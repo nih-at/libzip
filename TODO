@@ -13,7 +13,6 @@
 	get nentries from zip
 	convert error codes to string
 * documentation: zip_add*, zip_replace*, [zip_free_meta, zip_meta_new]
-* correct version in installed libzip.so.x.y
 * regression tests
 * code review
 

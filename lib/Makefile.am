@@ -2,6 +2,8 @@ lib_LTLIBRARIES = libzip.la
 noinst_HEADERS = zipint.h
 include_HEADERS = zip.h
 
+libzip_la_LDFLAGS=-version-info 0:5
+
 libzip_la_SOURCES=zip_open.c zip_close.c zip_err_str.c zip_name_locate.c \
 	zip_fopen.c zip_fopen_index.c zip_fclose.c zip_fread.c \
 	zip_add.c zip_replace.c zip_add_zip.c zip_replace_zip.c \
