@@ -12,7 +12,6 @@
 * regression tests
 * code review
 * README
-* set mtime for changed entries
 ------------------------------------------------ others
 * zip_replace_zip: allow rewinding
 * API for (file and archive) comments
