@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.3 2003/10/01 18:27:46 dillo Exp $
+  $NiH: zipcmp.c,v 1.4 2003/10/02 14:13:37 dillo Exp $
 
   cmpzip.c -- compare zip files
   Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -53,13 +53,14 @@ struct entry {
 
 char *prg;
 
-char *usage = "usage: %s [-hVvq] zip1 zip2\n";
+char *usage = "usage: %s [-hViqv] zip1 zip2\n";
 
 char help_head[] = PACKAGE " by Dieter Baron and Thomas Klausner\n\n";
 
 char help[] = "\n\
   -h       display this help message\n\
   -V       display version number\n\
+  -i       compare names ignoring case distinctions\n\
   -q       be quiet\n\
   -v       be verbose (print differences, default)\n\
 \n\
@@ -72,7 +73,7 @@ You may redistribute copies of\n\
 " PACKAGE " under the terms of the GNU General Public License.\n\
 For more information about these matters, see the files named COPYING.\n";
 
-#define OPTIONS "hVqv"
+#define OPTIONS "hViqv"
 
 
 
@@ -84,6 +85,8 @@ static int compare_list(const char *name[], int verbose,
 		 void print(const void *));
 static int compare_zip(const char *zn[], int verbose);
 
+int ignore_case;
+
 
 
 int
@@ -94,10 +97,14 @@ main(int argc, char *argv[])
 
     prg = argv[0];
 
+    ignore_case = 0;
     verbose = 1;
 
     while ((c=getopt(argc, argv, OPTIONS)) != -1) {
 	switch (c) {
+	case 'i':
+	    ignore_case = 1;
+	    break;
 	case 'q':
 	    verbose = 0;
 	    break;
@@ -236,7 +243,7 @@ entry_cmp(const void *p1, const void *p2)
     e1 = p1;
     e2 = p2;
 
-    if ((c=strcmp(e1->name, e2->name)) != 0)
+    if ((c=(ignore_case ? strcasecmp : strcmp)(e1->name, e2->name)) != 0)
 	return c;
     if (e1->size != e2->size)
 	return e1->size - e2->size;

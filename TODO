@@ -20,12 +20,11 @@
 ------------------------------------------------ others
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison
-* zipcmp: add option for case insensitive name comparison
 
 * don't allow the same filename twice in a zip (when adding/replacing)
 * append to files (for self-extracting files)
 * add custom compression function support
- *zip_replace_zip: remember compression method, recompress if different speced
+* zip_replace_zip: remember compression method, recompress if different speced
 * better closing of zip-files
 * close even if error...
 * update-zip (instead of close, reopen)

@@ -1,4 +1,4 @@
-.\" $NiH: zipcmp.mdoc,v 1.4 2003/10/02 15:28:22 wiz Exp $
+.\" $NiH: zipcmp.mdoc,v 1.5 2003/10/03 07:58:14 dillo Exp $
 .\"
 .\" zipcmp.mdoc -- compare zip archives
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -55,6 +55,8 @@ Supported options:
 .Bl -tag -width XXX
 .It Fl h
 Display a short help message and exit.
+.It Fl i
+Compare names ignoring case distinctions.
 .It Fl q
 Quiet mode.
 Compare
@@ -62,6 +64,7 @@ Compare
 .It Fl v
 Verbose mode.
 Print details about differences to stdout.
+(This is the default.)
 .It Fl V
 Display version information and exit.
 .El
