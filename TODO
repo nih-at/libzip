@@ -21,6 +21,8 @@
 * code review
 * README
 * update code for new API
+* fix XXX in man/
+* fix XXX in lib?
 ------------------------------------------------ others
 * zip_commit
 * zip_replace_zip: allow rewinding
