@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_close.mdoc,v 1.2 2003/10/03 08:12:58 wiz Exp 
-.\" $NiH: zip_close.mdoc,v 1.2 2003/10/03 08:12:58 wiz Exp $
+.\" from NiH: zip_delete.mdoc,v 1.1 2003/10/03 08:30:44 dillo Exp 
+.\" $NiH: zip_delete.mdoc,v 1.1 2003/10/03 08:30:44 dillo Exp $
 .\"
-.\" zip_close.mdoc \-\- close zip archive
+.\" zip_delete.mdoc \-\- delete files from zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,63 +35,32 @@
 .\"
 .TH ZIP_OPEN 3 "October 3, 2003" NiH
 .SH "NAME"
-zip_open \- open zip archive
+zip_delete \- delete file from zip archive
 .SH "LIBRARY"
 .Lb libzip
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
-.Fn zip_close "struct zip *archive"
+.Fn zip_delete "struct zip *archive" "int index"
 .SH "DESCRIPTION"
-The
-.Fn zip_close
-function closes
-\fBarchive\fR
-and frees the memory allocated for it.
-If any files within were changed, those changes are written to disk
-first.
-If writing changes fails,
-.Fn zip_close
-fails and
-\fBarchive\fR
-is left unchanged.
+The file at position
+\fBindex\fR
+is marked as deleted.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \\-1 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_close
-will fail if:
+.Fn zip_delete
+fails if:
 .RS
 .TP 4
 Bq Er ZERR_INVAL
-The
-\fBpath\fR
-argument is
-.Dv NULL.
-.TP 4
-Bq Er ZERR_MEMORY
-Required memory could not be allocated.
-.TP 4
-Bq Er ZERR_RENAME
-A temporary file could not be renamed to its final name.
-See
-.Va errno
-for details.
-.TP 4
-Bq Er ZERR_SEEK
-A file seek  failed.
-See
-.Va errno
-for details.
-.TP 4
-Bq Er ZERR_TMPOPEN
-A temporary file could not be created.
-See
-.Va errno
-for details.
-.\" XXX: list incomplete
+\fBindex\fR
+is not a valid file index in
+\fBzip.\fR
+.\: XXX: also ch_func ZIP_CMD_CLOSE errors
 .RE
 .SH "SEE ALSO"
-zip_open(3)
+zip_unchange(3)
