@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.37.4.5 2004/04/07 12:08:21 dillo Exp $
+  $NiH: zip_close.c,v 1.37.4.6 2004/04/08 16:57:14 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -53,7 +53,6 @@ static int add_data_uncomp(zip_read_func, void *, struct zip_dirent *, FILE *,
 			   struct zip_error *);
 static int copy_data(FILE *, off_t, off_t, FILE *, struct zip_error *);
 
-
 
 
 int
@@ -96,6 +95,8 @@ zip_close(struct zip *za)
     }
     cd->nentry = 0;
 
+    /* pointers in cd are owned by za */
+
     if ((cd->entry=malloc(sizeof(*(cd->entry))*survivors)) == NULL) {
 	_zip_error_set(&za->error, ZERR_MEMORY, 0);
 	free(cd);
@@ -131,7 +132,11 @@ zip_close(struct zip *za)
 	if (za->entry[i].state == ZIP_ST_DELETED)
 	    continue;
 
-	if (i < za->cdir->nentry) {
+	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
+	    _zip_dirent_init(&de);
+	    memcpy(cd->entry+i, &de, sizeof(cd->entry[i]));
+	}
+	else {
 	    if (fseek(za->zp, za->cdir->entry[i].offset, SEEK_SET) != 0) {
 		_zip_error_set(&za->error, ZERR_SEEK, errno);
 		error = 1;
@@ -141,32 +146,29 @@ zip_close(struct zip *za)
 		error = 1;
 		break;
 	    }
-	}
-	else {
-	    de.filename = NULL;
-	    de.filename_len = 0;
-	    de.extrafield = NULL;
-	    de.extrafield_len = 0;
-	    de.comment = NULL;
-	    de.comment_len = 0;
+	    memcpy(cd->entry+i, za->cdir->entry+i, sizeof(cd->entry[i]));
 	}
 
 	if (za->entry[i].ch_filename) {
 	    free(de.filename);
-	    de.filename = za->entry[i].ch_filename;
+	    de.filename = strdup(za->entry[i].ch_filename);
 	    de.filename_len = strlen(de.filename);
-	    za->entry[i].ch_filename = NULL;
+	    cd->entry[i].filename = za->entry[i].ch_filename;
+	    cd->entry[i].filename_len = de.filename_len;
 	}
 
 	cd->entry[cd->nentry].offset = ftell(tfp);
 
-	if (za->entry[i].state == ZIP_ST_REPLACED
-	    || za->entry[i].state == ZIP_ST_ADDED) {
+	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
 	    de.last_mod = za->entry[i].ch_mtime;
 	    if (add_data(za, i, &de, tfp) < 0) {
 		error -1;
 		break;
 	    }
+	    cd->entry[i].comp_method = de.comp_method;
+	    cd->entry[i].comp_size = de.comp_size;
+	    cd->entry[i].uncomp_size = de.uncomp_size;
+	    cd->entry[i].crc = de.crc;
 	}
 	else {
 	    if (_zip_dirent_write(&de, tfp, 1, &za->error) < 0) {
@@ -179,8 +181,7 @@ zip_close(struct zip *za)
 		break;
 	    }
 	}
-	    
-	/* XXX: merge za->cdir->entry[i] and de into cd->entry[cd->nentry] */
+
 	cd->nentry++;
 
 	_zip_dirent_finalize(&de);
@@ -191,16 +192,16 @@ zip_close(struct zip *za)
 	    error = 1;
     }
     
+    cd->nentry = 0;
+    _zip_cdir_free(cd);
+
     if (error) {
 	_zip_dirent_finalize(&de);
-	_zip_cdir_free(cd);
 	fclose(tfp);
 	remove(temp);
 	free(temp);
 	return -1;
     }
-
-    _zip_cdir_free(cd);
 
     if (fclose(tfp) != 0) {
 	/* XXX: handle fclose(tfp) error */
