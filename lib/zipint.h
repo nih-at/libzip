@@ -12,8 +12,8 @@
 #define CDENTRYSIZE         46
 #define LENTRYSIZE          30
 
-struct zf *_zip_zf_new(void);
-int _zip_zf_free(struct zf *zf);
+struct zf *_zip_new(void);
+int _zip_free(struct zf *zf);
 int _zip_readcdentry(FILE *fp, struct zf_entry *zfe, unsigned char **cdpp, 
 		     int left, int readp, int localp);
 
