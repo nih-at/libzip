@@ -1,8 +1,8 @@
 /*
-  $NiH: open.c,v 1.3 2004/11/17 21:55:17 wiz Exp $
+  $NiH$
 
-  open.c -- test cases for opening zip archives
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  name_locate.c -- test cases for finding files in zip archives
+  Copyright (C) 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -41,29 +41,39 @@
 
 #include "zip.h"
 
-int open_fail(const char *, int, const char *, int, int);
-int open_success(const char *, int, const char *, int);
+#define TEST_ZIP	"test.zip"
+
+int find_fail(struct zip *, const char *, int, int);
+int find_success(struct zip *, const char *, int);
 
 
 
 int
 main(int argc, char *argv[])
 {
-    int fail;
+    int fail, ze;
+    struct zip *z;
 
     fail = 0;
 
-    remove("nosuchfile");
-    fail += open_fail("nosuchfile", 0, "non-existing", ZIP_ER_OPEN, ENOENT);
-    fail += open_fail("Makefile", 0, "non-zip", ZIP_ER_NOZIP, 0);
-    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZIP_ER_EXISTS, 0);
-    /* ZIP_ER_OPEN */
-    /* ZIP_ER_READ */
-    /* ZIP_ER_SEEK */
-    /* ZIP_ER_INCONS */
+    if ((z=zip_open(TEST_ZIP, 0, &ze)) == NULL) {
+	printf("fail: opening zip archive ``%s'' failed (%d)\n",
+	       TEST_ZIP, ze);
+	return 1;
+    }
 
-    fail += open_success("test.zip", 0, "existing", 3);
-    fail += open_success("nosuchfile", ZIP_CREATE, "new", 0);
+    fail += find_fail(z, "nosuchfile", 0, ZIP_ER_NOENT);
+    fail += find_success(z, "test", 0);
+    fail += find_fail(z, "TeSt", 0, ZIP_ER_NOENT);
+    fail += find_success(z, "TeSt", ZIP_FL_NOCASE);
+    fail += find_success(z, "testdir/test2", 0);
+    fail += find_success(z, "tesTdir/tESt2", ZIP_FL_NOCASE);
+    fail += find_fail(z, "testdir/test2", ZIP_FL_NODIR, ZIP_ER_NOENT);
+    fail += find_fail(z, "tesTdir/tESt2", ZIP_FL_NOCASE|ZIP_FL_NODIR,
+		      ZIP_ER_NOENT);
+    fail += find_fail(z, "test2", 0, ZIP_ER_NOENT);
+    fail += find_success(z, "test2", ZIP_FL_NODIR);
+    fail += find_success(z, "TeST2", ZIP_FL_NODIR|ZIP_FL_NOCASE);
 
     exit(fail ? 1 : 0);
 }
@@ -71,46 +81,36 @@ main(int argc, char *argv[])
 
 
 int
-open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
+find_fail(struct zip *z, const char *name, int flags, int zerr)
 {
-    struct zip *z;
-    int ze;
+    int ret, ze, se;
+    char expected[80];
 
-    errno = 0;
+    if ((ret=zip_name_locate(z, name, flags)) < 0) {
+	zip_error_get(z, &ze, &se);
+	if (ze != zerr) {
+	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
+	    printf("unexpected error while looking for ``%s'': "
+		   "got ``%s'', expected ``%s''\n", name, zip_strerror(z),
+		   expected);
+	    return 1;
+	}
 
-    if ((z=zip_open(fname, flags, &ze)) != NULL) {
-	printf("fail: opening %s succeeded\n", desc);
-	zip_close(z);
-	return 1;
+	return 0;
     }
-    else if (ze != zerr || errno != serr) {
-	printf("fail: opening %s returned wrong error %d/%d, expected %d/%d\n",
-		desc, ze, errno, zerr, serr);
-	return 1;
-    }
 
-    return 0;
+    return 1;
 }
 
 
 
 int
-open_success(const char *fname, int flags, const char *desc, int nent)
+find_success(struct zip *z, const char *name, int flags)
 {
-    struct zip *z;
-    int ze, num;
 
-    if ((z=zip_open(fname, flags, &ze)) == NULL) {
-	printf("fail: opening %s failed (%d)\n", desc, ze);
-	return 1;
-    }
-
-    num = zip_get_num_files(z);
-    zip_close(z);
-    
-    if (num != nent) {
-	printf("fail: opening %s got wrong number of files %d, expected %d\n",
-		desc, num, nent);
+    if (zip_name_locate(z, name, flags) < 0) {
+	printf("unexpected error while looking for ``%s'': %s\n",
+	       name, zip_strerror(z));
 	return 1;
     }
 
