@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_name_locate.c,v 1.16 2004/11/30 22:19:37 wiz Exp $
+  $NiH: zip_name_locate.c,v 1.17 2004/11/30 23:02:47 wiz Exp $
 
   zip_name_locate.c -- get index by name
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -55,7 +55,7 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 		 struct zip_error *error)
 {
     int (*cmp)(const char *, const char *);
-    const char *fn, *p, *q;
+    const char *fn, *p;
     int i, n;
 
     if (fname == NULL) {
@@ -77,15 +77,9 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 	    continue;
 	
 	if (flags & ZIP_FL_NODIR) {
-	    /* XXX: is this correct? */
 	    p = strrchr(fn, '/');
-	    q = strrchr(fn, '\\');
-	    if (p && q)
-		fn = (p > q) ? p : q;
-	    else if (p)
-		fn = p;
-	    else if (q)
-		fn = q;
+	    if (p)
+		fn = p+1;
 	}
 
 	if (cmp(fname, fn) == 0)
