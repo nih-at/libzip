@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.37.4.4 2004/04/06 21:43:35 dillo Exp $
+  $NiH: zip_close.c,v 1.37.4.5 2004/04/07 12:08:21 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -373,7 +373,7 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 
 	ret = deflate(&zstr, flush);
 	if (ret != Z_OK && ret != Z_STREAM_END) {
-	    _zip_error_set(error, ZERR_ZLIB, 0 /* XXX */);
+	    _zip_error_set(error, ZERR_ZLIB, ret);
 	    return -1;
 	}
 	
