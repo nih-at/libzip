@@ -1,4 +1,4 @@
-.\" $NiH: zip_error_to_str.mdoc,v 1.2 2004/12/03 15:23:10 dillo Exp $
+.\" $NiH: zip_error_to_str.mdoc,v 1.3 2004/12/22 15:49:20 wiz Exp $
 .\"
 .\" zip_error_to_str.mdoc -- get string representation of zip error code
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -49,7 +49,7 @@ The
 function stores a string describing the libzip error code
 .Ar ze
 in the user-provided buffer
-.Ar buf 
+.Ar buf
 which has size
 .Ar len .
 The buffer is always NUL-terminated.
@@ -81,4 +81,4 @@ excluding the terminating NUL character.
 .Xr zip_file_error_get 3 ,
 .Xr zip_file_strerror 3 ,
 .Xr zip_open 3 ,
-.Xr zip_strerror 3 
+.Xr zip_strerror 3
