@@ -3,7 +3,7 @@
 .\" $NiH: zip_fopen.mdoc,v 1.5 2003/10/06 16:37:07 dillo Exp $
 .\"
 .\" zip_fopen.mdoc \-- open file in zip archvie for reading
-.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FOPEN 3 "October 3, 2003" NiH
+.TH ZIP_FOPEN 3 "April 14, 2004" NiH
 .SH "NAME"
 zip_fopen , \- .Nm zip_fopen_index
 open file in zip archive for reading
@@ -42,9 +42,9 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip_file *
-.Fn zip_fopen "struct zip *archive" "const char *fname" "int case_sens"
+.Fn zip_fopen "struct zip *archive" "const char *fname" "int flags"
 .Ft struct zip_file *
-.Fn zip_fopen_index "struct zip *archive" "int index"
+.Fn zip_fopen_index "struct zip *archive" "int index" "int flags"
 .SH "DESCRIPTION"
 The
 .Fn zip_fopen
@@ -54,9 +54,22 @@ in
 \fBarchive.\fR
 The
 \fBflags\fR
-argument specifies how the name lookup should be done.
-Its values are described in
+argument specifies how the name lookup should be done, according to
+the values are described in
 zip_name_locate(3).
+Also, the following values may be
+.I orNo 'ed
+to it.
+.RS
+.TP 19
+Dv ZIP_FL_COMPRESSED
+Read the compressed data.  Otherwise the data is uncompressed by 
+.Fn zip_fread.
+.TP 19
+Dv ZIP_FL_UNCHANGED
+Read the original data from the zip archive, ignoring any changes made
+to the file.
+.RE
 .PP
 The
 .Fn zip_fopen_index
@@ -68,11 +81,14 @@ Upon successful completion, a
 pointer is returned.
 Otherwise,
 .Dv NULL
-is returned and the global variable
-.Va zip_err
+is returned and the error code in
+\fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
 .RS
+.TP 4
+Bq Er ZERR_CHANGED
+The file data has been changed.
 .TP 4
 Bq Er ZERR_COMPNOTSUPP
 The compression method used is not supported.
@@ -82,16 +98,12 @@ Required memory could not be allocated.
 .TP 4
 Bq Er ZERR_READ
 A file read error occurred.
-See
-.Va errno
-for details.
 .TP 4
 Bq Er ZERR_SEEK
 A file seek error occurred.
-See
-.Va errno
-for details.
-.\" XXX: ZERR_ZLIB, _zip_file_fillbuf
+.TP 4
+Bq Er ZERR_ZLIB
+Initializing the zlib stream failed.
 .RE
 .PP
 The function
@@ -103,9 +115,7 @@ zip_name_locate(3).
 .PP
 The function
 .Fn zip_fopen_index
-may also fail and set
-.Va zip_err
-to
+may also fail with
 .Er ZERR_INVAL
 if
 \fBindex\fR

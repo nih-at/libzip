@@ -55,14 +55,14 @@ does not contain a file with that name, \-1 is returned.
 The
 .Fa flags
 are specified by
-.I or'ing
+.I orNo 'ing
 the following values, or 0 for none of them.
 .RS
-.TP 17
-Dv ZIP_NAME_NOCASE
+.TP 15
+Dv ZIP_FL_NOCASE
 Ignore case distinctions.
-.TP 17
-Dv ZIP_NAME_NODIR
+.TP 15
+Dv ZIP_FL_NODIR
 Ignore directory part of file name in archive.
 .RE
 .\".SH "RETURN VALUES"

@@ -1,7 +1,7 @@
-.\" $NiH$
+.\" $NiH: zip_stat.mdoc,v 1.1 2003/10/06 02:50:11 dillo Exp $
 .\"
 .\" zip_stat.mdoc -- get information about file
-.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
@@ -31,7 +31,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 3, 2003
+.Dd April 14, 2004
 .Dt ZIP_STAT 3
 .Os
 .Sh NAME
@@ -43,9 +43,9 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_stat "struct zip *archive" "const char *fname" "int case_sens" "struct zip_stat *sb"
+.Fn zip_stat "struct zip *archive" "const char *fname" "int flags" "struct zip_stat *sb"
 .Ft int
-.Fn zip_stat_index "struct zip *archive" "int index" "struct zip_stat *sb"
+.Fn zip_stat_index "struct zip *archive" "int index" "int flags" "struct zip_stat *sb"
 .Sh DESCRIPTION
 The
 .Fn zip_stat
@@ -58,6 +58,12 @@ The
 argument specifies how the name lookup should be done.
 Its values are described in
 .Xr zip_name_locate 3 .
+Also,
+.Dv ZIP_FL_UNCHANGED
+may be
+.Em or Ns No 'ed
+to it to request information about the original file in the archive,
+ignoring any changes made.
 .Pp
 The
 .Fn zip_stat_index
@@ -97,5 +103,6 @@ fails and sets the error information to
 if
 .Ar index
 is invalid.
+.\" XXX: ZERR_CHANGED
 .Sh SEE ALSO
 .Xr zip_name_locate 3

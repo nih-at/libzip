@@ -1,4 +1,4 @@
-.\" $NiH: zip_name_locate.mdoc,v 1.2 2003/10/06 16:37:07 dillo Exp $
+.\" $NiH: zip_name_locate.mdoc,v 1.3 2003/12/27 22:48:58 wiz Exp $
 .\"
 .\" zip_name_locate.mdoc -- get index of file by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -58,10 +58,10 @@ The
 are specified by
 .Em or Ns No 'ing
 the following values, or 0 for none of them.
-.Bl -tag -offset indent -width ZIP_NAME_NOCASE
-.It Dv ZIP_NAME_NOCASE
+.Bl -tag -offset indent -width ZIP_FL_NOCASE
+.It Dv ZIP_FL_NOCASE
 Ignore case distinctions.
-.It Dv ZIP_NAME_NODIR
+.It Dv ZIP_FL_NODIR
 Ignore directory part of file name in archive.
 .El
 .\" .Sh RETURN VALUES
