@@ -1,4 +1,4 @@
-.\" $NiH$
+.\" $NiH: zip_get_name.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
 .\"
 .\" zip_name_locate.mdoc -- get index of file by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -51,11 +51,11 @@ function returns the name of the file at position
 in
 .Ar archive .
 The returned string must not be modified or freed, and becomes invalid when
-.Ar archvie
+.Ar archive
 is closed.
 .Sh RETURN VALUES
 Upon successful completion, a pointer to the name is returned.
-Otherwise, 
+Otherwise,
 .Dv NULL
 is returned and the global variable
 .Va zip_err
