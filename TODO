@@ -2,6 +2,10 @@
 * correct version in installed libzip.so.x.y
 * fix warnings in zipcmp
 * regression tests
+* API cleanup
+* code review
+* zipcmp: add option for file content comparison
+* zipcmp: add option for case insensitive name comparison
 
 * don't allow the same filename twice in a zip (when adding/replacing)
 * append to files (for self-extracting files)
