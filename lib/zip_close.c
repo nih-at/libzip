@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.43 2004/11/17 21:55:10 wiz Exp $
+  $NiH: zip_close.c,v 1.44 2004/11/18 15:04:04 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -47,11 +47,11 @@
 #include "zipint.h"
 
 static int add_data(struct zip *, int, struct zip_dirent *, FILE *);
-static int add_data_comp(zip_read_func, void *, struct zip_stat *, FILE *,
-			 struct zip_error *);
-static int add_data_uncomp(zip_read_func, void *, struct zip_stat *, FILE *,
-			   struct zip_error *);
-static void ch_set_error(struct zip_error *, zip_read_func, void *);
+static int add_data_comp(zip_source_callback, void *, struct zip_stat *,
+			 FILE *, struct zip_error *);
+static int add_data_uncomp(zip_source_callback, void *, struct zip_stat *,
+			   FILE *, struct zip_error *);
+static void ch_set_error(struct zip_error *, zip_source_callback, void *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
 
 
@@ -240,20 +240,20 @@ static int
 add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 {
     off_t offstart, offend;
-    zip_read_func rf;
+    zip_source_callback cb;
     void *ud;
     struct zip_stat st;
     
-    rf = za->entry[idx].source->f;
+    cb = za->entry[idx].source->f;
     ud = za->entry[idx].source->ud;
 
-    if (rf(ud, &st, sizeof(st), ZIP_CMD_STAT) < sizeof(st)) {
-	ch_set_error(&za->error, rf, ud);
+    if (cb(ud, &st, sizeof(st), ZIP_SOURCE_STAT) < sizeof(st)) {
+	ch_set_error(&za->error, cb, ud);
 	return -1;
     }
 
-    if (rf(ud, NULL, 0, ZIP_CMD_OPEN) < 0) {
-	ch_set_error(&za->error, rf, ud);
+    if (cb(ud, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
+	ch_set_error(&za->error, cb, ud);
 	return -1;
     }
 
@@ -263,16 +263,16 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 	return -1;
 
     if (st.comp_method != ZIP_CM_STORE) {
-	if (add_data_comp(rf, ud, &st, ft, &za->error) < 0)
+	if (add_data_comp(cb, ud, &st, ft, &za->error) < 0)
 	    return -1;
     }
     else {
-	if (add_data_uncomp(rf, ud, &st, ft, &za->error) < 0)
+	if (add_data_uncomp(cb, ud, &st, ft, &za->error) < 0)
 	    return -1;
     }
 
-    if (rf(ud, NULL, 0, ZIP_CMD_CLOSE) < 0) {
-	ch_set_error(&za->error, rf, ud);
+    if (cb(ud, NULL, 0, ZIP_SOURCE_CLOSE) < 0) {
+	ch_set_error(&za->error, cb, ud);
 	return -1;
     }
 
@@ -303,14 +303,14 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 
 
 static int
-add_data_comp(zip_read_func rf, void *ud, struct zip_stat *st,FILE *ft,
+add_data_comp(zip_source_callback cb, void *ud, struct zip_stat *st,FILE *ft,
 	      struct zip_error *error)
 {
     char buf[BUFSIZE];
     ssize_t n;
 
     st->comp_size = 0;
-    while ((n=rf(ud, buf, sizeof(buf), ZIP_CMD_READ)) > 0) {
+    while ((n=cb(ud, buf, sizeof(buf), ZIP_SOURCE_READ)) > 0) {
 	if (fwrite(buf, 1, n, ft) != n) {
 	    _zip_error_set(error, ZIP_ER_WRITE, errno);
 	    return -1;
@@ -319,7 +319,7 @@ add_data_comp(zip_read_func rf, void *ud, struct zip_stat *st,FILE *ft,
 	st->comp_size += n;
     }
     if (n < 0) {
-	ch_set_error(error, rf, ud);
+	ch_set_error(error, cb, ud);
 	return -1;
     }	
 
@@ -329,8 +329,8 @@ add_data_comp(zip_read_func rf, void *ud, struct zip_stat *st,FILE *ft,
 
 
 static int
-add_data_uncomp(zip_read_func rf, void *ud, struct zip_stat *st, FILE *ft,
-		struct zip_error *error)
+add_data_uncomp(zip_source_callback cb, void *ud, struct zip_stat *st,
+		FILE *ft, struct zip_error *error)
 {
     char b1[BUFSIZE], b2[BUFSIZE];
     int end, flush, ret;
@@ -359,8 +359,8 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_stat *st, FILE *ft,
     end = 0;
     while (!end) {
 	if (zstr.avail_in == 0 && !flush) {
-	    if ((n=rf(ud, b1, sizeof(b1), ZIP_CMD_READ)) < 0) {
-		ch_set_error(error, rf, ud);
+	    if ((n=cb(ud, b1, sizeof(b1), ZIP_SOURCE_READ)) < 0) {
+		ch_set_error(error, cb, ud);
 		deflateEnd(&zstr);
 		return -1;
 	    }
@@ -405,11 +405,11 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_stat *st, FILE *ft,
 
 
 static void
-ch_set_error(struct zip_error *error, zip_read_func rf, void *ud)
+ch_set_error(struct zip_error *error, zip_source_callback cb, void *ud)
 {
     int e[2];
 
-    if ((rf(ud, e, sizeof(e), ZIP_CMD_READ)) < sizeof(e)) {
+    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_READ)) < sizeof(e)) {
 	error->zip_err = ZIP_ER_INTERNAL;
 	error->sys_err = 0;
     }

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_zip.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
+  $NiH: zip_source_zip.c,v 1.2 2004/11/18 16:28:13 wiz Exp $
 
   zip_source_zip.c -- create data source from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -47,7 +47,8 @@ struct read_zip {
     off_t off, len;
 };
 
-static ssize_t read_zip(void *st, void *data, size_t len, enum zip_cmd cmd);
+static ssize_t read_zip(void *st, void *data, size_t len,
+			enum zip_source_cmd cmd);
 
 
 
@@ -116,7 +117,7 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
 
 
 static ssize_t
-read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
+read_zip(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 {
     struct read_zip *z;
     char b[8192], *buf;
@@ -126,7 +127,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_CMD_OPEN:
+    case ZIP_SOURCE_OPEN:
 	for (n=0; n<z->off; n+= i) {
 	    i = (z->off-n > sizeof(b) ? sizeof(b) : z->off-n);
 	    if ((i=zip_fread(z->zf, b, i)) < 0) {
@@ -137,7 +138,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 	}
 	return 0;
 	
-    case ZIP_CMD_READ:
+    case ZIP_SOURCE_READ:
 	if (z->len != -1)
 	    n = len > z->len ? z->len : len;
 	else
@@ -154,10 +155,10 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 
 	return i;
 	
-    case ZIP_CMD_CLOSE:
+    case ZIP_SOURCE_CLOSE:
 	return 0;
 
-    case ZIP_CMD_STAT:
+    case ZIP_SOURCE_STAT:
 	if (len < sizeof(z->st))
 	    return -1;
 	len = sizeof(z->st);
@@ -165,7 +166,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 	memcpy(data, &z->st, len);
 	return len;
 
-    case ZIP_CMD_ERROR:
+    case ZIP_SOURCE_ERROR:
 	{
 	    int *e;
 
@@ -177,7 +178,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 	}
 	return sizeof(int)*2;
 
-    case ZIP_CMD_FREE:
+    case ZIP_SOURCE_FREE:
 	zip_fclose(z->zf);
 	free(z);
 	return 0;

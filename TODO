@@ -1,8 +1,4 @@
 ------------------------------------------------ showstopper
-* API cleanup
-	check function names (consistency, appropriateness)
-	file sizes, offsets: type big enough? (no, zip64)
-	let ch_func report errors back to caller
 * zipcmp.c:142: warning: passing arg 1 of `compare_zip' from incompatible pointer type
 * zipcmp.c:189: warning: passing arg 3 of `compare_list' from incompatible pointer type
 * what is ZIP_CMD_CLOSE good for; check callers

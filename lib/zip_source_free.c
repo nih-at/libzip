@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_free.c,v 1.17 2004/11/17 21:55:13 wiz Exp $
+  $NiH: zip_source_free.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
 
   zip_source_free.c -- free zip data source
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -48,7 +48,7 @@ zip_source_free(struct zip_source *source)
     if (source == NULL)
 	return;
 
-    (void)source->f(source->ud, NULL, 0, ZIP_CMD_FREE);
+    (void)source->f(source->ud, NULL, 0, ZIP_SOURCE_FREE);
 
     free(source);
 }

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_stat_index.c,v 1.6 2004/11/18 15:04:05 wiz Exp $
+  $NiH: zip_stat_index.c,v 1.7 2004/11/30 23:02:47 wiz Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -57,7 +57,7 @@ zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
     if ((flags & ZIP_FL_UNCHANGED) == 0
 	&& ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
 	if (za->entry[index].source->f(za->entry[index].source->ud,
-				     st, sizeof(*st), ZIP_CMD_STAT) < 0) {
+				     st, sizeof(*st), ZIP_SOURCE_STAT) < 0) {
 	    _zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
 	    return -1;
 	}

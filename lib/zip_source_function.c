@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_function.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
+  $NiH: zip_source_function.c,v 1.2 2004/11/18 16:28:13 wiz Exp $
 
   zip_source_function.c -- create zip data source from callback function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -43,7 +43,7 @@
 
 
 struct zip_source *
-zip_source_function(struct zip *za, zip_read_func zrf, void *ud)
+zip_source_function(struct zip *za, zip_source_callback zcb, void *ud)
 {
     struct zip_source *zs;
 
@@ -55,7 +55,7 @@ zip_source_function(struct zip *za, zip_read_func zrf, void *ud)
 	return NULL;
     }
 
-    zs->f = zrf;
+    zs->f = zcb;
     zs->ud = ud;
     
     return zs;

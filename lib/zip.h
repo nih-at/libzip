@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.45 2004/11/30 23:02:46 wiz Exp $
+  $NiH: zip.h,v 1.46 2004/12/22 15:49:18 wiz Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -106,17 +106,17 @@
 
 
 
-enum zip_cmd {
-    ZIP_CMD_OPEN,	/* prepare for reading */
-    ZIP_CMD_READ, 	/* read data */
-    ZIP_CMD_CLOSE,	/* reading is done */
-    ZIP_CMD_STAT,	/* get meta information */
-    ZIP_CMD_ERROR,	/* get error information */
-    ZIP_CMD_FREE	/* cleanup and free resources */
+enum zip_source_cmd {
+    ZIP_SOURCE_OPEN,	/* prepare for reading */
+    ZIP_SOURCE_READ, 	/* read data */
+    ZIP_SOURCE_CLOSE,	/* reading is done */
+    ZIP_SOURCE_STAT,	/* get meta information */
+    ZIP_SOURCE_ERROR,	/* get error information */
+    ZIP_SOURCE_FREE	/* cleanup and free resources */
 };
 
-typedef ssize_t (*zip_read_func)(void *state, void *data,
-				 size_t len, enum zip_cmd cmd);
+typedef ssize_t (*zip_source_callback)(void *state, void *data,
+				       size_t len, enum zip_source_cmd cmd);
 
 struct zip_stat {
     const char *name;			/* name of the file */
@@ -156,7 +156,8 @@ struct zip_source *zip_source_buffer(struct zip *, const void *, off_t, int);
 struct zip_source *zip_source_file(struct zip *, const char *, off_t, off_t);
 struct zip_source *zip_source_filep(struct zip *, FILE *, off_t, off_t);
 void zip_source_free(struct zip_source *);
-struct zip_source *zip_source_function(struct zip *, zip_read_func, void *);
+struct zip_source *zip_source_function(struct zip *,
+				       zip_source_callback, void *);
 struct zip_source *zip_source_zip(struct zip *, struct zip *, int, int,
 				  off_t, off_t);
 int zip_stat(struct zip *, const char *, int, struct zip_stat *);

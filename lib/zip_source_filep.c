@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_filep.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
+  $NiH: zip_source_filep.c,v 1.2 2004/11/18 16:28:13 wiz Exp $
 
   zip_source_filep.c -- create data source from FILE *
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -52,7 +52,8 @@ struct read_file {
     int e[2];		/* error codes */
 };
 
-static int read_file(void *state, void *data, size_t len, enum zip_cmd cmd);
+static int read_file(void *state, void *data, size_t len,
+		     enum zip_source_cmd cmd);
 
 
 
@@ -90,7 +91,7 @@ zip_source_filep(struct zip *za, FILE *file, off_t start, off_t len)
 
 
 static int
-read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
+read_file(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 {
     struct read_file *z;
     char *buf;
@@ -100,7 +101,7 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_CMD_OPEN:
+    case ZIP_SOURCE_OPEN:
 	if (fseeko(z->f, z->off, SEEK_SET) < 0) {
 	    z->e[0] = ZIP_ER_SEEK;
 	    z->e[1] = errno;
@@ -109,7 +110,7 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
 	z->remain = z->len;
 	return 0;
 	
-    case ZIP_CMD_READ:
+    case ZIP_SOURCE_READ:
 	if (z->remain != -1)
 	    n = len > z->remain ? z->remain : len;
 	else
@@ -126,10 +127,10 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
 
 	return i;
 	
-    case ZIP_CMD_CLOSE:
+    case ZIP_SOURCE_CLOSE:
 	return 0;
 
-    case ZIP_CMD_STAT:
+    case ZIP_SOURCE_STAT:
         {
 	    struct zip_stat *st;
 	    struct stat fst;
@@ -159,14 +160,14 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
 	    return sizeof(*st);
 	}
 
-    case ZIP_CMD_ERROR:
+    case ZIP_SOURCE_ERROR:
 	if (len < sizeof(int)*2)
 	    return -1;
 
 	memcpy(data, z->e, sizeof(int)*2);
 	return sizeof(int)*2;
 
-    case ZIP_CMD_FREE:
+    case ZIP_SOURCE_FREE:
 	fclose(z->f);
 	free(z);
 	return 0;

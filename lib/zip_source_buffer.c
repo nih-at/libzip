@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_buffer.c,v 1.2 2004/11/18 16:28:12 wiz Exp $
+  $NiH: zip_source_buffer.c,v 1.1 2004/11/18 17:26:51 wiz Exp $
 
   zip_source_buffer.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -48,7 +48,7 @@ struct read_data {
 };
 
 static ssize_t read_data(void *state, void *data, size_t len,
-			 enum zip_cmd cmd);
+			 enum zip_source_cmd cmd);
 
 
 
@@ -87,7 +87,7 @@ zip_source_buffer(struct zip *za, const void *data, off_t len, int freep)
 
 
 static int
-read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
+read_data(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 {
     struct read_data *z;
     char *buf;
@@ -97,11 +97,11 @@ read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_CMD_OPEN:
+    case ZIP_SOURCE_OPEN:
 	z->buf = z->data;
 	return 0;
 	
-    case ZIP_CMD_READ:
+    case ZIP_SOURCE_READ:
 	n = z->end - z->buf;
 	if (n > len)
 	    n = len;
@@ -115,10 +115,10 @@ read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
 
 	return n;
 	
-    case ZIP_CMD_CLOSE:
+    case ZIP_SOURCE_CLOSE:
 	return 0;
 
-    case ZIP_CMD_STAT:
+    case ZIP_SOURCE_STAT:
         {
 	    struct zip_stat *st;
 	    
@@ -136,7 +136,7 @@ read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
 	    return sizeof(*st);
 	}
 
-    case ZIP_CMD_ERROR:
+    case ZIP_SOURCE_ERROR:
 	{
 	    int *e;
 
@@ -148,7 +148,7 @@ read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
 	}
 	return sizeof(int)*2;
 
-    case ZIP_CMD_FREE:
+    case ZIP_SOURCE_FREE:
 	if (z->freep) {
 	    free((void *)z->data);
 	    z->data = NULL;

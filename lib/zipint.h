@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.34 2004/11/30 22:19:38 wiz Exp $
+  $NiH: zipint.h,v 1.35 2004/11/30 23:02:48 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -146,7 +146,7 @@ struct zip_cdir {
 
 
 struct zip_source {
-    zip_read_func f;
+    zip_source_callback f;
     void *ud;
 };
 
