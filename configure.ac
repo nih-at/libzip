@@ -59,12 +59,13 @@ in
     *) MANFMT=man;;
 esac
 
-AC_CONFIG_LINKS([zipcmp.1:zipcmp.${MANFMT}
-		 zip_open.3:zip_open.${MANFMT}])
+AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
+		 man/zip_open.3:man/zip_open.${MANFMT}])
 
 AC_CONFIG_FILES([Makefile
 		 libzip.pc
 		 libzip-uninstalled.pc
+		 man/Makefile
 		 lib/Makefile
 		 regress/Makefile
 		 src/Makefile])

@@ -1,5 +1,5 @@
 man_MANS=\
-	zipcmp.1
+	zipcmp.1 \
 	zip_open.3
 
 DISTCLEANFILES=${man_MANS}
