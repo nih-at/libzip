@@ -1,6 +1,6 @@
-.\" $NiH: zip_open.mdoc,v 1.7 2003/10/02 16:00:55 dillo Exp $
+.\" $NiH$
 .\"
-.\" zip_open.mdoc -- open zip archive
+.\" zip_fopen.mdoc -- open file in zip archvie for reading
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -32,77 +32,80 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd October 3, 2003
-.Dt ZIP_OPEN 3
+.Dt ZIP_FOPEN 3
 .Os
 .Sh NAME
-.Nm zip_open
-.Nd open zip archive
+.Nm zip_fopen ,
+.Nm zip_fopen_index
+.Nd open file in zip archvie for reading
 .Sh LIBRARY
 .Lb libzip
 .Sh SYNOPSIS
 .In zip.h
-.Ft struct zip *
-.Fn zip_open "const char *path" "int flags"
+.Ft struct zip_file *
+.Fn zip_fopen "struct zip *archive" "const char *fname" "int case_sens"
+.Ft struct zip_file *
+.Fn zip_fopen_index "struct zip *archive" "int index"
 .Sh DESCRIPTION
-The zip archive specified by
-.Ar path
-is opened and a pointer to a
-.\" XXX: also marks up ,
-.Ft struct zip ,
-used to manipulate the archive, is returned.
 The
-.Fa flags
-are specified by
-.Em or Ns No 'ing
-the following values, or 0 for none of them.
-.Bl -tag -offset indent -width ZIP_CHECKCONS
-.It Dv ZIP_CREATE
-Create the archive if it does not exist.
-.It Dv ZIP_EXCL
-Error if archive already exists.
-.It Dv ZIP_CHECKCONS
-Perform additional consistency checks on the archive, and error if
-they fail.
-.El
+.Fn zip_fopen
+function opens the file name
+.Ar fname
+in
+.Ar archive .
+If
+.Ar case_sens
+is zero, case is ignored during name lookup.
+.Pp
+The
+.Fn zip_fopen_index
+function opens the file at position
+.Ar index .
 .Sh RETURN VALUES
-Upon successful completion
-.Fn zip_open
-returns a
-.Ft struct zip
-pointer.
+Upon successful completion, a
+.Ft struct zip_file
+pointer is returned.
 Otherwise,
 .Dv NULL
 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .Sh ERRORS
-The named archive is opened unless:
 .Bl -tag -width Er
-.It Bq Er ZERR_EXISTS
-The named archive exists and
-.Dv ZIP_EXCL
-is set.
-.It Bq Er ZERR_INVAL
-The
-.Ar path
-argument is
-.Dv NULL .
+.It Bq Er ZERR_COMPNOTSUPP
+The compression method used is not supported.
 .It Bq Er ZERR_MEMORY
 Required memory could not be allocated.
-.It Bq Er ZERR_NOENT
-The named archive does not exist and
-.Dv ZIP_CREATE
-is not set.
-.It Bq Er ZERR_NOZIP
-The named file is not a zip archive.
-.It Bq Er ZERR_OPEN
-The named file could not be opened.
 .It Bq Er ZERR_READ
-A read error occurred; see
+A file read error occurred.
+See
 .Va errno
 for details.
 .It Bq Er ZERR_SEEK
-The named file does not allow seeks.
+A file seek error occurred.
+See
+.Va errno
+for details.
+.\" XXX: ZERR_ZLIB, _zip_file_fillbuf
 .El
+.Pp
+The function
+.Fn zip_fopen
+may also fail and set
+.Va zip_err
+for any of the errors specified for the routine
+.Xr zip_name_locate .
+.Pp
+The function
+.Fn zip_fopen_index
+may also fail and set
+.Va zip_err
+to
+.Er ZERR_INVAL
+if
+.Ar index
+is invalid.
 .Sh SEE ALSO
-.Xr zip_close 3
+.Xr zip_fclose 3 ,
+.Xr zip_fread 3 ,
+.Xr zip_name_locate
