@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.11 2004/11/30 21:51:29 wiz Exp $
+  $NiH: zipcmp.c,v 1.12 2004/12/22 17:31:32 dillo Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -57,7 +57,7 @@ const char *prg;
 
 #define PROGRAM	"zipmerge"
 
-char *usage = "usage: %s [-hViqtv] zip1 zip2\n";
+char *usage = "usage: %s [-hiqtVv] zip1 zip2\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";

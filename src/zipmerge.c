@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.6 2004/11/30 23:02:48 wiz Exp $
+  $NiH: zipmerge.c,v 1.7 2004/12/22 17:31:32 dillo Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -51,7 +51,7 @@ char *prg;
 
 #define PROGRAM	"zipmerge"
 
-char *usage = "usage: %s [-hVDiIsS] target-zip zip...\n";
+char *usage = "usage: %s [-DhIiSsV] target-zip zip...\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -60,10 +60,10 @@ char help[] = "\n\
   -h       display this help message\n\
   -V       display version number\n\
   -D       ignore directory component in file names\n\
-  -i       ask before overwriting files\n\
   -I       ignore case in file names\n\
-  -s       overwrite identical files without asking\n\
+  -i       ask before overwriting files\n\
   -S       don't overwrite identical files\n\
+  -s       overwrite identical files without asking\n\
 \n\
 Report bugs to <nih@giga.or.at>.\n";
 
