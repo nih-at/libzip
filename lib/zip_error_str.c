@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_error.c,v 1.1 2003/10/05 16:05:22 dillo Exp $
+  $NiH$
 
-  zip_error.c -- struct zip_error helper functions
+  zip_error_str.c -- get string representation of zip error code
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,47 +35,39 @@
 
 
 
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "zip.h"
 #include "zipint.h"
 
 
 
-void
-_zip_error_fini(struct zip_error *err)
+int
+zip_error_str(char *buf, int len, int ze, int se)
 {
-    free(err->str);
-    err->str = NULL;
-}
+    const char *zs, *ss;
 
-
+    if (ze < 0 || ze >= _zip_nerr_str)
+	return snprintf(buf, len, "Unknown error %d", ze);
 
-void
-_zip_error_get(struct zip_error *err, int *zep, int *sep)
-{
-    if (zep)
-	*zep = err->zip_err;
-    /* XXX: only if valid? */
-    if (sep)
-	*sep = err->sys_err;
-}
+    zs = _zip_err_str[ze];
+	
+    switch (_zip_err_type[ze]) {
+    case ZIP_ET_SYS:
+	ss = strerror(se);
+	break;
+	
+    case ZIP_ET_ZIP:
+	ss = zError(se);
+	break;
+	
+    default:
+	ss = NULL;
+    }
 
-
-
-void
-_zip_error_init(struct zip_error *err)
-{
-    err->zip_err = 0;
-    err->sys_err = 0;
-    err->str = NULL;
-}
-
-
-
-void
-_zip_error_set(struct zip_error *err, int ze, int se)
-{
-    err->zip_err = ze;
-    err->sys_err = se;
+    return snprintf(buf, len, "%s%s%s",
+		    zs, (ss ? ": " : ""), (ss ? ss : ""));
 }

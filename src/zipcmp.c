@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.4 2003/10/02 14:13:37 dillo Exp $
+  $NiH: zipcmp.c,v 1.5 2003/10/03 23:54:32 dillo Exp $
 
   cmpzip.c -- compare zip files
   Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -35,6 +35,7 @@
 
 
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -141,18 +142,22 @@ static int
 compare_zip(const char *zn[], int verbose)
 {
     struct zip *z;
+    struct zip_stat st;
     struct entry *e[2];
     int n[2];
     int i, j;
+    int err;
+    char errstr[1024];
 
     for (i=0; i<2; i++) {
-	if ((z=zip_open(zn[i], ZIP_CHECKCONS)) == NULL) {
+	if ((z=zip_open(zn[i], ZIP_CHECKCONS, &err)) == NULL) {
+	    zip_error_str(errstr, sizeof(errstr), err, errno);
 	    fprintf(stderr, "%s: cannot open zip file `%s': %s\n",
-		    prg, zn[i], zip_err_str[zip_err]);
+		    prg, zn[i], errstr);
 	    return -1;
 	}
 
-	n[i] = z->nentry;
+	n[i] = zip_get_num_files(z);
 
 	if ((e[i]=malloc(sizeof(*e[i]) * n[i])) == NULL) {
 	    fprintf(stderr, "%s: malloc failure\n", prg);
@@ -160,9 +165,10 @@ compare_zip(const char *zn[], int verbose)
 	}
 
 	for (j=0; j<n[i]; j++) {
-	    e[i][j].name = strdup(z->entry[j].fn);
-	    e[i][j].size = z->entry[j].meta->uncomp_size;
-	    e[i][j].crc = z->entry[j].meta->crc;
+	    zip_stat_index(z, i, &st);
+	    e[i][j].name = strdup(st.name);
+	    e[i][j].size = st.size;
+	    e[i][j].crc = st.crc;
 	}
 
 	zip_close(z);

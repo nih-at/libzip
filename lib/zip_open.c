@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.15 2003/10/01 09:51:00 dillo Exp $
+  $NiH: zip_open.c,v 1.16 2003/10/02 14:13:31 dillo Exp $
 
   zip_open.c -- open zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -46,6 +46,7 @@
 #include "zip.h"
 #include "zipint.h"
 
+static void set_error(int *errp, int err);
 static struct zip *_zip_readcdir(FILE *fp, unsigned char *buf,
 			   unsigned char *eocd, int buflen);
 static int _zip_read2(unsigned char **a);
@@ -69,7 +70,7 @@ static time_t _zip_d2u_time(int dtime, int ddate);
    zipfile struct, or NULL if unsuccessful, setting zip_err. */
 
 struct zip *
-zip_open(const char *fn, int flags)
+zip_open(const char *fn, int flags, int *errp)
 {
     FILE *fp;
     unsigned char *buf, *match;
@@ -79,32 +80,34 @@ zip_open(const char *fn, int flags)
     struct stat st;
 
     if (fn == NULL) {
-	zip_err = ZERR_INVAL;
+	set_error(errp, ZERR_INVAL);
 	return NULL;
     }
     
     if (stat(fn, &st) != 0) {
 	if (flags & ZIP_CREATE) {
 	    cdir = _zip_new();
+	    /* XXX: check cdir != NULL */
 	    cdir->zn = strdup(fn);
 	    if (!cdir->zn) {
-		zip_err = ZERR_MEMORY;
+		/* XXX: free cdir */
+		set_error(errp, ZERR_MEMORY);
 		return NULL;
 	    }
 	    return cdir;
 	} else {
-	    zip_err = ZERR_NOENT;
+	    set_error(errp, ZERR_NOENT);
 	    return NULL;
 	}
     } else if ((flags & ZIP_EXCL)) {
-	zip_err = ZERR_EXISTS;
+	set_error(errp, ZERR_EXISTS);
 	return NULL;
     }
     /* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
        just like open() */
     
     if ((fp=fopen(fn, "rb"))==NULL) {
-	zip_err = ZERR_OPEN;
+	set_error(errp, ZERR_OPEN);
 	return NULL;
     }
     
@@ -114,14 +117,16 @@ zip_open(const char *fn, int flags)
     i = fseek(fp, -(len < BUFSIZE ? len : BUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */
-	zip_err = ZERR_SEEK;
+	set_error(errp, ZERR_SEEK);
 	fclose(fp);
 	return NULL;
     }
 
+    /* XXX: why not allocate statically? */
     buf = (unsigned char *)malloc(BUFSIZE);
     if (!buf) {
-	zip_err = ZERR_MEMORY;
+	set_error(errp, ZERR_MEMORY);
+	fclose(fp);
 	return NULL;
     }
 
@@ -129,7 +134,7 @@ zip_open(const char *fn, int flags)
     buflen = fread(buf, 1, BUFSIZE, fp);
 
     if (ferror(fp)) {
-	zip_err = ZERR_READ;
+	set_error(errp, ZERR_READ);
 	free(buf);
 	fclose(fp);
 	return NULL;
@@ -170,7 +175,7 @@ zip_open(const char *fn, int flags)
 
     if (best < 0) {
 	/* no consistent eocd found */
-	zip_err = ZERR_NOZIP;
+	set_error(errp, ZERR_NOZIP);
 	free(buf);
 	_zip_free(cdir);
 	fclose(fp);
@@ -181,13 +186,24 @@ zip_open(const char *fn, int flags)
 
     cdir->zn = strdup(fn);
     if (!cdir->zn) {
-	zip_err = ZERR_MEMORY;
+	set_error(errp, ZERR_MEMORY);
+	_zip_free(cdir);
+	fclose(fp);
 	return NULL;
     }
 
     cdir->zp = fp;
     
     return cdir;
+}
+
+
+
+static void
+set_error(int *errp, int err)
+{
+    if (errp)
+	*errp = err;
 }
 
 

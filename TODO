@@ -1,19 +1,17 @@
 ------------------------------------------------ showstopper
 * API cleanup
 	check function names (consistency, appropriateness)
-	error handling: errno member in struct zip, struct zip_file
-	error handling in zip_open?
 	file sizes, offsets: type big enough?
-	meta data: expose struct vs. accessor functions
-	don't expose struct zip, struct zip_file
-* needed functions:
-	get error code from struct zip, struct zip_file
-	get nentries from zip
-* documentation: zip_add*, zip_replace*,
+	don't expose struct zip, struct zip_file, struct zip_meta
+	clean up error handling and error code setting (get rid of zip_err)
+	zip_{add,replace}*: don't use struct zip_meta
+* documentation: zip_add*, zip_replace*, zip_{,_file}get_error,
+	zip_error_sys_type, zip_get_num_files, zip_error_str
 	[zip_free_meta, zip_meta_new]
+	zip_fopen, zip_name_locate: flags
+	zip_open: errp
 * regression tests
 * code review
-
 ------------------------------------------------ others
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison

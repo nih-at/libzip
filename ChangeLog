@@ -1,7 +1,31 @@
 2003-10-05  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
-	* lib/zip.h: (struct zip_error) new struct.
-	* lib/zip.h: (struct zip, struct zip_file) add new member error.
+	* lib/zip.h, lib/zipint.h: Don't expose struct zip, struc
+	zip_file.
+	* lib/zip_open.c (zip_open): new argument errp, use it to store
+	error code.
+	* lib/zip_error_str.c (zip_error_str): new function.
+	* lib/zip_error_sys_type.c (zip_error_sys_type): new function.
+	* lib/zip_get_num_files.c (zip_get_num_files): new function.
+	* src/zipcmp.c (compare_zip): adapt to new API.
+
+	* lib/zip.h, lib/zipint.h: Don't expose zip_err_str, rename to
+	_zip_err_str.  Adapt users.
+	
+	* lib/zip_error.c(_zip_error_get): new function.
+	* lib/zip_get_error.c (zip_get_error): new function.
+	* lib/zip_file_get_error.c (zip_file_get_error): new function.
+	
+	* lib/zip.h (struct zip_stat): new struct.
+	* lib/zip_stat.c (zip_stat): new function.
+	* lib/zip_stat_index.c (zip_stat_index) new function.
+
+	* lib/zip_error.c (_zip_error_set): new function.
+	* lib/zip_name_locate.c (zip_name_locate): set za->error if name
+	not found.
+	
+	* lib/zip.h: (struct zip_error): new struct.
+	* lib/zip.h: (struct zip, struct zip_file): add new member error.
 	* lib/zip.h, lib/zipint.h, lib/make_zip_err_str.sh: add
 	_zip_err_errno.
 	* lib/zip_error.c (_zip_error_fini, _zip_error_init): new

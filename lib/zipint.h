@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.18 2003/10/02 14:13:33 dillo Exp $
+  $NiH: zipint.h,v 1.19 2003/10/05 16:05:22 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,8 +48,68 @@
 #define CDENTRYSIZE         46
 #define LENTRYSIZE          30
 
-enum { ZIP_ET_NONE, ZIP_ET_SYS, ZIP_ET_ZIP };
+
 
+struct zip_error {
+    int zip_err;	/* libzip error code (ZERR_*) */
+    int sys_err;	/* copy of errno (E*) or zlib error code */
+    char *str;		/* string representation or NULL */
+};
+
+struct zip {
+    char *zn;
+    FILE *zp;
+    struct zip_error error;
+    unsigned short comlen, changes;
+    unsigned int cd_size, cd_offset;
+    char *com;
+    int nentry, nentry_alloc;
+    struct zip_entry *entry;
+    int nfile, nfile_alloc;
+    struct zip_file **file;
+};
+
+/* file in zip file */
+
+struct zip_file {
+    struct zip *zf;
+    char *name;
+    struct zip_error error;
+    int flags; /* -1: eof, >0: error */
+
+    int method;
+    /* position within zip file (fread/fwrite) */
+    long fpos;
+    /* no of bytes left to read */
+    unsigned long bytes_left;
+    /* no of bytes of compressed data left */
+    unsigned long cbytes_left;
+    /* crc so far */
+    unsigned long crc, crc_orig;
+    
+    char *buffer;
+    z_stream *zstr;
+};
+
+/* entry in zip file directory */
+
+struct zip_entry {
+    struct zip_meta *meta;
+    char *fn;
+    char *fn_old;
+    unsigned int file_fnlen;
+
+    enum zip_state state;
+    zip_read_func ch_func;
+    void *ch_data;
+    int ch_comp;		/* 1: data returned by ch_func is compressed */
+    struct zip_meta *ch_meta;
+};
+
+
+
+extern const char * const _zip_err_str[];
+extern const int _zip_nerr_str;
 extern const int _zip_err_type[];
 
 
@@ -57,7 +117,9 @@ extern const int _zip_err_type[];
 void _zip_entry_init(struct zip *, int);
 const char *_zip_error_strerror(struct zip_error *);
 void _zip_error_fini(struct zip_error *);
+void _zip_error_get(struct zip_error *, int *, int *);
 void _zip_error_init(struct zip_error *);
+void _zip_error_set(struct zip_error *, int, int);
 int _zip_file_fillbuf(char *, int, struct zip_file *);
 int _zip_free(struct zip *);
 int _zip_free_entry(struct zip_entry *);

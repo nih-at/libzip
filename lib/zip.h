@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.33 2003/10/04 07:40:59 dillo Exp $
+  $NiH: zip.h,v 1.34 2003/10/05 16:05:22 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -52,6 +52,10 @@ enum zip_cmd { ZIP_CMD_INIT, ZIP_CMD_READ, ZIP_CMD_META, ZIP_CMD_CLOSE };
 #define ZIP_EXCL             2
 #define ZIP_CHECKCONS        4
 
+/* flags for zip_name_locate */
+#define ZIP_NAME_NOCASE		1
+#define ZIP_NAME_NODIR		2
+
 int zip_err; /* global variable for errors returned by the low-level
 		library */
 
@@ -78,69 +82,14 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_INTERNAL        20  /* N Internal error */
 #define ZERR_INCONS	     21  /* N Zip archive inconsistent */
 
-extern const char * const zip_err_str[];
-extern const int zip_nerr_str;
+#define ZIP_ET_NONE	      0  /* sys_err unused */
+#define ZIP_ET_SYS	      1  /* sys_err is errno */
+#define ZIP_ET_ZIP	      2  /* sys_err is zlib error code */
 
 /* zip file */
 
 typedef int (*zip_read_func)(void *state, void *data,
 			     int len, enum zip_cmd cmd);
-
-struct zip_error {
-    int zip_err;	/* libzip error code (ZERR_*) */
-    int sys_err;	/* copy of errno (E*) */
-    char *str;		/* string representation or NULL */
-};
-
-struct zip {
-    char *zn;
-    FILE *zp;
-    struct zip_error error;
-    unsigned short comlen, changes;
-    unsigned int cd_size, cd_offset;
-    char *com;
-    int nentry, nentry_alloc;
-    struct zip_entry *entry;
-    int nfile, nfile_alloc;
-    struct zip_file **file;
-};
-
-/* file in zip file */
-
-struct zip_file {
-    struct zip *zf;
-    char *name;
-    struct zip_error error;
-    int flags; /* -1: eof, >0: error */
-
-    int method;
-    /* position within zip file (fread/fwrite) */
-    long fpos;
-    /* no of bytes left to read */
-    unsigned long bytes_left;
-    /* no of bytes of compressed data left */
-    unsigned long cbytes_left;
-    /* crc so far */
-    unsigned long crc, crc_orig;
-    
-    char *buffer;
-    z_stream *zstr;
-};
-
-/* entry in zip file directory */
-
-struct zip_entry {
-    struct zip_meta *meta;
-    char *fn;
-    char *fn_old;
-    unsigned int file_fnlen;
-
-    enum zip_state state;
-    zip_read_func ch_func;
-    void *ch_data;
-    int ch_comp;		/* 1: data returned by ch_func is compressed */
-    struct zip_meta *ch_meta;
-};
 
 struct zip_meta {
     unsigned short version_made, version_need, bitflags, comp_method,
@@ -150,6 +99,20 @@ struct zip_meta {
     unsigned short ef_len, lef_len, fc_len;
     unsigned char *ef, *lef, *fc;
 };
+
+struct zip_stat {
+    const char *name;			/* name of the file */
+    int index;				/* index within archive */
+    unsigned int crc;			/* crc of file data */
+    unsigned int size;			/* size of file (uncompressed) */
+    time_t mtime;			/* modification time */
+    unsigned int comp_size;		/* size of file (compressed) */
+    unsigned short comp_method;		/* compression method used */
+    /* unsigned short bitflags; */
+};
+
+struct zip;
+struct zip_file;
 
 
 
@@ -165,17 +128,22 @@ int zip_add_zip(struct zip *, const char *, struct zip_meta *,
 		struct zip *, int, int, int);
 int zip_close(struct zip *);
 int zip_delete(struct zip *, int);
+int zip_error_str(char *, int, int, int);
+int zip_error_sys_type(int);
 int zip_fclose(struct zip_file *);
+void zip_file_get_error(struct zip_file *, int *, int *);
 const char *zip_file_strerror(struct zip_file *);
 struct zip_file *zip_fopen(struct zip *, const char *, int);
 struct zip_file *zip_fopen_index(struct zip *, int);
 int zip_fread(struct zip_file *, char *, int);
 void zip_free_meta(struct zip_meta *);
+void zip_get_error(struct zip *, int *, int *);
 struct zip_meta *zip_get_meta(struct zip *, int);
 const char *zip_get_name(struct zip *, int);
+int zip_get_num_files(struct zip *);
 int zip_name_locate(struct zip *, const char *, int);
 struct zip_meta *zip_new_meta(void);
-struct zip *zip_open(const char *, int);
+struct zip *zip_open(const char *, int, int *);
 int zip_rename(struct zip *, int, const char *);
 int zip_replace(struct zip *, int, const char *, struct zip_meta *,
 		zip_read_func, void *, int);
@@ -187,6 +155,8 @@ int zip_replace_filep(struct zip *, int, const char *, struct zip_meta *,
 		     FILE *, int, int);
 int zip_replace_zip(struct zip *, int, const char *, struct zip_meta *,
 		    struct zip *, int, int, int);
+int zip_stat(struct zip *, const char *, int, struct zip_stat *);
+int zip_stat_index(struct zip *, int, struct zip_stat *);
 const char *zip_strerror(struct zip *);
 int zip_unchange(struct zip *, int);
 int zip_unchange_all(struct zip *);

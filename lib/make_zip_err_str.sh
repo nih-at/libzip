@@ -22,7 +22,7 @@ cat <<EOF >> "$2.$$" || exit 1
 
 
 
-const char * const zip_err_str[] = {
+const char * const _zip_err_str[] = {
 EOF
 
 sed -n  '/^#define ZERR_/ s/.*\/\* . \([^*]*\) \*\//    "\1",/p' "$1" \
@@ -31,7 +31,7 @@ sed -n  '/^#define ZERR_/ s/.*\/\* . \([^*]*\) \*\//    "\1",/p' "$1" \
 cat <<EOF >> "$2.$$" || exit 1
 };
 
-const int zip_nerr_str = sizeof(zip_err_str)/sizeof(zip_err_str[0]);
+const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0]);
 
 #define N ZIP_ET_NONE
 #define S ZIP_ET_SYS

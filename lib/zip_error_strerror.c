@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_error_strerror.c,v 1.1 2003/10/05 16:05:22 dillo Exp $
 
   zip_error_sterror.c -- get string representation of struct zip_error
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,28 +48,45 @@
 const char *
 _zip_error_strerror(struct zip_error *err)
 {
+    const char *zs, *ss;
+    char buf[128], *s;
+
     _zip_error_fini(err);
 
-    if (err->zip_err < 0 || err->zip_err >= zip_nerr_str) {
-	/* XXX */
-	asprintf(&err->str, "Unknown error %d", err->zip_err);
-	return err->str;
+    if (err->zip_err < 0 || err->zip_err >= _zip_nerr_str) {
+	sprintf(buf, "Unknown error %d", err->zip_err);
+	zs = NULL;
+	ss = buf;
+    }
+    else {
+	zs = _zip_err_str[err->zip_err];
+	
+	switch (_zip_err_type[err->zip_err]) {
+	case ZIP_ET_SYS:
+	    ss = strerror(err->sys_err);
+	    break;
+
+	case ZIP_ET_ZIP:
+	    ss = zError(err->sys_err);
+	    break;
+
+	default:
+	    ss = NULL;
+	}
     }
 
-    switch (_zip_err_type[err->zip_err]) {
-    case ZIP_ET_SYS:
-	/* XXX */
-	asprintf(&err->str, "%s: %s",
-		 zip_err_str[err->zip_err], strerror(err->sys_err));
-	return err->str;
+    if (ss == NULL)
+	return zs;
+    else {
+	if ((s=malloc(strlen(ss) + (zs ? strlen(zs)+2 : 0) + 1)) == NULL)
+	    return _zip_err_str[ZERR_MEMORY];
+	
+	sprintf(s, "%s%s%s",
+		(zs ? zs : ""),
+		(zs ? ": " : ""),
+		ss);
+	err->str = s;
 
-    case ZIP_ET_ZIP:
-	/* XXX */
-	asprintf(&err->str, "%s: %s",
-		 zip_err_str[err->zip_err], zError(err->sys_err));
-	return err->str;
-
-    default:
-	return zip_err_str[err->zip_err];
+	return ss;
     }
 }

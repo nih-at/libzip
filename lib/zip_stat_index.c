@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_error.c,v 1.1 2003/10/05 16:05:22 dillo Exp $
+  $NiH$
 
-  zip_error.c -- struct zip_error helper functions
+  zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,47 +35,27 @@
 
 
 
-#include <stdlib.h>
-
 #include "zip.h"
 #include "zipint.h"
 
 
 
-void
-_zip_error_fini(struct zip_error *err)
+int
+zip_stat_index(struct zip *za, int index, struct zip_stat *st)
 {
-    free(err->str);
-    err->str = NULL;
-}
+    if (index < 0 || index >= za->nentry) {
+	_zip_error_set(&za->error, ZERR_INVAL, 0);
+	return -1;
+    }
 
-
+    st->name = za->entry[index].fn;
+    st->index = index;
+    st->crc = za->entry[index].meta->crc;
+    st->size = za->entry[index].meta->uncomp_size;
+    st->mtime = za->entry[index].meta->last_mod;
+    st->comp_size = za->entry[index].meta->comp_size;
+    st->comp_method = za->entry[index].meta->comp_method;
+    /* st->bitflags = za->entry[index].meta->bitflags; */
 
-void
-_zip_error_get(struct zip_error *err, int *zep, int *sep)
-{
-    if (zep)
-	*zep = err->zip_err;
-    /* XXX: only if valid? */
-    if (sep)
-	*sep = err->sys_err;
-}
-
-
-
-void
-_zip_error_init(struct zip_error *err)
-{
-    err->zip_err = 0;
-    err->sys_err = 0;
-    err->str = NULL;
-}
-
-
-
-void
-_zip_error_set(struct zip_error *err, int ze, int se)
-{
-    err->zip_err = ze;
-    err->sys_err = se;
+    return 0;
 }

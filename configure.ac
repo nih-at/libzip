@@ -70,6 +70,7 @@ AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
 		 man/zip_name_locate.3:man/zip_name_locate.${MANFMT}
 		 man/zip_open.3:man/zip_open.${MANFMT}
 		 man/zip_rename.3:man/zip_rename.${MANFMT}
+		 man/zip_stat.3:man/zip_stat.${MANFMT}
 		 man/zip_strerror.3:man/zip_strerror.${MANFMT}
 		 man/zip_unchange.3:man/zip_unchange.${MANFMT}
 		 man/zip_unchange_all.3:man/zip_unchange_all.${MANFMT}])
