@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zipmerge.c,v 1.1 2004/05/15 23:56:55 dillo Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -49,7 +49,7 @@
 
 char *prg;
 
-char *usage = "usage: %s [-hVDiI] target-zip zip...\n";
+char *usage = "usage: %s [-hVDiIsS] target-zip zip...\n";
 
 char help_head[] = PACKAGE " by Dieter Baron and Thomas Klausner\n\n";
 
@@ -59,6 +59,8 @@ char help[] = "\n\
   -D       ignore directory component in file names\n\
   -i       ask before overwriting files\n\
   -I       ignore case in file names\n\
+  -s       overwrite identical files without asking\n\
+  -S       don't overwrite identical files\n\
 \n\
 Report bugs to <nih@giga.or.at>.\n";
 
@@ -69,12 +71,18 @@ You may redistribute copies of\n\
 " PACKAGE " under the terms of the GNU General Public License.\n\
 For more information about these matters, see the files named COPYING.\n";
 
-#define OPTIONS "hVDiI"
+#define OPTIONS "hVDiIsS"
+
+#define CONFIRM_ALL_YES		0x001
+#define CONFIRM_ALL_NO		0x002
+#define CONFIRM_SAME_YES	0x010
+#define CONFIRM_SAME_NO		0x020
 
 int confirm;
 int name_flags;
 
-static int confirm_replace(const char *, const char *, const char *);
+static int confirm_replace(struct zip *, const char *, int,
+			   struct zip *, const char *, int);
 static int merge_zip(struct zip *zt, const char *, const char *);
 
 
@@ -88,7 +96,7 @@ main(int argc, char *argv[])
 
     prg = argv[0];
 
-    confirm = 0;
+    confirm = CONFIRM_ALL_YES;
     name_flags = 0;
 
     while ((c=getopt(argc, argv, OPTIONS)) != -1) {
@@ -97,10 +105,18 @@ main(int argc, char *argv[])
 	    name_flags |= ZIP_FL_NODIR;
 	    break;
 	case 'i':
-	    confirm = 1;
+	    confirm &= ~CONFIRM_ALL_YES;
 	    break;
 	case 'I':
 	    name_flags |= ZIP_FL_NOCASE;
+	    break;
+	case 's':
+	    confirm &= ~CONFIRM_SAME_NO;
+	    confirm |= CONFIRM_SAME_YES;
+	    break;
+	case 'S':
+	    confirm &= ~CONFIRM_SAME_YES;
+	    confirm |= CONFIRM_SAME_NO;
 	    break;
 
 	case 'h':
@@ -148,16 +164,46 @@ main(int argc, char *argv[])
 
 
 static int
-confirm_replace(const char *tname, const char *sname, const char *fname)
+confirm_replace(struct zip *zt, const char *tname, int it,
+		struct zip *zs, const char *sname, int is)
 {
     char line[1024];
+    struct zip_stat st, ss;
 
-    printf("replace `%s' in `%s' from `%s'? ",
-	   fname, tname, sname);
+    if (confirm & CONFIRM_ALL_YES)
+	return 1;
+    else if (confirm & CONFIRM_ALL_NO)
+	return 0;
+
+    if (zip_stat_index(zt, it, ZIP_FL_UNCHANGED, &st) < 0) {
+	fprintf(stderr, "%s: cannot stat file %d in `%s': %s\n",
+		prg, it, tname, zip_strerror(zt));
+	return -1;
+    }
+    if (zip_stat_index(zs, is, 0, &ss) < 0) {
+	fprintf(stderr, "%s: cannot stat file %d in `%s': %s\n",
+		prg, is, sname, zip_strerror(zs));
+	return -1;
+    }
+
+    if (st.size == ss.size && st.crc == ss.crc) {
+	if (confirm & CONFIRM_SAME_YES)
+	    return 1;
+	else if (confirm & CONFIRM_SAME_NO)
+	    return 0;
+    }
+
+    printf("replace `%s' (%qu / %08x) in `%s'\n"
+	   "   with `%s' (%qu / %08x) from `%s'? ",
+	   st.name, st.size, st.crc, tname,
+	   ss.name, ss.size, ss.crc, sname);
     fflush(stdout);
 
-    if (fgets(line, sizeof(line), stdin) == NULL)
-	return 0;
+    if (fgets(line, sizeof(line), stdin) == NULL) {
+	fprintf(stderr, "%s: read error from stdin: %s\n",
+		prg, strerror(errno));
+	return -1;
+    }
 
     if (tolower(line[0]) == 'y')
 	return 1;
@@ -186,13 +232,27 @@ merge_zip(struct zip *zt, const char *tname, const char *sname)
 	fname = zip_get_name(zs, i);
 
 	if ((idx=zip_name_locate(zt, fname, name_flags)) != -1) {
-	    if (!confirm || confirm_replace(tname, sname, fname)) {
-		if (zip_replace_zip(zt, idx, zs, i, 0, 0, 0) < 0) {
+	    switch (confirm_replace(zt, tname, idx, zs, sname, i)) {
+	    case 0:
+		break;
+		
+	    case 1:
+		if ((err=zip_replace_zip(zt, idx, zs, i, 0, 0, 0) < 0)) {
 		    fprintf(stderr,
 			    "%s: cannot replace `%s' in `%s': %s\n",
 			    prg, fname, tname, zip_strerror(zt));
 		    return -1;
 		}
+		break;
+
+	    case -1:
+		return -1;
+		
+	    default:
+		fprintf(stderr,	"%s: internal error: "
+			"unexpected return code from confirm (%d)\n",
+			prg, err);
+		return -1;
 	    }
 	}
 	else {
