@@ -138,8 +138,13 @@ int zip_replace_data(struct zip *zf, int idx, char *name,
 		     struct zip_meta *meta,
 		     char *data, int len, int freep);
 int zip_add_file(struct zip *zf, char *name, struct zip_meta *meta,
-		 FILE *file, int start, int len);
+		     char *fname, int start, int len);
 int zip_replace_file(struct zip *zf, int idx, char *name,
+		     struct zip_meta *meta,
+		     char *fname, int start, int len);
+int zip_add_filep(struct zip *zf, char *name, struct zip_meta *meta,
+		 FILE *file, int start, int len);
+int zip_replace_filep(struct zip *zf, int idx, char *name,
 		     struct zip_meta *meta,
 		     FILE *file, int start, int len);
 int zip_add_zip(struct zip *zf, char *name, struct zip_meta *meta,
