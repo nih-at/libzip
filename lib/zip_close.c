@@ -200,7 +200,7 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 {
     z_stream zstr;
     char b1[BUFSIZE], b2[BUFSIZE];
-    int n, size, crc;
+    int n, size, crc, ret;
     int flush, end, idx;
     struct zip_meta *meta;
 
@@ -258,17 +258,20 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 		    flush = Z_FINISH;
 	    }
 
-	    switch (deflate(&zstr, flush)) {
-	    case Z_OK:
-		if (zstr.avail_out) {
-		    if (_zip_fwrite(b2, 1, BUFSIZE-zstr.avail_out, zf->zp) < 0)
-			return -1;
-		    zstr.next_out = b2;
-		    zstr.avail_out = BUFSIZE;
-		}
-		break;
-		
-	    case Z_STREAM_END:
+	    ret = deflate(&zstr, flush);
+	    if (ret != Z_OK && ret != Z_STREAM_END) {
+		zip_err = ZERR_ZLIB;
+		return -1;
+	    }
+	    
+	    if (zstr.avail_out != BUFSIZE) {
+		if (_zip_fwrite(b2, 1, BUFSIZE-zstr.avail_out, zf->zp) < 0)
+		    return -1;
+		zstr.next_out = b2;
+		zstr.avail_out = BUFSIZE;
+	    }
+
+	    if (ret == Z_STREAM_END) {
 		if (se->ch_func(se->ch_data, meta, 0, ZIP_CMD_META) < 0)
 		    return -1;
 		meta->comp_method = meta->version_need = -1;
@@ -278,12 +281,6 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 
 		deflateEnd(&zstr);
 		end = 1;
-		break;
-
-	    case Z_STREAM_ERROR:
-	    case Z_BUF_ERROR:
-		zip_err = ZERR_ZLIB;
-		return -1;
 	    }
 	}
 
