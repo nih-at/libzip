@@ -1,3 +1,4 @@
+#include "zip.h"
 #include "zipint.h"
 
 int

@@ -24,6 +24,6 @@ struct zip_entry *_zip_new_entry(struct zip *zf);
 int _zip_free_entry(struct zip_entry *ze);
 int _zip_unchange_data(struct zip_entry *ze);
 int _zip_unchange(struct zip_entry *ze);
-int _zip_merge_meta(struct meta *dest, struct meta *src);
+int _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src);
 
 #endif /* zipint.h */

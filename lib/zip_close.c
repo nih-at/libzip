@@ -9,15 +9,15 @@
 #include "zipint.h"
 
 static int _zip_entry_copy(struct zip *dest, struct zip *src,
-			  int entry_no, char *name);
-static int _zip_entry_add(struct zip *dest, struct zip *src, int entry_no);
+			  int entry_no, char *name, struct zip_meta *meta);
+static int _zip_entry_add(struct zip *dest, struct zip_entry *se);
 static int _zip_writecdir(struct zip *zfp);
 static void _zip_write2(FILE *fp, int i);
 static void _zip_write4(FILE *fp, int i);
 static void _zip_writestr(FILE *fp, char *str, int len);
 static int _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp);
 static int _zip_create_entry(struct zip *dest, struct zip_entry *src_entry,
-			     char *name);
+			     char *name, struct zip_meta *meta);
 static void _zip_u2d_time(time_t time, int *ddate, int *dtime);
 static int _zip_fwrite(char *b, int s, int n, FILE *f);
 
@@ -110,7 +110,7 @@ zip_close(struct zip *zf)
 	    case ZIP_ST_REPLACED:
 	    case ZIP_ST_ADDED:
 		/* XXX: rewrite to use new change data format */
-		if (_zip_entry_add(tzf, zf, i)) {
+		if (_zip_entry_add(tzf, zf->entry+i)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
@@ -152,7 +152,8 @@ zip_close(struct zip *zf)
 
 
 static int
-_zip_entry_copy(struct zip *dest, struct zip *src, int entry_no, char *name)
+_zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
+		char *name, struct zip_meta *meta)
 {
     char buf[BUFSIZE];
     unsigned int len, remainder;
@@ -161,9 +162,10 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no, char *name)
 
     null = NULL;
 
-    _zip_create_entry(dest, src->entry+entry_no, name);
+    _zip_create_entry(dest, src->entry+entry_no, name, meta);
 
-    if (fseek(src->zp, src->entry[entry_no].local_offset, SEEK_SET) != 0) {
+    if (fseek(src->zp, src->entry[entry_no].meta->local_offset,
+	      SEEK_SET) != 0) {
 	zip_err = ZERR_SEEK;
 	return -1;
     }
@@ -180,14 +182,14 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no, char *name)
 	return -1;
     }
     
-    tempzfe.fnlen = dest->entry[dest->nentry-1].fnlen;
+    tempzfe.file_fnlen = strlen(dest->entry[dest->nentry-1].fn);
 
     if (_zip_writecdentry(dest->zp, &tempzfe, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
     
-    remainder = src->entry[entry_no].comp_size;
+    remainder = src->entry[entry_no].meta->comp_size;
     len = BUFSIZE;
     while (remainder) {
 	if (len > remainder)
@@ -214,28 +216,25 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
     z_stream zstr;
     char b1[BUFSIZE], b2[BUFSIZE];
     int n, size, crc;
-    int flush, end;
+    int flush, end, idx;
     struct zip_meta *meta;
-    long fpos;
-
-    fpos = ftell(zf->zp);
-
-    if (se->ch_func(se->state, NULL, 0, ZIP_CMD_INIT) != 0)
-	return -1;
 
     _zip_create_entry(zf, NULL, se->fn, se->ch_meta);
     --zf->nentry;
     idx = zf->nentry;
+
+    zf->entry[idx].meta->local_offset = ftell(zf->zp);
+
+    if (se->ch_func(se->ch_data, NULL, 0, ZIP_CMD_INIT) != 0)
+	return -1;
 
     if (_zip_writecdentry(zf->zp, zf->entry+idx, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
 
-    if ((meta=zip_new_meta()) < 0) {
-	fseek(zf->zp, fpos, SEEK_SET);
+    if ((meta=zip_new_meta()) < 0)
 	return -1;
-    }
 
     if (se->ch_comp == 0) { /* we have to compress */
 	zstr.zalloc = Z_NULL;
@@ -259,11 +258,11 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	end = 0;
 	while (!end) {
 	    if (zstr.avail_in == 0 && !flush) {
-		if ((n=se->ch_func(se->state, b1, BUFSIZE,
-				   ZIP_CMD_READ)) < 0)
+		if ((n=se->ch_func(se->ch_data, b1, BUFSIZE,
+				     ZIP_CMD_READ)) < 0)
 		    return -1;
-		zstr->next_in = b1;
-		zstr->avail_in = n;
+		zstr.next_in = b1;
+		zstr.avail_in = n;
 		size += n;
 		crc = crc32(crc, b1, n);
 
@@ -315,21 +314,22 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 
     se->ch_func(se->ch_data, NULL, 0, ZIP_CMD_CLOSE);
 
-    if (fseek(zf->zp, fpos, SEEK_SET) < 0) {
+    if (fseek(zf->zp, zf->entry[idx].meta->local_offset, SEEK_SET) < 0) {
 	zip_err = ZERR_SEEK;
 	return -1;
     }
 
     meta->ef_len = meta->lef_len = meta->fc_len = -1;
-    _zip_meta_merge(zf->entry[idx].meta, meta);
+    _zip_merge_meta(zf->entry[idx].meta, meta);
     
     if (_zip_writecdentry(zf->zp, zf->entry+idx, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
 
-    _zip_free_meta(meta);
+    zip_free_meta(meta);
 
+    zf->nentry++;
     return 0;
 }
 
@@ -342,7 +342,7 @@ _zip_fwrite(char *b, int s, int n, FILE *f)
 
     writ = 0;
 
-    while (left<n) {
+    while (writ<n) {
 	if ((ret=fwrite(b, s, n-writ, f)) < 0) {
 	    zip_err = ZERR_WRITE;
 	    return ret;
@@ -435,37 +435,46 @@ _zip_writestr(FILE *fp, char *str, int len)
 static int
 _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp)
 {
+    int ltime, ldate;
+
     fprintf(fp, "%s", localp?LOCAL_MAGIC:CENTRAL_MAGIC);
     
     if (!localp)
-	_zip_write2(fp, zfe->version_made);
-    _zip_write2(fp, zfe->version_need);
-    _zip_write2(fp, zfe->bitflags);
-    _zip_write2(fp, zfe->comp_meth);
-    _zip_write2(fp, zfe->lmtime);
-    _zip_write2(fp, zfe->lmdate);
+	_zip_write2(fp, zfe->meta->version_made);
+    _zip_write2(fp, zfe->meta->version_need);
+    _zip_write2(fp, zfe->meta->bitflags);
+    _zip_write2(fp, zfe->meta->comp_method);
+    _zip_u2d_time(zfe->meta->last_mod, &ldate, &ltime);
+    _zip_write2(fp, ltime);
+    _zip_write2(fp, ldate);
 
-    _zip_write4(fp, zfe->crc);
-    _zip_write4(fp, zfe->comp_size);
-    _zip_write4(fp, zfe->uncomp_size);
-    
-    _zip_write2(fp, zfe->fnlen);
-    _zip_write2(fp, zfe->eflen);
-    if (!localp) {
-	_zip_write2(fp, zfe->fcomlen);
-	_zip_write2(fp, zfe->disknrstart);
-	_zip_write2(fp, zfe->intatt);
+    _zip_write4(fp, zfe->meta->crc);
+    _zip_write4(fp, zfe->meta->comp_size);
+    _zip_write4(fp, zfe->meta->uncomp_size);
 
-	_zip_write4(fp, zfe->extatt);
-	_zip_write4(fp, zfe->local_offset);
+    _zip_write2(fp, strlen(zfe->fn));
+    if (localp)
+	_zip_write2(fp, zfe->meta->lef_len);
+    else {
+	_zip_write2(fp, zfe->meta->lef_len);
+	_zip_write2(fp, zfe->meta->fc_len);
+	_zip_write2(fp, zfe->meta->disknrstart);
+	_zip_write2(fp, zfe->meta->int_attr);
+	_zip_write4(fp, zfe->meta->ext_attr);
+	_zip_write4(fp, zfe->meta->local_offset);
     }
     
-    if (zfe->fnlen)
-	_zip_writestr(fp, zfe->fn, zfe->fnlen);
-    if (zfe->eflen)
-	_zip_writestr(fp, zfe->ef, zfe->eflen);
-    if (zfe->fcomlen)
-	_zip_writestr(fp, zfe->fcom, zfe->fcomlen);
+    _zip_writestr(fp, zfe->fn, strlen(zfe->fn));
+    if (localp) {
+	if (zfe->meta->lef_len)
+	    _zip_writestr(fp, zfe->meta->lef, zfe->meta->lef_len);
+    }
+    else {
+	if (zfe->meta->ef_len)
+	    _zip_writestr(fp, zfe->meta->ef, zfe->meta->ef_len);
+	if (zfe->meta->fc_len)
+	    _zip_writestr(fp, zfe->meta->fc, zfe->meta->fc_len);
+    }
 
     if (ferror(fp))
 	return -1;
@@ -476,85 +485,99 @@ _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp)
 
 
 static int
-_zip_create_entry(struct zip *dest, struct zip_entry *src_entry, char *name)
+_zip_create_entry(struct zip *dest, struct zip_entry *se,
+		  char *name, struct zip_meta *meta)
 {
-    time_t now_t;
-    struct tm *now;
+    struct zip_entry *de;
 
     if (!dest)
 	return -1;
     
-    _zip_new_entry(dest);
+    de = _zip_new_entry(dest);
 
-    if (!src_entry) {
+    if (!se) {
 	/* set default values for central directory entry */
-	dest->entry[dest->nentry-1].version_made = 20;
-	dest->entry[dest->nentry-1].version_need = 20;
+	de->meta->version_made = 20;
+	de->meta->version_need = 20;
 	/* maximum compression */
-	dest->entry[dest->nentry-1].bitflags = 2;
+	de->meta->bitflags = 2;
 	/* deflate algorithm */
-	dest->entry[dest->nentry-1].comp_meth = 8;
-	/* standard MS-DOS format time & date of compression start --
-	   thanks Info-Zip! (+1 for rounding) */
-	now_t = time(NULL)+1;
-	now = localtime(&now_t);
-	dest->entry[dest->nentry-1].lmtime = ((now->tm_year+1900-1980)<<9)+
-	    ((now->tm_mon+1)<<5) + now->tm_mday;
-	dest->entry[dest->nentry-1].lmdate = ((now->tm_hour)<<11)+
-	    ((now->tm_min)<<5) + ((now->tm_sec)>>1);
-	dest->entry[dest->nentry-1].fcomlen = 0;
-	dest->entry[dest->nentry-1].eflen = 0;
-	dest->entry[dest->nentry-1].disknrstart = 0;
+	de->meta->comp_method = 8;
+	de->meta->last_mod = time(NULL)+1;
+	de->meta->fc_len = 0;
+	de->meta->ef_len = 0;
+	de->meta->lef_len = 0;
+	de->meta->disknrstart = 0;
 	/* binary data */
-	dest->entry[dest->nentry-1].intatt = 0;
+	de->meta->int_attr = 0;
 	/* init CRC-32, compressed and uncompressed size
 	   XXX: will be updated later */
-	dest->entry[dest->nentry-1].crc = crc32(0, 0, 0);
-	dest->entry[dest->nentry-1].comp_size = 0;
-	dest->entry[dest->nentry-1].uncomp_size = 0;
-	dest->entry[dest->nentry-1].extatt = 0;
-	dest->entry[dest->nentry-1].ef = NULL;
-	dest->entry[dest->nentry-1].fcom = NULL;
+	de->meta->crc = crc32(0, 0, 0);
+	de->meta->comp_size = 0;
+	de->meta->uncomp_size = 0;
+	de->meta->ext_attr = 0;
+	de->meta->ef = NULL;
+	de->meta->lef = NULL;
+	de->meta->fc = NULL;
     } else {
 	/* copy values from original zf_entry */
-	dest->entry[dest->nentry-1].version_made = src_entry->version_made;
-	dest->entry[dest->nentry-1].version_need = src_entry->version_need;
-	dest->entry[dest->nentry-1].bitflags = src_entry->bitflags;
-	dest->entry[dest->nentry-1].comp_meth = src_entry->comp_meth;
-	dest->entry[dest->nentry-1].lmtime = src_entry->lmtime;
-	dest->entry[dest->nentry-1].lmdate = src_entry->lmdate;
-	dest->entry[dest->nentry-1].fcomlen = src_entry->fcomlen;
-	dest->entry[dest->nentry-1].eflen = src_entry->eflen;
-	dest->entry[dest->nentry-1].disknrstart = src_entry->disknrstart;
-	dest->entry[dest->nentry-1].intatt = src_entry->intatt;
-	dest->entry[dest->nentry-1].crc = src_entry->crc;
-	dest->entry[dest->nentry-1].comp_size = src_entry->comp_size;
-	dest->entry[dest->nentry-1].uncomp_size = src_entry->uncomp_size;
-	dest->entry[dest->nentry-1].extatt = src_entry->extatt;
-	dest->entry[dest->nentry-1].ef = (char *)_zip_memdup(src_entry->ef,
-							     src_entry->eflen);
-	dest->entry[dest->nentry-1].fcom =
-	    (char *)_zip_memdup(src_entry->fcom, src_entry->fcomlen);
+	de->meta->version_made = se->meta->version_made;
+	de->meta->version_need = se->meta->version_need;
+	de->meta->bitflags = se->meta->bitflags;
+	de->meta->comp_method = se->meta->comp_method;
+	de->meta->last_mod = se->meta->last_mod;
+	de->meta->disknrstart = se->meta->disknrstart;
+	de->meta->int_attr = se->meta->int_attr;
+	de->meta->crc = se->meta->crc;
+	de->meta->comp_size = se->meta->comp_size;
+	de->meta->uncomp_size = se->meta->uncomp_size;
+	de->meta->ext_attr = se->meta->ext_attr;
+	if (se->meta->ef_len > 0 && se->meta->ef) {
+	    de->meta->ef_len = se->meta->ef_len;
+	    de->meta->ef = (char *)_zip_memdup(se->meta->ef,
+					       se->meta->ef_len);
+	}
+	else {
+	    de->meta->ef_len = 0;
+	    de->meta->ef = NULL;
+	}
+	if (se->meta->lef_len > 0 && se->meta->lef) {
+	    de->meta->lef_len = se->meta->lef_len;
+	    de->meta->lef = (char *)_zip_memdup(se->meta->lef,
+						se->meta->lef_len);
+	}
+	else {
+	    de->meta->lef_len = 0;
+	    de->meta->lef = NULL;
+	}
+	if (se->meta->fc_len > 0 && se->meta->fc) {
+	    de->meta->fc_len = se->meta->fc_len;
+	    de->meta->fc = (char *)_zip_memdup(se->meta->fc,
+					       se->meta->fc_len);
+	}
+	else {
+	    de->meta->fc_len = 0;
+	    de->meta->fc = NULL;
+	}
+    }
+	
+    de->meta->local_offset = ftell(dest->zp);
+
+    if (name)
+	de->fn = strdup(name);
+    else if (se && se->fn)
+	de->fn = strdup(se->fn);
+    else {
+	de->fn = strdup("-");
     }
 
-    dest->entry[dest->nentry-1].local_offset = ftell(dest->zp);
-
-    if (name) {
-	dest->entry[dest->nentry-1].fn = strdup(name);
-	dest->entry[dest->nentry-1].fnlen = strlen(name);
-    } else if (src_entry && src_entry->fn) {
-	dest->entry[dest->nentry-1].fn = strdup(src_entry->fn);
-	dest->entry[dest->nentry-1].fnlen = src_entry->fnlen;
-    } else {
-	dest->entry[dest->nentry-1].fn = strdup("-");
-	dest->entry[dest->nentry-1].fnlen = 1;
-    }
-
-    if (!dest->entry[dest->nentry-1].fn) {
+    if (!de->fn) {
 	dest->nentry--;
 	zip_err = ZERR_MEMORY;
 	return -1;
     }
+
+    _zip_merge_meta(de->meta, meta);
 
     return 0;
 }

@@ -85,7 +85,7 @@ struct zip_entry {
     unsigned int file_fnlen;
 
     enum zip_state state;
-    zip_read_func *ch_func;
+    zip_read_func ch_func;
     void *ch_data;
     int ch_comp;
     struct zip_meta *ch_meta;
@@ -127,7 +127,7 @@ int zip_rename(struct zip *zf, int idx, char *name);
 int zip_delete(struct zip *zf, int idx);
 
 int zip_replace(struct zip *zf, int idx, char *name, struct zip_meta *meta,
-		zip_read_func *fn, void *state, int comp);
+		zip_read_func fn, void *state, int comp);
 
 int zip_add_data(struct zip *zf, char *name, struct zip_meta *meta,
 		 char *data, int len, int freep);

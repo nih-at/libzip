@@ -5,7 +5,7 @@
 
 int
 zip_replace(struct zip *zf, int idx, char *name, struct zip_meta *meta,
-	    zip_read_func *fn, void *state, int comp)
+	    zip_read_func fn, void *state, int comp)
 {
     if (idx == -1) {
 	if (_zip_new_entry(zf) == NULL)
@@ -19,7 +19,7 @@ zip_replace(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 	return -1;
     }
 
-    if (_zip_unchange_data(zf+idx) != 0)
+    if (_zip_unchange_data(zf->entry+idx) != 0)
 	return -1;
 
     if (_zip_set_name(zf, idx, name) != 0)
@@ -27,6 +27,8 @@ zip_replace(struct zip *zf, int idx, char *name, struct zip_meta *meta,
     
     zf->changes = 1;
     zf->entry[idx].state = ZIP_ST_REPLACED;
+    if (zf->entry[idx].ch_meta)
+	zip_free_meta(zf->entry[idx].ch_meta);
     zf->entry[idx].ch_meta = meta;
     zf->entry[idx].ch_func = fn;
     zf->entry[idx].ch_data = state;

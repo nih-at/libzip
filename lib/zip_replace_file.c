@@ -8,7 +8,7 @@ struct read_file {
     int off, len;
 };
 
-static zip_read_func read_file;
+static int read_file(void *state, void *data, int len, enum zip_cmd cmd);
 
 
 

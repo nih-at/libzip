@@ -9,7 +9,8 @@ struct read_data {
     int freep;
 };
 
-static zip_read_func read_data;
+static int read_data(void *state, void *data, int len, enum zip_cmd cmd);
+
 
 
 
