@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp 
-.\" $NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp $
+.\" from NiH: zip_name_locate.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
+.\" $NiH: zip_name_locate.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
 .\"
-.\" zip_delete.mdoc \-\- delete files from zip archive
+.\" zip_name_locate.mdoc \-\- get index by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,36 +33,27 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_DELETE 3 "October 3, 2003" NiH
+.TH ZIP_NAME_LOCATE 3 "October 3, 2003" NiH
 .SH "NAME"
-zip_delete \- delete file from zip archive
+zip_name_locate \- get index of file by name
 .SH "LIBRARY"
 libzip (\-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
-.Fn zip_delete "struct zip *archive" "int index"
+.Fn zip_name_locate "struct zip *archive" "const char *fname" "int case_sens"
 .SH "DESCRIPTION"
-The file at position
-\fBindex\fR
-in the zip archive
-\fBarchive\fR
-is marked as deleted.
-.SH "RETURN VALUES"
-Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the global variable
-.Va zip_err
-is set to indicate the error.
-.SH "ERRORS"
-.Fn zip_delete
-fails if:
-.RS
-.TP 4
-Bq Er ZERR_INVAL
-\fBindex\fR
-is not a valid file index in
+The
+.Fn zip_name_locate
+function returns the index of the file named
+\fBfname\fR
+in
 \fBarchive.\fR
-.\: XXX: also ch_func ZIP_CMD_CLOSE errors
-.RE
-.SH "SEE ALSO"
-zip_unchange(3)
+If
+\fBcase_sens\fR
+is zero, case is ignored.
+If
+\fBarchive\fR
+does not contain a file with that name, \\-1 is returned.
+.\".SH "RETURN VALUES"
+.\".SH "SEE ALSO"

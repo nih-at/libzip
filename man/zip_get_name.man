@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp 
-.\" $NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp $
+.\" from NiH: zip_get_name.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
+.\" $NiH: zip_get_name.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
 .\"
-.\" zip_delete.mdoc \-\- delete files from zip archive
+.\" zip_name_locate.mdoc \-\- get index of file by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,28 +33,34 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_DELETE 3 "October 3, 2003" NiH
+.TH ZIP_NAME_LOCATE 3 "October 3, 2003" NiH
 .SH "NAME"
-zip_delete \- delete file from zip archive
+zip_name_locate \- get index of file by name
 .SH "LIBRARY"
 libzip (\-lzip)
 .SH "SYNOPSIS"
 .In zip.h
-.Ft int
-.Fn zip_delete "struct zip *archive" "int index"
+.Ft const char *
+.Fn zip_get_name "struct zip *archive" "int index"
 .SH "DESCRIPTION"
-The file at position
+The
+.Fn zip_get_name
+function returns the name of the file at position
 \fBindex\fR
-in the zip archive
-\fBarchive\fR
-is marked as deleted.
+in
+\fBarchive.\fR
+The returned string must not be modified or freed, and becomes invalid when
+\fBarchvie\fR
+is closed.
 .SH "RETURN VALUES"
-Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the global variable
+Upon successful completion, a pointer to the name is returned.
+Otherwise, 
+.Dv NULL
+is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_delete
+.Fn zip_get_name
 fails if:
 .RS
 .TP 4
@@ -62,7 +68,4 @@ Bq Er ZERR_INVAL
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR
-.\: XXX: also ch_func ZIP_CMD_CLOSE errors
-.RE
-.SH "SEE ALSO"
-zip_unchange(3)
+.\".SH "SEE ALSO"
