@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.37.4.1 2004/03/20 09:54:05 dillo Exp $
+  $NiH: zip_close.c,v 1.37.4.2 2004/03/23 16:05:38 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -46,6 +46,7 @@
 #include "zip.h"
 #include "zipint.h"
 
+#if 0
 static int _zip_entry_copy(struct zip *dest, struct zip *src,
 			   int entry_no, struct zip_meta *meta);
 static int _zip_entry_add(struct zip *dest, struct zip_entry *se);
@@ -59,41 +60,37 @@ static struct zip_entry *_zip_create_entry(struct zip *dest,
 			                   char *name, struct zip_meta *meta);
 static void _zip_u2d_time(time_t time, int *ddate, int *dtime);
 static int _zip_fwrite(char *b, int s, int n, FILE *f);
+#endif
 
 
-
-/* zip_close:
-   Tries to commit all changes and close the zipfile; if it fails,
-   zip_err (and errno) are set and *zf is unchanged, except for
-   problems in _zip_free. */ 
 
 int
 zip_close(struct zip *zf)
 {
-    int i, count, tfd, ret, survivors;
+    int changed, survivors;
+    int i, count, tfd, ret;
     char *temp;
     FILE *tfp;
-    struct zip *tzf;
     mode_t mask;
+    struct zip_cdir *cd;
 
-    count = survivors = 0;
+    changed = survivors = 0;
     for (i=0; i<zf->nentry; i++) {
 	if (zf->entry[i].state != ZIP_ST_UNCHANGED)
-	    count = 1;
+	    changed = 1;
 	if (zf->entry[i].state != ZIP_ST_DELETED)
 	    survivors = 1;
-	if (survivors && count)
+	if (survivors && changed)
 	    break;
     }
 
-    /* no changes */
-    if (count == 0) {
+    if (!changed) {
 	_zip_free(zf);
 	return 0;
     }
 
     /* don't create zip files with no entries */
-    if (survivors == 0) {
+    if (!survivors) {
 	ret = 0;
 	if (zf->zn)
 	    ret = remove(zf->zn);
@@ -102,46 +99,43 @@ zip_close(struct zip *zf)
 	return ret;
     }	       
 	
-    temp = (char *)malloc(strlen(zf->zn)+8);
-    if (!temp) {
+    if ((cd=malloc(sizeof(*cd))) == NULL) {
 	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	return -1;
     }
+    cd->nentry = 0;
 
-#if 0
+    if ((cd->entry=malloc(sizeof(*(cd->entry))*zf->nentry)) == NULL) {
+	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	free(cd);
+	return -1;
+    }
+
+    if ((temp=malloc(strlen(zf->zn)+8)) == NULL) {
+	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	_zip_cdir_free(cd);
+	return -1;
+    }
+
     sprintf(temp, "%s.XXXXXX", zf->zn);
 
-    tfd = mkstemp(temp);
-    if (tfd == -1) {
+    if ((tfd=mkstemp(temp)) == -1) {
 	_zip_error_set(&zf->error, ZERR_TMPOPEN, errno);
+	_zip_cdir_free(cd);
 	free(temp);
 	return -1;
     }
     
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
 	_zip_error_set(&zf->error, ZERR_TMPOPEN, errno);
+	_zip_cdir_free(cd);
 	close(tfd);
 	remove(temp);
 	free(temp);
 	return -1;
     }
 
-    if ((tzf=_zip_new(&zf->error.zip_err)) == NULL) {
-	fclose(tfp);
-	remove(temp);
-	free(temp);
-	return -1;
-    }
-    tzf->zp = tfp;
-    tzf->zn = temp;
-    tzf->comlen = zf->comlen;
-    if ((tzf->com=(unsigned char *)_zip_memdup(zf->com, zf->comlen)) == NULL) {
-	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
-	remove(tzf->zn);
-	_zip_free(tzf);
-	return -1;
-    }
-
+#if 0
     count = 0;
     if (zf->entry) {
 	for (i=0; i<zf->nentry; i++) {
