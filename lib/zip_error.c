@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_error.c,v 1.4 2004/04/14 14:01:23 dillo Exp $
+  $NiH: zip_error.c,v 1.5 2004/04/16 09:40:27 dillo Exp $
 
   zip_error.c -- struct zip_error helper functions
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -65,9 +65,12 @@ _zip_error_get(struct zip_error *err, int *zep, int *sep)
 {
     if (zep)
 	*zep = err->zip_err;
-    /* XXX: only if valid? */
-    if (sep)
-	*sep = err->sys_err;
+    if (sep) {
+	if (zip_error_get_sys_type(err->zip_err) != ZIP_ET_NONE)
+	    *sep = err->sys_err;
+	else
+	    *sep = 0;
+    }
 }
 
 

@@ -1,5 +1,8 @@
 2005-01-11  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
+	* lib/zip_error.c (_zip_error_get): set system error to 0 for
+	ZIP_ET_NONE.
+
 	* lib/zip_open.c (_zip_memdup): make static, use size_t for size
 	argument, add error argument for passing error code back to
 	caller.
