@@ -180,7 +180,8 @@ int zip_replace_zip(struct zip *zf, int idx, char *name,
 		    struct zip_meta *meta,
 		    struct zip *srczf, int srcidx, int start, int len);
 
+/* lose all changes to one or all file(s) */
 int zip_unchange(struct zip *zf, int idx);
-
+int zip_unchange_all(struct zip *zf);
 
 #endif /* _HAD_ZIP_H */

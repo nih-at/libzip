@@ -35,7 +35,7 @@ static struct zip_file *_zip_file_new(struct zip *zf);
 struct zip_file *
 zip_fopen_index(struct zip *zf, int fileno)
 {
-    unsigned char buf[4], *c;
+    unsigned char buf[4];
     int len;
     struct zip_file *zff;
 
@@ -67,9 +67,12 @@ zip_fopen_index(struct zip *zf, int fileno)
     zff->crc_orig = zf->entry[fileno].meta->crc;
 
     /* go to start of actual data */
-    fseek (zf->zp, zf->entry[fileno].meta->local_offset+LENTRYSIZE-4,
-	   SEEK_SET);
-    /* XXX: check fseek error */
+    if (fseek(zf->zp, zf->entry[fileno].meta->local_offset+LENTRYSIZE-4,
+	      SEEK_SET) < 0) {
+	zip_err = ZERR_SEEK;
+	zip_fclose(zff);
+	return NULL;
+    }
     len = fread(buf, 1, 4, zf->zp);
     if (len != 4) {
 	zip_err = ZERR_READ;
@@ -77,11 +80,11 @@ zip_fopen_index(struct zip *zf, int fileno)
 	return NULL;
     }
     
-    c = buf;
     zff->fpos = zf->entry[fileno].meta->local_offset+LENTRYSIZE;
-    zff->fpos += (c[3]<<8)+c[2]+(c[1]<<8)+c[0];
+    zff->fpos += (buf[3]<<8)+buf[2]+(buf[1]<<8)+buf[0];
 	
-    if (zf->entry[fileno].meta->comp_method == 0)
+    if ((zf->entry[fileno].meta->comp_method == 0)
+	|| (zff->bytes_left == 0))
 	return zff;
     
     if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {
@@ -92,7 +95,6 @@ zip_fopen_index(struct zip *zf, int fileno)
 
     len = _zip_file_fillbuf (zff->buffer, BUFSIZE, zff);
     if (len <= 0) {
-	/* XXX: error handling */
 	zip_fclose(zff);
 	return NULL;
     }
@@ -110,9 +112,7 @@ zip_fopen_index(struct zip *zf, int fileno)
 
     /* negative value to tell zlib that there is no header */
     if (inflateInit2(zff->zstr, -MAX_WBITS) != Z_OK) {
-	/* XXX: error here 
-	   myerror(ERRFILE, zff->zstr->msg);
-	*/
+	zip_err = ZERR_ZLIB;
 	zip_fclose(zff);
 	return NULL;
     }
@@ -132,15 +132,20 @@ _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff)
     if (zff->cbytes_left <= 0 || buflen <= 0)
 	return 0;
     
-    fseek(zff->zf->zp, zff->fpos, SEEK_SET);
+    if (fseek(zff->zf->zp, zff->fpos, SEEK_SET) < 0) {
+	zff->flags = ZERR_SEEK;
+	return -1;
+    }
     if (buflen < zff->cbytes_left)
 	i = buflen;
     else
 	i = zff->cbytes_left;
 
     j = fread(buf, 1, i, zff->zf->zp);
-    if (j == 0) 
-	zff->flags = ZERR_SEEK;
+    if (j == 0) {
+	zff->flags = ZERR_EOF;
+	j = -1;
+    }
     else if (j < 0)
 	zff->flags = ZERR_READ;
     else {

@@ -155,7 +155,6 @@ zip_close(struct zip *zf)
 		break;
 	    case ZIP_ST_REPLACED:
 	    case ZIP_ST_ADDED:
-		/* XXX: rewrite to use new change data format */
 		if (_zip_entry_add(tzf, zf->entry+i)) {
 		    /* zip_err set by _zip_entry_add */
 		    remove(tzf->zn);
@@ -178,7 +177,7 @@ zip_close(struct zip *zf)
 	    _zip_free(tzf);
 	    return -1;
 	}
-	mask=umask(0);
+	mask = umask(0);
 	umask(mask);
 	chmod(zf->zn, 0666&~mask);
     }
@@ -267,8 +266,15 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 
     size = 0;
     
-    if (se->ch_comp == 0) { /* we have to compress */
-	/* XXX: check compression method */
+    if ((se->ch_comp == 0) || (se->ch_meta
+			       && (se->ch_meta->comp_method == 0))) {
+	/* we have to compress */
+	if (se->ch_meta && ((se->ch_meta->comp_method > 0)
+			    && (se->ch_meta->comp_method != 8))) {
+	    /* unknown compression method */
+	    zip_err = ZERR_INVAL;
+	    return -1;
+	}
 	zstr.zalloc = Z_NULL;
 	zstr.zfree = Z_NULL;
 	zstr.opaque = NULL;
@@ -278,7 +284,6 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	/* -15: undocumented feature of zlib to _not_ write a zlib header */
 	deflateInit2(&zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -15, 9,
 		     Z_DEFAULT_STRATEGY);
-
 
 	zstr.next_out = b2;
 	zstr.avail_out = BUFSIZE;

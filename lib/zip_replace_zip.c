@@ -31,7 +31,7 @@ struct read_zip {
     int idx;
     long fpos;
     long avail;
-    /* ... */
+    /* XXX: ... */
 };
 
 struct read_part {
@@ -39,7 +39,7 @@ struct read_part {
     int idx;
     struct zip_file *zff;
     int off, len;
-    /* ... */
+    /* XXX: ... */
 };
 
 static int read_zip(void *state, void *data, int len, enum zip_cmd cmd);

@@ -35,11 +35,11 @@ zip_fread(struct zip_file *zff, char *outbuf, int toread)
     if (!zff)
 	return -1;
 
+    if ((zff->flags == -1) || (toread == 0))
+	return 0;
+
     if (zff->flags != 0)
 	return -1;
-
-    if (toread == 0)
-	return 0;
 
     if (zff->bytes_left == 0) {
 	zff->flags = -1;
@@ -71,7 +71,7 @@ zip_fread(struct zip_file *zff, char *outbuf, int toread)
 	case Z_OK:
 	case Z_STREAM_END:
 	    /* all ok */
-	    /* XXX: Z_STREAM_END probably won't happen, since we didn't
+	    /* Z_STREAM_END probably won't happen, since we didn't
 	       have a header */
 	    len = zff->zstr->total_out - out_before;
 	    if (len >= zff->bytes_left || len >= toread) {
@@ -85,25 +85,23 @@ zip_fread(struct zip_file *zff, char *outbuf, int toread)
 	    if (zff->zstr->avail_in == 0) {
 		/* read some more bytes */
 		len = _zip_file_fillbuf(zff->buffer, BUFSIZE, zff);
-		if (len <= 0) {
-		    /* XXX: error
-		       myerror (ERRSTR, "read error");
-		    */
+		if (len == 0) {
+		    zff->flags = ZERR_INCONS;
 		    return -1;
 		}
+		else if (len < 0)
+		    return -1;
 		zff->zstr->next_in = zff->buffer;
 		zff->zstr->avail_in = len;
 		continue;
 	    }
-	    /* XXX: set error */
-	    zip_err = ZERR_ZLIB;
+	    zff->flags = ZERR_ZLIB;
 	    return -1;
 	case Z_NEED_DICT:
 	case Z_DATA_ERROR:
 	case Z_STREAM_ERROR:
 	case Z_MEM_ERROR:
-	    /* XXX: set error */
-	    zip_err = ZERR_ZLIB;
+	    zff->flags = ZERR_ZLIB;
 	    return -1;
 	}
     }

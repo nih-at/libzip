@@ -1,5 +1,5 @@
 /*
-  zip_unchange.c -- undo changes to file in zip file
+  zip_unchange.c -- undo changes to all files in zip file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 
   This file is part of libzip, a library to manipulate ZIP files.
@@ -29,23 +29,18 @@
 
 
 int
-zip_unchange(struct zip *zf, int idx)
+zip_unchange_all(struct zip *zf)
 {
-    int ret;
+    int ret, i;
     
-    if (!zf || idx < 0 || idx >= zf->nentry) {
+    if (!zf) {
 	zip_err = ZERR_INVAL;
 	return -1;
     }
 
-    if (zf->entry[idx].fn_old) {
-	free(zf->entry[idx].fn);
-	zf->entry[idx].fn = zf->entry[idx].fn_old;
-	zf->entry[idx].fn_old = NULL;
-    }
-
-    zip_free_meta(zf->entry[idx].ch_meta);
-    ret = _zip_unchange_data(zf->entry+idx);
+    ret = 0;
+    for (i=0; i<zf->nentry; i++)
+	ret |= zip_unchange(zf, i);
         
     return ret;
 }
