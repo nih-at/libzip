@@ -2,7 +2,7 @@
 .\" from NiH: zip_get_name.mdoc,v 1.2 2003/10/03 23:34:23 wiz Exp 
 .\" $NiH: zip_get_name.mdoc,v 1.2 2003/10/03 23:34:23 wiz Exp $
 .\"
-.\" zip_name_locate.mdoc \-- get index of file by name
+.\" zip_get_name.mdoc \-- get name of file by index
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,9 +33,9 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_NAME_LOCATE 3 "October 3, 2003" NiH
+.TH ZIP_GET_NAME 3 "October 3, 2003" NiH
 .SH "NAME"
-zip_name_locate \- get index of file by name
+zip_get_name \- get name of file by index
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
@@ -68,4 +68,5 @@ Bq Er ZERR_INVAL
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR
-.\".SH "SEE ALSO"
+.SH "SEE ALSO"
+zip_name_locate(3)

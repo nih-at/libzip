@@ -1,6 +1,6 @@
-.\" $NiH: zip_get_name.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
+.\" $NiH: zip_get_name.mdoc,v 1.2 2003/10/03 23:34:23 wiz Exp $
 .\"
-.\" zip_name_locate.mdoc -- get index of file by name
+.\" zip_get_name.mdoc -- get name of file by index
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -32,11 +32,11 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd October 3, 2003
-.Dt ZIP_NAME_LOCATE 3
+.Dt ZIP_GET_NAME 3
 .Os
 .Sh NAME
-.Nm zip_name_locate
-.Nd get index of file by name
+.Nm zip_get_name
+.Nd get name of file by index
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
@@ -68,4 +68,5 @@ fails if:
 .Ar index
 is not a valid file index in
 .Ar archive .
-.\" .Sh SEE ALSO
+.Sh SEE ALSO
+.Xr zip_name_locate 3
