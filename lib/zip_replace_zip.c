@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.17.4.4 2004/03/23 16:07:51 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.17.4.5 2004/04/06 20:30:06 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,11 +48,9 @@ struct read_zip {
 };
 
 struct read_part {
-    struct zip *zf;
-    int idx;
-    struct zip_file *zff;
+    struct zip_file *zf;
+    struct zip_stat st;
     off_t off, len;
-    /* XXX: ... */
 };
 
 static ssize_t read_zip(void *st, void *data, size_t len, enum zip_cmd cmd);
@@ -78,6 +76,7 @@ int
 _zip_replace_zip(struct zip *zf, int idx, const char *name,
 		 struct zip *srczf, int srcidx, off_t start, off_t len)
 {
+    int ze, se;
     struct read_zip *z;
     struct read_part *p;
 
@@ -95,18 +94,30 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	}
 	z->zf = srczf;
 	z->idx = srcidx;
-	return _zip_replace(zf, idx, name, read_zip, z, 1);
+	return _zip_replace(zf, idx, name, read_zip, z, ZIP_CH_ISCOMP);
     }
     else {
-	if ((p=(struct read_part *)malloc(sizeof(struct read_part))) == NULL) {
+	if ((p=malloc(sizeof(*p))) == NULL) {
 	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	    return -1;
 	}
-	p->zf = srczf;
-	p->idx = srcidx;
+	
+	ze = srczf->error.zip_err;
+	se = srczf->error.sys_err;
+	
+	if (zip_stat_index(srczf, idx, &p->st) < 0
+	    || (p->zf=zip_fopen_index(srczf, idx)) == NULL) {
+	    free(p);
+	    _zip_error_set(&zf->error,
+			   srczf->error.zip_err, srczf->error.sys_err);
+	    srczf->error.zip_err = ze;
+	    srczf->error.sys_err = se;
+
+	    return -1;
+	}
 	p->off = start;
 	p->len = (len ? len : -1);
-	p->zff = NULL;
+
 	return _zip_replace(zf, idx, name, read_part, p, 0);
     }
 }
@@ -168,15 +179,11 @@ read_part(void *state, void *data, size_t len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
-	/* XXX: preserve error from z->zf */
-	if ((z->zff=zip_fopen_index(z->zf, z->idx) ) == NULL)
-	    return -1;
-
 	for (n=0; n<z->off; n+= i) {
 	    i = (z->off-n > 8192 ? 8192 : z->off-n);
-	    if ((i=zip_fread(z->zff, b, i)) < 0) {
-		zip_fclose(z->zff);
-		z->zff = NULL;
+	    if ((i=zip_fread(z->zf, b, i)) < 0) {
+		zip_fclose(z->zf);
+		z->zf = NULL;
 		return -1;
 	    }
 	}
@@ -188,7 +195,8 @@ read_part(void *state, void *data, size_t len, enum zip_cmd cmd)
 	else
 	    n = len;
 	
-	if ((i=zip_fread(z->zff, buf, n)) < 0) {
+
+	if ((i=zip_fread(z->zf, buf, n)) < 0) {
 	    /* XXX: copy error from z->zff */
 	    return -1;
 	}
@@ -199,15 +207,19 @@ read_part(void *state, void *data, size_t len, enum zip_cmd cmd)
 	return i;
 	
     case ZIP_CMD_CLOSE:
-	if (z->zff) {
-	    zip_fclose(z->zff);
-	    z->zff = NULL;
-	}
+	zip_fclose(z->zf);
 	free(z);
 	return 0;
 
-	default:
-	    ;
+    case ZIP_CMD_STAT:
+	if (len < sizeof(z->st))
+	    return -1;
+
+	memcpy(data, &z->st, sizeof(z->st));
+	return 0;
+
+    default:
+	;
     }
 
     return -1;

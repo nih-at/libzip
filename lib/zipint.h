@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.6 2004/04/06 20:30:08 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.7 2004/04/06 21:43:36 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -154,7 +154,6 @@ struct zip_entry {
     int ch_flags;		/* 1: data returned by ch_func is compressed */
     char *ch_filename;
     time_t ch_mtime;
-    int ch_comp_method;
 };
 
 
@@ -166,6 +165,7 @@ extern const int _zip_err_type[];
 
 
 void _zip_cdir_free(struct zip_cdir *);
+int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
 void _zip_dirent_finalize(struct zip_dirent *);
 int _zip_dirent_read(struct zip_dirent *, FILE *,
 		     unsigned char **, int, int, struct zip_error *);

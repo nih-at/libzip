@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.35.4.2 2004/03/23 17:16:02 dillo Exp $
+  $NiH: zip.h,v 1.35.4.3 2004/04/06 20:26:24 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -55,6 +55,10 @@
 #define ZIP_NAME_NOCASE		1
 #define ZIP_NAME_NODIR		2
 
+
+/* flags for zip_add and zip_replace */
+
+#define ZIP_CH_ISCOMP	1	/* data returned by ch_func is compressed */
 
 /* libzip error codes */
 

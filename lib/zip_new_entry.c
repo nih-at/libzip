@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new_entry.c,v 1.7.4.2 2004/03/22 14:56:48 dillo Exp $
+  $NiH: zip_new_entry.c,v 1.7.4.3 2004/04/06 20:30:06 dillo Exp $
 
   zip_new_entry.c -- create and init struct zip_entry
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -73,7 +73,6 @@ _zip_new_entry(struct zip *zf)
     ze->ch_func = NULL;
     ze->ch_data = NULL;
     ze->ch_flags = 0;
-    ze->ch_comp_method = ZIP_CM_DEFAULT;
     ze->ch_mtime = -1;
 
     if (zf)
