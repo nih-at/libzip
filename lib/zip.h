@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.36 2004/04/14 14:01:22 dillo Exp $
+  $NiH: zip.h,v 1.37 2004/04/16 09:40:26 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -85,6 +85,7 @@
 #define ZERR_NOZIP           19  /* N Not a zip archive */
 #define ZERR_INTERNAL        20  /* N Internal error */
 #define ZERR_INCONS	     21  /* N Zip archive inconsistent */
+#define ZERR_REMOVE	     22  /* S Can't remove file */
 
 
 /* type of system error value */
@@ -110,10 +111,12 @@
 
 
 enum zip_cmd {
-    ZIP_CMD_INIT,	/* prepare for reading */
+    ZIP_CMD_OPEN,	/* prepare for reading */
     ZIP_CMD_READ, 	/* read data */
-    ZIP_CMD_CLOSE,	/* close and cleanup */
-    ZIP_CMD_STAT	/* for compressed data */
+    ZIP_CMD_CLOSE,	/* reading is done */
+    ZIP_CMD_STAT,	/* get meta information */
+    ZIP_CMD_ERROR,	/* get error information */
+    ZIP_CMD_FREE	/* cleanup and free resources */
 };
 
 typedef ssize_t (*zip_read_func)(void *state, void *data,

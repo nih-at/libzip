@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_data.c,v 1.13 2004/04/14 14:01:27 dillo Exp $
+  $NiH: zip_replace_data.c,v 1.14 2004/04/16 09:40:30 dillo Exp $
 
   zip_replace_data.c -- replace file from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -42,8 +42,8 @@
 #include "zipint.h"
 
 struct read_data {
-    const char *buf, *data;
-    off_t len;
+    const char *buf, *data, *end;
+    time_t mtime;
     int freep;
 };
 
@@ -78,8 +78,9 @@ _zip_replace_data(struct zip *zf, int idx, const char *name,
     }
 
     f->data = data;
-    f->len = len;
+    f->end = data+len;
     f->freep = freep;
+    f->mtime = time(NULL);
     
     return _zip_replace(zf, idx, name, read_data, f, 0);
 }
@@ -97,24 +98,57 @@ read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_CMD_INIT:
+    case ZIP_CMD_OPEN:
 	z->buf = z->data;
 	return 0;
 	
     case ZIP_CMD_READ:
-	n = len > z->len ? z->len : len;
+	n = z->end - z->buf;
+	if (n > len)
+	    n = len;
 	if (n < 0)
 	    n = 0;
 
 	if (n) {
 	    memcpy(buf, z->buf, n);
 	    z->buf += n;
-	    z->len -= n;
 	}
 
 	return n;
 	
     case ZIP_CMD_CLOSE:
+	return 0;
+
+    case ZIP_CMD_STAT:
+        {
+	    struct zip_stat *st;
+	    
+	    if (len < sizeof(*st))
+		return -1;
+
+	    st = (struct zip_stat *)data;
+
+	    st->mtime = z->mtime;
+	    st->crc = 0;
+	    st->size = z->end - z->data;
+	    st->comp_size = -1;
+	    st->comp_method = ZIP_CM_STORE;
+	    
+	    return sizeof(*st);
+	}
+
+    case ZIP_CMD_ERROR:
+	{
+	    int *e;
+
+	    if (len < sizeof(int)*2)
+		return -1;
+
+	    e[0] = e[1] = 0;
+	}
+	return sizeof(int)*2;
+
+    case ZIP_CMD_FREE:
 	if (z->freep) {
 	    free((void *)z->data);
 	    z->data = NULL;

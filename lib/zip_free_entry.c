@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free_entry.c,v 1.10 2004/04/14 14:01:25 dillo Exp $
+  $NiH: zip_free_entry.c,v 1.11 2004/04/16 09:40:28 dillo Exp $
 
   zip_free_entry.c -- free struct zip_entry
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -52,7 +52,7 @@ _zip_free_entry(struct zip_entry *ze)
     free(ze->ch_filename);
     
     if (ze->ch_func)
-	ret = ze->ch_func(ze->ch_data, NULL, 0, ZIP_CMD_CLOSE);
+	ret = ze->ch_func(ze->ch_data, NULL, 0, ZIP_CMD_FREE);
 
     return ret;
 }

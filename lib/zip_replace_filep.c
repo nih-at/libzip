@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_filep.c,v 1.8 2004/04/14 14:01:27 dillo Exp $
+  $NiH: zip_replace_filep.c,v 1.9 2004/04/16 09:40:30 dillo Exp $
 
   zip_replace_filep.c -- replace file from FILE*
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -35,14 +35,21 @@
 
 
 
+#include <sys/stat.h>
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "zip.h"
 #include "zipint.h"
 
 struct read_file {
-    FILE *f;
-    off_t off, len;
+    FILE *f;		/* file to copy from */
+    off_t off;		/* start offset of */
+    off_t len;		/* lengt of data to copy */
+    off_t remain;	/* bytes remaining to be copied */
+    int e[2];		/* error codes */
 };
 
 static int read_file(void *state, void *data, size_t len, enum zip_cmd cmd);
@@ -94,34 +101,74 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_CMD_INIT:
+    case ZIP_CMD_OPEN:
 	if (fseeko(z->f, z->off, SEEK_SET) < 0) {
-	    /* XXX: zip_err = ZERR_SEEK; */
+	    z->e[0] = ZERR_SEEK;
+	    z->e[1] = errno;
 	    return -1;
 	}
+	z->remain = z->len;
 	return 0;
 	
     case ZIP_CMD_READ:
-	if (z->len != -1)
-	    n = len > z->len ? z->len : len;
+	if (z->remain != -1)
+	    n = len > z->remain ? z->remain : len;
 	else
 	    n = len;
 	
 	if ((i=fread(buf, 1, n, z->f)) < 0) {
-	    /* XXX: zip_err = ZERR_READ; */
+	    z->e[0] = ZERR_READ;
+	    z->e[1] = errno;
 	    return -1;
 	}
 
-	if (z->len != -1)
-	    z->len -= i;
+	if (z->remain != -1)
+	    z->remain -= i;
 
 	return i;
 	
     case ZIP_CMD_CLOSE:
-	if (z->f) {
-	    fclose(z->f);
-	    z->f = NULL;
+	return 0;
+
+    case ZIP_CMD_STAT:
+        {
+	    struct zip_stat *st;
+	    struct stat fst;
+	    
+	    if (len < sizeof(*st))
+		return -1;
+
+	    st = (struct zip_stat *)data;
+
+	    if (fstat(fileno(z->f), &fst) != 0) {
+		z->e[0] = ZERR_READ; /* best match */
+		z->e[1] = errno;
+		return -1;
+	    }
+
+	    st->mtime = fst.st_mtime;
+	    st->crc = 0;
+	    if (z->len != -1)
+		st->size = z->len;
+	    else if ((fst.st_mode&S_IFMT) == S_IFREG)
+		st->size = fst.st_size;
+	    else
+		st->size = -1;
+	    st->comp_size = -1;
+	    st->comp_method = ZIP_CM_STORE;
+
+	    return sizeof(*st);
 	}
+
+    case ZIP_CMD_ERROR:
+	if (len < sizeof(int)*2)
+	    return -1;
+
+	memcpy(data, z->e, sizeof(int)*2);
+	return sizeof(int)*2;
+
+    case ZIP_CMD_FREE:
+	fclose(z->f);
 	free(z);
 	return 0;
 

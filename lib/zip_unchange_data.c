@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_unchange_data.c,v 1.10 2004/04/14 14:01:28 dillo Exp $
+  $NiH: zip_unchange_data.c,v 1.11 2004/04/16 09:40:31 dillo Exp $
 
   zip_unchange_data.c -- undo helper function
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -51,8 +51,6 @@ _zip_unchange_data(struct zip_entry *ze)
 	ze->ch_func = NULL;
     }
     
-    ze->ch_flags = 0;
-
     ze->state = ze->ch_filename ? ZIP_ST_RENAMED : ZIP_ST_UNCHANGED;
 
     return ret;

@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.24 2004/04/16 09:40:31 dillo Exp $
+  $NiH: zipint.h,v 1.25 2004/04/19 11:49:13 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -146,9 +146,7 @@ struct zip_entry {
     enum zip_state state;
     zip_read_func ch_func;
     void *ch_data;
-    int ch_flags;		/* 1: data returned by ch_func is compressed */
     char *ch_filename;
-    time_t ch_mtime;
 };
 
 

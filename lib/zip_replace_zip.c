@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.20 2004/04/17 19:15:30 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.21 2004/05/16 00:50:48 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -36,6 +36,8 @@
 
 
 #include <stdlib.h>
+#include <string.h>
+
 #include "zip.h"
 #include "zipint.h"
 
@@ -127,7 +129,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_CMD_INIT:
+    case ZIP_CMD_OPEN:
 	for (n=0; n<z->off; n+= i) {
 	    i = (z->off-n > sizeof(b) ? sizeof(b) : z->off-n);
 	    if ((i=zip_fread(z->zf, b, i)) < 0) {
@@ -156,15 +158,31 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 	return i;
 	
     case ZIP_CMD_CLOSE:
-	zip_fclose(z->zf);
-	free(z);
 	return 0;
 
     case ZIP_CMD_STAT:
 	if (len < sizeof(z->st))
 	    return -1;
+	len = sizeof(z->st);
 
-	memcpy(data, &z->st, sizeof(z->st));
+	memcpy(data, &z->st, len);
+	return len;
+
+    case ZIP_CMD_ERROR:
+	{
+	    int *e;
+
+	    if (len < sizeof(int)*2)
+		return -1;
+
+	    e = (int *)data;
+	    zip_file_get_error(z->zf, e, e+1);
+	}
+	return sizeof(int)*2;
+
+    case ZIP_CMD_FREE:
+	zip_fclose(z->zf);
+	free(z);
 	return 0;
 
     default:

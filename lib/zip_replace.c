@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace.c,v 1.12 2004/04/14 14:01:27 dillo Exp $
+  $NiH: zip_replace.c,v 1.13 2004/04/16 09:40:29 dillo Exp $
 
   zip_replace.c -- replace file via callback function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -75,7 +75,6 @@ _zip_replace(struct zip *zf, int idx, const char *name,
 			    ? ZIP_ST_ADDED : ZIP_ST_REPLACED);
     zf->entry[idx].ch_func = fn;
     zf->entry[idx].ch_data = state;
-    zf->entry[idx].ch_flags = flags;
 
     return 0;
 }

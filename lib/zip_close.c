@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.40 2004/04/16 09:40:27 dillo Exp $
+  $NiH: zip_close.c,v 1.41 2004/04/19 11:49:12 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -47,10 +47,11 @@
 #include "zipint.h"
 
 static int add_data(struct zip *, int, struct zip_dirent *, FILE *);
-static int add_data_comp(zip_read_func, void *, struct zip_dirent *, FILE *,
+static int add_data_comp(zip_read_func, void *, struct zip_stat *, FILE *,
 			 struct zip_error *);
-static int add_data_uncomp(zip_read_func, void *, struct zip_dirent *, FILE *,
+static int add_data_uncomp(zip_read_func, void *, struct zip_stat *, FILE *,
 			   struct zip_error *);
+static void ch_set_error(struct zip_error *, zip_read_func, void *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
 
 
@@ -163,11 +164,11 @@ zip_close(struct zip *za)
 	cd->entry[j].offset = ftell(tfp);
 
 	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
-	    de.last_mod = za->entry[i].ch_mtime;
 	    if (add_data(za, i, &de, tfp) < 0) {
 		error = -1;
 		break;
 	    }
+	    cd->entry[j].last_mod = de.last_mod;
 	    cd->entry[j].comp_method = de.comp_method;
 	    cd->entry[j].comp_size = de.comp_size;
 	    cd->entry[j].uncomp_size = de.uncomp_size;
@@ -241,12 +242,18 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
     off_t offstart, offend;
     zip_read_func rf;
     void *ud;
+    struct zip_stat st;
     
     rf = za->entry[idx].ch_func;
     ud = za->entry[idx].ch_data;
 
-    if (rf(ud, NULL, 0, ZIP_CMD_INIT) < 0) {
-	/* XXX: set error */
+    if (rf(ud, &st, sizeof(st), ZIP_CMD_STAT) < sizeof(st)) {
+	ch_set_error(&za->error, rf, ud);
+	return -1;
+    }
+
+    if (rf(ud, NULL, 0, ZIP_CMD_OPEN) < 0) {
+	ch_set_error(&za->error, rf, ud);
 	return -1;
     }
 
@@ -255,22 +262,19 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
 
-    if (za->entry[idx].ch_flags & ZIP_CH_ISCOMP) {
-	if (add_data_comp(rf, ud, de, ft, &za->error) < 0)
+    if (st.comp_method != ZIP_CM_STORE) {
+	if (add_data_comp(rf, ud, &st, ft, &za->error) < 0)
 	    return -1;
     }
     else {
-	if (add_data_uncomp(rf, ud, de, ft, &za->error) < 0)
+	if (add_data_uncomp(rf, ud, &st, ft, &za->error) < 0)
 	    return -1;
     }
 
-#if 0
-    /* XXX: this is also called in _zip_free */
     if (rf(ud, NULL, 0, ZIP_CMD_CLOSE) < 0) {
-	/* XXX: set error */
+	ch_set_error(&za->error, rf, ud);
 	return -1;
     }
-#endif
 
     offend = ftell(ft);
 
@@ -279,6 +283,12 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 	return -1;
     }
     
+    de->comp_method = st.comp_method;
+    de->last_mod = st.mtime;
+    de->crc = st.crc;
+    de->uncomp_size = st.size;
+    de->comp_size = st.comp_size;
+
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
     
@@ -293,36 +303,25 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 
 
 static int
-add_data_comp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
+add_data_comp(zip_read_func rf, void *ud, struct zip_stat *st,FILE *ft,
 	      struct zip_error *error)
 {
     char buf[BUFSIZE];
     ssize_t n;
-    struct zip_stat st;
 
-    if (rf(ud, &st, sizeof(st), ZIP_CMD_STAT) < 0) {
-	/* XXX: set error */
-	return -1;
-    }
-
-    de->comp_size = 0;
+    st->comp_size = 0;
     while ((n=rf(ud, buf, sizeof(buf), ZIP_CMD_READ)) > 0) {
 	if (fwrite(buf, 1, n, ft) != n) {
 	    _zip_error_set(error, ZERR_WRITE, errno);
 	    return -1;
 	}
 	
-	de->comp_size += n;
+	st->comp_size += n;
     }
     if (n < 0) {
-	/* XXX: set error */
+	ch_set_error(error, rf, ud);
 	return -1;
     }	
-
-    de->comp_method = st.comp_method;
-    /* de->last_mod = st.mtime; */
-    de->crc = st.crc;
-    de->uncomp_size = st.size;
 
     return 0;
 }
@@ -330,7 +329,7 @@ add_data_comp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 
 
 static int
-add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
+add_data_uncomp(zip_read_func rf, void *ud, struct zip_stat *st, FILE *ft,
 		struct zip_error *error)
 {
     char b1[BUFSIZE], b2[BUFSIZE];
@@ -338,11 +337,9 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
     ssize_t n;
     z_stream zstr;
 
-    /* ZIP_CMD_STAT for mtime? */
-
-    de->comp_method = ZIP_CM_DEFLATE;
-    de->comp_size = de->uncomp_size = 0;
-    de->crc = crc32(0, NULL, 0);
+    st->comp_method = ZIP_CM_DEFLATE;
+    st->comp_size = st->size = 0;
+    st->crc = crc32(0, NULL, 0);
 
     zstr.zalloc = Z_NULL;
     zstr.zfree = Z_NULL;
@@ -363,15 +360,15 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
     while (!end) {
 	if (zstr.avail_in == 0 && !flush) {
 	    if ((n=rf(ud, b1, sizeof(b1), ZIP_CMD_READ)) < 0) {
-		/* XXX: set error */
+		ch_set_error(error, rf, ud);
 		deflateEnd(&zstr);
 		return -1;
 	    }
 	    if (n > 0) {
 		zstr.avail_in = n;
 		zstr.next_in = b1;
-		de->uncomp_size += n;
-		de->crc = crc32(de->crc, b1, n);
+		st->size += n;
+		st->crc = crc32(st->crc, b1, n);
 	    }
 	    else
 		flush = Z_FINISH;
@@ -393,7 +390,7 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 	
 	    zstr.next_out = b2;
 	    zstr.avail_out = sizeof(b2);
-	    de->comp_size += n;
+	    st->comp_size += n;
 	}
 
 	if (ret == Z_STREAM_END) {
@@ -403,6 +400,23 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
     }
 
     return 0;
+}
+
+
+
+static void
+ch_set_error(struct zip_error *error, zip_read_func rf, void *ud)
+{
+    int e[2];
+
+    if ((rf(ud, e, sizeof(e), ZIP_CMD_READ)) < sizeof(e)) {
+	error->zip_err = ZERR_INTERNAL;
+	error->sys_err = 0;
+    }
+    else {
+	error->zip_err = e[0];
+	error->sys_err = e[1];
+    }
 }
 
 

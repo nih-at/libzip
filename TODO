@@ -1,4 +1,5 @@
 ------------------------------------------------ showstopper
+* zip_replace: remove flags argument?  (currently unused)
 * API cleanup
 	check function names (consistency, appropriateness)
 	file sizes, offsets: type big enough? (no, zip64)
@@ -13,6 +14,7 @@
 * README
 * set mtime for changed entries
 ------------------------------------------------ others
+* zip_replace_zip: allow rewinding
 * API for (file and archive) comments
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison
