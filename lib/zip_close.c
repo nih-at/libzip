@@ -311,10 +311,14 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	return -1;
     }
 
-    se->ch_meta->local_offset = meta->local_offset = -1;
-    se->ch_meta->comp_method = -1;
+    meta->local_offset = -1;
     _zip_merge_meta_fix(zf->entry[idx].meta, meta);
-    _zip_merge_meta_fix(zf->entry[idx].meta, se->ch_meta);
+    if (se->ch_meta) {
+	se->ch_meta->local_offset =  se->ch_meta->comp_method
+	    = se->ch_meta->uncomp_size = se->ch_meta->comp_size
+	    = se->ch_meta->crc = -1;
+	_zip_merge_meta_fix(zf->entry[idx].meta, se->ch_meta);
+    }
     zip_free_meta(meta);
 
     if (_zip_writecdentry(zf->zp, zf->entry+idx, 1) != 0) {
