@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.25 2004/12/22 15:48:37 dillo Exp $
+  $NiH: zip_open.c,v 1.26 2004/12/22 15:49:19 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -50,6 +50,7 @@ static void set_error(int *, struct zip_error *, int);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
 static int _zip_headercomp(struct zip_dirent *, int,
 			   struct zip_dirent *, int);
+static void *_zip_memdup(const void *, size_t, struct zip_error *);
 static unsigned char *_zip_memmem(const unsigned char *, int,
 				  const unsigned char *, int);
 static struct zip_cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
@@ -281,7 +282,11 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     }
 
     if (cd->comment_len)
-	cd->comment = _zip_memdup(eocd+EOCDLEN, cd->comment_len);
+	if ((cd->comment=_zip_memdup(eocd+EOCDLEN, cd->comment_len, error))
+	    == NULL) {
+	    free(cd);
+	    return NULL;
+	}
 
     cdp = eocd;
     if (cd->size < eocd-buf) {
@@ -448,14 +453,14 @@ _zip_memmem(const unsigned char *big, int biglen, const unsigned char *little,
 
 
 
-void *
-_zip_memdup(const void *mem, int len)
+static void *
+_zip_memdup(const void *mem, size_t len, struct zip_error *error)
 {
     void *ret;
 
     ret = malloc(len);
     if (!ret) {
-	/* XXX: zip_err = ZIP_ER_MEMORY; */
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 

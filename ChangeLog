@@ -1,3 +1,11 @@
+2005-01-11  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_open.c (_zip_memdup): make static, use size_t for size
+	argument, add error argument for passing error code back to
+	caller.
+	* lib/zip_open.c (_zip_readcdir): error out if _zip_memdup
+	failes.
+	
 2004-12-28  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip_free.c (_zip_free): correctly set error of open
