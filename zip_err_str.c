@@ -14,5 +14,8 @@ char * zip_err_str[]={
     "zip file closed without closing this file",
     "file does already exist",
     "file doesn't exist",
-    "can't open file"    
+    "can't open file",
+    "error creating temp file",
+    "zlib error",
+    "malloc failure"
 };

@@ -9,14 +9,14 @@
 #include "zip.h"
 #include "zipint.h"
 
-static struct zf *readcdir(FILE *fp, unsigned char *buf,
+static struct zf *_zip_readcdir(FILE *fp, unsigned char *buf,
 			   unsigned char *eocd, int buflen);
-static int read2(unsigned char **a);
-static int read4(unsigned char **a);
-static char *readstr(unsigned char **buf, int len, int nulp);
-static char *readfpstr(FILE *fp, int len, int nulp);
-static int checkcons(FILE *fp, struct zf *zf);
-static int headercomp(struct zf_entry *h1, int local1p, struct zf_entry *h2,
+static int _zip_read2(unsigned char **a);
+static int _zip_read4(unsigned char **a);
+static char *_zip_readstr(unsigned char **buf, int len, int nulp);
+static char *_zip_readfpstr(FILE *fp, int len, int nulp);
+static int _zip_checkcons(FILE *fp, struct zf *zf);
+static int _zip_headercomp(struct zf_entry *h1, int local1p, struct zf_entry *h2,
 		      int local2p);
 
 
@@ -43,8 +43,12 @@ zip_open(char *fn, int flags)
     
     if (stat(fn, &st) != 0) {
 	if (flags & ZIP_CREATE) {
-	    cdir = zf_new();
-	    cdir->zn = xstrdup(fn);
+	    cdir = _zip_zf_new();
+	    cdir->zn = strdup(fn);
+	    if (!cdir->zn) {
+		zip_err = ZERR_MEMORY;
+		return NULL;
+	    }
 	    return cdir;
 	} else {
 	    zip_err = ZERR_FILENEXISTS;
@@ -72,7 +76,11 @@ zip_open(char *fn, int flags)
 	return NULL;
     }
 
-    buf = (unsigned char *)xmalloc(BUFSIZE);
+    buf = (unsigned char *)malloc(BUFSIZE);
+    if (!buf) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
 
     clearerr(fp);
     buflen = fread(buf, 1, BUFSIZE, fp);
@@ -91,25 +99,25 @@ zip_open(char *fn, int flags)
 	/* found match -- check, if good */
 	/* to avoid finding the same match all over again */
 	match++;
-	if ((cdirnew=readcdir(fp, buf, match-1, buflen)) == NULL)
+	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen)) == NULL)
 	    continue;	    
 
 	if (cdir) {
 	    if (best <= 0)
-		best = checkcons(fp, cdir);
-	    a = checkcons(fp, cdirnew);
+		best = _zip_checkcons(fp, cdir);
+	    a = _zip_checkcons(fp, cdirnew);
 	    if (best < a) {
-		zf_free(cdir);
+		_zip_zf_free(cdir);
 		cdir = cdirnew;
 		best = a;
 	    }
 	    else
-		zf_free(cdirnew);
+		_zip_zf_free(cdirnew);
 	}
 	else {
 	    cdir = cdirnew;
 	    if (flags & ZIP_CHECKCONS)
-		best = checkcons(fp, cdir);
+		best = _zip_checkcons(fp, cdir);
 	    else
 		best = 0;
 	}
@@ -119,14 +127,19 @@ zip_open(char *fn, int flags)
     if (best < 0) {
 	/* no consistent eocd found */
 	free(buf);
-	zf_free(cdir);
+	_zip_zf_free(cdir);
 	fclose(fp);
 	return NULL;
     }
 
     free(buf);
 
-    cdir->zn = xstrdup(fn);
+    cdir->zn = strdup(fn);
+    if (!cdir->zn) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
+
     cdir->zp = fp;
     
     return cdir;
@@ -134,14 +147,14 @@ zip_open(char *fn, int flags)
 
 
 
-/* readcdir:
+/* _zip_readcdir:
    tries to find a valid end-of-central-directory at the beginning of
    buf, and then the corresponding central directory entries.
    Returns a zipfile struct which contains the central directory 
    entries, or NULL if unsuccessful. */
 
 static struct zf *
-readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
+_zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
 {
     struct zf *zf;
     unsigned char *cdp;
@@ -162,22 +175,25 @@ readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
 	return NULL;
     }
 
-    zf = zf_new();
+    if ((zf=_zip_zf_new()) == NULL) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
 
     cdp = eocd + 8;
     /* number of cdir-entries on this disk */
-    i = read2(&cdp);
+    i = _zip_read2(&cdp);
     /* number of cdir-entries */
-    zf->nentry = zf->nentry_alloc = read2(&cdp);
-    zf->cd_size = read4(&cdp);
-    zf->cd_offset = read4(&cdp);
-    zf->comlen = read2(&cdp);
+    zf->nentry = zf->nentry_alloc = _zip_read2(&cdp);
+    zf->cd_size = _zip_read4(&cdp);
+    zf->cd_offset = _zip_read4(&cdp);
+    zf->comlen = _zip_read2(&cdp);
     zf->entry = NULL;
 
     if ((zf->comlen != comlen) || (zf->nentry != i)) {
 	/* comment size wrong -- too few or too many left after central dir */
 	/* or number of cdir-entries on this disk != number of cdir-entries */
-	zf_free(zf);
+	_zip_zf_free(zf);
 	return NULL;
     }
 
@@ -196,13 +212,18 @@ readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
 	fseek(fp, -(zf->cd_size+zf->comlen+EOCDLEN), SEEK_END);
 	if (ferror(fp) || (ftell(fp) != zf->cd_offset)) {
 	    /* seek error or offset of cdir wrong */
-	    zf_free(zf);
+	    _zip_zf_free(zf);
 	    return NULL;
 	}
     }
 
-    zf->entry = (struct zf_entry *)xmalloc(sizeof(struct zf_entry)
-					   *zf->nentry);
+    zf->entry = (struct zf_entry *)malloc(sizeof(struct zf_entry)
+					  *zf->nentry);
+    if (!zf->entry) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
+    
     for (i=0; i<zf->nentry; i++) {
 	zf->entry[i].fn = NULL;
 	zf->entry[i].ef = NULL;
@@ -212,9 +233,9 @@ readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     
     for (i=0; i<zf->nentry; i++) {
 	if ((_zip_readcdentry(fp, zf->entry+i, &cdp, eocd-cdp, readp, 0)) < 0) {
-	    /* i entries have already been filled, tell zf_free
+	    /* i entries have already been filled, tell _zip_zf_free
 	       how many to free */
-	    zf_free(zf);
+	    _zip_zf_free(zf);
 	    return NULL;
 	}
     }
@@ -269,28 +290,28 @@ _zip_readcdentry(FILE *fp, struct zf_entry *zfe, unsigned char **cdpp,
 
     /* convert buffercontents to zf_entry */
     if (!localp)
-	zfe->version_made = read2(&cur);
+	zfe->version_made = _zip_read2(&cur);
     else
 	zfe->version_made = 0;
-    zfe->version_need = read2(&cur);
-    zfe->bitflags = read2(&cur);
-    zfe->comp_meth = read2(&cur);
-    zfe->lmtime = read2(&cur);
-    zfe->lmdate = read2(&cur);
+    zfe->version_need = _zip_read2(&cur);
+    zfe->bitflags = _zip_read2(&cur);
+    zfe->comp_meth = _zip_read2(&cur);
+    zfe->lmtime = _zip_read2(&cur);
+    zfe->lmdate = _zip_read2(&cur);
 
-    zfe->crc = read4(&cur);
-    zfe->comp_size = read4(&cur);
-    zfe->uncomp_size = read4(&cur);
+    zfe->crc = _zip_read4(&cur);
+    zfe->comp_size = _zip_read4(&cur);
+    zfe->uncomp_size = _zip_read4(&cur);
     
-    zfe->fnlen = read2(&cur);
-    zfe->eflen = read2(&cur);
+    zfe->fnlen = _zip_read2(&cur);
+    zfe->eflen = _zip_read2(&cur);
     if (!localp) {
-	zfe->fcomlen = read2(&cur);
-	zfe->disknrstart = read2(&cur);
-	zfe->intatt = read2(&cur);
+	zfe->fcomlen = _zip_read2(&cur);
+	zfe->disknrstart = _zip_read2(&cur);
+	zfe->intatt = _zip_read2(&cur);
 
-	zfe->extatt = read4(&cur);
-	zfe->local_offset = read4(&cur);
+	zfe->extatt = _zip_read4(&cur);
+	zfe->local_offset = _zip_read4(&cur);
     }
     else {
 	zfe->fcomlen = zfe->disknrstart = zfe->intatt = 0;
@@ -300,14 +321,19 @@ _zip_readcdentry(FILE *fp, struct zf_entry *zfe, unsigned char **cdpp,
     if (left < CDENTRYSIZE+zfe->fnlen+zfe->eflen+zfe->fcomlen) {
 	if (readp) {
 	    if (zfe->fnlen)
-		zfe->fn = readfpstr(fp, zfe->fnlen, 1);
-	    else
-		zfe->fn = xstrdup("");
+		zfe->fn = _zip_readfpstr(fp, zfe->fnlen, 1);
+	    else {
+		zfe->fn = strdup("");
+		if (!zfe->fn) {
+		    zip_err = ZERR_MEMORY;
+		    return -1;
+		}
+	    }
 	    if (zfe->eflen)
-		zfe->ef = readfpstr(fp, zfe->eflen, 0);
+		zfe->ef = _zip_readfpstr(fp, zfe->eflen, 0);
 	    /* XXX: really null-terminate comment? */
 	    if (zfe->fcomlen)
-		zfe->fcom = readfpstr(fp, zfe->fcomlen, 1);
+		zfe->fcom = _zip_readfpstr(fp, zfe->fcomlen, 1);
 	}
 	else {
 	    /* can't get more bytes if not allowed to read */
@@ -316,11 +342,11 @@ _zip_readcdentry(FILE *fp, struct zf_entry *zfe, unsigned char **cdpp,
     }
     else {
         if (zfe->fnlen)
-	    zfe->fn = readstr(&cur, zfe->fnlen, 1);
+	    zfe->fn = _zip_readstr(&cur, zfe->fnlen, 1);
         if (zfe->eflen)
-	    zfe->ef = readstr(&cur, zfe->eflen, 0);
+	    zfe->ef = _zip_readstr(&cur, zfe->eflen, 0);
         if (zfe->fcomlen)
-	    zfe->fcom = readstr(&cur, zfe->fcomlen, 1);
+	    zfe->fcom = _zip_readstr(&cur, zfe->fcomlen, 1);
     }
     if (!readp)
       *cdpp = cur;
@@ -337,7 +363,7 @@ _zip_readcdentry(FILE *fp, struct zf_entry *zfe, unsigned char **cdpp,
 
 
 static int
-read2(unsigned char **a)
+_zip_read2(unsigned char **a)
 {
     int ret;
 
@@ -350,7 +376,7 @@ read2(unsigned char **a)
 
 
 static int
-read4(unsigned char **a)
+_zip_read4(unsigned char **a)
 {
     int ret;
 
@@ -363,11 +389,16 @@ read4(unsigned char **a)
 
 
 static char *
-readstr(unsigned char **buf, int len, int nulp)
+_zip_readstr(unsigned char **buf, int len, int nulp)
 {
     char *r;
 
-    r = (char *)xmalloc(nulp?len+1:len);
+    r = (char *)malloc(nulp?len+1:len);
+    if (!r) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
+    
     memcpy(r, *buf, len);
     *buf += len;
 
@@ -380,11 +411,16 @@ readstr(unsigned char **buf, int len, int nulp)
 
 
 static char *
-readfpstr(FILE *fp, int len, int nullp)
+_zip_readfpstr(FILE *fp, int len, int nullp)
 {
     char *r;
 
-    r = (char *)xmalloc(nullp?len+1:len);
+    r = (char *)malloc(nullp?len+1:len);
+    if (!r) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
+
     if (fread(r, 1, len, fp)<len) {
 	free(r);
 	return NULL;
@@ -398,14 +434,14 @@ readfpstr(FILE *fp, int len, int nullp)
 
 
 
-/* checkcons:
+/* _zip_checkcons:
    Checks the consistency of the central directory by comparing central
    directory entries with local headers and checking for plausible
    file and header offsets. Returns -1 if not plausible, else the
    difference between the lowest and the highest fileposition reached */
 
 static int
-checkcons(FILE *fp, struct zf *zf)
+_zip_checkcons(FILE *fp, struct zf *zf)
 {
     int min, max, i, j;
     struct zf_entry temp;
@@ -437,7 +473,7 @@ checkcons(FILE *fp, struct zf *zf)
 	    return -1;
 	}
 	_zip_readcdentry(fp, &temp, &buf, 0, 1, 1);
-	if (headercomp(zf->entry+i, 0, &temp, 1) != 0)
+	if (_zip_headercomp(zf->entry+i, 0, &temp, 1) != 0)
 	    return -1;
     }
 
@@ -446,13 +482,13 @@ checkcons(FILE *fp, struct zf *zf)
 
 
 
-/* headercomp:
+/* _zip_headercomp:
    compares two headers h1 and h2; if they are local headers, set
    local1p or local2p respectively to 1, else 0. Return 0 if they
    are identical, -1 if not. */
 
 static int
-headercomp(struct zf_entry *h1, int local1p, struct zf_entry *h2,
+_zip_headercomp(struct zf_entry *h1, int local1p, struct zf_entry *h2,
 	   int local2p)
 {
     if ((h1->version_need != h2->version_need)

@@ -11,11 +11,11 @@
 static int _zip_entry_copy(struct zf *dest, struct zf *src,
 			  int entry_no, char *name);
 static int _zip_entry_add(struct zf *dest, struct zf *src, int entry_no);
-static int writecdir(struct zf *zfp)
-static void write2(FILE *fp, int i);
-static void write4(FILE *fp, int i);
-static void writestr(FILE *fp, char *str, int len);
-static int writecdentry(FILE *fp, struct zf_entry *zfe, int localp);
+static int _zip_writecdir(struct zf *zfp);
+static void _zip_write2(FILE *fp, int i);
+static void _zip_write4(FILE *fp, int i);
+static void _zip_writestr(FILE *fp, char *str, int len);
+static int _zip_writecdentry(FILE *fp, struct zf_entry *zfe, int localp);
 static int _zip_create_entry(struct zf *dest, struct zf_entry *src_entry,
 			     char *name);
 
@@ -24,7 +24,7 @@ static int _zip_create_entry(struct zf *dest, struct zf_entry *src_entry,
 /* zip_close:
    Tries to commit all changes and close the zipfile; if it fails,
    zip_err (and errno) are set and *zf is unchanged, except for
-   problems in zf_free. */ 
+   problems in _zip_zf_free. */ 
 
 int
 zip_close(struct zf *zf)
@@ -35,7 +35,7 @@ zip_close(struct zf *zf)
     struct zf *tzf;
 
     if (zf->changes == 0)
-	return zf_free(zf);
+	return _zip_zf_free(zf);
 
     /* look if there really are any changes */
     count = 0;
@@ -48,28 +48,40 @@ zip_close(struct zf *zf)
 
     /* no changes, all has been unchanged */
     if (count == 0)
-	return zf_free(zf);
+	return _zip_zf_free(zf);
     
-    temp = (char *)xmalloc(strlen(zf->zn)+8);
+    temp = (char *)malloc(strlen(zf->zn)+8);
+    if (!temp) {
+	zip_err = ZERR_MEMORY;
+	return -1;
+    }
+
     sprintf(temp, "%s.XXXXXX", zf->zn);
 
     tfd = mkstemp(temp);
 
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
+	zip_err = ZERR_TMPOPEN;
+	remove(temp);
 	free(temp);
 	close(tfd);
 	return -1;
     }
 
-    tzf = zf_new();
+    tzf = _zip_zf_new();
     tzf->zp = tfp;
     tzf->zn = temp;
     tzf->nentry = 0;
     tzf->comlen = zf->comlen;
     tzf->cd_size = tzf->cd_offset = 0;
     tzf->com = (unsigned char *)memdup(zf->com, zf->comlen);
-    tzf->entry = (struct zf_entry *)xmalloc(sizeof(struct
-						   zf_entry)*ALLOC_SIZE);
+    tzf->entry = (struct zf_entry *)malloc(sizeof(struct
+						  zf_entry)*ALLOC_SIZE);
+    if (!tzf->entry) {
+	zip_err = ZERR_MEMORY;
+	return -1;
+    }
+
     tzf->nentry_alloc = ALLOC_SIZE;
     
     count = 0;
@@ -77,8 +89,12 @@ zip_close(struct zf *zf)
 	for (i=0; i<zf->nentry; i++) {
 	    switch (zf->entry[i].state) {
 	    case Z_UNCHANGED:
-		if (zip_entry_copy(tzf, zf, i, NULL))
-		    myerror(ERRFILE, "zip_entry_copy failed");
+		if (_zip_entry_copy(tzf, zf, i, NULL)) {
+		    /* zip_err set by _zip_entry_copy */
+		    remove(tzf->zn);
+		    _zip_zf_free(tzf);
+		    return -1;
+		}
 		break;
 	    case Z_DELETED:
 		break;
@@ -86,27 +102,41 @@ zip_close(struct zf *zf)
 		/* fallthrough */
 	    case Z_ADDED:
 		if (zf->entry[i].ch_data_zf) {
-		    if (zip_entry_copy(tzf, zf->entry[i].ch_data_zf,
+		    if (_zip_entry_copy(tzf, zf->entry[i].ch_data_zf,
 				       zf->entry[i].ch_data_zf_fileno,
-				       zf->entry[i].fn))
-			myerror(ERRFILE, "zip_entry_copy failed");
+				       zf->entry[i].fn)) {
+			/* zip_err set by _zip_entry_copy */
+			remove(tzf->zn);
+			_zip_zf_free(tzf);
+			return -1;
+		    }
 		} else if (zf->entry[i].ch_data_buf) {
 #if 0
-		    zip_entry_add(tzf, zf, i);
+		    if (_zip_entry_add(tzf, zf, i)) {
+			/* zip_err set by _zip_entry_copy */
+			remove(tzf->zn);
+			_zip_zf_free(tzf);
+			return -1;
+		    }
 #endif /* 0 */
 		} else if (zf->entry[i].ch_data_fp) {
 #if 0
-		    zip_entry_add(tzf, zf, i);
+		    if (_zip_entry_add(tzf, zf, i)) {
+			/* zip_err set by _zip_entry_copy */
+			remove(tzf->zn);
+			_zip_zf_free(tzf);
+			return -1;
+		    }
 #endif /* 0 */
-		} else {
-		    /* XXX: ? */
-		    myerror(ERRFILE, "Z_ADDED: no data");
-		    break;
 		}
 		break;
 	    case Z_RENAMED:
-		if (zip_entry_copy(tzf, zf, i, NULL))
-		    myerror(ERRFILE, "zip_entry_copy failed");
+		if (_zip_entry_copy(tzf, zf, i, NULL)) {
+		    /* zip_err set by _zip_entry_copy */
+		    remove(tzf->zn);
+		    _zip_zf_free(tzf);
+		    return -1;
+		}
 		break;
 	    default:
 		/* can't happen */
@@ -115,18 +145,18 @@ zip_close(struct zf *zf)
 	}
     }
 
-    writecdir(tzf);
+    _zip_writecdir(tzf);
     
     if (fclose(tzf->zp)==0) {
 	if (rename(tzf->zn, zf->zn) != 0) {
 	    zip_err = ZERR_RENAME;
-	    zf_free(tzf);
+	    _zip_zf_free(tzf);
 	    return -1;
 	}
     }
 
     free(temp);
-    zf_free(zf);
+    _zip_zf_free(zf);
 
     return 0;
 }
@@ -143,7 +173,7 @@ _zip_entry_copy(struct zf *dest, struct zf *src, int entry_no, char *name)
 
     null = NULL;
 
-    zip_create_entry(dest, src->entry+entry_no, name);
+    _zip_create_entry(dest, src->entry+entry_no, name);
 
     if (fseek(src->zp, src->entry[entry_no].local_offset, SEEK_SET) != 0) {
 	zip_err = ZERR_SEEK;
@@ -156,10 +186,15 @@ _zip_entry_copy(struct zf *dest, struct zf *src, int entry_no, char *name)
     }
     
     free(tempzfe.fn);
-    tempzfe.fn = xstrdup(dest->entry[dest->nentry-1].fn);
+    tempzfe.fn = strdup(dest->entry[dest->nentry-1].fn);
+    if (!tempzfe.fn) {
+	zip_err = ZERR_MEMORY;
+	return -1;
+    }
+    
     tempzfe.fnlen = dest->entry[dest->nentry-1].fnlen;
 
-    if (writecdentry(dest->zp, &tempzfe, 1) != 0) {
+    if (_zip_writecdentry(dest->zp, &tempzfe, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
@@ -201,9 +236,9 @@ _zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
     if (!src)
 	return -1;
     
-    zip_create_entry(dest, NULL, src->entry[entry_no].fn);
+    _zip_create_entry(dest, NULL, src->entry[entry_no].fn);
 
-    if (writecdentry(dest->zp, dest->entry+dest->nentry, 1) != 0) {
+    if (_zip_writecdentry(dest->zp, dest->entry+dest->nentry, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
@@ -238,7 +273,12 @@ _zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
 		 Z_DEFAULT_STRATEGY);
 
     if (src->entry[entry_no].ch_data_buf) {
-	outbuf = (char *)xmalloc(src->entry[entry_no].ch_data_len*1.01+12);
+	outbuf = (char *)malloc(src->entry[entry_no].ch_data_len*1.01+12);
+	if (!outbuf) {
+	    zip_err = ZERR_MEMORY;
+	    return -1;
+	}
+
 	zstr->next_in = src->entry[entry_no].ch_data_buf;
 	zstr->avail_in = src->entry[entry_no].ch_data_len;
 	zstr->next_out = outbuf;
@@ -250,8 +290,10 @@ _zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
 	case Z_STREAM_END:
 	    break;
 	default:
-	    myerror(ERRDEF, "zlib error while deflating buffer: %s",
-		    zstr->msg);
+	    zip_err = ZERR_ZLIB;
+	    /* myerror(ERRDEF, "zlib error while deflating buffer: %s",
+	       zstr->msg);
+	    */
 	    return -1;
 	}
 	dest->entry[dest->nentry-1].crc =
@@ -279,7 +321,7 @@ _zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
 	    return -1;
 	}
 
-	if (writecdentry(dest->zp, dest->entry+dest->nentry, 1) != 0) {
+	if (_zip_writecdentry(dest->zp, dest->entry+dest->nentry, 1) != 0) {
 	    zip_err = ZERR_WRITE;
 	    return -1;
 	}
@@ -324,7 +366,7 @@ _zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
 
 
 static int
-writecdir(struct zf *zfp)
+_zip_writecdir(struct zf *zfp)
 {
     int i;
     long cd_offset, cd_size;
@@ -332,7 +374,7 @@ writecdir(struct zf *zfp)
     cd_offset = ftell(zfp->zp);
 
     for (i=0; i<zfp->nentry; i++) {
-	if (writecdentry(zfp->zp, zfp->entry+i, 0) != 0) {
+	if (_zip_writecdentry(zfp->zp, zfp->entry+i, 0) != 0) {
 	    zip_err = ZERR_WRITE;
 	    return -1;
 	}
@@ -343,12 +385,12 @@ writecdir(struct zf *zfp)
     clearerr(zfp->zp);
     fprintf(zfp->zp, EOCD_MAGIC);
     fprintf(zfp->zp, "%c%c%c%c", 0, 0, 0, 0);
-    write2(zfp->zp, zfp->nentry);
-    write2(zfp->zp, zfp->nentry);
-    write4(zfp->zp, cd_size);
-    write4(zfp->zp, cd_offset);
-    write2(zfp->zp, zfp->comlen);
-    writestr(zfp->zp, zfp->com, zfp->comlen);
+    _zip_write2(zfp->zp, zfp->nentry);
+    _zip_write2(zfp->zp, zfp->nentry);
+    _zip_write4(zfp->zp, cd_size);
+    _zip_write4(zfp->zp, cd_offset);
+    _zip_write2(zfp->zp, zfp->comlen);
+    _zip_writestr(zfp->zp, zfp->com, zfp->comlen);
 
     return 0;
 }
@@ -356,7 +398,7 @@ writecdir(struct zf *zfp)
 
 
 static void
-write2(FILE *fp, int i)
+_zip_write2(FILE *fp, int i)
 {
     putc(i&0xff, fp);
     putc((i>>8)&0xff, fp);
@@ -367,7 +409,7 @@ write2(FILE *fp, int i)
 
 
 static void
-write4(FILE *fp, int i)
+_zip_write4(FILE *fp, int i)
 {
     putc(i&0xff, fp);
     putc((i>>8)&0xff, fp);
@@ -380,7 +422,7 @@ write4(FILE *fp, int i)
 
 
 static void
-writestr(FILE *fp, char *str, int len)
+_zip_writestr(FILE *fp, char *str, int len)
 {
 #if WIZ
     int i;
@@ -395,45 +437,45 @@ writestr(FILE *fp, char *str, int len)
 
 
 
-/* writecdentry:
+/* _zip_writecdentry:
    if localp, writes local header for zfe to zf->zp,
    else write central directory entry for zfe to zf->zp.
    if after writing ferror(fp), return -1, else return 0.*/
    
 static int
-writecdentry(FILE *fp, struct zf_entry *zfe, int localp)
+_zip_writecdentry(FILE *fp, struct zf_entry *zfe, int localp)
 {
     fprintf(fp, "%s", localp?LOCAL_MAGIC:CENTRAL_MAGIC);
     
     if (!localp)
-	write2(fp, zfe->version_made);
-    write2(fp, zfe->version_need);
-    write2(fp, zfe->bitflags);
-    write2(fp, zfe->comp_meth);
-    write2(fp, zfe->lmtime);
-    write2(fp, zfe->lmdate);
+	_zip_write2(fp, zfe->version_made);
+    _zip_write2(fp, zfe->version_need);
+    _zip_write2(fp, zfe->bitflags);
+    _zip_write2(fp, zfe->comp_meth);
+    _zip_write2(fp, zfe->lmtime);
+    _zip_write2(fp, zfe->lmdate);
 
-    write4(fp, zfe->crc);
-    write4(fp, zfe->comp_size);
-    write4(fp, zfe->uncomp_size);
+    _zip_write4(fp, zfe->crc);
+    _zip_write4(fp, zfe->comp_size);
+    _zip_write4(fp, zfe->uncomp_size);
     
-    write2(fp, zfe->fnlen);
-    write2(fp, zfe->eflen);
+    _zip_write2(fp, zfe->fnlen);
+    _zip_write2(fp, zfe->eflen);
     if (!localp) {
-	write2(fp, zfe->fcomlen);
-	write2(fp, zfe->disknrstart);
-	write2(fp, zfe->intatt);
+	_zip_write2(fp, zfe->fcomlen);
+	_zip_write2(fp, zfe->disknrstart);
+	_zip_write2(fp, zfe->intatt);
 
-	write4(fp, zfe->extatt);
-	write4(fp, zfe->local_offset);
+	_zip_write4(fp, zfe->extatt);
+	_zip_write4(fp, zfe->local_offset);
     }
     
     if (zfe->fnlen)
-	writestr(fp, zfe->fn, zfe->fnlen);
+	_zip_writestr(fp, zfe->fn, zfe->fnlen);
     if (zfe->eflen)
-	writestr(fp, zfe->ef, zfe->eflen);
+	_zip_writestr(fp, zfe->ef, zfe->eflen);
     if (zfe->fcomlen)
-	writestr(fp, zfe->fcom, zfe->fcomlen);
+	_zip_writestr(fp, zfe->fcom, zfe->fcomlen);
 
     if (ferror(fp))
 	return -1;
@@ -452,7 +494,7 @@ _zip_create_entry(struct zf *dest, struct zf_entry *src_entry, char *name)
     if (!dest)
 	return -1;
     
-    zip_new_entry(dest);
+    _zip_new_entry(dest);
 
     if (!src_entry) {
 	/* set default values for central directory entry */
@@ -508,14 +550,20 @@ _zip_create_entry(struct zf *dest, struct zf_entry *src_entry, char *name)
     dest->entry[dest->nentry-1].local_offset = ftell(dest->zp);
 
     if (name) {
-	dest->entry[dest->nentry-1].fn = xstrdup(name);
+	dest->entry[dest->nentry-1].fn = strdup(name);
 	dest->entry[dest->nentry-1].fnlen = strlen(name);
     } else if (src_entry && src_entry->fn) {
-	dest->entry[dest->nentry-1].fn = xstrdup(src_entry->fn);
+	dest->entry[dest->nentry-1].fn = strdup(src_entry->fn);
 	dest->entry[dest->nentry-1].fnlen = src_entry->fnlen;
     } else {
-	dest->entry[dest->nentry-1].fn = xstrdup("-");
+	dest->entry[dest->nentry-1].fn = strdup("-");
 	dest->entry[dest->nentry-1].fnlen = 1;
+    }
+
+    if (!dest->entry[dest->nentry-1].fn) {
+	dest->nentry--;
+	zip_err = ZERR_MEMORY;
+	return -1;
     }
 
     return 0;

@@ -27,6 +27,9 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_FILEEXISTS       9
 #define ZERR_FILENEXISTS     10
 #define ZERR_OPEN            11
+#define ZERR_TMPOPEN         12
+#define ZERR_ZLIB            13
+#define ZERR_MEMORY          14
 
 extern char *zip_err_str[];
 
