@@ -87,7 +87,7 @@ struct zip_entry {
     zip_read_func *ch_func;
     void *ch_data;
     int ch_comp;
-    struct meta *ch_meta;
+    struct zip_meta *ch_meta;
 };
 
 struct zip_meta {
