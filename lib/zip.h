@@ -150,6 +150,7 @@ int zip_fclose(struct zip_file *zff);
 struct zip_meta *zip_new_meta(void);
 void zip_free_meta(struct zip_meta *meta);
 struct zip_meta *zip_get_meta(struct zip *zf, int idx);
+char *zip_get_name(struct zip *zf, int idx);
 
 /* high level routines to modify zip file */
 
