@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.15 2003/03/16 10:21:42 wiz Exp $
+  $NiH: zipint.h,v 1.16 2003/10/01 09:51:01 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -37,21 +37,23 @@
 #define CDENTRYSIZE         46
 #define LENTRYSIZE          30
 
+
+
+void _zip_entry_init(struct zip *, int);
+int _zip_file_fillbuf(char *, int, struct zip_file *);
+int _zip_free(struct zip *);
+int _zip_free_entry(struct zip_entry *);
+int _zip_local_header_read(struct zip *, int);
+void *_zip_memdup(const void *, int);
+int _zip_merge_meta(struct zip_meta *, struct zip_meta *);
+int _zip_merge_meta_fix(struct zip_meta *, struct zip_meta *);
 struct zip *_zip_new(void);
-int _zip_free(struct zip *zf);
-int _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp, 
-		     int left, int readp, int localp);
-int _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff);
-void *_zip_memdup(const void *mem, int len);
-void _zip_entry_init(struct zip *zf, int idx);
-int _zip_set_name(struct zip *zf, int idx, const char *name);
-struct zip_entry *_zip_new_entry(struct zip *zf);
-int _zip_free_entry(struct zip_entry *ze);
-int _zip_unchange_data(struct zip_entry *ze);
-int _zip_unchange(struct zip_entry *ze);
-int _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src);
-int _zip_merge_meta_fix(struct zip_meta *dest, struct zip_meta *src);
-int _zip_local_header_read(struct zip *zf, int idx);
+struct zip_entry *_zip_new_entry(struct zip *);
+int _zip_readcdentry(FILE *, struct zip_entry *, unsigned char **, 
+		     int, int, int);
+int _zip_set_name(struct zip *, int, const char *);
+int _zip_unchange(struct zip_entry *);
+int _zip_unchange_data(struct zip_entry *);
 
 #endif /* zipint.h */
 

@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.29 2003/03/16 10:21:37 wiz Exp $
+  $NiH: zip.h,v 1.30 2003/10/01 09:50:59 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -133,61 +133,40 @@ struct zip_meta {
 
 
 
-/* opening/closing zip files */
-
-struct zip *zip_open(const char *fn, int checkp);
-int zip_close(struct zip *zf);
-
-int zip_name_locate(struct zip *zf, const char *fn, int case_sens);
-
-/* read access to files in zip file */
-
-struct zip_file *zip_fopen(struct zip *zf, const char *fn, int case_sens);
-struct zip_file *zip_fopen_index(struct zip *zf, int fileno);
-int zip_fread(struct zip_file *zff, char *outbuf, int toread);
-int zip_fclose(struct zip_file *zff);
-
-/* data structure to set file attributes (except the file name) */
-
+int zip_add(struct zip *, const char *, struct zip_meta *,
+	    zip_read_func, void *, int);
+int zip_add_data(struct zip *, const char *, struct zip_meta *,
+		 const char *, int, int);
+int zip_add_file(struct zip *, const char *, struct zip_meta *,
+		 const char *, int, int);
+int zip_add_filep(struct zip *, const char *, struct zip_meta *,
+		 FILE *, int, int);
+int zip_add_zip(struct zip *, const char *, struct zip_meta *,
+		struct zip *, int, int, int);
+int zip_close(struct zip *);
+int zip_delete(struct zip *, int);
+int zip_fclose(struct zip_file *);
+struct zip_file *zip_fopen(struct zip *, const char *, int);
+struct zip_file *zip_fopen_index(struct zip *, int);
+int zip_fread(struct zip_file *, char *, int);
+void zip_free_meta(struct zip_meta *);
+struct zip_meta *zip_get_meta(struct zip *, int);
+const char *zip_get_name(struct zip *, int);
+int zip_name_locate(struct zip *, const char *, int);
 struct zip_meta *zip_new_meta(void);
-void zip_free_meta(struct zip_meta *meta);
-struct zip_meta *zip_get_meta(struct zip *zf, int idx);
-const char *zip_get_name(struct zip *zf, int idx);
-
-/* high level routines to modify zip file */
-
-int zip_rename(struct zip *zf, int idx, const char *name);
-int zip_delete(struct zip *zf, int idx);
-
-int zip_add(struct zip *zf, const char *name, struct zip_meta *meta,
-	    zip_read_func fn, void *state, int comp);
-int zip_replace(struct zip *zf, int idx, const char *name,
-		struct zip_meta *meta,
-		zip_read_func fn, void *state, int comp);
-
-int zip_add_data(struct zip *zf, const char *name, struct zip_meta *meta,
-		 const char *data, int len, int freep);
-int zip_replace_data(struct zip *zf, int idx, const char *name,
-		     struct zip_meta *meta,
-		     const char *data, int len, int freep);
-int zip_add_file(struct zip *zf, const char *name, struct zip_meta *meta,
-		 const char *fname, int start, int len);
-int zip_replace_file(struct zip *zf, int idx, const char *name,
-		     struct zip_meta *meta,
-		     const char *fname, int start, int len);
-int zip_add_filep(struct zip *zf, const char *name, struct zip_meta *meta,
-		 FILE *file, int start, int len);
-int zip_replace_filep(struct zip *zf, int idx, const char *name,
-		     struct zip_meta *meta,
-		     FILE *file, int start, int len);
-int zip_add_zip(struct zip *zf, const char *name, struct zip_meta *meta,
-		struct zip *srczf, int srcidx, int start, int len);
-int zip_replace_zip(struct zip *zf, int idx, const char *name,
-		    struct zip_meta *meta,
-		    struct zip *srczf, int srcidx, int start, int len);
-
-/* lose all changes to one or all file(s) */
-int zip_unchange(struct zip *zf, int idx);
-int zip_unchange_all(struct zip *zf);
+struct zip *zip_open(const char *, int);
+int zip_rename(struct zip *, int, const char *);
+int zip_replace(struct zip *, int, const char *, struct zip_meta *,
+		zip_read_func, void *, int);
+int zip_replace_data(struct zip *, int, const char *, struct zip_meta *,
+		     const char *, int, int);
+int zip_replace_file(struct zip *, int, const char *, struct zip_meta *,
+		     const char *, int, int);
+int zip_replace_filep(struct zip *, int, const char *, struct zip_meta *,
+		     FILE *, int, int);
+int zip_replace_zip(struct zip *, int, const char *, struct zip_meta *,
+		    struct zip *, int, int, int);
+int zip_unchange(struct zip *, int);
+int zip_unchange_all(struct zip *);
 
 #endif /* _HAD_ZIP_H */
