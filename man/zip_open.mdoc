@@ -18,7 +18,7 @@
 .\" 3. The names of the authors may not be used to endorse or promote
 .\"    products derived from this software without specific prior
 .\"    written permission.
-.\"
+.\" 
 .\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
 .\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 .\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,12 +44,10 @@
 .Ft struct zip *
 .Fn zip_open "const char *path" "int flags"
 .Sh DESCRIPTION
-.Fn zip_open
-opens the zip file
-.Ar path
-and returns a
-.Ft struct zip
-for further use by the library.
+The zip archive specified by path is opened and a pointer to a
+.\" XXX: also marks up ,
+.Ft struct zip ,
+used to manipulate the archvie, is returned.
 The
 .Fa flags
 are specified by
@@ -75,7 +73,31 @@ Otherwise,
 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
-.\".Sh ERRORS
-.\" XXX
-.\".Sh SEE ALSO
-.\" XXX
+.Sh ERRORS
+The named archive is opened unless:
+.Bl -tag -width Er
+.It Bq Er ZERR_EXISTS
+.It Bq Er ZERR_INVAL
+The 
+.Ar path
+argument is
+.Dv NULL .
+.It Bq Er ZERR_MEMORY
+Required memory could not be allocated.
+.It Bq Er ZERR_NOENT
+The named archive does not exist and
+.Dv ZIP_CREATE
+is not set.
+.It Bq Er ZERR_NOZIP
+The named file is not a zip archive.
+.It Bq Er ZERR_OPEN
+The named file could not be opened.
+.It Bq Er ZERR_READ
+A read error occurred; see
+.Va errno
+for details.
+.It Bq Er ZERR_SEEK
+The named file does not allow seeks.
+.El
+.Sh SEE ALSO
+.Xr zip_close 3
