@@ -179,6 +179,7 @@ zip_close(struct zip *zf)
 	}
 	if (rename(tzf->zn, zf->zn) != 0) {
 	    zip_err = ZERR_RENAME;
+	    remove(tzf->zn);
 	    _zip_free(tzf);
 	    zf->zp = fopen(zf->zn, "rb");
 	    /* XXX: can't handle open error usefully */
@@ -189,7 +190,6 @@ zip_close(struct zip *zf)
 	chmod(zf->zn, 0666&~mask);
     }
 
-    free(temp);
     /* no errors possible, since files already closed */
     _zip_free(zf);
     _zip_free(tzf);
