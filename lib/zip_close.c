@@ -532,7 +532,7 @@ _zip_create_entry(struct zip *dest, struct zip_entry *se,
 	de->meta->comp_size = se->meta->comp_size;
 	de->meta->uncomp_size = se->meta->uncomp_size;
 	de->meta->ext_attr = se->meta->ext_attr;
-	if (se->meta->ef_len > 0 && se->meta->ef) {
+	if (se->meta->ef_len != (unsigned short)-1 && se->meta->ef) {
 	    de->meta->ef_len = se->meta->ef_len;
 	    de->meta->ef = (char *)_zip_memdup(se->meta->ef,
 					       se->meta->ef_len);
@@ -541,7 +541,7 @@ _zip_create_entry(struct zip *dest, struct zip_entry *se,
 	    de->meta->ef_len = 0;
 	    de->meta->ef = NULL;
 	}
-	if (se->meta->lef_len > 0 && se->meta->lef) {
+	if (se->meta->lef_len != (unsigned short)-1 && se->meta->lef) {
 	    de->meta->lef_len = se->meta->lef_len;
 	    de->meta->lef = (char *)_zip_memdup(se->meta->lef,
 						se->meta->lef_len);
@@ -550,7 +550,7 @@ _zip_create_entry(struct zip *dest, struct zip_entry *se,
 	    de->meta->lef_len = 0;
 	    de->meta->lef = NULL;
 	}
-	if (se->meta->fc_len > 0 && se->meta->fc) {
+	if (se->meta->fc_len != (unsigned short)-1 && se->meta->fc) {
 	    de->meta->fc_len = se->meta->fc_len;
 	    de->meta->fc = (char *)_zip_memdup(se->meta->fc,
 					       se->meta->fc_len);
