@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new_entry.c,v 1.6 2003/10/01 09:51:00 dillo Exp $
+  $NiH: zip_new_entry.c,v 1.7 2003/10/02 14:13:31 dillo Exp $
 
   zip_new_entry.c -- create and init struct zip_entry
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -49,23 +49,24 @@ _zip_new_entry(struct zip *zf)
     if (!zf) {
 	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
 	if (!ze) {
-	    zip_err = ZERR_MEMORY;
+	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	    return NULL;
 	}
-    } else {
+    }
+    else {
 	if (zf->nentry >= zf->nentry_alloc-1) {
 	    zf->nentry_alloc += 16;
 	    zf->entry = (struct zip_entry *)realloc(zf->entry,
 						    sizeof(struct zip_entry)
 						    * zf->nentry_alloc);
 	    if (!zf->entry) {
-		zip_err = ZERR_MEMORY;
+		_zip_error_set(&zf->error, ZERR_MEMORY, 0);
 		return NULL;
 	    }
 	}
 	ze = zf->entry+zf->nentry;
     }
-    if ((ze->meta = zip_new_meta()) == NULL)
+    if ((ze->meta = _zip_new_meta()) == NULL)
 	return NULL;
 
     ze->fn = ze->fn_old = NULL;
@@ -73,8 +74,9 @@ _zip_new_entry(struct zip *zf)
 
     ze->ch_func = NULL;
     ze->ch_data = NULL;
-    ze->ch_comp = -1;
-    ze->ch_meta = NULL;
+    ze->ch_flags = 0;
+    ze->ch_comp_method = ZIP_CM_DEFAULT;
+    ze->ch_mtime = -1;
 
     if (zf)
 	zf->nentry++;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.14 2003/10/06 16:37:41 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.15 2003/10/06 22:44:06 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -138,7 +138,7 @@ zip_fopen_index(struct zip *zf, int fileno)
 
 
 int
-_zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff)
+_zip_file_fillbuf(void *buf, size_t buflen, struct zip_file *zff)
 {
     int i, j;
 

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_delete.c,v 1.10 2003/10/03 08:34:11 dillo Exp $
+  $NiH: zip_delete.c,v 1.11 2003/10/06 16:37:40 dillo Exp $
 
   zip_delete.c -- delete file from zip archive
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -51,7 +51,6 @@ zip_delete(struct zip *zf, int idx)
     if (zip_unchange(zf, idx) != 0)
 	return -1;
 
-    zf->changes = 1;
     zf->entry[idx].state = ZIP_ST_DELETED;
 
     return 0;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace.c,v 1.10 2003/10/01 09:51:01 dillo Exp $
+  $NiH: zip_replace.c,v 1.11 2003/10/02 14:13:31 dillo Exp $
 
   zip_replace.c -- replace file via callback function
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -41,8 +41,22 @@
 
 
 int
-zip_replace(struct zip *zf, int idx, const char *name, struct zip_meta *meta,
-	    zip_read_func fn, void *state, int comp)
+zip_replace(struct zip *zf, int idx, zip_read_func fn, void *state, int flags)
+{
+    if (idx < 0 || idx >= zf->nentry) {
+	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	return -1;
+    }
+
+    return _zip_replace(zf, idx, NULL, fn, state, flags);
+}
+
+
+
+
+int
+_zip_replace(struct zip *zf, int idx, const char *name,
+	     zip_read_func fn, void *state, int flags)
 {
     if (idx == -1) {
 	if (_zip_new_entry(zf) == NULL)
@@ -51,25 +65,16 @@ zip_replace(struct zip *zf, int idx, const char *name, struct zip_meta *meta,
 	idx = zf->nentry - 1;
     }
     
-    if (idx < 0 || idx >= zf->nentry) {
-	zip_err = ZERR_INVAL;
-	return -1;
-    }
-
     if (_zip_unchange_data(zf->entry+idx) != 0)
 	return -1;
 
     if (_zip_set_name(zf, idx, name) != 0)
 	return -1;
     
-    zf->changes = 1;
     zf->entry[idx].state = ZIP_ST_REPLACED;
-    if (zf->entry[idx].ch_meta)
-	zip_free_meta(zf->entry[idx].ch_meta);
-    zf->entry[idx].ch_meta = meta;
     zf->entry[idx].ch_func = fn;
     zf->entry[idx].ch_data = state;
-    zf->entry[idx].ch_comp = comp;
+    zf->entry[idx].ch_flags = flags;
 
     return 0;
 }

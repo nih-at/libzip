@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.16 2003/10/01 09:51:01 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.17 2003/10/02 14:13:32 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -51,42 +51,49 @@ struct read_part {
     struct zip *zf;
     int idx;
     struct zip_file *zff;
-    int off, len;
+    off_t off, len;
     /* XXX: ... */
 };
 
-static int read_zip(void *state, void *data, int len, enum zip_cmd cmd);
-static int read_part(void *state, void *data, int len, enum zip_cmd cmd);
+static ssize_t read_zip(void *st, void *data, size_t len, enum zip_cmd cmd);
+static ssize_t read_part(void *st, void *data, size_t len, enum zip_cmd cmd);
 
 
 
 int
-zip_replace_zip(struct zip *zf, int idx, const char *name,
-		struct zip_meta *meta,
-		struct zip *srczf, int srcidx, int start, int len)
+zip_replace_zip(struct zip *zf, int idx,
+		struct zip *srczf, int srcidx, off_t start, off_t len)
+{
+    if (srcidx < 0 || srcidx >= srczf->nentry) {
+	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	return -1;
+    }
+
+    return _zip_replace_zip(zf, idx, NULL, srczf, srcidx, start, len);
+}
+
+
+
+int
+_zip_replace_zip(struct zip *zf, int idx, const char *name,
+		 struct zip *srczf, int srcidx, off_t start, off_t len)
 {
     struct read_zip *z;
     struct read_part *p;
 
-    if (srcidx < -1 || srcidx >= srczf->nentry) {
-	zip_err = ZERR_INVAL;
-	return -1;
-    }
-
     if ((srczf->entry[srcidx].meta->comp_method != 0
 	 && start == 0 && (len == 0 || len == -1))) {
 	if ((z=(struct read_zip *)malloc(sizeof(struct read_zip))) == NULL) {
-	    zip_err = ZERR_MEMORY;
+	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	    return -1;
 	}
 	z->zf = srczf;
 	z->idx = srcidx;
-	return zip_replace(zf, idx, (name ? name : srczf->entry[srcidx].fn),
-			   meta, read_zip, z, 1);
+	return _zip_replace(zf, idx, name, read_zip, z, 1);
     }
     else {
 	if ((p=(struct read_part *)malloc(sizeof(struct read_part))) == NULL) {
-	    zip_err = ZERR_MEMORY;
+	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	    return -1;
 	}
 	p->zf = srczf;
@@ -94,15 +101,14 @@ zip_replace_zip(struct zip *zf, int idx, const char *name,
 	p->off = start;
 	p->len = (len ? len : -1);
 	p->zff = NULL;
-	return zip_replace(zf, idx, (name ? name : srczf->entry[srcidx].fn),
-			   meta, read_part, p, 0);
+	return _zip_replace(zf, idx, name, read_part, p, 0);
     }
 }
 
 
 
-static int
-read_zip(void *state, void *data, int len, enum zip_cmd cmd)
+static ssize_t
+read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 {
     struct read_zip *z;
     int ret;
@@ -121,23 +127,24 @@ read_zip(void *state, void *data, int len, enum zip_cmd cmd)
 	
     case ZIP_CMD_READ:
 	if (fseek(z->zf->zp, z->fpos, SEEK_SET) < 0) {
-	    zip_err = ZERR_SEEK;
+	    /* XXX: zip_err = ZERR_SEEK; */
 	    return -1;
 	}
 	if ((ret=fread(data, 1, len < z->avail ? len : z->avail,
 		       z->zf->zp)) < 0) {
-	    zip_err = ZERR_READ;
+	    /* XXX: zip_err = ZERR_READ; */
 	    return -1;
 	}
 	z->fpos += ret;
 	z->avail -= ret;
 	return ret;
 	
-    case ZIP_CMD_META:
-	return _zip_merge_meta_fix((struct zip_meta *)data,
-				   z->zf->entry[z->idx].meta);
     case ZIP_CMD_CLOSE:
+	free(z);
 	return 0;
+
+    default:
+	;
     }
 
     return -1;
@@ -145,8 +152,8 @@ read_zip(void *state, void *data, int len, enum zip_cmd cmd)
 
 
 
-static int
-read_part(void *state, void *data, int len, enum zip_cmd cmd)
+static ssize_t
+read_part(void *state, void *data, size_t len, enum zip_cmd cmd)
 {
     struct read_part *z;
     char b[8192], *buf;
@@ -157,6 +164,7 @@ read_part(void *state, void *data, int len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
+	/* XXX: preserve error from z->zf */
 	if ((z->zff=zip_fopen_index(z->zf, z->idx) ) == NULL)
 	    return -1;
 
@@ -176,23 +184,26 @@ read_part(void *state, void *data, int len, enum zip_cmd cmd)
 	else
 	    n = len;
 	
-	if ((i=zip_fread(z->zff, buf, n)) < 0)
+	if ((i=zip_fread(z->zff, buf, n)) < 0) {
+	    /* XXX: copy error from z->zff */
 	    return -1;
+	}
 
 	if (z->len != -1)
 	    z->len -= i;
 
 	return i;
 	
-    case ZIP_CMD_META:
-	return 0;
-
     case ZIP_CMD_CLOSE:
 	if (z->zff) {
 	    zip_fclose(z->zff);
 	    z->zff = NULL;
 	}
+	free(z);
 	return 0;
+
+	default:
+	    ;
     }
 
     return -1;

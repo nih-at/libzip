@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_rename.c,v 1.9 2003/10/03 23:25:31 dillo Exp $
+  $NiH: zip_rename.c,v 1.10 2003/10/06 16:37:41 dillo Exp $
 
   zip_rename.c -- rename file in zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,11 +48,10 @@ zip_rename(struct zip *zf, int idx, const char *name)
 	return -1;
     }
 
+    /* XXX: move this to _zip_set_name */
     if (zf->entry[idx].state == ZIP_ST_UNCHANGED) 
 	zf->entry[idx].state = ZIP_ST_RENAMED;
     
-    zf->changes = 1;
-
     _zip_set_name(zf, idx, name);
 
     return 0;

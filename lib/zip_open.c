@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.18 2003/10/06 16:37:41 dillo Exp $
+  $NiH: zip_open.c,v 1.19 2003/10/06 22:44:06 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -346,7 +346,7 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
     if (readp) {
 	/* read entry from disk */
 	if ((fread(buf, 1, size, fp)<size)) {
-	    zip_err = ZERR_READ;
+	    /* XXX: zip_err = ZERR_READ; */
 	    return -1;
 	}
 	left = size;
@@ -355,20 +355,20 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
     else {
 	cur = *cdpp;
 	if (left < size) {
-	    zip_err = ZERR_NOZIP;
+	    /* XXX: zip_err = ZERR_NOZIP; */
 	    return -1;
 	}
     }
 
     if (localp) {
 	if (memcmp(cur, LOCAL_MAGIC, 4)!=0) {
-	    zip_err = ZERR_NOZIP;
+	    /* XXX: zip_err = ZERR_NOZIP; */
 	    return -1;
 	}
     }
     else
 	if (memcmp(cur, CENTRAL_MAGIC, 4)!=0) {
-	    zip_err = ZERR_NOZIP;
+	    /* XXX: zip_err = ZERR_NOZIP; */
 	    return -1;
 	}
 
@@ -418,7 +418,7 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 		zfe->fn = strdup("");
 
 	    if (!zfe->fn) {
-		zip_err = ZERR_MEMORY;
+		/* XXX: zip_err = ZERR_MEMORY; */
 		return -1;
 	    }
 
@@ -445,7 +445,7 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 	}
 	else {
 	    /* can't get more bytes if not allowed to read */
-	    zip_err = ZERR_NOZIP;
+	    /* XXX: zip_err = ZERR_NOZIP; */
 	    return -1;
 	}
     }
@@ -518,7 +518,7 @@ _zip_readstr(unsigned char **buf, int len, int nulp)
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
-	zip_err = ZERR_MEMORY;
+	/* XXX: zip_err = ZERR_MEMORY; */
 	return NULL;
     }
     
@@ -545,7 +545,7 @@ _zip_readfpstr(FILE *fp, int len, int nulp)
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
-	zip_err = ZERR_MEMORY;
+	/* XXX: zip_err = ZERR_MEMORY; */
 	return NULL;
     }
 
@@ -593,7 +593,7 @@ _zip_checkcons(FILE *fp, struct zip *zf)
 	if (zf->entry[i].meta->local_offset < min)
 	    min = zf->entry[i].meta->local_offset;
 	if (min < 0) {
-	    zip_err = ZERR_NOZIP;
+	    _zip_error_set(&zf->error, ZERR_NOZIP, 0);
 	    _zip_free_entry(temp);
 	    return -1;
 	}
@@ -604,13 +604,13 @@ _zip_checkcons(FILE *fp, struct zip *zf)
 	if (j > max)
 	    max = j;
 	if (max > zf->cd_offset) {
-	    zip_err = ZERR_NOZIP;
+	    _zip_error_set(&zf->error, ZERR_NOZIP, 0);
 	    _zip_free_entry(temp);
 	    return -1;
 	}
 	
 	if (fseek(fp, zf->entry[i].meta->local_offset, SEEK_SET) != 0) {
-	    zip_err = ZERR_SEEK;
+	    _zip_error_set(&zf->error, ZERR_SEEK, 0);
 	    _zip_free_entry(temp);
 	    return -1;
 	}
@@ -621,7 +621,7 @@ _zip_checkcons(FILE *fp, struct zip *zf)
 	}
 	
 	if (_zip_headercomp(zf->entry+i, 0, temp, 1) != 0) {
-	    zip_err = ZERR_NOZIP;
+	    _zip_error_set(&zf->error, ZERR_NOZIP, 0);
 	    _zip_free_entry(temp);
 	    return -1;
 	}
@@ -707,7 +707,7 @@ _zip_memdup(const void *mem, int len)
 
     ret = malloc(len);
     if (!ret) {
-	zip_err = ZERR_MEMORY;
+	/* XXX: zip_err = ZERR_MEMORY; */
 	return NULL;
     }
 

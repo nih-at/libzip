@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.36 2003/10/06 16:37:40 dillo Exp $
+  $NiH: zip_close.c,v 1.37 2003/10/06 22:44:06 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -76,12 +76,6 @@ zip_close(struct zip *zf)
     struct zip *tzf;
     mode_t mask;
 
-    if (zf->changes == 0) {
-	_zip_free(zf);
-	return 0;
-    }
-
-    /* look if there really are any changes */
     count = survivors = 0;
     for (i=0; i<zf->nentry; i++) {
 	if (zf->entry[i].state != ZIP_ST_UNCHANGED)
@@ -92,7 +86,7 @@ zip_close(struct zip *zf)
 	    break;
     }
 
-    /* no changes, all has been unchanged */
+    /* no changes */
     if (count == 0) {
 	_zip_free(zf);
 	return 0;
@@ -142,10 +136,12 @@ zip_close(struct zip *zf)
     tzf->comlen = zf->comlen;
     if ((tzf->com=(unsigned char *)_zip_memdup(zf->com, zf->comlen)) == NULL) {
 	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	remove(tzf->zn);
 	_zip_free(tzf);
 	return -1;
     }
 
+#if 0
     count = 0;
     if (zf->entry) {
 	for (i=0; i<zf->nentry; i++) {
@@ -204,12 +200,16 @@ zip_close(struct zip *zf)
 
     _zip_free(zf);
     _zip_free(tzf);
-
+#else
+    return -1;
+#endif
+    
     return 0;
 }
 
 
 
+#if 0
 static int
 _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
 		struct zip_meta *meta)
@@ -699,3 +699,4 @@ _zip_local_header_read(struct zip *zf, int idx)
 
     return 0;
 }
+#endif

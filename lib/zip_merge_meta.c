@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_merge_meta.c,v 1.7 2003/03/16 10:21:40 wiz Exp $
+  $NiH: zip_merge_meta.c,v 1.8 2003/10/02 14:13:30 dillo Exp $
 
   zip_merge_meta.c -- merge two meta information structures
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -45,7 +45,7 @@ _zip_merge_meta_fix(struct zip_meta *dest, struct zip_meta *src)
     if (!src)
 	return 0;
     if (!dest) {
-	zip_err = ZERR_INTERNAL;
+	/* XXX: zip_err = ZERR_INTERNAL; */
 	return -1;
     }
     
@@ -87,7 +87,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
     if (!src)
 	return 0;
     if (!dest) {
-	zip_err = ZERR_INTERNAL;
+	/* XXX: zip_err = ZERR_INTERNAL; */
 	return -1;
     }
 
@@ -97,7 +97,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 	free(dest->ef);
 	dest->ef = _zip_memdup(src->ef, src->ef_len);
 	if (!dest->ef) {
-	    zip_err = ZERR_MEMORY;
+	    /* zip_err = ZERR_MEMORY; */
 	    return -1;
 	}
 	dest->ef_len = src->ef_len;
@@ -107,7 +107,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 	free(dest->lef);
 	dest->lef = _zip_memdup(src->lef, src->lef_len);
 	if (!dest->lef) {
-	    zip_err = ZERR_MEMORY;
+	    /* zip_err = ZERR_MEMORY; */
 	    return -1;
 	}
 	dest->lef_len = src->lef_len;
@@ -117,7 +117,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 	free(dest->fc);
 	dest->fc = _zip_memdup(src->fc, src->fc_len);
 	if (!dest->fc) {
-	    zip_err = ZERR_MEMORY;
+	    /* zip_err = ZERR_MEMORY; */
 	    return -1;
 	}
 	dest->fc_len = src->fc_len;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new_meta.c,v 1.5 2003/03/16 10:21:40 wiz Exp $
+  $NiH: zip_new_meta.c,v 1.6 2003/10/02 14:13:31 dillo Exp $
 
   zip_new_meta.c -- create and init struct zip_meta
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -37,14 +37,17 @@
 
 #include <stdlib.h>
 #include "zip.h"
+#include "zipint.h"
+
+
 
 struct zip_meta *
-zip_new_meta(void)
+_zip_new_meta(void)
 {
     struct zip_meta *meta;
     
     if ((meta=(struct zip_meta *)malloc(sizeof(struct zip_meta)))==NULL) {
-	zip_err = ZERR_MEMORY;
+	/* XXX: zip_err = ZERR_MEMORY; */
 	return NULL;
     }
 

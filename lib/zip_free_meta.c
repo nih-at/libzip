@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free_meta.c,v 1.7 2003/03/16 10:21:39 wiz Exp $
+  $NiH: zip_free_meta.c,v 1.8 2003/10/02 14:13:30 dillo Exp $
 
   zip_free_meta.c -- free struct zip_meta
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -37,9 +37,12 @@
 
 #include <stdlib.h>
 #include "zip.h"
+#include "zipint.h"
+
+
 
 void
-zip_free_meta(struct zip_meta *meta)
+_zip_free_meta(struct zip_meta *meta)
 {
     if (!meta)
 	return;

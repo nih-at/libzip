@@ -26,7 +26,6 @@ libzip_la_SOURCES=\
 	zip_free_entry.c \
 	zip_free_meta.c \
 	zip_get_error.c \
-	zip_get_meta.c \
 	zip_get_num_files.c \
 	zip_get_name.c \
 	zip_merge_meta.c \
