@@ -1,4 +1,4 @@
-.\" $NiH: zip_close.mdoc,v 1.6 2004/11/30 22:26:55 wiz Exp $
+.\" $NiH: zip_close.mdoc,v 1.7 2004/12/01 00:30:43 wiz Exp $
 .\"
 .\" zip_close.mdoc -- close zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -76,30 +76,17 @@ Required memory could not be allocated.
 File is not a zip archive.
 .It Bq Er ZIP_ER_READ
 A file read failed.
-See
-.Va errno
-for details.
 .It Bq Er ZIP_ER_RENAME
 A temporary file could not be renamed to its final name.
-See
-.Va errno
-for details.
 .It Bq Er ZIP_ER_SEEK
 A file seek failed.
-See
-.Va errno
-for details.
 .It Bq Er ZIP_ER_TMPOPEN
 A temporary file could not be created.
-See
-.Va errno
-for details.
 .It Bq Er ZIP_ER_WRITE
 A file write failed.
-See
-.Va errno
-for details.
 .\" XXX: list incomplete: add_data, copy_data
 .El
 .Sh SEE ALSO
-.Xr zip_open 3
+.Xr zip_error_get 3 ,
+.Xr zip_open 3 ,
+.Xr zip_strerror 3
