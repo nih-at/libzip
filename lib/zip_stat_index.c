@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_stat_index.c,v 1.5 2004/11/17 21:55:14 wiz Exp $
+  $NiH: zip_stat_index.c,v 1.6 2004/11/18 15:04:05 wiz Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -43,10 +43,16 @@
 int
 zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 {
+    const char *name;
+    
     if (index < 0 || index >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
+
+    if ((name=zip_get_name(za, index, flags)) == NULL)
+	return -1;
+    
 
     if ((flags & ZIP_FL_UNCHANGED) == 0
 	&& ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
@@ -57,7 +63,7 @@ zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 	}
     }
     else {
-	if (index >= za->cdir->nentry) {
+	if (za->cdir == NULL || index >= za->cdir->nentry) {
 	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	    return -1;
 	}
@@ -71,10 +77,7 @@ zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 	/* st->bitflags = za->cdir->entry[index].bitflags; */
     }
 
-    if (flags & ZIP_FL_UNCHANGED)
-	st->name = za->cdir->entry[index].filename;
-    else
-	st->name = zip_get_name(za, index);
-
+    st->name = name;
+    
     return 0;
 }

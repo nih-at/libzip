@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.4 2004/11/18 17:11:24 wiz Exp $
+  $NiH: zipmerge.c,v 1.5 2004/11/24 11:55:57 wiz Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -230,7 +230,7 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
     }
 
     for (i=0; i<zip_get_num_files(zs); i++) {
-	fname = zip_get_name(zs, i);
+	fname = zip_get_name(zs, i, 0);
 
 	if ((idx=zip_name_locate(za, fname, name_flags)) != -1) {
 	    switch (confirm_replace(za, tname, idx, zs, sname, i)) {

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_unchange_all.c,v 1.5 2003/10/03 08:34:11 dillo Exp $
+  $NiH: zip_unchange_all.c,v 1.6 2003/10/06 16:37:41 dillo Exp $
 
   zip_unchange.c -- undo changes to all files in zip archive
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -48,7 +48,7 @@ zip_unchange_all(struct zip *za)
 
     ret = 0;
     for (i=0; i<za->nentry; i++)
-	ret |= zip_unchange(za, i);
+	ret |= _zip_unchange(za, i, 1);
         
     return ret;
 }

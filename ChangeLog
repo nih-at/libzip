@@ -1,5 +1,10 @@
 2004-11-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
+	* lib/zip_get_name.c (zip_get_name): add flags argument.
+	(_zip_get_name): new function.
+	* lib/zip_uncange.c (zip_unchange): return error if unchanging
+	name would result in duplicate name in archive.
+	
 	* lib/zip_name_locate.c (_zip_name_locate): new function.
 	(zip_name_locate): move actual name lookup to _zip_name_locate.
 	* lib/zip_set_name.c (_zip_set_name): don't allow duplicate names

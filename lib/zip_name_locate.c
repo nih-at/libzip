@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_name_locate.c,v 1.15 2004/11/18 15:04:05 wiz Exp $
+  $NiH: zip_name_locate.c,v 1.16 2004/11/30 22:19:37 wiz Exp $
 
   zip_name_locate.c -- get index by name
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -45,30 +45,24 @@
 int
 zip_name_locate(struct zip *za, const char *fname, int flags)
 {
-    int i;
-    
-    if (fname == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-    
-    i = _zip_name_locate(za, fname, flags);
-
-    if (i == -1)
-	_zip_error_set(&za->error, ZIP_ER_NOENT, 0);
-
-    return i;
+    return _zip_name_locate(za, fname, flags, &za->error);
 }
 
 
 
 int
-_zip_name_locate(struct zip *za, const char *fname, int flags)
+_zip_name_locate(struct zip *za, const char *fname, int flags,
+		 struct zip_error *error)
 {
     int (*cmp)(const char *, const char *);
     const char *fn, *p, *q;
     int i, n;
 
+    if (fname == NULL) {
+	_zip_error_set(error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+    
     cmp = (flags & ZIP_FL_NOCASE) ? strcasecmp : strcmp;
 
     n = (flags & ZIP_FL_UNCHANGED) ? za->cdir->nentry : za->nentry;
@@ -76,7 +70,7 @@ _zip_name_locate(struct zip *za, const char *fname, int flags)
 	if (flags & ZIP_FL_UNCHANGED)
 	    fn = za->cdir->entry[i].filename;
 	else
-	    fn = zip_get_name(za, i);
+	    fn = _zip_get_name(za, i, flags, error);
 
 	/* newly added (partially filled) entry */
 	if (fn == NULL)
@@ -98,5 +92,6 @@ _zip_name_locate(struct zip *za, const char *fname, int flags)
 	    return i;
     }
 
+    _zip_error_set(error, ZIP_ER_NOENT, 0);
     return -1;
 }

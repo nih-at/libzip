@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_set_name.c,v 1.14 2004/11/18 17:11:22 wiz Exp $
+  $NiH: zip_set_name.c,v 1.15 2004/11/30 22:19:38 wiz Exp $
 
   zip_set_name.c -- rename helper function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -46,17 +46,22 @@ int
 _zip_set_name(struct zip *za, int idx, const char *name)
 {
     char *s;
+    int i;
     
     if (idx < 0 || idx >= za->nentry || name == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
-    if (_zip_name_locate(za, name, 0) != -1) {
+    if ((i=_zip_name_locate(za, name, 0, NULL)) != -1 && i != idx) {
 	_zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
 	return -1;
     }
 
+    /* no effective name change */
+    if (i == idx)
+	return 0;
+    
     if ((s=strdup(name)) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_unchange_data.c,v 1.12 2004/06/24 15:01:58 dillo Exp $
+  $NiH: zip_unchange_data.c,v 1.13 2004/11/18 15:04:06 wiz Exp $
 
   zip_unchange_data.c -- undo helper function
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -36,7 +36,7 @@
 
 
 #include <stdlib.h>
-#include "zip.h"
+
 #include "zipint.h"
 
 void
