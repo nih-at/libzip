@@ -2,7 +2,7 @@
 .\" from NiH: zip_open.mdoc,v 1.7 2003/10/02 16:00:55 dillo Exp 
 .\" $NiH: zip_open.mdoc,v 1.7 2003/10/02 16:00:55 dillo Exp $
 .\"
-.\" zip_open.mdoc \-\- open zip archive
+.\" zip_open.mdoc \-- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -52,7 +52,7 @@ used to manipulate the archive, is returned.
 The
 .Fa flags
 are specified by
-.I or Ns No 'ing
+.I orNo 'ing
 the following values, or 0 for none of them.
 .RS
 .TP 15

@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_unchange_all.mdoc,v 1.1 2003/10/03 08:30:44 dillo Exp 
-.\" $NiH: zip_unchange_all.mdoc,v 1.1 2003/10/03 08:30:44 dillo Exp $
+.\" from NiH: zip_unchange_all.mdoc,v 1.2 2003/10/03 09:44:43 wiz Exp 
+.\" $NiH: zip_unchange_all.mdoc,v 1.2 2003/10/03 09:44:43 wiz Exp $
 .\"
-.\" zip_unchange_all.mdoc \-\- undo changes to all files in zip archive
+.\" zip_unchange_all.mdoc \-- undo changes to all files in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,9 +33,9 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_OPEN 3 "October 3, 2003" NiH
+.TH ZIP_UNCHANGE_ALL 3 "October 3, 2003" NiH
 .SH "NAME"
-zip_unchange \- undo changes to all files in zip archive
+zip_unchange_all \- undo changes to all files in zip archive
 .SH "LIBRARY"
 .Lb libzip
 .SH "SYNOPSIS"
@@ -48,7 +48,7 @@ Changes to all files in
 are reverted.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the global variable
+Otherwise, \-1 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .\".SH "ERRORS"
