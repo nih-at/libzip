@@ -7,4 +7,4 @@ ziptest_SOURCES=ziptest.c
 TESTS=buffadd
 
 INCLUDES=-I$(top_srcdir) -I$(top_srcdir)/libzip
-LDADD=../libzip.a
+LDADD=../libzip.la
