@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.35.4.4 2004/04/07 12:08:21 dillo Exp $
+  $NiH: zip.h,v 1.35.4.5 2004/04/08 16:53:07 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -50,11 +50,12 @@
 #define ZIP_CHECKCONS        4
 
 
-/* flags for zip_name_locate and zip_fopen */
+/* flags for zip_name_locate, zip_fopen, zip_stat, ... */
 
-#define ZIP_NAME_NOCASE		1 /* ignore case on name lookup */
-#define ZIP_NAME_NODIR		2 /* ignore directory component */
-#define ZIP_NAME_COMP		4 /* read compressed data (XXX: rename) */
+#define ZIP_FL_NOCASE		1 /* ignore case on name lookup */
+#define ZIP_FL_NODIR		2 /* ignore directory component */
+#define ZIP_FL_COMPRESSED	4 /* read compressed data (XXX: rename) */
+#define ZIP_FL_UNCHANGED	8 /* use original data, ignoring changes */
 
 /* flags for zip_add and zip_replace */
 
@@ -137,7 +138,8 @@ int zip_add(struct zip *, const char *, zip_read_func, void *, int);
 int zip_add_data(struct zip *, const char *, const void *, off_t, int);
 int zip_add_file(struct zip *, const char *, const char *, off_t, off_t);
 int zip_add_filep(struct zip *, const char *, FILE *, off_t, off_t);
-int zip_add_zip(struct zip *, const char *, struct zip *, int, off_t, off_t);
+int zip_add_zip(struct zip *, const char *, struct zip *, int, int,
+		off_t, off_t);
 int zip_close(struct zip *);
 int zip_delete(struct zip *, int);
 int zip_error_str(char *, size_t, int, int);
@@ -158,9 +160,9 @@ int zip_replace(struct zip *, int, zip_read_func, void *, int);
 int zip_replace_data(struct zip *, int, const void *, off_t, int);
 int zip_replace_file(struct zip *, int, const char *, off_t, off_t);
 int zip_replace_filep(struct zip *, int, FILE *, off_t, off_t);
-int zip_replace_zip(struct zip *, int, struct zip *, int, off_t, off_t);
+int zip_replace_zip(struct zip *, int, struct zip *, int, int, off_t, off_t);
 int zip_stat(struct zip *, const char *, int, struct zip_stat *);
-int zip_stat_index(struct zip *, int, struct zip_stat *);
+int zip_stat_index(struct zip *, int, int, struct zip_stat *);
 const char *zip_strerror(struct zip *);
 int zip_unchange(struct zip *, int);
 int zip_unchange_all(struct zip *);

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.17.4.8 2004/04/10 23:15:55 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.17.4.9 2004/04/13 19:47:59 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -51,27 +51,29 @@ static ssize_t read_zip(void *st, void *data, size_t len, enum zip_cmd cmd);
 
 int
 zip_replace_zip(struct zip *zf, int idx,
-		struct zip *srczf, int srcidx, off_t start, off_t len)
+		struct zip *srczf, int srcidx, int flags,
+		off_t start, off_t len)
 {
     if (srcidx < 0 || srcidx >= srczf->nentry) {
 	_zip_error_set(&zf->error, ZERR_INVAL, 0);
 	return -1;
     }
 
-    return _zip_replace_zip(zf, idx, NULL, srczf, srcidx, start, len);
+    return _zip_replace_zip(zf, idx, NULL, srczf, srcidx, flags, start, len);
 }
 
 
 
 int
 _zip_replace_zip(struct zip *zf, int idx, const char *name,
-		 struct zip *srczf, int srcidx, off_t start, off_t len)
+		 struct zip *srczf, int srcidx, int flags,
+		 off_t start, off_t len)
 {
     struct zip_error error;
     struct read_zip *p;
-    int flags;
 
-    if (ZIP_ENTRY_DATA_CHANGED(srczf->entry+srcidx)) {
+    if ((flags & ZIP_FL_UNCHANGED) == 0
+	&& ZIP_ENTRY_DATA_CHANGED(srczf->entry+srcidx)) {
 	_zip_error_set(&zf->error, ZERR_CHANGED, 0);
 	return NULL;
     }
@@ -80,9 +82,9 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	len = -1;
 
     if (start == 0 && len == -1)
-	flags = ZIP_NAME_COMP;
+	flags |= ZIP_FL_COMPRESSED;
     else
-	flags = 0;
+	flags &= ~ZIP_FL_COMPRESSED;
 
     if ((p=malloc(sizeof(*p))) == NULL) {
 	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
@@ -91,7 +93,7 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	
     _zip_error_copy(&error, &srczf->error);
 	
-    if (zip_stat_index(srczf, srcidx, &p->st) < 0
+    if (zip_stat_index(srczf, srcidx, flags, &p->st) < 0
 	|| (p->zf=zip_fopen_index(srczf, srcidx, flags)) == NULL) {
 	free(p);
 	_zip_error_copy(&zf->error, &srczf->error);
@@ -102,7 +104,7 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
     p->off = start;
     p->len = len;
 
-    if ((flags & ZIP_NAME_COMP) == 0) {
+    if ((flags & ZIP_FL_COMPRESSED) == 0) {
 	p->st.size = p->st.comp_size = len;
 	p->st.comp_method = ZIP_CM_STORE;
 	/* XXX: crc */
