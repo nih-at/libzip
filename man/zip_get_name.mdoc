@@ -1,4 +1,4 @@
-.\" $NiH: zip_get_name.mdoc,v 1.4 2004/11/17 21:55:16 wiz Exp $
+.\" $NiH: zip_get_name.mdoc,v 1.5 2004/11/30 22:26:56 wiz Exp $
 .\"
 .\" zip_get_name.mdoc -- get name of file by index
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -31,7 +31,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 3, 2003
+.Dd November 30, 2004
 .Dt ZIP_GET_NAME 3
 .Os
 .Sh NAME
@@ -42,7 +42,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft const char *
-.Fn zip_get_name "struct zip *archive" "int index"
+.Fn zip_get_name "struct zip *archive" "int index" "int flags"
 .Sh DESCRIPTION
 The
 .Fn zip_get_name
@@ -50,6 +50,11 @@ function returns the name of the file at position
 .Ar index
 in
 .Ar archive .
+If
+.Ar flags
+is set to
+.Dv ZIP_FL_UNCHANGED ,
+the original unchanged filename is returned.
 The returned string must not be modified or freed, and becomes invalid when
 .Ar archive
 is closed.
@@ -67,6 +72,11 @@ fails if:
 .It Bq Er ZIP_ER_INVAL
 .Ar index
 is not a valid file index in
-.Ar archive .
+.Ar archive ,
+or
+.Ar index
+points to an added file and
+.Dv ZIP_FL_UNCHANGED
+is set.
 .Sh SEE ALSO
 .Xr zip_name_locate 3
