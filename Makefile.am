@@ -1,0 +1,1 @@
+SUBDIRS=lib src regress

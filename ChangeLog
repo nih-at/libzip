@@ -1,0 +1,37 @@
+2003-01-30  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* configure.ac: bump to 0.5.
+
+	* libzip/tests/buffadd.c: include <string.h>.
+	* libzip/zip_replace_data.c: include <string.h>.
+
+2001-10-27  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* libzip/zip_replace_zip.c (read_part): fix typo: pass correct
+	length to zip_read()
+
+2001-10-20  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* libzip/zip_open.c (_zip_readcdir): Work around some broken zip
+	files.
+
+2000-11-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* libzip/Makefile.am: install public header file
+
+2000-11-04  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* zip/Makefile.am, libzip/tests/Makefile.am: make libzip
+	shared by using libtool
+	* config.guess, config.sub, libtool.m4, ltconfig, ltmain.sh: new
+	files for above
+
+	* libzip/Makefile.am, zip.h: add zip_get_name
+	* libzip/zip_get_name.c: new file
+
+	* libzip/tests/ziptest.c (main): add some '\n'
+
+1999-10-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* libzip/zip_close.c (zip_close): make zip_close work under DOS,
+	free zip structure for temp file
