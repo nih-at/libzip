@@ -59,7 +59,7 @@ zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 	return -1;
     }
 
-    if ((srczf->entry[srcidx].meta->comp_method == 8
+    if ((srczf->entry[srcidx].meta->comp_method != 0
 	 && start == 0 && (len == 0 || len == -1))) {
 	if ((z=(struct read_zip *)malloc(sizeof(struct read_zip))) == NULL) {
 	    zip_err = ZERR_MEMORY;
