@@ -12,7 +12,10 @@
 * regression tests
 * code review
 * README
+* set mtime for changed entries
 ------------------------------------------------ others
+* API for (file and archive) comments
+* let ch_func report errors back to caller
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison
 * support for zip64 (large file)
@@ -21,9 +24,6 @@
 * append to files (for self-extracting files)
 * add custom compression function support
 * zip_replace_zip: remember compression method, recompress if different speced
-* better closing of zip-files
 * close even if error...
 * update-zip (instead of close, reopen)
 * support for old compression methods?????
-* zip-comment functions
-* better error handling, more verbose
