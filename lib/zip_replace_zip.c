@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.17.4.2 2004/03/22 14:17:34 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.17.4.3 2004/03/22 14:56:49 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -117,12 +117,9 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
-	/* XXX: use same method as in zip_fopen_index() */
-	_zip_local_header_read(z->zf, z->idx);
-	z->fpos = z->zf->entry[z->idx].offset + LENTRYSIZE
-	    + z->zf->entry[z->idx].meta->lef_len
-	    + z->zf->entry[z->idx].meta->fc_len
-	    + z->zf->entry[z->idx].file_fnlen;
+	/* XXX: sets zf->error */
+	if ((z->fpos=_zip_file_get_offset(z->zf, z->zf->entry+z->idx)) == 0)
+	    return -1;
 	z->avail = z->zf->entry[z->idx].comp_size;
 	return 0;
 	
