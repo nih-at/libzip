@@ -7,6 +7,7 @@
 	zip_error_sys_type zip_file_get_error zip_get_error
 	zip_replace zip_replace_data zip_replace_file zip_replace_filep
 	zip_replace_zip
+* don't allow the same filename twice in a zip (when adding/replacing)
 * regression tests
 * code review
 * README
@@ -17,7 +18,6 @@
 * zipcmp: add option for file content comparison
 * support for zip64 (large file)
 
-* don't allow the same filename twice in a zip (when adding/replacing)
 * append to files (for self-extracting files)
 * add custom compression function support
 * zip_replace_zip: remember compression method, recompress if different speced
