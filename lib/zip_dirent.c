@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.2 2004/04/14 14:01:23 dillo Exp $
+  $NiH: zip_dirent.c,v 1.3 2004/11/17 21:55:10 wiz Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -150,8 +150,8 @@ _zip_dirent_finalize(struct zip_dirent *zde)
 void
 _zip_dirent_init(struct zip_dirent *de)
 {
-    de->version_madeby = 0; /* XXX */
-    de->version_needed = 0; /* XXX */
+    de->version_madeby = 0;
+    de->version_needed = 20; /* 2.0 */
     de->bitflags = 0;
     de->comp_method = 0;
     de->last_mod = 0;
@@ -220,7 +220,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     }
 
     if (memcmp(cur, (localp ? LOCAL_MAGIC : CENTRAL_MAGIC), 4) != 0) {
-	/* XXX: zip_err = ZIP_ER_NOZIP; */
+	_zip_error_set(error, ZIP_ER_NOZIP, 0);
 	return -1;
     }
     cur += 4;
