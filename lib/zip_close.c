@@ -593,9 +593,9 @@ _zip_u2d_time(time_t time, int *ddate, int *dtime)
     struct tm *tm;
 
     tm = localtime(&time);
-    *dtime = ((tm->tm_year+1900-1980)<<9)+ ((tm->tm_mon+1)<<5)
+    *ddate = ((tm->tm_year+1900-1980)<<9)+ ((tm->tm_mon+1)<<5)
 	+ tm->tm_mday;
-    *ddate = ((tm->tm_hour)<<11)+ ((tm->tm_min)<<5)
+    *dtime = ((tm->tm_hour)<<11)+ ((tm->tm_min)<<5)
 	+ ((tm->tm_sec)>>1);
 
     return;
