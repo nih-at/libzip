@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_open.mdoc,v 1.13 2003/10/09 13:39:08 wiz Exp 
-.\" $NiH: zip_open.mdoc,v 1.13 2003/10/09 13:39:08 wiz Exp $
+.\" from NiH: zip_open.mdoc,v 1.14 2003/12/27 22:37:34 wiz Exp 
+.\" $NiH: zip_open.mdoc,v 1.14 2003/12/27 22:37:34 wiz Exp $
 .\"
 .\" zip_open.mdoc \-- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_OPEN 3 "October 3, 2003" NiH
+.TH ZIP_OPEN 3 "December 27, 2003" NiH
 .SH "NAME"
 zip_open \- open zip archive
 .SH "LIBRARY"
@@ -138,4 +138,5 @@ The file specified by
 does not allow seeks.
 .RE
 .SH "SEE ALSO"
-zip_close(3)
+zip_close(3),
+zip_error_str(3)
