@@ -1,7 +1,7 @@
 /*
   $NiH$
 
-  buffadd.c -- test cases for adding files from buffer
+  open.c -- test cases for opening zip archives
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,79 +35,82 @@
 
 
 
-#include <errno.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "zip.h"
 
-char *teststr="This is a test, and it seems to have been successful.\n";
-char *testname="testfile.txt";
-char *testzip="test_zip.zip";
+int open_fail(const char *fname, int flags, const char *desc, int err);
+int open_success(const char *fname, int flags, const char *desc, int nent);
+
+
 
 int
 main(int argc, char *argv[])
 {
+    int fail;
+
+    fail = 0;
+
+    remove("nosuchfile");
+    fail += open_fail("nosuchfile", 0, "non-existing", ZERR_NOENT);
+    fail += open_fail("Makefile", 0, "non-zip", ZERR_NOZIP);
+    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZERR_EXISTS);
+    /* ZERR_OPEN */
+    /* ZERR_READ */
+    /* ZERR_SEEK */
+    /* ZERR_INCONS */
+
+    fail += open_success("test.zip", 0, "existing", 1);
+    fail += open_success("nosuchfile", ZIP_CREATE, "new", 0);
+
+    exit(fail ? 1 : 0);
+}
+
+
+
+int
+open_fail(const char *fname, int flags, const char *desc, int err)
+{
     struct zip *z;
-    struct zip_file *ze;
-    int err;
+    int ze;
+
+    if ((z=zip_open(fname, flags, &ze)) != NULL) {
+	printf("fail: opening %s succeeded\n", desc);
+	zip_close(z);
+	return 1;
+    }
+    else if (ze != err) {
+	printf("fail: opening %s returned wrong error %d, expected %d\n",
+		desc, ze, err);
+	return 1;
+    }
+
+    return 0;
+}
+
+
+
+int
+open_success(const char *fname, int flags, const char *desc, int nent)
+{
+    struct zip *z;
+    int ze, num;
+
+    if ((z=zip_open(fname, flags, &ze)) == NULL) {
+	printf("fail: opening %s failed (%d)\n", desc, ze);
+	return 1;
+    }
+
+    num = zip_get_num_files(z);
+    zip_close(z);
     
-    char buf[2000];
-
-    remove(testzip);
-    
-    if ((z=zip_open(testzip, ZIP_CREATE, &err)) == NULL) {
-	zip_error_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr,"%s: can't open zipfile %s: %s\n", argv[0],
-		testzip, buf);
-	exit(1);
+    if (num != nent) {
+	printf("fail: opening %s got wrong number of files %d, expected %d\n",
+		desc, num, nent);
+	return 1;
     }
 
-    if (zip_add_data(z, testname, NULL, teststr, strlen(teststr), 0)==-1) {
-	fprintf(stderr,"%s: can't add buffer '%s': %s\n", argv[0],
-		teststr, zip_strerror(z));
-	exit(1);
-    }
-
-    if (zip_close(z) == -1) {
-	fprintf(stderr,"%s: can't close zipfile %s\n", argv[0],
-		testzip);
-	exit(1);
-    }
-
-    if ((z=zip_open(testzip, ZIP_CHECKCONS, &err))==NULL) {
-	zip_error_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr,"%s: can't re-open zipfile %s: %s\n", argv[0],
-		testzip, buf);
-	exit(1);
-    }
-
-    if ((ze=zip_fopen(z, testname, 0))==NULL) {
-	fprintf(stderr,"%s: can't fopen file '%s' in '%s': %s\n", argv[0],
-		testname, testzip, zip_strerror(z));
-	exit(1);
-    }
-
-    if (zip_fread(ze, buf, 2000) < 0) {
-	fprintf(stderr,"%s: can't read from '%s' in zipfile '%s': %s\n",
-		argv[0], testname, testzip, zip_file_strerror(ze));
-	exit(1);
-    }
-    
-    if (strcmp(buf, teststr)) {
-	fprintf(stderr,"%s: wrong data: '%s' instead of '%s'\n", argv[0],
-		buf, teststr);
-	exit(1);
-    }
-
-    if (zip_close(z) == -1) {
-	fprintf(stderr,"%s: can't close zipfile %s\n", argv[0],
-		testzip);
-	exit(1);
-    }
-
-    remove(testzip);
-    
     return 0;
 }
