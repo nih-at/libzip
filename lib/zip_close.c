@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.35 2003/10/04 07:39:52 dillo Exp $
+  $NiH: zip_close.c,v 1.36 2003/10/06 16:37:40 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -125,22 +125,26 @@ zip_close(struct zip *zf)
     
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
 	_zip_error_set(&zf->error, ZERR_TMPOPEN, errno);
+	close(tfd);
 	remove(temp);
 	free(temp);
-	close(tfd);
 	return -1;
     }
 
-    tzf=_zip_new(); /* XXX: bail out if tzf == NULL */
+    if ((tzf=_zip_new(&zf->error.zip_err)) == NULL) {
+	fclose(tfp);
+	remove(temp);
+	free(temp);
+	return -1;
+    }
     tzf->zp = tfp;
     tzf->zn = temp;
-    tzf->nentry = 0;
-    tzf->entry = NULL;
-    tzf->nentry_alloc = 0;
     tzf->comlen = zf->comlen;
-    tzf->cd_size = tzf->cd_offset = 0;
-    tzf->com = (unsigned char *)_zip_memdup(zf->com, zf->comlen);
-    /* XXX: bail out if tzf->com == NULL; */
+    if ((tzf->com=(unsigned char *)_zip_memdup(zf->com, zf->comlen)) == NULL) {
+	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	_zip_free(tzf);
+	return -1;
+    }
 
     count = 0;
     if (zf->entry) {

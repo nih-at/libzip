@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.13 2003/10/03 11:20:16 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.14 2003/10/06 16:37:41 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -35,6 +35,7 @@
 
 
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -175,7 +176,7 @@ _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff)
 static struct zip_file *
 _zip_file_new(struct zip *zf)
 {
-    struct zip_file *zff, file;
+    struct zip_file *zff, **file;
     int n;
 
     if ((zff=(struct zip_file *)malloc(sizeof(struct zip_file))) == NULL) {

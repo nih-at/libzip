@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.17 2003/10/06 02:50:06 dillo Exp $
+  $NiH: zip_open.c,v 1.18 2003/10/06 16:37:41 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,7 +48,7 @@
 
 static void set_error(int *errp, int err);
 static struct zip *_zip_readcdir(FILE *fp, unsigned char *buf,
-			   unsigned char *eocd, int buflen);
+			   unsigned char *eocd, int buflen, int *errp);
 static int _zip_read2(unsigned char **a);
 static int _zip_read4(unsigned char **a);
 static char *_zip_readstr(unsigned char **buf, int len, int nulp);
@@ -86,11 +86,12 @@ zip_open(const char *fn, int flags, int *errp)
     
     if (stat(fn, &st) != 0) {
 	if (flags & ZIP_CREATE) {
-	    cdir = _zip_new();
-	    /* XXX: check cdir != NULL */
+	    if ((cdir=_zip_new(errp)) == NULL)
+		return NULL;
+	    
 	    cdir->zn = strdup(fn);
 	    if (!cdir->zn) {
-		/* XXX: free cdir */
+		_zip_free(cdir);
 		set_error(errp, ZERR_MEMORY);
 		return NULL;
 	    }
@@ -148,7 +149,7 @@ zip_open(const char *fn, int flags, int *errp)
 	/* found match -- check, if good */
 	/* to avoid finding the same match all over again */
 	match++;
-	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen)) == NULL)
+	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, errp)) == NULL)
 	    continue;	    
 
 	if (cdir) {
@@ -211,11 +212,12 @@ set_error(int *errp, int err)
 /* _zip_readcdir:
    tries to find a valid end-of-central-directory at the beginning of
    buf, and then the corresponding central directory entries.
-   Returns a zipfile struct which contains the central directory 
+   Returns a struct zip which contains the central directory 
    entries, or NULL if unsuccessful. */
 
 static struct zip *
-_zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
+_zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
+	      int *errp)
 {
     struct zip *zf;
     unsigned char *cdp;
@@ -225,25 +227,23 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     comlen = buf + buflen - eocd - EOCDLEN;
     if (comlen < 0) {
 	/* not enough bytes left for comment */
-	zip_err = ZERR_NOZIP;
+	set_error(errp, ZERR_NOZIP);
 	return NULL;
     }
 
     /* check for end-of-central-dir magic */
     if (memcmp(eocd, EOCD_MAGIC, 4) != 0) {
-	zip_err = ZERR_NOZIP;
+	set_error(errp, ZERR_NOZIP);
 	return NULL;
     }
 
     if (memcmp(eocd+4, "\0\0\0\0", 4) != 0) {
-	zip_err = ZERR_MULTIDISK;
+	set_error(errp, ZERR_MULTIDISK);
 	return NULL;
     }
 
-    if ((zf=_zip_new()) == NULL) {
-	zip_err = ZERR_MEMORY;
+    if ((zf=_zip_new(errp)) == NULL)
 	return NULL;
-    }
 
     cdp = eocd + 8;
     /* number of cdir-entries on this disk */
@@ -261,7 +261,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
 	 (zf->comlen != comlen-2)) || (entries != i)) {
 	/* comment size wrong -- too few or too many left after central dir */
 	/* or number of cdir-entries on this disk != number of cdir-entries */
-	zip_err = ZERR_NOZIP;
+	set_error(errp, ZERR_NOZIP);
 	_zip_free(zf);
 	return NULL;
     }
@@ -282,9 +282,9 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
 	if (ferror(fp) || (ftell(fp) != zf->cd_offset)) {
 	    /* seek error or offset of cdir wrong */
 	    if (ferror(fp))
-		zip_err = ZERR_SEEK;
+		set_error(errp, ZERR_SEEK);
 	    else
-		zip_err = ZERR_NOZIP;
+		set_error(errp, ZERR_NOZIP);
 	    _zip_free(zf);
 	    return NULL;
 	}
@@ -293,7 +293,8 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     zf->entry = (struct zip_entry *)malloc(sizeof(struct zip_entry)
 					   *entries);
     if (!zf->entry) {
-	zip_err = ZERR_MEMORY;
+	set_error(errp, ZERR_MEMORY);
+	_zip_free(zf);
 	return NULL;
     }
 
@@ -302,6 +303,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     for (i=0; i<entries; i++) {
 	if (_zip_new_entry(zf) == NULL) {
 	    /* shouldn't happen, since space already has been malloc'd */
+	    _zip_error_get(&zf->error, errp, NULL);
 	    _zip_free(zf);
 	    return NULL;
 	}

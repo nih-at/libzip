@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.20 2003/10/06 02:50:07 dillo Exp $
+  $NiH: zipint.h,v 1.21 2003/10/06 16:37:42 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -128,7 +128,7 @@ int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
 int _zip_merge_meta(struct zip_meta *, struct zip_meta *);
 int _zip_merge_meta_fix(struct zip_meta *, struct zip_meta *);
-struct zip *_zip_new(void);
+struct zip *_zip_new(int *);
 struct zip_entry *_zip_new_entry(struct zip *);
 int _zip_readcdentry(FILE *, struct zip_entry *, unsigned char **, 
 		     int, int, int);

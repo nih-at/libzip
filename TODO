@@ -6,6 +6,7 @@
 	clean up error handling and error code setting (get rid of zip_err)
 	zip_{add,replace}*: don't use struct zip_meta
 	don't expose zip_free_meta, zip_meta_new
+	defines for compression method
 * documentation: zip_add*, zip_replace*, zip_{,_file}get_error,
 	zip_error_sys_type, zip_get_num_files, zip_error_str
 * regression tests
@@ -14,6 +15,7 @@
 ------------------------------------------------ others
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison
+* support for zip64 (large file)
 
 * don't allow the same filename twice in a zip (when adding/replacing)
 * append to files (for self-extracting files)

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free.c,v 1.6 2003/10/02 14:13:30 dillo Exp $
+  $NiH: zip_free.c,v 1.7 2003/10/06 16:37:41 dillo Exp $
 
   zip_free.c -- free struct zip
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -51,7 +51,7 @@ _zip_free(struct zip *zf)
     int i;
 
     if (zf == NULL)
-	return 0;
+	return;
 
     if (zf->zn)
 	free(zf->zn);
