@@ -12,8 +12,7 @@ zipcmp \- compare contents of zip archives
 .\" XXX
 .SH "EXIT STATUS"
 .B zipcmp
-exits 0 if the two zip files contain the same files, 1 if they differ,
+exits 0 if the two zip archive contain the same files, 1 if they differ,
 and \*[Gt]1 if an error occurred.
 .SH "SEE ALSO"
 .\" XXX
-.SH "STANDARDS"
