@@ -1,4 +1,4 @@
-.\" $NiH: zip_fopen.mdoc,v 1.3 2003/10/03 23:36:10 wiz Exp $
+.\" $NiH: zip_fopen.mdoc,v 1.4 2003/10/03 23:39:49 wiz Exp $
 .\"
 .\" zip_fopen.mdoc -- open file in zip archvie for reading
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -53,9 +53,11 @@ function opens the file name
 .Ar fname
 in
 .Ar archive .
-If
-.Ar case_sens
-is zero, case is ignored during name lookup.
+The
+.Ar flags
+argument specifies how the name lookup should be done.
+Its values are described in
+.Xr zip_name_locate 3 .
 .Pp
 The
 .Fn zip_fopen_index
