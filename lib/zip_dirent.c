@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.1.2.6 2004/04/06 21:43:35 dillo Exp $
+  $NiH: zip_dirent.c,v 1.1.2.7 2004/04/07 12:08:21 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -115,6 +115,31 @@ _zip_dirent_finalize(struct zip_dirent *zde)
     zde->extrafield = NULL;
     free(zde->comment);
     zde->comment = NULL;
+}
+
+
+
+void
+_zip_dirent_init(struct zip_dirent *de)
+{
+    de->version_madeby = 0; /* XXX */
+    de->version_needed = 0; /* XXX */
+    de->bitflags = 0;
+    de->comp_method = 0;
+    de->last_mod = 0;
+    de->crc = 0;
+    de->comp_size = 0;
+    de->uncomp_size = 0;
+    de->filename = NULL;
+    de->filename_len = 0;
+    de->extrafield = NULL;
+    de->extrafield_len = 0;
+    de->comment = NULL;
+    de->comment_len = 0;
+    de->disk_number = 0;
+    de->int_attrib = 0;
+    de->ext_attrib = 0;
+    de->offset = 0;
 }
 
 
