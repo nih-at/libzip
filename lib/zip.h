@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <zlib.h>
+#include <time.h>
 
 enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
