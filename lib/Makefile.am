@@ -25,15 +25,12 @@ libzip_la_SOURCES=\
 	zip_fread.c \
 	zip_free.c \
 	zip_free_entry.c \
-	zip_free_meta.c \
 	zip_get_error.c \
 	zip_get_num_files.c \
 	zip_get_name.c \
-	zip_merge_meta.c \
 	zip_name_locate.c \
 	zip_new.c \
 	zip_new_entry.c \
-	zip_new_meta.c \
 	zip_open.c \
 	zip_rename.c \
 	zip_replace.c \

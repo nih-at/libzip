@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.1 2004/03/20 09:54:09 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.2 2004/03/22 14:17:34 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -124,7 +124,7 @@ struct zip_dirent {
 struct zip_entry {
     char *fn;			/* file name */
     unsigned short comp_method;	/* compression method */
-    unsigend int comp_size;	/* size of compressed data */
+    unsigned int comp_size;	/* size of compressed data */
     unsigned int uncomp_size;	/* size of uncompressed data */
     unsigned int crc;		/* CRC-32 of uncompressed data */
     unsigned int offset;	/* byte offset of local dir entry */
@@ -150,7 +150,7 @@ extern const int _zip_err_type[];
 
 
 void _zip_dirent_finalize(struct zip_dirent *);
-int _zip_dirent_read(struct zip_direntry *, FILE *,
+int _zip_dirent_read(struct zip_dirent *, FILE *,
 		     unsigned char **, int, int, struct zip_error *);
 void _zip_entry_init(struct zip *, int);
 void _zip_error_copy(struct zip_error *, struct zip_error *);

@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_dirent.c,v 1.1.2.1 2004/03/22 14:17:33 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -46,8 +46,9 @@
 #include "zip.h"
 #include "zipint.h"
 
+static time_t _zip_d2u_time(int, int);
 static unsigned short _zip_read2(unsigned char **);
-static unsignend int _zip_read4(unsigned char **);
+static unsigned int _zip_read4(unsigned char **);
 static char *_zip_readfpstr(FILE *, int, int, struct zip_error *);
 static char *_zip_readstr(unsigned char **, int, int, struct zip_error *);
 
@@ -81,7 +82,7 @@ _zip_dirent_finalize(struct zip_dirent *zde)
 */
 
 int
-_zip_dirent_read(struct zip_direntry *zde, FILE *fp,
+_zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 		 unsigned char **bufp, int left, int localp,
 		 struct zip_error *error)
 {
@@ -123,10 +124,10 @@ _zip_dirent_read(struct zip_direntry *zde, FILE *fp,
     /* convert buffercontents to zip_dirent */
     
     if (!localp)
-	zde->version_made = _zip_read2(&cur);
+	zde->version_madeby = _zip_read2(&cur);
     else
-	zde->version_made = 0;
-    zde->version_need = _zip_read2(&cur);
+	zde->version_madeby = 0;
+    zde->version_needed = _zip_read2(&cur);
     zde->bitflags = _zip_read2(&cur);
     zde->comp_method = _zip_read2(&cur);
     
@@ -162,13 +163,13 @@ _zip_dirent_read(struct zip_direntry *zde, FILE *fp,
 
     if (bufp) {
 	if (left < CDENTRYSIZE + (zde->filename_len+zde->extrafield_len
-				  +zfe->commeent_len)) {
-	    _zip_error_set(error, ZIP_NOZIP, 0);
+				  +zde->comment_len)) {
+	    _zip_error_set(error, ZERR_NOZIP, 0);
 	    return -1;
 	}
 
 	if (zde->filename_len) {
-	    zde->filenme = _zip_readstr(&cur, zde->filename_len, 1, error);
+	    zde->filename = _zip_readstr(&cur, zde->filename_len, 1, error);
 	    if (!zde->filename)
 		    return -1;
 	}
@@ -181,14 +182,14 @@ _zip_dirent_read(struct zip_direntry *zde, FILE *fp,
 	}
 
 	if (zde->comment_len) {
-	    zde->comment = _zip_readstr(fp, zde->comment_len, 0, error);
+	    zde->comment = _zip_readstr(&cur, zde->comment_len, 0, error);
 	    if (!zde->comment)
 		return -1;
 	}
     }
     else {
 	if (zde->filename_len) {
-	    zde->filenme = _zip_readfpstr(fp, zde->filename_len, 1, error);
+	    zde->filename = _zip_readfpstr(fp, zde->filename_len, 1, error);
 	    if (!zde->filename)
 		    return -1;
 	}
@@ -250,7 +251,7 @@ _zip_read2(unsigned char **a)
 
 
 
-static unsignend int
+static unsigned int
 _zip_read4(unsigned char **a)
 {
     unsigned int ret;
@@ -270,13 +271,13 @@ _zip_readfpstr(FILE *fp, int len, int nulp, struct zip_error *error)
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
-	zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZERR_MEMORY, 0);
 	return NULL;
     }
 
     if (fread(r, 1, len, fp)<len) {
 	free(r);
-	zip_error_set(error, ZERR_READ, errno);
+	_zip_error_set(error, ZERR_READ, errno);
 	return NULL;
     }
 
@@ -301,7 +302,7 @@ _zip_readstr(unsigned char **buf, int len, int nulp, struct zip_error *error)
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
-	zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZERR_MEMORY, 0);
 	return NULL;
     }
     
