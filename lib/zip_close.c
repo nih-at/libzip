@@ -9,15 +9,16 @@
 #include "zipint.h"
 
 static int _zip_entry_copy(struct zip *dest, struct zip *src,
-			  int entry_no, char *name, struct zip_meta *meta);
+			  int entry_no, struct zip_meta *meta);
 static int _zip_entry_add(struct zip *dest, struct zip_entry *se);
 static int _zip_writecdir(struct zip *zfp);
 static void _zip_write2(FILE *fp, int i);
 static void _zip_write4(FILE *fp, int i);
 static void _zip_writestr(FILE *fp, char *str, int len);
 static int _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp);
-static int _zip_create_entry(struct zip *dest, struct zip_entry *src_entry,
-			     char *name, struct zip_meta *meta);
+static struct zip_entry *_zip_create_entry(struct zip *dest, 
+			                   struct zip_entry *src_entry,
+			                   char *name, struct zip_meta *meta);
 static void _zip_u2d_time(time_t time, int *ddate, int *dtime);
 static int _zip_fwrite(char *b, int s, int n, FILE *f);
 
@@ -104,7 +105,7 @@ zip_close(struct zip *zf)
 		    _zip_free(tzf);
 		    return -1;
 		}
-		if (_zip_entry_copy(tzf, zf, i, NULL, zf->entry[i].ch_meta)) {
+		if (_zip_entry_copy(tzf, zf, i, zf->entry[i].ch_meta)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
