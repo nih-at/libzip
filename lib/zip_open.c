@@ -226,7 +226,10 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     zf->comlen = _zip_read2(&cdp);
     zf->entry = NULL;
 
-    if ((zf->comlen != comlen) || (entries != i)) {
+    /* XXX: some zip files are broken; their internal comment length
+       says 0, but they have 1 or 2 comment bytes */
+    if (((zf->comlen != comlen) && (zf->comlen != comlen-1) &&
+	 (zf->comlen != comlen-2)) || (entries != i)) {
 	/* comment size wrong -- too few or too many left after central dir */
 	/* or number of cdir-entries on this disk != number of cdir-entries */
 	zip_err = ZERR_NOZIP;
