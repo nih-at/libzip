@@ -1,8 +1,8 @@
 /*
-  $NiH$
+  $NiH: zip_unchange_data.c,v 1.7 2002/06/06 09:27:16 dillo Exp $
 
   zip_unchange_data.c -- undo helper function
-  Copyright (C) 1999 Dieter Baron and Thomas Klaunser
+  Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>

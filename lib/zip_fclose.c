@@ -1,8 +1,8 @@
 /*
-  $NiH$
+  $NiH: zip_fclose.c,v 1.5 2002/06/06 09:27:09 dillo Exp $
 
   zip_fclose.c -- close file in zip file
-  Copyright (C) 1999 Dieter Baron and Thomas Klaunser
+  Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>

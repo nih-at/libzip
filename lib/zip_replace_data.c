@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_replace_data.c,v 1.8 2002/06/06 09:27:14 dillo Exp $
+  $NiH: zip_replace_data.c,v 1.9 2003/01/30 03:46:01 wiz Exp $
 
   zip_replace_data.c -- replace file from buffer
-  Copyright (C) 1999 Dieter Baron and Thomas Klaunser
+  Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>

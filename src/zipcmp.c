@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_open.c,v 1.13 2002/06/06 09:27:13 dillo Exp $
+  $NiH: cmpzip.c,v 1.1 2003/03/14 14:53:29 dillo Exp $
 
   cmpzip.c -- compare zip files
-  Copyright (C) 2003 Dieter Baron and Thomas Klaunser
+  Copyright (C) 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
