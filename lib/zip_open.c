@@ -335,8 +335,14 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
     zfe->meta->uncomp_size = _zip_read4(&cur);
     
     zfe->file_fnlen = _zip_read2(&cur);
-    zfe->meta->ef_len = _zip_read2(&cur);
-    if (!localp) {
+    if (localp) {
+	zfe->meta->ef_len = 0;
+	zfe->meta->lef_len = _zip_read2(&cur);
+	zfe->meta->fc_len = zfe->meta->disknrstart = zfe->meta->int_attr = 0;
+	zfe->meta->ext_attr = zfe->meta->local_offset = 0;
+    } else {
+	zfe->meta->ef_len = _zip_read2(&cur);
+	zfe->meta->lef_len = 0;
 	zfe->meta->fc_len = _zip_read2(&cur);
 	zfe->meta->disknrstart = _zip_read2(&cur);
 	zfe->meta->int_attr = _zip_read2(&cur);
@@ -344,13 +350,9 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 	zfe->meta->ext_attr = _zip_read4(&cur);
 	zfe->meta->local_offset = _zip_read4(&cur);
     }
-    else {
-	zfe->meta->fc_len = zfe->meta->disknrstart = zfe->meta->int_attr = 0;
-	zfe->meta->ext_attr = zfe->meta->local_offset = 0;
-    }
-    
+
     if (left < CDENTRYSIZE+zfe->file_fnlen+zfe->meta->ef_len
-	+zfe->meta->fc_len) {
+	+zfe->meta->lef_len+zfe->meta->fc_len) {
 	if (readp) {
 	    if (zfe->file_fnlen)
 		zfe->fn = _zip_readfpstr(fp, zfe->file_fnlen, 1);
@@ -362,12 +364,21 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 		return -1;
 	    }
 
+	    /* only set for local headers */
+	    if (zfe->meta->lef_len) {
+		zfe->meta->lef = _zip_readfpstr(fp, zfe->meta->lef_len, 0);
+		if (!zfe->meta->lef)
+		    return -1;
+	    }
+
+	    /* only set for central directory entries */
 	    if (zfe->meta->ef_len) {
 		zfe->meta->ef = _zip_readfpstr(fp, zfe->meta->ef_len, 0);
 		if (!zfe->meta->ef)
 		    return -1;
 	    }
 
+	    /* only set for central directory entries */
 	    if (zfe->meta->fc_len) {
 		zfe->meta->fc = _zip_readfpstr(fp, zfe->meta->fc_len, 0);
 		if (!zfe->meta->fc)
@@ -386,11 +397,22 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 	    if (!zfe->fn)
 		return -1;
 	}
-        if (zfe->meta->ef_len) {
+
+	/* only set for local headers */
+	if (zfe->meta->lef_len) {
+	    zfe->meta->lef = _zip_readstr(&cur, zfe->meta->lef_len, 0);
+	    if (!zfe->meta->lef)
+		return -1;
+	}
+
+	/* only set for central directory entries */
+	if (zfe->meta->ef_len) {
 	    zfe->meta->ef = _zip_readstr(&cur, zfe->meta->ef_len, 0);
 	    if (!zfe->meta->ef)
 		return -1;
 	}
+
+	/* only set for central directory entries */
         if (zfe->meta->fc_len) {
 	    zfe->meta->fc = _zip_readstr(&cur, zfe->meta->fc_len, 0);
 	    if (!zfe->meta->fc)

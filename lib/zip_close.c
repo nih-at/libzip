@@ -99,7 +99,7 @@ zip_close(struct zip *zf)
 	    switch (zf->entry[i].state) {
 	    case ZIP_ST_UNCHANGED:
 	    case ZIP_ST_RENAMED:
-		_zip_loacl_header_read(zf, i);
+		_zip_local_header_read(zf, i);
 		if (_zip_entry_copy(tzf, zf, i, NULL, zf->entry[i].ch_meta)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
@@ -150,10 +150,7 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
 {
     char buf[BUFSIZE];
     unsigned int len, remainder;
-    unsigned char *null;
     struct zip_entry tempzfe;
-
-    null = NULL;
 
     _zip_create_entry(dest, src->entry+entry_no, name, meta);
 
@@ -163,7 +160,7 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
 	return -1;
     }
 
-    if (_zip_readcdentry(src->zp, &tempzfe, &null, 0, 1, 1) != 0) {
+    if (_zip_readcdentry(src->zp, &tempzfe, NULL, 0, 1, 1) != 0) {
 	zip_err = ZERR_READ;
 	return -1;
     }
@@ -607,7 +604,7 @@ _zip_local_header_read(struct zip *zf, int idx)
 	return -1;
     }
 
-    if (_zip_readcdentry(zf->zp, &ze, NULL, 0, 1, 1) < 0)
+    if (_zip_readcdentry(zf->zp, ze, NULL, 0, 1, 1) < 0)
 	return -1;
 
     zf->entry[idx].meta->lef_len = ze->meta->lef_len;
