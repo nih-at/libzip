@@ -18,8 +18,6 @@
 * sort zipint.h contents
 * documentation:
 	zip_error_sys_type zip_file_get_error zip_get_error
-	zip_source_file zip_source_filep zip_source_function
-	zip_source_zip
 * don't allow the same filename twice in a zip (when adding/replacing)
 * regression tests
 * code review
