@@ -1,5 +1,5 @@
 /*
-  $NiH: cmpzip.c,v 1.1 2003/03/14 14:53:29 dillo Exp $
+  $NiH: cmpzip.c,v 1.2 2003/03/16 10:21:37 wiz Exp $
 
   cmpzip.c -- compare zip files
   Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -105,13 +105,13 @@ main(int argc, char *argv[])
 
 	default:
 	    fprintf(stderr, usage, prg);
-	    exit(1);
+	    exit(2);
 	}
     }
 
     if (argc != optind+2) {
 	fprintf(stderr, usage, prg);
-	exit(1);
+	exit(2);
     }
 
     exit((compare_zip(argv+optind, verbose) == 0) ? 0 : 1);
@@ -152,9 +152,18 @@ compare_zip(const char *zn[], int verbose)
 	qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
     }
 
-    return compare_list(zn, verbose,
-			e, n, sizeof(e[i][0]),
-			entry_cmp, entry_print);
+    switch (compare_list(zn, verbose,
+			 e, n, sizeof(e[i][0]),
+			 entry_cmp, entry_print)) {
+    case 0:
+	exit(0);
+
+    case 1:
+	exit(1);
+
+    default:
+	exit(2);
+    }
 }
 
 
