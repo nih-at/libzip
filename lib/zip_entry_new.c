@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_new_entry.c,v 1.12 2004/11/18 15:04:05 wiz Exp $
+  $NiH: zip_entry_new.c,v 1.13 2004/11/18 17:11:22 wiz Exp $
 
-  zip_new_entry.c -- create and init struct zip_entry
+  zip_entry_new.c -- create and init struct zip_entry
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -43,7 +43,7 @@
 
 
 struct zip_entry *
-_zip_new_entry(struct zip *za)
+_zip_entry_new(struct zip *za)
 {
     struct zip_entry *ze;
     if (!za) {

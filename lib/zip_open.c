@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.22 2004/04/19 11:49:13 dillo Exp $
+  $NiH: zip_open.c,v 1.23 2004/11/17 21:55:12 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -199,7 +199,7 @@ zip_open(const char *fn, int flags, int *zep)
 	return NULL;
     }
     for (i=0; i<cdir->nentry; i++)
-	_zip_new_entry(za);
+	_zip_entry_new(za);
 
     return za;
 }

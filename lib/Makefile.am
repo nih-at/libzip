@@ -10,6 +10,7 @@ libzip_la_SOURCES=\
 	zip_delete.c \
 	zip_dirent.c \
 	zip_entry_free.c \
+	zip_entry_new.c \
 	zip_err_str.c \
 	zip_error.c \
 	zip_error_get.c \
@@ -28,7 +29,6 @@ libzip_la_SOURCES=\
 	zip_get_name.c \
 	zip_name_locate.c \
 	zip_new.c \
-	zip_new_entry.c \
 	zip_open.c \
 	zip_rename.c \
 	zip_replace.c \

@@ -1,9 +1,8 @@
-
 #ifndef _HAD_ZIPINT_H
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.30 2004/11/18 17:11:22 wiz Exp $
+  $NiH: zipint.h,v 1.31 2004/11/30 21:37:01 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -172,26 +171,31 @@ extern const int _zip_err_type[];
 void _zip_cdir_free(struct zip_cdir *);
 struct zip_cdir *_zip_cdir_new(int, struct zip_error *);
 int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
+
 void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
 int _zip_dirent_read(struct zip_dirent *, FILE *,
 		     unsigned char **, int, int, struct zip_error *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
+
 void _zip_entry_free(struct zip_entry *);
 void _zip_entry_init(struct zip *, int);
+struct zip_entry *_zip_entry_new(struct zip *);
+
 void _zip_error_copy(struct zip_error *, struct zip_error *);
 void _zip_error_fini(struct zip_error *);
 void _zip_error_get(struct zip_error *, int *, int *);
 void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
 const char *_zip_error_strerror(struct zip_error *);
+
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
 unsigned int _zip_file_get_offset(struct zip *, int);
+
 void _zip_free(struct zip *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
 struct zip *_zip_new(struct zip_error *);
-struct zip_entry *_zip_new_entry(struct zip *);
 unsigned short _zip_read2(unsigned char **);
 unsigned int _zip_read4(unsigned char **);
 int _zip_replace(struct zip *, int, const char *, struct zip_source *);
@@ -199,4 +203,3 @@ int _zip_set_name(struct zip *, int, const char *);
 void _zip_unchange_data(struct zip_entry *);
 
 #endif /* zipint.h */
-

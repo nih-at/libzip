@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace.c,v 1.16 2004/11/17 21:55:12 wiz Exp $
+  $NiH: zip_replace.c,v 1.17 2004/11/18 15:04:05 wiz Exp $
 
   zip_replace.c -- replace file via callback function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -59,7 +59,7 @@ _zip_replace(struct zip *za, int idx, const char *name,
 	     struct zip_source *source)
 {
     if (idx == -1) {
-	if (_zip_new_entry(za) == NULL)
+	if (_zip_entry_new(za) == NULL)
 	    return -1;
 
 	idx = za->nentry - 1;
