@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.1.2.4 2004/03/23 18:38:47 dillo Exp $
+  $NiH: zip_dirent.c,v 1.1.2.5 2004/04/06 20:30:04 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -49,6 +49,9 @@
 static time_t _zip_d2u_time(int, int);
 static char *_zip_readfpstr(FILE *, int, int, struct zip_error *);
 static char *_zip_readstr(unsigned char **, int, int, struct zip_error *);
+static void _zip_u2d_time(time_t, int *, int *);
+static void _zip_write2(unsigned short, FILE *);
+static void _zip_write4(unsigned int, FILE *);
 
 
 
@@ -231,6 +234,68 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 
 
 
+/* _zip_dirent_write(zde, fp, localp, error):
+   Writes zip directory entry zde to file fp.
+
+   If localp != 0, it writes a local header instead of a central
+   directory entry.
+
+   Returns 0 if successful. On error, error is filled in and -1 is
+   returned.
+*/
+
+int
+_zip_dirent_write(struct zip_dirent *zde, FILE *fp, int localp,
+		  struct zip_error *error)
+{
+    int dostime, dosdate;
+
+    if (!localp)
+	_zip_write2(zde->version_madeby, fp);
+    _zip_write2(zde->version_needed, fp);
+    _zip_write2(zde->bitflags, fp);
+    _zip_write2(zde->comp_method, fp);
+
+    _zip_u2d_time(zde->last_mod, &dostime, &dosdate);
+    _zip_write2(dostime, fp);
+    _zip_write2(dosdate, fp);
+    
+    _zip_write4(zde->crc, fp);
+    _zip_write4(zde->comp_size, fp);
+    _zip_write4(zde->uncomp_size, fp);
+    
+    _zip_write2(zde->filename_len, fp);
+    _zip_write2(zde->extrafield_len, fp);
+    
+    if (!localp) {
+	_zip_write2(zde->comment_len, fp);
+	_zip_write2(zde->disk_number, fp);
+	_zip_write2(zde->int_attrib, fp);
+	_zip_write4(zde->ext_attrib, fp);
+	_zip_write4(zde->offset, fp);
+    }
+
+    if (zde->filename_len)
+	fwrite(zde->filename, 1, zde->filename_len, fp);
+
+    if (zde->extrafield_len)
+	fwrite(zde->extrafield, 1, zde->extrafield_len, fp);
+
+    if (!localp) {
+	if (zde->comment_len)
+	    fwrite(zde->comment, 1, zde->comment_len, fp);
+    }
+
+    if (ferror(fp)) {
+	_zip_error_set(error, ZERR_WRITE, errno);
+	return -1;
+    }
+
+    return 0;
+}
+
+
+
 static time_t
 _zip_d2u_time(int dtime, int ddate)
 {
@@ -334,4 +399,44 @@ _zip_readstr(unsigned char **buf, int len, int nulp, struct zip_error *error)
     }
 
     return r;
+}
+
+
+
+static void
+_zip_write2(unsigned short i, FILE *fp)
+{
+    putc(i&0xff, fp);
+    putc((i>>8)&0xff, fp);
+
+    return;
+}
+
+
+
+static void
+_zip_write4(unsigned int i, FILE *fp)
+{
+    putc(i&0xff, fp);
+    putc((i>>8)&0xff, fp);
+    putc((i>>16)&0xff, fp);
+    putc((i>>24)&0xff, fp);
+    
+    return;
+}
+
+
+
+static void
+_zip_u2d_time(time_t time, int *dtime, int *ddate)
+{
+    struct tm *tm;
+
+    tm = localtime(&time);
+    *ddate = ((tm->tm_year+1900-1980)<<9) + ((tm->tm_mon+1)<<5)
+	+ tm->tm_mday;
+    *dtime = ((tm->tm_hour)<<11) + ((tm->tm_min)<<5)
+	+ ((tm->tm_sec)>>1);
+
+    return;
 }
