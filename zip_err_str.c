@@ -17,5 +17,7 @@ char * zip_err_str[]={
     "can't open file",
     "error creating temp file",
     "zlib error",
-    "malloc failure"
+    "malloc failure",
+    "entry has been changed",
+    "compression method not supported"
 };

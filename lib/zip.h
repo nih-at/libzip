@@ -29,9 +29,9 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_NOENT            9  /* no such file */
 #define ZERR_EXISTS          10  /* file already exists */
 #define ZERR_OPEN            11  /* can't open file */
-#define ZERR_TMPOPEN         12
-#define ZERR_ZLIB            13
-#define ZERR_MEMORY          14
+#define ZERR_TMPOPEN         12  /* failure to create temporary file */
+#define ZERR_ZLIB            13  /* zlib error */
+#define ZERR_MEMORY          14  /* malloc failure */
 #define ZERR_CHANGED         15  /* entry has been changed */
 #define ZERR_COMPNOTSUPP     16  /* compression method not supported */
 
