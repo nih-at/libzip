@@ -203,7 +203,9 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
     int flush, end, idx;
     struct zip_meta *meta;
 
-    _zip_create_entry(zf, NULL, se->fn, se->ch_meta);
+    if (_zip_create_entry(zf, NULL, se->fn, se->ch_meta) == NULL)
+	return -1;
+    
     --zf->nentry;
     idx = zf->nentry;
 
@@ -468,16 +470,17 @@ _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp)
 
 
 
-static int
+static struct zip_entry *
 _zip_create_entry(struct zip *dest, struct zip_entry *se,
 		  char *name, struct zip_meta *meta)
 {
     struct zip_entry *de;
 
     if (!dest)
-	return -1;
+	return NULL;
     
-    de = _zip_new_entry(dest);
+    if ((de=_zip_new_entry(dest)) == NULL)
+	return NULL;
 
     if (!se) {
 	/* set default values for central directory entry */
@@ -558,10 +561,15 @@ _zip_create_entry(struct zip *dest, struct zip_entry *se,
     if (!de->fn) {
 	dest->nentry--;
 	zip_err = ZERR_MEMORY;
-	return -1;
+	return NULL;
     }
 
-    return _zip_merge_meta(de->meta, meta);
+    if (_zip_merge_meta(de->meta, meta) < 0) {
+	dest->nentry--;
+	return NULL;
+    }
+
+    return de;
 }
 
 
