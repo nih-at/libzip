@@ -1,4 +1,4 @@
-.\" $NiH: zip_error_get.mdoc,v 1.1 2004/12/01 00:07:01 wiz Exp $
+.\" $NiH: zip_error_get.mdoc,v 1.2 2004/12/01 00:15:54 wiz Exp $
 .\"
 .\" zip_error_get.mdoc -- get error codes for archive or file
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -59,17 +59,18 @@ is not
 will be filled in with the error code from libzip.
 Similarly,
 .Ar *sep
-will contain the corresponding system error code (gathered from
-.Va errno
-at the time of the error), if
+will contain the corresponding system error code, if
 .Ar sep
 is not
-.Dv NULL .
+.Dv NULL ;
+use
+.Fn zip_error_sys_type
+to determine the type of system error code.
 .Pp
 The
 .Fn zip_file_error_get
-function does the same for a zip file
+function does the same for the zip file
 .Ar zf .
 .Sh SEE ALSO
-.Xr zip_error_to_str 3 ,
-.Xr zip_strerror_str 3
+.Xr zip_error_sys_type 3 ,
+.Xr zip_error_to_str 3
