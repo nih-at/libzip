@@ -40,8 +40,8 @@ extern char *zip_err_str[];
 
 /* zip file */
 
-typedef unsigned long (*zip_read_func)(void *state, void *data,
-				       int len, enum zip_cmd cmd);
+typedef int (*zip_read_func)(void *state, void *data,
+			     int len, enum zip_cmd cmd);
 
 struct zip {
     char *zn;
@@ -95,8 +95,8 @@ struct zip_meta {
 	disknrstart, int_attr;
     time_t last_mod;
     unsigned int crc, comp_size, uncomp_size, ext_attr, local_offset;
-    unsigned short ef_len, fc_len;
-    unsigned char *ef, *fc;
+    unsigned short ef_len, lef_len, fc_len;
+    unsigned char *ef, *lef, *fc;
 };
 
 

@@ -18,7 +18,7 @@ static void _zip_writestr(FILE *fp, char *str, int len);
 static int _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp);
 static int _zip_create_entry(struct zip *dest, struct zip_entry *src_entry,
 			     char *name);
-
+static int _zip_fwrite(char *b, int s, int n, FILE *f);
 
 
 /* zip_close:
@@ -92,7 +92,7 @@ zip_close(struct zip *zf)
 	for (i=0; i<zf->nentry; i++) {
 	    switch (zf->entry[i].state) {
 	    case ZIP_ST_UNCHANGED:
-		if (_zip_entry_copy(tzf, zf, i, NULL)) {
+		if (_zip_entry_copy(tzf, zf, i, NULL, NULL)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
@@ -102,39 +102,18 @@ zip_close(struct zip *zf)
 	    case ZIP_ST_DELETED:
 		break;
 	    case ZIP_ST_REPLACED:
-		/* fallthrough */
 	    case ZIP_ST_ADDED:
-		if (zf->entry[i].ch_data_zf) {
-		    if (_zip_entry_copy(tzf, zf->entry[i].ch_data_zf,
-				       zf->entry[i].ch_data_zf_fileno,
-				       zf->entry[i].fn)) {
-			/* zip_err set by _zip_entry_copy */
-			remove(tzf->zn);
-			_zip_free(tzf);
-			return -1;
-		    }
-		} else if (zf->entry[i].ch_data_buf) {
-#if 0
-		    if (_zip_entry_add(tzf, zf, i)) {
-			/* zip_err set by _zip_entry_copy */
-			remove(tzf->zn);
-			_zip_free(tzf);
-			return -1;
-		    }
-#endif /* 0 */
-		} else if (zf->entry[i].ch_data_fp) {
-#if 0
-		    if (_zip_entry_add(tzf, zf, i)) {
-			/* zip_err set by _zip_entry_copy */
-			remove(tzf->zn);
-			_zip_free(tzf);
-			return -1;
-		    }
-#endif /* 0 */
+		/* XXX: rewrite to use new change data format */
+		if (_zip_entry_add(tzf, zf, i)) {
+		    /* zip_err set by _zip_entry_copy */
+		    remove(tzf->zn);
+		    _zip_free(tzf);
+		    return -1;
 		}
 		break;
 	    case ZIP_ST_RENAMED:
-		if (_zip_entry_copy(tzf, zf, i, NULL)) {
+		/* XXX: handle meta data change also */
+		if (_zip_entry_copy(tzf, zf, i, NULL, zf->entry[i].ch_meta)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
@@ -224,148 +203,148 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no, char *name)
 
 
 static int
-_zip_entry_add(struct zip *dest, struct zip *src, int entry_no)
+_zip_entry_add(struct zip *zf, struct zip_entry *se)
 {
-    z_stream *zstr;
-    char *outbuf;
-    int ret, wrote;
-    
-#if 0
-    char buf[BUFSIZE];
-    unsigned int len, remainder;
-#endif
-    unsigned char *null;
+    z_stream zstr;
+    char b1[BUFSIZE], b2[BUFSIZE];
+    int n, size, crc;
+    int flush, end;
+    struct zip_meta *meta;
+    long fpos;
 
-    null = NULL;
+    fpos = ftell(zf->zp);
 
-    if (!src)
+    if (se->ch_func(se->state, NULL, 0, ZIP_CMD_INIT) != 0)
 	return -1;
-    
-    _zip_create_entry(dest, NULL, src->entry[entry_no].fn);
 
-    if (_zip_writecdentry(dest->zp, dest->entry+dest->nentry, 1) != 0) {
+    _zip_create_entry(zf, NULL, se->fn, se->ch_meta);
+    --zf->nentry;
+    idx = zf->nentry;
+
+    if (_zip_writecdentry(zf->zp, zf->entry+idx, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
 
-    if (src->entry[entry_no].ch_data_fp) {
-	if (fseek(src->entry[entry_no].ch_data_fp,
-		  src->entry[entry_no].ch_data_offset, SEEK_SET) != 0) {
-	    zip_err = ZERR_SEEK;
-	    return -1;
-	}
-    } else if (src->entry[entry_no].ch_data_buf) {
-	if (src->entry[entry_no].ch_data_offset)
-	    src->entry[entry_no].ch_data_buf +=
-		src->entry[entry_no].ch_data_offset;
-	
-	if (!src->entry[entry_no].ch_data_len) {
-	    /* obviously no data */
-	    dest->nentry++;
-	    return 0;
-	}
-    } else 
-	return 1;
-
-    zstr->zalloc = Z_NULL;
-    zstr->zfree = Z_NULL;
-    zstr->opaque = NULL;
-    zstr->avail_in = 0;
-    zstr->avail_out = 0;
-
-    /* -15: undocumented feature of zlib to _not_ write a zlib header */
-    deflateInit2(zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -15, 9,
-		 Z_DEFAULT_STRATEGY);
-
-    if (src->entry[entry_no].ch_data_buf) {
-	outbuf = (char *)malloc(src->entry[entry_no].ch_data_len*1.01+12);
-	if (!outbuf) {
-	    zip_err = ZERR_MEMORY;
-	    return -1;
-	}
-
-	zstr->next_in = src->entry[entry_no].ch_data_buf;
-	zstr->avail_in = src->entry[entry_no].ch_data_len;
-	zstr->next_out = outbuf;
-	zstr->avail_out = src->entry[entry_no].ch_data_len*1.01+12;
-
-	ret = deflate(zstr, Z_FINISH);
-
-	switch(ret) {
-	case Z_STREAM_END:
-	    break;
-	default:
-	    zip_err = ZERR_ZLIB;
-	    /* myerror(ERRDEF, "zlib error while deflating buffer: %s",
-	       zstr->msg);
-	    */
-	    return -1;
-	}
-	dest->entry[dest->nentry-1].crc =
-	    crc32(dest->entry[dest->nentry-1].crc,
-		  src->entry[entry_no].ch_data_buf,
-		  src->entry[entry_no].ch_data_len);
-	dest->entry[dest->nentry-1].uncomp_size =
-	    src->entry[entry_no].ch_data_len;
-	dest->entry[dest->nentry-1].comp_size = zstr->total_out;
-
-	wrote = 0;
-	if ((ret = fwrite(outbuf+wrote, 1, zstr->total_out-wrote, dest->zp))
-	    < zstr->total_out-wrote) {
-	    if (ferror(dest->zp)) {
-		zip_err = ZERR_WRITE;
-		return -1;
-	    }
-	    wrote += ret;
-	}
-
-	fseek(dest->zp, dest->entry[dest->nentry-1].local_offset,
-	      SEEK_SET);
-	if (ferror(dest->zp)) {
-	    zip_err = ZERR_SEEK;
-	    return -1;
-	}
-
-	if (_zip_writecdentry(dest->zp, dest->entry+dest->nentry, 1) != 0) {
-	    zip_err = ZERR_WRITE;
-	    return -1;
-	}
-
-	fseek(dest->zp, 0, SEEK_END);
-	if (ferror(dest->zp)) {
-	    zip_err = ZERR_SEEK;
-	    return -1;
-	}
-	
-	dest->nentry++;
-	return 0;
+    if ((meta=zip_new_meta()) < 0) {
+	fseek(zf->zp, fpos, SEEK_SET);
+	return -1;
     }
 
-    /* missing: fp, partial zf */
-    /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-#if 0	
-	/* XXX: ignore below  */
-	remainder = src->entry[entry_no].comp_size;
-	len = BUFSIZE;
-	while (remainder) {
-	    if (len > remainder)
-		len = remainder;
-	    if (fread(buf, 1, len, src->zp)!=len) {
-		zip_err = ZERR_READ;
+    if (se->ch_comp == 0) { /* we have to compress */
+	zstr.zalloc = Z_NULL;
+	zstr.zfree = Z_NULL;
+	zstr.opaque = NULL;
+	zstr.avail_in = 0;
+	zstr.avail_out = 0;
+
+	/* -15: undocumented feature of zlib to _not_ write a zlib header */
+	deflateInit2(&zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -15, 9,
+		     Z_DEFAULT_STRATEGY);
+
+
+	zstr.next_out = b2;
+	zstr.avail_out = BUFSIZE;
+	zstr.avail_in = 0;
+	flush = 0;
+	crc = crc32(0, NULL, 0);
+	size = 0;
+
+	end = 0;
+	while (!end) {
+	    if (zstr.avail_in == 0 && !flush) {
+		if ((n=se->ch_func(se->state, b1, BUFSIZE,
+				   ZIP_CMD_READ)) < 0)
+		    return -1;
+		zstr->next_in = b1;
+		zstr->avail_in = n;
+		size += n;
+		crc = crc32(crc, b1, n);
+
+		if (n == 0)
+		    flush = Z_FINISH;
+	    }
+
+	    switch (deflate(&zstr, flush)) {
+	    case Z_OK:
+		if (zstr.avail_out) {
+		    if (_zip_fwrite(b2, 1, BUFSIZE-zstr.avail_out, zf->zp) < 0)
+			return -1;
+		    zstr.next_out = b2;
+		    zstr.avail_out = BUFSIZE;
+		}
+		break;
+		
+	    case Z_STREAM_END:
+		if (se->ch_func(se->ch_state, meta, 0, ZIP_CMD_META) < 0)
+		    return -1;
+		meta->crc = crc;
+		meta->uncomp_size = size;
+		meta->comp_size = zstr.total_out;
+
+		deflateEnd(&zstr);
+		end = 1;
+		break;
+
+	    case Z_STREAM_ERROR:
+	    case Z_BUF_ERROR:
+		zip_err = ZERR_ZLIB;
 		return -1;
 	    }
-	    if (fwrite(buf, 1, len, dest->zp)!=len) {
-		zip_err = ZERR_WRITE;
-		return -1;
-	    }
-	    remainder -= len;
 	}
 
-	fseek(dest->zp, 0, SEEK_END);
-	dest->nentry++;
-	return 0;
-#endif
-	return 1;
+    }
+    else { /* we get compressed data */
+	while ((n=se->ch_func(se->ch_state, b1, BUFSIZE, ZIP_CMD_READ)) > 0) {
+	    size += n;
+	    if (_zip_fwrite(b2, 1, zstr.avail_out, zf->zp) < 0)
+		return -1;
+	}
+	if (n < 0)
+	    return -1;
+	if (se->ch_func(se->ch_state, meta, 0, ZIP_CMD_META) < 0)
+	    return -1;
+	meta->comp_size = size;
+    }
+
+    se->ch_func(se->ch_state, NULL, 0, ZIP_CMD_CLOSE);
+
+    if (fseek(zf->zp, fpos, SEEK_SET) < 0) {
+	zip_err = ZERR_SEEK;
+	return -1;
+    }
+
+    meta->ef_len = meta->lef_len = meta->fc_len = -1;
+    _zip_meta_merge(zf->entry[idx].meta, meta);
+    
+    if (_zip_writecdentry(zf->zp, zf->entry+idx, 1) != 0) {
+	zip_err = ZERR_WRITE;
+	return -1;
+    }
+
+    _zip_free_meta(meta);
+
+    return 0;
+}
+
+
+
+static int
+_zip_fwrite(char *b, int s, int n, FILE *f)
+{
+    int ret, writ;
+
+    writ = 0;
+
+    while (left<n) {
+	if ((ret=fwrite(b, s, n-writ, f)) < 0) {
+	    zip_err = ZERR_WRITE;
+	    return ret;
+	}
+	writ += ret;
+    }
+
+    return writ;
 }
 
 
