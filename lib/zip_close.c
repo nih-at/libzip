@@ -271,7 +271,7 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	    case Z_STREAM_END:
 		if (se->ch_func(se->ch_data, meta, 0, ZIP_CMD_META) < 0)
 		    return -1;
-		meta->comp_method = meta->version_needed = -1;
+		meta->comp_method = meta->version_need = -1;
 		meta->crc = crc;
 		meta->uncomp_size = size;
 		meta->comp_size = zstr.total_out;
