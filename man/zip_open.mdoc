@@ -1,4 +1,4 @@
-.\" $NiH: zip_open.mdoc,v 1.9 2003/10/03 12:04:09 dillo Exp $
+.\" $NiH: zip_open.mdoc,v 1.10 2003/10/06 16:36:54 dillo Exp $
 .\"
 .\" zip_open.mdoc -- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -63,7 +63,8 @@ Error if archive already exists.
 .It Dv ZIP_CHECKCONS
 Perform additional consistency checks on the archive, and error if
 they fail.
-.Pp If an error occurs and
+.Pp
+If an error occurs and
 .Ar errorp
 is non-NULL, it will be set to the corresponding error code.
 .El
