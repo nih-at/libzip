@@ -26,5 +26,7 @@ int _zip_unchange_data(struct zip_entry *ze);
 int _zip_unchange(struct zip_entry *ze);
 int _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src);
 int _zip_merge_meta_fix(struct zip_meta *dest, struct zip_meta *src);
+int _zip_local_header_read(struct zip *zf, int idx);
 
 #endif /* zipint.h */
+

@@ -98,7 +98,9 @@ zip_close(struct zip *zf)
 	for (i=0; i<zf->nentry; i++) {
 	    switch (zf->entry[i].state) {
 	    case ZIP_ST_UNCHANGED:
-		if (_zip_entry_copy(tzf, zf, i, NULL, NULL)) {
+	    case ZIP_ST_RENAMED:
+		_zip_loacl_header_read(zf, i);
+		if (_zip_entry_copy(tzf, zf, i, NULL, zf->entry[i].ch_meta)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
@@ -111,15 +113,6 @@ zip_close(struct zip *zf)
 	    case ZIP_ST_ADDED:
 		/* XXX: rewrite to use new change data format */
 		if (_zip_entry_add(tzf, zf->entry+i)) {
-		    /* zip_err set by _zip_entry_copy */
-		    remove(tzf->zn);
-		    _zip_free(tzf);
-		    return -1;
-		}
-		break;
-	    case ZIP_ST_RENAMED:
-		/* XXX: handle meta data change also */
-		if (_zip_entry_copy(tzf, zf, i, NULL, zf->entry[i].ch_meta)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
@@ -577,9 +570,7 @@ _zip_create_entry(struct zip *dest, struct zip_entry *se,
 	return -1;
     }
 
-    _zip_merge_meta(de->meta, meta);
-
-    return 0;
+    return _zip_merge_meta(de->meta, meta);
 }
 
 
@@ -596,4 +587,33 @@ _zip_u2d_time(time_t time, int *ddate, int *dtime)
 	+ ((tm->tm_sec)>>1);
 
     return;
+}
+
+
+
+int
+_zip_local_header_read(struct zip *zf, int idx)
+{
+    struct zip_entry *ze;
+    
+    if (zf->entry[idx].meta->lef_len != (unsigned short)-1)
+	return 0;
+
+    if ((ze=_zip_new_entry(NULL)) == NULL)
+	return -1;
+
+    if (fseek(zf->zp, zf->entry[idx].meta->local_offset, SEEK_SET) < 0) {
+	zip_err = ZERR_SEEK;
+	return -1;
+    }
+
+    if (_zip_readcdentry(zf->zp, &ze, NULL, 0, 1, 1) < 0)
+	return -1;
+
+    zf->entry[idx].meta->lef_len = ze->meta->lef_len;
+    zf->entry[idx].meta->lef = ze->meta->lef;
+    ze->meta->lef = NULL;
+    _zip_free_entry(ze);
+
+    return 0;
 }
