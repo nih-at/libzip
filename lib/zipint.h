@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.3 2004/03/22 14:56:49 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.4 2004/03/23 17:16:03 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -51,14 +51,20 @@
 
 
 
+/* state of change of a file in zip archive */
+
 enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
+
+/* error information */
 
 struct zip_error {
     int zip_err;	/* libzip error code (ZERR_*) */
     int sys_err;	/* copy of errno (E*) or zlib error code */
     char *str;		/* string representation or NULL */
 };
+
+/* zip archive, part of API */
 
 struct zip {
     char *zn;			/* file name */
@@ -74,7 +80,7 @@ struct zip {
     struct zip_file **file;	/* opened files within archvie */
 };
 
-/* file in zip file */
+/* file in zip archive, part of API */
 
 struct zip_file {
     struct zip *zf;		/* zip archive containing this file */
@@ -117,6 +123,17 @@ struct zip_dirent {
     unsigned int offset;		/* (c)  offest of local header  */
 };
 
+/* zip archive central directory */
+
+struct zip_cdir {
+    struct zip_dirent *entry;	/* directory entries */
+    int nentry;			/* number of entries */
+
+    unsigned int size;		/* size of central direcotry */
+    unsigned int offset;	/* offset of central directory in file */
+    unsigned short comment_len;	/* length of zip archive comment */
+};
+
 /* entry in zip archive directory */
 
 struct zip_entry {
@@ -146,6 +163,7 @@ extern const int _zip_err_type[];
 
 
 
+void _zip_cdir_free(struct zip_cdir *);
 void _zip_dirent_finalize(struct zip_dirent *);
 int _zip_dirent_read(struct zip_dirent *, FILE *,
 		     unsigned char **, int, int, struct zip_error *);

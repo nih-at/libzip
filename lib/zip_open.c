@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.19.4.2 2004/03/22 14:17:34 dillo Exp $
+  $NiH: zip_open.c,v 1.19.4.3 2004/03/23 17:16:02 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -46,24 +46,14 @@
 #include "zip.h"
 #include "zipint.h"
 
-struct cdir {
-    struct zip_dirent *entry;	/* directory entries */
-    int nentry;			/* number of entries */
-
-    unsigned int size;		/* size of central direcotry */
-    unsigned int offset;	/* offset of central directory in file */
-    unsigned short comment_len;	/* length of zip archive comment */
-};
-
-static int fill_entries(struct zip *, struct cdir *);
+static int fill_entries(struct zip *, struct zip_cdir *);
 static void set_error(int *, int *, int, int);
-static void _zip_cdir_free(struct cdir *);
-static int _zip_checkcons(FILE *, struct cdir *, struct zip_error *);
+static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
 static int _zip_headercomp(struct zip_dirent *, int,
 			   struct zip_dirent *, int);
 static unsigned char *_zip_memmem(const unsigned char *, int,
 				  const unsigned char *, int);
-static struct cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
+static struct zip_cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
 				 int, struct zip_error *);
 
 
@@ -75,7 +65,7 @@ zip_open(const char *fn, int flags, int *zep, int *sep)
     unsigned char *buf, *match;
     int a, i, buflen, best;
     struct zip *za;
-    struct cdir *cdir, *cdirnew;
+    struct zip_cdir *cdir, *cdirnew;
     long len;
     struct stat st;
     struct zip_error error, err2;
@@ -213,7 +203,7 @@ zip_open(const char *fn, int flags, int *zep, int *sep)
 
 
 static int
-fill_entries(struct zip *za, struct cdir *cd)
+fill_entries(struct zip *za, struct zip_cdir *cd)
 {
     int i;
 
@@ -250,33 +240,17 @@ set_error(int *zep, int *sep, int ze, int se)
 
 
 
-static void
-_zip_cdir_free(struct cdir *cd)
-{
-    int i;
-
-    if (!cd)
-	return;
-
-    for (i=0; i<cd->nentry; i++)
-	_zip_dirent_finalize(cd->entry+i);
-    /* free(cd->comment); */
-    free(cd);
-}
-
-
-
 /* _zip_readcdir:
    tries to find a valid end-of-central-directory at the beginning of
    buf, and then the corresponding central directory entries.
-   Returns a struct cdir which contains the central directory 
+   Returns a struct zip_cdir which contains the central directory 
    entries, or NULL if unsuccessful. */
 
-static struct cdir *
+static struct zip_cdir *
 _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	      struct zip_error *error)
 {
-    struct cdir *cd;
+    struct zip_cdir *cd;
     unsigned char *cdp, **bufp;
     int i, comlen;
 
@@ -376,7 +350,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
    difference between the lowest and the highest fileposition reached */
 
 static int
-_zip_checkcons(FILE *fp, struct cdir *cd, struct zip_error *error)
+_zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 {
     int min, max, i, j;
     struct zip_dirent temp;
