@@ -26,7 +26,6 @@ MAN3=	zip_add.3 \
 	zip_source_function.3 \
 	zip_source_zip.3 \
 	zip_stat.3 \
-	zip_strerror.3 \
 	zip_unchange.3 \
 	zip_unchange_all.3
 
@@ -39,6 +38,8 @@ link-man3: install-man3
 	${LN} ${man3dir}/zip_fopen.3 ${man3dir}/zip_fopen_index.3
 	-rm -f ${man3dir}/zip_stat_index.3
 	${LN} ${man3dir}/zip_stat.3 ${man3dir}/zip_stat_index.3
+	-rm -f ${man3dir}/zip_strerror.3
+	${LN} ${man3dir}/zip_file_strerror.3 ${man3dir}/zip_strerror.3
 
 MANDOC=${MAN1:.1=.mdoc} ${MAN3:.3=.mdoc}
 MAN=${MANDOC:.mdoc=.man}

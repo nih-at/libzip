@@ -6,7 +6,6 @@
 * code review
 * README
 * document zipmerge(1)
-* merge zip_strerror.mdoc and zip_file_strerror.mdoc?
 * recreate .man files
 * fix XXX in man/
 * fix XXX in lib?

@@ -1,6 +1,6 @@
-.\" $NiH: zip_file_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp $
+.\" $NiH: zip_file_strerror.mdoc,v 1.3 2004/11/24 16:15:30 wiz Exp $
 .\"
-.\" zip_file_strerror.mdoc -- get string representation of zip file error
+.\" zip_file_strerror.mdoc -- get string representation for a zip error
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -31,29 +31,46 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 3, 2003
+.Dd December 27, 2004
 .Dt ZIP_FILE_STRERROR 3
 .Os
 .Sh NAME
-.Nm zip_file_strerror
-.Nd get string representation of zip file error
+.Nm zip_file_strerror ,
+.Nm zip_strerror
+.Nd get string representation for a zip error
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft const char *
 .Fn zip_file_strerror "struct zip_file *file"
+.Ft const char *
+.Fn zip_strerror "struct zip *archive"
 .Sh DESCRIPTION
 The
+.Fn zip_strerror
+function returns a string describing the last error for the zip archive
+.Ar archive ,
+while the
 .Fn zip_file_strerror
-function returns a string describing the last error for
-.Ar file .
-The returned string must not be modified or freed, and becomes invalid when
+function does the same for a zip file
 .Ar file
+(one file in an archive).
+The returned string must not be modified or freed, and becomes invalid when
+.Ar archive
+or
+.Ar file ,
+respectively,
 is closed or on the next call to
-.Fn zip_file_strerror
-for the same zip file.
+.Fn zip_strerror
+or
+.Fn zip_file_strerror ,
+respectively,
+for the same archive.
 .Sh RETURN VALUES
 .Fn zip_file_strerror
-returns a pointer to the error string.
-.\" .Sh SEE ALSO
+and
+.Fn zip_strerror
+return a pointer to the error string.
+.Sh SEE ALSO
+.Xr zip_error_to_str 3
