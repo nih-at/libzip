@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_delete.c,v 1.8 2003/03/16 10:21:38 wiz Exp $
+  $NiH: zip_delete.c,v 1.9 2003/10/02 14:13:29 dillo Exp $
 
-  zip_delete.c -- delete file from zip file
+  zip_delete.c -- delete file from zip archive
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.

@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_unchange_all.c,v 1.3 2003/03/16 10:21:42 wiz Exp $
+  $NiH: zip_unchange_all.c,v 1.4 2003/10/02 14:13:32 dillo Exp $
 
-  zip_unchange.c -- undo changes to all files in zip file
+  zip_unchange.c -- undo changes to all files in zip archive
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
