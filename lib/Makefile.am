@@ -6,3 +6,7 @@ libzip_a_SOURCES=zip_open.c zip_close.c zip_err_str.c zip_name_locate.c \
 	zip_fopen.c zip_fopen_index.c zip_fclose.c zip_fread.c \
 	zf_new_free.c
 
+BUILT_SOURCES=zip_err_str.c
+
+zip_err_str.c: zip.h
+	make_zip_err_str.sh zip.h zip_err_str.c
