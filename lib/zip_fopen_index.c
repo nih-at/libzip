@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.17 2004/04/15 23:48:10 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.18 2004/04/16 09:40:28 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -97,7 +97,6 @@ zip_fopen_index(struct zip *zf, int fileno, int flags)
     if (zff->flags & ZIP_ZF_COMP)
 	zff->bytes_left = zff->cbytes_left;
     else {
-	/* XXX: don't use BUFSIZE */
 	if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {
 	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	    zip_fclose(zff);

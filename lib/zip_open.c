@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.20 2004/04/14 14:01:26 dillo Exp $
+  $NiH: zip_open.c,v 1.21 2004/04/16 09:40:29 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -109,7 +109,7 @@ zip_open(const char *fn, int flags, int *zep)
     clearerr(fp);
     fseek(fp, 0, SEEK_END);
     len = ftell(fp);
-    i = fseek(fp, -(len < BUFSIZE ? len : BUFSIZE), SEEK_END);
+    i = fseek(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */
 	set_error(zep, NULL, ZERR_SEEK);
@@ -118,14 +118,14 @@ zip_open(const char *fn, int flags, int *zep)
     }
 
     /* 64k is too much for stack */
-    if ((buf=(unsigned char *)malloc(BUFSIZE)) == NULL) {
+    if ((buf=(unsigned char *)malloc(CDBUFSIZE)) == NULL) {
 	set_error(zep, NULL, ZERR_MEMORY);
 	fclose(fp);
 	return NULL;
     }
 
     clearerr(fp);
-    buflen = fread(buf, 1, BUFSIZE, fp);
+    buflen = fread(buf, 1, CDBUFSIZE, fp);
 
     if (ferror(fp)) {
 	set_error(zep, NULL, ZERR_READ);

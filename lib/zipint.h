@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.23 2004/04/14 14:01:28 dillo Exp $
+  $NiH: zipint.h,v 1.24 2004/04/16 09:40:31 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -39,15 +39,16 @@
 
 
 
-#define MAXCOMLEN        65536
-#define EOCDLEN             22
-#define BUFSIZE       (MAXCOMLEN+EOCDLEN)
-#define LOCAL_MAGIC   "PK\3\4"
 #define CENTRAL_MAGIC "PK\1\2"
+#define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"
 #define DATADES_MAGIC "PK\7\8"
 #define CDENTRYSIZE         46
 #define LENTRYSIZE          30
+#define MAXCOMLEN        65536
+#define EOCDLEN             22
+#define CDBUFSIZE       (MAXCOMLEN+EOCDLEN)
+#define BUFSIZE		8192
 
 
 

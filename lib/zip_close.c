@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.39 2004/04/15 12:54:20 dillo Exp $
+  $NiH: zip_close.c,v 1.40 2004/04/16 09:40:27 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -296,7 +296,7 @@ static int
 add_data_comp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 	      struct zip_error *error)
 {
-    char buf[8192];
+    char buf[BUFSIZE];
     ssize_t n;
     struct zip_stat st;
 
@@ -333,7 +333,7 @@ static int
 add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 		struct zip_error *error)
 {
-    char b1[8192], b2[8192];
+    char b1[BUFSIZE], b2[BUFSIZE];
     int end, flush, ret;
     ssize_t n;
     z_stream zstr;
@@ -410,7 +410,7 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 static int
 copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
 {
-    char buf[8192];
+    char buf[BUFSIZE];
     int n, nn;
 
     if (len == 0)
