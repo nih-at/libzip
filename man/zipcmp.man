@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zipcmp.mdoc,v 1.5 2003/10/03 07:58:14 dillo Exp 
-.\" $NiH: zipcmp.mdoc,v 1.5 2003/10/03 07:58:14 dillo Exp $
+.\" from NiH: zipcmp.mdoc,v 1.7 2003/10/03 23:55:12 dillo Exp 
+.\" $NiH: zipcmp.mdoc,v 1.7 2003/10/03 23:55:12 dillo Exp $
 .\"
 .\" zipcmp.mdoc \-\- compare zip archives
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -38,7 +38,7 @@
 zipcmp \- compare contents of zip archives
 .SH "SYNOPSIS"
 .B zipcmp
-[\fB\-hqVv\fR]
+[\fB\-hiqVv\fR]
 \fBzip1 zip2\fR
 .SH "DESCRIPTION"
 .B zipcmp
@@ -56,6 +56,9 @@ Supported options:
 \fB\-h\fR
 Display a short help message and exit.
 .TP 5
+\fB\-i\fR
+Compare names ignoring case distinctions.
+.TP 5
 \fB\-q\fR
 Quiet mode.
 Compare
@@ -64,6 +67,7 @@ Compare
 \fB\-v\fR
 Verbose mode.
 Print details about differences to stdout.
+(This is the default.)
 .TP 5
 \fB\-V\fR
 Display version information and exit.
