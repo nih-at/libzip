@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.36 2004/12/22 16:32:01 dillo Exp $
+  $NiH: zipint.h,v 1.37 2005/01/11 18:00:38 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -84,9 +84,9 @@ struct zip {
     int nentry;			/* number of entries */
     int nentry_alloc;		/* number of entries allocated */
     struct zip_entry *entry;	/* entries */
-    int nfile;			/* number of opened files within archvie */
+    int nfile;			/* number of opened files within archive */
     int nfile_alloc;		/* number of files allocated */
-    struct zip_file **file;	/* opened files within archvie */
+    struct zip_file **file;	/* opened files within archive */
 };
 
 /* file in zip archive, part of API */

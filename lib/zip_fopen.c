@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_fopen.c,v 1.9 2004/04/14 14:01:24 dillo Exp $
+  $NiH: zip_fopen.c,v 1.10 2004/04/16 09:40:28 dillo Exp $
 
-  zip_fopen.c -- open file in zip archvie for reading
+  zip_fopen.c -- open file in zip archive for reading
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
