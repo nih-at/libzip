@@ -63,12 +63,14 @@ AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
 		 man/zip_close.3:man/zip_close.${MANFMT}
 		 man/zip_delete.3:man/zip_delete.${MANFMT}
 		 man/zip_fclose.3:man/zip_fclose.${MANFMT}
+		 man/zip_file_strerror.3:man/zip_file_strerror.${MANFMT}
 		 man/zip_fopen.3:man/zip_fopen.${MANFMT}
 		 man/zip_fread.3:man/zip_fread.${MANFMT}
 		 man/zip_get_name.3:man/zip_get_name.${MANFMT}
 		 man/zip_name_locate.3:man/zip_name_locate.${MANFMT}
 		 man/zip_open.3:man/zip_open.${MANFMT}
 		 man/zip_rename.3:man/zip_rename.${MANFMT}
+		 man/zip_strerror.3:man/zip_strerror.${MANFMT}
 		 man/zip_unchange.3:man/zip_unchange.${MANFMT}
 		 man/zip_unchange_all.3:man/zip_unchange_all.${MANFMT}])
 

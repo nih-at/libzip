@@ -13,7 +13,10 @@ libzip_la_SOURCES=\
 	zip_close.c \
 	zip_delete.c \
 	zip_err_str.c \
+	zip_error.c \
+	zip_error_strerror.c \
 	zip_fclose.c \
+	zip_file_strerror.c \
 	zip_fopen.c \
 	zip_fopen_index.c \
 	zip_fread.c \
@@ -35,6 +38,7 @@ libzip_la_SOURCES=\
 	zip_replace_filep.c \
 	zip_replace_zip.c \
 	zip_set_name.c \
+	zip_strerror.c \
 	zip_unchange.c \
 	zip_unchange_all.c \
 	zip_unchange_data.c

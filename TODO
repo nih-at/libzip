@@ -3,16 +3,14 @@
 	check function names (consistency, appropriateness)
 	error handling: errno member in struct zip, struct zip_file
 	error handling in zip_open?
-	error string: in user buffer, malloced, or in struct zip{,_file}
 	file sizes, offsets: type big enough?
 	meta data: expose struct vs. accessor functions
 	don't expose struct zip, struct zip_file
 * needed functions:
-	get status of struct zip_file (member flags)
-	get error code from struct zip
+	get error code from struct zip, struct zip_file
 	get nentries from zip
-	convert error codes to string
-* documentation: zip_add*, zip_replace*, [zip_free_meta, zip_meta_new]
+* documentation: zip_add*, zip_replace*,
+	[zip_free_meta, zip_meta_new]
 * regression tests
 * code review
 

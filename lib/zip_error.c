@@ -1,10 +1,7 @@
-#ifndef _HAD_ZIPINT_H
-#define _HAD_ZIPINT_H
-
 /*
-  $NiH: zipint.h,v 1.18 2003/10/02 14:13:33 dillo Exp $
+  $NiH$
 
-  zipint.h -- internal declarations.
+  zip_error.c -- struct zip_error helper functions
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,40 +35,26 @@
 
 
 
-#define MAXCOMLEN        65536
-#define EOCDLEN             22
-#define BUFSIZE       (MAXCOMLEN+EOCDLEN)
-#define LOCAL_MAGIC   "PK\3\4"
-#define CENTRAL_MAGIC "PK\1\2"
-#define EOCD_MAGIC    "PK\5\6"
-#define DATADES_MAGIC "PK\7\8"
-#define CDENTRYSIZE         46
-#define LENTRYSIZE          30
+#include <stdlib.h>
 
-enum { ZIP_ET_NONE, ZIP_ET_SYS, ZIP_ET_ZIP };
-
-extern const int _zip_err_type[];
+#include "zip.h"
+#include "zipint.h"
 
 
 
-void _zip_entry_init(struct zip *, int);
-const char *_zip_error_strerror(struct zip_error *);
-void _zip_error_fini(struct zip_error *);
-void _zip_error_init(struct zip_error *);
-int _zip_file_fillbuf(char *, int, struct zip_file *);
-int _zip_free(struct zip *);
-int _zip_free_entry(struct zip_entry *);
-int _zip_local_header_read(struct zip *, int);
-void *_zip_memdup(const void *, int);
-int _zip_merge_meta(struct zip_meta *, struct zip_meta *);
-int _zip_merge_meta_fix(struct zip_meta *, struct zip_meta *);
-struct zip *_zip_new(void);
-struct zip_entry *_zip_new_entry(struct zip *);
-int _zip_readcdentry(FILE *, struct zip_entry *, unsigned char **, 
-		     int, int, int);
-int _zip_set_name(struct zip *, int, const char *);
-int _zip_unchange(struct zip_entry *);
-int _zip_unchange_data(struct zip_entry *);
+void
+_zip_error_fini(struct zip_error *err)
+{
+    free(err->str);
+    err->str = NULL;
+}
 
-#endif /* zipint.h */
+
 
+
+void _zip_error_init(struct zip_error *err)
+{
+    err->zip_err = 0;
+    err->sys_err = 0;
+    err->str = NULL;
+}

@@ -1,3 +1,15 @@
+2003-10-05  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip.h: (struct zip_error) new struct.
+	* lib/zip.h: (struct zip, struct zip_file) add new member error.
+	* lib/zip.h, lib/zipint.h, lib/make_zip_err_str.sh: add
+	_zip_err_errno.
+	* lib/zip_error.c (_zip_error_fini, _zip_error_init): new
+	functions.
+	* lib/zip_error_strerror.c (_zip_error_strerror): new function.
+	* lib/zip_file_strerror.c (zip_file_strerror): new function.
+	* lib/zip_strerror.c (zip_strerror): new function.
+
 2003-10-04  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip.h, lib/make_zip_err_str.sh: make zip_err_str const.

@@ -7,12 +7,14 @@ MAN1=	zipcmp.1
 MAN3=	zip_close.3 \
 	zip_delete.3 \
 	zip_fclose.3 \
+	zip_file_strerror.3 \
 	zip_fopen.3 \
 	zip_fread.3 \
 	zip_get_name.3 \
 	zip_name_locate.3 \
 	zip_open.3 \
 	zip_rename.3 \
+	zip_strerror.3 \
 	zip_unchange.3 \
 	zip_unchange_all.3
 

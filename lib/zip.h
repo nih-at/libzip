@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.32 2003/10/02 14:13:28 dillo Exp $
+  $NiH: zip.h,v 1.33 2003/10/04 07:40:59 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -55,39 +55,47 @@ enum zip_cmd { ZIP_CMD_INIT, ZIP_CMD_READ, ZIP_CMD_META, ZIP_CMD_CLOSE };
 int zip_err; /* global variable for errors returned by the low-level
 		library */
 
-#define ZERR_OK               0  /* no error */
-#define ZERR_MULTIDISK        1  /* multi-disk zip archives not supported */
-#define ZERR_RENAME           2  /* renaming temporary file failed */
-#define ZERR_CLOSE            3  /* closing zip archive failed */
-#define ZERR_SEEK             4  /* seek error */
-#define ZERR_READ             5  /* read error */
-#define ZERR_WRITE            6  /* write error */
-#define ZERR_CRC              7  /* CRC error */
-#define ZERR_ZIPCLOSED        8  /* containing zip archive was closed */
-#define ZERR_NOENT            9  /* no such file */
-#define ZERR_EXISTS          10  /* file already exists */
-#define ZERR_OPEN            11  /* can't open file */
-#define ZERR_TMPOPEN         12  /* failure to create temporary file */
-#define ZERR_ZLIB            13  /* zlib error */
-#define ZERR_MEMORY          14  /* malloc failure */
-#define ZERR_CHANGED         15  /* entry has been changed */
-#define ZERR_COMPNOTSUPP     16  /* compression method not supported */
-#define ZERR_EOF             17  /* premature EOF */
-#define ZERR_INVAL           18  /* invalid argument */
-#define ZERR_NOZIP           19  /* not a zip archive */
-#define ZERR_INTERNAL        20  /* internal error */
-#define ZERR_INCONS	     21  /* zip archive inconsistent */
+#define ZERR_OK               0  /* N No error */
+#define ZERR_MULTIDISK        1  /* N Multi-disk zip archives not supported */
+#define ZERR_RENAME           2  /* S Renaming temporary file failed */
+#define ZERR_CLOSE            3  /* S Closing zip archive failed */
+#define ZERR_SEEK             4  /* S Seek error */
+#define ZERR_READ             5  /* S Read error */
+#define ZERR_WRITE            6  /* S Write error */
+#define ZERR_CRC              7  /* N CRC error */
+#define ZERR_ZIPCLOSED        8  /* N Containing zip archive was closed */
+#define ZERR_NOENT            9  /* N No such file */
+#define ZERR_EXISTS          10  /* N File already exists */
+#define ZERR_OPEN            11  /* S Can't open file */
+#define ZERR_TMPOPEN         12  /* S Failure to create temporary file */
+#define ZERR_ZLIB            13  /* Z Zlib error */
+#define ZERR_MEMORY          14  /* N Malloc failure */
+#define ZERR_CHANGED         15  /* N Entry has been changed */
+#define ZERR_COMPNOTSUPP     16  /* N Compression method not supported */
+#define ZERR_EOF             17  /* N Premature EOF */
+#define ZERR_INVAL           18  /* N Invalid argument */
+#define ZERR_NOZIP           19  /* N Not a zip archive */
+#define ZERR_INTERNAL        20  /* N Internal error */
+#define ZERR_INCONS	     21  /* N Zip archive inconsistent */
 
 extern const char * const zip_err_str[];
+extern const int zip_nerr_str;
 
 /* zip file */
 
 typedef int (*zip_read_func)(void *state, void *data,
 			     int len, enum zip_cmd cmd);
 
+struct zip_error {
+    int zip_err;	/* libzip error code (ZERR_*) */
+    int sys_err;	/* copy of errno (E*) */
+    char *str;		/* string representation or NULL */
+};
+
 struct zip {
     char *zn;
     FILE *zp;
+    struct zip_error error;
     unsigned short comlen, changes;
     unsigned int cd_size, cd_offset;
     char *com;
@@ -102,6 +110,7 @@ struct zip {
 struct zip_file {
     struct zip *zf;
     char *name;
+    struct zip_error error;
     int flags; /* -1: eof, >0: error */
 
     int method;
@@ -157,6 +166,7 @@ int zip_add_zip(struct zip *, const char *, struct zip_meta *,
 int zip_close(struct zip *);
 int zip_delete(struct zip *, int);
 int zip_fclose(struct zip_file *);
+const char *zip_file_strerror(struct zip_file *);
 struct zip_file *zip_fopen(struct zip *, const char *, int);
 struct zip_file *zip_fopen_index(struct zip *, int);
 int zip_fread(struct zip_file *, char *, int);
@@ -177,6 +187,7 @@ int zip_replace_filep(struct zip *, int, const char *, struct zip_meta *,
 		     FILE *, int, int);
 int zip_replace_zip(struct zip *, int, const char *, struct zip_meta *,
 		    struct zip *, int, int, int);
+const char *zip_strerror(struct zip *);
 int zip_unchange(struct zip *, int);
 int zip_unchange_all(struct zip *);
 
