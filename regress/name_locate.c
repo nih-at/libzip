@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: name_locate.c,v 1.1 2005/01/11 18:53:16 wiz Exp $
 
   name_locate.c -- test cases for finding files in zip archives
   Copyright (C) 2005 Dieter Baron and Thomas Klausner
@@ -74,6 +74,11 @@ main(int argc, char *argv[])
     fail += find_fail(z, "test2", 0, ZIP_ER_NOENT);
     fail += find_success(z, "test2", ZIP_FL_NODIR);
     fail += find_success(z, "TeST2", ZIP_FL_NODIR|ZIP_FL_NOCASE);
+    zip_delete(z, 0);
+    fail += find_fail(z, "test", 0, ZIP_ER_NOENT);
+    fail += find_success(z, "test", ZIP_FL_UNCHANGED);
+    zip_unchange_all(z);
+    fail += find_success(z, "test", 0);
 
     exit(fail ? 1 : 0);
 }
