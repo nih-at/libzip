@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_add_data.c -- add file from buffer
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

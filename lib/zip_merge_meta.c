@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_merge_meta.c -- merge two meta information structures
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

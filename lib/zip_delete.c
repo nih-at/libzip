@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_delete.c -- delete file from zip file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

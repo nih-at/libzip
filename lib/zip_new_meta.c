@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_new_meta.c -- create and init struct zip_meta
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

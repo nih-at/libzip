@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_rename.c -- rename file in zip file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

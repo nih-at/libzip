@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_unchange.c -- undo changes to file in zip file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

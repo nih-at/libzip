@@ -2,6 +2,8 @@
 #define _HAD_ZIPINT_H
 
 /*
+  $NiH$
+
   zipint.h -- internal declarations.
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_close.c -- close zip file and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

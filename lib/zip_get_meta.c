@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_get_meta.c -- get meta information for file in zip file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

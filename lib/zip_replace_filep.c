@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_replace_filep.c -- replace file from FILE*
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_fopen.c -- open file in zip file for reading
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -2,6 +2,8 @@
 #define _HAD_ZIP_H
 
 /*
+  $NiH$
+
   zip.h -- exported declarations.
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_set_name.c -- rename helper function
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_replace.c -- replace file via callback function
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_fopen_index.c -- open file in zip file for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

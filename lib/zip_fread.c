@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_fread.c -- read from file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

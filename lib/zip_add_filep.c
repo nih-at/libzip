@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_add_filep.c -- add file from FILE*
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

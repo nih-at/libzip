@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_name_locate.c -- get index by name
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

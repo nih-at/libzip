@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_open.c -- open zip file
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

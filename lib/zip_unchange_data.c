@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_unchange_data.c -- undo helper function
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_free_entry.c -- free struct zip_entry
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

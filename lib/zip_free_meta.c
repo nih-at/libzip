@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_free_meta.c -- free struct zip_meta
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 

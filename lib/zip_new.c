@@ -1,4 +1,6 @@
 /*
+  $NiH$
+
   zip_new.c -- create and init struct zip
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
 
