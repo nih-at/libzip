@@ -1,5 +1,7 @@
 2005-01-11  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
+	* lib/zip_new.c (_zip_new): init error.
+
 	* lib/zip_error.c (_zip_error_get): set system error to 0 for
 	ZIP_ET_NONE.
 
