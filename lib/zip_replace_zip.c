@@ -42,7 +42,8 @@ zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 	}
 	z->zf = srczf;
 	z->idx = srcidx;
-	return zip_replace(zf, idx, name, meta, read_zip, z, 1);
+	return zip_replace(zf, idx, (name ? name : srczf->entry[srcidx].fn),
+			   meta, read_zip, z, 1);
     }
     else {
 	if ((p=(struct read_part *)malloc(sizeof(struct read_part))) == NULL) {
@@ -54,7 +55,8 @@ zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 	p->off = start;
 	p->len = len;
 	p->zff = NULL;
-	return zip_replace(zf, idx, name, meta, read_part, z, 0);
+	return zip_replace(zf, idx, (name ? name : srczf->entry[srcidx].fn),
+			   meta, read_part, z, 0);
     }
 }
 
