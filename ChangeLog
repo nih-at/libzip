@@ -1,3 +1,8 @@
+2005-01-20  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_get_name.c (_zip_get_name): return ZIP_ER_DELETED for
+	deleted entries if ZIP_FL_UNCHANGED isn't set.
+
 2005-01-11  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* lib/zip_name_locate.c (_zip_name_locate): fix ZIP_FL_NODIR;
