@@ -1,4 +1,4 @@
-.\" $NiH: zip_source_function.mdoc,v 1.5 2004/12/22 15:35:49 dillo Exp $
+.\" $NiH: zip_source_function.mdoc,v 1.6 2004/12/22 16:19:54 wiz Exp $
 .\"
 .\" zip_source_function.mdoc -- create data source from function
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -51,7 +51,7 @@ creates a zip source from the user-provided function
 which must be of the following type:
 .Bd -literal
 typedef ssize_t (*zip_source_callback)(void *state,
-    void *data, size_t len, enum zip_cmd cmd);
+    void *data, size_t len, enum zip_source_cmd cmd);
 .Ed
 .Pp
 When called by the library, the first argument is the
