@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_get_name.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
-.\" $NiH: zip_get_name.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
+.\" from NiH: zip_get_name.mdoc,v 1.2 2003/10/03 23:34:23 wiz Exp 
+.\" $NiH: zip_get_name.mdoc,v 1.2 2003/10/03 23:34:23 wiz Exp $
 .\"
-.\" zip_name_locate.mdoc \-\- get index of file by name
+.\" zip_name_locate.mdoc \-- get index of file by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,7 +37,7 @@
 .SH "NAME"
 zip_name_locate \- get index of file by name
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft const char *
@@ -50,11 +50,11 @@ function returns the name of the file at position
 in
 \fBarchive.\fR
 The returned string must not be modified or freed, and becomes invalid when
-\fBarchvie\fR
+\fBarchive\fR
 is closed.
 .SH "RETURN VALUES"
 Upon successful completion, a pointer to the name is returned.
-Otherwise, 
+Otherwise,
 .Dv NULL
 is returned and the global variable
 .Va zip_err

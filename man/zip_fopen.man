@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fopen.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp 
-.\" $NiH: zip_fopen.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp $
+.\" from NiH: zip_fopen.mdoc,v 1.3 2003/10/03 23:36:10 wiz Exp 
+.\" $NiH: zip_fopen.mdoc,v 1.3 2003/10/03 23:36:10 wiz Exp $
 .\"
-.\" zip_fopen.mdoc \-\- open file in zip archvie for reading
+.\" zip_fopen.mdoc \-- open file in zip archvie for reading
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,7 +38,7 @@
 zip_fopen , \- .Nm zip_fopen_index
 open file in zip archvie for reading
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip_file *
@@ -97,7 +97,7 @@ The function
 may also fail and set
 .Va zip_err
 for any of the errors specified for the routine
-.Xr zip_name_locate.
+zip_name_locate(3).
 .PP
 The function
 .Fn zip_fopen_index
@@ -111,4 +111,4 @@ is invalid.
 .SH "SEE ALSO"
 zip_fclose(3),
 zip_fread(3),
-.Xr zip_name_locate
+zip_name_locate(3)

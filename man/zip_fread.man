@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fread.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp 
-.\" $NiH: zip_fread.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp $
+.\" from NiH: zip_fread.mdoc,v 1.3 2003/10/03 23:36:25 wiz Exp 
+.\" $NiH: zip_fread.mdoc,v 1.3 2003/10/03 23:36:25 wiz Exp $
 .\"
-.\" zip_fread.mdoc \-\- read from file
+.\" zip_fread.mdoc \-- read from file
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,12 +37,12 @@
 .SH "NAME"
 zip_fread \- read from file
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
 .\" XXX: buf should be void *
-.Fn zip_fread "struct zip_file *file" "char *buf, "int nbytes"
+.Fn zip_fread "struct zip_file *file" "char *buf" "int nbytes"
 .SH "DESCRIPTION"
 The
 .Fn zip_fread
@@ -53,10 +53,10 @@ bytes from
 into
 \fBbuf.\fR
 .SH "RETURN VALUES"
-If successful, the nuber of bytes actually read is returned.
-Otherwise, \\-1 is returned.
+If successful, the number of bytes actually read is returned.
+Otherwise, \-1 is returned.
 .\".SH "ERRORS"
 .\" XXX: the code needs checking.
 .SH "SEE ALSO"
-zip_fopen(3),
-zip_fclose(3)
+zip_fclose(3),
+zip_fopen(3)
