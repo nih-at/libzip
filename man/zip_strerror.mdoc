@@ -1,6 +1,6 @@
-.\" $NiH: zip_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp $
+.\" $NiH: zip_strerror.mdoc,v 1.2 2003/12/27 22:29:12 wiz Exp $
 .\"
-.\" zip_strerror.mdoc -- get string representation of zip error
+.\" zip_strerror.mdoc -- get string representation of zip error for archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -36,7 +36,7 @@
 .Os
 .Sh NAME
 .Nm zip_strerror
-.Nd get string representation of zip error
+.Nd get string representation of zip error for archive
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
@@ -57,4 +57,4 @@ for the same archive.
 .Fn zip_strerror
 returns a pointer to the error string.
 .Sh SEE ALSO
-.Xr zip_error_str 3
+.Xr zip_error_to_str 3
