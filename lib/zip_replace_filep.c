@@ -30,7 +30,7 @@ zip_replace_filep(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 
     f->f = file;
     f->off = start;
-    f->len = len;
+    f->len = (len ? len : -1);
     
     return zip_replace(zf, idx, name, meta, read_file, f, 0);
 }

@@ -53,7 +53,7 @@ zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 	p->zf = srczf;
 	p->idx = srcidx;
 	p->off = start;
-	p->len = len;
+	p->len = (len ? len : -1);
 	p->zff = NULL;
 	return zip_replace(zf, idx, (name ? name : srczf->entry[srcidx].fn),
 			   meta, read_part, p, 0);
