@@ -60,6 +60,7 @@ in
 esac
 
 AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
+		 man/zip_close.3:man/zip_close.${MANFMT}
 		 man/zip_open.3:man/zip_open.${MANFMT}])
 
 AC_CONFIG_FILES([Makefile

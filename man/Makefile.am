@@ -4,7 +4,7 @@ DISTCLEANFILES=${man_MANS}
 EXTRA_DIST=${MANDOC} ${MAN}
 
 MAN1=	zipcmp.1
-MAN3=	zip_open.3
+MAN3=	zip_close.3 zip_open.3
 
 MANDOC=${MAN1:.1=.mdoc} ${MAN3:.3=.mdoc}
 MAN=${MANDOC:.mdoc=.man}
