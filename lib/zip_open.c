@@ -18,8 +18,8 @@ static char *_zip_readfpstr(FILE *fp, int len, int nulp);
 static int _zip_checkcons(FILE *fp, struct zip *zf);
 static int _zip_headercomp(struct zip_entry *h1, int local1p,
 			   struct zip_entry *h2, int local2p);
-unsigned char *_zip_memmem(const unsigned char *big, int biglen,
-		      const unsigned char *little, int littlelen);
+static unsigned char *_zip_memmem(const unsigned char *big, int biglen,
+				  const unsigned char *little, int littlelen);
 
 
 
@@ -527,8 +527,8 @@ _zip_headercomp(struct zip_entry *h1, int local1p, struct zip_entry *h2,
 
 
 
-unsigned char *
-memmem(const unsigned char *big, int biglen, const unsigned char *little, 
+static unsigned char *
+_zip_memmem(const unsigned char *big, int biglen, const unsigned char *little, 
        int littlelen)
 {
     const unsigned char *p;
