@@ -276,7 +276,7 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 		break;
 		
 	    case Z_STREAM_END:
-		if (se->ch_func(se->ch_state, meta, 0, ZIP_CMD_META) < 0)
+		if (se->ch_func(se->ch_data, meta, 0, ZIP_CMD_META) < 0)
 		    return -1;
 		meta->crc = crc;
 		meta->uncomp_size = size;
@@ -295,19 +295,19 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 
     }
     else { /* we get compressed data */
-	while ((n=se->ch_func(se->ch_state, b1, BUFSIZE, ZIP_CMD_READ)) > 0) {
+	while ((n=se->ch_func(se->ch_data, b1, BUFSIZE, ZIP_CMD_READ)) > 0) {
 	    size += n;
 	    if (_zip_fwrite(b2, 1, zstr.avail_out, zf->zp) < 0)
 		return -1;
 	}
 	if (n < 0)
 	    return -1;
-	if (se->ch_func(se->ch_state, meta, 0, ZIP_CMD_META) < 0)
+	if (se->ch_func(se->ch_data, meta, 0, ZIP_CMD_META) < 0)
 	    return -1;
 	meta->comp_size = size;
     }
 
-    se->ch_func(se->ch_state, NULL, 0, ZIP_CMD_CLOSE);
+    se->ch_func(se->ch_data, NULL, 0, ZIP_CMD_CLOSE);
 
     if (fseek(zf->zp, fpos, SEEK_SET) < 0) {
 	zip_err = ZERR_SEEK;
