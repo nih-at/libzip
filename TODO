@@ -1,4 +1,7 @@
-* documentation
+* documentation: zip_add*, zip_get_name, zip_name_locate, zip_rename,
+		 zip_replace*
+	[zip_free_meta, zip_meta_new]
+* function to get status of struct zip_file (member flags)
 * correct version in installed libzip.so.x.y
 * fix warnings in zipcmp
 * regression tests

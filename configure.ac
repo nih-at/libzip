@@ -62,7 +62,9 @@ esac
 AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
 		 man/zip_close.3:man/zip_close.${MANFMT}
 		 man/zip_delete.3:man/zip_delete.${MANFMT}
+		 man/zip_fclose.3:man/zip_fclose.${MANFMT}
 		 man/zip_fopen.3:man/zip_fopen.${MANFMT}
+		 man/zip_fread.3:man/zip_fread.${MANFMT}
 		 man/zip_unchange.3:man/zip_unchange.${MANFMT}
 		 man/zip_unchange_all.3:man/zip_unchange_all.${MANFMT}
 		 man/zip_open.3:man/zip_open.${MANFMT}])
