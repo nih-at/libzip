@@ -1,4 +1,4 @@
-.\" $NiH: zip_unchange.mdoc,v 1.4 2004/11/17 21:55:17 wiz Exp $
+.\" $NiH: zip_unchange.mdoc,v 1.5 2004/11/30 22:26:56 wiz Exp $
 .\"
 .\" zip_unchange.mdoc -- undo changes to file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -31,7 +31,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 3, 2003
+.Dd November 30, 2004
 .Dt ZIP_UNCHANGE 3
 .Os
 .Sh NAME
@@ -56,6 +56,8 @@ is set to indicate the error.
 .Fn zip_unchange
 fails if:
 .Bl -tag -width Er
+.It Bq Er ZIP_ER_EXISTS
+Unchanging the name would result in a duplicate name in the archive.
 .It Bq Er ZIP_ER_INVAL
 .Ar index
 is not a valid file index in
