@@ -53,6 +53,10 @@ AC_EXEEXT
 dnl AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
 
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile
-		 regress/Makefile])
+AC_CONFIG_FILES([Makefile
+		 libzip.pc
+		 libzip-uninstalled.pc
+		 lib/Makefile
+		 regress/Makefile
+		 src/Makefile])
 AC_OUTPUT

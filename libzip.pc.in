@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libzip
+Description: library for handling zip archvie
+Version: @VERSION@
+Libs: -L${libdir} -lzip @LIBS@
+Cflags: -I${includedir}
+
