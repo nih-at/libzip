@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new.c,v 1.6.4.1 2004/03/22 14:56:48 dillo Exp $
+  $NiH: zip_new.c,v 1.6.4.2 2004/03/23 16:08:46 dillo Exp $
 
   zip_new.c -- create and init struct zip
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -60,7 +60,7 @@ _zip_new(struct zip_error *error)
     za->zp = NULL;
     za->nentry = za->nentry_alloc = 0;
     za->nfile = za->nfile_alloc = 0;
-    za->com = NULL;
+    za->cdir = NULL;
     za->entry = NULL;
     za->file = NULL;
     

@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.4 2004/03/23 17:16:03 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.5 2004/03/23 18:38:48 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -71,12 +71,12 @@ struct zip {
     FILE *zp;			/* file */
     struct zip_error error;	/* error information */
 
-    char *com;			/* zip archvie comment (?) */
+    struct zip_cdir *cdir;	/* central directory */
     int nentry;			/* number of entries */
     int nentry_alloc;		/* number of entries allocated */
     struct zip_entry *entry;	/* entries */
     int nfile;			/* number of opened files within archvie */
-    int nfile_alloc;		/* numbere of files allocated */
+    int nfile_alloc;		/* number of files allocated */
     struct zip_file **file;	/* opened files within archvie */
 };
 
@@ -111,8 +111,8 @@ struct zip_dirent {
     unsigned int crc;			/* (cl) CRC-32 of uncompressed data */
     unsigned int comp_size;		/* (cl) size of commpressed data */
     unsigned int uncomp_size;		/* (cl) size of uncommpressed data */
-    char *filename;			/* (cl) file name */
-    unsigned short filename_len;	/* (cl) length of file name */
+    char *filename;			/* (cl) file name (NUL-terminated) */
+    unsigned short filename_len;	/* (cl) length of filename (w/o NUL) */
     char *extrafield;			/* (cl) extra field */
     unsigned short extrafield_len;	/* (cl) length of extra field */
     char *comment;			/* (c)  file comment */
@@ -131,12 +131,14 @@ struct zip_cdir {
 
     unsigned int size;		/* size of central direcotry */
     unsigned int offset;	/* offset of central directory in file */
+    char *comment;		/* zip archive comment */
     unsigned short comment_len;	/* length of zip archive comment */
 };
 
 /* entry in zip archive directory */
 
 struct zip_entry {
+#if 0
     char *fn;			/* file name */
     unsigned short comp_method;	/* compression method */
     unsigned int comp_size;	/* size of compressed data */
@@ -144,13 +146,13 @@ struct zip_entry {
     unsigned int crc;		/* CRC-32 of uncompressed data */
     unsigned int offset;	/* byte offset of local dir entry */
     time_t mtime;		/* time of last modification */
-
-    char *fn_old;		/* original file name (NULL if unchanged) */
+#endif
 
     enum zip_state state;
     zip_read_func ch_func;
     void *ch_data;
     int ch_flags;		/* 1: data returned by ch_func is compressed */
+    char *ch_filename;
     time_t ch_mtime;
     int ch_comp_method;
 };
@@ -175,7 +177,7 @@ void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
 const char *_zip_error_strerror(struct zip_error *);
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
-unsigned int _zip_file_get_offset(struct zip *, struct zip_entry *);
+unsigned int _zip_file_get_offset(struct zip *, int);
 void _zip_free(struct zip *);
 int _zip_free_entry(struct zip_entry *);
 int _zip_local_header_read(struct zip *, int);

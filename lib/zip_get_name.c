@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_get_name.c,v 1.5 2003/10/02 14:13:30 dillo Exp $
+  $NiH: zip_get_name.c,v 1.6 2003/10/06 16:37:41 dillo Exp $
 
   zip_get_name.c -- get filename for a file in zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,5 +48,8 @@ zip_get_name(struct zip *zf, int idx)
 	return NULL;
     }
 
-    return zf->entry[idx].fn;
+    if (zf->entry[idx].ch_filename)
+	return zf->entry[idx].ch_filename;
+
+    return zf->cdir->entry[idx].filename;
 }

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.1.2.3 2004/03/23 16:06:28 dillo Exp $
+  $NiH: zip_dirent.c,v 1.1.2.4 2004/03/23 18:38:47 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -62,7 +62,7 @@ _zip_cdir_free(struct zip_cdir *cd)
 
     for (i=0; i<cd->nentry; i++)
 	_zip_dirent_finalize(cd->entry+i);
-    /* free(cd->comment); */
+    free(cd->comment);
     free(cd->entry);
     free(cd);
 }

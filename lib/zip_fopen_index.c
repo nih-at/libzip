@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.15.4.3 2004/03/22 14:56:48 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.15.4.4 2004/03/23 16:07:50 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -58,49 +58,32 @@ zip_fopen_index(struct zip *zf, int fileno)
 	return NULL;
     }
 
-#if 0
     if (zf->entry[fileno].state != ZIP_ST_UNCHANGED
 	&& zf->entry[fileno].state != ZIP_ST_RENAMED) {
 	_zip_error_set(&zf->error, ZERR_CHANGED, 0);
 	return NULL;
     }
-#endif
-
     
-    if ((zf->entry[fileno].comp_method != ZIP_CM_STORE)
-	&& (zf->entry[fileno].comp_method != ZIP_CM_DEFLATE)) {
+    if ((zf->cdir->entry[fileno].comp_method != ZIP_CM_STORE)
+	&& (zf->cdir->entry[fileno].comp_method != ZIP_CM_DEFLATE)) {
 	_zip_error_set(&zf->error, ZERR_COMPNOTSUPP, 0);
 	return NULL;
     }
 
     zff = _zip_file_new(zf);
 
-    zff->name = zf->entry[fileno].fn;
-    zff->method = zf->entry[fileno].comp_method;
-    zff->bytes_left = zf->entry[fileno].uncomp_size;
-    zff->cbytes_left = zf->entry[fileno].comp_size;
-    zff->crc_orig = zf->entry[fileno].crc;
+    zff->name = zf->cdir->entry[fileno].filename;
+    zff->method = zf->cdir->entry[fileno].comp_method;
+    zff->bytes_left = zf->cdir->entry[fileno].uncomp_size;
+    zff->cbytes_left = zf->cdir->entry[fileno].comp_size;
+    zff->crc_orig = zf->cdir->entry[fileno].crc;
 
-    /* go to start of actual data */
-    if (fseek(zf->zp, zf->entry[fileno].offset+LENTRYSIZE-4, SEEK_SET) < 0) {
-	_zip_error_set(&zf->error, ZERR_SEEK, errno);
-	zip_fclose(zff);
-	return NULL;
-    }
-    len = fread(buf, 1, 4, zf->zp);
-    if (len != 4) {
-	_zip_error_set(&zf->error, ZERR_READ, errno);
-	zip_fclose(zff);
-	return NULL;
-    }
-    
-    if ((zff->fpos=_zip_file_get_offset(zf, zf->entry+fileno)) == 0) {
+    if ((zff->fpos=_zip_file_get_offset(zf, fileno)) == 0) {
 	zip_fclose(zff);
 	return NULL;
     }
 	
-    if ((zf->entry[fileno].comp_method == ZIP_CM_STORE)
-	|| (zff->bytes_left == 0))
+    if ((zff->method == ZIP_CM_STORE) || (zff->bytes_left == 0))
 	return zff;
     
     if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {

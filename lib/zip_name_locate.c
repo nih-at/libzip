@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_name_locate.c,v 1.8 2003/10/02 14:13:30 dillo Exp $
+  $NiH: zip_name_locate.c,v 1.9 2003/10/06 02:50:06 dillo Exp $
 
   zip_name_locate.c -- get index by name
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -46,19 +46,18 @@ int
 zip_name_locate(struct zip *za, const char *fname, int flags)
 {
     int (*cmp)();
-    const char *fn;
+    const char *fn, *p;
     int i;
 
     cmp = (flags & ZIP_NAME_NOCASE) ? strcmp : strcasecmp;
 
     for (i=0; i<za->nentry; i++) {
+	fn = zip_get_name(za, i);
 	if (flags & ZIP_NAME_NODIR) {
 	    /* XXX: handle '\' */
-	    if ((fn=strrchr(za->entry[i].fn, '/')) == NULL)
-		fn = za->entry[i].fn;
+	    if ((p=strrchr(fn, '/')) != NULL)
+		fn = p;
 	}
-	else 
-	    fn = za->entry[i].fn;
 
 	if (cmp(fname, fn) == 0)
 	    return i;

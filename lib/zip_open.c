@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.19.4.3 2004/03/23 17:16:02 dillo Exp $
+  $NiH: zip_open.c,v 1.19.4.4 2004/03/23 18:38:48 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -46,8 +46,7 @@
 #include "zip.h"
 #include "zipint.h"
 
-static int fill_entries(struct zip *, struct zip_cdir *);
-static void set_error(int *, int *, int, int);
+static void set_error(int *, struct zip_error *, int);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
 static int _zip_headercomp(struct zip_dirent *, int,
 			   struct zip_dirent *, int);
@@ -59,7 +58,7 @@ static struct zip_cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
 
 
 struct zip *
-zip_open(const char *fn, int flags, int *zep, int *sep)
+zip_open(const char *fn, int flags, int *zep)
 {
     FILE *fp;
     unsigned char *buf, *match;
@@ -71,39 +70,39 @@ zip_open(const char *fn, int flags, int *zep, int *sep)
     struct zip_error error, err2;
 
     if (fn == NULL) {
-	set_error(zep, sep, ZERR_INVAL, 0);
+	set_error(zep, NULL, ZERR_INVAL);
 	return NULL;
     }
     
     if (stat(fn, &st) != 0) {
 	if (flags & ZIP_CREATE) {
 	    if ((za=_zip_new(&error)) == NULL) {
-		_zip_error_get(&error, zep, sep);
+		set_error(zep, &error, 0);
 		return NULL;
 	    }
 	    
 	    za->zn = strdup(fn);
 	    if (!za->zn) {
 		_zip_free(za);
-		set_error(zep, sep, ZERR_MEMORY, 0);
+		set_error(zep, NULL, ZERR_MEMORY);
 		return NULL;
 	    }
 	    return za;
 	}
 	else {
-	    set_error(zep, sep, ZERR_OPEN, errno);
+	    set_error(zep, NULL, ZERR_OPEN);
 	    return NULL;
 	}
     }
     else if ((flags & ZIP_EXCL)) {
-	set_error(zep, sep, ZERR_EXISTS, 0);
+	set_error(zep, NULL, ZERR_EXISTS);
 	return NULL;
     }
     /* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
        just like open() */
     
     if ((fp=fopen(fn, "rb")) == NULL) {
-	set_error(zep, sep, ZERR_OPEN, errno);
+	set_error(zep, NULL, ZERR_OPEN);
 	return NULL;
     }
     
@@ -113,14 +112,14 @@ zip_open(const char *fn, int flags, int *zep, int *sep)
     i = fseek(fp, -(len < BUFSIZE ? len : BUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */
-	set_error(zep, sep, ZERR_SEEK, errno);
+	set_error(zep, NULL, ZERR_SEEK);
 	fclose(fp);
 	return NULL;
     }
 
     /* 64k is too much for stack */
     if ((buf=(unsigned char *)malloc(BUFSIZE)) == NULL) {
-	set_error(zep, sep, ZERR_MEMORY, 0);
+	set_error(zep, NULL, ZERR_MEMORY);
 	fclose(fp);
 	return NULL;
     }
@@ -129,7 +128,7 @@ zip_open(const char *fn, int flags, int *zep, int *sep)
     buflen = fread(buf, 1, BUFSIZE, fp);
 
     if (ferror(fp)) {
-	set_error(zep, sep, ZERR_READ, errno);
+	set_error(zep, NULL, ZERR_READ);
 	free(buf);
 	fclose(fp);
 	return NULL;
@@ -172,70 +171,54 @@ zip_open(const char *fn, int flags, int *zep, int *sep)
     
     if (best < 0) {
 	/* no consistent eocd found */
-	set_error(zep, sep, ZERR_NOZIP, 0);
+	set_error(zep, NULL, ZERR_NOZIP);
 	_zip_cdir_free(cdir);
 	fclose(fp);
 	return NULL;
     }
 
     if ((za=_zip_new(&error)) == NULL) {
-	_zip_error_get(&error, zep, sep);
+	set_error(zep, &error, 0);
 	_zip_cdir_free(cdir);
 	fclose(fp);
 	return NULL;
     }
 
     za->zp = fp;
+    za->cdir = cdir;
     
     if ((za->zn=strdup(fn)) == NULL) {
-	set_error(zep, sep, ZERR_MEMORY, 0);
+	set_error(zep, NULL, ZERR_MEMORY);
 	_zip_free(za);
-	_zip_cdir_free(cdir);
 	return NULL;
     }
 
-    fill_entries(za, cdir);
-    _zip_cdir_free(cdir);
-    
+    if ((za->entry=malloc(sizeof(*(za->entry))*cdir->nentry)) == NULL) {
+	set_error(zep, NULL, ZERR_MEMORY);
+	_zip_free(za);
+	return NULL;
+    }
+    for (i=0; i<cdir->nentry; i++)
+	_zip_new_entry(za);
+
     return za;
 }
 
 
 
-static int
-fill_entries(struct zip *za, struct zip_cdir *cd)
+static void
+set_error(int *zep, struct zip_error *err, int ze)
 {
-    int i;
+    int se;
 
-    if ((za->entry=malloc(sizeof(*(za->entry))*cd->nentry)) == NULL)
-	return -1;
-
-    za->nentry_alloc = cd->nentry;
-
-    for (i=0; i<cd->nentry; i++) {
-	_zip_new_entry(za);
-	za->entry[i].fn = cd->entry[i].filename;
-	cd->entry[i].filename = NULL;
-	za->entry[i].comp_method = cd->entry[i].comp_method;
-	za->entry[i].comp_size = cd->entry[i].comp_size;
-	za->entry[i].uncomp_size = cd->entry[i].uncomp_size;
-	za->entry[i].crc = cd->entry[i].crc;
-	za->entry[i].offset = cd->entry[i].offset;
-	za->entry[i].mtime = cd->entry[i].last_mod;
+    if (err) {
+	_zip_error_get(err, &ze, &se);
+	if (zip_error_sys_type(ze) == ZIP_ET_SYS)
+	    errno = se;
     }
 
-    return 0;
-}
-
-
-
-static void
-set_error(int *zep, int *sep, int ze, int se)
-{
     if (zep)
 	*zep = ze;
-    if (sep)
-	*sep = se;
 }
 
 
@@ -281,11 +264,12 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     /* number of cdir-entries on this disk */
     i = _zip_read2(&cdp);
     /* number of cdir-entries */
+    cd->entry = NULL;
     cd->nentry = _zip_read2(&cdp);
     cd->size = _zip_read4(&cdp);
     cd->offset = _zip_read4(&cdp);
+    cd->comment = NULL;
     cd->comment_len = _zip_read2(&cdp);
-    cd->entry = NULL;
 
     /* XXX: some zip files are broken; their internal comment length
        says 0, but they have 1 or 2 comment bytes */
@@ -298,8 +282,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	return NULL;
     }
 
-    /* cd->comment = (unsigned char *)_zip_memdup(eocd+EOCDLEN,
-						 cd->comment_len); */
+    cd->comment = _zip_memdup(eocd+EOCDLEN, cd->comment_len);
 
     cdp = eocd;
     if (cd->size < eocd-buf) {

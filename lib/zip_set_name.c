@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_set_name.c,v 1.9 2003/10/02 14:13:32 dillo Exp $
+  $NiH: zip_set_name.c,v 1.10 2003/10/06 16:37:41 dillo Exp $
 
   zip_set_name.c -- rename helper function
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -58,11 +58,8 @@ _zip_set_name(struct zip *zf, int idx, const char *name)
 	    return -1;
 	}
 	
-	if (zf->entry[idx].fn_old == NULL)
-	    zf->entry[idx].fn_old = zf->entry[idx].fn;
-	else
-	    free(zf->entry[idx].fn);
-	zf->entry[idx].fn = s;
+	free(zf->entry[idx].ch_filename);
+	zf->entry[idx].ch_filename = s;
     }
 
     return 0;

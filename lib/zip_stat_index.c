@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_stat_index.c,v 1.1 2003/10/06 02:50:07 dillo Exp $
+  $NiH: zip_stat_index.c,v 1.1.4.1 2004/03/22 14:17:34 dillo Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,14 +48,20 @@ zip_stat_index(struct zip *za, int index, struct zip_stat *st)
 	return -1;
     }
 
-    st->name = za->entry[index].fn;
+    if (za->entry[index].state != ZIP_ST_UNCHANGED
+	&& za->entry[index].state != ZIP_ST_RENAMED) {
+	_zip_error_set(&za->error, ZERR_CHANGED, 0);
+	return NULL;
+    }
+    
+    st->name = zip_get_name(za, index);
     st->index = index;
-    st->crc = za->entry[index].crc;
-    st->size = za->entry[index].uncomp_size;
-    st->mtime = za->entry[index].mtime;
-    st->comp_size = za->entry[index].comp_size;
-    st->comp_method = za->entry[index].comp_method;
-    /* st->bitflags = za->entry[index].bitflags; */
+    st->crc = za->cdir->entry[index].crc;
+    st->size = za->cdir->entry[index].uncomp_size;
+    st->mtime = za->cdir->entry[index].last_mod;
+    st->comp_size = za->cdir->entry[index].comp_size;
+    st->comp_method = za->cdir->entry[index].comp_method;
+    /* st->bitflags = za->cdir->entry[index].bitflags; */
 
     return 0;
 }
