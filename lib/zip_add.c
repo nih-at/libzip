@@ -4,9 +4,8 @@
 
 
 int
-zip_add(struct zip *zf, char *name, zip_read_func *fn, void *state, int comp)
+zip_add(struct zip *zf, char *name, struct zip_meta *meta,
+	zip_read_func *fn, void *state, int comp)
 {
-    _zip_new_entry(zf);
-
-    return zip_replace(zf, zf->nentry-1, name, fn, state, comp);
+    return zip_replace(zf, -1, name, meta, fn, state, comp);
 }

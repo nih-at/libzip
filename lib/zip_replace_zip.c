@@ -21,13 +21,13 @@ static zip_read_func read_part;
 
 
 int
-zip_replace_zip(struct zip *zf, int idx, char *name,
+zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 		struct zip *srczf, int srcidx, int start, int len)
 {
     struct read_zip *z;
     struct read_part *p;
 
-    if (srcidx < 0 || srcidx >= srczf->nentry) {
+    if (srcidx < -1 || srcidx >= srczf->nentry) {
 	zip_err = ZERR_NOENT;
 	return -1;
     }
@@ -39,7 +39,7 @@ zip_replace_zip(struct zip *zf, int idx, char *name,
 	}
 	z->zf = srczf;
 	z->idx = srcidx;
-	return zip_replace(zf, idx, name, read_zip, z, 1);
+	return zip_replace(zf, idx, name, meta, read_zip, z, 1);
     }
     else {
 	if ((p=(struct read_part *)malloc(sizeof(struct read_part))) == NULL) {
@@ -51,14 +51,14 @@ zip_replace_zip(struct zip *zf, int idx, char *name,
 	p->off = start;
 	p->len = len;
 	p->zff = NULL;
-	return zip_replace(zf, idx, name, read_part, z, 0);
+	return zip_replace(zf, idx, name, meta, read_part, z, 0);
     }
 }
 
 
 
-static unsigned long
-read_zip(void *state, void *data, int len, enum zip_cmd cmd);
+static int
+read_zip(void *state, void *data, int len, enum zip_cmd cmd)
 {
     struct read_zip *z;
 
@@ -84,8 +84,8 @@ read_zip(void *state, void *data, int len, enum zip_cmd cmd);
 
 
 
-static unsigned long
-read_part(void *state, void *data, int len, enum zip_cmd cmd);
+static int
+read_part(void *state, void *data, int len, enum zip_cmd cmd)
 {
     struct read_part *z;
     char b[8192], *buf;
@@ -123,8 +123,8 @@ read_part(void *state, void *data, int len, enum zip_cmd cmd);
 
 	return i;
 	
-    case ZIP_CMD_CRC:
-	return -1;
+    case ZIP_CMD_META:
+	return 0;
 
     case ZIP_CMD_CLOSE:
 	if (z->zff) {

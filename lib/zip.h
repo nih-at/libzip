@@ -118,20 +118,26 @@ struct *zip_meta zip_new_meta(void);
 
 /* high level routines to modify zip file */
 
-int zip_unchange(struct zip *zf, int idx);
 int zip_rename(struct zip *zf, int idx, char *name);
-int zip_add_file(struct zip *zf, char *name, FILE *file, int start, int len);
-int zip_add_data(struct zip *zf, char *name, char *buf, int start, int len);
-int zip_add_zip(struct zip *zf, char *name, struct zip *srczf, int srcidx,
-		int start, int len);
-int zip_replace_file(struct zip *zf, int idx, char *name, FILE *file,
-		     int start, int len);
-int zip_replace_data(struct zip *zf, int idx, char *name, char *buf,
-		     int start, int len);
-int zip_replace_zip(struct zip *zf, int idx, char *name,
-		    struct zip *srczf, int srcidx, int start, int len);
-
 int zip_delete(struct zip *zf, int idx);
+
+int zip_add_data(struct zip *zf, char *name, struct zip_meta *meta,
+		 char *data, int len, int freep);
+int zip_replace_data(struct zip *zf, int idx, char *name,
+		     struct zip_meta *meta,
+		     char *data, int len, int freep);
+int zip_add_file(struct zip *zf, char *name, struct zip_meta *meta,
+		 FILE *file, int start, int len);
+int zip_replace_file(struct zip *zf, int idx, char *name,
+		     struct zip_meta *meta,
+		     FILE *file, int start, int len);
+int zip_add_zip(struct zip *zf, char *name, struct zip_meta *meta,
+		struct zip *srczf, int srcidx, int start, int len);
+int zip_replace_zip(struct zip *zf, int idx, char *name,
+		    struct zip_meta *meta,
+		    struct zip *srczf, int srcidx, int start, int len)
+
+int zip_unchange(struct zip *zf, int idx);
 
 
 #endif /* _HAD_ZIP_H */
