@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_error.c,v 1.2 2003/10/06 02:50:05 dillo Exp $
+  $NiH: zip_error.c,v 1.3 2003/10/06 16:37:40 dillo Exp $
 
   zip_error.c -- struct zip_error helper functions
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -85,6 +85,8 @@ _zip_error_init(struct zip_error *err)
 void
 _zip_error_set(struct zip_error *err, int ze, int se)
 {
-    err->zip_err = ze;
-    err->sys_err = se;
+    if (err) {
+	err->zip_err = ze;
+	err->sys_err = se;
+    }
 }
