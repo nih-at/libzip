@@ -11,7 +11,7 @@ zip_delete(struct zip *zf, int idx)
 	return -1;
     }
 
-    if (_zip_unchange_data(zf, idx) != 0)
+    if (_zip_unchange_data(zf+idx) != 0)
 	return -1;
 
     zf->changes = 1;

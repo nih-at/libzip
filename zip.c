@@ -12,32 +12,6 @@ void zip_entry_init(struct zf *zf, int idx);
 
 
 
-static int
-zip_unchange_data(struct zf *zf, int idx)
-{
-    if (idx >= zf->nentry || idx < 0)
-	return -1;
-
-    if (zf->entry[idx].ch_data_fp) {
-	fclose(zf->entry[idx].ch_data_fp);
-	zf->entry[idx].ch_data_fp = NULL;
-    }
-    if (zf->entry[idx].ch_data_buf) {
-	free(zf->entry[idx].ch_data_buf);
-	zf->entry[idx].ch_data_buf = NULL;
-    }
-
-    zf->entry[idx].ch_data_zf = NULL;
-    zf->entry[idx].ch_data_zf_fileno = 0;
-    zf->entry[idx].ch_data_offset = 0;
-    zf->entry[idx].ch_data_len = 0;
-
-    zf->entry[idx].state = zf->entry[idx].fn_old ? Z_RENAMED : Z_UNCHANGED;
-
-    return idx;
-}
-
-
 
 
 

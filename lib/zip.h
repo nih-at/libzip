@@ -119,7 +119,7 @@ int zip_fclose(struct zip_file *zff);
 /* data structure to set file attributes (except the file name) */
 
 struct zip_meta *zip_new_meta(void);
-void zip_meta_free(struct zip_meta *meta);
+void zip_free_meta(struct zip_meta *meta);
 
 /* high level routines to modify zip file */
 

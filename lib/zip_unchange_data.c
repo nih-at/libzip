@@ -1,10 +1,12 @@
 #include "zipint.h"
 
-void
+int
 _zip_unchange_data(struct zip_entry *ze)
 {
+    int ret;
+    
     if (ze->ch_func) {
-	ze->ch_func(ze->ch_data, NULL, 0, ZIP_CMD_CLOSE);
+	ret = ze->ch_func(ze->ch_data, NULL, 0, ZIP_CMD_CLOSE);
 	ze->ch_func = NULL;
     }
     
@@ -16,6 +18,6 @@ _zip_unchange_data(struct zip_entry *ze)
     ze->state = (ze->fn_old || ze->ch_meta) ? ZIP_ST_RENAMED
 	: ZIP_ST_UNCHANGED;
 
-    return;
+    return ret;
 }
 
