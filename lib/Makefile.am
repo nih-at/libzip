@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libzip.la
-noinst_HEADERS=zip.h \
-	zipint.h
+noinst_HEADERS = zipint.h
+include_HEADERS = zip.h
 
 SUBDIRS=. tests
 
