@@ -1,5 +1,5 @@
 /*
-  $NiH: buffadd.c,v 1.7 2004/11/18 17:11:23 wiz Exp $
+  $NiH: buffadd.c,v 1.8 2004/11/18 17:26:55 wiz Exp $
 
   buffadd.c -- test cases for adding files from buffer
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -60,7 +60,7 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(testzip, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr,"%s: can't open zipfile %s: %s\n", argv[0],
+	fprintf(stderr,"%s: can't open zip archive %s: %s\n", argv[0],
 		testzip, buf);
 	exit(1);
     }
@@ -74,14 +74,14 @@ main(int argc, char *argv[])
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr,"%s: can't close zipfile %s\n", argv[0],
+	fprintf(stderr,"%s: can't close zip archive %s\n", argv[0],
 		testzip);
 	exit(1);
     }
 
     if ((za=zip_open(testzip, ZIP_CHECKCONS, &err))==NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr,"%s: can't re-open zipfile %s: %s\n", argv[0],
+	fprintf(stderr,"%s: can't re-open zip archive %s: %s\n", argv[0],
 		testzip, buf);
 	exit(1);
     }
@@ -93,11 +93,14 @@ main(int argc, char *argv[])
     }
 
     if (zip_fread(zf, buf, 2000) < 0) {
-	fprintf(stderr,"%s: can't read from '%s' in zipfile '%s': %s\n",
+	fprintf(stderr,"%s: can't read from '%s' in zip archive '%s': %s\n",
 		argv[0], testname, testzip, zip_file_strerror(zf));
 	exit(1);
     }
     
+    zip_fclose(zf);
+    zf = zip_fopen(za, testname, 0);
+
     if (strcmp(buf, teststr)) {
 	fprintf(stderr,"%s: wrong data: '%s' instead of '%s'\n", argv[0],
 		buf, teststr);
@@ -105,11 +108,18 @@ main(int argc, char *argv[])
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr,"%s: can't close zipfile %s\n", argv[0],
+	fprintf(stderr,"%s: can't close zip archive %s\n", argv[0],
 		testzip);
 	exit(1);
     }
 
+    buf[0] = '\0';
+    if ((err=zip_fread(zf, buf, 2000)) != -1) {
+	fprintf(stderr,"%s: can read from '%s' in closed zip archive '%s': %s\n",
+		argv[0], testname, testzip, zip_file_strerror(zf));
+	exit(1);
+    }
+    
     remove(testzip);
     
     return 0;
