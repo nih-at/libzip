@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #include "zip.h"
 #include "zipint.h"
@@ -36,6 +37,7 @@ zip_close(struct zip *zf)
     char *temp;
     FILE *tfp;
     struct zip *tzf;
+    mode_t mask;
 
     if (zf->changes == 0)
 	return _zip_free(zf);
@@ -139,6 +141,9 @@ zip_close(struct zip *zf)
 	    _zip_free(tzf);
 	    return -1;
 	}
+	mask=umask(0);
+	umask(mask);
+	chmod(zf->zn, 0666&~mask);
     }
 
     free(temp);
