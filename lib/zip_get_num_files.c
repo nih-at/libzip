@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_get_num_files.c,v 1.1 2003/10/06 02:50:06 dillo Exp $
 
   zip_get_num_files.c -- get number of files in archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -43,5 +43,8 @@
 int
 zip_get_num_files(struct zip *za)
 {
+    if (za == NULL)
+	return -1;
+
     return za->nentry;
 }
