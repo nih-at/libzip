@@ -289,7 +289,7 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
     else { /* we get compressed data */
 	while ((n=se->ch_func(se->ch_data, b1, BUFSIZE, ZIP_CMD_READ)) > 0) {
 	    size += n;
-	    if (_zip_fwrite(b2, 1, zstr.avail_out, zf->zp) < 0)
+	    if (_zip_fwrite(b1, 1, n, zf->zp) < 0)
 		return -1;
 	}
 	if (n < 0)
@@ -443,7 +443,7 @@ _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp)
     if (localp)
 	_zip_write2(fp, zfe->meta->lef_len);
     else {
-	_zip_write2(fp, zfe->meta->lef_len);
+	_zip_write2(fp, zfe->meta->ef_len);
 	_zip_write2(fp, zfe->meta->fc_len);
 	_zip_write2(fp, zfe->meta->disknrstart);
 	_zip_write2(fp, zfe->meta->int_attr);
