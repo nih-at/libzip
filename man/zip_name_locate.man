@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_name_locate.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
-.\" $NiH: zip_name_locate.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
+.\" from NiH: zip_name_locate.mdoc,v 1.2 2003/10/06 16:37:07 dillo Exp 
+.\" $NiH: zip_name_locate.mdoc,v 1.2 2003/10/06 16:37:07 dillo Exp $
 .\"
 .\" zip_name_locate.mdoc \-\- get index by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -41,7 +41,7 @@ libzip (\-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
-.Fn zip_name_locate "struct zip *archive" "const char *fname" "int case_sens"
+.Fn zip_name_locate "struct zip *archive" "const char *fname" "int flags"
 .SH "DESCRIPTION"
 The
 .Fn zip_name_locate
@@ -50,10 +50,20 @@ function returns the index of the file named
 in
 \fBarchive.\fR
 If
-\fBcase_sens\fR
-is zero, case is ignored.
-If
 \fBarchive\fR
 does not contain a file with that name, \\-1 is returned.
+The
+.Fa flags
+are specified by
+.I or Ns No 'ing
+the following values, or 0 for none of them.
+.RS
+.TP 17
+Dv ZIP_NAME_NOCASE
+Ignore case distinctions.
+.TP 17
+Dv ZIP_NAME_NODIR
+Ignore directory part of file name in archive.
+.RE
 .\".SH "RETURN VALUES"
 .\".SH "SEE ALSO"

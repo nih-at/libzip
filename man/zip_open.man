@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_open.mdoc,v 1.9 2003/10/03 12:04:09 dillo Exp 
-.\" $NiH: zip_open.mdoc,v 1.9 2003/10/03 12:04:09 dillo Exp $
+.\" from NiH: zip_open.mdoc,v 1.10 2003/10/06 16:36:54 dillo Exp 
+.\" $NiH: zip_open.mdoc,v 1.10 2003/10/06 16:36:54 dillo Exp $
 .\"
 .\" zip_open.mdoc \-\- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -41,7 +41,7 @@ libzip (\-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip *
-.Fn zip_open "const char *path" "int flags"
+.Fn zip_open "const char *path" "int flags" "int *errorp"
 .SH "DESCRIPTION"
 The zip archive specified by
 \fBpath\fR
@@ -65,6 +65,9 @@ Error if archive already exists.
 Dv ZIP_CHECKCONS
 Perform additional consistency checks on the archive, and error if
 they fail.
+.PP If an error occurs and
+\fBerrorp\fR
+is non\-NULL, it will be set to the corresponding error code.
 .RE
 .SH "RETURN VALUES"
 Upon successful completion
@@ -74,17 +77,22 @@ returns a
 pointer.
 Otherwise,
 .Dv NULL
-is returned and the global variable
-.Va zip_err
+is returned and
+\fB*errorp\fR
 is set to indicate the error.
 .SH "ERRORS"
 The named archive is opened unless:
 .RS
 .TP 4
 Bq Er ZERR_EXISTS
-The named archive exists and
+The named file exists and
 .Dv ZIP_EXCL
 is set.
+.TP 4
+Bq Er ZERR_INCONS
+Inconsistencies were found in the named archive and
+.Dv ZIP_CHECKCONS
+was specified.
 .TP 4
 Bq Er ZERR_INVAL
 The
@@ -96,7 +104,7 @@ Bq Er ZERR_MEMORY
 Required memory could not be allocated.
 .TP 4
 Bq Er ZERR_NOENT
-The named archive does not exist and
+The named file does not exist and
 .Dv ZIP_CREATE
 is not set.
 .TP 4

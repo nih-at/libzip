@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fopen.mdoc,v 1.4 2003/10/03 23:39:49 wiz Exp 
-.\" $NiH: zip_fopen.mdoc,v 1.4 2003/10/03 23:39:49 wiz Exp $
+.\" from NiH: zip_fopen.mdoc,v 1.5 2003/10/06 16:37:07 dillo Exp 
+.\" $NiH: zip_fopen.mdoc,v 1.5 2003/10/06 16:37:07 dillo Exp $
 .\"
-.\" zip_fopen.mdoc \-- open file in zip archvie for reading
+.\" zip_fopen.mdoc \-\- open file in zip archvie for reading
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,7 +38,7 @@
 zip_fopen , \- .Nm zip_fopen_index
 open file in zip archive for reading
 .SH "LIBRARY"
-libzip (-lzip)
+libzip (\-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip_file *
@@ -52,9 +52,11 @@ function opens the file name
 \fBfname\fR
 in
 \fBarchive.\fR
-If
-\fBcase_sens\fR
-is zero, case is ignored during name lookup.
+The
+\fBflags\fR
+argument specifies how the name lookup should be done.
+Its values are described in
+zip_name_locate(3).
 .PP
 The
 .Fn zip_fopen_index
