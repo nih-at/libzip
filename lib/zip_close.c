@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.37.4.6 2004/04/08 16:57:14 dillo Exp $
+  $NiH: zip_close.c,v 1.37.4.7 2004/04/10 23:15:15 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -304,10 +304,13 @@ add_data_comp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 	return -1;
     }	
 
+#if 0
+    /* XXX: this is also called in _zip_free */
     if (rf(ud, NULL, 0, ZIP_CMD_CLOSE) < 0) {
 	/* XXX: set error */
 	return -1;
     }
+#endif
 
     de->comp_method = st.comp_method;
     /* de->last_mod = st.mtime; */
@@ -397,10 +400,13 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_dirent *de, FILE *ft,
 	}
     }
 
+#if 0
+    /* XXX: this is also called in _zip_free */
     if (rf(ud, NULL, 0, ZIP_CMD_CLOSE) < 0) {
 	/* XXX: set error */
 	return -1;
     }
+#endif
 
     return 0;
 }
