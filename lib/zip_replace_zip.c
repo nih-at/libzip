@@ -148,7 +148,7 @@ read_part(void *state, void *data, int len, enum zip_cmd cmd)
 
 	for (n=0; n<z->off; n+= i) {
 	    i = (z->off-n > 8192 ? 8192 : z->off-n);
-	    if ((i=zip_fread(z->zff, b, n)) < 0) {
+	    if ((i=zip_fread(z->zff, b, i)) < 0) {
 		zip_fclose(z->zff);
 		z->zff = NULL;
 		return -1;
