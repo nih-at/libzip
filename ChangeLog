@@ -1,3 +1,8 @@
+2004-11-30  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+
+	* zipint.h: Rename _zip_new_entry to _zip_entry_new;
+	rename _zip_free_entry to _zip_entry_free; adapt users.
+
 2004-11-18  Thomas Klausner <wiz@danbala.tuwien.ac.at>
 
 	* zip.h: Rename zip_source_data to zip_source_buffer.
