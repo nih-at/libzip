@@ -22,3 +22,8 @@
 * close even if error...
 * update-zip (instead of close, reopen)
 * support for old compression methods?????
+------------------------------------------------ regression tests
+* (fopen_index) illegal index
+	changed entry w/ ZIP_FL_UNCHANGED
+	changed entry w/o ZIP_FL_UNCHANGED
+	added entry

@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: fread.c,v 1.1 2005/01/11 21:18:51 dillo Exp $
 
   fread.c -- test cases for reading from zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -74,6 +74,13 @@ main(int argc, char *argv[])
     fail += do_read(z, "storedcrcerror", 0, WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "deflatecrcerror", 0, WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "deflatezliberror", 0, WHEN_READ, ZIP_ER_ZLIB, -3);
+    fail += do_read(z, NULL, 0, WHEN_OPEN, ZIP_ER_INVAL, 0);
+    fail += do_read(z, "nosuchfile", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
+    fail += do_read(z, "deflatezliberror", ZIP_FL_COMPRESSED, WHEN_NEVER, 0,0);
+    fail += do_read(z, "deflatecrcerror", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
+    fail += do_read(z, "storedcrcerror", ZIP_FL_COMPRESSED,
+		    WHEN_READ, ZIP_ER_CRC, 0);
+    fail += do_read(z, "storedok", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
 
     exit(fail ? 1 : 0);
 }
