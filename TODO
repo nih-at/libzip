@@ -6,14 +6,15 @@
 * zip_open.c: In function `_zip_checkcons':
 * zip_open.c:331: warning: `min' might be used uninitialized in this function
 * zip_open.c:331: warning: `max' might be used uninitialized in this function
-* zipcmp.c: In function `main':
 * zipcmp.c:142: warning: passing arg 1 of `compare_zip' from incompatible pointer type
-* zipcmp.c: In function `compare_zip':
 * zipcmp.c:189: warning: passing arg 3 of `compare_list' from incompatible pointer type
 * what is ZIP_CMD_CLOSE good for; check callers
 * regression tests (duplicate file names, unchange, .{200})
 * code review
 * README
+* document zipmerge(1)
+* merge zip_strerror.mdoc and zip_file_strerror.mdoc?
+* recreate .man files
 * fix XXX in man/
 * fix XXX in lib?
 * fix XXX in ChangeLog!
