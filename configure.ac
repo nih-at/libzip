@@ -60,6 +60,7 @@ in
 esac
 
 AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
+		 man/zipmerge.1:man/zipmerge.${MANFMT}
 		 man/zip_add.3:man/zip_add.${MANFMT}
 		 man/zip_close.3:man/zip_close.${MANFMT}
 		 man/zip_delete.3:man/zip_delete.${MANFMT}
