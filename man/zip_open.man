@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_open.mdoc,v 1.12 2003/10/07 11:54:17 dillo Exp 
-.\" $NiH: zip_open.mdoc,v 1.12 2003/10/07 11:54:17 dillo Exp $
+.\" from NiH: zip_open.mdoc,v 1.13 2003/10/09 13:39:08 wiz Exp 
+.\" $NiH: zip_open.mdoc,v 1.13 2003/10/09 13:39:08 wiz Exp $
 .\"
-.\" zip_open.mdoc \-\- open zip archive
+.\" zip_open.mdoc \-- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,7 +37,7 @@
 .SH "NAME"
 zip_open \- open zip archive
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip *
@@ -52,7 +52,7 @@ used to manipulate the archive, is returned.
 The
 .Fa flags
 are specified by
-.I or Ns No 'ing
+.I or'ing
 the following values, or 0 for none of them.
 .RS
 .TP 15
@@ -68,7 +68,7 @@ they fail.
 .PP
 If an error occurs and
 \fBerrorp\fR
-is non\-NULL, it will be set to the corresponding error code.
+is non-NULL, it will be set to the corresponding error code.
 .RE
 .SH "RETURN VALUES"
 Upon successful completion
@@ -96,7 +96,8 @@ is set.
 .TP 4
 Bq Er ZERR_INCONS
 Inconsistencies were found in the file specified by
-\fBpatah and\fR
+\fBpath\fR
+and
 .Dv ZIP_CHECKCONS
 was specified.
 .TP 4
