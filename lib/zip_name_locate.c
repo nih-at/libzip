@@ -6,7 +6,7 @@
 
 
 int
-zip_name_locate(struct zf *zf, char *fname, int case_sens)
+zip_name_locate(struct zip *zf, char *fname, int case_sens)
 {
     int i;
 

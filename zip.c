@@ -6,10 +6,6 @@
 static int zip_unchange_data(struct zf *zf, int idx);
 static int zip_set_name(struct zf *zf, int idx, char *name);
 
-/* XXX: place in internal header file. */
-void zip_new_entry(struct zf *zf);
-void zip_entry_init(struct zf *zf, int idx);
-
 
 
 int

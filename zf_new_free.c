@@ -5,16 +5,20 @@
 
 
 
-/* _zip_zf_new:
+/* _zip_new:
    creates a new zipfile struct, and sets the contents to zero; returns
    the new struct. */
 
-struct zf *
-_zip_zf_new(void)
+struct zip *
+_zip_new(void)
 {
-    struct zf *zf;
+    struct zip *zf;
 
-    zf = (struct zf *)xmalloc(sizeof(struct zf));
+    zf = (struct zip *)malloc(sizeof(struct zip));
+    if (!zf) {
+	zip_err = ZERR_MEMORY;
+	return NULL;
+    }
 
     zf->zn = NULL;
     zf->zp = NULL;
@@ -30,13 +34,13 @@ _zip_zf_new(void)
 
 
 
-/* _zip_zf_free:
+/* _zip_free:
    frees the space allocated to a zipfile struct, and closes the
    corresponding file. Returns 0 if successful, the error returned
    by fclose if not. */
 
 int
-_zip_zf_free(struct zf *zf)
+_zip_free(struct zip *zf)
 {
     int i, ret;
 

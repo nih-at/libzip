@@ -8,15 +8,15 @@
 #include "zip.h"
 #include "zipint.h"
 
-static int _zip_entry_copy(struct zf *dest, struct zf *src,
+static int _zip_entry_copy(struct zip *dest, struct zip *src,
 			  int entry_no, char *name);
-static int _zip_entry_add(struct zf *dest, struct zf *src, int entry_no);
-static int _zip_writecdir(struct zf *zfp);
+static int _zip_entry_add(struct zip *dest, struct zip *src, int entry_no);
+static int _zip_writecdir(struct zip *zfp);
 static void _zip_write2(FILE *fp, int i);
 static void _zip_write4(FILE *fp, int i);
 static void _zip_writestr(FILE *fp, char *str, int len);
-static int _zip_writecdentry(FILE *fp, struct zf_entry *zfe, int localp);
-static int _zip_create_entry(struct zf *dest, struct zf_entry *src_entry,
+static int _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp);
+static int _zip_create_entry(struct zip *dest, struct zip_entry *src_entry,
 			     char *name);
 
 
@@ -24,18 +24,18 @@ static int _zip_create_entry(struct zf *dest, struct zf_entry *src_entry,
 /* zip_close:
    Tries to commit all changes and close the zipfile; if it fails,
    zip_err (and errno) are set and *zf is unchanged, except for
-   problems in _zip_zf_free. */ 
+   problems in _zip_free. */ 
 
 int
-zip_close(struct zf *zf)
+zip_close(struct zip *zf)
 {
     int i, count, tfd;
     char *temp;
     FILE *tfp;
-    struct zf *tzf;
+    struct zip *tzf;
 
     if (zf->changes == 0)
-	return _zip_zf_free(zf);
+	return _zip_free(zf);
 
     /* look if there really are any changes */
     count = 0;
@@ -48,7 +48,7 @@ zip_close(struct zf *zf)
 
     /* no changes, all has been unchanged */
     if (count == 0)
-	return _zip_zf_free(zf);
+	return _zip_free(zf);
     
     temp = (char *)malloc(strlen(zf->zn)+8);
     if (!temp) {
@@ -68,21 +68,24 @@ zip_close(struct zf *zf)
 	return -1;
     }
 
-    tzf = _zip_zf_new();
+    tzf = _zip_new();
     tzf->zp = tfp;
     tzf->zn = temp;
     tzf->nentry = 0;
     tzf->comlen = zf->comlen;
     tzf->cd_size = tzf->cd_offset = 0;
-    tzf->com = (unsigned char *)memdup(zf->com, zf->comlen);
-    tzf->entry = (struct zf_entry *)malloc(sizeof(struct
-						  zf_entry)*ALLOC_SIZE);
-    if (!tzf->entry) {
-	zip_err = ZERR_MEMORY;
-	return -1;
-    }
+    tzf->com = (unsigned char *)_zip_memdup(zf->com, zf->comlen);
+    /*    tzf->entry = (struct zip_entry *)malloc(sizeof(struct
+	  zip_entry)*ALLOC_SIZE);
+	  if (!tzf->entry) {
+	  zip_err = ZERR_MEMORY;
+	  return -1;
+	  }
 
-    tzf->nentry_alloc = ALLOC_SIZE;
+	  tzf->nentry_alloc = ALLOC_SIZE;
+    */
+    tzf->entry = NULL;
+    tzf->nentry_alloc = 0;
     
     count = 0;
     if (zf->entry) {
@@ -92,7 +95,7 @@ zip_close(struct zf *zf)
 		if (_zip_entry_copy(tzf, zf, i, NULL)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
-		    _zip_zf_free(tzf);
+		    _zip_free(tzf);
 		    return -1;
 		}
 		break;
@@ -107,7 +110,7 @@ zip_close(struct zf *zf)
 				       zf->entry[i].fn)) {
 			/* zip_err set by _zip_entry_copy */
 			remove(tzf->zn);
-			_zip_zf_free(tzf);
+			_zip_free(tzf);
 			return -1;
 		    }
 		} else if (zf->entry[i].ch_data_buf) {
@@ -115,7 +118,7 @@ zip_close(struct zf *zf)
 		    if (_zip_entry_add(tzf, zf, i)) {
 			/* zip_err set by _zip_entry_copy */
 			remove(tzf->zn);
-			_zip_zf_free(tzf);
+			_zip_free(tzf);
 			return -1;
 		    }
 #endif /* 0 */
@@ -124,7 +127,7 @@ zip_close(struct zf *zf)
 		    if (_zip_entry_add(tzf, zf, i)) {
 			/* zip_err set by _zip_entry_copy */
 			remove(tzf->zn);
-			_zip_zf_free(tzf);
+			_zip_free(tzf);
 			return -1;
 		    }
 #endif /* 0 */
@@ -134,7 +137,7 @@ zip_close(struct zf *zf)
 		if (_zip_entry_copy(tzf, zf, i, NULL)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
-		    _zip_zf_free(tzf);
+		    _zip_free(tzf);
 		    return -1;
 		}
 		break;
@@ -150,13 +153,13 @@ zip_close(struct zf *zf)
     if (fclose(tzf->zp)==0) {
 	if (rename(tzf->zn, zf->zn) != 0) {
 	    zip_err = ZERR_RENAME;
-	    _zip_zf_free(tzf);
+	    _zip_free(tzf);
 	    return -1;
 	}
     }
 
     free(temp);
-    _zip_zf_free(zf);
+    _zip_free(zf);
 
     return 0;
 }
@@ -164,12 +167,12 @@ zip_close(struct zf *zf)
 
 
 static int
-_zip_entry_copy(struct zf *dest, struct zf *src, int entry_no, char *name)
+_zip_entry_copy(struct zip *dest, struct zip *src, int entry_no, char *name)
 {
     char buf[BUFSIZE];
     unsigned int len, remainder;
     unsigned char *null;
-    struct zf_entry tempzfe;
+    struct zip_entry tempzfe;
 
     null = NULL;
 
@@ -221,14 +224,16 @@ _zip_entry_copy(struct zf *dest, struct zf *src, int entry_no, char *name)
 
 
 static int
-_zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
+_zip_entry_add(struct zip *dest, struct zip *src, int entry_no)
 {
     z_stream *zstr;
     char *outbuf;
     int ret, wrote;
     
+#if 0
     char buf[BUFSIZE];
     unsigned int len, remainder;
+#endif
     unsigned char *null;
 
     null = NULL;
@@ -366,7 +371,7 @@ _zip_entry_add(struct zf *dest, struct zf *src, int entry_no)
 
 
 static int
-_zip_writecdir(struct zf *zfp)
+_zip_writecdir(struct zip *zfp)
 {
     int i;
     long cd_offset, cd_size;
@@ -443,7 +448,7 @@ _zip_writestr(FILE *fp, char *str, int len)
    if after writing ferror(fp), return -1, else return 0.*/
    
 static int
-_zip_writecdentry(FILE *fp, struct zf_entry *zfe, int localp)
+_zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp)
 {
     fprintf(fp, "%s", localp?LOCAL_MAGIC:CENTRAL_MAGIC);
     
@@ -486,7 +491,7 @@ _zip_writecdentry(FILE *fp, struct zf_entry *zfe, int localp)
 
 
 static int
-_zip_create_entry(struct zf *dest, struct zf_entry *src_entry, char *name)
+_zip_create_entry(struct zip *dest, struct zip_entry *src_entry, char *name)
 {
     time_t now_t;
     struct tm *now;
@@ -541,10 +546,10 @@ _zip_create_entry(struct zf *dest, struct zf_entry *src_entry, char *name)
 	dest->entry[dest->nentry-1].comp_size = src_entry->comp_size;
 	dest->entry[dest->nentry-1].uncomp_size = src_entry->uncomp_size;
 	dest->entry[dest->nentry-1].extatt = src_entry->extatt;
-	dest->entry[dest->nentry-1].ef = (char *)memdup(src_entry->ef,
-						      src_entry->eflen);
-	dest->entry[dest->nentry-1].fcom = (char *)memdup(src_entry->fcom,
-							src_entry->fcomlen);
+	dest->entry[dest->nentry-1].ef = (char *)_zip_memdup(src_entry->ef,
+							     src_entry->eflen);
+	dest->entry[dest->nentry-1].fcom =
+	    (char *)_zip_memdup(src_entry->fcom, src_entry->fcomlen);
     }
 
     dest->entry[dest->nentry-1].local_offset = ftell(dest->zp);

@@ -42,15 +42,15 @@ struct zip {
     unsigned int cd_size, cd_offset;
     char *com;
     int nentry, nentry_alloc;
-    struct zf_entry *entry;
+    struct zip_entry *entry;
     int nfile, nfile_alloc;
-    struct zf_file **file;
+    struct zip_file **file;
 };
 
 /* file in zip file */
 
 struct zip_file {
-    struct zf *zf;
+    struct zip *zf;
     char *name;
     int flags; /* -1: eof, >0: error */
 
@@ -79,7 +79,7 @@ struct zip_entry {
     char *fn_old;
     /* only use one of the following three for supplying new data
        listed in order of priority, if more than one is set */
-    struct zf *ch_data_zf;
+    struct zip *ch_data_zf;
     char *ch_data_buf;
     FILE *ch_data_fp;
     /* offset & len of new data in ch_data_fp or ch_data_buf */
@@ -110,7 +110,7 @@ int zip_unchange(struct zip *zf, int idx);
 int zip_rename(struct zip *zf, int idx, char *name);
 int zip_add_file(struct zip *zf, char *name, FILE *file, int start, int len);
 int zip_add_data(struct zip *zf, char *name, char *buf, int start, int len);
-int zip_add_zip(struct zip *zf, char *name, struct zf *srczf, int srcidx,
+int zip_add_zip(struct zip *zf, char *name, struct zip *srczf, int srcidx,
 		int start, int len);
 int zip_replace_file(struct zip *zf, int idx, char *name, FILE *file,
 		     int start, int len);
