@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fopen.mdoc,v 1.1 2003/10/03 11:19:03 dillo Exp 
-.\" $NiH: zip_fopen.mdoc,v 1.1 2003/10/03 11:19:03 dillo Exp $
+.\" from NiH: zip_fopen.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp 
+.\" $NiH: zip_fopen.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp $
 .\"
 .\" zip_fopen.mdoc \-\- open file in zip archvie for reading
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -38,7 +38,7 @@
 zip_fopen , \- .Nm zip_fopen_index
 open file in zip archvie for reading
 .SH "LIBRARY"
-.Lb libzip
+libzip (\-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip_file *
