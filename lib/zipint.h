@@ -20,5 +20,6 @@ int _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff);
 void *_zip_memdup(const void *mem, int len);
 void _zip_new_entry(struct zip *zf);
 void _zip_entry_init(struct zip *zf, int idx);
+int _zip_set_name(struct zip *zf, int idx, char *name);
 
 #endif /* zipint.h */

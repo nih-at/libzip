@@ -7,7 +7,7 @@
 
 enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
-enum zip_cmd { ZIP_CMD_INIT, ZIP_CMD_READ, ZIP_CMD_CRC, ZIP_CMD_CLOSE };
+enum zip_cmd { ZIP_CMD_INIT, ZIP_CMD_READ, ZIP_CMD_META, ZIP_CMD_CLOSE };
 
 /* flags for zip_open */
 #define ZIP_CREATE           1
@@ -39,7 +39,7 @@ extern char *zip_err_str[];
 
 /* zip file */
 
-typedef unsigned long (*zip_read_func)(void *state, char *buf,
+typedef unsigned long (*zip_read_func)(void *state, void *data,
 				       int len, enum zip_cmd cmd);
 
 struct zip {
@@ -85,17 +85,14 @@ struct zip_entry {
     char *fn, *ef, *fcom;
     char *fn_old;
 
-    
+    zip_read_func *ch_func;
+    void *ch_data;
+    int ch_comp;
+};
 
-    /* only use one of the following three for supplying new data
-       listed in order of priority, if more than one is set */
-    struct zip *ch_data_zf;
-    char *ch_data_buf;
-    FILE *ch_data_fp;
-    /* offset & len of new data in ch_data_fp or ch_data_buf */
-    unsigned int ch_data_offset, ch_data_len;
-    /* if source is another zipfile, number of file in zipfile */
-    unsigned int ch_data_zf_fileno;
+struct zip_meta { /* meta information needed to add compressed data */
+    unsigned int crc, uncomp_size;
+    /* ... */
 };
 
 
