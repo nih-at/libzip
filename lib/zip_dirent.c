@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.3 2004/11/17 21:55:10 wiz Exp $
+  $NiH: zip_dirent.c,v 1.4 2004/12/22 18:43:01 wiz Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -451,12 +451,11 @@ _zip_readfpstr(FILE *fp, int len, int nulp, struct zip_error *error)
     }
 
     if (nulp) {
-	/* elephant */
-	/* XXX: what does this do? */
+	/* replace any in-string NUL characters with spaces */
 	r[len] = 0;
-	o = r-1;
-	while (((o=memchr(o+1, 0, r+len-(o+1))) < r+len) && o)
-	       *o = ' ';
+	for (o=r; o<r+len; o++)
+	    if (*o == '\0')
+		*o = ' ';
     }
     
     return r;
@@ -479,12 +478,11 @@ _zip_readstr(unsigned char **buf, int len, int nulp, struct zip_error *error)
     *buf += len;
 
     if (nulp) {
-	/* elephant */
-	/* XXX: what does this do? */
+	/* replace any in-string NUL characters with spaces */
 	r[len] = 0;
-	o = r-1;
-	while (((o=memchr(o+1, 0, r+len-(o+1))) < r+len) && o)
-	       *o = ' ';
+	for (o=r; o<r+len; o++)
+	    if (*o == '\0')
+		*o = ' ';
     }
 
     return r;
