@@ -585,7 +585,11 @@ _zip_headercomp(struct zip_entry *h1, int local1p, struct zip_entry *h2,
 	   int local2p)
 {
     if ((h1->meta->version_need != h2->meta->version_need)
+#if 0
+	/* some zip-files have different values in local
+	   and global headers for the bitflags */
 	|| (h1->meta->bitflags != h2->meta->bitflags)
+#endif
 	|| (h1->meta->comp_method != h2->meta->comp_method)
 	|| (h1->meta->last_mod != h2->meta->last_mod)
 	|| (h1->meta->crc != h2->meta->crc)
