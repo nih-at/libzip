@@ -16,7 +16,7 @@ zip_fopen_index(struct zip *zf, int fileno)
     struct zip_file *zff;
 
     if ((fileno < 0) || (fileno >= zf->nentry)) {
-	zip_err = ZERR_NOENT;
+	zip_err = ZERR_INVAL;
 	return NULL;
     }
 

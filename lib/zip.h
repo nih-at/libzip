@@ -25,7 +25,7 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_READ             5  /* read error */
 #define ZERR_WRITE            6  /* write error */
 #define ZERR_CRC              7  /* CRC error */
-#define ZERR_ZIPCLOSED        8  /* containing zip file closed */
+#define ZERR_ZIPCLOSED        8  /* containing zip file was closed */
 #define ZERR_NOENT            9  /* no such file */
 #define ZERR_EXISTS          10  /* file already exists */
 #define ZERR_OPEN            11  /* can't open file */
@@ -35,6 +35,8 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_CHANGED         15  /* entry has been changed */
 #define ZERR_COMPNOTSUPP     16  /* compression method not supported */
 #define ZERR_EOF             17  /* premature EOF */
+#define ZERR_EINVAL          18  /* invalid argument */
+#define ZERR_NOZIP           19  /* not a zip file */
 
 extern char *zip_err_str[];
 

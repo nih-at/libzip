@@ -21,7 +21,7 @@ zip_replace_data(struct zip *zf, int idx, char *name, struct zip_meta *meta,
     struct read_data *f;
 
     if (idx < -1 || idx >= zf->nentry) {
-	zip_err = ZERR_NOENT;
+	zip_err = ZERR_INVAL;
 	return -1;
     }
     

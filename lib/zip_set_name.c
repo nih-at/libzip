@@ -8,8 +8,8 @@
 int
 _zip_set_name(struct zip *zf, int idx, char *name)
 {
-    if (idx >= zf->nentry || idx < 0) {
-	zip_err = ZERR_NOENT;
+    if (idx < 0 || idx >= zf->nentry) {
+	zip_err = ZERR_INVAL;
 	return -1;
     }
 

@@ -9,8 +9,8 @@ zip_unchange(struct zip *zf, int idx)
 {
     int ret;
     
-    if (idx >= zf->nentry || idx < 0) {
-	zip_err = ZERR_NOENT;
+    if (idx < 0 || idx >= zf->nentry) {
+	zip_err = ZERR_INVAL;
 	return -1;
     }
 

@@ -29,7 +29,7 @@ zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
     struct read_part *p;
 
     if (srcidx < -1 || srcidx >= srczf->nentry) {
-	zip_err = ZERR_NOENT;
+	zip_err = ZERR_INVAL;
 	return -1;
     }
 
