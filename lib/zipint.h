@@ -2,10 +2,10 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.14 2002/06/06 09:27:17 dillo Exp $
+  $NiH: zipint.h,v 1.15 2003/03/16 10:21:42 wiz Exp $
 
   zipint.h -- internal declarations.
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
@@ -44,7 +44,7 @@ int _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 int _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff);
 void *_zip_memdup(const void *mem, int len);
 void _zip_entry_init(struct zip *zf, int idx);
-int _zip_set_name(struct zip *zf, int idx, char *name);
+int _zip_set_name(struct zip *zf, int idx, const char *name);
 struct zip_entry *_zip_new_entry(struct zip *zf);
 int _zip_free_entry(struct zip_entry *ze);
 int _zip_unchange_data(struct zip_entry *ze);

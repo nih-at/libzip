@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_rename.c,v 1.5 2002/06/06 09:27:14 dillo Exp $
+  $NiH: zip_rename.c,v 1.6 2003/03/16 10:21:40 wiz Exp $
 
   zip_rename.c -- rename file in zip file
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
@@ -30,7 +30,7 @@
 
 
 int
-zip_rename(struct zip *zf, int idx, char *name)
+zip_rename(struct zip *zf, int idx, const char *name)
 {
     if (idx >= zf->nentry || idx < 0) {
 	zip_err = ZERR_INVAL;

@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.14 2002/06/06 09:27:15 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.15 2003/03/16 10:21:41 wiz Exp $
 
   zip_replace_zip.c -- replace file from zip file
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
@@ -50,7 +50,8 @@ static int read_part(void *state, void *data, int len, enum zip_cmd cmd);
 
 
 int
-zip_replace_zip(struct zip *zf, int idx, char *name, struct zip_meta *meta,
+zip_replace_zip(struct zip *zf, int idx, const char *name,
+		struct zip_meta *meta,
 		struct zip *srczf, int srcidx, int start, int len)
 {
     struct read_zip *z;

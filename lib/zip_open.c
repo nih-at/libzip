@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_open.c,v 1.13 2002/06/06 09:27:13 dillo Exp $
+  $NiH: zip_open.c,v 1.14 2003/03/16 10:21:40 wiz Exp $
 
   zip_open.c -- open zip file
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
@@ -58,7 +58,7 @@ static time_t _zip_d2u_time(int dtime, int ddate);
    zipfile struct, or NULL if unsuccessful, setting zip_err. */
 
 struct zip *
-zip_open(char *fn, int flags)
+zip_open(const char *fn, int flags)
 {
     FILE *fp;
     unsigned char *buf, *match;

@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_fopen.c,v 1.3 2002/06/06 09:27:09 dillo Exp $
+  $NiH: zip_fopen.c,v 1.4 2003/03/16 10:21:38 wiz Exp $
 
   zip_fopen.c -- open file in zip file for reading
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
@@ -30,7 +30,7 @@
 
 
 struct zip_file *
-zip_fopen(struct zip *zf, char *fname, int case_sens)
+zip_fopen(struct zip *zf, const char *fname, int case_sens)
 {
     int idx;
 

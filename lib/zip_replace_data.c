@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_replace_data.c,v 1.9 2003/01/30 03:46:01 wiz Exp $
+  $NiH: zip_replace_data.c,v 1.10 2003/03/16 10:21:41 wiz Exp $
 
   zip_replace_data.c -- replace file from buffer
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP files.
   The authors can be contacted at <nih@giga.or.at>
@@ -31,7 +31,7 @@
 #include "zipint.h"
 
 struct read_data {
-    char *buf, *data;
+    const char *buf, *data;
     int len;
     int freep;
 };
@@ -42,8 +42,9 @@ static int read_data(void *state, void *data, int len, enum zip_cmd cmd);
 
 
 int
-zip_replace_data(struct zip *zf, int idx, char *name, struct zip_meta *meta,
-		 char *data, int len, int freep)
+zip_replace_data(struct zip *zf, int idx, const char *name,
+		 struct zip_meta *meta,
+		 const char *data, int len, int freep)
 {
     struct read_data *f;
 
@@ -99,7 +100,7 @@ read_data(void *state, void *data, int len, enum zip_cmd cmd)
 
     case ZIP_CMD_CLOSE:
 	if (z->freep) {
-	    free(z->data);
+	    free((void *)z->data);
 	    z->data = NULL;
 	}
 	return 0;
