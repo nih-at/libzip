@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.11 2003/03/16 10:21:38 wiz Exp $
+  $NiH: zip_fopen_index.c,v 1.12 2003/10/02 14:13:29 dillo Exp $
 
-  zip_fopen_index.c -- open file in zip file for reading by index
+  zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
