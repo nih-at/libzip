@@ -172,9 +172,14 @@ zip_close(struct zip *zf)
     _zip_writecdir(tzf);
     
     if (fclose(tzf->zp)==0) {
+	tzf->zp = NULL;
+	fclose(zf->zp);
+	zf->zp = NULL;
 	if (rename(tzf->zn, zf->zn) != 0) {
 	    zip_err = ZERR_RENAME;
 	    _zip_free(tzf);
+	    zf->zp = fopen(zf->zn, "rb");
+	    /* XXX: can't handle open error usefully */
 	    return -1;
 	}
 	mask = umask(0);
@@ -183,7 +188,9 @@ zip_close(struct zip *zf)
     }
 
     free(temp);
+    /* no errors possible, since files already closed */
     _zip_free(zf);
+    _zip_free(tzf);
 
     return 0;
 }
