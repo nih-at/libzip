@@ -1,0 +1,19 @@
+.TH ZIPCMP 1 "October 1, 2003" NiH
+.SH "NAME"
+zipcmp \- compare contents of zip archives
+.SH "SYNOPSIS"
+.B zipcmp
+[\fB\-h\fR]
+[\fB\-q\fR]
+[\fB\-V\fR]
+[\fB\-v\fR]
+\fBzip1 zip2\fR
+.SH "DESCRIPTION"
+.\" XXX
+.SH "EXIT STATUS"
+.B zipcmp
+exits 0 if the two zip files contain the same files, 1 if they differ,
+and \*[Gt]1 if an error occurred.
+.SH "SEE ALSO"
+.\" XXX
+.SH "STANDARDS"

@@ -1,0 +1,33 @@
+.\" $NiH$
+.\" zip_open.c \-\- open zip file
+.\" Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+.\"
+.\" This file is part of libzip, a library to manipulate ZIP files.
+.\" The authors can be contacted at <nih@giga.or.at>
+.\"
+.TH ZIP_OPEN 3 "October 3, 2003" NiH
+.SH "NAME"
+zip_open \- open zip archive
+.SH "LIBRARY"
+.Lb libzip
+.SH "SYNOPSIS"
+.Fd #include \*[Lt]zip.h\*[Gt]
+.Ft struct zip *
+.Fn zip_open "const char *path" "int flags"
+.SH "DESCRIPTION"
+.\" XXX
+.SH "RETURN VALUES"
+Upon successful completion
+.Fn fopen
+returns a
+.Tn struct zip
+pointer.
+Otherwise,
+.Dv NULL
+is returned and the global variable
+.Va zip_err
+is set to indicate the error.
+.SH "ERRORS"
+.\" XXX
+.SH "SEE ALSO"
+.\" XXX

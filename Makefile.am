@@ -1,4 +1,4 @@
-SUBDIRS=lib src regress
+SUBDIRS=lib src man regress
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libzip.pc

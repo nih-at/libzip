@@ -53,6 +53,15 @@ AC_EXEEXT
 dnl AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
 
+case $host_os
+in
+    *bsd*) MANFMT=mdoc;;
+    *) MANFMT=man;;
+esac
+
+AC_CONFIG_LINKS([zipcmp.1:zipcmp.${MANFMT}
+		 zip_open.3:zip_open.${MANFMT}])
+
 AC_CONFIG_FILES([Makefile
 		 libzip.pc
 		 libzip-uninstalled.pc
