@@ -1,9 +1,12 @@
 #! /bin/sh
+#
+# $NetBSD: config.guess,v 1.8 2004/08/14 19:13:55 schmonz Exp $
+#
 # Attempt to guess a canonical system name.
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 
-timestamp='2003-10-20'
+timestamp='2004-06-11'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -158,6 +161,7 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	    arm*) machine=arm-unknown ;;
 	    sh3el) machine=shl-unknown ;;
 	    sh3eb) machine=sh-unknown ;;
+	    sh5el) machine=sh5le-unknown ;;
 	    *) machine=${UNAME_MACHINE_ARCH}-unknown ;;
 	esac
 	# The Operating System including object format, if it has switched
@@ -197,14 +201,23 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	# CPU_TYPE-MANUFACTURER-OPERATING_SYSTEM is used.
 	echo "${machine}-${os}${release}"
 	exit 0 ;;
+    amd64:OpenBSD:*:*)
+	echo x86_64-unknown-openbsd${UNAME_RELEASE}
+	exit 0 ;;
     amiga:OpenBSD:*:*)
 	echo m68k-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
     arc:OpenBSD:*:*)
 	echo mipsel-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
+    cats:OpenBSD:*:*)
+	echo arm-unknown-openbsd${UNAME_RELEASE}
+	exit 0 ;;
     hp300:OpenBSD:*:*)
 	echo m68k-unknown-openbsd${UNAME_RELEASE}
+	exit 0 ;;
+    luna88k:OpenBSD:*:*)
+    	echo m88k-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
     mac68k:OpenBSD:*:*)
 	echo m68k-unknown-openbsd${UNAME_RELEASE}
@@ -219,9 +232,6 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	echo m88k-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
     mvmeppc:OpenBSD:*:*)
-	echo powerpc-unknown-openbsd${UNAME_RELEASE}
-	exit 0 ;;
-    pegasos:OpenBSD:*:*)
 	echo powerpc-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
     pmax:OpenBSD:*:*)
@@ -239,10 +249,24 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
     *:OpenBSD:*:*)
 	echo ${UNAME_MACHINE}-unknown-openbsd${UNAME_RELEASE}
 	exit 0 ;;
+    *:ekkoBSD:*:*)
+	echo ${UNAME_MACHINE}-unknown-ekkobsd${UNAME_RELEASE}
+	exit 0 ;;
+    macppc:MirBSD:*:*)
+	echo powerppc-unknown-mirbsd${UNAME_RELEASE}
+	exit 0 ;;
+    *:MirBSD:*:*)
+	echo ${UNAME_MACHINE}-unknown-mirbsd${UNAME_RELEASE}
+	exit 0 ;;
     alpha:OSF1:*:*)
-	if test $UNAME_RELEASE = "V4.0"; then
+	case $UNAME_RELEASE in
+	*4.0)
 		UNAME_RELEASE=`/usr/sbin/sizer -v | awk '{print $3}'`
-	fi
+		;;
+	*5.*)
+	        UNAME_RELEASE=`/usr/sbin/sizer -v | awk '{print $4}'`
+		;;
+	esac
 	# According to Compaq, /usr/sbin/psrinfo has been available on
 	# OSF/1 and Tru64 systems produced since 1995.  I hope that
 	# covers most systems running today.  This code pipes the CPU
@@ -280,11 +304,12 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	    "EV7.9 (21364A)")
 		UNAME_MACHINE="alphaev79" ;;
 	esac
+	# A Pn.n version is a patched version.
 	# A Vn.n version is a released version.
 	# A Tn.n version is a released field test version.
 	# A Xn.n version is an unreleased experimental baselevel.
 	# 1.2 uses "1.2" for uname -r.
-	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[VTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
+	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[PVTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
 	exit 0 ;;
     Alpha*:OpenVMS:*:*)
 	echo alpha-hp-vms
@@ -405,6 +430,9 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
     *:*MiNT:*:* | *:*mint:*:* | *:*TOS:*:*)
         echo m68k-unknown-mint${UNAME_RELEASE}
         exit 0 ;;
+    m68k:machten:*:*)
+	echo m68k-apple-machten${UNAME_RELEASE}
+	exit 0 ;;
     powerpc:machten:*:*)
 	echo powerpc-apple-machten${UNAME_RELEASE}
 	exit 0 ;;
@@ -829,6 +857,9 @@ EOF
     ia64:Linux:*:*)
 	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit 0 ;;
+    m32r*:Linux:*:*)
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
+	exit 0 ;;
     m68*:Linux:*:*)
 	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit 0 ;;
@@ -1069,7 +1100,7 @@ EOF
     M680?0:D-NIX:5.3:*)
 	echo m68k-diab-dnix
 	exit 0 ;;
-    M68*:*:R3V[567]*:*)
+    M68*:*:R3V[5678]*:*)
 	test -r /sysV68 && echo 'm68k-motorola-sysv' && exit 0 ;;
     3[345]??:*:4.0:3.0 | 3[34]??A:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 3[34]??/*:*:4.0:3.0 | 4400:*:4.0:3.0 | 4850:*:4.0:3.0 | SKA40:*:4.0:3.0 | SDS2:*:4.0:3.0 | SHG2:*:4.0:3.0)
 	OS_REL=''
@@ -1186,7 +1217,7 @@ EOF
     *:QNX:*:4*)
 	echo i386-pc-qnx
 	exit 0 ;;
-    NSR-[DGKLNPTVWY]:NONSTOP_KERNEL:*:*)
+    NSR-?:NONSTOP_KERNEL:*:*)
 	echo nsr-tandem-nsk${UNAME_RELEASE}
 	exit 0 ;;
     *:NonStop-UX:*:*)
@@ -1230,8 +1261,8 @@ EOF
     SEI:*:*:SEIUX)
         echo mips-sei-seiux${UNAME_RELEASE}
 	exit 0 ;;
-    *:DRAGONFLY:*:*)
-	echo ${UNAME_MACHINE}-unknown-dragonfly${UNAME_RELEASE}
+    *:DragonFly:*:*)
+	echo ${UNAME_MACHINE}-unknown-dragonfly`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
 	exit 0 ;;
 esac
 
