@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "zip.h"
 
 struct zip_entry *
@@ -27,9 +28,9 @@ _zip_new_entry(struct zip *zf)
 	return NULL;
 
     ze->fn = ze->fn_old = NULL;
-    ze->state = Z_UNCHANGED;
+    ze->state = ZIP_ST_UNCHANGED;
 
-    ze->zip_read_func = NULL;
+    ze->ch_func = NULL;
     ze->ch_data = NULL;
     ze->ch_comp = -1;
     ze->ch_meta = NULL;

@@ -7,12 +7,12 @@ int
 zip_rename(struct zip *zf, int idx, char *name)
 {
     if (idx >= zf->nentry || idx < 0) {
-	zip_err = ZIP_NOENT;
+	zip_err = ZERR_NOENT;
 	return -1;
     }
 
-    if (zf->entry[idx].state == Z_UNCHANGED) 
-	zf->entry[idx].state = Z_RENAMED;
+    if (zf->entry[idx].state == ZIP_ST_UNCHANGED) 
+	zf->entry[idx].state = ZIP_ST_RENAMED;
     
     zf->changes = 1;
 
