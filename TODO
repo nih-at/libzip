@@ -12,7 +12,7 @@
 * zipcmp.c:189: warning: passing arg 3 of `compare_list' from incompatible pointer type
 * what is ZIP_CMD_CLOSE good for; check callers
 * documentation:
-	zip_error_sys_type zip_file_get_error zip_get_error
+	zip_error_sys_type
 * regression tests (duplicate file names, unchange, .{200})
 * code review
 * README
