@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.1.2.1 2004/03/22 14:17:33 dillo Exp $
+  $NiH: zip_dirent.c,v 1.1.2.2 2004/03/22 14:56:47 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -47,8 +47,6 @@
 #include "zipint.h"
 
 static time_t _zip_d2u_time(int, int);
-static unsigned short _zip_read2(unsigned char **);
-static unsigned int _zip_read4(unsigned char **);
 static char *_zip_readfpstr(FILE *, int, int, struct zip_error *);
 static char *_zip_readstr(unsigned char **, int, int, struct zip_error *);
 
@@ -238,7 +236,7 @@ _zip_d2u_time(int dtime, int ddate)
 
 
 
-static unsigned short
+unsigned short
 _zip_read2(unsigned char **a)
 {
     unsigned short ret;
@@ -251,7 +249,7 @@ _zip_read2(unsigned char **a)
 
 
 
-static unsigned int
+unsigned int
 _zip_read4(unsigned char **a)
 {
     unsigned int ret;
