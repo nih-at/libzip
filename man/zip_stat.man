@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
 .\" from NiH: zip_stat.mdoc,v 1.2 2004/04/14 14:01:30 dillo Exp 
-.\" $NiH: zip_stat.mdoc,v 1.2 2004/04/14 14:01:30 dillo Exp $
+.\" $NiH: zip_stat.man,v 1.4 2004/04/14 14:36:26 dillo Exp $
 .\"
 .\" zip_stat.mdoc \-- get information about file
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -98,10 +98,10 @@ zip_name_locate(3).
 The function
 .Fn zip_stata_index
 fails and sets the error information to
-.Er ZERR_INVAL
+.Er ZIP_ER_INVAL
 if
 \fBindex\fR
 is invalid.
-.\" XXX: ZERR_CHANGED
+.\" XXX: ZIP_ER_CHANGED
 .SH "SEE ALSO"
 zip_name_locate(3)

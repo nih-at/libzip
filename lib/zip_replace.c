@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace.c,v 1.14 2004/06/24 15:01:58 dillo Exp $
+  $NiH: zip_replace.c,v 1.15 2004/06/24 16:26:08 dillo Exp $
 
   zip_replace.c -- replace file via callback function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -44,7 +44,7 @@ int
 zip_replace(struct zip *zf, int idx, zip_read_func fn, void *state)
 {
     if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 

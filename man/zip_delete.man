@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
 .\" from NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp 
-.\" $NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp $
+.\" $NiH: zip_delete.man,v 1.5 2003/12/27 22:51:29 wiz Exp $
 .\"
 .\" zip_delete.mdoc \-- delete files from zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -58,7 +58,7 @@ is set to indicate the error.
 fails if:
 .RS
 .TP 4
-Bq Er ZERR_INVAL
+Bq Er ZIP_ER_INVAL
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR

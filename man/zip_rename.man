@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
 .\" from NiH: zip_rename.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
-.\" $NiH: zip_rename.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
+.\" $NiH: zip_rename.man,v 1.2 2003/12/27 22:51:30 wiz Exp $
 .\"
 .\" zip_rename.mdoc \-- rename file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -59,7 +59,7 @@ is set to indicate the error.
 fails if:
 .RS
 .TP 4
-Bq Er ZERR_INVAL
+Bq Er ZIP_ER_INVAL
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR

@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
 .\" from NiH: zip_open.mdoc,v 1.15 2003/12/28 00:51:51 wiz Exp 
-.\" $NiH: zip_open.mdoc,v 1.15 2003/12/28 00:51:51 wiz Exp $
+.\" $NiH: zip_open.man,v 1.11 2003/12/28 00:52:13 wiz Exp $
 .\"
 .\" zip_open.mdoc \-- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -87,52 +87,52 @@ The archive specified by
 is opened unless:
 .RS
 .TP 4
-Bq Er ZERR_EXISTS
+Bq Er ZIP_ER_EXISTS
 The file specified by
 \fBpath\fR
 exists and
 .Dv ZIP_EXCL
 is set.
 .TP 4
-Bq Er ZERR_INCONS
+Bq Er ZIP_ER_INCONS
 Inconsistencies were found in the file specified by
 \fBpath\fR
 and
 .Dv ZIP_CHECKCONS
 was specified.
 .TP 4
-Bq Er ZERR_INVAL
+Bq Er ZIP_ER_INVAL
 The
 \fBpath\fR
 argument is
 .Dv NULL.
 .TP 4
-Bq Er ZERR_MEMORY
+Bq Er ZIP_ER_MEMORY
 Required memory could not be allocated.
 .TP 4
-Bq Er ZERR_NOENT
+Bq Er ZIP_ER_NOENT
 The file specified by
 \fBpath\fR
 does not exist and
 .Dv ZIP_CREATE
 is not set.
 .TP 4
-Bq Er ZERR_NOZIP
+Bq Er ZIP_ER_NOZIP
 The file specified by
 \fBpath\fR
 is not a zip archive.
 .TP 4
-Bq Er ZERR_OPEN
+Bq Er ZIP_ER_OPEN
 The file specified by
 \fBpath\fR
 could not be opened.
 .TP 4
-Bq Er ZERR_READ
+Bq Er ZIP_ER_READ
 A read error occurred; see
 .Va errno
 for details.
 .TP 4
-Bq Er ZERR_SEEK
+Bq Er ZIP_ER_SEEK
 The file specified by
 \fBpath\fR
 does not allow seeks.

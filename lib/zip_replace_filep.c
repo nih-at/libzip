@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_filep.c,v 1.10 2004/06/24 15:01:58 dillo Exp $
+  $NiH: zip_replace_filep.c,v 1.11 2004/06/24 16:26:08 dillo Exp $
 
   zip_replace_filep.c -- replace file from FILE*
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -61,7 +61,7 @@ zip_replace_filep(struct zip *zf, int idx,
 		  FILE *file, off_t start, off_t len)
 {
     if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
     
@@ -77,7 +77,7 @@ _zip_replace_filep(struct zip *zf, int idx, const char *name,
     struct read_file *f;
 
     if ((f=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
-	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
 
@@ -103,7 +103,7 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
     switch (cmd) {
     case ZIP_CMD_OPEN:
 	if (fseeko(z->f, z->off, SEEK_SET) < 0) {
-	    z->e[0] = ZERR_SEEK;
+	    z->e[0] = ZIP_ER_SEEK;
 	    z->e[1] = errno;
 	    return -1;
 	}
@@ -117,7 +117,7 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
 	    n = len;
 	
 	if ((i=fread(buf, 1, n, z->f)) < 0) {
-	    z->e[0] = ZERR_READ;
+	    z->e[0] = ZIP_ER_READ;
 	    z->e[1] = errno;
 	    return -1;
 	}
@@ -141,7 +141,7 @@ read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
 	    st = (struct zip_stat *)data;
 
 	    if (fstat(fileno(z->f), &fst) != 0) {
-		z->e[0] = ZERR_READ; /* best match */
+		z->e[0] = ZIP_ER_READ; /* best match */
 		z->e[1] = errno;
 		return -1;
 	    }

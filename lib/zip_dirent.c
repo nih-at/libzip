@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.1.2.10 2004/04/13 19:47:58 dillo Exp $
+  $NiH: zip_dirent.c,v 1.2 2004/04/14 14:01:23 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -78,12 +78,12 @@ _zip_cdir_new(int nentry, struct zip_error *error)
     struct zip_cdir *cd;
     
     if ((cd=malloc(sizeof(*cd))) == NULL) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
     if ((cd->entry=malloc(sizeof(*(cd->entry))*nentry)) == NULL) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	free(cd);
 	return NULL;
     }
@@ -125,7 +125,7 @@ _zip_cdir_write(struct zip_cdir *cd, FILE *fp, struct zip_error *error)
     fwrite(cd->comment, 1, cd->comment_len, fp);
 
     if (ferror(fp)) {
-	_zip_error_set(error, ZERR_WRITE, errno);
+	_zip_error_set(error, ZIP_ER_WRITE, errno);
 	return -1;
     }
 
@@ -205,14 +205,14 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 	/* use data from buffer */
 	cur = *bufp;
 	if (left < size) {
-	    _zip_error_set(error, ZERR_NOZIP, 0);
+	    _zip_error_set(error, ZIP_ER_NOZIP, 0);
 	    return -1;
 	}
     }
     else {
 	/* read entry from disk */
 	if ((fread(buf, 1, size, fp)<size)) {
-	    _zip_error_set(error, ZERR_READ, errno);
+	    _zip_error_set(error, ZIP_ER_READ, errno);
 	    return -1;
 	}
 	left = size;
@@ -220,7 +220,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     }
 
     if (memcmp(cur, (localp ? LOCAL_MAGIC : CENTRAL_MAGIC), 4) != 0) {
-	/* XXX: zip_err = ZERR_NOZIP; */
+	/* XXX: zip_err = ZIP_ER_NOZIP; */
 	return -1;
     }
     cur += 4;
@@ -269,7 +269,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     if (bufp) {
 	if (left < CDENTRYSIZE + (zde->filename_len+zde->extrafield_len
 				  +zde->comment_len)) {
-	    _zip_error_set(error, ZERR_NOZIP, 0);
+	    _zip_error_set(error, ZIP_ER_NOZIP, 0);
 	    return -1;
 	}
 
@@ -376,7 +376,7 @@ _zip_dirent_write(struct zip_dirent *zde, FILE *fp, int localp,
     }
 
     if (ferror(fp)) {
-	_zip_error_set(error, ZERR_WRITE, errno);
+	_zip_error_set(error, ZIP_ER_WRITE, errno);
 	return -1;
     }
 
@@ -440,13 +440,13 @@ _zip_readfpstr(FILE *fp, int len, int nulp, struct zip_error *error)
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
     if (fread(r, 1, len, fp)<len) {
 	free(r);
-	_zip_error_set(error, ZERR_READ, errno);
+	_zip_error_set(error, ZIP_ER_READ, errno);
 	return NULL;
     }
 
@@ -471,7 +471,7 @@ _zip_readstr(unsigned char **buf, int len, int nulp, struct zip_error *error)
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
     

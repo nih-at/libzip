@@ -1,5 +1,5 @@
 /*
-  $NiH: open.c,v 1.1.4.1 2004/04/10 23:52:58 dillo Exp $
+  $NiH: open.c,v 1.2 2004/04/14 14:01:30 dillo Exp $
 
   open.c -- test cases for opening zip archives
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -54,13 +54,13 @@ main(int argc, char *argv[])
     fail = 0;
 
     remove("nosuchfile");
-    fail += open_fail("nosuchfile", 0, "non-existing", ZERR_OPEN, ENOENT);
-    fail += open_fail("Makefile", 0, "non-zip", ZERR_NOZIP, 0);
-    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZERR_EXISTS, 0);
-    /* ZERR_OPEN */
-    /* ZERR_READ */
-    /* ZERR_SEEK */
-    /* ZERR_INCONS */
+    fail += open_fail("nosuchfile", 0, "non-existing", ZIP_ER_OPEN, ENOENT);
+    fail += open_fail("Makefile", 0, "non-zip", ZIP_ER_NOZIP, 0);
+    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZIP_ER_EXISTS, 0);
+    /* ZIP_ER_OPEN */
+    /* ZIP_ER_READ */
+    /* ZIP_ER_SEEK */
+    /* ZIP_ER_INCONS */
 
     fail += open_success("test.zip", 0, "existing", 1);
     fail += open_success("nosuchfile", ZIP_CREATE, "new", 0);

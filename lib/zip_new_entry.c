@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new_entry.c,v 1.9 2004/04/16 09:40:29 dillo Exp $
+  $NiH: zip_new_entry.c,v 1.10 2004/06/24 15:01:57 dillo Exp $
 
   zip_new_entry.c -- create and init struct zip_entry
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -49,7 +49,7 @@ _zip_new_entry(struct zip *zf)
     if (!zf) {
 	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
 	if (!ze) {
-	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	    _zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
 	    return NULL;
 	}
     }
@@ -60,7 +60,7 @@ _zip_new_entry(struct zip *zf)
 						    sizeof(struct zip_entry)
 						    * zf->nentry_alloc);
 	    if (!zf->entry) {
-		_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+		_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
 		return NULL;
 	    }
 	}

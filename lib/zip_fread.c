@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.10 2004/04/16 09:40:28 dillo Exp $
+  $NiH: zip_fread.c,v 1.11 2004/04/17 19:15:30 dillo Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -59,7 +59,7 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
 	if ((zff->flags & ZIP_ZF_COMP) == 0) {
 	    /* XXX: compare for stored */
 	    if (zff->crc != zff->crc_orig) {
-		_zip_error_set(&zff->error, ZERR_CRC, 0);
+		_zip_error_set(&zff->error, ZIP_ER_CRC, 0);
 		return -1;
 	    }
 	}
@@ -104,7 +104,7 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
 	    if (zff->zstr->avail_in == 0) {
 		len = _zip_file_fillbuf(zff->buffer, BUFSIZE, zff);
 		if (len == 0) {
-		    _zip_error_set(&zff->error, ZERR_INCONS, 0);
+		    _zip_error_set(&zff->error, ZIP_ER_INCONS, 0);
 		    return -1;
 		}
 		else if (len < 0)
@@ -118,7 +118,7 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
 	case Z_DATA_ERROR:
 	case Z_STREAM_ERROR:
 	case Z_MEM_ERROR:
-	    _zip_error_set(&zff->error, ZERR_ZLIB, ret);
+	    _zip_error_set(&zff->error, ZIP_ER_ZLIB, ret);
 	    return -1;
 	}
     }

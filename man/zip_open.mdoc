@@ -1,4 +1,4 @@
-.\" $NiH: zip_open.mdoc,v 1.14 2003/12/27 22:37:34 wiz Exp $
+.\" $NiH: zip_open.mdoc,v 1.15 2003/12/28 00:51:51 wiz Exp $
 .\"
 .\" zip_open.mdoc -- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -84,44 +84,44 @@ The archive specified by
 .Ar path
 is opened unless:
 .Bl -tag -width Er
-.It Bq Er ZERR_EXISTS
+.It Bq Er ZIP_ER_EXISTS
 The file specified by
 .Ar path
 exists and
 .Dv ZIP_EXCL
 is set.
-.It Bq Er ZERR_INCONS
+.It Bq Er ZIP_ER_INCONS
 Inconsistencies were found in the file specified by
 .Ar path
 and
 .Dv ZIP_CHECKCONS
 was specified.
-.It Bq Er ZERR_INVAL
+.It Bq Er ZIP_ER_INVAL
 The
 .Ar path
 argument is
 .Dv NULL .
-.It Bq Er ZERR_MEMORY
+.It Bq Er ZIP_ER_MEMORY
 Required memory could not be allocated.
-.It Bq Er ZERR_NOENT
+.It Bq Er ZIP_ER_NOENT
 The file specified by
 .Ar path
 does not exist and
 .Dv ZIP_CREATE
 is not set.
-.It Bq Er ZERR_NOZIP
+.It Bq Er ZIP_ER_NOZIP
 The file specified by
 .Ar path
 is not a zip archive.
-.It Bq Er ZERR_OPEN
+.It Bq Er ZIP_ER_OPEN
 The file specified by
 .Ar path
 could not be opened.
-.It Bq Er ZERR_READ
+.It Bq Er ZIP_ER_READ
 A read error occurred; see
 .Va errno
 for details.
-.It Bq Er ZERR_SEEK
+.It Bq Er ZIP_ER_SEEK
 The file specified by
 .Ar path
 does not allow seeks.

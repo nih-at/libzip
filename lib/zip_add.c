@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_add.c,v 1.11 2004/04/16 09:40:26 dillo Exp $
+  $NiH: zip_add.c,v 1.12 2004/06/24 16:26:08 dillo Exp $
 
   zip_add.c -- add file via callback function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -44,7 +44,7 @@ int
 zip_add(struct zip *zf, const char *name, zip_read_func fn, void *state)
 {
     if (name == NULL) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 	

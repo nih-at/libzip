@@ -3,7 +3,7 @@
 	check function names (consistency, appropriateness)
 	file sizes, offsets: type big enough? (no, zip64)
 	let ch_func report errors back to caller
-* documentation: zip_add zip_add_data zip_add_file zip_add_filep zip_add_zip
+* documentation:
 	zip_error_sys_type zip_file_get_error zip_get_error
 	zip_replace zip_replace_data zip_replace_file zip_replace_filep
 	zip_replace_zip

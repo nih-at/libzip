@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.38 2004/06/24 15:01:57 dillo Exp $
+  $NiH: zip.h,v 1.39 2004/06/24 16:26:07 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -54,45 +54,41 @@
 
 #define ZIP_FL_NOCASE		1 /* ignore case on name lookup */
 #define ZIP_FL_NODIR		2 /* ignore directory component */
-#define ZIP_FL_COMPRESSED	4 /* read compressed data (XXX: rename) */
+#define ZIP_FL_COMPRESSED	4 /* read compressed data */
 #define ZIP_FL_UNCHANGED	8 /* use original data, ignoring changes */
-
-/* flags for zip_add and zip_replace */
-
-#define ZIP_CH_ISCOMP	1	/* data returned by ch_func is compressed */
 
 /* libzip error codes */
 
-#define ZERR_OK               0  /* N No error */
-#define ZERR_MULTIDISK        1  /* N Multi-disk zip archives not supported */
-#define ZERR_RENAME           2  /* S Renaming temporary file failed */
-#define ZERR_CLOSE            3  /* S Closing zip archive failed */
-#define ZERR_SEEK             4  /* S Seek error */
-#define ZERR_READ             5  /* S Read error */
-#define ZERR_WRITE            6  /* S Write error */
-#define ZERR_CRC              7  /* N CRC error */
-#define ZERR_ZIPCLOSED        8  /* N Containing zip archive was closed */
-#define ZERR_NOENT            9  /* N No such file */
-#define ZERR_EXISTS          10  /* N File already exists */
-#define ZERR_OPEN            11  /* S Can't open file */
-#define ZERR_TMPOPEN         12  /* S Failure to create temporary file */
-#define ZERR_ZLIB            13  /* Z Zlib error */
-#define ZERR_MEMORY          14  /* N Malloc failure */
-#define ZERR_CHANGED         15  /* N Entry has been changed */
-#define ZERR_COMPNOTSUPP     16  /* N Compression method not supported */
-#define ZERR_EOF             17  /* N Premature EOF */
-#define ZERR_INVAL           18  /* N Invalid argument */
-#define ZERR_NOZIP           19  /* N Not a zip archive */
-#define ZERR_INTERNAL        20  /* N Internal error */
-#define ZERR_INCONS	     21  /* N Zip archive inconsistent */
-#define ZERR_REMOVE	     22  /* S Can't remove file */
+#define ZIP_ER_OK             0  /* N No error */
+#define ZIP_ER_MULTIDISK      1  /* N Multi-disk zip archives not supported */
+#define ZIP_ER_RENAME         2  /* S Renaming temporary file failed */
+#define ZIP_ER_CLOSE          3  /* S Closing zip archive failed */
+#define ZIP_ER_SEEK           4  /* S Seek error */
+#define ZIP_ER_READ           5  /* S Read error */
+#define ZIP_ER_WRITE          6  /* S Write error */
+#define ZIP_ER_CRC            7  /* N CRC error */
+#define ZIP_ER_ZIPCLOSED      8  /* N Containing zip archive was closed */
+#define ZIP_ER_NOENT          9  /* N No such file */
+#define ZIP_ER_EXISTS        10  /* N File already exists */
+#define ZIP_ER_OPEN          11  /* S Can't open file */
+#define ZIP_ER_TMPOPEN       12  /* S Failure to create temporary file */
+#define ZIP_ER_ZLIB          13  /* Z Zlib error */
+#define ZIP_ER_MEMORY        14  /* N Malloc failure */
+#define ZIP_ER_CHANGED       15  /* N Entry has been changed */
+#define ZIP_ER_COMPNOTSUPP   16  /* N Compression method not supported */
+#define ZIP_ER_EOF           17  /* N Premature EOF */
+#define ZIP_ER_INVAL         18  /* N Invalid argument */
+#define ZIP_ER_NOZIP         19  /* N Not a zip archive */
+#define ZIP_ER_INTERNAL      20  /* N Internal error */
+#define ZIP_ER_INCONS        21  /* N Zip archive inconsistent */
+#define ZIP_ER_REMOVE        22  /* S Can't remove file */
 
 
 /* type of system error value */
 
 #define ZIP_ET_NONE	      0  /* sys_err unused */
 #define ZIP_ET_SYS	      1  /* sys_err is errno */
-#define ZIP_ET_ZIP	      2  /* sys_err is zlib error code */
+#define ZIP_ET_ZLIB	      2  /* sys_err is zlib error code */
 
 /* compression methods */
 

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_add_zip.c,v 1.8 2004/04/14 14:01:22 dillo Exp $
+  $NiH: zip_add_zip.c,v 1.9 2004/04/16 09:40:27 dillo Exp $
 
   zip_add_zip.c -- add file from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -45,7 +45,7 @@ zip_add_zip(struct zip *zf, const char *name,
 	    struct zip *srczf, int srcidx, int flags, off_t start, off_t len)
 {
     if (name == NULL) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_rename.c,v 1.11 2004/04/14 14:01:27 dillo Exp $
+  $NiH: zip_rename.c,v 1.12 2004/04/16 09:40:29 dillo Exp $
 
   zip_rename.c -- rename file in zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -44,7 +44,7 @@ int
 zip_rename(struct zip *zf, int idx, const char *name)
 {
     if (idx >= zf->nentry || idx < 0) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#  $NiH: zip.h,v 1.37 2004/04/16 09:40:26 dillo Exp $
+#  $NiH: make_zip_err_str.sh,v 1.7 2004/04/25 16:20:16 dillo Exp $
 #
 #  make_zip_err_str.sh: create zip_err_str.c from zip.h
 #  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -47,7 +47,7 @@ then
     exit 1
 fi
 
-rcsid=`echo '$NiH$' | tr -d '$'`
+rcsid=`echo '$NiH: make_zip_err_str.sh,v 1.7 2004/04/25 16:20:16 dillo Exp $' | tr -d '$'`
 inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
 
 cat <<EOF >> "$2.$$" || exit 1
@@ -67,7 +67,7 @@ cat <<EOF >> "$2.$$" || exit 1
 const char * const _zip_err_str[] = {
 EOF
 
-sed -n  '/^#define ZERR_/ s/.*\/\* . \([^*]*\) \*\//    "\1",/p' "$1" \
+sed -n  '/^#define ZIP_ER_/ s/.*\/\* . \([^*]*\) \*\//    "\1",/p' "$1" \
     >> "$2.$$" || exit 1
 
 cat <<EOF >> "$2.$$" || exit 1
@@ -77,12 +77,12 @@ const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0]);
 
 #define N ZIP_ET_NONE
 #define S ZIP_ET_SYS
-#define Z ZIP_ET_ZIP
+#define Z ZIP_ET_ZLIB
 
 const int _zip_err_type[] = {
 EOF
 
-sed -n  '/^#define ZERR_/ s/.*\/\* \(.\) \([^*]*\) \*\//    \1,/p' "$1" \
+sed -n  '/^#define ZIP_ER_/ s/.*\/\* \(.\) \([^*]*\) \*\//    \1,/p' "$1" \
     >> "$2.$$" || exit 1
 
 echo '};' >> "$2.$$" || exit 1

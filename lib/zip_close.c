@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.41 2004/04/19 11:49:12 dillo Exp $
+  $NiH: zip_close.c,v 1.42 2004/06/24 15:01:57 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -94,7 +94,7 @@ zip_close(struct zip *za)
 	return -1;
 
     if ((temp=malloc(strlen(za->zn)+8)) == NULL) {
-	_zip_error_set(&za->error, ZERR_MEMORY, 0);
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	_zip_cdir_free(cd);
 	return -1;
     }
@@ -102,14 +102,14 @@ zip_close(struct zip *za)
     sprintf(temp, "%s.XXXXXX", za->zn);
 
     if ((tfd=mkstemp(temp)) == -1) {
-	_zip_error_set(&za->error, ZERR_TMPOPEN, errno);
+	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);
 	_zip_cdir_free(cd);
 	free(temp);
 	return -1;
     }
     
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
-	_zip_error_set(&za->error, ZERR_TMPOPEN, errno);
+	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);
 	_zip_cdir_free(cd);
 	close(tfd);
 	remove(temp);
@@ -142,7 +142,7 @@ zip_close(struct zip *za)
 	}
 	else {
 	    if (fseek(za->zp, za->cdir->entry[i].offset, SEEK_SET) != 0) {
-		_zip_error_set(&za->error, ZERR_SEEK, errno);
+		_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 		error = 1;
 		break;
 	    }
@@ -216,7 +216,7 @@ zip_close(struct zip *za)
     }
     
     if (rename(temp, za->zn) != 0) {
-	_zip_error_set(&za->error, ZERR_RENAME, errno);
+	_zip_error_set(&za->error, ZIP_ER_RENAME, errno);
 	remove(temp);
 	free(temp);
 	return -1;
@@ -279,7 +279,7 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
     offend = ftell(ft);
 
     if (fseek(ft, offstart, SEEK_SET) < 0) {
-	_zip_error_set(&za->error, ZERR_SEEK, errno);
+	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
     }
     
@@ -293,7 +293,7 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 	return -1;
     
     if (fseek(ft, offend, SEEK_SET) < 0) {
-	_zip_error_set(&za->error, ZERR_SEEK, errno);
+	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
     }
 
@@ -312,7 +312,7 @@ add_data_comp(zip_read_func rf, void *ud, struct zip_stat *st,FILE *ft,
     st->comp_size = 0;
     while ((n=rf(ud, buf, sizeof(buf), ZIP_CMD_READ)) > 0) {
 	if (fwrite(buf, 1, n, ft) != n) {
-	    _zip_error_set(error, ZERR_WRITE, errno);
+	    _zip_error_set(error, ZIP_ER_WRITE, errno);
 	    return -1;
 	}
 	
@@ -376,7 +376,7 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_stat *st, FILE *ft,
 
 	ret = deflate(&zstr, flush);
 	if (ret != Z_OK && ret != Z_STREAM_END) {
-	    _zip_error_set(error, ZERR_ZLIB, ret);
+	    _zip_error_set(error, ZIP_ER_ZLIB, ret);
 	    return -1;
 	}
 	
@@ -384,7 +384,7 @@ add_data_uncomp(zip_read_func rf, void *ud, struct zip_stat *st, FILE *ft,
 	    n = sizeof(b2) - zstr.avail_out;
 	    
 	    if (fwrite(b2, 1, n, ft) != n) {
-		_zip_error_set(error, ZERR_WRITE, errno);
+		_zip_error_set(error, ZIP_ER_WRITE, errno);
 		return -1;
 	    }
 	
@@ -410,7 +410,7 @@ ch_set_error(struct zip_error *error, zip_read_func rf, void *ud)
     int e[2];
 
     if ((rf(ud, e, sizeof(e), ZIP_CMD_READ)) < sizeof(e)) {
-	error->zip_err = ZERR_INTERNAL;
+	error->zip_err = ZIP_ER_INTERNAL;
 	error->sys_err = 0;
     }
     else {
@@ -433,16 +433,16 @@ copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
     while (len > 0) {
 	nn = len > sizeof(buf) ? sizeof(buf) : len;
 	if ((n=fread(buf, 1, nn, fs)) < 0) {
-	    _zip_error_set(error, ZERR_READ, errno);
+	    _zip_error_set(error, ZIP_ER_READ, errno);
 	    return -1;
 	}
 	else if (n == 0) {
-	    _zip_error_set(error, ZERR_EOF, 0);
+	    _zip_error_set(error, ZIP_ER_EOF, 0);
 	    return -1;
 	}
 
 	if (fwrite(buf, 1, n, ft) != n) {
-	    _zip_error_set(error, ZERR_WRITE, errno);
+	    _zip_error_set(error, ZIP_ER_WRITE, errno);
 	    return -1;
 	}
 	

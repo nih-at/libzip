@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new.c,v 1.7 2004/04/14 14:01:26 dillo Exp $
+  $NiH: zip_new.c,v 1.8 2004/04/16 09:40:29 dillo Exp $
 
   zip_new.c -- create and init struct zip
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -52,7 +52,7 @@ _zip_new(struct zip_error *error)
 
     za = (struct zip *)malloc(sizeof(struct zip));
     if (!za) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 

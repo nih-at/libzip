@@ -1,4 +1,4 @@
-.\" $NiH: zip_fopen.mdoc,v 1.5.4.1 2004/04/14 12:43:44 dillo Exp $
+.\" $NiH: zip_fopen.mdoc,v 1.6 2004/04/14 14:01:29 dillo Exp $
 .\"
 .\" zip_fopen.mdoc -- open file in zip archvie for reading
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -85,17 +85,17 @@ is returned and the error code in
 is set to indicate the error.
 .Sh ERRORS
 .Bl -tag -width Er
-.It Bq Er ZERR_CHANGED
+.It Bq Er ZIP_ER_CHANGED
 The file data has been changed.
-.It Bq Er ZERR_COMPNOTSUPP
+.It Bq Er ZIP_ER_COMPNOTSUPP
 The compression method used is not supported.
-.It Bq Er ZERR_MEMORY
+.It Bq Er ZIP_ER_MEMORY
 Required memory could not be allocated.
-.It Bq Er ZERR_READ
+.It Bq Er ZIP_ER_READ
 A file read error occurred.
-.It Bq Er ZERR_SEEK
+.It Bq Er ZIP_ER_SEEK
 A file seek error occurred.
-.It Bq Er ZERR_ZLIB
+.It Bq Er ZIP_ER_ZLIB
 Initializing the zlib stream failed.
 .El
 .Pp
@@ -109,7 +109,7 @@ for any of the errors specified for the routine
 The function
 .Fn zip_fopen_index
 may also fail with
-.Er ZERR_INVAL
+.Er ZIP_ER_INVAL
 if
 .Ar index
 is invalid.

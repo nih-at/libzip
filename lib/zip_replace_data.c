@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_data.c,v 1.15 2004/06/24 15:01:58 dillo Exp $
+  $NiH: zip_replace_data.c,v 1.16 2004/06/24 16:26:08 dillo Exp $
 
   zip_replace_data.c -- replace file from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -57,7 +57,7 @@ zip_replace_data(struct zip *zf, int idx,
 		 const void *data, off_t len, int freep)
 {
     if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
     
@@ -73,7 +73,7 @@ _zip_replace_data(struct zip *zf, int idx, const char *name,
     struct read_data *f;
 
     if ((f=malloc(sizeof(*f))) == NULL) {
-	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
 

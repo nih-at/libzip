@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_error_str.c,v 1.2 2004/04/14 14:01:23 dillo Exp $
+  $NiH: zip_error_str.c,v 1.3 2004/04/16 09:40:28 dillo Exp $
 
   zip_error_str.c -- get string representation of zip error code
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -60,7 +60,7 @@ zip_error_str(char *buf, size_t len, int ze, int se)
 	ss = strerror(se);
 	break;
 	
-    case ZIP_ET_ZIP:
+    case ZIP_ET_ZLIB:
 	ss = zError(se);
 	break;
 	

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_add_data.c,v 1.7 2004/04/14 14:01:22 dillo Exp $
+  $NiH: zip_add_data.c,v 1.8 2004/04/16 09:40:26 dillo Exp $
 
   zip_add_data.c -- add file from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -45,7 +45,7 @@ zip_add_data(struct zip *zf, const char *name,
 	     const void *data, off_t len, int freep)
 {
     if (name == NULL) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 

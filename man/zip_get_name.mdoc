@@ -1,4 +1,4 @@
-.\" $NiH: zip_get_name.mdoc,v 1.2 2003/10/03 23:34:23 wiz Exp $
+.\" $NiH: zip_get_name.mdoc,v 1.3 2003/12/27 22:50:28 wiz Exp $
 .\"
 .\" zip_get_name.mdoc -- get name of file by index
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -64,7 +64,7 @@ is set to indicate the error.
 .Fn zip_get_name
 fails if:
 .Bl -tag -width Er
-.It Bq Er ZERR_INVAL
+.It Bq Er ZIP_ER_INVAL
 .Ar index
 is not a valid file index in
 .Ar archive .

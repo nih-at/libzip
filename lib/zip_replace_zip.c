@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.22 2004/06/24 15:01:58 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.23 2004/06/24 16:26:08 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -57,7 +57,7 @@ zip_replace_zip(struct zip *zf, int idx,
 		off_t start, off_t len)
 {
     if (srcidx < 0 || srcidx >= srczf->nentry) {
-	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
@@ -76,7 +76,7 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 
     if ((flags & ZIP_FL_UNCHANGED) == 0
 	&& ZIP_ENTRY_DATA_CHANGED(srczf->entry+srcidx)) {
-	_zip_error_set(&zf->error, ZERR_CHANGED, 0);
+	_zip_error_set(&zf->error, ZIP_ER_CHANGED, 0);
 	return -1;
     }
 
@@ -89,7 +89,7 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	flags &= ~ZIP_FL_COMPRESSED;
 
     if ((p=malloc(sizeof(*p))) == NULL) {
-	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
 	

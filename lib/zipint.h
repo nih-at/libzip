@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.26 2004/06/24 15:01:59 dillo Exp $
+  $NiH: zipint.h,v 1.27 2004/06/24 16:26:09 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -65,7 +65,7 @@ enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 /* error information */
 
 struct zip_error {
-    int zip_err;	/* libzip error code (ZERR_*) */
+    int zip_err;	/* libzip error code (ZIP_ER_*) */
     int sys_err;	/* copy of errno (E*) or zlib error code */
     char *str;		/* string representation or NULL */
 };
