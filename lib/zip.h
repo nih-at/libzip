@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.37 2004/04/16 09:40:26 dillo Exp $
+  $NiH: zip.h,v 1.38 2004/06/24 15:01:57 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -137,7 +137,7 @@ struct zip_file;
 
 
 
-int zip_add(struct zip *, const char *, zip_read_func, void *, int);
+int zip_add(struct zip *, const char *, zip_read_func, void *);
 int zip_add_data(struct zip *, const char *, const void *, off_t, int);
 int zip_add_file(struct zip *, const char *, const char *, off_t, off_t);
 int zip_add_filep(struct zip *, const char *, FILE *, off_t, off_t);
@@ -159,7 +159,7 @@ int zip_get_num_files(struct zip *);
 int zip_name_locate(struct zip *, const char *, int);
 struct zip *zip_open(const char *, int, int *);
 int zip_rename(struct zip *, int, const char *);
-int zip_replace(struct zip *, int, zip_read_func, void *, int);
+int zip_replace(struct zip *, int, zip_read_func, void *);
 int zip_replace_data(struct zip *, int, const void *, off_t, int);
 int zip_replace_file(struct zip *, int, const char *, off_t, off_t);
 int zip_replace_filep(struct zip *, int, FILE *, off_t, off_t);

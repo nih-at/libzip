@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_data.c,v 1.14 2004/04/16 09:40:30 dillo Exp $
+  $NiH: zip_replace_data.c,v 1.15 2004/06/24 15:01:58 dillo Exp $
 
   zip_replace_data.c -- replace file from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -82,7 +82,7 @@ _zip_replace_data(struct zip *zf, int idx, const char *name,
     f->freep = freep;
     f->mtime = time(NULL);
     
-    return _zip_replace(zf, idx, name, read_data, f, 0);
+    return _zip_replace(zf, idx, name, read_data, f);
 }
 
 

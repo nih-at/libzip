@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_filep.c,v 1.9 2004/04/16 09:40:30 dillo Exp $
+  $NiH: zip_replace_filep.c,v 1.10 2004/06/24 15:01:58 dillo Exp $
 
   zip_replace_filep.c -- replace file from FILE*
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -85,7 +85,7 @@ _zip_replace_filep(struct zip *zf, int idx, const char *name,
     f->off = start;
     f->len = (len ? len : -1);
     
-    return _zip_replace(zf, idx, name, read_file, f, 0);
+    return _zip_replace(zf, idx, name, read_file, f);
 }
 
 

@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.25 2004/04/19 11:49:13 dillo Exp $
+  $NiH: zipint.h,v 1.26 2004/06/24 15:01:59 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -188,7 +188,7 @@ struct zip *_zip_new(struct zip_error *);
 struct zip_entry *_zip_new_entry(struct zip *);
 unsigned short _zip_read2(unsigned char **);
 unsigned int _zip_read4(unsigned char **);
-int _zip_replace(struct zip *, int, const char *,zip_read_func, void *, int);
+int _zip_replace(struct zip *, int, const char *,zip_read_func, void *);
 int _zip_replace_data(struct zip *, int, const char *,
 		      const void *, off_t, int);
 int _zip_replace_file(struct zip *, int, const char *,
