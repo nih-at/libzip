@@ -224,6 +224,7 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	return -1;
 
     if (se->ch_comp == 0) { /* we have to compress */
+	/* XXX: check compression method */
 	zstr.zalloc = Z_NULL;
 	zstr.zfree = Z_NULL;
 	zstr.opaque = NULL;
@@ -270,6 +271,7 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	    case Z_STREAM_END:
 		if (se->ch_func(se->ch_data, meta, 0, ZIP_CMD_META) < 0)
 		    return -1;
+		meta->comp_method = meta->version_needed = -1;
 		meta->crc = crc;
 		meta->uncomp_size = size;
 		meta->comp_size = zstr.total_out;
@@ -300,22 +302,31 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
     }
 
     se->ch_func(se->ch_data, NULL, 0, ZIP_CMD_CLOSE);
+    free(se->ch_data);
+    se->ch_func = NULL;
+    se->ch_data = NULL;
 
     if (fseek(zf->zp, zf->entry[idx].meta->local_offset, SEEK_SET) < 0) {
 	zip_err = ZERR_SEEK;
 	return -1;
     }
 
-    meta->ef_len = meta->lef_len = meta->fc_len = -1;
-    _zip_merge_meta(zf->entry[idx].meta, meta);
-    
+    se->ch_meta->local_offset = meta->local_offset = -1;
+    se->ch_meta->comp_method = -1;
+    _zip_merge_meta_fix(zf->entry[idx].meta, meta);
+    _zip_merge_meta_fix(zf->entry[idx].meta, se->ch_meta);
+    zip_free_meta(meta);
+
     if (_zip_writecdentry(zf->zp, zf->entry+idx, 1) != 0) {
 	zip_err = ZERR_WRITE;
 	return -1;
     }
 
-    zip_free_meta(meta);
-
+    if (fseek(zf->zp, 0, SEEK_END) < 0) {
+	zip_err = ZERR_SEEK;
+	return -1;
+    }
+    
     zf->nentry++;
     return 0;
 }
@@ -596,7 +607,7 @@ _zip_local_header_read(struct zip *zf, int idx)
 {
     struct zip_entry *ze;
     
-    if (zf->entry[idx].meta->lef_len != (unsigned short)-1)
+    if (zf->entry[idx].meta->lef_len != 0)
 	return 0;
 
     if ((ze=_zip_new_entry(NULL)) == NULL)
