@@ -63,6 +63,7 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_INVAL           18  /* invalid argument */
 #define ZERR_NOZIP           19  /* not a zip file */
 #define ZERR_INTERNAL        20  /* internal error */
+#define ZERR_INCONS	     21  /* zip file inconsistent */
 
 extern char *zip_err_str[];
 
