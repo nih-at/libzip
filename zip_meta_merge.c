@@ -33,7 +33,7 @@ _zip_merge_meta(struct meta *dest, struct meta *src)
     
     if ((src->ef_len != -1) && src->ef) {
 	free(dest->ef);
-	dest->ef = memdup(dest->ef, src->ef, src->ef_len);
+	dest->ef = _zip_memdup(dest->ef, src->ef, src->ef_len);
 	if (!dest->ef) {
 	    zip_err = ZERR_MEMORY;
 	    return -1;
@@ -42,7 +42,7 @@ _zip_merge_meta(struct meta *dest, struct meta *src)
 
     if ((src->lef_len != -1) && src->lef) {
 	free(dest->lef);
-	dest->lef = memdup(dest->lef, src->lef, src->lef_len);
+	dest->lef = _zip_memdup(dest->lef, src->lef, src->lef_len);
 	if (!dest->lef) {
 	    zip_err = ZERR_MEMORY;
 	    return -1;
@@ -51,7 +51,7 @@ _zip_merge_meta(struct meta *dest, struct meta *src)
 
     if ((src->fc_len != -1) && src->fc) {
 	free(dest->fc);
-	dest->fc = memdup(dest->fc, src->fc, src->fc_len);
+	dest->fc = _zip_memdup(dest->fc, src->fc, src->fc_len);
 	if (!dest->fc) {
 	    zip_err = ZERR_MEMORY;
 	    return -1;
