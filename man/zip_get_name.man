@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_get_name.mdoc,v 1.4 2004/11/17 21:55:16 wiz Exp 
-.\" $NiH: zip_get_name.mdoc,v 1.4 2004/11/17 21:55:16 wiz Exp $
+.\" from NiH: zip_get_name.mdoc,v 1.6 2004/11/30 23:05:49 wiz Exp 
+.\" $NiH: zip_get_name.mdoc,v 1.6 2004/11/30 23:05:49 wiz Exp $
 .\"
 .\" zip_get_name.mdoc \-- get name of file by index
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_GET_NAME 3 "October 3, 2003" NiH
+.TH ZIP_GET_NAME 3 "November 30, 2004" NiH
 .SH "NAME"
 zip_get_name \- get name of file by index
 .SH "LIBRARY"
@@ -41,7 +41,7 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft const char *
-.Fn zip_get_name "struct zip *archive" "int index"
+.Fn zip_get_name "struct zip *archive" "int index" "int flags"
 .SH "DESCRIPTION"
 The
 .Fn zip_get_name
@@ -49,6 +49,11 @@ function returns the name of the file at position
 \fBindex\fR
 in
 \fBarchive.\fR
+If
+\fBflags\fR
+is set to
+\fBZIP_FL_UNCHANGED,\fR
+the original unchanged filename is returned.
 The returned string must not be modified or freed, and becomes invalid when
 \fBarchive\fR
 is closed.
@@ -56,8 +61,8 @@ is closed.
 Upon successful completion, a pointer to the name is returned.
 Otherwise,
 \fBNULL\fR
-is returned and the global variable
-.Va zip_err
+and the error code in
+\fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
 .Fn zip_get_name
@@ -67,6 +72,11 @@ fails if:
 Bq Er ZIP_ER_INVAL
 \fBindex\fR
 is not a valid file index in
-\fBarchive.\fR
+\fBarchive,\fR
+or
+\fBindex\fR
+points to an added file and
+\fBZIP_FL_UNCHANGED\fR
+is set.
 .SH "SEE ALSO"
 zip_name_locate(3)

@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_rename.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
-.\" $NiH: zip_rename.man,v 1.2 2003/12/27 22:51:30 wiz Exp $
+.\" from NiH: zip_rename.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp 
+.\" $NiH: zip_rename.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp $
 .\"
 .\" zip_rename.mdoc \-- rename file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_RENAME 3 "October 3, 2003" NiH
+.TH ZIP_RENAME 3 "November 30, 2003" NiH
 .SH "NAME"
 zip_rename \- rename file in zip archive
 .SH "LIBRARY"
@@ -51,13 +51,18 @@ is renamed to
 \fBname.\fR
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \-1 is returned and the global variable
-.Va zip_err
+Otherwise, \-1 is returned and the error code in
+\fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
 .Fn zip_rename
 fails if:
 .RS
+.TP 4
+Bq Er ZIP_ER_EXISTS
+There is already a file called
+\fBname\fR
+in the archive.
 .TP 4
 Bq Er ZIP_ER_INVAL
 \fBindex\fR

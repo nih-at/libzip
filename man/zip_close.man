@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_close.mdoc,v 1.4 2003/10/03 12:04:08 dillo Exp 
-.\" $NiH: zip_close.man,v 1.5 2003/12/27 22:51:28 wiz Exp $
+.\" from NiH: zip_close.mdoc,v 1.8 2004/12/22 16:37:33 wiz Exp 
+.\" $NiH: zip_close.mdoc,v 1.8 2004/12/22 16:37:33 wiz Exp $
 .\"
 .\" zip_close.mdoc \-- close zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -57,8 +57,8 @@ fails and
 is left unchanged.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \-1 is returned and the global variable
-.Va zip_err
+Otherwise, \-1 is returned and the error code in
+\fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
 .Fn zip_close
@@ -69,29 +69,31 @@ Bq Er ZIP_ER_INVAL
 The
 \fBpath\fR
 argument is
-.Dv NULL.
+\fBNULL.\fR
 .TP 4
 Bq Er ZIP_ER_MEMORY
 Required memory could not be allocated.
 .TP 4
+Bq Er ZIP_ER_NOZIP
+File is not a zip archive.
+.TP 4
+Bq Er ZIP_ER_READ
+A file read failed.
+.TP 4
 Bq Er ZIP_ER_RENAME
 A temporary file could not be renamed to its final name.
-See
-.Va errno
-for details.
 .TP 4
 Bq Er ZIP_ER_SEEK
-A file seek  failed.
-See
-.Va errno
-for details.
+A file seek failed.
 .TP 4
 Bq Er ZIP_ER_TMPOPEN
 A temporary file could not be created.
-See
-.Va errno
-for details.
-.\" XXX: list incomplete
+.TP 4
+Bq Er ZIP_ER_WRITE
+A file write failed.
+.\" XXX: list incomplete: add_data, copy_data
 .RE
 .SH "SEE ALSO"
-zip_open(3)
+zip_error_get(3),
+zip_open(3),
+zip_strerror(3)

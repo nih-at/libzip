@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fopen.mdoc,v 1.5 2003/10/06 16:37:07 dillo Exp 
-.\" $NiH: zip_fopen.man,v 1.7 2004/04/14 14:01:29 dillo Exp $
+.\" from NiH: zip_fopen.mdoc,v 1.9 2005/01/11 18:38:17 wiz Exp 
+.\" $NiH: zip_fopen.mdoc,v 1.9 2005/01/11 18:38:17 wiz Exp $
 .\"
-.\" zip_fopen.mdoc \-- open file in zip archvie for reading
+.\" zip_fopen.mdoc \-- open file in zip archive for reading
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -58,15 +58,15 @@ argument specifies how the name lookup should be done, according to
 the values are described in
 zip_name_locate(3).
 Also, the following values may be
-.I orNo 'ed
+.I or'ed
 to it.
 .RS
 .TP 19
-Dv ZIP_FL_COMPRESSED
-Read the compressed data.  Otherwise the data is uncompressed by 
+\fBZIP_FL_COMPRESSED\fR
+Read the compressed data.  Otherwise the data is uncompressed by
 .Fn zip_fread.
 .TP 19
-Dv ZIP_FL_UNCHANGED
+\fBZIP_FL_UNCHANGED\fR
 Read the original data from the zip archive, ignoring any changes made
 to the file.
 .RE
@@ -80,7 +80,7 @@ Upon successful completion, a
 .Ft struct zip_file
 pointer is returned.
 Otherwise,
-.Dv NULL
+\fBNULL\fR
 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
