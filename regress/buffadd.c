@@ -1,5 +1,5 @@
 /*
-  $NiH: buffadd.c,v 1.6 2004/11/18 15:04:07 wiz Exp $
+  $NiH: buffadd.c,v 1.7 2004/11/18 17:11:23 wiz Exp $
 
   buffadd.c -- test cases for adding files from buffer
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -65,7 +65,7 @@ main(int argc, char *argv[])
 	exit(1);
     }
 
-    if ((zs=zip_source_data(za, teststr, strlen(teststr), 0)) == NULL
+    if ((zs=zip_source_buffer(za, teststr, strlen(teststr), 0)) == NULL
 	|| zip_add(za, testname, zs) == -1) {
 	zip_source_free(zs);
 	fprintf(stderr,"%s: can't add buffer '%s': %s\n", argv[0],

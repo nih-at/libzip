@@ -1,6 +1,6 @@
-.\" $NiH: zip_source_data.mdoc,v 1.2 2004/11/17 21:55:14 wiz Exp $
+.\" $NiH: zip_source_buffer.mdoc,v 1.1 2004/11/18 15:10:49 wiz Exp $
 .\"
-.\" zip_source_data.mdoc -- create zip data source from buffer
+.\" zip_source_buffer.mdoc -- create zip data source from buffer
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,18 +35,18 @@
 .Dt ZIP_SOURCE_DATA 3
 .Os
 .Sh NAME
-.Nm zip_source_data
+.Nm zip_source_buffer
 .Nd create zip data source from buffer
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_data "struct zip *archive" "const void *data" "off_t len" \
+.Fn zip_source_buffer "struct zip *archive" "const void *data" "off_t len" \
 "int freep"
 .Sh DESCRIPTION
 The function
-.Fn zip_source_data
+.Fn zip_source_buffer
 creates a zip source from the buffer
 .Ar data
 of size
@@ -62,7 +62,7 @@ is returned and the error code in
 .Ar archive
 is set to indicate the error.
 .Sh ERRORS
-.Fn zip_source_data
+.Fn zip_source_buffer
 fails if:
 .Bl -tag -width Er
 .It Bq Er ZIP_ER_INVAL

@@ -32,7 +32,7 @@ libzip_la_SOURCES=\
 	zip_open.c \
 	zip_rename.c \
 	zip_replace.c \
-	zip_source_data.c \
+	zip_source_buffer.c \
 	zip_source_file.c \
 	zip_source_filep.c \
 	zip_source_free.c \

@@ -1,5 +1,8 @@
 2004-11-18  Thomas Klausner <wiz@danbala.tuwien.ac.at>
 
+	* zip.h: Rename zip_source_data to zip_source_buffer.
+	Adapt users and documentation.
+
 	* lib/zip_source_*: Verify user-supplied data.
 
 	* zip.h: Rename zip_get_error to zip_error_get;

@@ -1,4 +1,4 @@
-.\" $NiH: zip_add.mdoc,v 1.2 2004/11/17 21:55:14 wiz Exp $
+.\" $NiH: zip_add.mdoc,v 1.3 2004/11/18 15:04:06 wiz Exp $
 .\"
 .\" zip_add.mdoc -- add files to zip archive
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -80,7 +80,7 @@ is set to indicate the error.
 .Bd -literal -offset indent
 struct zip_source *s;
 
-if ((s=zip_source_data(archive, buffer, len)) == NULL ||
+if ((s=zip_source_buffer(archive, buffer, len)) == NULL ||
     zip_add(archive, name, s) < 0) {
     zip_source_free(s);
     printf("error adding file: %s\n", zip_strerror(archive));

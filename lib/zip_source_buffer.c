@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_source_data.c,v 1.1 2004/11/18 15:06:23 wiz Exp $
+  $NiH: zip_source_buffer.c,v 1.2 2004/11/18 16:28:12 wiz Exp $
 
-  zip_source_data.c -- create zip data source from buffer
+  zip_source_buffer.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -53,7 +53,7 @@ static ssize_t read_data(void *state, void *data, size_t len,
 
 
 struct zip_source *
-zip_source_data(struct zip *za, const void *data, off_t len, int freep)
+zip_source_buffer(struct zip *za, const void *data, off_t len, int freep)
 {
     struct read_data *f;
     struct zip_source *zs;

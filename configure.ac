@@ -73,7 +73,7 @@ AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
 		 man/zip_name_locate.3:man/zip_name_locate.${MANFMT}
 		 man/zip_open.3:man/zip_open.${MANFMT}
 		 man/zip_rename.3:man/zip_rename.${MANFMT}
-		 man/zip_source_data.3:man/zip_source_data.${MANFMT}
+		 man/zip_source_buffer.3:man/zip_source_buffer.${MANFMT}
 		 man/zip_source_file.3:man/zip_source_file.${MANFMT}
 		 man/zip_source_filep.3:man/zip_source_filep.${MANFMT}
 		 man/zip_source_free.3:man/zip_source_free.${MANFMT}
