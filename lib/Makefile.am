@@ -7,7 +7,7 @@ libzip_a_SOURCES=zip_open.c zip_close.c zip_err_str.c zip_name_locate.c \
 	zip_add.c zip_replace.c zip_add_zip.c zip_replace_zip.c \
 	zip_add_data.c zip_replace_data.c zip_add_file.c zip_replace_file.c \
 	zip_delete.c zip_unchange.c zip_rename.c \
-	zf_new_free.c zip_new_entry.c zip_free_entry.c \
+	zip_new.c zip_free.c zip_new_entry.c zip_free_entry.c \
 	zip_new_meta.c zip_free_meta.c zip_merge_meta.c zip_unchange_data.c
 
 BUILT_SOURCES=zip_err_str.c
