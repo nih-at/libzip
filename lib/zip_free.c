@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free.c,v 1.8 2003/10/06 22:44:06 dillo Exp $
+  $NiH: zip_free.c,v 1.8.4.1 2004/04/06 20:30:04 dillo Exp $
 
   zip_free.c -- free struct zip
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -71,7 +71,6 @@ _zip_free(struct zip *zf)
     for (i=0; i<zf->nfile; i++) {
 	zf->file[i]->flags = ZERR_ZIPCLOSED;
 	zf->file[i]->zf = NULL;
-	zf->file[i]->name = NULL;
     }
 
     free(zf->file);

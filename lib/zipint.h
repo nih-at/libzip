@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.7 2004/04/06 21:43:36 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.8 2004/04/07 12:08:22 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -56,6 +56,11 @@
 enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
 
+/* constants for struct zip_file's member flags */
+
+#define ZIP_ZF_EOF	1 /* EOF reached */
+#define ZIP_ZF_UNCOMP	2 /* uncompress data */
+
 /* error information */
 
 struct zip_error {
@@ -84,7 +89,6 @@ struct zip {
 
 struct zip_file {
     struct zip *zf;		/* zip archive containing this file */
-    char *name;			/* name of file */
     struct zip_error error;	/* error information */
     int flags;			/* -1: eof, >0: error */
 
