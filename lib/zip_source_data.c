@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_data.c,v 1.17 2004/11/17 21:55:13 wiz Exp $
+  $NiH: zip_source_data.c,v 1.1 2004/11/18 15:06:23 wiz Exp $
 
   zip_source_data.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -57,6 +57,9 @@ zip_source_data(struct zip *za, const void *data, off_t len, int freep)
 {
     struct read_data *f;
     struct zip_source *zs;
+
+    if (za == NULL)
+	return NULL;
 
     if (len < 0 || (data == NULL && len > 0)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);

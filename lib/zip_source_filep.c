@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_filep.c,v 1.12 2004/11/17 21:55:13 wiz Exp $
+  $NiH: zip_source_filep.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
 
   zip_source_filep.c -- create data source from FILE *
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -61,6 +61,14 @@ zip_source_filep(struct zip *za, FILE *file, off_t start, off_t len)
 {
     struct read_file *f;
     struct zip_source *zs;
+
+    if (za == NULL)
+	return NULL;
+
+    if (file == NULL || start < 0 || len < -1) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return NULL;
+    }
 
     if ((f=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);

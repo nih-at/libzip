@@ -1,5 +1,7 @@
 2004-11-18  Thomas Klausner <wiz@danbala.tuwien.ac.at>
 
+	* lib/zip_source_*: Verify user-supplied data.
+
 	* zip.h: Rename zip_get_error to zip_error_get;
 	rename zip_file_get_error to zip_file_error_get;
 	rename zip_error_str to zip_error_to_str;

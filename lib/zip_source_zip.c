@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_zip.c,v 1.24 2004/11/17 21:55:13 wiz Exp $
+  $NiH: zip_source_zip.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
 
   zip_source_zip.c -- create data source from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -58,6 +58,14 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
     struct zip_error error;
     struct zip_source *zs;
     struct read_zip *p;
+
+    if (za == NULL)
+	return NULL;
+
+    if (srcza == NULL || start < 0 || len < -1 || srcidx < 0 || srcidx >= srcza->nentry) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return NULL;
+    }
 
     if ((flags & ZIP_FL_UNCHANGED) == 0
 	&& ZIP_ENTRY_DATA_CHANGED(srcza->entry+srcidx)) {
