@@ -1,4 +1,4 @@
-.\" $NiH$
+.\" $NiH: zip_close.mdoc,v 1.1 2003/10/03 07:57:40 dillo Exp $
 .\"
 .\" zip_close.mdoc -- close zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -49,15 +49,16 @@ The
 function closes
 .Ar archive
 and frees the memory allocated for it.
-If any files within were changed, those changes are written to disc
-first.  If writing changes fails,
+If any files within were changed, those changes are written to disk
+first.
+If writing changes fails,
 .Fn zip_close
 fails and
 .Ar archive
 is left unchanged.
 .Sh RETURN VALUES
-Upon successful completion 0 is returned. Otherwise, -1 is returned
-and the global variable
+Upon successful completion 0 is returned.
+Otherwise, \-1 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .Sh ERRORS
