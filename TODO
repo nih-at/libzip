@@ -41,8 +41,6 @@
 	illegal index
 * (get_name)
 * (get_num_files)
-* (name_locate)
-	deleted name [E]
 * (rename)
 * (replace)
 * (source_buffer)
