@@ -21,7 +21,7 @@ MAN3=	zip_close.3 \
 	zip_unchange.3 \
 	zip_unchange_all.3
 
-install-man: link-man3
+install-data-hook: link-man3
 
 LN=ln
 
