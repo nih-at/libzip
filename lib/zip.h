@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.46 2004/12/22 15:49:18 wiz Exp $
+  $NiH: zip.h,v 1.47 2004/12/22 16:31:59 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -81,6 +81,7 @@
 #define ZIP_ER_INTERNAL      20  /* N Internal error */
 #define ZIP_ER_INCONS        21  /* N Zip archive inconsistent */
 #define ZIP_ER_REMOVE        22  /* S Can't remove file */
+#define ZIP_ER_DELETED       23  /* N Entry has been deleted */
 
 
 /* type of system error value */
