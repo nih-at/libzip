@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_open.mdoc,v 1.14 2003/12/27 22:37:34 wiz Exp 
-.\" $NiH: zip_open.mdoc,v 1.14 2003/12/27 22:37:34 wiz Exp $
+.\" from NiH: zip_open.mdoc,v 1.15 2003/12/28 00:51:51 wiz Exp 
+.\" $NiH: zip_open.mdoc,v 1.15 2003/12/28 00:51:51 wiz Exp $
 .\"
 .\" zip_open.mdoc \-- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -65,11 +65,11 @@ Error if archive already exists.
 Dv ZIP_CHECKCONS
 Perform additional consistency checks on the archive, and error if
 they fail.
+.RE
 .PP
 If an error occurs and
 \fBerrorp\fR
 is non-NULL, it will be set to the corresponding error code.
-.RE
 .SH "RETURN VALUES"
 Upon successful completion
 .Fn zip_open
