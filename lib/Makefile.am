@@ -17,6 +17,7 @@ libzip_la_SOURCES=\
 	zip_error.c \
 	zip_error_str.c \
 	zip_error_strerror.c \
+	zip_error_sys_type.c \
 	zip_fclose.c \
 	zip_file_get_error.c \
 	zip_file_get_offset.c \
