@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.44 2004/11/18 15:04:04 wiz Exp $
+  $NiH: zip_close.c,v 1.45 2004/12/22 16:31:59 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -60,7 +60,7 @@ int
 zip_close(struct zip *za)
 {
     int changed, survivors;
-    int i, j, tfd, ret, error;
+    int i, j, tfd, error;
     char *temp;
     FILE *tfp;
     mode_t mask;
@@ -82,12 +82,14 @@ zip_close(struct zip *za)
 
     /* don't create zip files with no entries */
     if (survivors == 0) {
-	ret = 0;
-	if (za->zn)
-	    ret = remove(za->zn);
+	if (za->zn) {
+	    if (remove(za->zn) != 0) {
+		_zip_error_set(&za->error, ZIP_ER_REMOVE, errno);
+		return -1;
+	    }
+	}
 	_zip_free(za);
-	/* XXX: inconsistent: za freed, returned -1 */
-	return ret;
+	return 0;
     }	       
 	
     if ((cd=_zip_cdir_new(survivors, &za->error)) == NULL)
