@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.35.4.3 2004/04/06 20:26:24 dillo Exp $
+  $NiH: zip.h,v 1.35.4.4 2004/04/07 12:08:21 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -50,11 +50,11 @@
 #define ZIP_CHECKCONS        4
 
 
-/* flags for zip_name_locate */
+/* flags for zip_name_locate and zip_fopen */
 
-#define ZIP_NAME_NOCASE		1
-#define ZIP_NAME_NODIR		2
-
+#define ZIP_NAME_NOCASE		1 /* ignore case on name lookup */
+#define ZIP_NAME_NODIR		2 /* ignore directory component */
+#define ZIP_NAME_COMP		4 /* read compressed data (XXX: rename) */
 
 /* flags for zip_add and zip_replace */
 
@@ -146,7 +146,7 @@ int zip_fclose(struct zip_file *);
 void zip_file_get_error(struct zip_file *, int *, int *);
 const char *zip_file_strerror(struct zip_file *);
 struct zip_file *zip_fopen(struct zip *, const char *, int);
-struct zip_file *zip_fopen_index(struct zip *, int);
+struct zip_file *zip_fopen_index(struct zip *, int, int);
 ssize_t zip_fread(struct zip_file *, void *, size_t);
 void zip_get_error(struct zip *, int *, int *);
 const char *zip_get_name(struct zip *, int);
