@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.17.4.7 2004/04/08 16:56:55 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.17.4.8 2004/04/10 23:15:55 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -75,9 +75,11 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	_zip_error_set(&zf->error, ZERR_CHANGED, 0);
 	return NULL;
     }
-    
-    if ((srczf->cdir->entry[srcidx].comp_method != ZIP_CM_STORE
-	 && start == 0 && (len == 0 || len == -1)))
+
+    if (len == 0)
+	len = -1;
+
+    if (start == 0 && len == -1)
 	flags = ZIP_NAME_COMP;
     else
 	flags = 0;
@@ -89,8 +91,8 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	
     _zip_error_copy(&error, &srczf->error);
 	
-    if (zip_stat_index(srczf, idx, &p->st) < 0
-	|| (p->zf=zip_fopen_index(srczf, idx, flags)) == NULL) {
+    if (zip_stat_index(srczf, srcidx, &p->st) < 0
+	|| (p->zf=zip_fopen_index(srczf, srcidx, flags)) == NULL) {
 	free(p);
 	_zip_error_copy(&zf->error, &srczf->error);
 	_zip_error_copy(&srczf->error, &error);
@@ -98,9 +100,9 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	return -1;
     }
     p->off = start;
-    p->len = (len ? len : -1);
+    p->len = len;
 
-    if (!(flags & ZIP_NAME_COMP)) {
+    if ((flags & ZIP_NAME_COMP) == 0) {
 	p->st.size = p->st.comp_size = len;
 	p->st.comp_method = ZIP_CM_STORE;
 	/* XXX: crc */

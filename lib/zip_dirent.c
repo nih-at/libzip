@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.1.2.8 2004/04/10 23:15:40 dillo Exp $
+  $NiH: zip_dirent.c,v 1.1.2.9 2004/04/10 23:51:27 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -68,6 +68,34 @@ _zip_cdir_free(struct zip_cdir *cd)
     free(cd->comment);
     free(cd->entry);
     free(cd);
+}
+
+
+
+struct zip_cdir *
+_zip_cdir_new(int nentry, struct zip_error *error)
+{
+    struct zip_cdir *cd;
+    
+    if ((cd=malloc(sizeof(*cd))) == NULL) {
+	_zip_error_set(error, ZERR_MEMORY, 0);
+	return NULL;
+    }
+
+    if ((cd->entry=malloc(sizeof(*(cd->entry))*nentry)) == NULL) {
+	_zip_error_set(error, ZERR_MEMORY, 0);
+	free(cd);
+	return NULL;
+    }
+
+    /* entries must be initialized by caller */
+
+    cd->nentry = nentry;
+    cd->size = cd->offset = 0;
+    cd->comment = NULL;
+    cd->comment_len = 0;
+
+    return cd;
 }
 
 

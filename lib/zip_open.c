@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.19.4.4 2004/03/23 18:38:48 dillo Exp $
+  $NiH: zip_open.c,v 1.19.4.5 2004/04/06 20:30:06 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -235,7 +235,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 {
     struct zip_cdir *cd;
     unsigned char *cdp, **bufp;
-    int i, comlen;
+    int i, comlen, nentry;
 
     comlen = buf + buflen - eocd - EOCDLEN;
     if (comlen < 0) {
@@ -255,17 +255,15 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	return NULL;
     }
 
-    if ((cd=malloc(sizeof(*cd))) == NULL) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
-	return NULL;
-    }
-
     cdp = eocd + 8;
     /* number of cdir-entries on this disk */
     i = _zip_read2(&cdp);
     /* number of cdir-entries */
-    cd->entry = NULL;
-    cd->nentry = _zip_read2(&cdp);
+    nentry = _zip_read2(&cdp);
+
+    if ((cd=_zip_cdir_new(nentry, error)) == NULL)
+	return NULL;
+
     cd->size = _zip_read4(&cdp);
     cd->offset = _zip_read4(&cdp);
     cd->comment = NULL;
@@ -282,7 +280,8 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	return NULL;
     }
 
-    cd->comment = _zip_memdup(eocd+EOCDLEN, cd->comment_len);
+    if (cd->comment_len)
+	cd->comment = _zip_memdup(eocd+EOCDLEN, cd->comment_len);
 
     cdp = eocd;
     if (cd->size < eocd-buf) {
@@ -304,12 +303,6 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	    free(cd);
 	    return NULL;
 	}
-    }
-
-    if ((cd->entry=malloc(sizeof(*(cd->entry))*cd->nentry)) == NULL) {
-	_zip_error_set(error, ZERR_MEMORY, 0);
-	free(cd);
-	return NULL;
     }
 
     for (i=0; i<cd->nentry; i++) {

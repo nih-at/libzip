@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.9 2004/04/08 16:55:36 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.10 2004/04/10 23:15:55 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -59,7 +59,7 @@ enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 /* constants for struct zip_file's member flags */
 
 #define ZIP_ZF_EOF	1 /* EOF reached */
-#define ZIP_ZF_UNCOMP	2 /* uncompress data */
+#define ZIP_ZF_COMP	2 /* read compressed data */
 
 /* error information */
 
@@ -142,16 +142,6 @@ struct zip_cdir {
 /* entry in zip archive directory */
 
 struct zip_entry {
-#if 0
-    char *fn;			/* file name */
-    unsigned short comp_method;	/* compression method */
-    unsigned int comp_size;	/* size of compressed data */
-    unsigned int uncomp_size;	/* size of uncompressed data */
-    unsigned int crc;		/* CRC-32 of uncompressed data */
-    unsigned int offset;	/* byte offset of local dir entry */
-    time_t mtime;		/* time of last modification */
-#endif
-
     enum zip_state state;
     zip_read_func ch_func;
     void *ch_data;
@@ -175,6 +165,7 @@ extern const int _zip_err_type[];
 
 
 void _zip_cdir_free(struct zip_cdir *);
+struct zip_cdir *_zip_cdir_new(int, struct zip_error *);
 int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
 void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
