@@ -33,7 +33,7 @@ static int _zip_fwrite(char *b, int s, int n, FILE *f);
 int
 zip_close(struct zip *zf)
 {
-    int i, count, tfd;
+    int i, count, tfd, ret, survivors;
     char *temp;
     FILE *tfp;
     struct zip *tzf;
@@ -43,18 +43,31 @@ zip_close(struct zip *zf)
 	return _zip_free(zf);
 
     /* look if there really are any changes */
-    count = 0;
+    count = survivors = 0;
     for (i=0; i<zf->nentry; i++) {
-	if (zf->entry[i].state != ZIP_ST_UNCHANGED) {
+	if (zf->entry[i].state != ZIP_ST_UNCHANGED)
 	    count = 1;
+	if (zf->entry[i].state != ZIP_ST_DELETED)
+	    survivors = 1;
+	if (survivors && count)
 	    break;
-	}
     }
 
     /* no changes, all has been unchanged */
     if (count == 0)
 	return _zip_free(zf);
-    
+
+    /* don't create zip files with no entries */
+    if (survivors == 0) {
+	ret = 0;
+	if (zf->zn)
+	    ret = remove(zf->zn);
+	if (!ret)
+	    return _zip_free(zf);
+	_zip_free(zf);
+	return ret;
+    }	       
+	
     temp = (char *)malloc(strlen(zf->zn)+8);
     if (!temp) {
 	zip_err = ZERR_MEMORY;
