@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.37 2005/01/11 18:00:38 dillo Exp $
+  $NiH: zipint.h,v 1.38 2005/01/11 18:38:16 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -63,7 +63,8 @@ enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 /* constants for struct zip_file's member flags */
 
 #define ZIP_ZF_EOF	1 /* EOF reached */
-#define ZIP_ZF_COMP	2 /* read compressed data */
+#define ZIP_ZF_DECOMP	2 /* decompress data */
+#define ZIP_ZF_CRC	4 /* compute and compare CRC */
 
 /* error information */
 

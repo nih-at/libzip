@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.12 2004/11/17 21:55:11 wiz Exp $
+  $NiH: zip_fread.c,v 1.13 2004/11/18 17:11:21 wiz Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -56,8 +56,7 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 
     if (zf->bytes_left == 0) {
 	zf->flags |= ZIP_ZF_EOF;
-	if ((zf->flags & ZIP_ZF_COMP) == 0) {
-	    /* XXX: compare for stored */
+	if (zf->flags & ZIP_ZF_CRC) {
 	    if (zf->crc != zf->crc_orig) {
 		_zip_error_set(&zf->error, ZIP_ER_CRC, 0);
 		return -1;
@@ -66,13 +65,11 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 	return 0;
     }
     
-    if (zf->flags & ZIP_ZF_COMP) {
+    if ((zf->flags & ZIP_ZF_DECOMP) == 0) {
 	ret = _zip_file_fillbuf(outbuf, toread, zf);
 	if (ret > 0) {
-#if 0
-	    /* XXX: compute for stored */
-	    zf->crc = crc32(zf->crc, outbuf, ret);
-#endif
+	    if (zf->flags & ZIP_ZF_CRC)
+		zf->crc = crc32(zf->crc, outbuf, ret);
 	    zf->bytes_left -= ret;
 	}
 	return ret;
@@ -94,7 +91,8 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 	       have a header */
 	    len = zf->zstr->total_out - out_before;
 	    if (len >= zf->bytes_left || len >= toread) {
-		zf->crc = crc32(zf->crc, outbuf, len);
+		if (zf->flags & ZIP_ZF_CRC)
+		    zf->crc = crc32(zf->crc, outbuf, len);
 		zf->bytes_left -= len;
 	        return len;
 	    }

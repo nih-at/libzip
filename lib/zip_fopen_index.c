@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.20 2004/11/17 21:55:11 wiz Exp $
+  $NiH: zip_fopen_index.c,v 1.21 2004/11/18 17:11:21 wiz Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -69,15 +69,16 @@ zip_fopen_index(struct zip *za, int fileno, int flags)
 	return NULL;
     }
 
-    if ((flags & ZIP_FL_COMPRESSED)
-	|| (za->cdir->entry[fileno].comp_method == ZIP_CM_STORE))
-	zfflags = ZIP_ZF_COMP;
-    else {
-	if (za->cdir->entry[fileno].comp_method != ZIP_CM_DEFLATE) {
-	    _zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-	    return NULL;
+    zfflags = 0;
+    if ((flags & ZIP_FL_COMPRESSED) == 0) {
+	zfflags |= ZIP_ZF_CRC;
+	if (za->cdir->entry[fileno].comp_method != ZIP_CM_STORE) {
+	    if (za->cdir->entry[fileno].comp_method != ZIP_CM_DEFLATE) {
+		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+		return NULL;
+	    }
+	    zfflags |= ZIP_ZF_DECOMP;
 	}
-	zfflags = 0;
     }
 
     zf = _zip_file_new(za);
@@ -94,7 +95,7 @@ zip_fopen_index(struct zip *za, int fileno, int flags)
 	return NULL;
     }
     
-    if (zf->flags & ZIP_ZF_COMP)
+    if ((zf->flags & ZIP_ZF_DECOMP) == 0)
 	zf->bytes_left = zf->cbytes_left;
     else {
 	if ((zf->buffer=(char *)malloc(BUFSIZE)) == NULL) {
