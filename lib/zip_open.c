@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.23 2004/11/17 21:55:12 wiz Exp $
+  $NiH: zip_open.c,v 1.24 2004/11/30 21:42:23 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -337,6 +337,8 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	max = cd->entry[0].offset;
 	min = cd->entry[0].offset;
     }
+    else
+	min = max = 0;
 
     for (i=0; i<cd->nentry; i++) {
 	if (cd->entry[i].offset < min)

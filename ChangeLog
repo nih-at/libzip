@@ -1,3 +1,12 @@
+2004-12-22  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_open.c (_zip_checkcons): always initialize variables
+
+2004-12-22  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+
+	* zip.h: Rename zip_error_sys_type to zip_error_get_sys_type.
+	Adapt callers and documentation.
+
 2004-11-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip_get_name.c (zip_get_name): add flags argument.
