@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_error.c,v 1.1 2003/10/05 16:05:22 dillo Exp $
+  $NiH: zip_error.c,v 1.2 2003/10/06 02:50:05 dillo Exp $
 
   zip_error.c -- struct zip_error helper functions
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -39,6 +39,15 @@
 
 #include "zip.h"
 #include "zipint.h"
+
+
+
+void
+_zip_error_copy(struct zip_error *dst, struct zip_error *src)
+{
+    dst->zip_err = src->zip_err;
+    dst->sys_err = src->sys_err;
+}
 
 
 

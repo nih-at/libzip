@@ -1,3 +1,11 @@
+2003-10-06  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_unchange_all.c (zip_unchange_all): remove check for za
+	!= NULL.
+
+	* lib/zip_set_name.c (_zip_set_name): adapt to new error code
+	handling.  clean up error handling.
+
 2003-10-05  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip.h, lib/zipint.h: Don't expose struct zip, struct

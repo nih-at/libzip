@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free.c,v 1.5 2003/03/16 10:21:39 wiz Exp $
+  $NiH: zip_free.c,v 1.6 2003/10/02 14:13:30 dillo Exp $
 
   zip_free.c -- free struct zip
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -43,15 +43,12 @@
 
 /* _zip_free:
    frees the space allocated to a zipfile struct, and closes the
-   corresponding file. Returns 0 if successful, the error returned
-   by fclose if not. */
+   corresponding file. */
 
-int
+void
 _zip_free(struct zip *zf)
 {
-    int i, ret;
-
-    ret = 0;
+    int i;
 
     if (zf == NULL)
 	return 0;
@@ -60,7 +57,7 @@ _zip_free(struct zip *zf)
 	free(zf->zn);
 
     if (zf->zp)
-	ret = fclose(zf->zp);
+	fclose(zf->zp);
 
     if (zf->com)
 	free(zf->com);
@@ -82,8 +79,5 @@ _zip_free(struct zip *zf)
     
     free(zf);
 
-    if (ret)
-	zip_err = ZERR_CLOSE;
-    
-    return ret;
+    return;
 }

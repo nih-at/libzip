@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.34 2003/10/03 07:58:38 dillo Exp $
+  $NiH: zip_close.c,v 1.35 2003/10/04 07:39:52 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -76,8 +76,10 @@ zip_close(struct zip *zf)
     struct zip *tzf;
     mode_t mask;
 
-    if (zf->changes == 0)
-	return _zip_free(zf);
+    if (zf->changes == 0) {
+	_zip_free(zf);
+	return 0;
+    }
 
     /* look if there really are any changes */
     count = survivors = 0;
@@ -91,23 +93,24 @@ zip_close(struct zip *zf)
     }
 
     /* no changes, all has been unchanged */
-    if (count == 0)
-	return _zip_free(zf);
+    if (count == 0) {
+	_zip_free(zf);
+	return 0;
+    }
 
     /* don't create zip files with no entries */
     if (survivors == 0) {
 	ret = 0;
 	if (zf->zn)
 	    ret = remove(zf->zn);
-	if (ret == 0)
-	    return _zip_free(zf);
 	_zip_free(zf);
+	/* XXX: inconsistent: zf freed, returned -1 */
 	return ret;
     }	       
 	
     temp = (char *)malloc(strlen(zf->zn)+8);
     if (!temp) {
-	zip_err = ZERR_MEMORY;
+	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	return -1;
     }
 
@@ -115,12 +118,13 @@ zip_close(struct zip *zf)
 
     tfd = mkstemp(temp);
     if (tfd == -1) {
-	zip_err = ZERR_TMPOPEN;
+	_zip_error_set(&zf->error, ZERR_TMPOPEN, errno);
+	free(temp);
 	return -1;
     }
     
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
-	zip_err = ZERR_TMPOPEN;
+	_zip_error_set(&zf->error, ZERR_TMPOPEN, errno);
 	remove(temp);
 	free(temp);
 	close(tfd);
@@ -131,23 +135,13 @@ zip_close(struct zip *zf)
     tzf->zp = tfp;
     tzf->zn = temp;
     tzf->nentry = 0;
+    tzf->entry = NULL;
+    tzf->nentry_alloc = 0;
     tzf->comlen = zf->comlen;
     tzf->cd_size = tzf->cd_offset = 0;
     tzf->com = (unsigned char *)_zip_memdup(zf->com, zf->comlen);
     /* XXX: bail out if tzf->com == NULL; */
 
-    /*    tzf->entry = (struct zip_entry *)malloc(sizeof(struct
-	  zip_entry)*ALLOC_SIZE);
-	  if (!tzf->entry) {
-	  zip_err = ZERR_MEMORY;
-	  return -1;
-	  }
-
-	  tzf->nentry_alloc = ALLOC_SIZE;
-    */
-    tzf->entry = NULL;
-    tzf->nentry_alloc = 0;
-    
     count = 0;
     if (zf->entry) {
 	for (i=0; i<zf->nentry; i++) {
@@ -188,24 +182,22 @@ zip_close(struct zip *zf)
     
     if (fclose(tzf->zp)==0) {
 	tzf->zp = NULL;
+	if (rename(tzf->zn, zf->zn) != 0) {
+	    _zip_error_set(&zf->error, ZERR_RENAME, errno);
+	    remove(tzf->zn);
+	    _zip_free(tzf);
+	    return -1;
+	}
 	if (zf->zp) {
 	    fclose(zf->zp);
 	    zf->zp = NULL;
-	}
-	if (rename(tzf->zn, zf->zn) != 0) {
-	    zip_err = ZERR_RENAME;
-	    remove(tzf->zn);
-	    _zip_free(tzf);
-	    zf->zp = fopen(zf->zn, "rb");
-	    /* XXX: can't handle open error usefully */
-	    return -1;
 	}
 	mask = umask(0);
 	umask(mask);
 	chmod(zf->zn, 0666&~mask);
     }
+    /* XXX: handle fclose(tzf->fn) error */
 
-    /* no errors possible, since files already closed */
     _zip_free(zf);
     _zip_free(tzf);
 
@@ -227,14 +219,14 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
 	return -1;
 
     if (_zip_writecdentry(dest->zp, ze, 1) != 0) {
-	zip_err = ZERR_WRITE;
+	_zip_error_set(&src->error, ZERR_WRITE, errno);
 	return -1;
     }
 
     if (fseek(src->zp, src->entry[entry_no].meta->local_offset
 	      + LENTRYSIZE + src->entry[entry_no].meta->lef_len
 	      + src->entry[entry_no].file_fnlen, SEEK_SET) != 0) {
-	zip_err = ZERR_SEEK;
+	_zip_error_set(&src->error, ZERR_SEEK, errno);
 	return -1;
     }
 
@@ -245,11 +237,11 @@ _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
 	if (len > remainder)
 	    len = remainder;
 	if (fread(buf, 1, len, src->zp)!=len) {
-	    zip_err = ZERR_READ;
+	    _zip_error_set(&src->error, ZERR_READ, errno);
 	    return -1;
 	}
 	if (fwrite(buf, 1, len, dest->zp)!=len) {
-	    zip_err = ZERR_WRITE;
+	    _zip_error_set(&src->error, ZERR_WRITE, errno);
 	    return -1;
 	}
 	remainder -= len;

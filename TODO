@@ -1,15 +1,13 @@
 ------------------------------------------------ showstopper
 * API cleanup
 	check function names (consistency, appropriateness)
-	file sizes, offsets: type big enough?
-	don't expose struct zip, struct zip_file, struct zip_meta
+	file sizes, offsets: type big enough? (no, zip64)
+	don't expose struct zip_meta
 	clean up error handling and error code setting (get rid of zip_err)
 	zip_{add,replace}*: don't use struct zip_meta
+	don't expose zip_free_meta, zip_meta_new
 * documentation: zip_add*, zip_replace*, zip_{,_file}get_error,
 	zip_error_sys_type, zip_get_num_files, zip_error_str
-	[zip_free_meta, zip_meta_new]
-	zip_fopen, zip_name_locate: flags
-	zip_open: errp
 * regression tests
 * code review
 * README

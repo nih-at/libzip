@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_open.c,v 1.16 2003/10/02 14:13:31 dillo Exp $
+  $NiH: zip_open.c,v 1.17 2003/10/06 02:50:06 dillo Exp $
 
-  zip_open.c -- open zip file
+  zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.

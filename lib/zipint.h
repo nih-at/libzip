@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.19 2003/10/05 16:05:22 dillo Exp $
+  $NiH: zipint.h,v 1.20 2003/10/06 02:50:07 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -115,13 +115,14 @@ extern const int _zip_err_type[];
 
 
 void _zip_entry_init(struct zip *, int);
-const char *_zip_error_strerror(struct zip_error *);
+void _zip_error_copy(struct zip_error *, struct zip_error *);
 void _zip_error_fini(struct zip_error *);
 void _zip_error_get(struct zip_error *, int *, int *);
 void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
+const char *_zip_error_strerror(struct zip_error *);
 int _zip_file_fillbuf(char *, int, struct zip_file *);
-int _zip_free(struct zip *);
+void _zip_free(struct zip *);
 int _zip_free_entry(struct zip_entry *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
