@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#  $NiH: make_zip_err_str.sh,v 1.8 2004/11/17 21:55:09 wiz Exp $
+#  $NiH: make_zip_errors.sh,v 1.1 2004/12/22 17:01:27 dillo Exp $
 #
 #  make_zip_errrors.sh: create zip_errors.mdoc from zip.h
 #  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -47,7 +47,7 @@ then
     exit 1
 fi
 
-rcsid=`echo '$NiH: make_zip_err_str.sh,v 1.8 2004/11/17 21:55:09 wiz Exp $' | tr -d '$'`
+rcsid=`echo '$NiH: make_zip_errors.sh,v 1.1 2004/12/22 17:01:27 dillo Exp $' | tr -d '$'`
 inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
 date=`date '+%B %e, %Y' | sed 's/  / /'`
 
@@ -73,7 +73,7 @@ cat <<EOF >> "$2.$$" || exit 1
 .\"    products derived from this software without specific prior
 .\"    written permission.
 .\"
-.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
+.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS \`\`AS IS'' AND ANY EXPRESS
 .\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 .\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 .\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
