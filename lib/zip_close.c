@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.45 2004/12/22 16:31:59 dillo Exp $
+  $NiH: zip_close.c,v 1.46 2004/12/22 18:33:45 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -211,7 +211,7 @@ zip_close(struct zip *za)
     }
 
     if (fclose(tfp) != 0) {
-	/* XXX: handle fclose(tfp) error */
+	_zip_error_set(&za->error, ZIP_ER_CLOSE, errno);
 	remove(temp);
 	free(temp);
 	return -1;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.26 2004/12/22 15:49:19 wiz Exp $
+  $NiH: zip_open.c,v 1.27 2005/01/11 18:11:44 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -270,7 +270,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     cd->comment = NULL;
     cd->comment_len = _zip_read2(&cdp);
 
-    /* XXX: some zip files are broken; their internal comment length
+    /* some zip files are broken; their internal comment length
        says 0, but they have 1 or 2 comment bytes */
     if ((comlen-cd->comment_len < 0) || (comlen-cd->comment_len > 2)
 	|| (cd->nentry != i)) {
