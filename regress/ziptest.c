@@ -1,40 +1,41 @@
 #include "zip.h"
 #include "error.h"
 
-char *prg;
-#define BUFSIZE 65536
 
 int
 main(int argc, char *argv[])
 {
+#if 0
     int i;
+#endif
     struct zip *zf, *destzf;
+#if 0
+#define BUFSIZE 65536
     struct zip_file *zff1, *zff2;
     char buf1[BUFSIZE], buf2[BUFSIZE];
-    
-    prg = argv[0];
+#endif
     
 #if 0
     if (argc != 2) {
-	myerror(ERRDEF, "call with one option: the zip-file to destroy"
-		"^H^H^H^H^H^H^Htest");
+	fprintf(stderr, "%s: call with one option: the zip-file to destroy"
+		"^H^H^H^H^H^H^Htest", argv[0]);
 	return 1;
     }
 #endif
     if (argc != 3) {
-	myerror(ERRDEF, "call with two options: src dest\n");
+	fprintf(stderr, "%s: call with two options: src dest", argv[0]);
 	return 1;
     }
 
-    seterrinfo(NULL, argv[1]);
     if ((zf=zip_open(argv[1], ZIP_CHECKCONS))==NULL) {
-	myerror(ERRZIP, "can't open file: %s", zip_err_str[zip_err]);
+	fprintf(stderr, "%s: %s: can't open file: %s", argv[0], argv[1],
+		zip_err_str[zip_err]);
 	return 1;
     }
 
-    seterrinfo(NULL, argv[2]);
     if ((destzf=zip_open(argv[2], ZIP_CREATE))==NULL) {
-	myerror(ERRZIP, "can't open file: %s", zip_err_str[zip_err]);
+	fprintf(stderr, "%s: %s: can't open file: %s", argv[0], argv[2],
+		zip_err_str[zip_err]);
 	return 1;
     }
 
@@ -46,7 +47,8 @@ main(int argc, char *argv[])
 #endif
 
     if (zip_add_zip(destzf, NULL, NULL, zf, 0, 0, 0) == -1)
-	myerror(ERRZIP, "can't add file to zip-file: %s", zip_err_str[zip_err]);
+	fprintf(stderr, "%s: %s: can't add file to zip '%s': %s", argv[0],
+		zf->entry[0].fn, argv[1], zip_err_str[zip_err]);
 
 #if 0
     zff1= zff_open_index(zf, 1);
@@ -82,13 +84,14 @@ main(int argc, char *argv[])
 #endif
     
     if (zip_close(destzf)!=0) {
-	myerror(ERRZIP, "can't close file: %s", zip_err_str[zip_err]);
+	fprintf(stderr, "%s: %s: can't close file: %s", argv[0], argv[2],
+		zip_err_str[zip_err]);
 	return 1;
     }
 
-    seterrinfo(NULL, argv[1]);
     if (zip_close(zf)!=0) {
-	myerror(ERRZIP, "can't close file %s", zip_err_str[zip_err]);
+	fprintf(stderr, "%s: %s: can't close file: %s", argv[0], argv[1],
+		zip_err_str[zip_err]);
 	return 1;
     }
     
