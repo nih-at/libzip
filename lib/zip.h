@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.39 2004/06/24 16:26:07 dillo Exp $
+  $NiH: zip.h,v 1.40 2004/11/17 21:55:09 wiz Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -100,6 +100,7 @@
 #define ZIP_CM_REDUCE_3	       4  /* reduced with factor 3 */
 #define ZIP_CM_REDUCE_4	       5  /* reduced with factor 4 */
 #define ZIP_CM_IMPLODE	       6  /* imploded */
+/* 7 - Reserved for Tokenizing compression algorithm */
 #define ZIP_CM_DEFLATE	       8  /* deflated */
 #define ZIP_CM_DEFLATE64       9  /* deflate64 */
 #define ZIP_CM_PKWARE_IMPLODE 10  /* PKWARE imploding */
