@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_rename.c,v 1.10.4.1 2004/03/20 09:54:07 dillo Exp $
+  $NiH: zip_rename.c,v 1.11 2004/04/14 14:01:27 dillo Exp $
 
   zip_rename.c -- rename file in zip archive
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

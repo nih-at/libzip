@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_replace_file.c,v 1.11.4.1 2004/03/20 09:54:08 dillo Exp $
+  $NiH: zip_replace_file.c,v 1.12 2004/04/14 14:01:27 dillo Exp $
 
   zip_replace_file.c -- replace file from file system
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

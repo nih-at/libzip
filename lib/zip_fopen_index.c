@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.16 2004/04/14 14:01:24 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.17 2004/04/15 23:48:10 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

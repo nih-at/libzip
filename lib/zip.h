@@ -2,10 +2,10 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.35.4.6 2004/04/14 09:21:33 dillo Exp $
+  $NiH: zip.h,v 1.36 2004/04/14 14:01:22 dillo Exp $
 
   zip.h -- exported declarations.
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

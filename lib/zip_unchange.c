@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_unchange.c,v 1.11.4.2 2004/04/06 20:30:07 dillo Exp $
+  $NiH: zip_unchange.c,v 1.12 2004/04/14 14:01:28 dillo Exp $
 
   zip_unchange.c -- undo changes to file in zip archive
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

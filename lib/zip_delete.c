@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_delete.c,v 1.11.4.1 2004/03/20 09:54:05 dillo Exp $
+  $NiH: zip_delete.c,v 1.12 2004/04/14 14:01:23 dillo Exp $
 
   zip_delete.c -- delete file from zip archive
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_fread.c,v 1.8.4.3 2004/04/13 19:47:59 dillo Exp $
+  $NiH: zip_fread.c,v 1.9 2004/04/14 14:01:24 dillo Exp $
 
   zip_fread.c -- read from file
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
