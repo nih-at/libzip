@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_close.c,v 1.32 2003/03/16 10:21:38 wiz Exp $
+  $NiH: zip_close.c,v 1.33 2003/10/02 14:13:29 dillo Exp $
 
-  zip_close.c -- close zip file and update changes
+  zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -99,7 +99,7 @@ zip_close(struct zip *zf)
 	ret = 0;
 	if (zf->zn)
 	    ret = remove(zf->zn);
-	if (!ret)
+	if (ret == 0)
 	    return _zip_free(zf);
 	_zip_free(zf);
 	return ret;
@@ -127,13 +127,15 @@ zip_close(struct zip *zf)
 	return -1;
     }
 
-    tzf = _zip_new();
+    tzf=_zip_new(); /* XXX: bail out if tzf == NULL */
     tzf->zp = tfp;
     tzf->zn = temp;
     tzf->nentry = 0;
     tzf->comlen = zf->comlen;
     tzf->cd_size = tzf->cd_offset = 0;
     tzf->com = (unsigned char *)_zip_memdup(zf->com, zf->comlen);
+    /* XXX: bail out if tzf->com == NULL;
+
     /*    tzf->entry = (struct zip_entry *)malloc(sizeof(struct
 	  zip_entry)*ALLOC_SIZE);
 	  if (!tzf->entry) {
@@ -681,8 +683,10 @@ _zip_local_header_read(struct zip *zf, int idx)
     if (zf->entry[idx].meta->lef_len != 0)
 	return 0;
 
-    if ((ze=_zip_new_entry(NULL)) == NULL)
+    if ((ze=_zip_new_entry(NULL)) == NULL) {
+	zip_err = ZERR_MEMORY;
 	return -1;
+    }
 
     if (fseek(zf->zp, zf->entry[idx].meta->local_offset, SEEK_SET) < 0) {
 	zip_err = ZERR_SEEK;
