@@ -14,7 +14,6 @@
 * regression tests (duplicate file names, unchange, .{200})
 * code review
 * README
-* update code for new API
 * fix XXX in man/
 * fix XXX in lib?
 * fix XXX in ChangeLog!
