@@ -1,4 +1,4 @@
-.\" $NiH: zip_open.mdoc,v 1.10 2003/10/06 16:36:54 dillo Exp $
+.\" $NiH: zip_open.mdoc,v 1.11 2003/10/06 17:02:07 wiz Exp $
 .\"
 .\" zip_open.mdoc -- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -80,14 +80,19 @@ is returned and
 .Ar *errorp
 is set to indicate the error.
 .Sh ERRORS
-The named archive is opened unless:
+The archive specified by
+.Ar path
+is opened unless:
 .Bl -tag -width Er
 .It Bq Er ZERR_EXISTS
-The named file exists and
+The file specified by
+.Ar path
+exists and
 .Dv ZIP_EXCL
 is set.
 .It Bq Er ZERR_INCONS
-Inconsistencies were found in the named archive and
+Inconsistencies were found in the file specified by
+.Ar patah and
 .Dv ZIP_CHECKCONS
 was specified.
 .It Bq Er ZERR_INVAL
@@ -98,19 +103,27 @@ argument is
 .It Bq Er ZERR_MEMORY
 Required memory could not be allocated.
 .It Bq Er ZERR_NOENT
-The named file does not exist and
+The file specified by
+.Ar path
+does not exist and
 .Dv ZIP_CREATE
 is not set.
 .It Bq Er ZERR_NOZIP
-The named file is not a zip archive.
+The file specified by
+.Ar path
+is not a zip archive.
 .It Bq Er ZERR_OPEN
-The named file could not be opened.
+The file specified by
+.Ar path
+could not be opened.
 .It Bq Er ZERR_READ
 A read error occurred; see
 .Va errno
 for details.
 .It Bq Er ZERR_SEEK
-The named file does not allow seeks.
+The file specified by
+.Ar path
+does not allow seeks.
 .El
 .Sh SEE ALSO
 .Xr zip_close 3
