@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.15.4.4 2004/03/23 16:07:50 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.15.4.5 2004/04/06 20:30:04 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -47,10 +47,10 @@ static struct zip_file *_zip_file_new(struct zip *zf);
 
 
 struct zip_file *
-zip_fopen_index(struct zip *zf, int fileno)
+zip_fopen_index(struct zip *zf, int fileno, int flags)
 {
-    unsigned char buf[4];
     int len, ret;
+    int zfflags;
     struct zip_file *zff;
 
     if ((fileno < 0) || (fileno >= zf->nentry)) {
@@ -63,16 +63,22 @@ zip_fopen_index(struct zip *zf, int fileno)
 	_zip_error_set(&zf->error, ZERR_CHANGED, 0);
 	return NULL;
     }
-    
-    if ((zf->cdir->entry[fileno].comp_method != ZIP_CM_STORE)
-	&& (zf->cdir->entry[fileno].comp_method != ZIP_CM_DEFLATE)) {
-	_zip_error_set(&zf->error, ZERR_COMPNOTSUPP, 0);
-	return NULL;
+
+    if ((flags & ZIP_NAME_COMP)
+	|| (zf->cdir->entry[fileno].comp_method != ZIP_CM_STORE))
+	zfflags = 0;
+    else {
+	if (zf->cdir->entry[fileno].comp_method != ZIP_CM_DEFLATE) {
+	    _zip_error_set(&zf->error, ZERR_COMPNOTSUPP, 0);
+	    return NULL;
+	}
+	zfflags = ZIP_ZF_UNCOMP;
     }
 
     zff = _zip_file_new(zf);
 
-    zff->name = zf->cdir->entry[fileno].filename;
+    zff->flags = zfflags;
+    /* zff->name = zf->cdir->entry[fileno].filename; */
     zff->method = zf->cdir->entry[fileno].comp_method;
     zff->bytes_left = zf->cdir->entry[fileno].uncomp_size;
     zff->cbytes_left = zf->cdir->entry[fileno].comp_size;
@@ -82,39 +88,41 @@ zip_fopen_index(struct zip *zf, int fileno)
 	zip_fclose(zff);
 	return NULL;
     }
-	
-    if ((zff->method == ZIP_CM_STORE) || (zff->bytes_left == 0))
-	return zff;
     
-    if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {
-	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
-	zip_fclose(zff);
-	return NULL;
-    }
+    if ((zff->flags & ZIP_ZF_UNCOMP) == 0)
+	zff->bytes_left = zff->cbytes_left;
+    else {
+	/* XXX: don't use BUFSIZE */
+	if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {
+	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	    zip_fclose(zff);
+	    return NULL;
+	}
 
-    len = _zip_file_fillbuf(zff->buffer, BUFSIZE, zff);
-    if (len <= 0) {
-	_zip_error_copy(&zf->error, &zff->error);
-	zip_fclose(zff);
+	len = _zip_file_fillbuf(zff->buffer, BUFSIZE, zff);
+	if (len <= 0) {
+	    _zip_error_copy(&zf->error, &zff->error);
+	    zip_fclose(zff);
 	return NULL;
-    }
+	}
 
-    if ((zff->zstr = (z_stream *)malloc(sizeof(z_stream))) == NULL) {
-	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
-	zip_fclose(zff);
-	return NULL;
-    }
-    zff->zstr->zalloc = Z_NULL;
-    zff->zstr->zfree = Z_NULL;
-    zff->zstr->opaque = NULL;
-    zff->zstr->next_in = zff->buffer;
-    zff->zstr->avail_in = len;
-
-    /* negative value to tell zlib that there is no header */
-    if ((ret=inflateInit2(zff->zstr, -MAX_WBITS)) != Z_OK) {
-	_zip_error_set(&zf->error, ZERR_ZLIB, ret);
-	zip_fclose(zff);
-	return NULL;
+	if ((zff->zstr = (z_stream *)malloc(sizeof(z_stream))) == NULL) {
+	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
+	    zip_fclose(zff);
+	    return NULL;
+	}
+	zff->zstr->zalloc = Z_NULL;
+	zff->zstr->zfree = Z_NULL;
+	zff->zstr->opaque = NULL;
+	zff->zstr->next_in = zff->buffer;
+	zff->zstr->avail_in = len;
+	
+	/* negative value to tell zlib that there is no header */
+	if ((ret=inflateInit2(zff->zstr, -MAX_WBITS)) != Z_OK) {
+	    _zip_error_set(&zf->error, ZERR_ZLIB, ret);
+	    zip_fclose(zff);
+	    return NULL;
+	}
     }
     
     return zff;
@@ -127,13 +135,14 @@ _zip_file_fillbuf(void *buf, size_t buflen, struct zip_file *zff)
 {
     int i, j;
 
-    if (zff->flags != 0)
+    if (zff->error.zip_err != ZERR_OK)
 	return -1;
-    if (zff->cbytes_left <= 0 || buflen <= 0)
+
+    if ((zff->flags & ZIP_ZF_EOF) || zff->cbytes_left <= 0 || buflen <= 0)
 	return 0;
     
     if (fseek(zff->zf->zp, zff->fpos, SEEK_SET) < 0) {
-	zff->flags = ZERR_SEEK;
+	_zip_error_set(&zff->error, ZERR_SEEK, errno);
 	return -1;
     }
     if (buflen < zff->cbytes_left)
@@ -143,11 +152,11 @@ _zip_file_fillbuf(void *buf, size_t buflen, struct zip_file *zff)
 
     j = fread(buf, 1, i, zff->zf->zp);
     if (j == 0) {
-	zff->flags = ZERR_EOF;
+	_zip_error_set(&zff->error, ZERR_EOF, 0);
 	j = -1;
     }
     else if (j < 0)
-	zff->flags = ZERR_READ;
+	_zip_error_set(&zff->error, ZERR_READ, errno);
     else {
 	zff->fpos += j;
 	zff->cbytes_left -= j;
@@ -185,6 +194,7 @@ _zip_file_new(struct zip *zf)
     zf->file[zf->nfile++] = zff;
 
     zff->zf = zf;
+    _zip_error_init(&zff->error);
     zff->flags = 0;
     zff->crc = crc32(0L, Z_NULL, 0);
     zff->crc_orig = 0;

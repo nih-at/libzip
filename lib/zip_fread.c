@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.8 2003/10/02 14:13:29 dillo Exp $
+  $NiH: zip_fread.c,v 1.8.4.1 2004/03/20 09:54:05 dillo Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -48,22 +48,22 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
     if (!zff)
 	return -1;
 
-    if ((zff->flags == -1) || (toread == 0))
-	return 0;
-
-    if (zff->flags != 0)
+    if (zff->error.zip_err != 0)
 	return -1;
 
+    if ((zff->flags & ZIP_ZF_EOF) || (toread == 0))
+	return 0;
+
     if (zff->bytes_left == 0) {
-	zff->flags = -1;
+	zff->flags |= ZIP_ZF_EOF;
 	if (zff->crc != zff->crc_orig) {
-	    zff->flags = ZERR_CRC;
+	    _zip_error_set(&zff->error, ZERR_CRC, 0);
 	    return -1;
 	}
 	return 0;
     }
     
-    if (zff->method == 0) {
+    if ((zff->flags & ZIP_ZF_UNCOMP) == 0) {
 	ret = _zip_file_fillbuf(outbuf, toread, zff);
 	if (ret > 0) {
 	    zff->crc = crc32(zff->crc, outbuf, ret);
@@ -90,16 +90,15 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
 	    if (len >= zff->bytes_left || len >= toread) {
 		zff->crc = crc32(zff->crc, outbuf, len);
 		zff->bytes_left -= len;
-	        return(len);
+	        return len;
 	    }
 	    break;
 
 	case Z_BUF_ERROR:
 	    if (zff->zstr->avail_in == 0) {
-		/* read some more bytes */
 		len = _zip_file_fillbuf(zff->buffer, BUFSIZE, zff);
 		if (len == 0) {
-		    zff->flags = ZERR_INCONS;
+		    _zip_error_set(&zff->error, ZERR_INCONS, 0);
 		    return -1;
 		}
 		else if (len < 0)
@@ -108,13 +107,12 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
 		zff->zstr->avail_in = len;
 		continue;
 	    }
-	    zff->flags = ZERR_ZLIB;
-	    return -1;
+	    /* fallthrough */
 	case Z_NEED_DICT:
 	case Z_DATA_ERROR:
 	case Z_STREAM_ERROR:
 	case Z_MEM_ERROR:
-	    zff->flags = ZERR_ZLIB;
+	    _zip_error_set(&zff->error, ZERR_ZLIB, ret);
 	    return -1;
 	}
     }
