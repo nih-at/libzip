@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.12 2004/12/22 17:31:32 dillo Exp $
+  $NiH: zipcmp.c,v 1.13 2004/12/22 17:34:27 wiz Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -85,11 +85,11 @@ For more information about these matters, see the files named COPYING.\n";
 
 static int entry_cmp(const void *p1, const void *p2);
 static void entry_print(const void *p);
-static int compare_list(const char *name[], int verbose,
+static int compare_list(char * const name[], int verbose,
 		 const void *l[], const int n[], int size,
 		 int (*cmp)(const void *, const void *),
 		 void print(const void *));
-static int compare_zip(const char *zn[], int verbose);
+static int compare_zip(char * const zn[], int verbose);
 static int test_file(struct zip *za, int idx, off_t size, unsigned int crc);
 
 int ignore_case, test_files;
@@ -97,7 +97,7 @@ int ignore_case, test_files;
 
 
 int
-main(int argc, char *argv[])
+main(int argc, char * const argv[])
 {
     int verbose;
     int c;
@@ -149,7 +149,7 @@ main(int argc, char *argv[])
 
 
 static int
-compare_zip(const char *zn[], int verbose)
+compare_zip(char * const zn[], int verbose)
 {
     struct zip *za;
     struct zip_stat st;
@@ -189,7 +189,7 @@ compare_zip(const char *zn[], int verbose)
     }
 
     switch (compare_list(zn, verbose,
-			 e, n, sizeof(e[i][0]),
+			 (void *)e, n, sizeof(e[i][0]),
 			 entry_cmp, entry_print)) {
     case 0:
 	exit(0);
@@ -205,7 +205,7 @@ compare_zip(const char *zn[], int verbose)
 
 
 static int
-compare_list(const char *name[2], int verbose,
+compare_list(char * const name[2], int verbose,
 	     const void *l[2], const int n[2], int size,
 	     int (*cmp)(const void *, const void *),
 	     void print(const void *))
