@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "zip.h"
 #include "zipint.h"
 

@@ -72,14 +72,14 @@ zip_fread(struct zip_file *zff, char *outbuf, int toread)
 		continue;
 	    }
 	    /* XXX: set error */
-	    myerror(ERRFILE, "zlib error: buf_err: %s", zff->zstr->msg);
+	    zip_err = ZERR_ZLIB;
 	    return -1;
 	case Z_NEED_DICT:
 	case Z_DATA_ERROR:
 	case Z_STREAM_ERROR:
 	case Z_MEM_ERROR:
 	    /* XXX: set error */
-	    myerror(ERRFILE, "zlib error: %s", zff->zstr->msg);
+	    zip_err = ZERR_ZLIB;
 	    return -1;
 	}
     }

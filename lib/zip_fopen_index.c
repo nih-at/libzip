@@ -1,7 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "zip.h"
 #include "zipint.h"
 
-static int _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff);
+static struct zip_file *_zip_file_new(struct zip *zf);
 
 
 
@@ -42,20 +45,23 @@ zip_fopen_index(struct zip *zf, int fileno)
     /* XXX: check fseek error */
     len = fread(buf, 1, 4, zf->zp);
     if (len != 4) {
-	zip_err = ZIP_READ;
+	zip_err = ZERR_READ;
 	zip_fclose(zff);
 	return NULL;
     }
     
     c = buf;
     zff->fpos = zf->entry[fileno].local_offset+LENTRYSIZE;
-    zff->fpos += read2(&c);
-    zff->fpos += read2(&c);
+    zff->fpos += (c[3]<<8)+c[2]+(c[1]<<8)+c[0];
 	
     if (zf->entry[fileno].comp_meth == 0)
 	return zff;
     
-    zff->buffer = (char *)xmalloc(BUFSIZE);
+    if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {
+	zip_err = ZERR_MEMORY;
+	zip_fclose(zff);
+	return NULL;
+    }
 
     len = _zip_file_fillbuf (zff->buffer, BUFSIZE, zff);
     if (len <= 0) {
@@ -89,7 +95,7 @@ zip_fopen_index(struct zip *zf, int fileno)
 
 
 
-static int
+int
 _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff)
 {
     int i, j;
@@ -120,7 +126,7 @@ _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff)
 
 
 
-struct zip_file *
+static struct zip_file *
 _zip_file_new(struct zip *zf)
 {
     struct zip_file *zff;
@@ -130,13 +136,12 @@ _zip_file_new(struct zip *zf)
 	zf->file = (struct zip_file **)realloc(zf->file, zf->nfile_alloc
 					       *sizeof(struct zip_file *));
 	if (zf->file == NULL) {
-	    zip_err = ZERR_MEMEORY;
+	    zip_err = ZERR_MEMORY;
 	    return NULL;
 	}
     }
 
-    zff = (struct zf_file *)malloc(sizeof(struct zip_file));
-    if (zff = NULL) {
+    if ((zff=(struct zip_file *)malloc(sizeof(struct zip_file))) == NULL) {
 	zip_err = ZERR_MEMORY;
 	return NULL;
     }
