@@ -173,8 +173,10 @@ zip_close(struct zip *zf)
     
     if (fclose(tzf->zp)==0) {
 	tzf->zp = NULL;
-	fclose(zf->zp);
-	zf->zp = NULL;
+	if (zf->zp) {
+	    fclose(zf->zp);
+	    zf->zp = NULL;
+	}
 	if (rename(tzf->zn, zf->zn) != 0) {
 	    zip_err = ZERR_RENAME;
 	    _zip_free(tzf);
