@@ -1,5 +1,5 @@
 /*
-  $NiH: fread.c,v 1.1 2005/01/11 21:18:51 dillo Exp $
+  $NiH: fread.c,v 1.2 2005/01/17 10:46:00 dillo Exp $
 
   fread.c -- test cases for reading from zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -60,6 +60,7 @@ main(int argc, char *argv[])
 {
     int fail, ze;
     struct zip *z;
+    struct zip_source *zs;
 
     fail = 0;
 
@@ -81,6 +82,18 @@ main(int argc, char *argv[])
     fail += do_read(z, "storedcrcerror", ZIP_FL_COMPRESSED,
 		    WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "storedok", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
+
+    zs = zip_source_buffer(z, "asdf", 4, 0);
+    zip_replace(z, zip_name_locate(z, "storedok", 0), zs);
+    fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
+    fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
+    zip_delete(z, zip_name_locate(z, "storedok", 0));
+    fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
+    fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
+    zs = zip_source_buffer(z, "asdf", 4, 0);
+    zip_add(z, "new_file", zs);
+    fail += do_read(z, "new_file", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
+    zip_unchange_all(z);
 
     exit(fail ? 1 : 0);
 }
