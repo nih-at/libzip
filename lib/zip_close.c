@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.37.4.9 2004/04/13 19:47:58 dillo Exp $
+  $NiH: zip_close.c,v 1.38 2004/04/14 14:01:23 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -59,7 +59,7 @@ int
 zip_close(struct zip *za)
 {
     int changed, survivors;
-    int i, j, count, tfd, ret, error;
+    int i, j, tfd, ret, error;
     char *temp;
     FILE *tfp;
     mode_t mask;
@@ -165,7 +165,7 @@ zip_close(struct zip *za)
 	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
 	    de.last_mod = za->entry[i].ch_mtime;
 	    if (add_data(za, i, &de, tfp) < 0) {
-		error -1;
+		error = -1;
 		break;
 	    }
 	    cd->entry[j].comp_method = de.comp_method;
@@ -179,7 +179,7 @@ zip_close(struct zip *za)
 		break;
 	    }
 	    /* we just read the local dirent, file is at correct position */
-	    if (copy_data(za->zp, de.uncomp_size, tfp, &za->error) < 0) {
+	    if (copy_data(za->zp, de.comp_size, tfp, &za->error) < 0) {
 		error = 1;
 		break;
 	    }
@@ -420,6 +420,10 @@ copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
 	nn = len > sizeof(buf) ? sizeof(buf) : len;
 	if ((n=fread(buf, 1, nn, fs)) < 0) {
 	    _zip_error_set(error, ZERR_READ, errno);
+	    return -1;
+	}
+	else if (n == 0) {
+	    _zip_error_set(error, ZERR_EOF, 0);
 	    return -1;
 	}
 
