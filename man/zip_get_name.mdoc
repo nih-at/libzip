@@ -1,6 +1,6 @@
-.\" $NiH: zip_delete.mdoc,v 1.3 2003/10/03 12:04:08 dillo Exp $
+.\" $NiH$
 .\"
-.\" zip_delete.mdoc -- delete files from zip archive
+.\" zip_name_locate.mdoc -- get index of file by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -32,37 +32,40 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd October 3, 2003
-.Dt ZIP_DELETE 3
+.Dt ZIP_NAME_LOCATE 3
 .Os
 .Sh NAME
-.Nm zip_delete
-.Nd delete file from zip archive
+.Nm zip_name_locate
+.Nd get index of file by name
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
-.Ft int
-.Fn zip_delete "struct zip *archive" "int index"
+.Ft const char *
+.Fn zip_get_name "struct zip *archive" "int index"
 .Sh DESCRIPTION
-The file at position
+The
+.Fn zip_get_name
+function returns the name of the file at position
 .Ar index
-in the zip archive
-.Ar archive
-is marked as deleted.
+in
+.Ar archive .
+The returned string must not be modified or freed, and becomes invalid when
+.Ar archvie
+is closed.
 .Sh RETURN VALUES
-Upon successful completion 0 is returned.
-Otherwise, \-1 is returned and the global variable
+Upon successful completion, a pointer to the name is returned.
+Otherwise, 
+.Dv NULL
+is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .Sh ERRORS
-.Fn zip_delete
+.Fn zip_get_name
 fails if:
 .Bl -tag -width Er
 .It Bq Er ZERR_INVAL
 .Ar index
 is not a valid file index in
 .Ar archive .
-.\: XXX: also ch_func ZIP_CMD_CLOSE errors
-.El
-.Sh SEE ALSO
-.Xr zip_unchange 3
+.\" .Sh SEE ALSO
