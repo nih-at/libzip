@@ -42,4 +42,3 @@ mkman: ${MAN}
 
 .mdoc.man:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
-
