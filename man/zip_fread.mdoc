@@ -1,4 +1,4 @@
-.\" $NiH: zip_fread.mdoc,v 1.1 2003/10/03 11:53:47 dillo Exp $
+.\" $NiH: zip_fread.mdoc,v 1.2 2003/10/03 12:04:08 dillo Exp $
 .\"
 .\" zip_fread.mdoc -- read from file
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -43,7 +43,7 @@ libzip (-lzip)
 .In zip.h
 .Ft int
 .\" XXX: buf should be void *
-.Fn zip_fread "struct zip_file *file" "char *buf, "int nbytes"
+.Fn zip_fread "struct zip_file *file" "char *buf" "int nbytes"
 .Sh DESCRIPTION
 The
 .Fn zip_fread
@@ -54,10 +54,10 @@ bytes from
 into
 .Ar buf .
 .Sh RETURN VALUES
-If successful, the nuber of bytes actually read is returned.
+If successful, the number of bytes actually read is returned.
 Otherwise, \-1 is returned.
 .\" .Sh ERRORS
 .\" XXX: the code needs checking.
 .Sh SEE ALSO
-.Xr zip_fopen 3 ,
-.Xr zip_fclose 3
+.Xr zip_fclose 3 ,
+.Xr zip_fopen 3
