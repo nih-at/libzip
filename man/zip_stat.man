@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_stat.mdoc,v 1.1 2003/10/06 02:50:11 dillo Exp 
-.\" $NiH: zip_stat.man,v 1.2.2.1 2004/04/14 12:43:44 dillo Exp $
+.\" from NiH: zip_stat.mdoc,v 1.2 2004/04/14 14:01:30 dillo Exp 
+.\" $NiH: zip_stat.mdoc,v 1.2 2004/04/14 14:01:30 dillo Exp $
 .\"
 .\" zip_stat.mdoc \-- get information about file
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
