@@ -27,7 +27,7 @@ main(int argc, char *argv[])
     }
 
     seterrinfo(NULL, argv[1]);
-    if ((zf=zip_open(argv[1], 0))==NULL) {
+    if ((zf=zip_open(argv[1], ZIP_CHECKCONS))==NULL) {
 	myerror(ERRZIP, "can't open file: %s", zip_err_str[zip_err]);
 	return 1;
     }
