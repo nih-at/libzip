@@ -18,6 +18,6 @@ echo "   -- don't change here */" >> "$2.$$"
 echo '#include "zip.h"' >> "$2.$$"
 echo 'char *zip_err_str[] = {' >> "$2.$$"
 sed -n  '/^#define ZERR_/ s/.*\/\* \([^*]*\) \*\//    "\1",/p' "$1" >> "$2.$$"
-echo '}' >> "$2.$$"
+echo '};' >> "$2.$$"
 
 mv "$2.$$" "$2"
