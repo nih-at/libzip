@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.21 2004/11/18 17:11:21 wiz Exp $
+  $NiH: zip_fopen_index.c,v 1.22 2005/01/11 19:52:24 wiz Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
-  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -70,15 +70,21 @@ zip_fopen_index(struct zip *za, int fileno, int flags)
     }
 
     zfflags = 0;
-    if ((flags & ZIP_FL_COMPRESSED) == 0) {
+    switch (za->cdir->entry[fileno].comp_method) {
+    case ZIP_CM_STORE:
 	zfflags |= ZIP_ZF_CRC;
-	if (za->cdir->entry[fileno].comp_method != ZIP_CM_STORE) {
-	    if (za->cdir->entry[fileno].comp_method != ZIP_CM_DEFLATE) {
-		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-		return NULL;
-	    }
-	    zfflags |= ZIP_ZF_DECOMP;
+	break;
+
+    case ZIP_CM_DEFLATE:
+	if ((flags & ZIP_FL_COMPRESSED) == 0)
+	    zfflags |= ZIP_ZF_CRC | ZIP_ZF_DECOMP;
+	break;
+    default:
+	if ((flags & ZIP_FL_COMPRESSED) == 0) {
+	    _zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	    return NULL;
 	}
+	break;
     }
 
     zf = _zip_file_new(za);

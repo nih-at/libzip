@@ -6,6 +6,10 @@
 
 2005-01-11  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
+	* lib/zip_fopen_index.c (zip_fopen_index), lib/zip_fread.c
+	(zip_fread), lib/zip_fclose.c (zip_fclose): fix CRC checking for
+	stored files.
+	
 	* lib/zip_new.c (_zip_new): init error.
 
 	* lib/zip_error.c (_zip_error_get): set system error to 0 for
