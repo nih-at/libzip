@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_name_locate.c,v 1.10 2004/04/14 14:01:26 dillo Exp $
+  $NiH: zip_name_locate.c,v 1.11 2004/04/16 09:39:32 dillo Exp $
 
   zip_name_locate.c -- get index by name
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -55,8 +55,6 @@ zip_name_locate(struct zip *za, const char *fname, int flags)
     }
     
     cmp = (flags & ZIP_FL_NOCASE) ? strcmp : strcasecmp;
-
-    /* XXX: honour ZIP_FL_UNCHANGED */
 
     n = (flags & ZIP_FL_UNCHANGED) ? za->cdir->nentry : za->nentry;
     for (i=0; i<n; i++) {
