@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_stat_index.c,v 1.1.4.1 2004/03/22 14:17:34 dillo Exp $
+  $NiH: zip_stat_index.c,v 1.1.4.2 2004/04/06 20:30:07 dillo Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,8 +48,8 @@ zip_stat_index(struct zip *za, int index, struct zip_stat *st)
 	return -1;
     }
 
-    if (za->entry[index].state != ZIP_ST_UNCHANGED
-	&& za->entry[index].state != ZIP_ST_RENAMED) {
+    if (ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
+	/* XXX: call ch_func with ZIP_CMD_STAT */
 	_zip_error_set(&za->error, ZERR_CHANGED, 0);
 	return NULL;
     }

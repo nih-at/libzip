@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.8 2004/04/07 12:08:22 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.9 2004/04/08 16:55:36 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -168,9 +168,16 @@ extern const int _zip_err_type[];
 
 
 
+#define ZIP_ENTRY_DATA_CHANGED(x)	\
+			((x)->state == ZIP_ST_REPLACED  \
+			 || (x)->state == ZIP_ST_ADDED)
+
+
+
 void _zip_cdir_free(struct zip_cdir *);
 int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
 void _zip_dirent_finalize(struct zip_dirent *);
+void _zip_dirent_init(struct zip_dirent *);
 int _zip_dirent_read(struct zip_dirent *, FILE *,
 		     unsigned char **, int, int, struct zip_error *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);

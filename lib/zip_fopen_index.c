@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.15.4.5 2004/04/06 20:30:04 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.15.4.6 2004/04/08 16:56:07 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -58,8 +58,7 @@ zip_fopen_index(struct zip *zf, int fileno, int flags)
 	return NULL;
     }
 
-    if (zf->entry[fileno].state != ZIP_ST_UNCHANGED
-	&& zf->entry[fileno].state != ZIP_ST_RENAMED) {
+    if (ZIP_ENTRY_DATA_CHANGED(zf->entry+fileno)) {
 	_zip_error_set(&zf->error, ZERR_CHANGED, 0);
 	return NULL;
     }
