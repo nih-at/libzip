@@ -3,14 +3,28 @@
 	check function names (consistency, appropriateness)
 	file sizes, offsets: type big enough? (no, zip64)
 	let ch_func report errors back to caller
+* zip_open.c: In function `_zip_checkcons':
+* zip_open.c:331: warning: `min' might be used uninitialized in this function
+* zip_open.c:331: warning: `max' might be used uninitialized in this function
+* zipcmp.c: In function `main':
+* zipcmp.c:142: warning: passing arg 1 of `compare_zip' from incompatible pointer type
+* zipcmp.c: In function `compare_zip':
+* zipcmp.c:189: warning: passing arg 3 of `compare_list' from incompatible pointer type
+* struct zip *zf -> struct zip *za
+* what is ZIP_CMD_CLOSE good for; check callers
+* man page cleanup: zf/za -> archive; "global variable zip_err"
+* zipint.h should include zip.h?
+* struct zip_file *zff -> struct zip *zf
+* sort zipint.h contents
 * documentation:
 	zip_error_sys_type zip_file_get_error zip_get_error
-	zip_replace zip_replace_data zip_replace_file zip_replace_filep
-	zip_replace_zip
+	zip_source_file zip_source_filep zip_source_function
+	zip_source_zip
 * don't allow the same filename twice in a zip (when adding/replacing)
 * regression tests
 * code review
 * README
+* update code for new API
 ------------------------------------------------ others
 * zip_commit
 * zip_replace_zip: allow rewinding

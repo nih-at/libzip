@@ -1,7 +1,7 @@
 /*
-  $NiH$
+  $NiH: zip_file_error_get.c,v 1.1 2003/10/06 02:50:06 dillo Exp $
 
-  zip_file_get_error.c -- get zip file error
+  zip_file_error_get.c -- get zip file error
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -41,7 +41,7 @@
 
 
 void
-zip_file_get_error(struct zip_file *zf, int *zep, int *sep)
+zip_file_error_get(struct zip_file *zf, int *zep, int *sep)
 {
     _zip_error_get(&zf->error, zep, sep);
 }

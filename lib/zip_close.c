@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.42 2004/06/24 15:01:57 dillo Exp $
+  $NiH: zip_close.c,v 1.43 2004/11/17 21:55:10 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -244,8 +244,8 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
     void *ud;
     struct zip_stat st;
     
-    rf = za->entry[idx].ch_func;
-    ud = za->entry[idx].ch_data;
+    rf = za->entry[idx].source->f;
+    ud = za->entry[idx].source->ud;
 
     if (rf(ud, &st, sizeof(st), ZIP_CMD_STAT) < sizeof(st)) {
 	ch_set_error(&za->error, rf, ud);

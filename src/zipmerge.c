@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.1 2004/05/15 23:56:55 dillo Exp $
+  $NiH: zipmerge.c,v 1.2 2004/05/16 00:51:50 dillo Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -141,7 +141,7 @@ main(int argc, char *argv[])
 
     tname = argv[optind++];
     if ((zt=zip_open(tname, ZIP_CREATE, &err)) == NULL) {
-	zip_error_str(errstr, sizeof(errstr), err, errno);
+	zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		prg, tname, errstr);
 	exit(1);
@@ -217,12 +217,13 @@ static int
 merge_zip(struct zip *zt, const char *tname, const char *sname)
 {
     struct zip *zs;
+    struct zip_source *source;
     int i, idx, err;
     char errstr[1024];
     const char *fname;
     
     if ((zs=zip_open(sname, 0, &err)) == NULL) {
-	zip_error_str(errstr, sizeof(errstr), err, errno);
+	zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		prg, sname, errstr);
 	return -1;
@@ -237,7 +238,9 @@ merge_zip(struct zip *zt, const char *tname, const char *sname)
 		break;
 		
 	    case 1:
-		if ((err=zip_replace_zip(zt, idx, zs, i, 0, 0, 0) < 0)) {
+		if ((source=zip_source_zip(zt, zs, i, 0, 0, 0)) == NULL
+		    || zip_replace(zt, idx, source) < 0) {
+		    zip_source_free(source);
 		    fprintf(stderr,
 			    "%s: cannot replace `%s' in `%s': %s\n",
 			    prg, fname, tname, zip_strerror(zt));
@@ -256,7 +259,9 @@ merge_zip(struct zip *zt, const char *tname, const char *sname)
 	    }
 	}
 	else {
-	    if (zip_add_zip(zt, fname, zs, i, 0, 0, 0) < 0) {
+	    if ((source=zip_source_zip(zt, zs, i, 0, 0, 0)) == NULL
+		|| zip_add(zt, fname, source) < 0) {
+		zip_source_free(source);
 		fprintf(stderr,
 			"%s: cannot add `%s' to `%s': %s\n",
 			prg, fname, tname, zip_strerror(zt));

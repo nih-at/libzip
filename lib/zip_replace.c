@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace.c,v 1.15 2004/06/24 16:26:08 dillo Exp $
+  $NiH: zip_replace.c,v 1.16 2004/11/17 21:55:12 wiz Exp $
 
   zip_replace.c -- replace file via callback function
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -41,40 +41,38 @@
 
 
 int
-zip_replace(struct zip *zf, int idx, zip_read_func fn, void *state)
+zip_replace(struct zip *za, int idx, struct zip_source *source)
 {
-    if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
+    if (idx < 0 || idx >= za->nentry || source == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
-    return _zip_replace(zf, idx, NULL, fn, state);
+    return _zip_replace(za, idx, NULL, source);
 }
 
 
 
 
 int
-_zip_replace(struct zip *zf, int idx, const char *name,
-	     zip_read_func fn, void *state)
+_zip_replace(struct zip *za, int idx, const char *name,
+	     struct zip_source *source)
 {
     if (idx == -1) {
-	if (_zip_new_entry(zf) == NULL)
+	if (_zip_new_entry(za) == NULL)
 	    return -1;
 
-	idx = zf->nentry - 1;
+	idx = za->nentry - 1;
     }
     
-    if (_zip_unchange_data(zf->entry+idx) != 0)
-	return -1;
+    _zip_unchange_data(za->entry+idx);
 
-    if (_zip_set_name(zf, idx, name) != 0)
+    if (_zip_set_name(za, idx, name) != 0)
 	return -1;
     
-    zf->entry[idx].state = ((zf->cdir == NULL || idx >= zf->cdir->nentry)
+    za->entry[idx].state = ((za->cdir == NULL || idx >= za->cdir->nentry)
 			    ? ZIP_ST_ADDED : ZIP_ST_REPLACED);
-    zf->entry[idx].ch_func = fn;
-    zf->entry[idx].ch_data = state;
+    za->entry[idx].source = source;
 
     return 0;
 }

@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_add_data.c,v 1.8 2004/04/16 09:40:26 dillo Exp $
+  $NiH: zip_error_get.c,v 1.1 2003/10/06 02:50:06 dillo Exp $
 
-  zip_add_data.c -- add file from buffer
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  zip_error_get.c -- get zip error
+  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -40,14 +40,8 @@
 
 
 
-int
-zip_add_data(struct zip *zf, const char *name,
-	     const void *data, off_t len, int freep)
+void
+zip_error_get(struct zip *za, int *zep, int *sep)
 {
-    if (name == NULL) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    return _zip_replace_data(zf, -1, name, data, len, freep);
+    _zip_error_get(&za->error, zep, sep);
 }

@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.40 2004/11/17 21:55:09 wiz Exp $
+  $NiH: zip.h,v 1.41 2004/11/17 21:59:00 wiz Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -131,36 +131,35 @@ struct zip_stat {
 
 struct zip;
 struct zip_file;
+struct zip_source;
 
 
 
-int zip_add(struct zip *, const char *, zip_read_func, void *);
-int zip_add_data(struct zip *, const char *, const void *, off_t, int);
-int zip_add_file(struct zip *, const char *, const char *, off_t, off_t);
-int zip_add_filep(struct zip *, const char *, FILE *, off_t, off_t);
-int zip_add_zip(struct zip *, const char *, struct zip *, int, int,
-		off_t, off_t);
+int zip_add(struct zip *, const char *, struct zip_source *);
 int zip_close(struct zip *);
 int zip_delete(struct zip *, int);
-int zip_error_str(char *, size_t, int, int);
+void zip_error_get(struct zip *, int *, int *);
 int zip_error_sys_type(int);
+int zip_error_to_str(char *, size_t, int, int);
 int zip_fclose(struct zip_file *);
-void zip_file_get_error(struct zip_file *, int *, int *);
+void zip_file_error_get(struct zip_file *, int *, int *);
 const char *zip_file_strerror(struct zip_file *);
 struct zip_file *zip_fopen(struct zip *, const char *, int);
 struct zip_file *zip_fopen_index(struct zip *, int, int);
 ssize_t zip_fread(struct zip_file *, void *, size_t);
-void zip_get_error(struct zip *, int *, int *);
 const char *zip_get_name(struct zip *, int);
 int zip_get_num_files(struct zip *);
 int zip_name_locate(struct zip *, const char *, int);
 struct zip *zip_open(const char *, int, int *);
 int zip_rename(struct zip *, int, const char *);
-int zip_replace(struct zip *, int, zip_read_func, void *);
-int zip_replace_data(struct zip *, int, const void *, off_t, int);
-int zip_replace_file(struct zip *, int, const char *, off_t, off_t);
-int zip_replace_filep(struct zip *, int, FILE *, off_t, off_t);
-int zip_replace_zip(struct zip *, int, struct zip *, int, int, off_t, off_t);
+int zip_replace(struct zip *, int, struct zip_source *);
+struct zip_source *zip_source_data(struct zip *, const void *, off_t, int);
+struct zip_source *zip_source_file(struct zip *, const char *, off_t, off_t);
+struct zip_source *zip_source_filep(struct zip *, FILE *, off_t, off_t);
+void zip_source_free(struct zip_source *);
+struct zip_source *zip_source_function(struct zip *, zip_read_func, void *);
+struct zip_source *zip_source_zip(struct zip *, struct zip *, int, int,
+				  off_t, off_t);
 int zip_stat(struct zip *, const char *, int, struct zip_stat *);
 int zip_stat_index(struct zip *, int, int, struct zip_stat *);
 const char *zip_strerror(struct zip *);

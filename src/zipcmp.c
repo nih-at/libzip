@@ -1,8 +1,8 @@
 /*
-  $NiH: zipcmp.c,v 1.7.2.2 2004/04/14 09:22:02 dillo Exp $
+  $NiH: zipcmp.c,v 1.8 2004/04/14 14:01:31 dillo Exp $
 
   zipcmp.c -- compare zip files
-  Copyright (C) 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -52,7 +52,7 @@ struct entry {
 
 
 
-char *prg;
+const char *prg;
 
 char *usage = "usage: %s [-hViqtv] zip1 zip2\n";
 
@@ -157,7 +157,7 @@ compare_zip(const char *zn[], int verbose)
 
     for (i=0; i<2; i++) {
 	if ((z=zip_open(zn[i], ZIP_CHECKCONS, &err)) == NULL) {
-	    zip_error_str(errstr, sizeof(errstr), err, errno);
+	    zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	    fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		    prg, zn[i], errstr);
 	    return -1;

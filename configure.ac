@@ -60,6 +60,7 @@ in
 esac
 
 AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
+		 man/zip_add.3:man/zip_add.${MANFMT}
 		 man/zip_close.3:man/zip_close.${MANFMT}
 		 man/zip_delete.3:man/zip_delete.${MANFMT}
 		 man/zip_error_str.3:man/zip_error_str.${MANFMT}
@@ -72,6 +73,12 @@ AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
 		 man/zip_name_locate.3:man/zip_name_locate.${MANFMT}
 		 man/zip_open.3:man/zip_open.${MANFMT}
 		 man/zip_rename.3:man/zip_rename.${MANFMT}
+		 man/zip_source_data.3:man/zip_source_data.${MANFMT}
+		 man/zip_source_file.3:man/zip_source_file.${MANFMT}
+		 man/zip_source_filep.3:man/zip_source_filep.${MANFMT}
+		 man/zip_source_free.3:man/zip_source_free.${MANFMT}
+		 man/zip_source_function.3:man/zip_source_function.${MANFMT}
+		 man/zip_source_zip.3:man/zip_source_zip.${MANFMT}
 		 man/zip_stat.3:man/zip_stat.${MANFMT}
 		 man/zip_strerror.3:man/zip_strerror.${MANFMT}
 		 man/zip_unchange.3:man/zip_unchange.${MANFMT}

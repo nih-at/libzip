@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_get_name.mdoc,v 1.3 2003/12/27 22:50:28 wiz Exp 
-.\" $NiH: zip_get_name.man,v 1.4 2003/12/27 22:51:29 wiz Exp $
+.\" from NiH: zip_get_name.mdoc,v 1.4 2004/11/17 21:55:16 wiz Exp 
+.\" $NiH: zip_get_name.mdoc,v 1.4 2004/11/17 21:55:16 wiz Exp $
 .\"
 .\" zip_get_name.mdoc \-- get name of file by index
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -55,7 +55,7 @@ is closed.
 .SH "RETURN VALUES"
 Upon successful completion, a pointer to the name is returned.
 Otherwise,
-.Dv NULL
+\fBNULL\fR
 is returned and the global variable
 .Va zip_err
 is set to indicate the error.

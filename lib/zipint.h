@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.27 2004/06/24 16:26:09 dillo Exp $
+  $NiH: zipint.h,v 1.28 2004/11/17 21:55:14 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -140,12 +140,18 @@ struct zip_cdir {
     unsigned short comment_len;	/* length of zip archive comment */
 };
 
+
+
+struct zip_source {
+    zip_read_func f;
+    void *ud;
+};
+
 /* entry in zip archive directory */
 
 struct zip_entry {
     enum zip_state state;
-    zip_read_func ch_func;
-    void *ch_data;
+    struct zip_source *source;
     char *ch_filename;
 };
 
@@ -181,24 +187,16 @@ const char *_zip_error_strerror(struct zip_error *);
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
 unsigned int _zip_file_get_offset(struct zip *, int);
 void _zip_free(struct zip *);
-int _zip_free_entry(struct zip_entry *);
+void _zip_free_entry(struct zip_entry *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
 struct zip *_zip_new(struct zip_error *);
 struct zip_entry *_zip_new_entry(struct zip *);
 unsigned short _zip_read2(unsigned char **);
 unsigned int _zip_read4(unsigned char **);
-int _zip_replace(struct zip *, int, const char *,zip_read_func, void *);
-int _zip_replace_data(struct zip *, int, const char *,
-		      const void *, off_t, int);
-int _zip_replace_file(struct zip *, int, const char *,
-		      const char *, off_t, off_t);
-int _zip_replace_filep(struct zip *, int, const char *, FILE *, off_t, off_t);
-int _zip_replace_zip(struct zip *, int, const char *,
-		     struct zip *, int, int, off_t, off_t);
+int _zip_replace(struct zip *, int, const char *, struct zip_source *);
 int _zip_set_name(struct zip *, int, const char *);
-int _zip_unchange(struct zip_entry *);
-int _zip_unchange_data(struct zip_entry *);
+void _zip_unchange_data(struct zip_entry *);
 
 #endif /* zipint.h */
 

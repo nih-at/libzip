@@ -6,20 +6,17 @@ libzip_la_LDFLAGS=-version-info 0:5
 
 libzip_la_SOURCES=\
 	zip_add.c \
-	zip_add_data.c \
-	zip_add_file.c \
-	zip_add_filep.c \
-	zip_add_zip.c \
 	zip_close.c \
 	zip_delete.c \
 	zip_dirent.c \
 	zip_err_str.c \
 	zip_error.c \
-	zip_error_str.c \
+	zip_error_get.c \
 	zip_error_strerror.c \
 	zip_error_sys_type.c \
+	zip_error_to_str.c \
 	zip_fclose.c \
-	zip_file_get_error.c \
+	zip_file_error_get.c \
 	zip_file_get_offset.c \
 	zip_file_strerror.c \
 	zip_fopen.c \
@@ -27,7 +24,6 @@ libzip_la_SOURCES=\
 	zip_fread.c \
 	zip_free.c \
 	zip_free_entry.c \
-	zip_get_error.c \
 	zip_get_num_files.c \
 	zip_get_name.c \
 	zip_name_locate.c \
@@ -36,10 +32,12 @@ libzip_la_SOURCES=\
 	zip_open.c \
 	zip_rename.c \
 	zip_replace.c \
-	zip_replace_data.c \
-	zip_replace_file.c \
-	zip_replace_filep.c \
-	zip_replace_zip.c \
+	zip_source_data.c \
+	zip_source_file.c \
+	zip_source_filep.c \
+	zip_source_free.c \
+	zip_source_function.c \
+	zip_source_zip.c \
 	zip_set_name.c \
 	zip_stat.c \
 	zip_stat_index.c \

@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_str.mdoc,v 1.1 2003/12/27 22:25:58 wiz Exp 
-.\" $NiH: zip_error_str.mdoc,v 1.1 2003/12/27 22:25:58 wiz Exp $
+.\" from NiH: zip_error_str.mdoc,v 1.2 2004/11/17 22:26:09 wiz Exp 
+.\" $NiH: zip_error_str.mdoc,v 1.2 2004/11/17 22:26:09 wiz Exp $
 .\"
 .\" zip_error_str.mdoc \-- get string representation of zip error code
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_STRERROR 3 "October 3, 2003" NiH
+.TH ZIP_ERROR_STR 3 "October 3, 2003" NiH
 .SH "NAME"
 zip_error_str \- get string representation of zip error
 .SH "LIBRARY"
@@ -45,9 +45,9 @@ libzip (-lzip)
 .SH "DESCRIPTION"
 The
 .Fn zip_error_str
-function returns a string describing the zip error code
+function stores a string describing the zip error code
 \fBze\fR
-in
+in the user-provided buffer
 \fBbuf\fR
 which has size
 \fBlen.\fR

@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_add_zip.c,v 1.9 2004/04/16 09:40:27 dillo Exp $
+  $NiH: zip_error_to_str.c,v 1.4 2004/11/17 21:55:10 wiz Exp $
 
-  zip_add_zip.c -- add file from zip file
+  zip_error_to_str.c -- get string representation of zip error code
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,19 +35,39 @@
 
 
 
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "zip.h"
 #include "zipint.h"
 
 
 
 int
-zip_add_zip(struct zip *zf, const char *name,
-	    struct zip *srczf, int srcidx, int flags, off_t start, off_t len)
+zip_error_to_str(char *buf, size_t len, int ze, int se)
 {
-    if (name == NULL) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
+    const char *zs, *ss;
+
+    if (ze < 0 || ze >= _zip_nerr_str)
+	return snprintf(buf, len, "Unknown error %d", ze);
+
+    zs = _zip_err_str[ze];
+	
+    switch (_zip_err_type[ze]) {
+    case ZIP_ET_SYS:
+	ss = strerror(se);
+	break;
+	
+    case ZIP_ET_ZLIB:
+	ss = zError(se);
+	break;
+	
+    default:
+	ss = NULL;
     }
 
-    return _zip_replace_zip(zf, -1, name, srczf, srcidx, flags, start, len);
+    return snprintf(buf, len, "%s%s%s",
+		    zs, (ss ? ": " : ""), (ss ? ss : ""));
 }

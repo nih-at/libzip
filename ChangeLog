@@ -1,3 +1,11 @@
+2004-11-18  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+
+	* zip.h: Rename zip_get_error to zip_error_get;
+	rename zip_file_get_error to zip_file_error_get;
+	rename zip_error_str to zip_error_to_str;
+	replace various zip_add_* and zip_replace_* functions
+	with zip_source_*.  Adapt users.  Update docs.
+
 2004-11-17  Thomas Klausner <wiz@danbala.tuwien.ac.at>
 
 	* zip.h: Rename ZERR_* to ZIP_ER_*; rename ZIP_ET_ZIP to

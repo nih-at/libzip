@@ -1,5 +1,5 @@
 /*
-  $NiH: buffadd.c,v 1.4.4.1 2004/04/10 23:52:40 dillo Exp $
+  $NiH: buffadd.c,v 1.5 2004/04/14 14:01:30 dillo Exp $
 
   buffadd.c -- test cases for adding files from buffer
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -51,6 +51,7 @@ main(int argc, char *argv[])
 {
     struct zip *z;
     struct zip_file *ze;
+    struct zip_source *zs;
     int err;
     
     char buf[2000];
@@ -58,13 +59,15 @@ main(int argc, char *argv[])
     remove(testzip);
     
     if ((z=zip_open(testzip, ZIP_CREATE, &err)) == NULL) {
-	zip_error_str(buf, sizeof(buf), err, errno);
+	zip_error_to_str(buf, sizeof(buf), err, errno);
 	fprintf(stderr,"%s: can't open zipfile %s: %s\n", argv[0],
 		testzip, buf);
 	exit(1);
     }
 
-    if (zip_add_data(z, testname, teststr, strlen(teststr), 0)==-1) {
+    if (zip_add(z, testname,
+		(zs=zip_source_data(z, teststr, strlen(teststr), 0)))==-1) {
+	zip_source_free(zs);
 	fprintf(stderr,"%s: can't add buffer '%s': %s\n", argv[0],
 		teststr, zip_strerror(z));
 	exit(1);
@@ -77,7 +80,7 @@ main(int argc, char *argv[])
     }
 
     if ((z=zip_open(testzip, ZIP_CHECKCONS, &err))==NULL) {
-	zip_error_str(buf, sizeof(buf), err, errno);
+	zip_error_to_str(buf, sizeof(buf), err, errno);
 	fprintf(stderr,"%s: can't re-open zipfile %s: %s\n", argv[0],
 		testzip, buf);
 	exit(1);

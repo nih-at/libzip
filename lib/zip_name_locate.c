@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_name_locate.c,v 1.13 2004/05/16 00:50:25 dillo Exp $
+  $NiH: zip_name_locate.c,v 1.14 2004/11/17 21:55:12 wiz Exp $
 
   zip_name_locate.c -- get index by name
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -45,7 +45,7 @@
 int
 zip_name_locate(struct zip *za, const char *fname, int flags)
 {
-    int (*cmp)();
+    int (*cmp)(const char *, const char *);
     const char *fn, *p, *q;
     int i, n;
 
