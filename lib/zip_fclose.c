@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fclose.c,v 1.9 2004/04/14 14:01:24 dillo Exp $
+  $NiH: zip_fclose.c,v 1.10 2004/04/16 09:40:28 dillo Exp $
 
   zip_fclose.c -- close file in zip archive
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -61,7 +61,8 @@ zip_fclose(struct zip_file *zff)
     }
 
     /* if EOF, compare CRC */
-    if (zff->flags & ZIP_ZF_EOF)
+    /* XXX: also compare for stored */
+    if ((zff->flags & ZIP_ZF_COMP) == 0 && (zff->flags & ZIP_ZF_EOF))
 	ret = (zff->crc_orig == zff->crc);
     else
 	ret = zff->error.zip_err;

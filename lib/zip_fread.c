@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.9 2004/04/14 14:01:24 dillo Exp $
+  $NiH: zip_fread.c,v 1.10 2004/04/16 09:40:28 dillo Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -56,9 +56,12 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
 
     if (zff->bytes_left == 0) {
 	zff->flags |= ZIP_ZF_EOF;
-	if (zff->crc != zff->crc_orig) {
-	    _zip_error_set(&zff->error, ZERR_CRC, 0);
-	    return -1;
+	if ((zff->flags & ZIP_ZF_COMP) == 0) {
+	    /* XXX: compare for stored */
+	    if (zff->crc != zff->crc_orig) {
+		_zip_error_set(&zff->error, ZERR_CRC, 0);
+		return -1;
+	    }
 	}
 	return 0;
     }
@@ -66,7 +69,10 @@ zip_fread(struct zip_file *zff, void *outbuf, size_t toread)
     if (zff->flags & ZIP_ZF_COMP) {
 	ret = _zip_file_fillbuf(outbuf, toread, zff);
 	if (ret > 0) {
+#if 0
+	    /* XXX: compute for stored */
 	    zff->crc = crc32(zff->crc, outbuf, ret);
+#endif
 	    zff->bytes_left -= ret;
 	}
 	return ret;
