@@ -1,3 +1,14 @@
+2004-11-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_name_locate.c (_zip_name_locate): new function.
+	(zip_name_locate): move actual name lookup to _zip_name_locate.
+	* lib/zip_set_name.c (_zip_set_name): don't allow duplicate names
+	in archive; return error if name is NULL.
+	* lib/zip_replace.c (_zip_replace): don't call _zip_set_name when
+	name is NULL.
+	* lib/zip_get_name.c (zip_get_name): fix when called with
+	partially initialized entry.
+	
 2004-11-30  Thomas Klausner <wiz@danbala.tuwien.ac.at>
 
 	* zipint.h: Include zip.h; add zlib.h.

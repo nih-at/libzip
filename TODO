@@ -11,18 +11,16 @@
 * zipcmp.c: In function `compare_zip':
 * zipcmp.c:189: warning: passing arg 3 of `compare_list' from incompatible pointer type
 * what is ZIP_CMD_CLOSE good for; check callers
-* man page cleanup: zf/za -> archive; "global variable zip_err"
-* zipint.h should include zip.h?
-* sort zipint.h contents
+* man page cleanup: "global variable zip_err"
 * documentation:
 	zip_error_sys_type zip_file_get_error zip_get_error
-* don't allow the same filename twice in a zip (when adding/replacing)
 * regression tests
 * code review
 * README
 * update code for new API
 * fix XXX in man/
 * fix XXX in lib?
+* fix XXX in ChangeLog!
 ------------------------------------------------ others
 * zip_commit
 * zip_replace_zip: allow rewinding

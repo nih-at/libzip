@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.32 2004/11/30 21:42:24 wiz Exp $
+  $NiH: zipint.h,v 1.33 2004/11/30 21:51:30 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -199,6 +199,7 @@ unsigned int _zip_file_get_offset(struct zip *, int);
 void _zip_free(struct zip *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
+int _zip_name_locate(struct zip *, const char *, int);
 struct zip *_zip_new(struct zip_error *);
 unsigned short _zip_read2(unsigned char **);
 unsigned int _zip_read4(unsigned char **);
