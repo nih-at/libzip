@@ -2,7 +2,7 @@
 .\" from NiH: zip_unchange.mdoc,v 1.3 2003/10/03 12:04:09 dillo Exp 
 .\" $NiH: zip_unchange.mdoc,v 1.3 2003/10/03 12:04:09 dillo Exp $
 .\"
-.\" zip_unchange.mdoc \-\- undo changes to file in zip archive
+.\" zip_unchange.mdoc \-- undo changes to file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,7 +37,7 @@
 .SH "NAME"
 zip_unchange \- undo changes to file in zip archive
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
@@ -48,7 +48,7 @@ Changes to the file at position
 are reverted.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the global variable
+Otherwise, \-1 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .SH "ERRORS"

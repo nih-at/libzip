@@ -1,4 +1,6 @@
-.\" $NiH$
+.\" Converted with mdoc2man 0.2
+.\" from NiH: zip_error_str.mdoc,v 1.1 2003/12/27 22:25:58 wiz Exp 
+.\" $NiH: zip_error_str.mdoc,v 1.1 2003/12/27 22:25:58 wiz Exp $
 .\"
 .\" zip_error_str.mdoc \-- get string representation of zip error code
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner

@@ -2,7 +2,7 @@
 .\" from NiH: zip_fopen.mdoc,v 1.5 2003/10/06 16:37:07 dillo Exp 
 .\" $NiH: zip_fopen.mdoc,v 1.5 2003/10/06 16:37:07 dillo Exp $
 .\"
-.\" zip_fopen.mdoc \-\- open file in zip archvie for reading
+.\" zip_fopen.mdoc \-- open file in zip archvie for reading
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,7 +38,7 @@
 zip_fopen , \- .Nm zip_fopen_index
 open file in zip archive for reading
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft struct zip_file *

@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_file_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp 
-.\" $NiH: zip_file_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp $
+.\" from NiH: zip_file_strerror.mdoc,v 1.2 2003/12/27 22:27:27 wiz Exp 
+.\" $NiH: zip_file_strerror.mdoc,v 1.2 2003/12/27 22:27:27 wiz Exp $
 .\"
 .\" zip_file_strerror.mdoc \-- get string representation of zip file error
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner

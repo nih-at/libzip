@@ -2,7 +2,7 @@
 .\" from NiH: zip_stat.mdoc,v 1.1 2003/10/06 02:50:11 dillo Exp 
 .\" $NiH: zip_stat.mdoc,v 1.1 2003/10/06 02:50:11 dillo Exp $
 .\"
-.\" zip_stat.mdoc \-\- get information about file
+.\" zip_stat.mdoc \-- get information about file
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,7 +38,7 @@
 zip_stat , \- .Nm zip_stat_index
 get information about file
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
@@ -80,7 +80,7 @@ struct zip_stat {
 };
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the error information in
+Otherwise, \-1 is returned and the error information in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"

@@ -2,7 +2,7 @@
 .\" from NiH: zipcmp.mdoc,v 1.7 2003/10/03 23:55:12 dillo Exp 
 .\" $NiH: zipcmp.mdoc,v 1.7 2003/10/03 23:55:12 dillo Exp $
 .\"
-.\" zipcmp.mdoc \-\- compare zip archives
+.\" zipcmp.mdoc \-- compare zip archives
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,7 +38,7 @@
 zipcmp \- compare contents of zip archives
 .SH "SYNOPSIS"
 .B zipcmp
-[\fB\-hiqVv\fR]
+[\fB-hiqVv\fR]
 \fBzip1 zip2\fR
 .SH "DESCRIPTION"
 .B zipcmp
@@ -53,23 +53,23 @@ File order and compressed size differences are ignored.
 Supported options:
 .RS
 .TP 5
-\fB\-h\fR
+\fB-h\fR
 Display a short help message and exit.
 .TP 5
-\fB\-i\fR
+\fB-i\fR
 Compare names ignoring case distinctions.
 .TP 5
-\fB\-q\fR
+\fB-q\fR
 Quiet mode.
 Compare
-\fB\-v\fR.
+\fB-v\fR.
 .TP 5
-\fB\-v\fR
+\fB-v\fR
 Verbose mode.
 Print details about differences to stdout.
 (This is the default.)
 .TP 5
-\fB\-V\fR
+\fB-V\fR
 Display version information and exit.
 .RE
 .SH "EXIT STATUS"

@@ -2,7 +2,7 @@
 .\" from NiH: zip_rename.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp 
 .\" $NiH: zip_rename.mdoc,v 1.1 2003/10/03 23:26:01 dillo Exp $
 .\"
-.\" zip_rename.mdoc \-\- rename file in zip archive
+.\" zip_rename.mdoc \-- rename file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,7 +37,7 @@
 .SH "NAME"
 zip_rename \- rename file in zip archive
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
@@ -51,7 +51,7 @@ is renamed to
 \fBname.\fR
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the global variable
+Otherwise, \-1 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .SH "ERRORS"

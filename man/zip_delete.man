@@ -2,7 +2,7 @@
 .\" from NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp 
 .\" $NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp $
 .\"
-.\" zip_delete.mdoc \-\- delete files from zip archive
+.\" zip_delete.mdoc \-- delete files from zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,7 +37,7 @@
 .SH "NAME"
 zip_delete \- delete file from zip archive
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
@@ -50,7 +50,7 @@ in the zip archive
 is marked as deleted.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
-Otherwise, \\-1 is returned and the global variable
+Otherwise, \-1 is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .SH "ERRORS"
