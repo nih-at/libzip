@@ -51,4 +51,4 @@ BUILT_SOURCES=zip_err_str.c
 EXTRA_DIST=make_zip_err_str.sh
 
 zip_err_str.c: zip.h make_zip_err_str.sh
-	$(srcdir)/make_zip_err_str.sh $(srcdir)/zip.h zip_err_str.c
+	sh $(srcdir)/make_zip_err_str.sh $(srcdir)/zip.h zip_err_str.c
