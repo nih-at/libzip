@@ -1,4 +1,4 @@
-.\" $NiH: zip_unchange_all.mdoc,v 1.2 2003/10/03 09:44:43 wiz Exp $
+.\" $NiH: zip_unchange_all.mdoc,v 1.3 2003/10/03 12:04:09 dillo Exp $
 .\"
 .\" zip_unchange_all.mdoc -- undo changes to all files in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -49,8 +49,8 @@ Changes to all files in
 are reverted.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
-Otherwise, \-1 is returned and the global variable
-.Va zip_err
+Otherwise, \-1 is returned and the error code in
+.Ar archive
 is set to indicate the error.
 .\".Sh ERRORS
 .\: XXX: ch_func ZIP_CMD_CLOSE errors

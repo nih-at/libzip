@@ -1,4 +1,4 @@
-.\" $NiH: zip_delete.mdoc,v 1.4 2003/10/03 23:26:00 dillo Exp $
+.\" $NiH: zip_delete.mdoc,v 1.5 2004/11/17 21:55:15 wiz Exp $
 .\"
 .\" zip_delete.mdoc -- delete files from zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -51,8 +51,8 @@ in the zip archive
 is marked as deleted.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
-Otherwise, \-1 is returned and the global variable
-.Va zip_err
+Otherwise, \-1 is returned and the error code in
+.Ar archive
 is set to indicate the error.
 .Sh ERRORS
 .Fn zip_delete
