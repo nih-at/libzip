@@ -1,8 +1,6 @@
-.\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_str.mdoc,v 1.2 2004/11/17 22:26:09 wiz Exp 
-.\" $NiH: zip_error_str.mdoc,v 1.2 2004/11/17 22:26:09 wiz Exp $
+.\" $NiH: zip_error_to_str.mdoc,v 1.2 2004/11/17 22:26:09 wiz Exp $
 .\"
-.\" zip_error_str.mdoc \-- get string representation of zip error code
+.\" zip_error_to_str.mdoc -- get string representation of zip error code
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,29 +31,32 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ERROR_STR 3 "October 3, 2003" NiH
-.SH "NAME"
-zip_error_str \- get string representation of zip error
-.SH "LIBRARY"
+.Dd November 24, 2004
+.Dt ZIP_ERROR_STR 3
+.Os
+.Sh NAME
+.Nm zip_error_to_str
+.Nd get string representation of zip error
+.Sh LIBRARY
 libzip (-lzip)
-.SH "SYNOPSIS"
+.Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_error_str "char *buf" "int len" "int ze" "int se"
-.SH "DESCRIPTION"
+.Fn zip_error_to_str "char *buf" "int len" "int ze" "int se"
+.Sh DESCRIPTION
 The
-.Fn zip_error_str
+.Fn zip_error_to_str
 function stores a string describing the zip error code
-\fBze\fR
+.Ar ze
 in the user-provided buffer
-\fBbuf\fR
+.Ar buf
 which has size
-\fBlen.\fR
-\fBse\fR
+.Ar len .
+.Ar se
 should be the value of the global variable
-\fBerrno\fR
+.Ar errno
 at the time of the error.
-.Fn zip_error_str
+.Fn zip_error_to_str
 is especially useful if
 .Fn zip_open
 failed and no
@@ -63,12 +64,12 @@ failed and no
 is available; otherwise
 .Fn zip_strerror
 should be used.
-.SH "RETURN VALUES"
-.Fn zip_error_str
+.Sh RETURN VALUES
+.Fn zip_error_to_str
 returns the number of characters that would have been written to a
 sufficiently sized
-\fBbuf,\fR
+.Ar buf ,
 excluding the terminating NUL character.
-.SH "SEE ALSO"
-zip_open(3),
-zip_strerror(3)
+.Sh SEE ALSO
+.Xr zip_open 3 ,
+.Xr zip_strerror 3

@@ -7,7 +7,7 @@ MAN1=	zipcmp.1
 MAN3=	zip_add.3 \
 	zip_close.3 \
 	zip_delete.3 \
-	zip_error_str.3 \
+	zip_error_to_str.3 \
 	zip_fclose.3 \
 	zip_file_strerror.3 \
 	zip_fopen.3 \
