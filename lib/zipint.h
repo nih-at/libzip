@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.22.4.2 2004/03/22 14:17:34 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.3 2004/03/22 14:56:49 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -64,9 +64,7 @@ struct zip {
     char *zn;			/* file name */
     FILE *zp;			/* file */
     struct zip_error error;	/* error information */
-    unsigned int cd_size;	/* size of central direcotry (?) */
-    unsigned int cd_offset;	/* offset of central directory in file (?) */
-    unsigned short comlen;	/* length of com */
+
     char *com;			/* zip archvie comment (?) */
     int nentry;			/* number of entries */
     int nentry_alloc;		/* number of entries allocated */
@@ -131,7 +129,6 @@ struct zip_entry {
     time_t mtime;		/* time of last modification */
 
     char *fn_old;		/* original file name (NULL if unchanged) */
-    unsigned int file_fnlen;
 
     enum zip_state state;
     zip_read_func ch_func;
@@ -160,14 +157,15 @@ void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
 const char *_zip_error_strerror(struct zip_error *);
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
+unsigned int _zip_file_get_offset(struct zip *, struct zip_entry *);
 void _zip_free(struct zip *);
 int _zip_free_entry(struct zip_entry *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
-struct zip *_zip_new(int *);
+struct zip *_zip_new(struct zip_error *);
 struct zip_entry *_zip_new_entry(struct zip *);
-int _zip_readcdentry(FILE *, struct zip_entry *, unsigned char **, 
-		     int, int, int);
+unsigned short _zip_read2(unsigned char **);
+unsigned int _zip_read4(unsigned char **);
 int _zip_replace(struct zip *, int, const char *,zip_read_func, void *, int);
 int _zip_replace_data(struct zip *, int, const char *,
 		      const void *, off_t, int);

@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.35 2003/10/06 02:50:05 dillo Exp $
+  $NiH: zip.h,v 1.35.4.1 2004/03/20 09:54:03 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -148,7 +148,7 @@ void zip_get_error(struct zip *, int *, int *);
 const char *zip_get_name(struct zip *, int);
 int zip_get_num_files(struct zip *);
 int zip_name_locate(struct zip *, const char *, int);
-struct zip *zip_open(const char *, int, int *);
+struct zip *zip_open(const char *, int, int *, int *);
 int zip_rename(struct zip *, int, const char *);
 int zip_replace(struct zip *, int, zip_read_func, void *, int);
 int zip_replace_data(struct zip *, int, const void *, off_t, int);
