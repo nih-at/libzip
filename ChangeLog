@@ -1,5 +1,9 @@
 2004-11-30  Thomas Klausner <wiz@danbala.tuwien.ac.at>
 
+	* zipint.h: Include zip.h; add zlib.h.
+	* zip.h: Remove zlib.h.
+	* src/zipcmp.c: Add zlib.h.
+
 	* zipint.h: Rename _zip_new_entry to _zip_entry_new;
 	rename _zip_free_entry to _zip_entry_free; adapt users.
 
