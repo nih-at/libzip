@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fclose.c,v 1.10 2004/04/16 09:40:28 dillo Exp $
+  $NiH: zip_fclose.c,v 1.11 2004/04/17 19:15:30 dillo Exp $
 
   zip_fclose.c -- close file in zip archive
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -43,30 +43,30 @@
 
 
 int
-zip_fclose(struct zip_file *zff)
+zip_fclose(struct zip_file *zf)
 {
     int i, ret;
     
-    if (zff->zstr)
-	inflateEnd(zff->zstr);
-    free(zff->buffer);
-    free(zff->zstr);
+    if (zf->zstr)
+	inflateEnd(zf->zstr);
+    free(zf->buffer);
+    free(zf->zstr);
 
-    for (i=0; i<zff->zf->nfile; i++) {
-	if (zff->zf->file[i] == zff) {
-	    zff->zf->file[i] = zff->zf->file[zff->zf->nfile-1];
-	    zff->zf->nfile--;
+    for (i=0; i<zf->za->nfile; i++) {
+	if (zf->za->file[i] == zf) {
+	    zf->za->file[i] = zf->za->file[zf->za->nfile-1];
+	    zf->za->nfile--;
 	    break;
 	}
     }
 
     /* if EOF, compare CRC */
     /* XXX: also compare for stored */
-    if ((zff->flags & ZIP_ZF_COMP) == 0 && (zff->flags & ZIP_ZF_EOF))
-	ret = (zff->crc_orig == zff->crc);
+    if ((zf->flags & ZIP_ZF_COMP) == 0 && (zf->flags & ZIP_ZF_EOF))
+	ret = (zf->crc_orig == zf->crc);
     else
-	ret = zff->error.zip_err;
+	ret = zf->error.zip_err;
 
-    free(zff);
+    free(zf);
     return ret;
 }

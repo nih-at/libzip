@@ -3,7 +3,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.28 2004/11/17 21:55:14 wiz Exp $
+  $NiH: zipint.h,v 1.29 2004/11/18 15:04:06 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -89,7 +89,7 @@ struct zip {
 /* file in zip archive, part of API */
 
 struct zip_file {
-    struct zip *zf;		/* zip archive containing this file */
+    struct zip *za;		/* zip archive containing this file */
     struct zip_error error;	/* error information */
     int flags;			/* -1: eof, >0: error */
 

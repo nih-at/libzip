@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_get_name.c,v 1.8 2004/04/16 09:40:29 dillo Exp $
+  $NiH: zip_get_name.c,v 1.9 2004/11/17 21:55:11 wiz Exp $
 
   zip_get_name.c -- get filename for a file in zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -41,15 +41,15 @@
 
 
 const char *
-zip_get_name(struct zip *zf, int idx)
+zip_get_name(struct zip *za, int idx)
 {
-    if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
+    if (idx < 0 || idx >= za->nentry) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
 
-    if (zf->entry[idx].ch_filename)
-	return zf->entry[idx].ch_filename;
+    if (za->entry[idx].ch_filename)
+	return za->entry[idx].ch_filename;
 
-    return zf->cdir->entry[idx].filename;
+    return za->cdir->entry[idx].filename;
 }

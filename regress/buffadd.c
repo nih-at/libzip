@@ -1,5 +1,5 @@
 /*
-  $NiH: buffadd.c,v 1.5 2004/04/14 14:01:30 dillo Exp $
+  $NiH: buffadd.c,v 1.6 2004/11/18 15:04:07 wiz Exp $
 
   buffadd.c -- test cases for adding files from buffer
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -49,8 +49,8 @@ char *testzip="test_zip.zip";
 int
 main(int argc, char *argv[])
 {
-    struct zip *z;
-    struct zip_file *ze;
+    struct zip *za;
+    struct zip_file *zf;
     struct zip_source *zs;
     int err;
     
@@ -58,43 +58,43 @@ main(int argc, char *argv[])
 
     remove(testzip);
     
-    if ((z=zip_open(testzip, ZIP_CREATE, &err)) == NULL) {
+    if ((za=zip_open(testzip, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
 	fprintf(stderr,"%s: can't open zipfile %s: %s\n", argv[0],
 		testzip, buf);
 	exit(1);
     }
 
-    if (zip_add(z, testname,
-		(zs=zip_source_data(z, teststr, strlen(teststr), 0)))==-1) {
+    if ((zs=zip_source_data(za, teststr, strlen(teststr), 0)) == NULL
+	|| zip_add(za, testname, zs) == -1) {
 	zip_source_free(zs);
 	fprintf(stderr,"%s: can't add buffer '%s': %s\n", argv[0],
-		teststr, zip_strerror(z));
+		teststr, zip_strerror(za));
 	exit(1);
     }
 
-    if (zip_close(z) == -1) {
+    if (zip_close(za) == -1) {
 	fprintf(stderr,"%s: can't close zipfile %s\n", argv[0],
 		testzip);
 	exit(1);
     }
 
-    if ((z=zip_open(testzip, ZIP_CHECKCONS, &err))==NULL) {
+    if ((za=zip_open(testzip, ZIP_CHECKCONS, &err))==NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
 	fprintf(stderr,"%s: can't re-open zipfile %s: %s\n", argv[0],
 		testzip, buf);
 	exit(1);
     }
 
-    if ((ze=zip_fopen(z, testname, 0))==NULL) {
+    if ((zf=zip_fopen(za, testname, 0))==NULL) {
 	fprintf(stderr,"%s: can't fopen file '%s' in '%s': %s\n", argv[0],
-		testname, testzip, zip_strerror(z));
+		testname, testzip, zip_strerror(za));
 	exit(1);
     }
 
-    if (zip_fread(ze, buf, 2000) < 0) {
+    if (zip_fread(zf, buf, 2000) < 0) {
 	fprintf(stderr,"%s: can't read from '%s' in zipfile '%s': %s\n",
-		argv[0], testname, testzip, zip_file_strerror(ze));
+		argv[0], testname, testzip, zip_file_strerror(zf));
 	exit(1);
     }
     
@@ -104,7 +104,7 @@ main(int argc, char *argv[])
 	exit(1);
     }
 
-    if (zip_close(z) == -1) {
+    if (zip_close(za) == -1) {
 	fprintf(stderr,"%s: can't close zipfile %s\n", argv[0],
 		testzip);
 	exit(1);

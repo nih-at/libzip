@@ -6,7 +6,7 @@
 int
 main(int argc, char *argv[])
 {
-    struct zip *z;
+    struct zip *za;
     int i;
 
     if (argc < 3) {
@@ -15,20 +15,20 @@ main(int argc, char *argv[])
 	exit(1);
     }
 
-    if ((z=zip_open(argv[1], ZIP_CHECKCONS|ZIP_CREATE)) == NULL) {
+    if ((za=zip_open(argv[1], ZIP_CHECKCONS|ZIP_CREATE)) == NULL) {
 	fprintf(stderr,"%s: can't open zipfile %s: %s\n", argv[0],
 		argv[1], zip_err_str[zip_err]);
 	exit(1);
     }
 
     for (i=0; i<argc-2; i++)
-	if (zip_add_file(z, NULL, NULL, argv[i+2], 0, -1)==-1) {
+	if (zip_add_file(za, NULL, NULL, argv[i+2], 0, -1)==-1) {
 	    fprintf(stderr,"%s: can't add file %s: %s\n", argv[0],
 		    argv[i+2], zip_err_str[zip_err]);
 	    exit(1);
 	}
 
-    if (zip_close(z) == -1) {
+    if (zip_close(za) == -1) {
 	fprintf(stderr,"%s: can't close zipfile %s: %s\n", argv[0],
 		argv[1], zip_err_str[zip_err]);
 	exit(1);

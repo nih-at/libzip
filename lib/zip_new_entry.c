@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new_entry.c,v 1.11 2004/11/17 21:55:12 wiz Exp $
+  $NiH: zip_new_entry.c,v 1.12 2004/11/18 15:04:05 wiz Exp $
 
   zip_new_entry.c -- create and init struct zip_entry
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -43,28 +43,28 @@
 
 
 struct zip_entry *
-_zip_new_entry(struct zip *zf)
+_zip_new_entry(struct zip *za)
 {
     struct zip_entry *ze;
-    if (!zf) {
+    if (!za) {
 	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
 	if (!ze) {
-	    _zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
+	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	    return NULL;
 	}
     }
     else {
-	if (zf->nentry >= zf->nentry_alloc-1) {
-	    zf->nentry_alloc += 16;
-	    zf->entry = (struct zip_entry *)realloc(zf->entry,
+	if (za->nentry >= za->nentry_alloc-1) {
+	    za->nentry_alloc += 16;
+	    za->entry = (struct zip_entry *)realloc(za->entry,
 						    sizeof(struct zip_entry)
-						    * zf->nentry_alloc);
-	    if (!zf->entry) {
-		_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
+						    * za->nentry_alloc);
+	    if (!za->entry) {
+		_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 		return NULL;
 	    }
 	}
-	ze = zf->entry+zf->nentry;
+	ze = za->entry+za->nentry;
     }
 
     ze->state = ZIP_ST_UNCHANGED;
@@ -72,8 +72,8 @@ _zip_new_entry(struct zip *zf)
     ze->ch_filename = NULL;
     ze->source = NULL;
 
-    if (zf)
-	zf->nentry++;
+    if (za)
+	za->nentry++;
 
     return ze;
 }

@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.8 2004/04/14 14:01:31 dillo Exp $
+  $NiH: zipcmp.c,v 1.9 2004/11/18 15:04:08 wiz Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -86,7 +86,7 @@ static int compare_list(const char *name[], int verbose,
 		 int (*cmp)(const void *, const void *),
 		 void print(const void *));
 static int compare_zip(const char *zn[], int verbose);
-static int test_file(struct zip *z, int idx, off_t size, unsigned int crc);
+static int test_file(struct zip *za, int idx, off_t size, unsigned int crc);
 
 int ignore_case, test_files;
 
@@ -147,7 +147,7 @@ main(int argc, char *argv[])
 static int
 compare_zip(const char *zn[], int verbose)
 {
-    struct zip *z;
+    struct zip *za;
     struct zip_stat st;
     struct entry *e[2];
     int n[2];
@@ -156,14 +156,14 @@ compare_zip(const char *zn[], int verbose)
     char errstr[1024];
 
     for (i=0; i<2; i++) {
-	if ((z=zip_open(zn[i], ZIP_CHECKCONS, &err)) == NULL) {
+	if ((za=zip_open(zn[i], ZIP_CHECKCONS, &err)) == NULL) {
 	    zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	    fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		    prg, zn[i], errstr);
 	    return -1;
 	}
 
-	n[i] = zip_get_num_files(z);
+	n[i] = zip_get_num_files(za);
 
 	if ((e[i]=malloc(sizeof(*e[i]) * n[i])) == NULL) {
 	    fprintf(stderr, "%s: malloc failure\n", prg);
@@ -171,15 +171,15 @@ compare_zip(const char *zn[], int verbose)
 	}
 
 	for (j=0; j<n[i]; j++) {
-	    zip_stat_index(z, j, 0, &st);
+	    zip_stat_index(za, j, 0, &st);
 	    e[i][j].name = strdup(st.name);
 	    e[i][j].size = st.size;
 	    e[i][j].crc = st.crc;
 	    if (test_files)
-		test_file(z, j, st.size, st.crc);
+		test_file(za, j, st.size, st.crc);
 	}
 
-	zip_close(z);
+	zip_close(za);
 
 	qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
     }
@@ -282,34 +282,34 @@ entry_print(const void *p)
 
 
 static int
-test_file(struct zip *z, int idx, off_t size, unsigned int crc)
+test_file(struct zip *za, int idx, off_t size, unsigned int crc)
 {
-    struct zip_file *f;
+    struct zip_file *zf;
     char buf[8192];
     int n, nsize, ncrc;
     
-    if ((f=zip_fopen_index(z, idx, 0)) == NULL) {
+    if ((zf=zip_fopen_index(za, idx, 0)) == NULL) {
 	fprintf(stderr, "%s: cannot open file %d in archive: %s\n",
-		prg, idx, zip_strerror(z));
+		prg, idx, zip_strerror(za));
 	return -1;
     }
 
     ncrc = crc32(0, NULL, 0);
     nsize = 0;
     
-    while ((n=zip_fread(f, buf, sizeof(buf))) > 0) {
+    while ((n=zip_fread(zf, buf, sizeof(buf))) > 0) {
 	nsize += n;
 	ncrc = crc32(ncrc, buf, n);
     }
 
     if (n < 0) {
 	fprintf(stderr, "%s: error reading file %d in archive: %s\n",
-		prg, idx, zip_file_strerror(f));
-	zip_fclose(f);
+		prg, idx, zip_file_strerror(zf));
+	zip_fclose(zf);
 	return -1;
     }
 
-    zip_fclose(f);
+    zip_fclose(zf);
 
     if (nsize != size) {
 	/* XXX: proper printf identifier */

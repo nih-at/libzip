@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.2 2004/05/16 00:51:50 dillo Exp $
+  $NiH: zipmerge.c,v 1.3 2004/11/18 15:04:08 wiz Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -83,14 +83,14 @@ int name_flags;
 
 static int confirm_replace(struct zip *, const char *, int,
 			   struct zip *, const char *, int);
-static int merge_zip(struct zip *zt, const char *, const char *);
+static int merge_zip(struct zip *za, const char *, const char *);
 
 
 
 int
 main(int argc, char *argv[])
 {
-    struct zip *zt;
+    struct zip *za;
     int c, err;
     char errstr[1024], *tname;
 
@@ -140,7 +140,7 @@ main(int argc, char *argv[])
     }
 
     tname = argv[optind++];
-    if ((zt=zip_open(tname, ZIP_CREATE, &err)) == NULL) {
+    if ((za=zip_open(tname, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		prg, tname, errstr);
@@ -148,13 +148,13 @@ main(int argc, char *argv[])
     }
 
     while (optind<argc) {
-	if (merge_zip(zt, tname, argv[optind++]) < 0)
+	if (merge_zip(za, tname, argv[optind++]) < 0)
 	    exit(1);
     }
 
-    if (zip_close(zt) < 0) {
+    if (zip_close(za) < 0) {
 	fprintf(stderr, "%s: cannot write zip archive `%s': %s\n",
-		prg, tname, zip_strerror(zt));
+		prg, tname, zip_strerror(za));
 	exit(1);
     }
 
@@ -164,7 +164,7 @@ main(int argc, char *argv[])
 
 
 static int
-confirm_replace(struct zip *zt, const char *tname, int it,
+confirm_replace(struct zip *za, const char *tname, int it,
 		struct zip *zs, const char *sname, int is)
 {
     char line[1024];
@@ -175,9 +175,9 @@ confirm_replace(struct zip *zt, const char *tname, int it,
     else if (confirm & CONFIRM_ALL_NO)
 	return 0;
 
-    if (zip_stat_index(zt, it, ZIP_FL_UNCHANGED, &st) < 0) {
+    if (zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st) < 0) {
 	fprintf(stderr, "%s: cannot stat file %d in `%s': %s\n",
-		prg, it, tname, zip_strerror(zt));
+		prg, it, tname, zip_strerror(za));
 	return -1;
     }
     if (zip_stat_index(zs, is, 0, &ss) < 0) {
@@ -214,7 +214,7 @@ confirm_replace(struct zip *zt, const char *tname, int it,
 
 
 static int
-merge_zip(struct zip *zt, const char *tname, const char *sname)
+merge_zip(struct zip *za, const char *tname, const char *sname)
 {
     struct zip *zs;
     struct zip_source *source;
@@ -232,18 +232,18 @@ merge_zip(struct zip *zt, const char *tname, const char *sname)
     for (i=0; i<zip_get_num_files(zs); i++) {
 	fname = zip_get_name(zs, i);
 
-	if ((idx=zip_name_locate(zt, fname, name_flags)) != -1) {
-	    switch (confirm_replace(zt, tname, idx, zs, sname, i)) {
+	if ((idx=zip_name_locate(za, fname, name_flags)) != -1) {
+	    switch (confirm_replace(za, tname, idx, zs, sname, i)) {
 	    case 0:
 		break;
 		
 	    case 1:
-		if ((source=zip_source_zip(zt, zs, i, 0, 0, 0)) == NULL
-		    || zip_replace(zt, idx, source) < 0) {
+		if ((source=zip_source_zip(za, zs, i, 0, 0, 0)) == NULL
+		    || zip_replace(za, idx, source) < 0) {
 		    zip_source_free(source);
 		    fprintf(stderr,
 			    "%s: cannot replace `%s' in `%s': %s\n",
-			    prg, fname, tname, zip_strerror(zt));
+			    prg, fname, tname, zip_strerror(za));
 		    return -1;
 		}
 		break;
@@ -259,12 +259,12 @@ merge_zip(struct zip *zt, const char *tname, const char *sname)
 	    }
 	}
 	else {
-	    if ((source=zip_source_zip(zt, zs, i, 0, 0, 0)) == NULL
-		|| zip_add(zt, fname, source) < 0) {
+	    if ((source=zip_source_zip(za, zs, i, 0, 0, 0)) == NULL
+		|| zip_add(za, fname, source) < 0) {
 		zip_source_free(source);
 		fprintf(stderr,
 			"%s: cannot add `%s' to `%s': %s\n",
-			prg, fname, tname, zip_strerror(zt));
+			prg, fname, tname, zip_strerror(za));
 		return -1;
 	    }
 	}

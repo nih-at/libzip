@@ -10,11 +10,9 @@
 * zipcmp.c:142: warning: passing arg 1 of `compare_zip' from incompatible pointer type
 * zipcmp.c: In function `compare_zip':
 * zipcmp.c:189: warning: passing arg 3 of `compare_list' from incompatible pointer type
-* struct zip *zf -> struct zip *za
 * what is ZIP_CMD_CLOSE good for; check callers
 * man page cleanup: zf/za -> archive; "global variable zip_err"
 * zipint.h should include zip.h?
-* struct zip_file *zff -> struct zip *zf
 * sort zipint.h contents
 * documentation:
 	zip_error_sys_type zip_file_get_error zip_get_error
