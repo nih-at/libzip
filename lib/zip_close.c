@@ -265,6 +265,8 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
     if ((meta=zip_new_meta()) < 0)
 	return -1;
 
+    size = 0;
+    
     if (se->ch_comp == 0) { /* we have to compress */
 	/* XXX: check compression method */
 	zstr.zalloc = Z_NULL;
@@ -283,7 +285,6 @@ _zip_entry_add(struct zip *zf, struct zip_entry *se)
 	zstr.avail_in = 0;
 	flush = 0;
 	crc = crc32(0, NULL, 0);
-	size = 0;
 
 	end = 0;
 	while (!end) {
