@@ -1,9 +1,37 @@
-.\" $NiH$
-.\" zip_open.c \-\- open zip file
-.\" Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+.\" Converted with mdoc2man 0.2
+.\" from NiH: zip_open.mdoc,v 1.7 2003/10/02 16:00:55 dillo Exp 
+.\" $NiH: zip_open.mdoc,v 1.7 2003/10/02 16:00:55 dillo Exp $
 .\"
-.\" This file is part of libzip, a library to manipulate ZIP files.
+.\" zip_open.mdoc \-\- open zip archive
+.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\"
+.\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in
+.\"    the documentation and/or other materials provided with the
+.\"    distribution.
+.\" 3. The names of the authors may not be used to endorse or promote
+.\"    products derived from this software without specific prior
+.\"    written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
+.\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+.\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+.\" DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+.\" GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+.\" INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+.\" IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+.\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .TH ZIP_OPEN 3 "October 3, 2003" NiH
 .SH "NAME"
@@ -11,16 +39,38 @@ zip_open \- open zip archive
 .SH "LIBRARY"
 .Lb libzip
 .SH "SYNOPSIS"
-.Fd #include \*[Lt]zip.h\*[Gt]
+.In zip.h
 .Ft struct zip *
 .Fn zip_open "const char *path" "int flags"
 .SH "DESCRIPTION"
-.\" XXX
+The zip archive specified by
+\fBpath\fR
+is opened and a pointer to a
+.\" XXX: also marks up,
+.Ft struct zip,
+used to manipulate the archive, is returned.
+The
+.Fa flags
+are specified by
+.I or Ns No 'ing
+the following values, or 0 for none of them.
+.RS
+.TP 15
+Dv ZIP_CREATE
+Create the archive if it does not exist.
+.TP 15
+Dv ZIP_EXCL
+Error if archive already exists.
+.TP 15
+Dv ZIP_CHECKCONS
+Perform additional consistency checks on the archive, and error if
+they fail.
+.RE
 .SH "RETURN VALUES"
 Upon successful completion
-.Fn fopen
+.Fn zip_open
 returns a
-.Tn struct zip
+.Ft struct zip
 pointer.
 Otherwise,
 .Dv NULL
@@ -28,6 +78,38 @@ is returned and the global variable
 .Va zip_err
 is set to indicate the error.
 .SH "ERRORS"
-.\" XXX
+The named archive is opened unless:
+.RS
+.TP 4
+Bq Er ZERR_EXISTS
+.TP 4
+Bq Er ZERR_INVAL
+The
+\fBpath\fR
+argument is
+.Dv NULL.
+.TP 4
+Bq Er ZERR_MEMORY
+Required memory could not be allocated.
+.TP 4
+Bq Er ZERR_NOENT
+The named archive does not exist and
+.Dv ZIP_CREATE
+is not set.
+.TP 4
+Bq Er ZERR_NOZIP
+The named file is not a zip archive.
+.TP 4
+Bq Er ZERR_OPEN
+The named file could not be opened.
+.TP 4
+Bq Er ZERR_READ
+A read error occurred; see
+.Va errno
+for details.
+.TP 4
+Bq Er ZERR_SEEK
+The named file does not allow seeks.
+.RE
 .SH "SEE ALSO"
-.\" XXX
+zip_close(3)
