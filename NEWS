@@ -2,3 +2,5 @@
 
 * first standalone release
 * changed license to three-clause BSD
+* overhauled API
+* install zipcmp

@@ -12,6 +12,7 @@
 	zip_open: errp
 * regression tests
 * code review
+* README
 ------------------------------------------------ others
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison
