@@ -2,7 +2,7 @@
 .\" from NiH: zip_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp 
 .\" $NiH: zip_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp $
 .\"
-.\" zip_strerror.mdoc \-\- get string representation of zip error
+.\" zip_strerror.mdoc \-- get string representation of zip error
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -37,7 +37,7 @@
 .SH "NAME"
 zip_strerror \- get string representation of zip error
 .SH "LIBRARY"
-libzip (\-lzip)
+libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft const char *
@@ -53,5 +53,7 @@ is closed or on the next call to
 .Fn zip_strerror
 for the same archive.
 .SH "RETURN VALUES"
-Returns a pointer to the error string.
-.\".SH "SEE ALSO"
+.Fn zip_strerror
+returns a pointer to the error string.
+.SH "SEE ALSO"
+zip_error_str(3)

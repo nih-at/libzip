@@ -1,4 +1,4 @@
-.\" $NiH$
+.\" $NiH: zip_strerror.mdoc,v 1.1 2003/10/05 16:05:25 dillo Exp $
 .\"
 .\" zip_strerror.mdoc -- get string representation of zip error
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -54,5 +54,7 @@ is closed or on the next call to
 .Fn zip_strerror
 for the same archive.
 .Sh RETURN VALUES
-Returns a pointer to the error string.
-.\" .Sh SEE ALSO
+.Fn zip_strerror
+returns a pointer to the error string.
+.Sh SEE ALSO
+.Xr zip_error_str 3
