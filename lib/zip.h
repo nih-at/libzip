@@ -78,21 +78,24 @@ struct zip_file {
 /* entry in zip file directory */
 
 struct zip_entry {
-    unsigned short version_made, version_need, bitflags, comp_meth,
-	lmtime, lmdate, fnlen, eflen, fcomlen, disknrstart, intatt;
-    unsigned int crc, comp_size, uncomp_size, extatt, local_offset;
-    enum zip_state state;
-    char *fn, *ef, *fcom;
+    sturct zip_meta *meta;
+    char *fn;
     char *fn_old;
 
+    enum zip_state state;
     zip_read_func *ch_func;
     void *ch_data;
     int ch_comp;
+    struct meta *ch_meta;
 };
 
-struct zip_meta { /* meta information needed to add compressed data */
-    unsigned int crc, uncomp_size;
-    /* ... */
+struct zip_meta {
+    unsigned short version_made, version_need, bitflags, comp_method,
+	disknrstart, int_attr;
+    time_t last_mod;
+    unsigned int crc, comp_size, uncomp_size, ext_attr, local_offset;
+    unsigned short ef_len, fc_len;
+    unsigned char *ef, *fc;
 };
 
 
@@ -110,6 +113,8 @@ struct zip_file *zip_fopen(struct zip *zf, char *fn, int case_sens);
 struct zip_file *zip_fopen_index(struct zip *zf, int fileno);
 int zip_fread(struct zip_file *zff, char *outbuf, int toread);
 int zip_fclose(struct zip_file *zff);
+
+struct *zip_meta zip_new_meta(void);
 
 /* high level routines to modify zip file */
 
