@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_zip.c,v 1.2 2004/11/18 16:28:13 wiz Exp $
+  $NiH: zip_source_zip.c,v 1.3 2004/12/22 16:32:00 dillo Exp $
 
   zip_source_zip.c -- create data source from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -145,10 +145,8 @@ read_zip(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 	    n = len;
 	
 
-	if ((i=zip_fread(z->zf, buf, n)) < 0) {
-	    /* XXX: copy error from z->zf */
+	if ((i=zip_fread(z->zf, buf, n)) < 0)
 	    return -1;
-	}
 
 	if (z->len != -1)
 	    z->len -= i;
