@@ -1,3 +1,7 @@
+2003-12-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* src/zipcmp.c (compare_zip): use correct index.
+
 2003-10-06  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip_unchange_all.c (zip_unchange_all): remove check for za

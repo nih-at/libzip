@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.5 2003/10/03 23:54:32 dillo Exp $
+  $NiH: zipcmp.c,v 1.6 2003/10/06 02:50:14 dillo Exp $
 
   cmpzip.c -- compare zip files
   Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -165,7 +165,7 @@ compare_zip(const char *zn[], int verbose)
 	}
 
 	for (j=0; j<n[i]; j++) {
-	    zip_stat_index(z, i, &st);
+	    zip_stat_index(z, j, &st);
 	    e[i][j].name = strdup(st.name);
 	    e[i][j].size = st.size;
 	    e[i][j].crc = st.crc;
