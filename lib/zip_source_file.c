@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_replace_file.c,v 1.13 2004/04/16 09:40:30 dillo Exp $
+  $NiH: zip_source_file.c,v 1.14 2004/11/17 21:55:13 wiz Exp $
 
-  zip_replace_file.c -- replace file from file system
+  zip_source_file.c -- create data source from file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -43,30 +43,21 @@
 
 
 
-int
-zip_replace_file(struct zip *zf, int idx,
-		 const char *fname, off_t start, off_t len)
+struct zip_source *
+zip_source_file(struct zip *za, const char *fname, off_t start, off_t len)
 {
-    if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    return _zip_replace_file(zf, idx, NULL, fname, start, len);
-}
-
-
-
-int
-_zip_replace_file(struct zip *zf, int idx, const char *name,
-		  const char *fname, off_t start, off_t len)
-{
+    struct zip_source *zs;
     FILE *fp;
 
     if ((fp=fopen(fname, "rb")) == NULL) {
-	_zip_error_set(&zf->error, ZIP_ER_OPEN, errno);
-	return -1;
+	_zip_error_set(&za->error, ZIP_ER_OPEN, errno);
+	return NULL;
     }
 
-    return _zip_replace_filep(zf, idx, name, fp, start, len);
+    if ((zs=zip_source_filep(za, fp, start, len)) == NULL) {
+	fclose(fp);
+	return NULL;
+    }
+
+    return zs;
 }

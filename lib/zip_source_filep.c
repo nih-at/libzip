@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_replace_filep.c,v 1.11 2004/06/24 16:26:08 dillo Exp $
+  $NiH: zip_source_filep.c,v 1.12 2004/11/17 21:55:13 wiz Exp $
 
-  zip_replace_filep.c -- replace file from FILE*
+  zip_source_filep.c -- create data source from FILE *
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -56,36 +56,27 @@ static int read_file(void *state, void *data, size_t len, enum zip_cmd cmd);
 
 
 
-int
-zip_replace_filep(struct zip *zf, int idx,
-		  FILE *file, off_t start, off_t len)
-{
-    if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-    
-    return _zip_replace_filep(zf, idx, NULL, file, start, len);
-}
-
-
-
-int
-_zip_replace_filep(struct zip *zf, int idx, const char *name,
-		  FILE *file, off_t start, off_t len)
+struct zip_source *
+zip_source_filep(struct zip *za, FILE *file, off_t start, off_t len)
 {
     struct read_file *f;
+    struct zip_source *zs;
 
     if ((f=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
-	_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
-	return -1;
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 
     f->f = file;
     f->off = start;
     f->len = (len ? len : -1);
     
-    return _zip_replace(zf, idx, name, read_file, f);
+    if ((zs=zip_source_function(za, read_file, f)) == NULL) {
+	free(f);
+	return NULL;
+    }
+
+    return zs;
 }
 
 

@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_replace_data.c,v 1.16 2004/06/24 16:26:08 dillo Exp $
+  $NiH: zip_source_data.c,v 1.17 2004/11/17 21:55:13 wiz Exp $
 
-  zip_replace_data.c -- replace file from buffer
+  zip_source_data.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -52,29 +52,20 @@ static ssize_t read_data(void *state, void *data, size_t len,
 
 
 
-int
-zip_replace_data(struct zip *zf, int idx,
-		 const void *data, off_t len, int freep)
-{
-    if (idx < 0 || idx >= zf->nentry) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-    
-    return _zip_replace_data(zf, idx, NULL, data, len, freep);
-}
-
-
-
-int
-_zip_replace_data(struct zip *zf, int idx, const char *name,
-		  const void *data, off_t len, int freep)
+struct zip_source *
+zip_source_data(struct zip *za, const void *data, off_t len, int freep)
 {
     struct read_data *f;
+    struct zip_source *zs;
+
+    if (len < 0 || (data == NULL && len > 0)) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return NULL;
+    }
 
     if ((f=malloc(sizeof(*f))) == NULL) {
-	_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
-	return -1;
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 
     f->data = data;
@@ -82,7 +73,12 @@ _zip_replace_data(struct zip *zf, int idx, const char *name,
     f->freep = freep;
     f->mtime = time(NULL);
     
-    return _zip_replace(zf, idx, name, read_data, f);
+    if ((zs=zip_source_function(za, read_data, f)) == NULL) {
+	free(f);
+	return NULL;
+    }
+
+    return zs;
 }
 
 
@@ -144,6 +140,7 @@ read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
 	    if (len < sizeof(int)*2)
 		return -1;
 
+	    e = (int *)data;
 	    e[0] = e[1] = 0;
 	}
 	return sizeof(int)*2;

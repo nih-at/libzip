@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.23 2004/06/24 16:26:08 dillo Exp $
+  $NiH: zip_source_zip.c,v 1.24 2004/11/17 21:55:13 wiz Exp $
 
-  zip_replace_zip.c -- replace file from zip file
+  zip_source_zip.c -- create data source from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -51,33 +51,18 @@ static ssize_t read_zip(void *st, void *data, size_t len, enum zip_cmd cmd);
 
 
 
-int
-zip_replace_zip(struct zip *zf, int idx,
-		struct zip *srczf, int srcidx, int flags,
-		off_t start, off_t len)
-{
-    if (srcidx < 0 || srcidx >= srczf->nentry) {
-	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    return _zip_replace_zip(zf, idx, NULL, srczf, srcidx, flags, start, len);
-}
-
-
-
-int
-_zip_replace_zip(struct zip *zf, int idx, const char *name,
-		 struct zip *srczf, int srcidx, int flags,
-		 off_t start, off_t len)
+struct zip_source *
+zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
+	       off_t start, off_t len)
 {
     struct zip_error error;
+    struct zip_source *zs;
     struct read_zip *p;
 
     if ((flags & ZIP_FL_UNCHANGED) == 0
-	&& ZIP_ENTRY_DATA_CHANGED(srczf->entry+srcidx)) {
-	_zip_error_set(&zf->error, ZIP_ER_CHANGED, 0);
-	return -1;
+	&& ZIP_ENTRY_DATA_CHANGED(srcza->entry+srcidx)) {
+	_zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
+	return NULL;
     }
 
     if (len == 0)
@@ -89,19 +74,19 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	flags &= ~ZIP_FL_COMPRESSED;
 
     if ((p=malloc(sizeof(*p))) == NULL) {
-	_zip_error_set(&zf->error, ZIP_ER_MEMORY, 0);
-	return -1;
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 	
-    _zip_error_copy(&error, &srczf->error);
+    _zip_error_copy(&error, &srcza->error);
 	
-    if (zip_stat_index(srczf, srcidx, flags, &p->st) < 0
-	|| (p->zf=zip_fopen_index(srczf, srcidx, flags)) == NULL) {
+    if (zip_stat_index(srcza, srcidx, flags, &p->st) < 0
+	|| (p->zf=zip_fopen_index(srcza, srcidx, flags)) == NULL) {
 	free(p);
-	_zip_error_copy(&zf->error, &srczf->error);
-	_zip_error_copy(&srczf->error, &error);
+	_zip_error_copy(&za->error, &srcza->error);
+	_zip_error_copy(&srcza->error, &error);
 	
-	return -1;
+	return NULL;
     }
     p->off = start;
     p->len = len;
@@ -112,7 +97,12 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
 	/* XXX: crc */
     }
     
-    return _zip_replace(zf, idx, name, read_zip, p);
+    if ((zs=zip_source_function(za, read_zip, p)) == NULL) {
+	free(p);
+	return NULL;
+    }
+
+    return zs;
 }
 
 
@@ -147,7 +137,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 	
 
 	if ((i=zip_fread(z->zf, buf, n)) < 0) {
-	    /* XXX: copy error from z->zff */
+	    /* XXX: copy error from z->zf */
 	    return -1;
 	}
 
@@ -175,7 +165,7 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 		return -1;
 
 	    e = (int *)data;
-	    zip_file_get_error(z->zf, e, e+1);
+	    zip_file_error_get(z->zf, e, e+1);
 	}
 	return sizeof(int)*2;
 
