@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_fclose.c,v 1.6 2003/03/16 10:21:38 wiz Exp $
+  $NiH: zip_fclose.c,v 1.7 2003/10/02 14:13:29 dillo Exp $
 
-  zip_fclose.c -- close file in zip file
+  zip_fclose.c -- close file in zip archive
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
