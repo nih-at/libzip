@@ -34,8 +34,12 @@ install-data-hook: link-man3
 LN=ln
 
 link-man3: install-man3
+	-rm -f ${man3dir}/zip_file_error_get.3
+	${LN} ${man3dir}/zip_error_get.3 ${man3dir}/zip_file_error_get.3
 	-rm -f ${man3dir}/zip_fopen_index.3
 	${LN} ${man3dir}/zip_fopen.3 ${man3dir}/zip_fopen_index.3
+	-rm -f ${man3dir}/zip_replace.3
+	${LN} ${man3dir}/zip_add.3 ${man3dir}/zip_replace.3
 	-rm -f ${man3dir}/zip_stat_index.3
 	${LN} ${man3dir}/zip_stat.3 ${man3dir}/zip_stat_index.3
 	-rm -f ${man3dir}/zip_strerror.3
