@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_file_get_offset.c,v 1.1.2.1 2004/03/23 17:14:49 dillo Exp $
 
   zip_file_get_offset.c -- get offset of file data in archive.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -55,12 +55,14 @@
 */
 
 unsigned int
-_zip_file_get_offset(struct zip *za, struct zip_entry *ze)
+_zip_file_get_offset(struct zip *za, int idx)
 {
     struct zip_dirent de;
     unsigned int offset;
 
-    if (fseek(za->zp, ze->offset, SEEK_SET) != 0) {
+    offset = za->cdir->entry[idx].offset;
+
+    if (fseek(za->zp, offset, SEEK_SET) != 0) {
 	_zip_error_set(&za->error, ZERR_SEEK, errno);
 	return 0;
     }
@@ -68,8 +70,7 @@ _zip_file_get_offset(struct zip *za, struct zip_entry *ze)
     if (_zip_dirent_read(&de, za->zp, NULL, 0, 1, &za->error) != 0)
 	return 0;
 
-    offset = ze->offset + LENTRYSIZE
-	+ de.filename_len + de.extrafield_len;
+    offset += LENTRYSIZE + de.filename_len + de.extrafield_len;
 
     _zip_dirent_finalize(&de);
 
