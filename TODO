@@ -5,7 +5,6 @@
 * regression tests (duplicate file names, unchange, .{200})
 * code review
 * README
-* document zipmerge(1)
 * recreate .man files
 * fix XXX in man/
 * fix XXX in lib?
