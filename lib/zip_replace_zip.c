@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_zip.c,v 1.17 2003/10/02 14:13:32 dillo Exp $
+  $NiH: zip_replace_zip.c,v 1.17.4.1 2004/03/20 09:54:08 dillo Exp $
 
   zip_replace_zip.c -- replace file from zip file
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -81,7 +81,7 @@ _zip_replace_zip(struct zip *zf, int idx, const char *name,
     struct read_zip *z;
     struct read_part *p;
 
-    if ((srczf->entry[srcidx].meta->comp_method != 0
+    if ((srczf->entry[srcidx].comp_method != ZIP_CM_STORED
 	 && start == 0 && (len == 0 || len == -1))) {
 	if ((z=(struct read_zip *)malloc(sizeof(struct read_zip))) == NULL) {
 	    _zip_error_set(&zf->error, ZERR_MEMORY, 0);
@@ -117,12 +117,13 @@ read_zip(void *state, void *data, size_t len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
+	/* XXX: use same method as in zip_fopen_index() */
 	_zip_local_header_read(z->zf, z->idx);
-	z->fpos = z->zf->entry[z->idx].meta->local_offset + LENTRYSIZE
+	z->fpos = z->zf->entry[z->idx].offset + LENTRYSIZE
 	    + z->zf->entry[z->idx].meta->lef_len
 	    + z->zf->entry[z->idx].meta->fc_len
 	    + z->zf->entry[z->idx].file_fnlen;
-	z->avail = z->zf->entry[z->idx].meta->comp_size;
+	z->avail = z->zf->entry[z->idx].comp_size;
 	return 0;
 	
     case ZIP_CMD_READ:

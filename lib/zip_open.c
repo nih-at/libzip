@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.19 2003/10/06 22:44:06 dillo Exp $
+  $NiH: zip_open.c,v 1.19.4.1 2004/03/20 09:54:07 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -49,16 +49,11 @@
 static void set_error(int *errp, int err);
 static struct zip *_zip_readcdir(FILE *fp, unsigned char *buf,
 			   unsigned char *eocd, int buflen, int *errp);
-static int _zip_read2(unsigned char **a);
-static int _zip_read4(unsigned char **a);
-static char *_zip_readstr(unsigned char **buf, int len, int nulp);
-static char *_zip_readfpstr(FILE *fp, int len, int nulp);
 static int _zip_checkcons(FILE *fp, struct zip *zf);
 static int _zip_headercomp(struct zip_entry *h1, int local1p,
 			   struct zip_entry *h2, int local2p);
 static unsigned char *_zip_memmem(const unsigned char *big, int biglen,
 				  const unsigned char *little, int littlelen);
-static time_t _zip_d2u_time(int dtime, int ddate);
 
 
 
@@ -322,251 +317,6 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 
 
 
-/* _zip_readcdentry:
-   fills the zipfile entry zfe with data from the buffer *cdpp, not reading
-   more than 'left' bytes from it; if readp != 0, it also reads more data
-   from fp, if necessary. If localp != 0, it reads a local header instead
-   of a central directory entry. Returns 0 if successful, -1 if not,
-   advancing *cdpp for each byte read. */
-
-int
-_zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp, 
-		 int left, int readp, int localp)
-{
-    unsigned char buf[CDENTRYSIZE];
-    unsigned char *cur;
-    unsigned short dostime, dosdate;
-    int size;
-
-    if (localp)
-	size = LENTRYSIZE;
-    else
-	size = CDENTRYSIZE;
-    
-    if (readp) {
-	/* read entry from disk */
-	if ((fread(buf, 1, size, fp)<size)) {
-	    /* XXX: zip_err = ZERR_READ; */
-	    return -1;
-	}
-	left = size;
-	cur = buf;
-    }
-    else {
-	cur = *cdpp;
-	if (left < size) {
-	    /* XXX: zip_err = ZERR_NOZIP; */
-	    return -1;
-	}
-    }
-
-    if (localp) {
-	if (memcmp(cur, LOCAL_MAGIC, 4)!=0) {
-	    /* XXX: zip_err = ZERR_NOZIP; */
-	    return -1;
-	}
-    }
-    else
-	if (memcmp(cur, CENTRAL_MAGIC, 4)!=0) {
-	    /* XXX: zip_err = ZERR_NOZIP; */
-	    return -1;
-	}
-
-    cur += 4;
-
-    /* convert buffercontents to zf_entry */
-    if (!localp)
-	zfe->meta->version_made = _zip_read2(&cur);
-    else
-	zfe->meta->version_made = 0;
-    zfe->meta->version_need = _zip_read2(&cur);
-    zfe->meta->bitflags = _zip_read2(&cur);
-    zfe->meta->comp_method = _zip_read2(&cur);
-    /* convert to time_t */
-    dostime = _zip_read2(&cur);
-    dosdate = _zip_read2(&cur);
-
-    zfe->meta->last_mod = _zip_d2u_time(dostime, dosdate);
-    
-    zfe->meta->crc = _zip_read4(&cur);
-    zfe->meta->comp_size = _zip_read4(&cur);
-    zfe->meta->uncomp_size = _zip_read4(&cur);
-    
-    zfe->file_fnlen = _zip_read2(&cur);
-    if (localp) {
-	zfe->meta->ef_len = 0;
-	zfe->meta->lef_len = _zip_read2(&cur);
-	zfe->meta->fc_len = zfe->meta->disknrstart = zfe->meta->int_attr = 0;
-	zfe->meta->ext_attr = zfe->meta->local_offset = 0;
-    } else {
-	zfe->meta->ef_len = _zip_read2(&cur);
-	zfe->meta->lef_len = 0;
-	zfe->meta->fc_len = _zip_read2(&cur);
-	zfe->meta->disknrstart = _zip_read2(&cur);
-	zfe->meta->int_attr = _zip_read2(&cur);
-
-	zfe->meta->ext_attr = _zip_read4(&cur);
-	zfe->meta->local_offset = _zip_read4(&cur);
-    }
-
-    if (left < CDENTRYSIZE+zfe->file_fnlen+zfe->meta->ef_len
-	+zfe->meta->lef_len+zfe->meta->fc_len) {
-	if (readp) {
-	    if (zfe->file_fnlen)
-		zfe->fn = _zip_readfpstr(fp, zfe->file_fnlen, 1);
-	    else
-		zfe->fn = strdup("");
-
-	    if (!zfe->fn) {
-		/* XXX: zip_err = ZERR_MEMORY; */
-		return -1;
-	    }
-
-	    /* only set for local headers */
-	    if (zfe->meta->lef_len) {
-		zfe->meta->lef = _zip_readfpstr(fp, zfe->meta->lef_len, 0);
-		if (!zfe->meta->lef)
-		    return -1;
-	    }
-
-	    /* only set for central directory entries */
-	    if (zfe->meta->ef_len) {
-		zfe->meta->ef = _zip_readfpstr(fp, zfe->meta->ef_len, 0);
-		if (!zfe->meta->ef)
-		    return -1;
-	    }
-
-	    /* only set for central directory entries */
-	    if (zfe->meta->fc_len) {
-		zfe->meta->fc = _zip_readfpstr(fp, zfe->meta->fc_len, 0);
-		if (!zfe->meta->fc)
-		    return -1;
-	    }
-	}
-	else {
-	    /* can't get more bytes if not allowed to read */
-	    /* XXX: zip_err = ZERR_NOZIP; */
-	    return -1;
-	}
-    }
-    else {
-        if (zfe->file_fnlen) {
-	    zfe->fn = _zip_readstr(&cur, zfe->file_fnlen, 1);
-	    if (!zfe->fn)
-		return -1;
-	}
-
-	/* only set for local headers */
-	if (zfe->meta->lef_len) {
-	    zfe->meta->lef = _zip_readstr(&cur, zfe->meta->lef_len, 0);
-	    if (!zfe->meta->lef)
-		return -1;
-	}
-
-	/* only set for central directory entries */
-	if (zfe->meta->ef_len) {
-	    zfe->meta->ef = _zip_readstr(&cur, zfe->meta->ef_len, 0);
-	    if (!zfe->meta->ef)
-		return -1;
-	}
-
-	/* only set for central directory entries */
-        if (zfe->meta->fc_len) {
-	    zfe->meta->fc = _zip_readstr(&cur, zfe->meta->fc_len, 0);
-	    if (!zfe->meta->fc)
-		return -1;
-	}
-    }
-    if (!readp)
-      *cdpp = cur;
-
-    return 0;
-}
-
-
-
-static int
-_zip_read2(unsigned char **a)
-{
-    int ret;
-
-    ret = (*a)[0]+((*a)[1]<<8);
-    *a += 2;
-
-    return ret;
-}
-
-
-
-static int
-_zip_read4(unsigned char **a)
-{
-    int ret;
-
-    ret = ((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
-    *a += 4;
-
-    return ret;
-}
-
-
-
-static char *
-_zip_readstr(unsigned char **buf, int len, int nulp)
-{
-    char *r, *o;
-
-    r = (char *)malloc(nulp?len+1:len);
-    if (!r) {
-	/* XXX: zip_err = ZERR_MEMORY; */
-	return NULL;
-    }
-    
-    memcpy(r, *buf, len);
-    *buf += len;
-
-    if (nulp) {
-	/* elephant */
-	r[len] = 0;
-	o = r-1;
-	while (((o=memchr(o+1, 0, r+len-(o+1))) < r+len) && o)
-	       *o = ' ';
-    }
-
-    return r;
-}
-
-
-
-static char *
-_zip_readfpstr(FILE *fp, int len, int nulp)
-{
-    char *r, *o;
-
-    r = (char *)malloc(nulp?len+1:len);
-    if (!r) {
-	/* XXX: zip_err = ZERR_MEMORY; */
-	return NULL;
-    }
-
-    if (fread(r, 1, len, fp)<len) {
-	free(r);
-	return NULL;
-    }
-
-    if (nulp) {
-	/* elephant */
-	r[len] = 0;
-	o = r-1;
-	while (((o=memchr(o+1, 0, r+len-(o+1))) < r+len) && o)
-	       *o = ' ';
-    }
-    
-    return r;
-}
-
-
-
 /* _zip_checkcons:
    Checks the consistency of the central directory by comparing central
    directory entries with local headers and checking for plausible
@@ -714,26 +464,4 @@ _zip_memdup(const void *mem, int len)
     memcpy(ret, mem, len);
 
     return ret;
-}
-
-
-
-static time_t
-_zip_d2u_time(int dtime, int ddate)
-{
-    struct tm *tm;
-    time_t now;
-
-    now = time(NULL);
-    tm = localtime(&now);
-    
-    tm->tm_year = ((ddate>>9)&127) + 1980 - 1900;
-    tm->tm_mon = ((ddate>>5)&15) - 1;
-    tm->tm_mday = ddate&31;
-
-    tm->tm_hour = (dtime>>11)&31;
-    tm->tm_min = (dtime>>5)&63;
-    tm->tm_sec = (dtime<<1)&62;
-
-    return mktime(tm);
 }

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.15 2003/10/06 22:44:06 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.15.4.1 2004/03/20 09:54:05 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -66,8 +66,9 @@ zip_fopen_index(struct zip *zf, int fileno)
     }
 #endif
 
-    if ((zf->entry[fileno].meta->comp_method != 0)
-	&& (zf->entry[fileno].meta->comp_method != 8)) {
+    
+    if ((zf->entry[fileno].comp_method != ZIP_CM_STORE)
+	&& (zf->entry[fileno].comp_method != ZIP_CM_DEFALTE)) {
 	_zip_error_set(&zf->error, ZERR_COMPNOTSUPP, 0);
 	return NULL;
     }
@@ -75,14 +76,13 @@ zip_fopen_index(struct zip *zf, int fileno)
     zff = _zip_file_new(zf);
 
     zff->name = zf->entry[fileno].fn;
-    zff->method = zf->entry[fileno].meta->comp_method;
-    zff->bytes_left = zf->entry[fileno].meta->uncomp_size;
-    zff->cbytes_left = zf->entry[fileno].meta->comp_size;
-    zff->crc_orig = zf->entry[fileno].meta->crc;
+    zff->method = zf->entry[fileno].comp_method;
+    zff->bytes_left = zf->entry[fileno].uncomp_size;
+    zff->cbytes_left = zf->entry[fileno].comp_size;
+    zff->crc_orig = zf->entry[fileno].crc;
 
     /* go to start of actual data */
-    if (fseek(zf->zp, zf->entry[fileno].meta->local_offset+LENTRYSIZE-4,
-	      SEEK_SET) < 0) {
+    if (fseek(zf->zp, zf->entry[fileno].offset+LENTRYSIZE-4, SEEK_SET) < 0) {
 	_zip_error_set(&zf->error, ZERR_SEEK, errno);
 	zip_fclose(zff);
 	return NULL;
@@ -94,10 +94,10 @@ zip_fopen_index(struct zip *zf, int fileno)
 	return NULL;
     }
     
-    zff->fpos = zf->entry[fileno].meta->local_offset+LENTRYSIZE;
+    zff->fpos = zf->entry[fileno].offset+LENTRYSIZE;
     zff->fpos += (buf[3]<<8)+buf[2]+(buf[1]<<8)+buf[0];
 	
-    if ((zf->entry[fileno].meta->comp_method == 0)
+    if ((zf->entry[fileno].comp_method == ZIP_CM_STORED)
 	|| (zff->bytes_left == 0))
 	return zff;
     
@@ -107,7 +107,7 @@ zip_fopen_index(struct zip *zf, int fileno)
 	return NULL;
     }
 
-    len = _zip_file_fillbuf (zff->buffer, BUFSIZE, zff);
+    len = _zip_file_fillbuf(zff->buffer, BUFSIZE, zff);
     if (len <= 0) {
 	_zip_error_copy(&zf->error, &zff->error);
 	zip_fclose(zff);

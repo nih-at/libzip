@@ -12,6 +12,7 @@ libzip_la_SOURCES=\
 	zip_add_zip.c \
 	zip_close.c \
 	zip_delete.c \
+	zip_dirent.c \
 	zip_err_str.c \
 	zip_error.c \
 	zip_error_str.c \

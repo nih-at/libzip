@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_stat_index.c,v 1.1 2003/10/06 02:50:07 dillo Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -50,12 +50,12 @@ zip_stat_index(struct zip *za, int index, struct zip_stat *st)
 
     st->name = za->entry[index].fn;
     st->index = index;
-    st->crc = za->entry[index].meta->crc;
-    st->size = za->entry[index].meta->uncomp_size;
-    st->mtime = za->entry[index].meta->last_mod;
-    st->comp_size = za->entry[index].meta->comp_size;
-    st->comp_method = za->entry[index].meta->comp_method;
-    /* st->bitflags = za->entry[index].meta->bitflags; */
+    st->crc = za->entry[index].crc;
+    st->size = za->entry[index].uncomp_size;
+    st->mtime = za->entry[index].mtime;
+    st->comp_size = za->entry[index].comp_size;
+    st->comp_method = za->entry[index].comp_method;
+    /* st->bitflags = za->entry[index].bitflags; */
 
     return 0;
 }
