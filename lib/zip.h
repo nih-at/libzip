@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.42 2004/11/18 15:04:04 wiz Exp $
+  $NiH: zip.h,v 1.43 2004/11/18 17:26:51 wiz Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -40,7 +40,6 @@
 
 #include <sys/types.h>
 #include <stdio.h>
-#include <zlib.h>
 #include <time.h>
 
 /* flags for zip_open */

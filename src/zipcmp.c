@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.9 2004/11/18 15:04:08 wiz Exp $
+  $NiH: zipcmp.c,v 1.10 2004/11/18 17:11:24 wiz Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <zlib.h>
 
 #include "config.h"
 #include "zip.h"

@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.31 2004/11/30 21:37:01 wiz Exp $
+  $NiH: zipint.h,v 1.32 2004/11/30 21:42:24 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -35,6 +35,10 @@
   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+#include <zlib.h>
+
+#include "zip.h"
 
 
 
@@ -97,7 +101,7 @@ struct zip_file {
     unsigned long bytes_left;	/* number of bytes left to read */
     unsigned long cbytes_left;  /* number of bytes of compressed data left */
     
-    unsigned long crc;		/* crc so far */
+    unsigned long crc;		/* CRC so far */
     unsigned long crc_orig;	/* CRC recorded in archive */
     
     char *buffer;
