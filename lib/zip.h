@@ -116,7 +116,7 @@ struct zip_entry {
     enum zip_state state;
     zip_read_func ch_func;
     void *ch_data;
-    int ch_comp;
+    int ch_comp;		/* 1: data returned by ch_func is compressed */
     struct zip_meta *ch_meta;
 };
 
