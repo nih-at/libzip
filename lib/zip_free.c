@@ -14,6 +14,8 @@ _zip_free(struct zip *zf)
 {
     int i, ret;
 
+    ret = 0;
+
     if (zf == NULL)
 	return 0;
 

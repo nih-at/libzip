@@ -5,6 +5,8 @@ int
 _zip_free_entry(struct zip_entry *ze)
 {
     int ret;
+
+    ret = 0;
     
     free(ze->fn);
     free(ze->fn_old);

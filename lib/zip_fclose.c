@@ -23,10 +23,11 @@ zip_fclose(struct zip_file *zff)
 	}
     }
 
-    /* EOF is ok */
-    ret = (zff->flags == -1 ? 0 : zff->flags);
-    if (!ret)
+    /* if EOF, compare CRC */
+    if (zff->flags == -1)
 	ret = (zff->crc_orig == zff->crc);
+    else
+	ret = zff->flags;
 
     free(zff);
     return ret;

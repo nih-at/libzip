@@ -47,7 +47,7 @@ zip_fread(struct zip_file *zff, char *outbuf, int toread)
 	case Z_OK:
 	case Z_STREAM_END:
 	    /* all ok */
-	    /* XXX: STREAM_END probably won't happen, since we didn't
+	    /* XXX: Z_STREAM_END probably won't happen, since we didn't
 	       have a header */
 	    len = zff->zstr->total_out - out_before;
 	    if (len >= zff->bytes_left || len >= toread) {

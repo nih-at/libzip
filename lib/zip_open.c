@@ -41,8 +41,10 @@ zip_open(char *fn, int flags)
     long len;
     struct stat st;
 
-    if (fn == NULL)
+    if (fn == NULL) {
+	zip_err = ZERR_INVAL;
 	return NULL;
+    }
     
     if (stat(fn, &st) != 0) {
 	if (flags & ZIP_CREATE) {
@@ -61,7 +63,7 @@ zip_open(char *fn, int flags)
 	zip_err = ZERR_EXISTS;
 	return NULL;
     }
-    /* ZIP_CREAT gets ignored if file exists and not ZIP_EXCL,
+    /* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
        just like open() */
     
     if ((fp=fopen(fn, "rb"))==NULL) {
@@ -75,6 +77,7 @@ zip_open(char *fn, int flags)
     i = fseek(fp, -(len < BUFSIZE ? len : BUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */
+	zip_err = ZERR_SEEK;
 	fclose(fp);
 	return NULL;
     }
@@ -89,7 +92,7 @@ zip_open(char *fn, int flags)
     buflen = fread(buf, 1, BUFSIZE, fp);
 
     if (ferror(fp)) {
-	/* read error */
+	zip_err = ZERR_READ;
 	free(buf);
 	fclose(fp);
 	return NULL;
@@ -130,6 +133,7 @@ zip_open(char *fn, int flags)
 
     if (best < 0) {
 	/* no consistent eocd found */
+	zip_err = ZERR_NOZIP;
 	free(buf);
 	_zip_free(cdir);
 	fclose(fp);
@@ -168,12 +172,15 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     comlen = buf + buflen - eocd - EOCDLEN;
     if (comlen < 0) {
 	/* not enough bytes left for comment */
+	zip_err = ZERR_NOZIP;
 	return NULL;
     }
 
     /* check for end-of-central-dir magic */
-    if (memcmp(eocd, EOCD_MAGIC, 4) != 0)
+    if (memcmp(eocd, EOCD_MAGIC, 4) != 0) {
+	zip_err = ZERR_NOZIP;
 	return NULL;
+    }
 
     if (memcmp(eocd+4, "\0\0\0\0", 4) != 0) {
 	zip_err = ZERR_MULTIDISK;
@@ -195,9 +202,10 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     zf->comlen = _zip_read2(&cdp);
     zf->entry = NULL;
 
-    if ((zf->comlen != comlen) || (zf->nentry != i)) {
+    if ((zf->comlen != comlen) || (entries != i)) {
 	/* comment size wrong -- too few or too many left after central dir */
 	/* or number of cdir-entries on this disk != number of cdir-entries */
+	zip_err = ZERR_NOZIP;
 	_zip_free(zf);
 	return NULL;
     }
@@ -217,13 +225,17 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
 	fseek(fp, -(zf->cd_size+zf->comlen+EOCDLEN), SEEK_END);
 	if (ferror(fp) || (ftell(fp) != zf->cd_offset)) {
 	    /* seek error or offset of cdir wrong */
+	    if (ferror(fp))
+		zip_err = ZERR_SEEK;
+	    else
+		zip_err = ZERR_NOZIP;
 	    _zip_free(zf);
 	    return NULL;
 	}
     }
 
     zf->entry = (struct zip_entry *)malloc(sizeof(struct zip_entry)
-					  *entries);
+					   *entries);
     if (!zf->entry) {
 	zip_err = ZERR_MEMORY;
 	return NULL;
@@ -275,24 +287,32 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
     
     if (readp) {
 	/* read entry from disk */
-	if ((fread(buf, 1, size, fp)<size))
+	if ((fread(buf, 1, size, fp)<size)) {
+	    zip_err = ZERR_READ;
 	    return -1;
+	}
 	left = size;
 	cur = buf;
     }
     else {
 	cur = *cdpp;
-	if (left < size)
+	if (left < size) {
+	    zip_err = ZERR_NOZIP;
 	    return -1;
+	}
     }
 
     if (localp) {
-	if (memcmp(cur, LOCAL_MAGIC, 4)!=0)
+	if (memcmp(cur, LOCAL_MAGIC, 4)!=0) {
+	    zip_err = ZERR_NOZIP;
 	    return -1;
+	}
     }
     else
-	if (memcmp(cur, CENTRAL_MAGIC, 4)!=0)
+	if (memcmp(cur, CENTRAL_MAGIC, 4)!=0) {
+	    zip_err = ZERR_NOZIP;
 	    return -1;
+	}
 
     cur += 4;
 
@@ -356,6 +376,7 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 	}
 	else {
 	    /* can't get more bytes if not allowed to read */
+	    zip_err = ZERR_NOZIP;
 	    return -1;
 	}
     }
@@ -428,7 +449,7 @@ _zip_readstr(unsigned char **buf, int len, int nulp)
 	/* elephant */
 	r[len] = 0;
 	o = r-1;
-	while ((o=memchr(o+1, 0, r+len-(o+1))) < r+len)
+	while (((o=memchr(o+1, 0, r+len-(o+1))) < r+len) && o)
 	       *o = ' ';
     }
 
@@ -457,7 +478,7 @@ _zip_readfpstr(FILE *fp, int len, int nulp)
 	/* elephant */
 	r[len] = 0;
 	o = r-1;
-	while ((o=memchr(o+1, 0, r+len-(o+1))) < r+len)
+	while (((o=memchr(o+1, 0, r+len-(o+1))) < r+len) && o)
 	       *o = ' ';
     }
     
@@ -492,6 +513,7 @@ _zip_checkcons(FILE *fp, struct zip *zf)
 	if (zf->entry[i].meta->local_offset < min)
 	    min = zf->entry[i].meta->local_offset;
 	if (min < 0) {
+	    zip_err = ZERR_NOZIP;
 	    _zip_free_entry(temp);
 	    return -1;
 	}
@@ -501,17 +523,25 @@ _zip_checkcons(FILE *fp, struct zip *zf)
 	    + zf->entry[i].meta->fc_len + LENTRYSIZE;
 	if (j > max)
 	    max = j;
-	if (max > zf->cd_offset)
+	if (max > zf->cd_offset) {
+	    zip_err = ZERR_NOZIP;
+	    _zip_free_entry(temp);
 	    return -1;
-
+	}
+	
 	if (fseek(fp, zf->entry[i].meta->local_offset, SEEK_SET) != 0) {
 	    zip_err = ZERR_SEEK;
 	    _zip_free_entry(temp);
 	    return -1;
 	}
 	
-	_zip_readcdentry(fp, temp, &buf, 0, 1, 1);
+	if (_zip_readcdentry(fp, temp, &buf, 0, 1, 1) == -1) {
+	    _zip_free_entry(temp);
+	    return -1;
+	}
+	
 	if (_zip_headercomp(zf->entry+i, 0, temp, 1) != 0) {
+	    zip_err = ZERR_NOZIP;
 	    _zip_free_entry(temp);
 	    return -1;
 	}

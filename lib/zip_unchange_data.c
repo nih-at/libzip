@@ -6,6 +6,8 @@ int
 _zip_unchange_data(struct zip_entry *ze)
 {
     int ret;
+
+    ret = 0;
     
     if (ze->ch_func) {
 	ret = ze->ch_func(ze->ch_data, NULL, 0, ZIP_CMD_CLOSE);

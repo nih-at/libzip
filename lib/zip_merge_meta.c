@@ -5,6 +5,13 @@
 int
 _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 {
+    if (!src)
+	return 0;
+    if (!dest) {
+	zip_err = ZERR_INTERNAL;
+	return -1;
+    }
+    
     if (src->version_made != (unsigned short)-1)
 	dest->version_made = src->version_made;
     if (src->version_need != (unsigned short)-1)
