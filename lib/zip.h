@@ -35,7 +35,7 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_CHANGED         15  /* entry has been changed */
 #define ZERR_COMPNOTSUPP     16  /* compression method not supported */
 #define ZERR_EOF             17  /* premature EOF */
-#define ZERR_EINVAL          18  /* invalid argument */
+#define ZERR_INVAL           18  /* invalid argument */
 #define ZERR_NOZIP           19  /* not a zip file */
 
 extern char *zip_err_str[];
