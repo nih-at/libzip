@@ -1,4 +1,4 @@
-.\" $NiH: zip_source_function.mdoc,v 1.4 2004/12/15 19:02:13 wiz Exp $
+.\" $NiH: zip_source_function.mdoc,v 1.5 2004/12/22 15:35:49 dillo Exp $
 .\"
 .\" zip_source_function.mdoc -- create data source from function
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -31,7 +31,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd December 10, 2004
+.Dd December 22, 2004
 .Dt ZIP_SOURCE_FUNCTION 3
 .Os
 .Sh NAME
@@ -42,7 +42,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_function "struct zip *archive" "zip_read_func fn" "void *userdata"
+.Fn zip_source_function "struct zip *archive" "zip_source_callback fn" "void *userdata"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_function
@@ -50,7 +50,7 @@ creates a zip source from the user-provided function
 .Ar fn ,
 which must be of the following type:
 .Bd -literal
-typedef ssize_t (*zip_read_func)(void *state,
+typedef ssize_t (*zip_source_callback)(void *state,
     void *data, size_t len, enum zip_cmd cmd);
 .Ed
 .Pp
@@ -68,10 +68,10 @@ and 0.
 The last argument,
 .Ar cmd ,
 specifies which action the function should perform:
-.Bl -tag -width XZIPXCMDXCLOSEXX -offset indent
-.It Dv ZIP_CMD_OPEN
+.Bl -tag -width XZIPXSOURCEXCLOSEXX -offset indent
+.It Dv ZIP_SOURCE_OPEN
 Prepare for reading.  Return 0 on success, \-1 on error.
-.It Dv ZIP_CMD_READ
+.It Dv ZIP_SOURCE_READ
 Read data into the buffer
 .Ar data
 of size
@@ -79,41 +79,41 @@ of size
 Return the number of bytes placed into
 .Ar data
 on success, \-1 on error.
-.It Dv ZIP_CMD_CLOSE
+.It Dv ZIP_SOURCE_CLOSE
 Reading is done.
-.It Dv ZIP_CMD_STAT
+.It Dv ZIP_SOURCE_STAT
 Get meta information for the input data.
 .Ar data
 points to a struct zip_stat, which should be filled in.  Return 0 on
 success, \-1 on error.
-.It Dv ZIP_CMD_ERROR
+.It Dv ZIP_SOURCE_ERROR
 Get error information.
 .Ar data
 points to an array of two ints, which should be filled with the libzip
 error code and the corresponding system error code for the error that
 occurred.  Return 0.
 .\" XXX: we should document all error codes somewhere
-.It Dv ZIP_CMD_FREE
+.It Dv ZIP_SOURCE_FREE
 Clean up and free all resources.  Return 0.
 .El
 .Pp
 The library will always issue
-.Dv ZIP_CMD_OPEN
+.Dv ZIP_SOURCE_OPEN
 before issuing
-.Dv ZIP_CMD_READ .
+.Dv ZIP_SOURCE_READ .
 When it no longer wishes to read from this source, it will issue
-.Dv ZIP_CMD_CLOSE .
+.Dv ZIP_SOURCE_CLOSE .
 If the library wishes to read the data again, it will issue
-.Dv ZIP_CMD_OPEN
+.Dv ZIP_SOURCE_OPEN
 a second time.  If the function is unable to provide
 the data again, it should return \-1.
 .Pp
-.Dv ZIP_CMD_STAT
+.Dv ZIP_SOURCE_STAT
 can be issued at any time.
-.Dv ZIP_CMD_ERROR
+.Dv ZIP_SOURCE_ERROR
 will only be issued in response to the function
 returning \-1.
-.Dv ZIP_CMD_FREE
+.Dv ZIP_SOURCE_FREE
 will be the last command issued.
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
