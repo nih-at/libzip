@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free.c,v 1.13 2004/11/18 17:11:21 wiz Exp $
+  $NiH: zip_free.c,v 1.14 2004/11/30 21:37:01 wiz Exp $
 
   zip_free.c -- free struct zip
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -69,8 +69,11 @@ _zip_free(struct zip *za)
     }
 
     for (i=0; i<za->nfile; i++) {
-	za->file[i]->flags = ZIP_ER_ZIPCLOSED;
-	za->file[i]->za = NULL;
+	if (za->file[i]->error.zip_err == ZIP_ER_OK
+	    && za->file[i]->cbytes_left > 0) {
+	    _zip_error_set(&za->file[i]->error, ZIP_ER_ZIPCLOSED, 0);
+	    za->file[i]->za = NULL;
+	}
     }
 
     free(za->file);
