@@ -23,7 +23,36 @@
 * update-zip (instead of close, reopen)
 * support for old compression methods?????
 ------------------------------------------------ regression tests
-* (fopen_index) illegal index
-	changed entry w/ ZIP_FL_UNCHANGED
-	changed entry w/o ZIP_FL_UNCHANGED
-	added entry
+* (add, replace)
+	add to empty zip
+	add to existing zip
+	add w/ existing file name [E]
+	replace ok
+	replace w/ illegal index [E]
+	replace w/ deleted name [E]
+* (close)
+* (delete)
+* (error_get)
+* (error_get_sys_type)
+* (error_to_str)
+* (file_error_get)
+* (file_strerror)
+* (fopen_index)
+	illegal index
+* (get_name)
+* (get_num_files)
+* (name_locate)
+	deleted name [E]
+* (rename)
+* (replace)
+* (source_buffer)
+* (source_file)
+* (source_filep)
+* (source_free)
+* (source_function)
+* (source_zip)
+* (stat)
+* (stat_index)
+* (strerror)
+* (unchange)
+* (unchange_all)
