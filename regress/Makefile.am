@@ -9,5 +9,5 @@ ziptest_SOURCES=ziptest.c
 
 TESTS=buffadd open
 
-INCLUDES=-I${top_srcdir}/lib
+AM_CPPFLAGS=-I${top_srcdir}/lib
 LDADD=../lib/libzip.la

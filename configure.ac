@@ -1,4 +1,4 @@
-AC_PREREQ(2.54)
+AC_PREREQ(2.59)
 AC_INIT([libzip],[0.5a],[nih@giga.or.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
