@@ -1,3 +1,16 @@
+2004-04-16  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_stat_index.c (zip_stat_index): return ZERR_INVAL if
+	ZIP_FL_UNCHANGED is specified and file was added.  Honour
+	ZIP_FL_UNCHANGED for name.  If file was changed and
+	ZIP_FL_UNCHANGED is not given, call ch_func with command
+	ZIP_CMD_STAT.
+
+	* lib/zip_fopen_index.c (zip_fopen_index): return ZERR_INVAL if
+	ZIP_FL_UNCHANGED is specified and file was added.
+	
+XXX: update for no-meta rewrite
+
 2003-12-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* src/zipcmp.c (compare_zip): use correct index.
