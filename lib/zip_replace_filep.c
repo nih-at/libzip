@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_filep.c,v 1.6 2003/10/01 09:51:01 dillo Exp $
+  $NiH: zip_replace_filep.c,v 1.7.4.1 2004/03/20 09:54:08 dillo Exp $
 
   zip_replace_filep.c -- replace file from FILE*
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -42,27 +42,35 @@
 
 struct read_file {
     FILE *f;
-    int off, len;
+    off_t off, len;
 };
 
-static int read_file(void *state, void *data, int len, enum zip_cmd cmd);
+static int read_file(void *state, void *data, size_t len, enum zip_cmd cmd);
 
 
 
 int
-zip_replace_filep(struct zip *zf, int idx, const char *name,
-		  struct zip_meta *meta,
-		  FILE *file, int start, int len)
+zip_replace_filep(struct zip *zf, int idx,
+		  FILE *file, off_t start, off_t len)
 {
-    struct read_file *f;
-
-    if (idx < -1 || idx >= zf->nentry) {
-	zip_err = ZERR_INVAL;
+    if (idx < 0 || idx >= zf->nentry) {
+	_zip_error_set(&zf->error, ZERR_INVAL, 0);
 	return -1;
     }
     
+    return _zip_replace_filep(zf, idx, NULL, file, start, len);
+}
+
+
+
+int
+_zip_replace_filep(struct zip *zf, int idx, const char *name,
+		  FILE *file, off_t start, off_t len)
+{
+    struct read_file *f;
+
     if ((f=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
-	zip_err = ZERR_MEMORY;
+	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	return -1;
     }
 
@@ -70,13 +78,13 @@ zip_replace_filep(struct zip *zf, int idx, const char *name,
     f->off = start;
     f->len = (len ? len : -1);
     
-    return zip_replace(zf, idx, name, meta, read_file, f, 0);
+    return _zip_replace(zf, idx, name, read_file, f, 0);
 }
 
 
 
 static int
-read_file(void *state, void *data, int len, enum zip_cmd cmd)
+read_file(void *state, void *data, size_t len, enum zip_cmd cmd)
 {
     struct read_file *z;
     char *buf;
@@ -87,8 +95,8 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
-	if (fseek(z->f, z->off, SEEK_SET) < 0) {
-	    zip_err = ZERR_SEEK;
+	if (fseeko(z->f, z->off, SEEK_SET) < 0) {
+	    /* XXX: zip_err = ZERR_SEEK; */
 	    return -1;
 	}
 	return 0;
@@ -100,7 +108,7 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 	    n = len;
 	
 	if ((i=fread(buf, 1, n, z->f)) < 0) {
-	    zip_err = ZERR_READ;
+	    /* XXX: zip_err = ZERR_READ; */
 	    return -1;
 	}
 
@@ -109,15 +117,16 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 
 	return i;
 	
-    case ZIP_CMD_META:
-	return 0;
-
     case ZIP_CMD_CLOSE:
 	if (z->f) {
 	    fclose(z->f);
 	    z->f = NULL;
 	}
+	free(z);
 	return 0;
+
+    default:
+	;
     }
 
     return -1;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_unchange.c,v 1.10 2003/10/03 08:34:11 dillo Exp $
+  $NiH: zip_unchange.c,v 1.11.4.2 2004/04/06 20:30:07 dillo Exp $
 
   zip_unchange.c -- undo changes to file in zip archive
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -51,13 +51,11 @@ zip_unchange(struct zip *zf, int idx)
 	return -1;
     }
 
-    if (zf->entry[idx].fn_old) {
-	free(zf->entry[idx].fn);
-	zf->entry[idx].fn = zf->entry[idx].fn_old;
-	zf->entry[idx].fn_old = NULL;
+    if (zf->entry[idx].ch_filename) {
+	free(zf->entry[idx].ch_filename);
+	zf->entry[idx].ch_filename = NULL;
     }
 
-    zip_free_meta(zf->entry[idx].ch_meta);
     ret = _zip_unchange_data(zf->entry+idx);
         
     return ret;

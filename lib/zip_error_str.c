@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_error_str.c,v 1.1.4.1 2004/03/20 09:54:05 dillo Exp $
 
   zip_error_str.c -- get string representation of zip error code
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -46,7 +46,7 @@
 
 
 int
-zip_error_str(char *buf, int len, int ze, int se)
+zip_error_str(char *buf, size_t len, int ze, int se)
 {
     const char *zs, *ss;
 

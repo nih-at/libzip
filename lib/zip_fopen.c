@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen.c,v 1.7 2003/10/03 08:34:11 dillo Exp $
+  $NiH: zip_fopen.c,v 1.8.4.1 2004/04/08 16:53:07 dillo Exp $
 
   zip_fopen.c -- open file in zip archvie for reading
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,5 +48,5 @@ zip_fopen(struct zip *za, const char *fname, int flags)
     if ((idx=zip_name_locate(za, fname, flags)) < 0)
 	return NULL;
 
-    return zip_fopen_index(za, idx);
+    return zip_fopen_index(za, idx, flags);
 }

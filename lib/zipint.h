@@ -1,8 +1,9 @@
+
 #ifndef _HAD_ZIPINT_H
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.21 2003/10/06 16:37:42 dillo Exp $
+  $NiH: zipint.h,v 1.22.4.12 2004/04/14 09:21:35 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -50,60 +51,103 @@
 
 
 
+/* state of change of a file in zip archive */
+
+enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
+		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
+
+/* constants for struct zip_file's member flags */
+
+#define ZIP_ZF_EOF	1 /* EOF reached */
+#define ZIP_ZF_COMP	2 /* read compressed data */
+
+/* error information */
+
 struct zip_error {
     int zip_err;	/* libzip error code (ZERR_*) */
     int sys_err;	/* copy of errno (E*) or zlib error code */
     char *str;		/* string representation or NULL */
 };
 
+/* zip archive, part of API */
+
 struct zip {
-    char *zn;
-    FILE *zp;
-    struct zip_error error;
-    unsigned short comlen, changes;
-    unsigned int cd_size, cd_offset;
-    char *com;
-    int nentry, nentry_alloc;
-    struct zip_entry *entry;
-    int nfile, nfile_alloc;
-    struct zip_file **file;
+    char *zn;			/* file name */
+    FILE *zp;			/* file */
+    struct zip_error error;	/* error information */
+
+    struct zip_cdir *cdir;	/* central directory */
+    int nentry;			/* number of entries */
+    int nentry_alloc;		/* number of entries allocated */
+    struct zip_entry *entry;	/* entries */
+    int nfile;			/* number of opened files within archvie */
+    int nfile_alloc;		/* number of files allocated */
+    struct zip_file **file;	/* opened files within archvie */
 };
 
-/* file in zip file */
+/* file in zip archive, part of API */
 
 struct zip_file {
-    struct zip *zf;
-    char *name;
-    struct zip_error error;
-    int flags; /* -1: eof, >0: error */
+    struct zip *zf;		/* zip archive containing this file */
+    struct zip_error error;	/* error information */
+    int flags;			/* -1: eof, >0: error */
 
-    int method;
-    /* position within zip file (fread/fwrite) */
-    long fpos;
-    /* no of bytes left to read */
-    unsigned long bytes_left;
-    /* no of bytes of compressed data left */
-    unsigned long cbytes_left;
-    /* crc so far */
-    unsigned long crc, crc_orig;
+    int method;			/* compression method */
+    long fpos;			/* position within zip file (fread/fwrite) */
+    unsigned long bytes_left;	/* number of bytes left to read */
+    unsigned long cbytes_left;  /* number of bytes of compressed data left */
+    
+    unsigned long crc;		/* crc so far */
+    unsigned long crc_orig;	/* CRC recorded in archive */
     
     char *buffer;
     z_stream *zstr;
 };
 
-/* entry in zip file directory */
+/* zip archive directory entry (central or local) */
+
+struct zip_dirent {
+    unsigned short version_madeby;	/* (c)  version of creator */
+    unsigned short version_needed;	/* (cl) version needed to extract */
+    unsigned short bitflags;		/* (cl) general purposee bit flag */
+    unsigned short comp_method;		/* (cl) compression method used */
+    time_t last_mod;			/* (cl) time of last modification */
+    unsigned int crc;			/* (cl) CRC-32 of uncompressed data */
+    unsigned int comp_size;		/* (cl) size of commpressed data */
+    unsigned int uncomp_size;		/* (cl) size of uncommpressed data */
+    char *filename;			/* (cl) file name (NUL-terminated) */
+    unsigned short filename_len;	/* (cl) length of filename (w/o NUL) */
+    char *extrafield;			/* (cl) extra field */
+    unsigned short extrafield_len;	/* (cl) length of extra field */
+    char *comment;			/* (c)  file comment */
+    unsigned short comment_len;		/* (c)  length of file comment */
+    unsigned short disk_number;		/* (c)  disk number start */
+    unsigned short int_attrib;		/* (c)  internal file attributes */
+    unsigned int ext_attrib;		/* (c)  external file attributes */
+    unsigned int offset;		/* (c)  offest of local header  */
+};
+
+/* zip archive central directory */
+
+struct zip_cdir {
+    struct zip_dirent *entry;	/* directory entries */
+    int nentry;			/* number of entries */
+
+    unsigned int size;		/* size of central direcotry */
+    unsigned int offset;	/* offset of central directory in file */
+    char *comment;		/* zip archive comment */
+    unsigned short comment_len;	/* length of zip archive comment */
+};
+
+/* entry in zip archive directory */
 
 struct zip_entry {
-    struct zip_meta *meta;
-    char *fn;
-    char *fn_old;
-    unsigned int file_fnlen;
-
     enum zip_state state;
     zip_read_func ch_func;
     void *ch_data;
-    int ch_comp;		/* 1: data returned by ch_func is compressed */
-    struct zip_meta *ch_meta;
+    int ch_flags;		/* 1: data returned by ch_func is compressed */
+    char *ch_filename;
+    time_t ch_mtime;
 };
 
 
@@ -114,6 +158,20 @@ extern const int _zip_err_type[];
 
 
 
+#define ZIP_ENTRY_DATA_CHANGED(x)	\
+			((x)->state == ZIP_ST_REPLACED  \
+			 || (x)->state == ZIP_ST_ADDED)
+
+
+
+void _zip_cdir_free(struct zip_cdir *);
+struct zip_cdir *_zip_cdir_new(int, struct zip_error *);
+int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
+void _zip_dirent_finalize(struct zip_dirent *);
+void _zip_dirent_init(struct zip_dirent *);
+int _zip_dirent_read(struct zip_dirent *, FILE *,
+		     unsigned char **, int, int, struct zip_error *);
+int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
 void _zip_entry_init(struct zip *, int);
 void _zip_error_copy(struct zip_error *, struct zip_error *);
 void _zip_error_fini(struct zip_error *);
@@ -121,17 +179,24 @@ void _zip_error_get(struct zip_error *, int *, int *);
 void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
 const char *_zip_error_strerror(struct zip_error *);
-int _zip_file_fillbuf(char *, int, struct zip_file *);
+int _zip_file_fillbuf(void *, size_t, struct zip_file *);
+unsigned int _zip_file_get_offset(struct zip *, int);
 void _zip_free(struct zip *);
 int _zip_free_entry(struct zip_entry *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, int);
-int _zip_merge_meta(struct zip_meta *, struct zip_meta *);
-int _zip_merge_meta_fix(struct zip_meta *, struct zip_meta *);
-struct zip *_zip_new(int *);
+struct zip *_zip_new(struct zip_error *);
 struct zip_entry *_zip_new_entry(struct zip *);
-int _zip_readcdentry(FILE *, struct zip_entry *, unsigned char **, 
-		     int, int, int);
+unsigned short _zip_read2(unsigned char **);
+unsigned int _zip_read4(unsigned char **);
+int _zip_replace(struct zip *, int, const char *,zip_read_func, void *, int);
+int _zip_replace_data(struct zip *, int, const char *,
+		      const void *, off_t, int);
+int _zip_replace_file(struct zip *, int, const char *,
+		      const char *, off_t, off_t);
+int _zip_replace_filep(struct zip *, int, const char *, FILE *, off_t, off_t);
+int _zip_replace_zip(struct zip *, int, const char *,
+		     struct zip *, int, int, off_t, off_t);
 int _zip_set_name(struct zip *, int, const char *);
 int _zip_unchange(struct zip_entry *);
 int _zip_unchange_data(struct zip_entry *);

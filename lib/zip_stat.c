@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_stat.c,v 1.1.4.1 2004/04/14 09:21:34 dillo Exp $
 
   zip_stat.c -- get information about file by name
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -48,5 +48,5 @@ zip_stat(struct zip *za, const char *fname, int flags, struct zip_stat *st)
     if ((idx=zip_name_locate(za, fname, flags)) < 0)
 	return -1;
 
-    return zip_stat_index(za, idx, st);
+    return zip_stat_index(za, idx, flags, st);
 }

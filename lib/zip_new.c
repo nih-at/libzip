@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_new.c,v 1.5 2003/10/02 14:13:31 dillo Exp $
+  $NiH: zip_new.c,v 1.6.4.3 2004/04/06 20:30:05 dillo Exp $
 
   zip_new.c -- create and init struct zip
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -46,25 +46,23 @@
    the new struct. */
 
 struct zip *
-_zip_new(int *errp)
+_zip_new(struct zip_error *error)
 {
-    struct zip *zf;
+    struct zip *za;
 
-    zf = (struct zip *)malloc(sizeof(struct zip));
-    if (!zf) {
-	if (errp)
-	    *errp = ZERR_MEMORY;
+    za = (struct zip *)malloc(sizeof(struct zip));
+    if (!za) {
+	_zip_error_set(error, ZERR_MEMORY, 0);
 	return NULL;
     }
 
-    zf->zn = NULL;
-    zf->zp = NULL;
-    zf->comlen = zf->changes = 0;
-    zf->nentry = zf->nentry_alloc = zf->cd_size = zf->cd_offset = 0;
-    zf->nfile = zf->nfile_alloc = 0;
-    zf->com = NULL;
-    zf->entry = NULL;
-    zf->file = NULL;
+    za->zn = NULL;
+    za->zp = NULL;
+    za->nentry = za->nentry_alloc = 0;
+    za->nfile = za->nfile_alloc = 0;
+    za->cdir = NULL;
+    za->entry = NULL;
+    za->file = NULL;
     
-    return zf;
+    return za;
 }

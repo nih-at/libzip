@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_data.c,v 1.11 2003/10/01 09:51:01 dillo Exp $
+  $NiH: zip_replace_data.c,v 1.12.4.1 2004/03/20 09:54:08 dillo Exp $
 
   zip_replace_data.c -- replace file from buffer
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -43,29 +43,37 @@
 
 struct read_data {
     const char *buf, *data;
-    int len;
+    off_t len;
     int freep;
 };
 
-static int read_data(void *state, void *data, int len, enum zip_cmd cmd);
-
+static ssize_t read_data(void *state, void *data, size_t len,
+			 enum zip_cmd cmd);
 
 
 
 int
-zip_replace_data(struct zip *zf, int idx, const char *name,
-		 struct zip_meta *meta,
-		 const char *data, int len, int freep)
+zip_replace_data(struct zip *zf, int idx,
+		 const void *data, off_t len, int freep)
 {
-    struct read_data *f;
-
-    if (idx < -1 || idx >= zf->nentry) {
-	zip_err = ZERR_INVAL;
+    if (idx < 0 || idx >= zf->nentry) {
+	_zip_error_set(&zf->error, ZERR_INVAL, 0);
 	return -1;
     }
     
-    if ((f=(struct read_data *)malloc(sizeof(struct read_data))) == NULL) {
-	zip_err = ZERR_MEMORY;
+    return _zip_replace_data(zf, idx, NULL, data, len, freep);
+}
+
+
+
+int
+_zip_replace_data(struct zip *zf, int idx, const char *name,
+		  const void *data, off_t len, int freep)
+{
+    struct read_data *f;
+
+    if ((f=malloc(sizeof(*f))) == NULL) {
+	_zip_error_set(&zf->error, ZERR_MEMORY, 0);
 	return -1;
     }
 
@@ -73,13 +81,13 @@ zip_replace_data(struct zip *zf, int idx, const char *name,
     f->len = len;
     f->freep = freep;
     
-    return zip_replace(zf, idx, name, meta, read_data, f, 0);
+    return _zip_replace(zf, idx, name, read_data, f, 0);
 }
 
 
 
 static int
-read_data(void *state, void *data, int len, enum zip_cmd cmd)
+read_data(void *state, void *data, size_t len, enum zip_cmd cmd)
 {
     struct read_data *z;
     char *buf;
@@ -106,15 +114,16 @@ read_data(void *state, void *data, int len, enum zip_cmd cmd)
 
 	return n;
 	
-    case ZIP_CMD_META:
-	return 0;
-
     case ZIP_CMD_CLOSE:
 	if (z->freep) {
 	    free((void *)z->data);
 	    z->data = NULL;
 	}
+	free(z);
 	return 0;
+
+    default:
+	;
     }
 
     return -1;

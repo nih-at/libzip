@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: open.c,v 1.1.4.1 2004/04/10 23:52:58 dillo Exp $
 
   open.c -- test cases for opening zip archives
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -35,14 +35,14 @@
 
 
 
-
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "zip.h"
 
-int open_fail(const char *fname, int flags, const char *desc, int err);
-int open_success(const char *fname, int flags, const char *desc, int nent);
+int open_fail(const char *, int, const char *, int, int);
+int open_success(const char *, int, const char *, int);
 
 
 
@@ -54,9 +54,9 @@ main(int argc, char *argv[])
     fail = 0;
 
     remove("nosuchfile");
-    fail += open_fail("nosuchfile", 0, "non-existing", ZERR_NOENT);
-    fail += open_fail("Makefile", 0, "non-zip", ZERR_NOZIP);
-    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZERR_EXISTS);
+    fail += open_fail("nosuchfile", 0, "non-existing", ZERR_OPEN, ENOENT);
+    fail += open_fail("Makefile", 0, "non-zip", ZERR_NOZIP, 0);
+    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZERR_EXISTS, 0);
     /* ZERR_OPEN */
     /* ZERR_READ */
     /* ZERR_SEEK */
@@ -71,19 +71,21 @@ main(int argc, char *argv[])
 
 
 int
-open_fail(const char *fname, int flags, const char *desc, int err)
+open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
 {
     struct zip *z;
     int ze;
+
+    errno = 0;
 
     if ((z=zip_open(fname, flags, &ze)) != NULL) {
 	printf("fail: opening %s succeeded\n", desc);
 	zip_close(z);
 	return 1;
     }
-    else if (ze != err) {
-	printf("fail: opening %s returned wrong error %d, expected %d\n",
-		desc, ze, err);
+    else if (ze != zerr || errno != serr) {
+	printf("fail: opening %s returned wrong error %d/%d, expected %d/%d\n",
+		desc, ze, errno, zerr, serr);
 	return 1;
     }
 

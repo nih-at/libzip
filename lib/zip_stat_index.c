@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_stat_index.c,v 1.1.4.4 2004/04/14 09:21:34 dillo Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -41,21 +41,28 @@
 
 
 int
-zip_stat_index(struct zip *za, int index, struct zip_stat *st)
+zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 {
     if (index < 0 || index >= za->nentry) {
 	_zip_error_set(&za->error, ZERR_INVAL, 0);
 	return -1;
     }
 
-    st->name = za->entry[index].fn;
+    if ((flags & ZIP_FL_UNCHANGED) == 0
+	&& ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
+	/* XXX: call ch_func with ZIP_CMD_STAT */
+	_zip_error_set(&za->error, ZERR_CHANGED, 0);
+	return NULL;
+    }
+    
+    st->name = zip_get_name(za, index);
     st->index = index;
-    st->crc = za->entry[index].meta->crc;
-    st->size = za->entry[index].meta->uncomp_size;
-    st->mtime = za->entry[index].meta->last_mod;
-    st->comp_size = za->entry[index].meta->comp_size;
-    st->comp_method = za->entry[index].meta->comp_method;
-    /* st->bitflags = za->entry[index].meta->bitflags; */
+    st->crc = za->cdir->entry[index].crc;
+    st->size = za->cdir->entry[index].uncomp_size;
+    st->mtime = za->cdir->entry[index].last_mod;
+    st->comp_size = za->cdir->entry[index].comp_size;
+    st->comp_method = za->cdir->entry[index].comp_method;
+    /* st->bitflags = za->cdir->entry[index].bitflags; */
 
     return 0;
 }

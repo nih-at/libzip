@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_free_meta.c,v 1.7 2003/03/16 10:21:39 wiz Exp $
+  $NiH: zip_file_get_offset.c,v 1.1.2.2 2004/04/06 20:27:22 dillo Exp $
 
-  zip_free_meta.c -- free struct zip_meta
-  Copyright (C) 1999 Dieter Baron and Thomas Klausner
+  zip_file_get_offset.c -- get offset of file data in archive.
+  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,20 +35,44 @@
 
 
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "zip.h"
+#include "zipint.h"
 
-void
-zip_free_meta(struct zip_meta *meta)
+
+
+/* _zip_file_get_offset(za, ze):
+   Returns the offset of the file data for entry ze.
+
+   On error, fills in za->error and returns 0.
+*/
+
+unsigned int
+_zip_file_get_offset(struct zip *za, int idx)
 {
-    if (!meta)
-	return;
-    
-    free(meta->ef);
-    free(meta->lef);
-    free(meta->fc);
+    struct zip_dirent de;
+    unsigned int offset;
 
-    free(meta);
-    
-    return;
+    offset = za->cdir->entry[idx].offset;
+
+    if (fseek(za->zp, offset, SEEK_SET) != 0) {
+	_zip_error_set(&za->error, ZERR_SEEK, errno);
+	return 0;
+    }
+
+    if (_zip_dirent_read(&de, za->zp, NULL, 0, 1, &za->error) != 0)
+	return 0;
+
+    offset += LENTRYSIZE + de.filename_len + de.extrafield_len;
+
+    _zip_dirent_finalize(&de);
+
+    return offset;
 }

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_replace_file.c,v 1.10 2003/10/01 09:51:01 dillo Exp $
+  $NiH: zip_replace_file.c,v 1.11.4.1 2004/03/20 09:54:08 dillo Exp $
 
   zip_replace_file.c -- replace file from file system
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -35,7 +35,8 @@
 
 
 
-#include <stdlib.h>
+#include <errno.h>
+#include <stdio.h>
 
 #include "zip.h"
 #include "zipint.h"
@@ -43,22 +44,29 @@
 
 
 int
-zip_replace_file(struct zip *zf, int idx, const char *name,
-		 struct zip_meta *meta,
-		 const char *fname, int start, int len)
+zip_replace_file(struct zip *zf, int idx,
+		 const char *fname, off_t start, off_t len)
+{
+    if (idx < 0 || idx >= zf->nentry) {
+	_zip_error_set(&zf->error, ZERR_INVAL, 0);
+	return -1;
+    }
+
+    return _zip_replace_file(zf, idx, NULL, fname, start, len);
+}
+
+
+
+int
+_zip_replace_file(struct zip *zf, int idx, const char *name,
+		  const char *fname, off_t start, off_t len)
 {
     FILE *fp;
 
-    if (idx < -1 || idx >= zf->nentry) {
-	zip_err = ZERR_INVAL;
-	return -1;
-    }
-    
     if ((fp=fopen(fname, "rb")) == NULL) {
-	zip_err = ZERR_OPEN;
+	_zip_error_set(&zf->error, ZERR_OPEN, errno);
 	return -1;
     }
 
-    return zip_replace_filep(zf, idx, (name ? name : fname), meta,
-			     fp, start, len);
+    return _zip_replace_filep(zf, idx, name, fp, start, len);
 }

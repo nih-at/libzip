@@ -2,17 +2,17 @@
 * API cleanup
 	check function names (consistency, appropriateness)
 	file sizes, offsets: type big enough? (no, zip64)
-	don't expose struct zip_meta
-	clean up error handling and error code setting (get rid of zip_err)
-	zip_{add,replace}*: don't use struct zip_meta
-	don't expose zip_free_meta, zip_meta_new
-	defines for compression method
-* documentation: zip_add*, zip_replace*, zip_{,_file}get_error,
-	zip_error_sys_type, zip_get_num_files, zip_error_str
+	let ch_func report errors back to caller
+* documentation: zip_add zip_add_data zip_add_file zip_add_filep zip_add_zip
+	zip_error_sys_type zip_file_get_error zip_get_error
+	zip_replace zip_replace_data zip_replace_file zip_replace_filep
+	zip_replace_zip
 * regression tests
 * code review
 * README
+* set mtime for changed entries
 ------------------------------------------------ others
+* API for (file and archive) comments
 * fix warnings in zipcmp
 * zipcmp: add option for file content comparison
 * support for zip64 (large file)
@@ -21,9 +21,6 @@
 * append to files (for self-extracting files)
 * add custom compression function support
 * zip_replace_zip: remember compression method, recompress if different speced
-* better closing of zip-files
 * close even if error...
 * update-zip (instead of close, reopen)
 * support for old compression methods?????
-* zip-comment functions
-* better error handling, more verbose
