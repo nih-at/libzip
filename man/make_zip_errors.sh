@@ -1,9 +1,9 @@
 #!/bin/sh
 
-#  $NiH: make_zip_errors.sh,v 1.1 2004/12/22 17:01:27 dillo Exp $
+#  $NiH: make_zip_errors.sh,v 1.2 2004/12/26 14:21:06 dillo Exp $
 #
 #  make_zip_errrors.sh: create zip_errors.mdoc from zip.h
-#  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+#  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 #
 #  This file is part of libzip, a library to manipulate ZIP archives.
 #  The authors can be contacted at <nih@giga.or.at>
@@ -47,7 +47,7 @@ then
     exit 1
 fi
 
-rcsid=`echo '$NiH: make_zip_errors.sh,v 1.1 2004/12/22 17:01:27 dillo Exp $' | tr -d '$'`
+rcsid=`echo '$NiH: make_zip_errors.sh,v 1.2 2004/12/26 14:21:06 dillo Exp $' | tr -d '$'`
 inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
 date=`date '+%B %e, %Y' | sed 's/  / /'`
 
@@ -55,7 +55,7 @@ cat <<EOF >> "$2.$$" || exit 1
 .\" \$NiH\$
 .\"
 .\" zip_errors.mdoc -- list of all libzip error codes
-.\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
