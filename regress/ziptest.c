@@ -18,23 +18,23 @@ main(int argc, char *argv[])
 #if 0
     if (argc != 2) {
 	fprintf(stderr, "%s: call with one option: the zip-file to destroy"
-		"^H^H^H^H^H^H^Htest", argv[0]);
+		"^H^H^H^H^H^H^Htest\n", argv[0]);
 	return 1;
     }
 #endif
     if (argc != 3) {
-	fprintf(stderr, "%s: call with two options: src dest", argv[0]);
+	fprintf(stderr, "%s: call with two options: src dest\n", argv[0]);
 	return 1;
     }
 
     if ((zf=zip_open(argv[1], ZIP_CHECKCONS))==NULL) {
-	fprintf(stderr, "%s: %s: can't open file: %s", argv[0], argv[1],
+	fprintf(stderr, "%s: %s: can't open file: %s\n", argv[0], argv[1],
 		zip_err_str[zip_err]);
 	return 1;
     }
 
     if ((destzf=zip_open(argv[2], ZIP_CREATE))==NULL) {
-	fprintf(stderr, "%s: %s: can't open file: %s", argv[0], argv[2],
+	fprintf(stderr, "%s: %s: can't open file: %s\n", argv[0], argv[2],
 		zip_err_str[zip_err]);
 	return 1;
     }
@@ -47,7 +47,7 @@ main(int argc, char *argv[])
 #endif
 
     if (zip_add_zip(destzf, NULL, NULL, zf, 0, 0, 0) == -1)
-	fprintf(stderr, "%s: %s: can't add file to zip '%s': %s", argv[0],
+	fprintf(stderr, "%s: %s: can't add file to zip '%s': %s\n", argv[0],
 		zf->entry[0].fn, argv[1], zip_err_str[zip_err]);
 
 #if 0
@@ -84,13 +84,13 @@ main(int argc, char *argv[])
 #endif
     
     if (zip_close(destzf)!=0) {
-	fprintf(stderr, "%s: %s: can't close file: %s", argv[0], argv[2],
+	fprintf(stderr, "%s: %s: can't close file: %s\n", argv[0], argv[2],
 		zip_err_str[zip_err]);
 	return 1;
     }
 
     if (zip_close(zf)!=0) {
-	fprintf(stderr, "%s: %s: can't close file: %s", argv[0], argv[1],
+	fprintf(stderr, "%s: %s: can't close file: %s\n", argv[0], argv[1],
 		zip_err_str[zip_err]);
 	return 1;
     }
