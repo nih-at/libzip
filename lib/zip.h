@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.31 2003/10/01 14:51:50 dillo Exp $
+  $NiH: zip.h,v 1.32 2003/10/02 14:13:28 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -56,14 +56,14 @@ int zip_err; /* global variable for errors returned by the low-level
 		library */
 
 #define ZERR_OK               0  /* no error */
-#define ZERR_MULTIDISK        1  /* multi-disk zip-files not supported */
-#define ZERR_RENAME           2  /* replacing zipfile with tempfile failed */
-#define ZERR_CLOSE            3  /* closing zipfile failed */
+#define ZERR_MULTIDISK        1  /* multi-disk zip archives not supported */
+#define ZERR_RENAME           2  /* renaming temporary file failed */
+#define ZERR_CLOSE            3  /* closing zip archive failed */
 #define ZERR_SEEK             4  /* seek error */
 #define ZERR_READ             5  /* read error */
 #define ZERR_WRITE            6  /* write error */
 #define ZERR_CRC              7  /* CRC error */
-#define ZERR_ZIPCLOSED        8  /* containing zip file was closed */
+#define ZERR_ZIPCLOSED        8  /* containing zip archive was closed */
 #define ZERR_NOENT            9  /* no such file */
 #define ZERR_EXISTS          10  /* file already exists */
 #define ZERR_OPEN            11  /* can't open file */
@@ -74,11 +74,11 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_COMPNOTSUPP     16  /* compression method not supported */
 #define ZERR_EOF             17  /* premature EOF */
 #define ZERR_INVAL           18  /* invalid argument */
-#define ZERR_NOZIP           19  /* not a zip file */
+#define ZERR_NOZIP           19  /* not a zip archive */
 #define ZERR_INTERNAL        20  /* internal error */
-#define ZERR_INCONS	     21  /* zip file inconsistent */
+#define ZERR_INCONS	     21  /* zip archive inconsistent */
 
-extern char *zip_err_str[];
+extern const char * const zip_err_str[];
 
 /* zip file */
 

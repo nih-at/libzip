@@ -21,7 +21,7 @@ cat <<EOF >> "$2.$$" || exit 1
 
 
 
-char *zip_err_str[] = {
+const char * const zip_err_str[] = {
 EOF
 
 sed -n  '/^#define ZERR_/ s/.*\/\* \([^*]*\) \*\//    "\1",/p' "$1" \

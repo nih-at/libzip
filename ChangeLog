@@ -1,5 +1,7 @@
 2003-10-04  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
+	* lib/zip.h, lib/make_zip_err_str.sh: make zip_err_str const.
+
 	* src/zipcmp.c (entry_cmp, main): add -i flag (compare names
 	ignoring case distinctions). 
 
