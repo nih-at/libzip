@@ -51,9 +51,12 @@ MAN=${MANDOC:.mdoc=.man}
 MDOC2MAN=mdoc2man
 SUFFIXES=.man .mdoc
 
-.PHONY: mkman
+.PHONY: mkman update-errors
 
 mkman: ${MAN}
+
+update-errors:
+	sh $(srcdir)/make_zip_errors.sh $(srcdir)/../lib/zip.h zip_errors.mdoc
 
 .mdoc.man:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
