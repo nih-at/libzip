@@ -1,0 +1,3 @@
+* documentation
+* correct version in installed libzip.so.x.y
+* fix warnings in zipcmp
