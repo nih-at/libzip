@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_free.c,v 1.12 2004/11/18 15:04:04 wiz Exp $
+  $NiH: zip_free.c,v 1.13 2004/11/18 17:11:21 wiz Exp $
 
   zip_free.c -- free struct zip
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -63,7 +63,7 @@ _zip_free(struct zip *za)
 
     if (za->entry) {
 	for (i=0; i<za->nentry; i++) {
-	    _zip_free_entry(za->entry+i);
+	    _zip_entry_free(za->entry+i);
 	}
 	free(za->entry);
     }

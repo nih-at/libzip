@@ -1,7 +1,7 @@
 /*
-  $NiH: zip_free_entry.c,v 1.12 2004/06/24 15:01:57 dillo Exp $
+  $NiH: zip_entry_free.c,v 1.13 2004/11/18 15:04:04 wiz Exp $
 
-  zip_free_entry.c -- free struct zip_entry
+  zip_entry_free.c -- free struct zip_entry
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -43,7 +43,7 @@
 
 
 void
-_zip_free_entry(struct zip_entry *ze)
+_zip_entry_free(struct zip_entry *ze)
 {
     free(ze->ch_filename);
     ze->ch_filename = NULL;
