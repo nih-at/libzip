@@ -1,6 +1,6 @@
 2003-10-05  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
-	* lib/zip.h, lib/zipint.h: Don't expose struct zip, struc
+	* lib/zip.h, lib/zipint.h: Don't expose struct zip, struct
 	zip_file.
 	* lib/zip_open.c (zip_open): new argument errp, use it to store
 	error code.
