@@ -2,7 +2,7 @@
 #include "zip.h"
 
 int
-_zip_entry_free(struct zip_entry *ze)
+_zip_free_entry(struct zip_entry *ze)
 {
     int ret;
     

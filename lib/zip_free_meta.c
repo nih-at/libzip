@@ -2,7 +2,7 @@
 #include "zip.h"
 
 void
-zip_meta_free(struct zip_meta *meta)
+zip_free_meta(struct zip_meta *meta)
 {
     if (!meta)
 	return;
