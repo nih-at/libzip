@@ -1,7 +1,7 @@
 /*
-  $NiH$
+  $NiH: zip_error_get_sys_type.c,v 1.1 2003/10/06 02:50:06 dillo Exp $
 
-  zip_error_sys_type.c -- return type of system error code
+  zip_error_get_sys_type.c -- return type of system error code
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -41,7 +41,7 @@
 
 
 int
-zip_error_sys_type(int ze)
+zip_error_get_sys_type(int ze)
 {
     if (ze < 0 || ze >= _zip_nerr_str)
 	return 0;

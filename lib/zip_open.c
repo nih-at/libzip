@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.24 2004/11/30 21:42:23 wiz Exp $
+  $NiH: zip_open.c,v 1.25 2004/12/22 15:48:37 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -213,7 +213,7 @@ set_error(int *zep, struct zip_error *err, int ze)
 
     if (err) {
 	_zip_error_get(err, &ze, &se);
-	if (zip_error_sys_type(ze) == ZIP_ET_SYS)
+	if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
 	    errno = se;
     }
 

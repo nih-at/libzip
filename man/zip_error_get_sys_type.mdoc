@@ -1,6 +1,6 @@
-.\" $NiH: zip_error_sys_type.mdoc,v 1.1 2004/12/01 00:16:08 wiz Exp $
+.\" $NiH: zip_error_get_sys_type.mdoc,v 1.2 2004/12/03 15:23:10 dillo Exp $
 .\"
-.\" zip_error_sys_type.mdoc -- get type of error
+.\" zip_error_get_sys_type.mdoc -- get type of error
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -35,17 +35,17 @@
 .Dt ZIP_ERROR_SYS_TYPE 3
 .Os
 .Sh NAME
-.Nm zip_error_sys_type
+.Nm zip_error_get_sys_type
 .Nd get type of system error code
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_error_sys_type "int ze"
+.Fn zip_error_get_sys_type "int ze"
 .Sh DESCRIPTION
 The
-.Fn zip_error_sys_type
+.Fn zip_error_get_sys_type
 function returns the type of the system error code for the libzip error
 .Ar ze .
 Possible types are:
