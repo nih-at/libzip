@@ -15,5 +15,7 @@ libzip_a_SOURCES=zip_open.c zip_close.c zip_err_str.c zip_name_locate.c \
 
 BUILT_SOURCES=zip_err_str.c
 
+EXTRA_DIST=make_zip_err_str.sh
+
 zip_err_str.c: zip.h make_zip_err_str.sh
 	$(srcdir)/make_zip_err_str.sh $(srcdir)/zip.h zip_err_str.c
