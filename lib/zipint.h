@@ -16,6 +16,7 @@ struct zip *_zip_new(void);
 int _zip_free(struct zip *zf);
 int _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp, 
 		     int left, int readp, int localp);
+int _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff);
 void *_zip_memdup(const void *mem, int len);
 void _zip_new_entry(struct zip *zf);
 void _zip_entry_init(struct zip *zf, int idx);

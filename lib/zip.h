@@ -30,6 +30,8 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_TMPOPEN         12
 #define ZERR_ZLIB            13
 #define ZERR_MEMORY          14
+#define ZERR_CHANGED         15  /* entry has been changed */
+#define ZERR_COMPNOTSUPP     16  /* compression method not supported */
 
 extern char *zip_err_str[];
 
