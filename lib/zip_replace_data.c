@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_replace_data.c,v 1.8 2002/06/06 09:27:14 dillo Exp $
 
   zip_replace_data.c -- replace file from buffer
   Copyright (C) 1999 Dieter Baron and Thomas Klaunser
@@ -25,6 +25,7 @@
 
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "zip.h"
 #include "zipint.h"
