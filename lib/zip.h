@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <zlib.h>
 
-enum zip_state { Z_UNCHANGED, Z_DELETED, Z_REPLACED, Z_ADDED, Z_RENAMED };
+enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
+		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
+enum zip_cmd { ZIP_CMD_INIT, ZIP_CMD_READ, ZIP_CMD_CRC, ZIP_CMD_CLOSE };
 
 /* flags for zip_open */
 #define ZIP_CREATE           1
@@ -36,6 +38,9 @@ int zip_err; /* global variable for errors returned by the low-level
 extern char *zip_err_str[];
 
 /* zip file */
+
+typedef unsigned long (*zip_read_func)(void *state, char *buf,
+				       int len, enum zip_cmd cmd);
 
 struct zip {
     char *zn;
@@ -79,6 +84,9 @@ struct zip_entry {
     enum zip_state state;
     char *fn, *ef, *fcom;
     char *fn_old;
+
+    
+
     /* only use one of the following three for supplying new data
        listed in order of priority, if more than one is set */
     struct zip *ch_data_zf;

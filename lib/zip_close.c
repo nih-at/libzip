@@ -40,7 +40,7 @@ zip_close(struct zip *zf)
     /* look if there really are any changes */
     count = 0;
     for (i=0; i<zf->nentry; i++) {
-	if (zf->entry[i].state != Z_UNCHANGED) {
+	if (zf->entry[i].state != ZIP_ST_UNCHANGED) {
 	    count = 1;
 	    break;
 	}
@@ -91,7 +91,7 @@ zip_close(struct zip *zf)
     if (zf->entry) {
 	for (i=0; i<zf->nentry; i++) {
 	    switch (zf->entry[i].state) {
-	    case Z_UNCHANGED:
+	    case ZIP_ST_UNCHANGED:
 		if (_zip_entry_copy(tzf, zf, i, NULL)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
@@ -99,11 +99,11 @@ zip_close(struct zip *zf)
 		    return -1;
 		}
 		break;
-	    case Z_DELETED:
+	    case ZIP_ST_DELETED:
 		break;
-	    case Z_REPLACED:
+	    case ZIP_ST_REPLACED:
 		/* fallthrough */
-	    case Z_ADDED:
+	    case ZIP_ST_ADDED:
 		if (zf->entry[i].ch_data_zf) {
 		    if (_zip_entry_copy(tzf, zf->entry[i].ch_data_zf,
 				       zf->entry[i].ch_data_zf_fileno,
@@ -133,7 +133,7 @@ zip_close(struct zip *zf)
 #endif /* 0 */
 		}
 		break;
-	    case Z_RENAMED:
+	    case ZIP_ST_RENAMED:
 		if (_zip_entry_copy(tzf, zf, i, NULL)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);

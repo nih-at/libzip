@@ -20,8 +20,8 @@ zip_fopen_index(struct zip *zf, int fileno)
 	return NULL;
     }
 
-    if (zf->entry[fileno].state != Z_UNCHANGED
-	&& zf->entry[fileno].state != Z_RENAMED) {
+    if (zf->entry[fileno].state != ZIP_ST_UNCHANGED
+	&& zf->entry[fileno].state != ZIP_ST_RENAMED) {
 	zip_err = ZERR_CHANGED;
 	return NULL;
     }
