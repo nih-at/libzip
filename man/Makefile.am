@@ -15,7 +15,6 @@ MAN3=	zip_close.3 \
 	zip_open.3 \
 	zip_rename.3 \
 	zip_stat.3 \
-	zip_stat_index.3 \
 	zip_strerror.3 \
 	zip_unchange.3 \
 	zip_unchange_all.3
