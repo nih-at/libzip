@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.33 2003/10/02 14:13:29 dillo Exp $
+  $NiH: zip_close.c,v 1.34 2003/10/03 07:58:38 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -134,7 +134,7 @@ zip_close(struct zip *zf)
     tzf->comlen = zf->comlen;
     tzf->cd_size = tzf->cd_offset = 0;
     tzf->com = (unsigned char *)_zip_memdup(zf->com, zf->comlen);
-    /* XXX: bail out if tzf->com == NULL;
+    /* XXX: bail out if tzf->com == NULL; */
 
     /*    tzf->entry = (struct zip_entry *)malloc(sizeof(struct
 	  zip_entry)*ALLOC_SIZE);
