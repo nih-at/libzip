@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.37 2003/10/06 22:44:06 dillo Exp $
+  $NiH: zip_close.c,v 1.37.4.1 2004/03/20 09:54:05 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999 Dieter Baron and Thomas Klausner
@@ -47,7 +47,7 @@
 #include "zipint.h"
 
 static int _zip_entry_copy(struct zip *dest, struct zip *src,
-			  int entry_no, struct zip_meta *meta);
+			   int entry_no, struct zip_meta *meta);
 static int _zip_entry_add(struct zip *dest, struct zip_entry *se);
 static int _zip_writecdir(struct zip *zfp);
 static void _zip_write2(FILE *fp, int i);
@@ -108,6 +108,7 @@ zip_close(struct zip *zf)
 	return -1;
     }
 
+#if 0
     sprintf(temp, "%s.XXXXXX", zf->zn);
 
     tfd = mkstemp(temp);
@@ -141,7 +142,6 @@ zip_close(struct zip *zf)
 	return -1;
     }
 
-#if 0
     count = 0;
     if (zf->entry) {
 	for (i=0; i<zf->nentry; i++) {
