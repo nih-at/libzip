@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "zip.h"
 
 
@@ -16,5 +17,8 @@ zip_unchange(struct zip *zf, int idx)
 	zf->entry[idx].fn_old = NULL;
     }
 
-    return _zip_unchange_data(zf, idx);
+    _zip_free_meta(zf->entry[idx]->ch_meta);
+    _zip_unchange_data(zf+idx);
+        
+    return 0;
 }

@@ -7,7 +7,7 @@ int
 zip_delete(struct zip *zf, int idx)
 {
     if (idx >= zf->nentry || idx < 0) {
-	zip_err = ZIP_NOENT;
+	zip_err = ZERR_NOENT;
 	return -1;
     }
 
@@ -15,7 +15,7 @@ zip_delete(struct zip *zf, int idx)
 	return -1;
 
     zf->changes = 1;
-    zf->entry[idx].state = Z_DELETED;
+    zf->entry[idx].state = ZIP_ST_DELETED;
 
     return 0;
 }

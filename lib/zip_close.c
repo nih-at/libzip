@@ -18,7 +18,9 @@ static void _zip_writestr(FILE *fp, char *str, int len);
 static int _zip_writecdentry(FILE *fp, struct zip_entry *zfe, int localp);
 static int _zip_create_entry(struct zip *dest, struct zip_entry *src_entry,
 			     char *name);
+static void _zip_u2d_time(time_t time, int *ddate, int *dtime);
 static int _zip_fwrite(char *b, int s, int n, FILE *f);
+
 
 
 /* zip_close:
@@ -59,7 +61,11 @@ zip_close(struct zip *zf)
     sprintf(temp, "%s.XXXXXX", zf->zn);
 
     tfd = mkstemp(temp);
-
+    if (tfd == -1) {
+	zip_err = ZERR_TMPOPEN;
+	return -1;
+    }
+    
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
 	zip_err = ZERR_TMPOPEN;
 	remove(temp);
@@ -501,8 +507,8 @@ _zip_create_entry(struct zip *dest, struct zip_entry *src_entry, char *name)
 	dest->entry[dest->nentry-1].disknrstart = 0;
 	/* binary data */
 	dest->entry[dest->nentry-1].intatt = 0;
-	/* XXX: init CRC-32, compressed and uncompressed size --
-	   will be updated later */
+	/* init CRC-32, compressed and uncompressed size
+	   XXX: will be updated later */
 	dest->entry[dest->nentry-1].crc = crc32(0, 0, 0);
 	dest->entry[dest->nentry-1].comp_size = 0;
 	dest->entry[dest->nentry-1].uncomp_size = 0;
@@ -551,4 +557,20 @@ _zip_create_entry(struct zip *dest, struct zip_entry *src_entry, char *name)
     }
 
     return 0;
+}
+
+
+
+static void
+_zip_u2d_time(time_t time, int *ddate, int *dtime)
+{
+    struct tm *tm;
+
+    tm = localtime(&time);
+    *dtime = ((tm->tm_year+1900-1980)<<9)+ ((tm->tm_mon+1)<<5)
+	+ tm->tm_mday;
+    *ddate = ((tm->tm_hour)<<11)+ ((tm->tm_min)<<5)
+	+ ((tm->tm_sec)>>1);
+
+    return;
 }

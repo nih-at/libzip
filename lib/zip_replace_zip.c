@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "zip.h"
 #include "zipint.h"
 
@@ -13,10 +14,10 @@ struct read_part {
     struct zip_file *zff;
     int off, len;
     /* ... */
-}
+};
 
-static zip_read_func read_zip;
-static zip_read_func read_part;
+static int read_zip(void *state, void *data, int len, enum zip_cmd cmd);
+static int read_part(void *state, void *data, int len, enum zip_cmd cmd);
 
 
 
@@ -80,6 +81,8 @@ read_zip(void *state, void *data, int len, enum zip_cmd cmd)
     case ZIP_CMD_CLOSE:
 	return 0;
     }
+
+    return 0;
 }
 
 
@@ -96,7 +99,7 @@ read_part(void *state, void *data, int len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
-	if ((z->zff=zip_fopen_index(z->zf, idx) ) == NULL)
+	if ((z->zff=zip_fopen_index(z->zf, z->idx) ) == NULL)
 	    return -1;
 
 	for (n=0; n<z->off; n+= i) {
@@ -133,4 +136,6 @@ read_part(void *state, void *data, int len, enum zip_cmd cmd)
 	}
 	return 0;
     }
+
+    return -1;
 }

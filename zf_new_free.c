@@ -58,12 +58,7 @@ _zip_free(struct zip *zf)
 
     if (zf->entry) {
 	for (i=0; i<zf->nentry; i++) {
-	    free(zf->entry[i].fn);
-	    free(zf->entry[i].ef);
-	    free(zf->entry[i].fcom);
-	    free(zf->entry[i].fn_old);
-	    if (zf->entry[i].ch_data_fp)
-		(void)fclose(zf->entry[i].ch_data_fp);
+	    _zip_free_entry(zf->entry+i);
 	}
 	free (zf->entry);
     }

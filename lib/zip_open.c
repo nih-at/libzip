@@ -20,6 +20,7 @@ static int _zip_headercomp(struct zip_entry *h1, int local1p,
 			   struct zip_entry *h2, int local2p);
 static unsigned char *_zip_memmem(const unsigned char *big, int biglen,
 				  const unsigned char *little, int littlelen);
+static time_t _zip_d2u_time(int dtime, int ddate);
 
 
 
@@ -162,6 +163,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     struct zip *zf;
     unsigned char *cdp;
     int i, comlen, readp;
+    int entries;
 
     comlen = buf + buflen - eocd - EOCDLEN;
     if (comlen < 0) {
@@ -187,7 +189,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     /* number of cdir-entries on this disk */
     i = _zip_read2(&cdp);
     /* number of cdir-entries */
-    zf->nentry = zf->nentry_alloc = _zip_read2(&cdp);
+    entries = _zip_read2(&cdp);
     zf->cd_size = _zip_read4(&cdp);
     zf->cd_offset = _zip_read4(&cdp);
     zf->comlen = _zip_read2(&cdp);
@@ -221,23 +223,25 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen)
     }
 
     zf->entry = (struct zip_entry *)malloc(sizeof(struct zip_entry)
-					  *zf->nentry);
+					  *entries);
     if (!zf->entry) {
 	zip_err = ZERR_MEMORY;
 	return NULL;
     }
-    
-    for (i=0; i<zf->nentry; i++) {
-	zf->entry[i].fn = NULL;
-	zf->entry[i].ef = NULL;
-	zf->entry[i].fcom = NULL;
-	_zip_entry_init(zf, i);
+
+    zf->nentry_alloc = entries;
+
+    for (i=0; i<entries; i++) {
+	if (_zip_new_entry(zf) == NULL) {
+	    /* shouldn't happen, since space already has been malloc'd */
+	    _zip_free(zf);
+	    return NULL;
+	}
     }
     
     for (i=0; i<zf->nentry; i++) {
-	if ((_zip_readcdentry(fp, zf->entry+i, &cdp, eocd-cdp, readp, 0)) < 0) {
-	    /* i entries have already been filled, tell _zip_free
-	       how many to free */
+	if ((_zip_readcdentry(fp, zf->entry+i, &cdp, eocd-cdp,
+			      readp, 0)) < 0) {
 	    _zip_free(zf);
 	    return NULL;
 	}
@@ -261,6 +265,7 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 {
     unsigned char buf[CDENTRYSIZE];
     unsigned char *cur;
+    unsigned short dostime, dosdate;
     int size;
 
     if (localp)
@@ -293,50 +298,61 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 
     /* convert buffercontents to zf_entry */
     if (!localp)
-	zfe->version_made = _zip_read2(&cur);
+	zfe->meta->version_made = _zip_read2(&cur);
     else
-	zfe->version_made = 0;
-    zfe->version_need = _zip_read2(&cur);
-    zfe->bitflags = _zip_read2(&cur);
-    zfe->comp_meth = _zip_read2(&cur);
-    zfe->lmtime = _zip_read2(&cur);
-    zfe->lmdate = _zip_read2(&cur);
+	zfe->meta->version_made = 0;
+    zfe->meta->version_need = _zip_read2(&cur);
+    zfe->meta->bitflags = _zip_read2(&cur);
+    zfe->meta->comp_method = _zip_read2(&cur);
+    /* convert to time_t */
+    dostime = _zip_read2(&cur);
+    dosdate = _zip_read2(&cur);
 
-    zfe->crc = _zip_read4(&cur);
-    zfe->comp_size = _zip_read4(&cur);
-    zfe->uncomp_size = _zip_read4(&cur);
+    zfe->meta->last_mod = _zip_d2u_time(dostime, dosdate);
     
-    zfe->fnlen = _zip_read2(&cur);
-    zfe->eflen = _zip_read2(&cur);
+    zfe->meta->crc = _zip_read4(&cur);
+    zfe->meta->comp_size = _zip_read4(&cur);
+    zfe->meta->uncomp_size = _zip_read4(&cur);
+    
+    zfe->file_fnlen = _zip_read2(&cur);
+    zfe->meta->ef_len = _zip_read2(&cur);
     if (!localp) {
-	zfe->fcomlen = _zip_read2(&cur);
-	zfe->disknrstart = _zip_read2(&cur);
-	zfe->intatt = _zip_read2(&cur);
+	zfe->meta->fc_len = _zip_read2(&cur);
+	zfe->meta->disknrstart = _zip_read2(&cur);
+	zfe->meta->int_attr = _zip_read2(&cur);
 
-	zfe->extatt = _zip_read4(&cur);
-	zfe->local_offset = _zip_read4(&cur);
+	zfe->meta->ext_attr = _zip_read4(&cur);
+	zfe->meta->local_offset = _zip_read4(&cur);
     }
     else {
-	zfe->fcomlen = zfe->disknrstart = zfe->intatt = 0;
-	zfe->extatt = zfe->local_offset = 0;
+	zfe->meta->fc_len = zfe->meta->disknrstart = zfe->meta->int_attr = 0;
+	zfe->meta->ext_attr = zfe->meta->local_offset = 0;
     }
     
-    if (left < CDENTRYSIZE+zfe->fnlen+zfe->eflen+zfe->fcomlen) {
+    if (left < CDENTRYSIZE+zfe->file_fnlen+zfe->meta->ef_len
+	+zfe->meta->fc_len) {
 	if (readp) {
-	    if (zfe->fnlen)
-		zfe->fn = _zip_readfpstr(fp, zfe->fnlen, 1);
-	    else {
+	    if (zfe->file_fnlen)
+		zfe->fn = _zip_readfpstr(fp, zfe->file_fnlen, 1);
+	    else
 		zfe->fn = strdup("");
-		if (!zfe->fn) {
-		    zip_err = ZERR_MEMORY;
-		    return -1;
-		}
+
+	    if (!zfe->fn) {
+		zip_err = ZERR_MEMORY;
+		return -1;
 	    }
-	    if (zfe->eflen)
-		zfe->ef = _zip_readfpstr(fp, zfe->eflen, 0);
-	    /* XXX: really null-terminate comment? */
-	    if (zfe->fcomlen)
-		zfe->fcom = _zip_readfpstr(fp, zfe->fcomlen, 1);
+
+	    if (zfe->meta->ef_len) {
+		zfe->meta->ef = _zip_readfpstr(fp, zfe->meta->ef_len, 0);
+		if (!zfe->meta->ef)
+		    return -1;
+	    }
+
+	    if (zfe->meta->fc_len) {
+		zfe->meta->fc = _zip_readfpstr(fp, zfe->meta->fc_len, 0);
+		if (!zfe->meta->fc)
+		    return -1;
+	    }
 	}
 	else {
 	    /* can't get more bytes if not allowed to read */
@@ -344,21 +360,24 @@ _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 	}
     }
     else {
-        if (zfe->fnlen)
-	    zfe->fn = _zip_readstr(&cur, zfe->fnlen, 1);
-        if (zfe->eflen)
-	    zfe->ef = _zip_readstr(&cur, zfe->eflen, 0);
-        if (zfe->fcomlen)
-	    zfe->fcom = _zip_readstr(&cur, zfe->fcomlen, 1);
+        if (zfe->file_fnlen) {
+	    zfe->fn = _zip_readstr(&cur, zfe->file_fnlen, 1);
+	    if (!zfe->fn)
+		return -1;
+	}
+        if (zfe->meta->ef_len) {
+	    zfe->meta->ef = _zip_readstr(&cur, zfe->meta->ef_len, 0);
+	    if (!zfe->meta->ef)
+		return -1;
+	}
+        if (zfe->meta->fc_len) {
+	    zfe->meta->fc = _zip_readstr(&cur, zfe->meta->fc_len, 0);
+	    if (!zfe->meta->fc)
+		return -1;
+	}
     }
     if (!readp)
       *cdpp = cur;
-
-    /* XXX */
-    zfe->ch_data_fp = NULL;
-    zfe->ch_data_buf = NULL;
-    zfe->ch_data_offset = 0;
-    zfe->ch_data_len = 0;
 
     return 0;
 }
@@ -394,7 +413,7 @@ _zip_read4(unsigned char **a)
 static char *
 _zip_readstr(unsigned char **buf, int len, int nulp)
 {
-    char *r;
+    char *r, *o;
 
     r = (char *)malloc(nulp?len+1:len);
     if (!r) {
@@ -405,8 +424,13 @@ _zip_readstr(unsigned char **buf, int len, int nulp)
     memcpy(r, *buf, len);
     *buf += len;
 
-    if (nulp)
+    if (nulp) {
+	/* elephant */
 	r[len] = 0;
+	o = r-1;
+	while ((o=memchr(o+1, 0, r+len-(o+1))) < r+len)
+	       *o = ' ';
+    }
 
     return r;
 }
@@ -414,11 +438,11 @@ _zip_readstr(unsigned char **buf, int len, int nulp)
 
 
 static char *
-_zip_readfpstr(FILE *fp, int len, int nullp)
+_zip_readfpstr(FILE *fp, int len, int nulp)
 {
-    char *r;
+    char *r, *o;
 
-    r = (char *)malloc(nullp?len+1:len);
+    r = (char *)malloc(nulp?len+1:len);
     if (!r) {
 	zip_err = ZERR_MEMORY;
 	return NULL;
@@ -429,8 +453,13 @@ _zip_readfpstr(FILE *fp, int len, int nullp)
 	return NULL;
     }
 
-    if (nullp)
+    if (nulp) {
+	/* elephant */
 	r[len] = 0;
+	o = r-1;
+	while ((o=memchr(o+1, 0, r+len-(o+1))) < r+len)
+	       *o = ' ';
+    }
     
     return r;
 }
@@ -447,39 +476,48 @@ static int
 _zip_checkcons(FILE *fp, struct zip *zf)
 {
     int min, max, i, j;
-    struct zip_entry temp;
+    struct zip_entry *temp;
     unsigned char *buf;
 
     buf = NULL;
-
     if (zf->nentry) {
-	max = zf->entry[0].local_offset;
-	min = zf->entry[0].local_offset;
+	max = zf->entry[0].meta->local_offset;
+	min = zf->entry[0].meta->local_offset;
     }
 
+    if ((temp=_zip_new_entry(NULL))==NULL)
+	return -1;
+    
     for (i=0; i<zf->nentry; i++) {
-	if (zf->entry[i].local_offset < min)
-	    min = zf->entry[i].local_offset;
-	if (min < 0)
+	if (zf->entry[i].meta->local_offset < min)
+	    min = zf->entry[i].meta->local_offset;
+	if (min < 0) {
+	    _zip_free_entry(temp);
 	    return -1;
-
-	j = zf->entry[i].local_offset + zf->entry[i].comp_size
-	    + zf->entry[i].fnlen + zf->entry[i].eflen
-	    + zf->entry[i].fcomlen + LENTRYSIZE;
+	}
+	
+	j = zf->entry[i].meta->local_offset + zf->entry[i].meta->comp_size
+	    + zf->entry[i].file_fnlen + zf->entry[i].meta->ef_len
+	    + zf->entry[i].meta->fc_len + LENTRYSIZE;
 	if (j > max)
 	    max = j;
 	if (max > zf->cd_offset)
 	    return -1;
 
-	if (fseek(fp, zf->entry[i].local_offset, SEEK_SET) != 0) {
+	if (fseek(fp, zf->entry[i].meta->local_offset, SEEK_SET) != 0) {
 	    zip_err = ZERR_SEEK;
+	    _zip_free_entry(temp);
 	    return -1;
 	}
-	_zip_readcdentry(fp, &temp, &buf, 0, 1, 1);
-	if (_zip_headercomp(zf->entry+i, 0, &temp, 1) != 0)
+	
+	_zip_readcdentry(fp, temp, &buf, 0, 1, 1);
+	if (_zip_headercomp(zf->entry+i, 0, temp, 1) != 0) {
+	    _zip_free_entry(temp);
 	    return -1;
+	}
     }
 
+    _zip_free_entry(temp);
     return max - min;
 }
 
@@ -494,31 +532,33 @@ static int
 _zip_headercomp(struct zip_entry *h1, int local1p, struct zip_entry *h2,
 	   int local2p)
 {
-    if ((h1->version_need != h2->version_need)
-	|| (h1->bitflags != h2->bitflags)
-	|| (h1->comp_meth != h2->comp_meth)
-	|| (h1->lmtime != h2->lmtime)
-	|| (h1->lmdate != h2->lmdate)
-	|| (h1->fnlen != h2->fnlen)
-	|| (h1->crc != h2->crc)
-	|| (h1->comp_size != h2->comp_size)
-	|| (h1->uncomp_size != h2->uncomp_size)
-	|| (h1->fnlen && memcmp(h1->fn, h2->fn, h1->fnlen)))
+    if ((h1->meta->version_need != h2->meta->version_need)
+	|| (h1->meta->bitflags != h2->meta->bitflags)
+	|| (h1->meta->comp_method != h2->meta->comp_method)
+	|| (h1->meta->last_mod != h2->meta->last_mod)
+	|| (h1->meta->crc != h2->meta->crc)
+	|| (h1->meta->comp_size != h2->meta->comp_size)
+	|| (h1->meta->uncomp_size != h2->meta->uncomp_size)
+	|| !h1->fn
+	|| !h2->fn
+	|| strcmp(h1->fn, h2->fn))
 	return -1;
 
     /* if they are different type, nothing more to check */
     if (local1p != local2p)
 	return 0;
 
-    if ((h1->version_made != h2->version_made)
-	|| (h1->disknrstart != h2->disknrstart)
-	|| (h1->intatt != h2->intatt)
-	|| (h1->extatt != h2->extatt)
-	|| (h1->local_offset != h2->local_offset)
-	|| (h1->eflen != h2->eflen)
-	|| (h1->eflen && memcmp(h1->fn, h2->fn, h1->fnlen))
-	|| (h1->fcomlen != h2->fcomlen)
-	|| (h1->fcomlen && memcmp(h1->fcom, h2->fcom, h1->fcomlen))) {
+    if ((h1->meta->version_made != h2->meta->version_made)
+	|| (h1->meta->disknrstart != h2->meta->disknrstart)
+	|| (h1->meta->int_attr != h2->meta->int_attr)
+	|| (h1->meta->ext_attr != h2->meta->ext_attr)
+	|| (h1->meta->local_offset != h2->meta->local_offset)
+	|| (h1->meta->ef_len != h2->meta->ef_len)
+	|| (h1->meta->ef_len && memcmp(h1->meta->ef, h2->meta->ef,
+				       h1->meta->ef_len))
+	|| (h1->meta->fc_len != h2->meta->fc_len)
+	|| (h1->meta->fc_len && memcmp(h1->meta->fc, h2->meta->fc,
+				       h1->meta->fc_len))) {
 	return -1;
     }
 
@@ -560,4 +600,26 @@ _zip_memdup(const void *mem, int len)
     memcpy(ret, mem, len);
 
     return ret;
+}
+
+
+
+static time_t
+_zip_d2u_time(int dtime, int ddate)
+{
+    struct tm *tm;
+    time_t now;
+
+    now = time(NULL);
+    tm = localtime(&now);
+    
+    tm->tm_year = ((ddate>>9)&127) + 1980 - 1900;
+    tm->tm_mon = ((ddate>>5)&15) - 1;
+    tm->tm_mday = ddate&31;
+
+    tm->tm_hour = (dtime>>11)&31;
+    tm->tm_min = (dtime>>5)&63;
+    tm->tm_sec = (dtime<<1)&62;
+
+    return mktime(tm);
 }

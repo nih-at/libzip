@@ -26,8 +26,8 @@ zip_fopen_index(struct zip *zf, int fileno)
 	return NULL;
     }
 
-    if ((zf->entry[fileno].comp_meth != 0)
-	&& (zf->entry[fileno].comp_meth != 8)) {
+    if ((zf->entry[fileno].meta->comp_method != 0)
+	&& (zf->entry[fileno].meta->comp_method != 8)) {
 	zip_err = ZERR_COMPNOTSUPP;
 	return NULL;
     }
@@ -35,13 +35,14 @@ zip_fopen_index(struct zip *zf, int fileno)
     zff = _zip_file_new(zf);
 
     zff->name = zf->entry[fileno].fn;
-    zff->method = zf->entry[fileno].comp_meth;
-    zff->bytes_left = zf->entry[fileno].uncomp_size;
-    zff->cbytes_left = zf->entry[fileno].comp_size;
-    zff->crc_orig = zf->entry[fileno].crc;
+    zff->method = zf->entry[fileno].meta->comp_method;
+    zff->bytes_left = zf->entry[fileno].meta->uncomp_size;
+    zff->cbytes_left = zf->entry[fileno].meta->comp_size;
+    zff->crc_orig = zf->entry[fileno].meta->crc;
 
     /* go to start of actual data */
-    fseek (zf->zp, zf->entry[fileno].local_offset+LENTRYSIZE-4, SEEK_SET);
+    fseek (zf->zp, zf->entry[fileno].meta->local_offset+LENTRYSIZE-4,
+	   SEEK_SET);
     /* XXX: check fseek error */
     len = fread(buf, 1, 4, zf->zp);
     if (len != 4) {
@@ -51,10 +52,10 @@ zip_fopen_index(struct zip *zf, int fileno)
     }
     
     c = buf;
-    zff->fpos = zf->entry[fileno].local_offset+LENTRYSIZE;
+    zff->fpos = zf->entry[fileno].meta->local_offset+LENTRYSIZE;
     zff->fpos += (c[3]<<8)+c[2]+(c[1]<<8)+c[0];
 	
-    if (zf->entry[fileno].comp_meth == 0)
+    if (zf->entry[fileno].meta->comp_method == 0)
 	return zff;
     
     if ((zff->buffer=(char *)malloc(BUFSIZE)) == NULL) {

@@ -5,7 +5,7 @@
 
 struct read_data {
     char *buf, *data;
-    int size;
+    int len;
     int freep;
 };
 
@@ -14,16 +14,16 @@ static zip_read_func read_data;
 
 
 int
-zip_replace_data(struct zf *zf, int idx, char *name, struct zip_meta *meta,
+zip_replace_data(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 		 char *data, int len, int freep)
 {
     struct read_data *f;
-    
-    if (srcidx < -1 || srcidx >= srczf->nentry) {
+
+    if (idx < -1 || idx >= zf->nentry) {
 	zip_err = ZERR_NOENT;
 	return -1;
     }
-
+    
     if ((f=(struct read_data *)malloc(sizeof(struct read_data))) == NULL) {
 	zip_err = ZERR_MEMORY;
 	return -1;
@@ -45,7 +45,7 @@ read_data(void *state, void *data, int len, enum zip_cmd cmd)
     char *buf;
     int n;
 
-    z = (struct read_file *)state;
+    z = (struct read_data *)state;
     buf = (char *)data;
 
     switch (cmd) {
@@ -72,4 +72,6 @@ read_data(void *state, void *data, int len, enum zip_cmd cmd)
 	}
 	return 0;
     }
+
+    return -1;
 }

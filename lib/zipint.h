@@ -18,8 +18,11 @@ int _zip_readcdentry(FILE *fp, struct zip_entry *zfe, unsigned char **cdpp,
 		     int left, int readp, int localp);
 int _zip_file_fillbuf(char *buf, int buflen, struct zip_file *zff);
 void *_zip_memdup(const void *mem, int len);
-void _zip_new_entry(struct zip *zf);
 void _zip_entry_init(struct zip *zf, int idx);
 int _zip_set_name(struct zip *zf, int idx, char *name);
+struct zip_entry *_zip_new_entry(struct zip *zf);
+int _zip_free_entry(struct zip_entry *ze);
+void _zip_unchange_data(struct zip_entry *ze);
+void _zip_unchange(struct zip_entry *ze);
 
 #endif /* zipint.h */

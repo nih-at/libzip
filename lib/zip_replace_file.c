@@ -1,11 +1,11 @@
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "zip.h"
 #include "zipint.h"
 
 struct read_file {
     FILE *f;
-    int off, size;
+    int off, len;
 };
 
 static zip_read_func read_file;
@@ -17,12 +17,12 @@ zip_replace_file(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 		 FILE *file, int start, int len)
 {
     struct read_file *f;
-    
-    if (srcidx < -1 || srcidx >= srczf->nentry) {
+
+    if (idx < -1 || idx >= zf->nentry) {
 	zip_err = ZERR_NOENT;
 	return -1;
     }
-
+    
     if ((f=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
 	zip_err = ZERR_MEMORY;
 	return -1;
@@ -49,7 +49,7 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 
     switch (cmd) {
     case ZIP_CMD_INIT:
-	if (fseek(f->f, f->off, SEEK_SET) < 0) {
+	if (fseek(z->f, z->off, SEEK_SET) < 0) {
 	    zip_err = ZERR_SEEK;
 	    return -1;
 	}
@@ -61,7 +61,7 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 	else
 	    n = len;
 	
-	if ((i=fread(z->f, 1, buf, n)) < 0) {
+	if ((i=fread(buf, 1, n, z->f)) < 0) {
 	    zip_err = ZERR_READ;
 	    return -1;
 	}
@@ -81,4 +81,6 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 	}
 	return 0;
     }
+
+    return -1;
 }

@@ -26,7 +26,7 @@ zip_replace(struct zip *zf, int idx, char *name, struct zip_meta *meta,
 	return -1;
     
     zf->changes = 1;
-    zf->entry[idx].state = Z_REPLACED;
+    zf->entry[idx].state = ZIP_ST_REPLACED;
     zf->entry[idx].ch_meta = meta;
     zf->entry[idx].ch_func = fn;
     zf->entry[idx].ch_data = state;
