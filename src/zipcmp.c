@@ -1,7 +1,7 @@
 /*
-  $NiH: zipcmp.c,v 1.6 2003/10/06 02:50:14 dillo Exp $
+  $NiH: zipcmp.c,v 1.7 2003/12/30 20:44:15 dillo Exp $
 
-  cmpzip.c -- compare zip files
+  zipcmp.c -- compare zip files
   Copyright (C) 2003 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -54,7 +54,7 @@ struct entry {
 
 char *prg;
 
-char *usage = "usage: %s [-hViqv] zip1 zip2\n";
+char *usage = "usage: %s [-hViqtv] zip1 zip2\n";
 
 char help_head[] = PACKAGE " by Dieter Baron and Thomas Klausner\n\n";
 
@@ -63,6 +63,7 @@ char help[] = "\n\
   -V       display version number\n\
   -i       compare names ignoring case distinctions\n\
   -q       be quiet\n\
+  -t       test zip files\n\
   -v       be verbose (print differences, default)\n\
 \n\
 Report bugs to <nih@giga.or.at>.\n";
@@ -74,7 +75,7 @@ You may redistribute copies of\n\
 " PACKAGE " under the terms of the GNU General Public License.\n\
 For more information about these matters, see the files named COPYING.\n";
 
-#define OPTIONS "hViqv"
+#define OPTIONS "hViqtv"
 
 
 
@@ -85,8 +86,9 @@ static int compare_list(const char *name[], int verbose,
 		 int (*cmp)(const void *, const void *),
 		 void print(const void *));
 static int compare_zip(const char *zn[], int verbose);
+static int test_file(struct zip *z, int idx, off_t size, unsigned int crc);
 
-int ignore_case;
+int ignore_case, test_files;
 
 
 
@@ -99,6 +101,7 @@ main(int argc, char *argv[])
     prg = argv[0];
 
     ignore_case = 0;
+    test_files = 0;
     verbose = 1;
 
     while ((c=getopt(argc, argv, OPTIONS)) != -1) {
@@ -108,6 +111,9 @@ main(int argc, char *argv[])
 	    break;
 	case 'q':
 	    verbose = 0;
+	    break;
+	case 't':
+	    test_files = 1;
 	    break;
 	case 'v':
 	    verbose = 1;
@@ -152,7 +158,7 @@ compare_zip(const char *zn[], int verbose)
     for (i=0; i<2; i++) {
 	if ((z=zip_open(zn[i], ZIP_CHECKCONS, &err)) == NULL) {
 	    zip_error_str(errstr, sizeof(errstr), err, errno);
-	    fprintf(stderr, "%s: cannot open zip file `%s': %s\n",
+	    fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		    prg, zn[i], errstr);
 	    return -1;
 	}
@@ -169,6 +175,8 @@ compare_zip(const char *zn[], int verbose)
 	    e[i][j].name = strdup(st.name);
 	    e[i][j].size = st.size;
 	    e[i][j].crc = st.crc;
+	    if (test_files)
+		test_file(z, j, st.size, st.crc);
 	}
 
 	zip_close(z);
@@ -269,4 +277,51 @@ entry_print(const void *p)
     e = p;
 
     printf("%10u %08x %s\n", e->size, e->crc, e->name);
+}
+
+
+
+static int
+test_file(struct zip *z, int idx, off_t size, unsigned int crc)
+{
+    struct zip_file *f;
+    char buf[8192];
+    int n, nsize, ncrc;
+    
+    if ((f=zip_fopen_index(z, idx, 0)) == NULL) {
+	fprintf(stderr, "%s: cannot open file %d in archive: %s\n",
+		prg, idx, zip_strerror(z));
+	return -1;
+    }
+
+    ncrc = crc32(0, NULL, 0);
+    nsize = 0;
+    
+    while ((n=zip_fread(f, buf, sizeof(buf))) > 0) {
+	nsize += n;
+	ncrc = crc32(ncrc, buf, n);
+    }
+
+    if (n < 0) {
+	fprintf(stderr, "%s: error reading file %d in archive: %s\n",
+		prg, idx, zip_file_strerror(f));
+	zip_fclose(f);
+	return -1;
+    }
+
+    zip_fclose(f);
+
+    if (nsize != size) {
+	/* XXX: proper printf identifier */
+	fprintf(stderr, "%s: file %d: unexpected length %ld (should be %ld)\n",
+		prg, idx, (long)nsize, (long)size);
+	return -2;
+    }
+    if (ncrc != crc) {
+	fprintf(stderr, "%s: file %d: unexpected length %x (should be %x)\n",
+		prg, idx, ncrc, crc);
+	return -2;
+    }
+
+    return 0;
 }
