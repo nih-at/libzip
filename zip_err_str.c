@@ -19,4 +19,5 @@ char *zip_err_str[] = {
     "malloc failure",
     "entry has been changed",
     "compression method not supported",
+    "premature EOF",
 };

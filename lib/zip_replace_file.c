@@ -61,8 +61,10 @@ read_file(void *state, void *data, int len, enum zip_cmd cmd)
 	else
 	    n = len;
 	
-	if ((i=fread(z->f, 1, buf, n)) < 0)
+	if ((i=fread(z->f, 1, buf, n)) < 0) {
+	    zip_err = ZERR_READ;
 	    return -1;
+	}
 
 	if (z->len != -1)
 	    z->len -= i;

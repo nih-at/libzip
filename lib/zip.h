@@ -34,6 +34,7 @@ int zip_err; /* global variable for errors returned by the low-level
 #define ZERR_MEMORY          14  /* malloc failure */
 #define ZERR_CHANGED         15  /* entry has been changed */
 #define ZERR_COMPNOTSUPP     16  /* compression method not supported */
+#define ZERR_EOF             17  /* premature EOF */
 
 extern char *zip_err_str[];
 
@@ -78,7 +79,7 @@ struct zip_file {
 /* entry in zip file directory */
 
 struct zip_entry {
-    sturct zip_meta *meta;
+    struct zip_meta *meta;
     char *fn;
     char *fn_old;
 
@@ -114,7 +115,7 @@ struct zip_file *zip_fopen_index(struct zip *zf, int fileno);
 int zip_fread(struct zip_file *zff, char *outbuf, int toread);
 int zip_fclose(struct zip_file *zff);
 
-struct *zip_meta zip_new_meta(void);
+struct zip_meta *zip_new_meta(void);
 
 /* high level routines to modify zip file */
 
@@ -135,7 +136,7 @@ int zip_add_zip(struct zip *zf, char *name, struct zip_meta *meta,
 		struct zip *srczf, int srcidx, int start, int len);
 int zip_replace_zip(struct zip *zf, int idx, char *name,
 		    struct zip_meta *meta,
-		    struct zip *srczf, int srcidx, int start, int len)
+		    struct zip *srczf, int srcidx, int start, int len);
 
 int zip_unchange(struct zip *zf, int idx);
 
