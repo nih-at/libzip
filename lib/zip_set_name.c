@@ -19,7 +19,7 @@ _zip_set_name(struct zip *zf, int idx, char *name)
 	else
 	    free(zf->entry[idx].fn);
 	zf->entry[idx].fn = strdup(name);
-	if (zf->entry[idx].fn) {
+	if (zf->entry[idx].fn == NULL) {
 	    zf->entry[idx].fn = zf->entry[idx].fn_old;
 	    zf->entry[idx].fn_old = NULL;
 	    zip_err = ZERR_MEMORY;
