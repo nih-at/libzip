@@ -5,6 +5,8 @@
 struct read_zip {
     struct zip *zf;
     int idx;
+    long fpos;
+    long avail;
     /* ... */
 };
 
@@ -62,27 +64,42 @@ static int
 read_zip(void *state, void *data, int len, enum zip_cmd cmd)
 {
     struct read_zip *z;
-
+    int ret;
+    
     z = (struct read_zip *)state;
 
     switch (cmd) {
     case ZIP_CMD_INIT:
-	/* XXX */
-	break;
+	_zip_local_header_read(z->zf, z->idx);
+	z->fpos = z->zf->entry[z->idx].meta->local_offset + LENTRYSIZE
+	    + z->zf->entry[z->idx].meta->lef_len
+	    + z->zf->entry[z->idx].meta->fc_len
+	    + z->zf->entry[z->idx].file_fnlen;
+	z->avail = z->zf->entry[z->idx].meta->comp_size;
+	return 0;
 	
     case ZIP_CMD_READ:
-	/* XXX */
-	break;
+	if (fseek(z->zf->zp, z->fpos, SEEK_SET) < 0) {
+	    zip_err = ZERR_SEEK;
+	    return -1;
+	}
+	if ((ret=fread(data, 1, len < z->avail ? len : z->avail,
+		       z->zf->zp)) < 0) {
+	    zip_err = ZERR_READ;
+	    return -1;
+	}
+	z->fpos += ret;
+	z->avail -= ret;
+	return ret;
 	
     case ZIP_CMD_META:
-	/* XXX */
-	break;
-
+	return _zip_merge_meta_fix((struct zip_meta *)data,
+				   z->zf->entry[z->idx].meta);
     case ZIP_CMD_CLOSE:
 	return 0;
     }
 
-    return 0;
+    return -1;
 }
 
 

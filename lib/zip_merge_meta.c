@@ -3,7 +3,7 @@
 #include "zipint.h"
 
 int
-_zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
+_zip_merge_meta_fix(struct zip_meta *dest, struct zip_meta *src)
 {
     if (!src)
 	return 0;
@@ -39,6 +39,23 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
     if (src->last_mod != 0)
 	dest->last_mod = src->last_mod;
     
+    return 0;
+}
+
+
+
+int
+_zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
+{
+    if (!src)
+	return 0;
+    if (!dest) {
+	zip_err = ZERR_INTERNAL;
+	return -1;
+    }
+
+    _zip_merge_meta_fix(dest, src);
+    
     if ((src->ef_len != (unsigned short)-1) && src->ef) {
 	free(dest->ef);
 	dest->ef = _zip_memdup(src->ef, src->ef_len);
@@ -46,6 +63,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 	    zip_err = ZERR_MEMORY;
 	    return -1;
 	}
+	dest->ef_len = src->ef_len;
     }
 
     if ((src->lef_len != (unsigned short)-1) && src->lef) {
@@ -55,6 +73,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 	    zip_err = ZERR_MEMORY;
 	    return -1;
 	}
+	dest->lef_len = src->lef_len;
     }
 
     if ((src->fc_len != (unsigned short)-1) && src->fc) {
@@ -64,6 +83,7 @@ _zip_merge_meta(struct zip_meta *dest, struct zip_meta *src)
 	    zip_err = ZERR_MEMORY;
 	    return -1;
 	}
+	dest->fc_len = src->fc_len;
     }
 
     return 0;

@@ -8,6 +8,7 @@ zip_free_meta(struct zip_meta *meta)
 	return;
     
     free(meta->ef);
+    free(meta->lef);
     free(meta->fc);
 
     free(meta);
