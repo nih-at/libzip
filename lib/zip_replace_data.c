@@ -57,9 +57,11 @@ read_data(void *state, void *data, int len, enum zip_cmd cmd)
     case ZIP_CMD_READ:
 	n = len > z->len ? z->len : len;
 
-	memcpy(buf, z->buf, n);
-	z->buf += n;
-	z->len -= n;
+	if (n) {
+	    memcpy(buf, z->buf, n);
+	    z->buf += n;
+	    z->len -= n;
+	}
 
 	return n;
 	
