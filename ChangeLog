@@ -1,3 +1,7 @@
+2003-10-01  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* src/zipcmp.c (compare_zip): exit with 2 in case of error.
+
 2003-01-30  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* configure.ac: bump to 0.5.
