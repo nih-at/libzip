@@ -99,7 +99,11 @@ zip_close(struct zip *zf)
 	    switch (zf->entry[i].state) {
 	    case ZIP_ST_UNCHANGED:
 	    case ZIP_ST_RENAMED:
-		_zip_local_header_read(zf, i);
+		if (_zip_local_header_read(zf, i) < 0) {
+		    remove(tzf->zn);
+		    _zip_free(tzf);
+		    return -1;
+		}
 		if (_zip_entry_copy(tzf, zf, i, NULL, zf->entry[i].ch_meta)) {
 		    /* zip_err set by _zip_entry_copy */
 		    remove(tzf->zn);
@@ -113,7 +117,7 @@ zip_close(struct zip *zf)
 	    case ZIP_ST_ADDED:
 		/* XXX: rewrite to use new change data format */
 		if (_zip_entry_add(tzf, zf->entry+i)) {
-		    /* zip_err set by _zip_entry_copy */
+		    /* zip_err set by _zip_entry_add */
 		    remove(tzf->zn);
 		    _zip_free(tzf);
 		    return -1;
@@ -146,38 +150,28 @@ zip_close(struct zip *zf)
 
 static int
 _zip_entry_copy(struct zip *dest, struct zip *src, int entry_no,
-		char *name, struct zip_meta *meta)
+		struct zip_meta *meta)
 {
     char buf[BUFSIZE];
     unsigned int len, remainder;
-    struct zip_entry tempzfe;
+    struct zip_entry *ze;
 
-    _zip_create_entry(dest, src->entry+entry_no, name, meta);
+    ze = _zip_create_entry(dest, src->entry+entry_no, NULL, meta);
+    if (!ze)
+	return -1;
 
-    if (fseek(src->zp, src->entry[entry_no].meta->local_offset,
-	      SEEK_SET) != 0) {
+    if (_zip_writecdentry(dest->zp, ze, 1) != 0) {
+	zip_err = ZERR_WRITE;
+	return -1;
+    }
+
+    if (fseek(src->zp, src->entry[entry_no].meta->local_offset
+	      + LENTRYSIZE + src->entry[entry_no].meta->lef_len
+	      + src->entry[entry_no].file_fnlen, SEEK_SET) != 0) {
 	zip_err = ZERR_SEEK;
 	return -1;
     }
 
-    if (_zip_readcdentry(src->zp, &tempzfe, NULL, 0, 1, 1) != 0) {
-	zip_err = ZERR_READ;
-	return -1;
-    }
-    
-    free(tempzfe.fn);
-    tempzfe.fn = strdup(dest->entry[dest->nentry-1].fn);
-    if (!tempzfe.fn) {
-	zip_err = ZERR_MEMORY;
-	return -1;
-    }
-    
-    tempzfe.file_fnlen = strlen(dest->entry[dest->nentry-1].fn);
-
-    if (_zip_writecdentry(dest->zp, &tempzfe, 1) != 0) {
-	zip_err = ZERR_WRITE;
-	return -1;
-    }
     
     remainder = src->entry[entry_no].meta->comp_size;
     len = BUFSIZE;
