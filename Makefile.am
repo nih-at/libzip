@@ -1,3 +1,6 @@
+# not GPL, thus no COPYING
+AUTOMAKE_OPTIONS=foreign
+
 SUBDIRS=lib src man regress
 
 pkgconfigdir = $(libdir)/pkgconfig
