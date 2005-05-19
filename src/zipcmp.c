@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.13 2004/12/22 17:34:27 wiz Exp $
+  $NiH: zipcmp.c,v 1.14 2004/12/22 18:12:03 wiz Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -213,13 +213,16 @@ compare_list(char * const name[2], int verbose,
     int i[2], j, c;
     int diff;
 
-#define INC(k)	(i[k]++, l[k]+=size)
-#define PRINT(k)	(((diff==0 && verbose)				    \
-			     ? printf("--- %s\n+++ %s\n", name[0], name[1]) \
-			     : 0),					    \
-			 (verbose ? (printf("%c ", (k)?'+':'-'),	    \
-				     print(l[k])) : 0),			    \
-			 diff = 1)
+#define INC(k)	(i[k]++, l[k]=((const char *)l[k])+size)
+#define PRINT(k)	do {						      \
+			    if (diff==0 && verbose)			      \
+			        printf("--- %s\n+++ %s\n", name[0], name[1]); \
+			    if (verbose) {				      \
+			        printf("%c ", (k)?'+':'-');		      \
+				print(l[k]);				      \
+			    }						      \
+			    diff = 1;					      \
+			} while (0)
 
     i[0] = i[1] = 0;
     diff = 0;
