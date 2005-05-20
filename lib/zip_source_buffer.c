@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_buffer.c,v 1.2 2004/12/22 16:31:59 dillo Exp $
+  $NiH: zip_source_buffer.c,v 1.3 2005/05/19 18:17:44 dillo Exp $
 
   zip_source_buffer.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -86,7 +86,7 @@ zip_source_buffer(struct zip *za, const void *data, off_t len, int freep)
 
 
 
-static int
+static ssize_t
 read_data(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 {
     struct read_data *z;
