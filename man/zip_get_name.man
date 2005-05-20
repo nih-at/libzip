@@ -1,9 +1,9 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_get_name.mdoc,v 1.6 2004/11/30 23:05:49 wiz Exp 
-.\" $NiH: zip_get_name.mdoc,v 1.6 2004/11/30 23:05:49 wiz Exp $
+.\" from NiH: zip_get_name.mdoc,v 1.7 2005/01/20 20:49:46 wiz Exp 
+.\" $NiH: zip_get_name.mdoc,v 1.7 2005/01/20 20:49:46 wiz Exp $
 .\"
 .\" zip_get_name.mdoc \-- get name of file by index
-.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_GET_NAME 3 "November 30, 2004" NiH
+.TH ZIP_GET_NAME 3 "January 20, 2005" NiH
 .SH "NAME"
 zip_get_name \- get name of file by index
 .SH "LIBRARY"
@@ -68,6 +68,13 @@ is set to indicate the error.
 .Fn zip_get_name
 fails if:
 .RS
+.TP 4
+Bq Er ZIP_ER_DELETED
+\fBindex\fR
+refers to a file that has been deleted
+(see
+zip_delete(3)
+).
 .TP 4
 Bq Er ZIP_ER_INVAL
 \fBindex\fR
