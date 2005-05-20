@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.13 2004/11/18 17:11:21 wiz Exp $
+  $NiH: zip_fread.c,v 1.14 2005/01/11 19:52:24 wiz Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -107,7 +107,7 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 		}
 		else if (len < 0)
 		    return -1;
-		zf->zstr->next_in = zf->buffer;
+		zf->zstr->next_in = (Bytef *)zf->buffer;
 		zf->zstr->avail_in = len;
 		continue;
 	    }

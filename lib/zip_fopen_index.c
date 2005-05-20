@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.22 2005/01/11 19:52:24 wiz Exp $
+  $NiH: zip_fopen_index.c,v 1.23 2005/01/17 10:45:20 dillo Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -125,7 +125,7 @@ zip_fopen_index(struct zip *za, int fileno, int flags)
 	zf->zstr->zalloc = Z_NULL;
 	zf->zstr->zfree = Z_NULL;
 	zf->zstr->opaque = NULL;
-	zf->zstr->next_in = zf->buffer;
+	zf->zstr->next_in = (Bytef *)zf->buffer;
 	zf->zstr->avail_in = len;
 	
 	/* negative value to tell zlib that there is no header */

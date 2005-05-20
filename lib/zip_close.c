@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.46 2004/12/22 18:33:45 wiz Exp $
+  $NiH: zip_close.c,v 1.47 2005/01/11 19:01:53 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -353,7 +353,7 @@ add_data_uncomp(zip_source_callback cb, void *ud, struct zip_stat *st,
     deflateInit2(&zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -15, 9,
 		 Z_DEFAULT_STRATEGY);
 
-    zstr.next_out = b2;
+    zstr.next_out = (Bytef *)b2;
     zstr.avail_out = sizeof(b2);
     zstr.avail_in = 0;
 
@@ -368,9 +368,9 @@ add_data_uncomp(zip_source_callback cb, void *ud, struct zip_stat *st,
 	    }
 	    if (n > 0) {
 		zstr.avail_in = n;
-		zstr.next_in = b1;
+		zstr.next_in = (Bytef *)b1;
 		st->size += n;
-		st->crc = crc32(st->crc, b1, n);
+		st->crc = crc32(st->crc, (Bytef *)b1, n);
 	    }
 	    else
 		flush = Z_FINISH;
@@ -390,7 +390,7 @@ add_data_uncomp(zip_source_callback cb, void *ud, struct zip_stat *st,
 		return -1;
 	    }
 	
-	    zstr.next_out = b2;
+	    zstr.next_out = (Bytef *)b2;
 	    zstr.avail_out = sizeof(b2);
 	    st->comp_size += n;
 	}
