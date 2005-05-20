@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_filep.c,v 1.3 2004/12/22 16:32:00 dillo Exp $
+  $NiH: zip_source_filep.c,v 1.4 2005/05/20 21:54:12 wiz Exp $
 
   zip_source_filep.c -- create data source from FILE *
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -52,7 +52,7 @@ struct read_file {
     int e[2];		/* error codes */
 };
 
-static int read_file(void *state, void *data, size_t len,
+static ssize_t read_file(void *state, void *data, size_t len,
 		     enum zip_source_cmd cmd);
 
 
