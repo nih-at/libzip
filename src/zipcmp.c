@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.14 2004/12/22 18:12:03 wiz Exp $
+  $NiH: zipcmp.c,v 1.15 2005/05/19 18:42:09 dillo Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -200,6 +200,8 @@ compare_zip(char * const zn[], int verbose)
     default:
 	exit(2);
     }
+
+    return 0;
 }
 
 
@@ -306,7 +308,7 @@ test_file(struct zip *za, int idx, off_t size, unsigned int crc)
     
     while ((n=zip_fread(zf, buf, sizeof(buf))) > 0) {
 	nsize += n;
-	ncrc = crc32(ncrc, buf, n);
+	ncrc = crc32(ncrc, (const Bytef *)buf, n);
     }
 
     if (n < 0) {
