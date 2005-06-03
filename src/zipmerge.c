@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.7 2004/12/22 17:31:32 dillo Exp $
+  $NiH: zipmerge.c,v 1.8 2004/12/22 17:34:27 wiz Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -196,8 +196,8 @@ confirm_replace(struct zip *za, const char *tname, int it,
 	    return 0;
     }
 
-    printf("replace `%s' (%qu / %08x) in `%s'\n"
-	   "   with `%s' (%qu / %08x) from `%s'? ",
+    printf("replace `%s' (%llu / %08x) in `%s'\n"
+	   "   with `%s' (%llu / %08x) from `%s'? ",
 	   st.name, st.size, st.crc, tname,
 	   ss.name, ss.size, ss.crc, sname);
     fflush(stdout);
