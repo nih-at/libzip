@@ -1,7 +1,7 @@
 noinst_PROGRAMS=buffadd open name_locate fread
 EXTRA_PROGRAMS=ziptest deltest
 
-EXTRA_DIST=test.zip
+EXTRA_DIST=broken.zip test.zip
 
 deltest_SOURCES=deltest.c
 buffadd_SOURCES=buffadd.c
