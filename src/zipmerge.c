@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.8 2004/12/22 17:34:27 wiz Exp $
+  $NiH: zipmerge.c,v 1.9 2005/06/03 12:33:34 wiz Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -170,7 +170,7 @@ static int
 confirm_replace(struct zip *za, const char *tname, int it,
 		struct zip *zs, const char *sname, int is)
 {
-    unsigned char line[1024];
+    char line[1024];
     struct zip_stat st, ss;
 
     if (confirm & CONFIRM_ALL_YES)
@@ -208,7 +208,7 @@ confirm_replace(struct zip *za, const char *tname, int it,
 	return -1;
     }
 
-    if (tolower(line[0]) == 'y')
+    if (tolower((unsigned char)line[0]) == 'y')
 	return 1;
 
     return 0;
