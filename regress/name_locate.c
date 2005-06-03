@@ -1,5 +1,5 @@
 /*
-  $NiH: name_locate.c,v 1.1 2005/01/11 18:53:16 wiz Exp $
+  $NiH: name_locate.c,v 1.2 2005/01/20 21:02:34 wiz Exp $
 
   name_locate.c -- test cases for finding files in zip archives
   Copyright (C) 2005 Dieter Baron and Thomas Klausner
@@ -88,10 +88,10 @@ main(int argc, char *argv[])
 int
 find_fail(struct zip *z, const char *name, int flags, int zerr)
 {
-    int ret, ze, se;
+    int ze, se;
     char expected[80];
 
-    if ((ret=zip_name_locate(z, name, flags)) < 0) {
+    if (zip_name_locate(z, name, flags) < 0) {
 	zip_error_get(z, &ze, &se);
 	if (ze != zerr) {
 	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
