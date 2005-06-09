@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.47 2005/01/11 19:01:53 dillo Exp $
+  $NiH: zip_close.c,v 1.48 2005/05/20 21:54:53 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
@@ -411,7 +411,7 @@ ch_set_error(struct zip_error *error, zip_source_callback cb, void *ud)
 {
     int e[2];
 
-    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_READ)) < sizeof(e)) {
+    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_ERROR)) < sizeof(e)) {
 	error->zip_err = ZIP_ER_INTERNAL;
 	error->sys_err = 0;
     }
