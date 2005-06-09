@@ -3,7 +3,6 @@
 * regression tests (duplicate file names, unchange, .{200})
 * code review
 * fix XXX in man/
-* fix XXX in lib?
 * fix XXX in ChangeLog!
 ------------------------------------------------ just before release
 * recreate .man files

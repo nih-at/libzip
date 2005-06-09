@@ -1,5 +1,11 @@
 2005-06-09  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
+	* lib/zip_source_zip.c (zip_source_zip): if reading uncompressed,
+	set crc in stat buffer to 0.
+
+	* lib/zip_close.c (ch_set_error): use ZIP_SOURCE_ERROR to get
+	error code from source callback.
+	
 	* regress/Makefile.am: add srcdir to TESTS_ENVIRONMENT.
 	* regress/mkname.c, regress/mkname.h: add.
 	* regress/fread.c, regress/name_locate.c, regress/open.c: use
