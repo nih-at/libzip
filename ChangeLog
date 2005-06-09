@@ -1,3 +1,12 @@
+2005-06-09  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* regress/Makefile.am: add srcdir to TESTS_ENVIRONMENT.
+	* regress/mkname.c, regress/mkname.h: add.
+	* regress/fread.c, regress/name_locate.c, regress/open.c: use
+	mkname.
+
+	* man/Makefile.am: fix DESTDIR support and uninstall.
+	
 2005-01-20  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip_get_name.c (_zip_get_name): return ZIP_ER_DELETED for

@@ -1,8 +1,8 @@
 /*
-  $NiH: open.c,v 1.3 2004/11/17 21:55:17 wiz Exp $
+  $NiH: open.c,v 1.4 2005/01/11 18:53:16 wiz Exp $
 
   open.c -- test cases for opening zip archives
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -40,6 +40,7 @@
 #include <stdlib.h>
 
 #include "zip.h"
+#include "mkname.h"
 
 int open_fail(const char *, int, const char *, int, int);
 int open_success(const char *, int, const char *, int);
@@ -55,7 +56,7 @@ main(int argc, char *argv[])
 
     remove("nosuchfile");
     fail += open_fail("nosuchfile", 0, "non-existing", ZIP_ER_OPEN, ENOENT);
-    fail += open_fail("Makefile", 0, "non-zip", ZIP_ER_NOZIP, 0);
+    fail += open_fail("Makefile.am", 0, "non-zip", ZIP_ER_NOZIP, 0);
     fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZIP_ER_EXISTS, 0);
     /* ZIP_ER_OPEN */
     /* ZIP_ER_READ */
@@ -78,7 +79,7 @@ open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
 
     errno = 0;
 
-    if ((z=zip_open(fname, flags, &ze)) != NULL) {
+    if ((z=zip_open(mkname(fname), flags, &ze)) != NULL) {
 	printf("fail: opening %s succeeded\n", desc);
 	zip_close(z);
 	return 1;
@@ -100,7 +101,7 @@ open_success(const char *fname, int flags, const char *desc, int nent)
     struct zip *z;
     int ze, num;
 
-    if ((z=zip_open(fname, flags, &ze)) == NULL) {
+    if ((z=zip_open(mkname(fname), flags, &ze)) == NULL) {
 	printf("fail: opening %s failed (%d)\n", desc, ze);
 	return 1;
     }

@@ -1,5 +1,5 @@
 /*
-  $NiH: name_locate.c,v 1.2 2005/01/20 21:02:34 wiz Exp $
+  $NiH: name_locate.c,v 1.3 2005/06/03 12:29:44 wiz Exp $
 
   name_locate.c -- test cases for finding files in zip archives
   Copyright (C) 2005 Dieter Baron and Thomas Klausner
@@ -40,6 +40,7 @@
 #include <stdlib.h>
 
 #include "zip.h"
+#include "mkname.h"
 
 #define TEST_ZIP	"test.zip"
 
@@ -56,7 +57,7 @@ main(int argc, char *argv[])
 
     fail = 0;
 
-    if ((z=zip_open(TEST_ZIP, 0, &ze)) == NULL) {
+    if ((z=zip_open(mkname(TEST_ZIP), 0, &ze)) == NULL) {
 	printf("fail: opening zip archive ``%s'' failed (%d)\n",
 	       TEST_ZIP, ze);
 	return 1;
