@@ -11,8 +11,6 @@ dnl test -z "$CFLAGS" && CFLAGS='-Wall -g' auto_cflags=1
 
 
 AC_PROG_CC
-AC_PROG_RANLIB
-
 
 AC_ARG_WITH(zlib,
     [  --with-zlib=PREFIX  specify prefix for ZLIB library],,
