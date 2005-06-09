@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_get.mdoc,v 1.4 2004/12/22 15:49:19 wiz Exp 
-.\" $NiH: zip_error_get.mdoc,v 1.4 2004/12/22 15:49:19 wiz Exp $
+.\" from NiH: zip_error_get.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_error_get.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_error_get.mdoc \-- get error codes for archive or file
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -71,5 +71,6 @@ The
 function does the same for the zip file
 \fBzf.\fR
 .SH "SEE ALSO"
+libzip(3),
 zip_error_get_sys_type(3),
 zip_error_to_str(3)

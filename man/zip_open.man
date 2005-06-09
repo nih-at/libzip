@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_open.mdoc,v 1.17 2004/11/24 16:15:54 wiz Exp 
-.\" $NiH: zip_open.mdoc,v 1.17 2004/11/24 16:15:54 wiz Exp $
+.\" from NiH: zip_open.mdoc,v 1.19 2005/06/09 18:51:48 wiz Exp 
+.\" $NiH: zip_open.mdoc,v 1.19 2005/06/09 18:51:48 wiz Exp $
 .\"
 .\" zip_open.mdoc \-- open zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -46,7 +46,6 @@ libzip (-lzip)
 The zip archive specified by
 \fBpath\fR
 is opened and a pointer to a
-.\" XXX: also marks up,
 .Ft struct zip,
 used to manipulate the archive, is returned.
 The
@@ -138,5 +137,6 @@ The file specified by
 does not allow seeks.
 .RE
 .SH "SEE ALSO"
+libzip(3),
 zip_close(3),
 zip_error_to_str(3)

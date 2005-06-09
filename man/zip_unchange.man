@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_unchange.mdoc,v 1.6 2004/11/30 23:08:21 wiz Exp 
-.\" $NiH: zip_unchange.mdoc,v 1.6 2004/11/30 23:08:21 wiz Exp $
+.\" from NiH: zip_unchange.mdoc,v 1.7 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_unchange.mdoc,v 1.7 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_unchange.mdoc \-- undo changes to file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -66,4 +66,5 @@ is not a valid file index in
 .\: XXX: also ch_func ZIP_CMD_CLOSE errors
 .RE
 .SH "SEE ALSO"
+libzip(3),
 zip_unchange_all(3)

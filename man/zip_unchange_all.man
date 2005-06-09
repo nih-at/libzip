@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_unchange_all.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp 
-.\" $NiH: zip_unchange_all.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp $
+.\" from NiH: zip_unchange_all.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_unchange_all.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_unchange_all.mdoc \-- undo changes to all files in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -55,4 +55,5 @@ is set to indicate the error.
 .\: XXX: ch_func ZIP_CMD_CLOSE errors
 .RE
 .SH "SEE ALSO"
+libzip(3),
 zip_unchange(3)

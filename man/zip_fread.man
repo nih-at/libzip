@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fread.mdoc,v 1.3 2003/10/03 23:36:25 wiz Exp 
-.\" $NiH: zip_fread.mdoc,v 1.3 2003/10/03 23:36:25 wiz Exp $
+.\" from NiH: zip_fread.mdoc,v 1.5 2005/06/09 18:53:11 wiz Exp 
+.\" $NiH: zip_fread.mdoc,v 1.5 2005/06/09 18:53:11 wiz Exp $
 .\"
 .\" zip_fread.mdoc \-- read from file
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -41,8 +41,7 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
 .Ft int
-.\" XXX: buf should be void *
-.Fn zip_fread "struct zip_file *file" "char *buf" "int nbytes"
+.Fn zip_fread "struct zip_file *file" "void *buf" "int nbytes"
 .SH "DESCRIPTION"
 The
 .Fn zip_fread
@@ -58,5 +57,6 @@ Otherwise, \-1 is returned.
 .\".SH "ERRORS"
 .\" XXX: the code needs checking.
 .SH "SEE ALSO"
+libzip(3),
 zip_fclose(3),
 zip_fopen(3)

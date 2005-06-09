@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_name_locate.mdoc,v 1.4 2004/04/14 14:01:29 dillo Exp 
-.\" $NiH: zip_name_locate.mdoc,v 1.4 2004/04/14 14:01:29 dillo Exp $
+.\" from NiH: zip_name_locate.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_name_locate.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_name_locate.mdoc \-- get index of file by name
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -67,4 +67,5 @@ Ignore directory part of file name in archive.
 .RE
 .\".SH "RETURN VALUES"
 .SH "SEE ALSO"
+libzip(3),
 zip_get_name(3)

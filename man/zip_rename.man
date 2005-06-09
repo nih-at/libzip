@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_rename.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp 
-.\" $NiH: zip_rename.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp $
+.\" from NiH: zip_rename.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_rename.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_rename.mdoc \-- rename file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -70,4 +70,5 @@ is not a valid file index in
 \fBarchive.\fR
 .RE
 .SH "SEE ALSO"
+libzip(3),
 zip_unchange(3)

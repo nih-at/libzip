@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fopen.mdoc,v 1.9 2005/01/11 18:38:17 wiz Exp 
-.\" $NiH: zip_fopen.mdoc,v 1.9 2005/01/11 18:38:17 wiz Exp $
+.\" from NiH: zip_fopen.mdoc,v 1.11 2005/06/09 18:54:24 wiz Exp 
+.\" $NiH: zip_fopen.mdoc,v 1.11 2005/06/09 18:54:24 wiz Exp $
 .\"
 .\" zip_fopen.mdoc \-- open file in zip archive for reading
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -63,7 +63,8 @@ to it.
 .RS
 .TP 19
 \fBZIP_FL_COMPRESSED\fR
-Read the compressed data.  Otherwise the data is uncompressed by
+Read the compressed data.
+Otherwise the data is uncompressed by
 .Fn zip_fread.
 .TP 19
 \fBZIP_FL_UNCHANGED\fR
@@ -121,6 +122,7 @@ if
 \fBindex\fR
 is invalid.
 .SH "SEE ALSO"
+libzip(3),
 zip_fclose(3),
 zip_fread(3),
 zip_name_locate(3)

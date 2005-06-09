@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_get_name.mdoc,v 1.7 2005/01/20 20:49:46 wiz Exp 
-.\" $NiH: zip_get_name.mdoc,v 1.7 2005/01/20 20:49:46 wiz Exp $
+.\" from NiH: zip_get_name.mdoc,v 1.8 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_get_name.mdoc,v 1.8 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_get_name.mdoc \-- get name of file by index
 .\" Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -86,4 +86,5 @@ points to an added file and
 \fBZIP_FL_UNCHANGED\fR
 is set.
 .SH "SEE ALSO"
+libzip(3),
 zip_name_locate(3)

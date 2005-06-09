@@ -1,8 +1,8 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: libzip.mdoc,v 1.2 2005/06/09 17:24:15 wiz Exp 
-.\" $NiH: libzip.mdoc,v 1.2 2005/06/09 17:24:15 wiz Exp $
+.\" from NiH: libzip.mdoc,v 1.3 2005/06/09 18:45:05 wiz Exp 
+.\" $NiH: libzip.mdoc,v 1.3 2005/06/09 18:45:05 wiz Exp $
 .\"
-.\" libzip.mdoc \-- XXX
+.\" libzip.mdoc \-- general overview of available functions
 .\" Copyright (C) 2005 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.

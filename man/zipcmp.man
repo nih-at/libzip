@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zipcmp.mdoc,v 1.7 2003/10/03 23:55:12 dillo Exp 
-.\" $NiH: zipcmp.mdoc,v 1.7 2003/10/03 23:55:12 dillo Exp $
+.\" from NiH: zipcmp.mdoc,v 1.9 2005/06/09 18:50:16 wiz Exp 
+.\" $NiH: zipcmp.mdoc,v 1.9 2005/06/09 18:50:16 wiz Exp $
 .\"
 .\" zipcmp.mdoc \-- compare zip archives
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -76,5 +76,6 @@ Display version information and exit.
 .B zipcmp
 exits 0 if the two zip archives contain the same files, 1 if they differ,
 and \*[Gt]1 if an error occurred.
-.\".SH "SEE ALSO"
-.\" XXX
+.SH "SEE ALSO"
+zipmerge(1),
+libzip(3)

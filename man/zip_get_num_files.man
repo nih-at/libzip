@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_get_num_files.mdoc,v 1.1 2003/12/27 22:56:50 wiz Exp 
-.\" $NiH: zip_get_num_files.mdoc,v 1.1 2003/12/27 22:56:50 wiz Exp $
+.\" from NiH: zip_get_num_files.mdoc,v 1.2 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_get_num_files.mdoc,v 1.2 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_get_num_files.mdoc \-- get number of files in archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -54,4 +54,5 @@ or \-1 if
 \fBarchive\fR
 is
 \fBNULL.\fR
-.\".SH "SEE ALSO"
+.SH "SEE ALSO"
+libzip(3)

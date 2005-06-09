@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fclose.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp 
-.\" $NiH: zip_fclose.mdoc,v 1.4 2004/11/30 22:26:56 wiz Exp $
+.\" from NiH: zip_fclose.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_fclose.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_fclose.mdoc \-- close file in zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -54,5 +54,6 @@ Otherwise, the error code is returned.
 .\".SH "ERRORS"
 .\" XXX: the code needs checking.
 .SH "SEE ALSO"
+libzip(3),
 zip_fopen(3),
 zip_fread(3)

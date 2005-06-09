@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_to_str.mdoc,v 1.4 2004/12/22 16:37:48 wiz Exp 
-.\" $NiH: zip_error_to_str.mdoc,v 1.4 2004/12/22 16:37:48 wiz Exp $
+.\" from NiH: zip_error_to_str.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp 
+.\" $NiH: zip_error_to_str.mdoc,v 1.5 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_error_to_str.mdoc \-- get string representation of zip error code
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -75,6 +75,7 @@ sufficiently sized
 \fBbuf,\fR
 excluding the terminating NUL character.
 .SH "SEE ALSO"
+libzip(3),
 zip_error_get(3),
 zip_error_get_sys_type(3),
 zip_file_error_get(3),
