@@ -1,9 +1,7 @@
 ------------------------------------------------ showstopper
-* write libzip.3 (intro)
 * what is ZIP_SOURCE_CLOSE good for; check callers
 * regression tests (duplicate file names, unchange, .{200})
 * code review
-* README
 * fix XXX in man/
 * fix XXX in lib?
 * fix XXX in ChangeLog!
