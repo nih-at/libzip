@@ -34,17 +34,24 @@ install-data-hook: link-man3
 
 LN=ln
 
-link-man3: install-man3
-	-rm -f ${man3dir}/zip_file_error_get.3
-	${LN} ${man3dir}/zip_error_get.3 ${man3dir}/zip_file_error_get.3
-	-rm -f ${man3dir}/zip_fopen_index.3
-	${LN} ${man3dir}/zip_fopen.3 ${man3dir}/zip_fopen_index.3
-	-rm -f ${man3dir}/zip_replace.3
-	${LN} ${man3dir}/zip_add.3 ${man3dir}/zip_replace.3
-	-rm -f ${man3dir}/zip_stat_index.3
-	${LN} ${man3dir}/zip_stat.3 ${man3dir}/zip_stat_index.3
-	-rm -f ${man3dir}/zip_strerror.3
-	${LN} ${man3dir}/zip_file_strerror.3 ${man3dir}/zip_strerror.3
+link-man3: install-man3 uninstall-hook
+	${LN} ${DESTDIR}${man3dir}/zip_error_get.3 \
+		${DESTDIR}${man3dir}/zip_file_error_get.3
+	${LN} ${DESTDIR}${man3dir}/zip_fopen.3 \
+		${DESTDIR}${man3dir}/zip_fopen_index.3
+	${LN} ${DESTDIR}${man3dir}/zip_add.3 \
+		${DESTDIR}${man3dir}/zip_replace.3
+	${LN} ${DESTDIR}${man3dir}/zip_stat.3 \
+		${DESTDIR}${man3dir}/zip_stat_index.3
+	${LN} ${DESTDIR}${man3dir}/zip_file_strerror.3 \
+		${DESTDIR}${man3dir}/zip_strerror.3
+
+uninstall-hook:
+	-rm -f ${DESTDIR}${man3dir}/zip_file_error_get.3
+	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index.3
+	-rm -f ${DESTDIR}${man3dir}/zip_replace.3
+	-rm -f ${DESTDIR}${man3dir}/zip_stat_index.3
+	-rm -f ${DESTDIR}${man3dir}/zip_strerror.3
 
 MANDOC=${MAN1:.1=.mdoc} ${MAN3:.3=.mdoc}
 MAN=${MANDOC:.mdoc=.man}
