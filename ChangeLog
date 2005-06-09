@@ -126,7 +126,26 @@
 	* lib/zip_fopen_index.c (zip_fopen_index): return ZERR_INVAL if
 	ZIP_FL_UNCHANGED is specified and file was added.
 	
-XXX: update for no-meta rewrite
+2004-04-14  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+        * TODO, lib/Makefile.am, lib/zip.h, lib/zip_add.c,
+          lib/zip_add_data.c, lib/zip_add_file.c, lib/zip_add_filep.c,
+          lib/zip_add_zip.c, lib/zip_close.c, lib/zip_delete.c,
+          lib/zip_dirent.c, lib/zip_error.c, lib/zip_error_str.c,
+          lib/zip_fclose.c, lib/zip_file_get_offset.c, lib/zip_fopen.c,
+          lib/zip_fopen_index.c, lib/zip_fread.c, lib/zip_free.c,
+          lib/zip_free_entry.c, lib/zip_free_meta.c, lib/zip_get_name.c,
+          lib/zip_merge_meta.c, lib/zip_name_locate.c, lib/zip_new.c,
+          lib/zip_new_entry.c, lib/zip_new_meta.c, lib/zip_open.c,
+          lib/zip_rename.c, lib/zip_replace.c, lib/zip_replace_data.c,
+          lib/zip_replace_file.c, lib/zip_replace_filep.c,
+          lib/zip_replace_zip.c, lib/zip_set_name.c, lib/zip_stat.c,
+          lib/zip_stat_index.c, lib/zip_unchange.c,
+          lib/zip_unchange_data.c, lib/zipint.h, man/zip_fopen.man,
+          man/zip_fopen.mdoc, man/zip_name_locate.man,
+          man/zip_name_locate.mdoc, man/zip_stat.man, man/zip_stat.mdoc,
+	  regress/buffadd.c, regress/open.c, src/zipcmp.c: Remove
+	  zip_meta structure.
 
 2003-12-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 

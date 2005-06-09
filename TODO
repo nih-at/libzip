@@ -1,5 +1,3 @@
------------------------------------------------- showstopper
-* fix XXX in ChangeLog!
 ------------------------------------------------ just before release
 * recreate .man files
 ------------------------------------------------ others
@@ -25,6 +23,12 @@
 	replace w/ illegal index [E]
 	replace w/ deleted name [E]
 * (close)
+	copy zip file
+	open copy
+	rename, delete, replace, add w/ new name, add w/ deleted name
+	close
+	zipcmp copy expected
+	remove copy
 * (delete)
 * (error_get)
 * (error_get_sys_type)
