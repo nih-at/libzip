@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_name_locate.c,v 1.17 2004/11/30 23:02:47 wiz Exp $
+  $NiH: zip_name_locate.c,v 1.18 2005/01/11 18:52:42 wiz Exp $
 
   zip_name_locate.c -- get index by name
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

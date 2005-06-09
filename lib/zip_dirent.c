@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_dirent.c,v 1.4 2004/12/22 18:43:01 wiz Exp $
+  $NiH: zip_dirent.c,v 1.5 2005/01/11 19:00:34 wiz Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

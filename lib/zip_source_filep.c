@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_source_filep.c,v 1.4 2005/05/20 21:54:12 wiz Exp $
+  $NiH: zip_source_filep.c,v 1.5 2005/05/20 22:05:30 wiz Exp $
 
   zip_source_filep.c -- create data source from FILE *
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

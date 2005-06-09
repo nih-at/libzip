@@ -1,8 +1,8 @@
 /*
-  $NiH: zipmerge.c,v 1.9 2005/06/03 12:33:34 wiz Exp $
+  $NiH: zipmerge.c,v 1.10 2005/06/03 12:55:31 wiz Exp $
 
   zipmerge.c -- merge zip archives
-  Copyright (C) 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

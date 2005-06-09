@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_free.c,v 1.15 2004/12/28 18:41:22 dillo Exp $
+  $NiH: zip_free.c,v 1.16 2005/01/11 17:40:56 dillo Exp $
 
   zip_free.c -- free struct zip
-  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

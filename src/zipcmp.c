@@ -1,8 +1,8 @@
 /*
-  $NiH: zipcmp.c,v 1.15 2005/05/19 18:42:09 dillo Exp $
+  $NiH: zipcmp.c,v 1.16 2005/05/20 21:56:54 wiz Exp $
 
   zipcmp.c -- compare zip files
-  Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

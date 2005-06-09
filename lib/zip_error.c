@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_error.c,v 1.5 2004/04/16 09:40:27 dillo Exp $
+  $NiH: zip_error.c,v 1.6 2005/01/11 18:30:30 dillo Exp $
 
   zip_error.c -- struct zip_error helper functions
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>

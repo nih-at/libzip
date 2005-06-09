@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_open.c,v 1.28 2005/01/11 19:01:53 dillo Exp $
+  $NiH: zip_open.c,v 1.29 2005/05/18 21:19:37 wiz Exp $
 
   zip_open.c -- open zip archive
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
