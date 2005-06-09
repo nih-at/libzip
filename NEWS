@@ -3,4 +3,5 @@
 * first standalone release
 * changed license to three-clause BSD
 * overhauled API
-* install zipcmp
+* added man pages
+* install zipcmp and zipmerge
