@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_zip.c,v 1.3 2004/12/22 16:32:00 dillo Exp $
+  $NiH: zip_source_zip.c,v 1.4 2005/01/11 18:29:33 dillo Exp $
 
   zip_source_zip.c -- create data source from zip file
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -103,7 +103,7 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
     if ((flags & ZIP_FL_COMPRESSED) == 0) {
 	p->st.size = p->st.comp_size = len;
 	p->st.comp_method = ZIP_CM_STORE;
-	/* XXX: crc */
+	p->st.crc = 0;
     }
     
     if ((zs=zip_source_function(za, read_zip, p)) == NULL) {
