@@ -1,4 +1,4 @@
-.\" $NiH: zip_source_function.mdoc,v 1.8 2005/06/09 18:50:27 wiz Exp $
+.\" $NiH: zip_source_function.mdoc,v 1.9 2005/06/09 18:54:24 wiz Exp $
 .\"
 .\" zip_source_function.mdoc -- create data source from function
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -93,8 +93,10 @@ Get error information.
 points to an array of two ints, which should be filled with the libzip
 error code and the corresponding system error code for the error that
 occurred.
+See
+.Xr zip_errors 3
+for details on the error codes.
 Return 0.
-.\" XXX: we should document all error codes somewhere
 .It Dv ZIP_SOURCE_FREE
 Clean up and free all resources.
 Return 0.
