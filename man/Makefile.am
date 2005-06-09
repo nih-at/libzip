@@ -1,6 +1,6 @@
 man_MANS=${MAN1} ${MAN3}
 
-DISTCLEANFILES=${man_MANS}
+DISTCLEANFILES=${man_MANS} ${HTML}
 EXTRA_DIST=${MANDOC} ${MAN}
 
 MAN1=	zipcmp.1 zipmerge.1
@@ -54,18 +54,33 @@ uninstall-hook:
 	-rm -f ${DESTDIR}${man3dir}/zip_stat_index.3
 	-rm -f ${DESTDIR}${man3dir}/zip_strerror.3
 
+link-html: ${HTML}
+	-rm -f zip_file_error_get.html zip_fopen_index.html \
+		zip_replace.html zip_stat_index.html \
+		zip_strerror.html
+	${LN} zip_error_get.html zip_file_error_get.html
+	${LN} zip_fopen.html zip_fopen_index.html
+	${LN} zip_add.html zip_replace.html
+	${LN} zip_stat.html zip_stat_index.html
+	${LN} zip_file_strerror.html zip_strerror.html
+
+HTML=${MANDOC:.mdoc=.html}
 MANDOC=${MAN1:.1=.mdoc} ${MAN3:.3=.mdoc}
 MAN=${MANDOC:.mdoc=.man}
 
 MDOC2MAN=mdoc2man
-SUFFIXES=.man .mdoc
+SUFFIXES=.man .mdoc .html
 
 .PHONY: mkman update-errors
 
 mkman: ${MAN}
+mkhtml: ${HTML} link-html
 
 update-errors:
 	sh $(srcdir)/make_zip_errors.sh $(srcdir)/../lib/zip.h zip_errors.mdoc
 
 .mdoc.man:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
+
+.mdoc.html:
+	nroff -mdoc2html $< | sed -e "s,../html3/,," > $@.$$$$ && mv $@.$$$$ $@
