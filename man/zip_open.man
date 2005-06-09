@@ -1,9 +1,9 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_open.mdoc,v 1.19 2005/06/09 18:51:48 wiz Exp 
-.\" $NiH: zip_open.mdoc,v 1.19 2005/06/09 18:51:48 wiz Exp $
+.\" from NiH: zip_open.mdoc,v 1.20 2005/06/09 19:51:23 wiz Exp 
+.\" $NiH: zip_open.mdoc,v 1.20 2005/06/09 19:51:23 wiz Exp $
 .\"
 .\" zip_open.mdoc \-- open zip archive
-.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>

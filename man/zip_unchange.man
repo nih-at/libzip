@@ -1,9 +1,9 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_unchange.mdoc,v 1.7 2005/06/09 18:50:27 wiz Exp 
-.\" $NiH: zip_unchange.mdoc,v 1.7 2005/06/09 18:50:27 wiz Exp $
+.\" from NiH: zip_unchange.mdoc,v 1.9 2005/06/09 19:51:23 wiz Exp 
+.\" $NiH: zip_unchange.mdoc,v 1.9 2005/06/09 19:51:23 wiz Exp $
 .\"
 .\" zip_unchange.mdoc \-- undo changes to file in zip archive
-.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
@@ -63,7 +63,6 @@ Bq Er ZIP_ER_INVAL
 \fBindex\fR
 is not a valid file index in
 \fBzip.\fR
-.\: XXX: also ch_func ZIP_CMD_CLOSE errors
 .RE
 .SH "SEE ALSO"
 libzip(3),

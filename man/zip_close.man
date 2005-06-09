@@ -1,9 +1,9 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_close.mdoc,v 1.9 2005/06/09 18:50:27 wiz Exp 
-.\" $NiH: zip_close.mdoc,v 1.9 2005/06/09 18:50:27 wiz Exp $
+.\" from NiH: zip_close.mdoc,v 1.12 2005/06/09 19:51:22 wiz Exp 
+.\" $NiH: zip_close.mdoc,v 1.12 2005/06/09 19:51:22 wiz Exp $
 .\"
 .\" zip_close.mdoc \-- close zip archive
-.\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <nih@giga.or.at>
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_CLOSE 3 "October 3, 2003" NiH
+.TH ZIP_CLOSE 3 "June 9, 2005" NiH
 .SH "NAME"
 zip_close \- close zip archive
 .SH "LIBRARY"
@@ -65,6 +65,13 @@ is set to indicate the error.
 will fail if:
 .RS
 .TP 4
+Bq Er ZIP_ER_EOF
+Unexpected end-of-file found while reading from a file.
+.TP 4
+Bq Er ZIP_ER_INTERNAL
+The callback function of an added or replaced file returned an
+error but failed to report which.
+.TP 4
 Bq Er ZIP_ER_INVAL
 The
 \fBpath\fR
@@ -91,8 +98,13 @@ A temporary file could not be created.
 .TP 4
 Bq Er ZIP_ER_WRITE
 A file write failed.
-.\" XXX: list incomplete: add_data, copy_data
+.TP 4
+Bq Er ZIP_ER_ZLIB
+An error occurred while (de)compressing a stream with
+zlib(3).
 .RE
+Additionally, any errors returned by the callback function
+for added or replaced files will be passed back.
 .SH "SEE ALSO"
 libzip(3),
 zip_error_get(3),
