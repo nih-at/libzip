@@ -1,4 +1,4 @@
-.\" $NiH$
+.\" $NiH: libzip.mdoc,v 1.1 2005/04/15 17:58:56 wiz Exp $
 .\"
 .\" libzip.mdoc -- XXX
 .\" Copyright (C) 2005 Dieter Baron and Thomas Klausner
@@ -45,26 +45,26 @@ libzip (-lzip)
 .Nm
 is a library for reading, creating, and modifying zip archives.
 .Pp
-Below there are two sections: how to read from zip archives
-and how to create/modify them.
+Below there are two sections listing functions: one for how to read
+from zip archives and one for how to create/modify them.
 .Sh READING ZIP ARCHIVES
 .Ss open archive
 .Xr zip_open 3
-.Ss finding files
+.Ss find files
 .Xr zip_name_locate 3
-.Ss reading files
+.Ss read files
 .Xr zip_fopen 3
 .Xr zip_fopen_index 3
 .Xr zip_fread 3
 .Xr zip_fclose 3
-.Ss closing archive
+.Ss close archive
 .Xr zip_close 3
 .Ss miscellaneous
 .Xr zip_stat 3
 .Xr zip_get_name 3
 .Xr zip_get_num_files 3
 .Sh CREATING/MODIFYING ZIP ARCHIVES
-.Ss open archive
+.Ss create/open archive
 .Xr zip_open 3
 .Ss add/change files
 .Xr zip_add 3
@@ -75,9 +75,9 @@ and how to create/modify them.
 .Xr zip_source_function 3
 .Xr zip_source_zip 3
 .Xr zip_source_free 3
-.Ss renaming files
+.Ss rename files
 .Xr zip_rename 3
-.Ss deleting files
+.Ss delete files
 .Xr zip_delete 3
 .Ss revert changes
 .Xr zip_unchange 3
@@ -91,8 +91,3 @@ and how to create/modify them.
 .Xr zip_error_get 3
 .Xr zip_error_get_sys_type 3
 .Xr zip_errors 3
-.Sh SEE ALSO
-.Xr zip_source_file 3 ,
-.Xr zip_source_filep 3 ,
-.Xr zip_source_function 3 ,
-.Xr zip_source_zip 3
