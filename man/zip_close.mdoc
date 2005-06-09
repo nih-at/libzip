@@ -1,4 +1,4 @@
-.\" $NiH: zip_close.mdoc,v 1.9 2005/06/09 18:50:27 wiz Exp $
+.\" $NiH: zip_close.mdoc,v 1.10 2005/06/09 19:11:40 wiz Exp $
 .\"
 .\" zip_close.mdoc -- close zip archive
 .\" Copyright (C) 2003 Dieter Baron and Thomas Klausner
@@ -67,6 +67,9 @@ will fail if:
 .Bl -tag -width Er
 .It Bq Er ZIP_ER_EOF
 Unexpected end-of-file found while reading from a file.
+.It Bq Er ZIP_ER_INTERNAL
+The callback function of an added or replaced file returned an
+error but failed to report which.
 .It Bq Er ZIP_ER_INVAL
 The
 .Ar path
