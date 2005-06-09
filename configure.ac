@@ -68,6 +68,7 @@ AC_CONFIG_LINKS([man/zipcmp.1:man/zipcmp.${MANFMT}
 		 man/zip_error_get.3:man/zip_error_get.${MANFMT}
 		 man/zip_error_get_sys_type.3:man/zip_error_get_sys_type.${MANFMT}
 		 man/zip_error_to_str.3:man/zip_error_to_str.${MANFMT}
+		 man/zip_errors.3:man/zip_errors.${MANFMT}
 		 man/zip_fclose.3:man/zip_fclose.${MANFMT}
 		 man/zip_file_strerror.3:man/zip_file_strerror.${MANFMT}
 		 man/zip_fopen.3:man/zip_fopen.${MANFMT}
