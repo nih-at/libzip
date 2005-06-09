@@ -1,0 +1,16 @@
+  This is a beta version of libzip, a C library for reading,
+creating, and modifying zip archives.
+
+  For more information, take a look at the included man pages. You
+can start with libzip(3), which lists all others. Example source
+code is in the src/ subdirectory.
+
+  For generic installation instructions, see file `INSTALL'.
+
+  If you make a binary distribution, please include a pointer to the
+distribution site:
+	http://www.nih.at/libzip/
+	ftp.nih.at /pub/nih/libzip
+The latest version can always be found there.
+
+Mail suggestions and bug reports to <nih@giga.or.at>.
