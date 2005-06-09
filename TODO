@@ -1,5 +1,3 @@
------------------------------------------------- just before release
-* recreate .man files
 ------------------------------------------------ others
 * regression tests (duplicate file names, unchange, .{200})
 * zip_commit
