@@ -1,5 +1,5 @@
-  This is a beta version of libzip, a C library for reading,
-creating, and modifying zip archives.
+  This is libzip, a C library for reading, creating, and modifying
+zip archives.
 
   For more information, take a look at the included man pages. You
 can start with libzip(3), which lists all others. Example source
