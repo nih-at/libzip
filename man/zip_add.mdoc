@@ -1,4 +1,4 @@
-.\" $NiH: zip_add.mdoc,v 1.4 2004/11/18 17:26:52 wiz Exp $
+.\" $NiH: zip_add.mdoc,v 1.5 2004/11/30 22:21:49 wiz Exp $
 .\"
 .\" zip_add.mdoc -- add files to zip archive
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -81,7 +81,7 @@ is set to indicate the error.
 struct zip_source *s;
 
 if ((s=zip_source_buffer(archive, buffer, len)) == NULL ||
-    zip_add(archive, name, s) < 0) {
+    zip_add(archive, name, s) \*[Lt] 0) {
     zip_source_free(s);
     printf("error adding file: %s\n", zip_strerror(archive));
 }
@@ -111,6 +111,7 @@ is invalid.
 Required memory could not be allocated.
 .El
 .Sh SEE ALSO
+.Xr libzip 3 ,
 .Xr zip_source_file 3 ,
 .Xr zip_source_filep 3 ,
 .Xr zip_source_function 3 ,
