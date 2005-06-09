@@ -11,6 +11,7 @@ MAN3=	libzip.3 \
 	zip_error_get.3 \
 	zip_error_get_sys_type.3 \
 	zip_error_to_str.3 \
+	zip_errors.3 \
 	zip_fclose.3 \
 	zip_file_strerror.3 \
 	zip_fopen.3 \
