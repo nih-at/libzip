@@ -83,4 +83,4 @@ update-errors:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
-	nroff -mdoc2html $< | sed -e "s,../html3/,," > $@.$$$$ && mv $@.$$$$ $@
+	nroff -mdoc2html $< | sed -e 's,^and$$,Dieter Baron \&lt;dillo@giga.or.at\&gt; and Thomas Klausner \&lt;tk@giga.or.at\&gt;,' -e "s,../html3/,," > $@.$$$$ && mv $@.$$$$ $@
