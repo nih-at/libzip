@@ -1,4 +1,4 @@
-.\" $NiH: zip_stat.mdoc,v 1.4 2005/06/09 18:50:27 wiz Exp $
+.\" $NiH: zip_stat.mdoc,v 1.5 2005/06/09 19:19:38 wiz Exp $
 .\"
 .\" zip_stat.mdoc -- get information about file
 .\" Copyright (C) 2003, 2004 Dieter Baron and Thomas Klausner
@@ -105,11 +105,9 @@ if
 is invalid.
 If
 .Dv ZIP_FL_UNCHANGED
-is not set and the callback function does not provide data
-when called with
-.Dv ZIP_SOURCE_STAT ,
-.Er ZIP_ER_CHANGED
-will be returned.
+is not set and no information can be optained from the source callback,
+the error information is set to
+.Er ZIP_ER_CHANGED .
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_name_locate 3
