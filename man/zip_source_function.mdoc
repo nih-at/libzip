@@ -1,4 +1,4 @@
-.\" $NiH: zip_source_function.mdoc,v 1.7 2004/12/22 16:21:00 wiz Exp $
+.\" $NiH: zip_source_function.mdoc,v 1.8 2005/06/09 18:50:27 wiz Exp $
 .\"
 .\" zip_source_function.mdoc -- create data source from function
 .\" Copyright (C) 2004 Dieter Baron and Thomas Klausner
@@ -70,7 +70,8 @@ The last argument,
 specifies which action the function should perform:
 .Bl -tag -width XZIPXSOURCEXCLOSEXX -offset indent
 .It Dv ZIP_SOURCE_OPEN
-Prepare for reading.  Return 0 on success, \-1 on error.
+Prepare for reading.
+Return 0 on success, \-1 on error.
 .It Dv ZIP_SOURCE_READ
 Read data into the buffer
 .Ar data
@@ -84,17 +85,19 @@ Reading is done.
 .It Dv ZIP_SOURCE_STAT
 Get meta information for the input data.
 .Ar data
-points to a struct zip_stat, which should be filled in.  Return 0 on
-success, \-1 on error.
+points to a struct zip_stat, which should be filled in.
+Return 0 on success, \-1 on error.
 .It Dv ZIP_SOURCE_ERROR
 Get error information.
 .Ar data
 points to an array of two ints, which should be filled with the libzip
 error code and the corresponding system error code for the error that
-occurred.  Return 0.
+occurred.
+Return 0.
 .\" XXX: we should document all error codes somewhere
 .It Dv ZIP_SOURCE_FREE
-Clean up and free all resources.  Return 0.
+Clean up and free all resources.
+Return 0.
 .El
 .Pp
 The library will always issue
@@ -105,8 +108,9 @@ When it no longer wishes to read from this source, it will issue
 .Dv ZIP_SOURCE_CLOSE .
 If the library wishes to read the data again, it will issue
 .Dv ZIP_SOURCE_OPEN
-a second time.  If the function is unable to provide
-the data again, it should return \-1.
+a second time.
+If the function is unable to provide the data again, it should
+return \-1.
 .Pp
 .Dv ZIP_SOURCE_STAT
 can be issued at any time.
