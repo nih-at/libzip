@@ -1,8 +1,8 @@
 /*
-  $NiH: buffadd.c,v 1.8 2004/11/18 17:26:55 wiz Exp $
+  $NiH: buffadd.c,v 1.9 2005/01/11 17:45:00 wiz Exp $
 
   buffadd.c -- test cases for adding files from buffer
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
