@@ -1,11 +1,9 @@
 ------------------------------------------------ showstopper
-* what is ZIP_SOURCE_CLOSE good for; check callers
-* regression tests (duplicate file names, unchange, .{200})
-* code review
 * fix XXX in ChangeLog!
 ------------------------------------------------ just before release
 * recreate .man files
 ------------------------------------------------ others
+* regression tests (duplicate file names, unchange, .{200})
 * zip_commit
 * zip_replace_zip: allow rewinding
 * API for (file and archive) comments
