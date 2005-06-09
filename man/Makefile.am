@@ -4,7 +4,8 @@ DISTCLEANFILES=${man_MANS}
 EXTRA_DIST=${MANDOC} ${MAN}
 
 MAN1=	zipcmp.1 zipmerge.1
-MAN3=	zip_add.3 \
+MAN3=	libzip.3 \
+	zip_add.3 \
 	zip_close.3 \
 	zip_delete.3 \
 	zip_error_get.3 \
