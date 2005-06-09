@@ -4,6 +4,7 @@
 
 2005-06-09  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
+	* regress/buffadd.c (main): check string length before comparing.
 	* ltmain.sh: update from libtool-1.5.18.
 	* compile, depcomp, install-sh, missing, mkinstalldirs: Update
 	from automake-1.9.5.

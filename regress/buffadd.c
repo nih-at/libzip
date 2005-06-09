@@ -1,5 +1,5 @@
 /*
-  $NiH: buffadd.c,v 1.9 2005/01/11 17:45:00 wiz Exp $
+  $NiH: buffadd.c,v 1.10 2005/06/09 20:04:45 dillo Exp $
 
   buffadd.c -- test cases for adding files from buffer
   Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
@@ -53,6 +53,7 @@ main(int argc, char *argv[])
     struct zip_file *zf;
     struct zip_source *zs;
     int err;
+    int len;
     
     char buf[2000];
 
@@ -92,7 +93,7 @@ main(int argc, char *argv[])
 	exit(1);
     }
 
-    if (zip_fread(zf, buf, 2000) < 0) {
+    if ((len=zip_fread(zf, buf, 2000)) < 0) {
 	fprintf(stderr,"%s: can't read from '%s' in zip archive '%s': %s\n",
 		argv[0], testname, testzip, zip_file_strerror(zf));
 	exit(1);
@@ -101,7 +102,8 @@ main(int argc, char *argv[])
     zip_fclose(zf);
     zf = zip_fopen(za, testname, 0);
 
-    if (strcmp(buf, teststr)) {
+    /* not NUL-terminated, so we have to check length manually */
+    if (len != strlen(teststr) || strncmp(buf, teststr, len)) {
 	fprintf(stderr,"%s: wrong data: '%s' instead of '%s'\n", argv[0],
 		buf, teststr);
 	exit(1);
