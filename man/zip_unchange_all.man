@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_unchange_all.mdoc,v 1.7 2005/06/09 19:51:23 wiz Exp 
-.\" $NiH: zip_unchange_all.mdoc,v 1.7 2005/06/09 19:51:23 wiz Exp $
+.\" from NiH: zip_unchange_all.mdoc,v 1.8 2005/06/09 20:41:00 wiz Exp 
+.\" $NiH: zip_unchange_all.mdoc,v 1.8 2005/06/09 20:41:00 wiz Exp $
 .\"
 .\" zip_unchange_all.mdoc \-- undo changes to all files in zip archive
 .\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
@@ -51,7 +51,6 @@ Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
-.RE
 .SH "SEE ALSO"
 libzip(3),
 zip_unchange(3)
