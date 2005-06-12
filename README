@@ -9,6 +9,9 @@ can start with libzip(3), which lists all others.  Example source code
 is in the src/ subdirectory.
 
   For generic installation instructions, see file `INSTALL'.
+Additionally, you'll need zlib (at least version 1.1.2). It comes
+with most operating systems nowadays, or you can get it at
+	http://www.gzip.org/zlib/
 
   If you make a binary distribution, please include a pointer to the
 distribution site:
