@@ -1,3 +1,7 @@
+2005-06-17  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* libzip.pc: return full path to zipcmp.
+
 2005-06-09  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* configure.ac: bump version to 0.6
