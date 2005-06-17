@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_fopen.mdoc,v 1.12 2005/06/09 19:51:23 wiz Exp 
-.\" $NiH: zip_fopen.mdoc,v 1.12 2005/06/09 19:51:23 wiz Exp $
+.\" from NiH: zip_fopen.mdoc,v 1.14 2005/06/09 21:14:54 wiz Exp 
+.\" $NiH: zip_fopen.mdoc,v 1.14 2005/06/09 21:14:54 wiz Exp $
 .\"
 .\" zip_fopen.mdoc \-- open file in zip archive for reading
 .\" Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -126,3 +126,8 @@ libzip(3),
 zip_fclose(3),
 zip_fread(3),
 zip_name_locate(3)
+.SH "AUTHORS"
+
+Dieter Baron <dillo@giga.or.at>
+and
+Thomas Klausner <tk@giga.or.at>

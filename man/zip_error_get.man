@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_get.mdoc,v 1.6 2005/06/09 19:51:23 wiz Exp 
-.\" $NiH: zip_error_get.mdoc,v 1.6 2005/06/09 19:51:23 wiz Exp $
+.\" from NiH: zip_error_get.mdoc,v 1.8 2005/06/09 21:14:54 wiz Exp 
+.\" $NiH: zip_error_get.mdoc,v 1.8 2005/06/09 21:14:54 wiz Exp $
 .\"
 .\" zip_error_get.mdoc \-- get error codes for archive or file
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -74,3 +74,8 @@ function does the same for the zip file
 libzip(3),
 zip_error_get_sys_type(3),
 zip_error_to_str(3)
+.SH "AUTHORS"
+
+Dieter Baron <dillo@giga.or.at>
+and
+Thomas Klausner <tk@giga.or.at>

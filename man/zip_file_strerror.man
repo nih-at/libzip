@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_file_strerror.mdoc,v 1.5 2005/06/09 19:51:23 wiz Exp 
-.\" $NiH: zip_file_strerror.mdoc,v 1.5 2005/06/09 19:51:23 wiz Exp $
+.\" from NiH: zip_file_strerror.mdoc,v 1.7 2005/06/09 21:14:54 wiz Exp 
+.\" $NiH: zip_file_strerror.mdoc,v 1.7 2005/06/09 21:14:54 wiz Exp $
 .\"
 .\" zip_file_strerror.mdoc \-- get string representation for a zip error
 .\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
@@ -74,3 +74,8 @@ return a pointer to the error string.
 .SH "SEE ALSO"
 libzip(3),
 zip_error_to_str(3)
+.SH "AUTHORS"
+
+Dieter Baron <dillo@giga.or.at>
+and
+Thomas Klausner <tk@giga.or.at>

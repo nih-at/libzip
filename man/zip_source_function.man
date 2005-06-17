@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_source_function.mdoc,v 1.11 2005/06/09 19:51:23 wiz Exp 
-.\" $NiH: zip_source_function.mdoc,v 1.11 2005/06/09 19:51:23 wiz Exp $
+.\" from NiH: zip_source_function.mdoc,v 1.13 2005/06/09 21:14:54 wiz Exp 
+.\" $NiH: zip_source_function.mdoc,v 1.13 2005/06/09 21:14:54 wiz Exp $
 .\"
 .\" zip_source_function.mdoc \-- create data source from function
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -150,3 +150,8 @@ zip_source_file(3),
 zip_source_filep(3),
 zip_source_free(3),
 zip_source_zip(3)
+.SH "AUTHORS"
+
+Dieter Baron <dillo@giga.or.at>
+and
+Thomas Klausner <tk@giga.or.at>
