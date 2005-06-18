@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.49 2005/06/09 19:11:37 dillo Exp $
+  $NiH: zip_close.c,v 1.50 2005/06/09 19:57:09 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -313,7 +313,7 @@ add_data_comp(zip_source_callback cb, void *ud, struct zip_stat *st,FILE *ft,
 
     st->comp_size = 0;
     while ((n=cb(ud, buf, sizeof(buf), ZIP_SOURCE_READ)) > 0) {
-	if (fwrite(buf, 1, n, ft) != n) {
+	if (fwrite(buf, 1, n, ft) != (size_t)n) {
 	    _zip_error_set(error, ZIP_ER_WRITE, errno);
 	    return -1;
 	}
@@ -443,7 +443,7 @@ copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
 	    return -1;
 	}
 
-	if (fwrite(buf, 1, n, ft) != n) {
+	if (fwrite(buf, 1, n, ft) != (size_t)n) {
 	    _zip_error_set(error, ZIP_ER_WRITE, errno);
 	    return -1;
 	}

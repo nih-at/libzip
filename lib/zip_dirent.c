@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.5 2005/01/11 19:00:34 wiz Exp $
+  $NiH: zip_dirent.c,v 1.6 2005/06/09 19:57:09 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -47,7 +47,7 @@
 #include "zipint.h"
 
 static time_t _zip_d2u_time(int, int);
-static char *_zip_readfpstr(FILE *, int, int, struct zip_error *);
+static char *_zip_readfpstr(FILE *, unsigned int, int, struct zip_error *);
 static char *_zip_readstr(unsigned char **, int, int, struct zip_error *);
 static void _zip_u2d_time(time_t, int *, int *);
 static void _zip_write2(unsigned short, FILE *);
@@ -188,13 +188,13 @@ _zip_dirent_init(struct zip_dirent *de)
 
 int
 _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
-		 unsigned char **bufp, int left, int localp,
+		 unsigned char **bufp, unsigned int left, int localp,
 		 struct zip_error *error)
 {
     unsigned char buf[CDENTRYSIZE];
     unsigned char *cur;
     unsigned short dostime, dosdate;
-    int size;
+    unsigned int size;
 
     if (localp)
 	size = LENTRYSIZE;
@@ -434,7 +434,7 @@ _zip_read4(unsigned char **a)
 
 
 static char *
-_zip_readfpstr(FILE *fp, int len, int nulp, struct zip_error *error)
+_zip_readfpstr(FILE *fp, unsigned int len, int nulp, struct zip_error *error)
 {
     char *r, *o;
 

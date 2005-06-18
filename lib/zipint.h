@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.39 2005/01/11 19:52:24 wiz Exp $
+  $NiH: zipint.h,v 1.40 2005/06/09 19:57:10 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -180,7 +180,7 @@ int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
 void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
 int _zip_dirent_read(struct zip_dirent *, FILE *,
-		     unsigned char **, int, int, struct zip_error *);
+		     unsigned char **, unsigned int, int, struct zip_error *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
 
 void _zip_entry_free(struct zip_entry *);
