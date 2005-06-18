@@ -1,5 +1,8 @@
 2005-06-18  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
+	* lib/zip_close.c, lib/zip_dirent.c, lib/zip_fread.c,
+	lib/zipint.h, src/zipcmp.c: fix some warnings with -Wsign-compare.
+
 	* configure.ac, man/Makefile.am: smarter man page installation
 	handling, avoiding symlinks.
 
