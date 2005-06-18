@@ -1,3 +1,8 @@
+2005-06-18  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* configure.ac, man/Makefile.am: smarter man page installation
+	handling, avoiding symlinks.
+
 2005-06-17  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* libzip.pc: return full path to zipcmp.
