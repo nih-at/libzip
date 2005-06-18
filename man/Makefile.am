@@ -1,35 +1,37 @@
-man_MANS=${MAN1} ${MAN3}
+MANFMT=@MANFMT@
+man1_MANS=${MAN1:.mdoc=.${MANFMT}}
+man3_MANS=${MAN3:.mdoc=.${MANFMT}}
 
-DISTCLEANFILES=${man_MANS} ${HTML}
+DISTCLEANFILES=${HTML}
 EXTRA_DIST=${MANDOC} ${MAN}
 
-MAN1=	zipcmp.1 zipmerge.1
-MAN3=	libzip.3 \
-	zip_add.3 \
-	zip_close.3 \
-	zip_delete.3 \
-	zip_error_get.3 \
-	zip_error_get_sys_type.3 \
-	zip_error_to_str.3 \
-	zip_errors.3 \
-	zip_fclose.3 \
-	zip_file_strerror.3 \
-	zip_fopen.3 \
-	zip_fread.3 \
-	zip_get_name.3 \
-	zip_get_num_files.3 \
-	zip_name_locate.3 \
-	zip_open.3 \
-	zip_rename.3 \
-	zip_source_buffer.3 \
-	zip_source_file.3 \
-	zip_source_filep.3 \
-	zip_source_free.3 \
-	zip_source_function.3 \
-	zip_source_zip.3 \
-	zip_stat.3 \
-	zip_unchange.3 \
-	zip_unchange_all.3
+MAN1=	zipcmp.mdoc zipmerge.mdoc
+MAN3=	libzip.mdoc \
+	zip_add.mdoc \
+	zip_close.mdoc \
+	zip_delete.mdoc \
+	zip_error_get.mdoc \
+	zip_error_get_sys_type.mdoc \
+	zip_error_to_str.mdoc \
+	zip_errors.mdoc \
+	zip_fclose.mdoc \
+	zip_file_strerror.mdoc \
+	zip_fopen.mdoc \
+	zip_fread.mdoc \
+	zip_get_name.mdoc \
+	zip_get_num_files.mdoc \
+	zip_name_locate.mdoc \
+	zip_open.mdoc \
+	zip_rename.mdoc \
+	zip_source_buffer.mdoc \
+	zip_source_file.mdoc \
+	zip_source_filep.mdoc \
+	zip_source_free.mdoc \
+	zip_source_function.mdoc \
+	zip_source_zip.mdoc \
+	zip_stat.mdoc \
+	zip_unchange.mdoc \
+	zip_unchange_all.mdoc
 
 install-data-hook: link-man3
 
@@ -64,8 +66,8 @@ link-html: ${HTML}
 	${LN} zip_stat.html zip_stat_index.html
 	${LN} zip_file_strerror.html zip_strerror.html
 
+MANDOC=${MAN1} ${MAN3}
 HTML=${MANDOC:.mdoc=.html}
-MANDOC=${MAN1:.1=.mdoc} ${MAN3:.3=.mdoc}
 MAN=${MANDOC:.mdoc=.man}
 
 MDOC2MAN=mdoc2man
@@ -83,4 +85,4 @@ update-errors:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
-	nroff -mdoc2html $< | sed -e 's,^and$$,Dieter Baron \&lt;dillo@giga.or.at\&gt; and Thomas Klausner \&lt;tk@giga.or.at\&gt;,' -e "s,../html3/,," > $@.$$$$ && mv $@.$$$$ $@
+	nroff -mdoc2html $< | sed -e "s,../html./,," > $@.$$$$ && mv $@.$$$$ $@
