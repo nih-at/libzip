@@ -1576,6 +1576,12 @@ EOF
 	compiler_flags="$compiler_flags $arg"
 	compile_command="$compile_command $arg"
 	finalize_command="$finalize_command $arg"
+	case $host:$arg in
+	*-*-dragonfly*:-pthread)
+	  # pkgsrc hack to use -pthread in .la file for final linking
+	  deplibs="$deplibs $arg"
+	  ;;
+	esac
 	continue
 	;;
 
@@ -2066,6 +2072,30 @@ EOF
 	  else
 	    compiler_flags="$compiler_flags $deplib"
 	  fi
+	  case $host:$deplib in
+	  *-*-dragonfly*:-pthread)
+	    # pkgsrc hack to use -pthread in .la file for final linking
+	    case $linkmode in
+	    lib)
+	      deplibs="$deplib $deplibs"
+	      test "$pass" = conv && continue
+	      newdependency_libs="$deplib $newdependency_libs"
+	      ;;
+	    prog)
+	      if test "$pass" = conv; then
+		deplibs="$deplib $deplibs"
+		continue
+	      fi
+	      if test "$pass" = scan; then
+		deplibs="$deplib $deplibs"
+	      else
+		compile_deplibs="$deplib $compile_deplibs"
+		finalize_deplibs="$deplib $finalize_deplibs"
+	      fi
+	      ;;
+	    esac
+	    ;;
+	  esac
 	  continue
 	  ;;
 	-l*)
