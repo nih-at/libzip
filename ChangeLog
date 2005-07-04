@@ -1,3 +1,7 @@
+2005-07-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* libzip.pc.in (zipcmp): Fix path to zipcmp.
+
 2005-06-18  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* lib/zip_close.c, lib/zip_dirent.c, lib/zip_fread.c,
