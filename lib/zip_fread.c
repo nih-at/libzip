@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.16 2005/06/09 19:57:09 dillo Exp $
+  $NiH: zip_fread.c,v 1.17 2005/06/18 00:54:08 wiz Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -44,7 +44,7 @@ ssize_t
 zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 {
     int out_before, ret;
-    unsigned int len;
+    int len;
 
     if (!zf)
 	return -1;
