@@ -3,6 +3,7 @@
 * zip_commit
 * zip_replace_zip: allow rewinding
 * API for (file and archive) comments
+* API for extracting and setting extra fields
 * zipcmp: add option for file content comparison
 * support for zip64 (large file)
 
