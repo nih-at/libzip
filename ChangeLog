@@ -1,6 +1,6 @@
 2005-07-14  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
-	* lib/zip.h: make usable from C++.
+	* lib/zip.h: make usable from C++. Patch from Heiko Hund.
 
 2005-07-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
