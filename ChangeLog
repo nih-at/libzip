@@ -1,3 +1,7 @@
+2005-07-14  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip.h: make usable from C++.
+
 2005-07-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* libzip.pc.in (zipcmp): Fix path to zipcmp.
