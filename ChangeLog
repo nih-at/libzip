@@ -1,5 +1,8 @@
 2005-07-14  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
+	* compile, depcomp, install-sh, missing, mkinstalldirs: update
+	from automake-1.9.6.
+
 	* configure.ac: bump version to 0.6.1
 
 	* lib/zip_fread.c (zip_fread): remove unsigned.
