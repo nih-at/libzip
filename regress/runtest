@@ -1,0 +1,299 @@
+#!/bin/sh
+
+#  $NiH: runtest,v 1.17 2005/07/13 17:42:19 dillo Exp $
+#
+#  runtest -- run regression tests
+#  Copyright (C) 2002, 2003 Dieter Baron and Thomas Klausner
+#
+#  This file is part of libzip, a library to manipulate ZIP archives.
+#  The authors can be contacted at <nih@giga.or.at>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+# runtest TESTNAME
+#
+# files: 
+#   TESTNAME.test: test scenario
+#
+# test scenario:
+#    Lines beginning with # are comments.
+#
+#    The following commands are recognized; return and args must
+#    appear exactly once, the others are optional.
+#
+#	retrun RET
+#	    RET is the expected exit code
+#
+#	args ARGS
+#	    run program with command line arguments ARGS
+#	
+#	stdout TEXT
+#	    program is expected to print TEXT to stdout.  If multiple
+#	    stdout commands are used, the messages are expected in
+#	    the order given. 
+#   
+#	error TEXT
+#	    program is expected to produce the error message TEXT.  If
+#	    multiple error commands are used, the messages are
+#	    expected in the order given.
+#
+#	copy IN OUT
+#	    link file IN to OUT
+#
+#	file IN TEST OUT
+#           link zip file IN to TEST, check against OUT after
+#           program has run.
+#
+#	filenew CREATED EXPECTED
+#	    check that CREATED has been created and equals EXPECTED.
+#
+#	filedel IN TEST
+#	    link zip file IN to TEST, check that it is deleted.
+#
+# exit status
+#	runtest uses the following exit codes:
+#	    0: test passed
+#	    1: test failed
+#	    2: other error
+#	   77: test was skipped
+# 
+# environment variables:
+#   VERBOSE: if set, be more verbose (e. g., output diffs)
+#   NOCLEANUP: if set, don't delete directory test is run in
+
+die() {
+	echo "$0: $*" >&2;
+	cleanup;
+	exit 2;
+}
+
+fail() {
+	if [ ! -z "${VERBOSE}" ]
+	then
+	    echo "${TEST} -- FAILED: $*";
+	fi;
+	cleanup;
+	exit 1;
+}
+
+skip() {
+	if [ ! -z "${VERBOSE}" ]
+	then
+		echo "${TEST} -- skipped: $*";
+	fi;
+	cleanup;
+	exit 77;
+}
+
+succeed() {
+	if [ ! -z "${VERBOSE}" ]
+	then
+		echo "${TEST} -- passed";
+	fi
+	cleanup;
+	exit 0;
+}
+
+cleanup() {
+	cd ..;
+	if [ -z "${NOCLEANUP}" ]
+	then
+		rm -r ${DIR};
+	fi
+}
+
+checkfile() {
+    if [ ! -f "$2" ]
+    then
+	fail "missing output file: '$2'"
+    else
+	if [ ! -f "$1" ]
+	then
+	    die "cannot find input file $1"
+	fi
+	
+	diff "$1" "$2" > /dev/null
+	if [ $? -ne 0 ]
+	then
+	    if [ ! -z "${VERBOSE}" ]
+	    then
+		diff -u "$1" "$2"
+	    fi
+	    fail "$3"
+	fi
+    fi
+}
+
+checkzip() {
+    if [ ! -f "$2" ]
+    then
+	fail "missing output file: '$2'"
+    else
+	if [ ! -f "$1" ]
+	then
+	    die "cannot find input file $1"
+	fi
+	
+	${ZIPCMP} -t ${ZIPCMP_FLAGS} "$1" "$2"
+	if [ $? -ne 0 ]
+	then
+	    fail "$3"
+	fi
+    fi
+}
+
+test_empty() {
+    if [ ! -z "$1" ]
+    then
+	die "directive $2 appeared twice in test file"
+    fi
+}
+
+test_set() {
+    if [ -z "$1" ]
+    then
+	die "required directive $2 missing in test file"
+    fi
+}
+
+TEST=`echo $1 | sed 's/\.test$//'`
+shift
+
+DIR=${TEST}.d$$
+if [ -z "${srcdir}" ]
+then
+    srcdir=..
+else
+	# XXX: fix for absolute srcdir?
+	srcdir=../${srcdir}
+fi
+
+if [ -z "${ZIPCMP}" ]
+then
+    ZIPCMP=zipcmp
+else
+    if expr "${ZIPCMP}" : '[^/].*/' > /dev/null
+    then
+	ZIPCMP="../${ZIPCMP}"
+    fi
+fi
+
+if [ -z "${VERBOSE}" ]
+then
+    ZIPCMP_FLAGS='-q'
+else
+    ZIPCMP_FLAGS='-v'
+fi
+
+# XXX: set up trap to cleanup
+
+mkdir ${DIR} || ( die "cannot create test directory ${DIR}" )
+cd ${DIR} || ( die "cannot cd to test directory ${DIR}" )
+
+{
+
+RET=''
+ARGS=''
+FILES=''
+FILES_SHOULD=''
+
+touch errors stdout
+
+while read cmd arg
+do
+  case $cmd in
+  \#*) ;;
+  program)
+    PROGRAM=../$arg;;
+  return)
+    test_empty "${RET}" return
+    RET="$arg";;
+  args)
+    test_empty "${ARGS}" args
+    ARGS=$arg;;
+  copy)
+    set $arg
+    FILES_SHOULD="${FILES_SHOULD} $2"
+    cp "${srcdir}/$1" "$2";;
+  file)
+    set $arg
+    # XXX: check that $1 exists
+    FILES="${FILES} ${srcdir}/$3!$2";;
+  filenew)
+    set $arg
+    FILES="${FILES} ${srcdir}/$2!$1";;
+  filedel)
+    set $arg
+    # XXX: check that $1 exists
+    cp "${srcdir}/$1" "$2";;
+  stdout)
+    echo "$arg" >> stdout;;
+  error)
+    echo "${PROGRAM}: $arg" >> errors;;
+  *)
+    die "unknown directive '$cmd'"
+  esac
+done
+
+if [ -z "${PROGRAM}" ]
+then
+    die no program to run given
+fi
+
+test_set "${RET}" return
+test_set "${ARGS}" args
+
+if [ ! -z "${VERBOSE}" ]
+then
+	echo "running: ${PROGRAM} ${ARGS}"
+fi
+${PROGRAM} ${ARGS} > gotout 2> goterr
+ret=$?
+
+if [ $ret -ne ${RET} ]
+then
+    if [ ! -z "${VERBOSE}" ]
+    then
+	cat gotout
+	cat goterr
+    fi
+    fail "unexpected exit status: got $ret, expected ${RET}"
+fi
+
+FILES_SHOULD="${FILES_SHOULD} errors stdout gotout goterr"
+
+checkfile errors goterr "unexpected error output"
+checkfile stdout gotout "unexpected output"
+
+if [ ! -z "${FILES}" ]
+then
+    for fs in ${FILES}
+    do
+        set -- `echo ${fs} | tr '!' ' '`
+	FILES_SHOULD="${FILES_SHOULD} $2"
+	checkzip $1 $2 "zip file $2 wrong"
+    done
+fi
+
+# XXX: check that no additional files exist
+echo gotfiles shouldfiles ${FILES_SHOULD} | tr ' ' '\012' | sort > shouldfiles
+touch gotfiles
+find . -type f -print | sed 's!^./!!' | sort > gotfiles
+
+checkfile shouldfiles gotfiles "unexpected/missing files"
+
+succeed
+
+} < ${srcdir}/${TEST}.test

@@ -1,3 +1,11 @@
+2005-07-15  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* regress/Makefile.am: convert for new-style test cases
+	* regress/add_from_file.c: add, based on add_from_buffer.c
+	* regress/add_from_buffer.c: add, based on buffadd.c.
+	* regress/buffadd.c: removed.
+	* regress/runtest: add, based on ckmame's
+
 2005-07-14  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* compile, depcomp, install-sh, missing, mkinstalldirs: update
