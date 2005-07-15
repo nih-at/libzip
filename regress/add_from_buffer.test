@@ -1,0 +1,6 @@
+# add buffer contents as file to zip
+# $NiH$
+program add_from_buffer
+return 0
+args testbuffer.zip
+filenew testbuffer.zip testbuffer.zip
