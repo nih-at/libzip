@@ -1,3 +1,11 @@
+2005-07-16  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* regress/runtest: fix typo in comment. Do not require args line.
+	* regress/fread.c, regress/name_locate.c, regress/open.c,
+	regress/fread.test, regress/name_locate.test, regress/open.test,
+	regress/Makefile.am: convert remaining tests to new testing
+	framework.
+
 2005-07-15  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* regress/Makefile.am: convert for new-style test cases
