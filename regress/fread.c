@@ -1,5 +1,5 @@
 /*
-  $NiH: fread.c,v 1.3 2005/01/20 21:01:41 dillo Exp $
+  $NiH: fread.c,v 1.4 2005/06/09 18:49:38 dillo Exp $
 
   fread.c -- test cases for reading from zip archives
   Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -42,8 +42,6 @@
 #include "zip.h"
 #include "mkname.h"
 
-#define TEST_ZIP "broken.zip"
-
 enum when {
     WHEN_NEVER, WHEN_OPEN, WHEN_READ, WHEN_CLOSE
 };
@@ -56,18 +54,30 @@ int do_read(struct zip *, const char *, int, enum when, int, int);
 
 
 
+const char *prg;
+
 int
 main(int argc, char *argv[])
 {
     int fail, ze;
     struct zip *z;
     struct zip_source *zs;
+    char *archive;
 
     fail = 0;
 
-    if ((z=zip_open(mkname(TEST_ZIP), 0, &ze)) == NULL) {
-	printf("fail: opening zip archive ``%s'' failed (%d)\n",
-	       TEST_ZIP, ze);
+    prg = argv[0];
+
+    if (argc != 2) {
+        fprintf(stderr, "usage: %s archive\n", prg);
+        return 1;
+    }
+
+    archive = argv[1];
+
+    if ((z=zip_open(mkname(archive), 0, &ze)) == NULL) {
+	printf("%s: opening zip archive ``%s'' failed (%d)\n", prg,
+	       archive, ze);
 	return 1;
     }
 
@@ -138,7 +148,7 @@ do_read(struct zip *z, const char *name, int flags,
     if (when_got != when_ex || ze_got != ze_ex || se_got != se_ex) {
 	zip_error_to_str(expected, sizeof(expected), ze_ex, se_ex);
 	zip_error_to_str(got, sizeof(got), ze_got, se_got);
-	printf("got %s error (%s), expected %s error (%s)\n",
+	printf("%s: got %s error (%s), expected %s error (%s)\n", prg,
 	       when_name[when_got], got, 
 	       when_name[when_ex], expected);
 	return 1;

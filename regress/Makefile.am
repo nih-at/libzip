@@ -16,12 +16,14 @@ open_SOURCES=		open.c mkname.c
 deltest_SOURCES=	deltest.c
 ziptest_SOURCES=	ziptest.c
 
-TESTS=open name_locate fread
 TESTS_ENVIRONMENT=	SRCDIR=${srcdir}
 
 TESTCASES= \
 	add_from_file.test \
-	add_from_buffer.test
+	add_from_buffer.test \
+	fread.test \
+	name_locate.test \
+	open.test
 
 check:
 	@failed=0; all=0; \

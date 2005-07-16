@@ -1,5 +1,5 @@
 /*
-  $NiH: open.c,v 1.4 2005/01/11 18:53:16 wiz Exp $
+  $NiH: open.c,v 1.5 2005/06/09 18:49:38 dillo Exp $
 
   open.c -- test cases for opening zip archives
   Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
@@ -45,25 +45,37 @@
 int open_fail(const char *, int, const char *, int, int);
 int open_success(const char *, int, const char *, int);
 
+const char *prg;
 
 
 int
 main(int argc, char *argv[])
 {
     int fail;
+    const char *archive;
+    const char *nonarchive;
 
     fail = 0;
+    prg = argv[0];
+
+    if (argc != 3) {
+        fprintf(stderr, "usage: %s archive non-archive\n", prg);
+        return 1;
+    }
+
+    archive = argv[1];
+    nonarchive = argv[2];
 
     remove("nosuchfile");
     fail += open_fail("nosuchfile", 0, "non-existing", ZIP_ER_OPEN, ENOENT);
-    fail += open_fail("Makefile.am", 0, "non-zip", ZIP_ER_NOZIP, 0);
-    fail += open_fail("test.zip", ZIP_EXCL, "existing-excl", ZIP_ER_EXISTS, 0);
+    fail += open_fail(nonarchive, 0, "non-zip", ZIP_ER_NOZIP, 0);
+    fail += open_fail(archive, ZIP_EXCL, "existing-excl", ZIP_ER_EXISTS, 0);
     /* ZIP_ER_OPEN */
     /* ZIP_ER_READ */
     /* ZIP_ER_SEEK */
     /* ZIP_ER_INCONS */
 
-    fail += open_success("test.zip", 0, "existing", 3);
+    fail += open_success(archive, 0, "existing", 3);
     fail += open_success("nosuchfile", ZIP_CREATE, "new", 0);
 
     exit(fail ? 1 : 0);
@@ -80,13 +92,13 @@ open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
     errno = 0;
 
     if ((z=zip_open(mkname(fname), flags, &ze)) != NULL) {
-	printf("fail: opening %s succeeded\n", desc);
+	printf("%s: opening %s succeeded\n", prg, desc);
 	zip_close(z);
 	return 1;
     }
     else if (ze != zerr || errno != serr) {
-	printf("fail: opening %s returned wrong error %d/%d, expected %d/%d\n",
-		desc, ze, errno, zerr, serr);
+	printf("%s: opening %s returned wrong error %d/%d, expected %d/%d\n",
+		prg, desc, ze, errno, zerr, serr);
 	return 1;
     }
 
@@ -102,7 +114,7 @@ open_success(const char *fname, int flags, const char *desc, int nent)
     int ze, num;
 
     if ((z=zip_open(mkname(fname), flags, &ze)) == NULL) {
-	printf("fail: opening %s failed (%d)\n", desc, ze);
+	printf("%s: opening %s failed (%d)\n", prg, desc, ze);
 	return 1;
     }
 
@@ -110,8 +122,8 @@ open_success(const char *fname, int flags, const char *desc, int nent)
     zip_close(z);
     
     if (num != nent) {
-	printf("fail: opening %s got wrong number of files %d, expected %d\n",
-		desc, num, nent);
+	printf("%s: opening %s got wrong number of files %d, expected %d\n",
+		prg, desc, num, nent);
 	return 1;
     }
 

@@ -1,0 +1,7 @@
+# various tests for zip_open
+# $NiH$
+program open
+args test.zip Makefile.am
+return 0
+copy test.zip test.zip
+copy Makefile.am Makefile.am

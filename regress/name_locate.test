@@ -1,0 +1,6 @@
+# various tests for zip_name_locate
+# $NiH$
+program name_locate
+args test.zip
+return 0
+copy test.zip test.zip
