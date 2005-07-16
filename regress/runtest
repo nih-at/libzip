@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#  $NiH: runtest,v 1.17 2005/07/13 17:42:19 dillo Exp $
+#  $NiH: runtest,v 1.1 2005/07/15 16:53:37 wiz Exp $
 #
 #  runtest -- run regression tests
 #  Copyright (C) 2002, 2003 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 #    The following commands are recognized; return and args must
 #    appear exactly once, the others are optional.
 #
-#	retrun RET
+#	return RET
 #	    RET is the expected exit code
 #
 #	args ARGS
@@ -253,7 +253,6 @@ then
 fi
 
 test_set "${RET}" return
-test_set "${ARGS}" args
 
 if [ ! -z "${VERBOSE}" ]
 then
