@@ -1,3 +1,9 @@
+2005-07-17  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* regress/Makefile.am: enable add_from_filep test.
+	* regress/add_from_filep.c, regress/add_from_filep.test: new
+	testcase.
+
 2005-07-16  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* regress/runtest: fix typo in comment. Do not require args line.

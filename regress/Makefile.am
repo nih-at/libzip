@@ -1,4 +1,5 @@
-noinst_PROGRAMS=add_from_buffer add_from_file open name_locate fread
+noinst_PROGRAMS=add_from_buffer add_from_file add_from_filep \
+	open name_locate fread
 noinst_HEADERS=mkname.h
 EXTRA_PROGRAMS=ziptest deltest
 
@@ -19,8 +20,9 @@ ziptest_SOURCES=	ziptest.c
 TESTS_ENVIRONMENT=	SRCDIR=${srcdir}
 
 TESTCASES= \
-	add_from_file.test \
 	add_from_buffer.test \
+	add_from_file.test \
+	add_from_filep.test \
 	fread.test \
 	name_locate.test \
 	open.test

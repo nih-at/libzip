@@ -1,0 +1,7 @@
+# add file to zip
+# $NiH$
+program add_from_filep
+return 0
+args testfile.zip testfile.txt
+copy testfile.txt testfile.txt
+filenew testfile.zip testfile.zip
