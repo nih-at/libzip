@@ -1,3 +1,9 @@
+2005-07-20  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* man/zip_source_buffer.mdoc, man/zip_source_file.mdoc,
+	man/zip_source_filep.mdoc, man/zip_source_function.mdoc,
+	man/zip_source_zip.mdoc: fix return value.
+
 2005-07-17  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* regress/Makefile.am: enable add_from_filep test.
