@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_source_function.mdoc,v 1.13 2005/06/09 21:14:54 wiz Exp 
-.\" $NiH: zip_source_function.mdoc,v 1.13 2005/06/09 21:14:54 wiz Exp $
+.\" from NiH: zip_source_function.mdoc,v 1.14 2005/07/20 17:18:04 wiz Exp 
+.\" $NiH: zip_source_function.mdoc,v 1.14 2005/07/20 17:18:04 wiz Exp $
 .\"
 .\" zip_source_function.mdoc \-- create data source from function
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -33,14 +33,14 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_SOURCE_FUNCTION 3 "December 22, 2004" NiH
+.TH ZIP_SOURCE_FUNCTION 3 "July 20, 2005" NiH
 .SH "NAME"
 zip_source_function \- create data source from function
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
 .In zip.h
-.Ft int
+.Ft struct zip_source *
 .Fn zip_source_function "struct zip *archive" "zip_source_callback fn" "void *userdata"
 .SH "DESCRIPTION"
 The function
