@@ -1,5 +1,6 @@
 * document that zip_source_free must not be called after
   zip_{add,replace} was successful.
+* do not compress if storing is smaller
 ------------------------------------------------ others
 * regression tests (duplicate file names, unchange, .{200})
 * zip_commit
