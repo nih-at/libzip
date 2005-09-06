@@ -1,3 +1,10 @@
+* add functions to:
+  . set compression method for new/changed entry
+  . set last modification time for entry
+  . read/set comment for file/archive
+  . read/set EAs
+  . parse/create some EAs?
+  . read/set ASCII file flag
 * document that zip_source_free must not be called after
   zip_{add,replace} was successful.
 * do not compress if storing is smaller
@@ -24,6 +31,7 @@
 	replace ok
 	replace w/ illegal index [E]
 	replace w/ deleted name [E]
+	unchange added/replaced file
 * (close)
 	copy zip file
 	open copy
