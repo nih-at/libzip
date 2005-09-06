@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.40 2005/06/09 19:57:10 dillo Exp $
+  $NiH: zipint.h,v 1.41 2005/06/18 00:54:08 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -114,7 +114,7 @@ struct zip_file {
 struct zip_dirent {
     unsigned short version_madeby;	/* (c)  version of creator */
     unsigned short version_needed;	/* (cl) version needed to extract */
-    unsigned short bitflags;		/* (cl) general purposee bit flag */
+    unsigned short bitflags;		/* (cl) general purpose bit flag */
     unsigned short comp_method;		/* (cl) compression method used */
     time_t last_mod;			/* (cl) time of last modification */
     unsigned int crc;			/* (cl) CRC-32 of uncompressed data */
@@ -129,7 +129,7 @@ struct zip_dirent {
     unsigned short disk_number;		/* (c)  disk number start */
     unsigned short int_attrib;		/* (c)  internal file attributes */
     unsigned int ext_attrib;		/* (c)  external file attributes */
-    unsigned int offset;		/* (c)  offest of local header  */
+    unsigned int offset;		/* (c)  offset of local header  */
 };
 
 /* zip archive central directory */
