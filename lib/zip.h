@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.49 2005/06/09 19:57:09 dillo Exp $
+  $NiH: zip.h,v 1.50 2005/07/14 14:08:11 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -108,6 +108,8 @@ extern "C" {
 #define ZIP_CM_DEFLATE	       8  /* deflated */
 #define ZIP_CM_DEFLATE64       9  /* deflate64 */
 #define ZIP_CM_PKWARE_IMPLODE 10  /* PKWARE imploding */
+/* 11 - Reserved by PKWARE */
+#define ZIP_CM_BZIP2          12  /* compressed using BZIP2 algorithm */
 
 
 
