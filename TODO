@@ -1,3 +1,4 @@
+* make zip_add return index of new file entry
 * add functions to:
   . set compression method for new/changed entry
   . set last modification time for entry
