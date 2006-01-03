@@ -3236,6 +3236,7 @@ EOF
 	# Calculate the version variables.
 	major=
 	versuffix=
+	versuffix2=
 	verstring=
 	case $version_type in
 	none) ;;
@@ -3348,6 +3349,7 @@ EOF
 	if test "$avoid_version" = yes && test "$need_version" = no; then
 	  major=
 	  versuffix=
+	  versuffix2=
 	  verstring=""
 	fi
 
