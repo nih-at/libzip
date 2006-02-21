@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.50 2005/06/09 19:57:09 dillo Exp $
+  $NiH: zip_close.c,v 1.51 2005/06/18 00:54:08 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -337,6 +337,7 @@ add_data_uncomp(zip_source_callback cb, void *ud, struct zip_stat *st,
     char b1[BUFSIZE], b2[BUFSIZE];
     int end, flush, ret;
     ssize_t n;
+    size_t n2;
     z_stream zstr;
 
     st->comp_method = ZIP_CM_DEFLATE;
@@ -383,16 +384,16 @@ add_data_uncomp(zip_source_callback cb, void *ud, struct zip_stat *st,
 	}
 	
 	if (zstr.avail_out != sizeof(b2)) {
-	    n = sizeof(b2) - zstr.avail_out;
+	    n2 = sizeof(b2) - zstr.avail_out;
 	    
-	    if (fwrite(b2, 1, n, ft) != n) {
+	    if (fwrite(b2, 1, n2, ft) != n2) {
 		_zip_error_set(error, ZIP_ER_WRITE, errno);
 		return -1;
 	    }
 	
 	    zstr.next_out = (Bytef *)b2;
 	    zstr.avail_out = sizeof(b2);
-	    st->comp_size += n;
+	    st->comp_size += n2;
 	}
 
 	if (ret == Z_STREAM_END) {
