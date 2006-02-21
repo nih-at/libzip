@@ -1,3 +1,4 @@
+* fix distcheck (3 tests fail, I don't understand why)
 * make zip_add return index of new file entry
 * add functions to:
   . set compression method for new/changed entry
