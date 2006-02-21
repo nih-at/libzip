@@ -1,8 +1,8 @@
 /*
-  $NiH: fread.c,v 1.4 2005/06/09 18:49:38 dillo Exp $
+  $NiH: fread.c,v 1.5 2005/07/16 17:14:32 wiz Exp $
 
   fread.c -- test cases for reading from zip archives
-  Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004, 2005, 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -63,6 +63,7 @@ main(int argc, char *argv[])
     struct zip *z;
     struct zip_source *zs;
     char *archive;
+    char errstr[1024];
 
     fail = 0;
 
@@ -76,8 +77,9 @@ main(int argc, char *argv[])
     archive = argv[1];
 
     if ((z=zip_open(mkname(archive), 0, &ze)) == NULL) {
-	printf("%s: opening zip archive ``%s'' failed (%d)\n", prg,
-	       archive, ze);
+	zip_error_to_str(errstr, sizeof(errstr), ze, errno);
+	printf("%s: opening zip archive ``%s'' failed: %s\n",
+	       prg, archive, errstr);
 	return 1;
     }
 
