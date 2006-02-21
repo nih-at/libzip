@@ -1,5 +1,5 @@
 /*
-  $NiH: open.c,v 1.4 2005/01/11 18:53:16 wiz Exp $
+  $NiH: mkname.c,v 1.1 2005/06/09 18:49:38 dillo Exp $
 
   mkname.c -- add srcdir to name
   Copyright (C) 2005 Dieter Baron and Thomas Klausner
@@ -37,6 +37,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "mkname.h"
 

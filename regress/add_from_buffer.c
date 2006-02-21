@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: add_from_buffer.c,v 1.1 2005/07/15 16:53:37 wiz Exp $
 
   add_from_buffer.c -- test case for adding file from buffer to archive
   Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
@@ -49,10 +49,8 @@ const char *prg;
 int
 main(int argc, char *argv[])
 {
-    char *srcdata;
     const char *archive;
     struct zip *za;
-    struct zip_file *zf;
     struct zip_source *zs;
     char buf[100];
     int err;

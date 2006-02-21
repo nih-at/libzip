@@ -1,5 +1,5 @@
 /*
-  $NiH: name_locate.c,v 1.4 2005/06/09 18:49:38 dillo Exp $
+  $NiH: name_locate.c,v 1.5 2005/07/16 17:14:32 wiz Exp $
 
   name_locate.c -- test cases for finding files in zip archives
   Copyright (C) 2005 Dieter Baron and Thomas Klausner
@@ -106,7 +106,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 	if (ze != zerr) {
 	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
 	    printf("%s: unexpected error while looking for ``%s'': "
-		   "got ``%s'', prg, expected ``%s''\n", name,
+		   "got ``%s'', expected ``%s''\n", prg, name,
 		   zip_strerror(z), expected);
 	    return 1;
 	}
