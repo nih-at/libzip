@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.30 2005/06/09 19:57:10 dillo Exp $
+  $NiH: zip_open.c,v 1.31 2006/02/21 09:41:00 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -443,7 +443,9 @@ _zip_memmem(const unsigned char *big, int biglen, const unsigned char *little,
     if ((biglen < littlelen) || (littlelen == 0))
 	return NULL;
     p = big-1;
-    while ((p=memchr(p+1, little[0], big-(p+1)+biglen-littlelen+1))!=NULL) {
+    while ((p=(const unsigned char *)
+	        memchr(p+1, little[0], (size_t)(big-(p+1)+biglen-littlelen+1)))
+	   != NULL) {
 	if (memcmp(p+1, little+1, littlelen-1)==0)
 	    return (unsigned char *)p;
     }
