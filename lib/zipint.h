@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.41 2005/06/18 00:54:08 wiz Exp $
+  $NiH: zipint.h,v 1.42 2005/09/06 23:44:25 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -46,7 +46,7 @@
 #define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"
 #define DATADES_MAGIC "PK\7\8"
-#define CDENTRYSIZE         46
+#define CDENTRYSIZE         46u
 #define LENTRYSIZE          30
 #define MAXCOMLEN        65536
 #define EOCDLEN             22

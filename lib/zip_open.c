@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.29 2005/05/18 21:19:37 wiz Exp $
+  $NiH: zip_open.c,v 1.30 2005/06/09 19:57:10 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -194,7 +194,8 @@ zip_open(const char *fn, int flags, int *zep)
 	return NULL;
     }
 
-    if ((za->entry=malloc(sizeof(*(za->entry))*cdir->nentry)) == NULL) {
+    if ((za->entry=(struct zip_entry *)malloc(sizeof(*(za->entry))
+					      * cdir->nentry)) == NULL) {
 	set_error(zep, NULL, ZIP_ER_MEMORY);
 	_zip_free(za);
 	return NULL;
@@ -289,7 +290,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	}
 
     cdp = eocd;
-    if (cd->size < eocd-buf) {
+    if (cd->size < (unsigned int)(eocd-buf)) {
 	/* if buffer already read in, use it */
 	cdp = eocd - cd->size;
 	bufp = &cdp;
@@ -299,7 +300,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	bufp = NULL;
 	clearerr(fp);
 	fseek(fp, -(cd->size+cd->comment_len+EOCDLEN), SEEK_END);
-	if (ferror(fp) || (ftell(fp) != cd->offset)) {
+	if (ferror(fp) || ((unsigned int)ftell(fp) != cd->offset)) {
 	    /* seek error or offset of cdir wrong */
 	    if (ferror(fp))
 		_zip_error_set(error, ZIP_ER_SEEK, errno);
@@ -333,7 +334,8 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 static int
 _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 {
-    int min, max, i, j;
+    int i;
+    unsigned int min, max, j;
     struct zip_dirent temp;
 
     if (cd->nentry) {

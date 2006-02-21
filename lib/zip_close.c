@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.51 2005/06/18 00:54:08 wiz Exp $
+  $NiH: zip_close.c,v 1.52 2006/02/21 09:13:32 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -95,7 +95,7 @@ zip_close(struct zip *za)
     if ((cd=_zip_cdir_new(survivors, &za->error)) == NULL)
 	return -1;
 
-    if ((temp=malloc(strlen(za->zn)+8)) == NULL) {
+    if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	_zip_cdir_free(cd);
 	return -1;
@@ -249,7 +249,7 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
     cb = za->entry[idx].source->f;
     ud = za->entry[idx].source->ud;
 
-    if (cb(ud, &st, sizeof(st), ZIP_SOURCE_STAT) < sizeof(st)) {
+    if (cb(ud, &st, sizeof(st), ZIP_SOURCE_STAT) < (ssize_t)sizeof(st)) {
 	ch_set_error(&za->error, cb, ud);
 	return -1;
     }
@@ -412,7 +412,7 @@ ch_set_error(struct zip_error *error, zip_source_callback cb, void *ud)
 {
     int e[2];
 
-    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_ERROR)) < sizeof(e)) {
+    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_ERROR)) < (ssize_t)sizeof(e)) {
 	error->zip_err = ZIP_ER_INTERNAL;
 	error->sys_err = 0;
     }

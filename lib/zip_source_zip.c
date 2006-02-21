@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_zip.c,v 1.5 2005/06/09 19:11:05 dillo Exp $
+  $NiH: zip_source_zip.c,v 1.6 2005/06/09 19:57:10 dillo Exp $
 
   zip_source_zip.c -- create data source from zip file
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -82,7 +82,7 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
     else
 	flags &= ~ZIP_FL_COMPRESSED;
 
-    if ((p=malloc(sizeof(*p))) == NULL) {
+    if ((p=(struct read_zip *)malloc(sizeof(*p))) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
