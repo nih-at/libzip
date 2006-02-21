@@ -43,6 +43,8 @@ AC_EXEEXT
 
 AM_PROG_LIBTOOL
 
+AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
+
 case $host_os
 in
     *bsd*) MANFMT=mdoc;;

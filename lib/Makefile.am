@@ -3,6 +3,7 @@ noinst_HEADERS = zipint.h
 include_HEADERS = zip.h
 
 libzip_la_LDFLAGS=-version-info 0:5
+libzip_la_LIBADD=@LIBOBJS@
 
 libzip_la_SOURCES=\
 	zip_add.c \
