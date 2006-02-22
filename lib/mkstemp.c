@@ -1,4 +1,4 @@
-/* $NiH$ */
+/* $NiH: mkstemp.c,v 1.1 2006/02/21 10:56:44 dillo Exp $ */
 
 /* Adapted from NetBSB libc by Dieter Baron */
 
@@ -51,7 +51,7 @@ _zip_mkstemp(char *path)
 	int fd;   
 	char *start, *trv;
 	struct stat sbuf;
-	u_int pid;
+	pid_t pid;
 
 	/* To guarantee multiple calls generate unique names even if
 	   the file is not created. 676 different possibilities with 7

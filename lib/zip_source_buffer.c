@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_buffer.c,v 1.5 2005/06/09 19:57:10 dillo Exp $
+  $NiH: zip_source_buffer.c,v 1.6 2006/02/21 09:41:00 dillo Exp $
 
   zip_source_buffer.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -71,7 +71,7 @@ zip_source_buffer(struct zip *za, const void *data, off_t len, int freep)
 	return NULL;
     }
 
-    f->data = data;
+    f->data = (const char *)data;
     f->end = ((const char *)data)+len;
     f->freep = freep;
     f->mtime = time(NULL);

@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.43 2006/02/21 09:41:00 dillo Exp $
+  $NiH: zipint.h,v 1.44 2006/02/21 10:56:44 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -44,6 +44,10 @@
 #ifndef HAVE_MKSTEMP
 int _zip_mkstemp(char *);
 #define mkstemp _zip_mkstemp
+#endif
+
+#ifndef HAVE_FSEEKO
+#define fseeko(s, o, w)	(fseek((s), (long int)(o), (w)))
 #endif
 
 
