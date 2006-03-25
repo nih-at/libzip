@@ -1,3 +1,8 @@
+2006-03-25  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* man/zip_source_function.mdoc: fix return values; correct
+	argument name. Noted by Tara Milana.
+
 2005-07-20  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* man/zip_source_buffer.mdoc, man/zip_source_file.mdoc,
