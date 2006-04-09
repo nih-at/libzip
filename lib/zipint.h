@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.44 2006/02/21 10:56:44 dillo Exp $
+  $NiH: zipint.h,v 1.45 2006/02/22 19:52:20 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -152,6 +152,9 @@ struct zip_cdir {
     unsigned int offset;	/* offset of central directory in file */
     char *comment;		/* zip archive comment */
     unsigned short comment_len;	/* length of zip archive comment */
+    char *ch_comment;		/* changed archive comment */
+    int ch_comment_len;		/* length of changed zip archive
+				 * comment, -1 if unchanged */
 };
 
 
@@ -167,6 +170,8 @@ struct zip_entry {
     enum zip_state state;
     struct zip_source *source;
     char *ch_filename;
+    char *ch_comment;
+    int ch_comment_len;
 };
 
 

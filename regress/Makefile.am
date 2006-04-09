@@ -1,5 +1,5 @@
 noinst_PROGRAMS=add_from_buffer add_from_file add_from_filep \
-	open name_locate fread
+	comment open name_locate fread
 noinst_HEADERS=mkname.h
 EXTRA_PROGRAMS=ziptest deltest
 
@@ -23,6 +23,7 @@ TESTCASES= \
 	add_from_buffer.test \
 	add_from_file.test \
 	add_from_filep.test \
+	comment.test \
 	fread.test \
 	name_locate.test \
 	open.test

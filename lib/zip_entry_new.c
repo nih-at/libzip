@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_entry_new.c,v 1.13 2004/11/18 17:11:22 wiz Exp $
+  $NiH: zip_entry_new.c,v 1.1 2004/11/30 21:42:22 wiz Exp $
 
   zip_entry_new.c -- create and init struct zip_entry
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -70,6 +70,8 @@ _zip_entry_new(struct zip *za)
     ze->state = ZIP_ST_UNCHANGED;
 
     ze->ch_filename = NULL;
+    ze->ch_comment = NULL;
+    ze->ch_comment_len = -1;
     ze->source = NULL;
 
     if (za)

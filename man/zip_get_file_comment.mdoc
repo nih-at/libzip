@@ -1,9 +1,9 @@
-.\" $NiH: libzip.mdoc,v 1.5 2005/06/09 21:14:54 wiz Exp $
+.\" $NiH$
 .\"
-.\" libzip.mdoc -- general overview of available functions
-.\" Copyright (C) 2005, 2006 Dieter Baron and Thomas Klausner
+.\" zip_get_file_comment.mdoc -- get comment for file in zip
+.\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
 .\"
-.\" This file is part of libzip, a library to manipulate ZIP archives.
+.\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <nih@giga.or.at>
 .\"
 .\" Redistribution and use in source and binary forms, with or without
@@ -32,67 +32,52 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd April 9, 2006
-.Dt LIBZIP 3
+.Dt ZIP_GET_FILE_COMMENT 3
 .Os
 .Sh NAME
-.Nm libzip
-.Nd library for manipulating zip archives
+.Nm zip_get_file_comment
+.Nd get comment for file in zip
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
+.Ft const char *
+.Fn zip_get_file_comment "struct zip *file" "int index" "int *lenp"
 .Sh DESCRIPTION
-.Nm
-is a library for reading, creating, and modifying zip archives.
-.Pp
-Below there are two sections listing functions: one for how to read
-from zip archives and one for how to create/modify them.
-.Sh READING ZIP ARCHIVES
-.Ss open archive
-.Xr zip_open 3
-.Ss find files
-.Xr zip_name_locate 3
-.Ss read files
-.Xr zip_fopen 3
-.Xr zip_fopen_index 3
-.Xr zip_fread 3
-.Xr zip_fclose 3
-.Ss close archive
-.Xr zip_close 3
-.Ss miscellaneous
-.Xr zip_stat 3
+The
+.Fn zip_get_file_comment
+function returns the comment for the file at position
+.Ar index
+in the zip archive.
+This pointer should not be modified or
+.Xr free 3 Ap d .
+If
+.Ar lenp
+is not
+.Dv NULL ,
+the integer to which it points will be set to the length of the
+comment.
+.Sh RETURN VALUES
+Upon successful completion, a pointer to the comment is returned,
+or
+.Dv NULL
+if there is no comment.
+In case of an error,
+.Dv NULL
+is returned and the error code in
+.Ar file
+is set to indicate the error.
+.Sh ERRORS
+.Fn zip_get_file_comment
+fails if:
+.Bl -tag -width Er
+.It Bq Er ZIP_ER_INVAL
+.Ar index
+is not a valid file index in
+.Ar archive .
+.Sh SEE ALSO
+.Xr libzip 3 ,
 .Xr zip_get_archive_comment 3
-.Xr zip_get_file_comment 3
-.Xr zip_get_name 3
-.Xr zip_get_num_files 3
-.Sh CREATING/MODIFYING ZIP ARCHIVES
-.Ss create/open archive
-.Xr zip_open 3
-.Ss add/change files
-.Xr zip_add 3
-.Xr zip_replace 3
-.Xr zip_source_buffer 3
-.Xr zip_source_file 3
-.Xr zip_source_filep 3
-.Xr zip_source_function 3
-.Xr zip_source_zip 3
-.Xr zip_source_free 3
-.Ss rename files
-.Xr zip_rename 3
-.Ss delete files
-.Xr zip_delete 3
-.Ss revert changes
-.Xr zip_unchange 3
-.Xr zip_unchange_all 3
-.Ss close archive
-.Xr zip_close 3
-.Sh ERROR HANDLING
-.Xr zip_error_to_str 3
-.Xr zip_strerror 3
-.Xr zip_file_strerror 3
-.Xr zip_error_get 3
-.Xr zip_error_get_sys_type 3
-.Xr zip_errors 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq dillo@giga.or.at

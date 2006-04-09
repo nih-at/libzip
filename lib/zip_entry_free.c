@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_entry_free.c,v 1.13 2004/11/18 15:04:04 wiz Exp $
+  $NiH: zip_entry_free.c,v 1.1 2004/11/30 21:37:01 wiz Exp $
 
   zip_entry_free.c -- free struct zip_entry
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -47,6 +47,9 @@ _zip_entry_free(struct zip_entry *ze)
 {
     free(ze->ch_filename);
     ze->ch_filename = NULL;
+    free(ze->ch_comment);
+    ze->ch_comment = NULL;
+    ze->ch_comment_len = -1;
 
     _zip_unchange_data(ze);
 }

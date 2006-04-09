@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_open.c,v 1.32 2006/02/21 10:55:16 dillo Exp $
+  $NiH: zip_open.c,v 1.33 2006/02/22 19:52:20 dillo Exp $
 
   zip_open.c -- open zip archive
-  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -270,6 +270,8 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     cd->offset = _zip_read4(&cdp);
     cd->comment = NULL;
     cd->comment_len = _zip_read2(&cdp);
+    cd->ch_comment = NULL;
+    cd->ch_comment_len = -1;
 
     /* some zip files are broken; their internal comment length
        says 0, but they have 1 or 2 comment bytes */

@@ -26,6 +26,8 @@ libzip_la_SOURCES=\
 	zip_fopen_index.c \
 	zip_fread.c \
 	zip_free.c \
+	zip_get_archive_comment.c \
+	zip_get_file_comment.c \
 	zip_get_num_files.c \
 	zip_get_name.c \
 	zip_name_locate.c \

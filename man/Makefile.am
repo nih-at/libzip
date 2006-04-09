@@ -18,6 +18,8 @@ MAN3=	libzip.mdoc \
 	zip_file_strerror.mdoc \
 	zip_fopen.mdoc \
 	zip_fread.mdoc \
+	zip_get_archive_comment.mdoc \
+	zip_get_file_comment.mdoc \
 	zip_get_name.mdoc \
 	zip_get_num_files.mdoc \
 	zip_name_locate.mdoc \
