@@ -9,6 +9,7 @@
 
 	* lib/zip.h: add encryption_method to zip_stat.
 	* man/zip_stat.mdoc: update docs.
+	* lib/zip_stat_index.c (zip_stat_index): initialize encryption_method.
 
 2006-03-25  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 

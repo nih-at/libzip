@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_stat_index.c,v 1.7 2004/11/30 23:02:47 wiz Exp $
+  $NiH: zip_stat_index.c,v 1.8 2004/12/22 16:32:00 dillo Exp $
 
   zip_stat_index.c -- get information about file by index
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -74,6 +74,8 @@ zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 	st->mtime = za->cdir->entry[index].last_mod;
 	st->comp_size = za->cdir->entry[index].comp_size;
 	st->comp_method = za->cdir->entry[index].comp_method;
+	/* XXX */
+	st->encryption_method = 0;
 	/* st->bitflags = za->cdir->entry[index].bitflags; */
     }
 
