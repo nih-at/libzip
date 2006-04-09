@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_replace.c,v 1.18 2004/11/30 21:42:23 wiz Exp $
+  $NiH: zip_replace.c,v 1.19 2004/11/30 22:19:38 wiz Exp $
 
   zip_replace.c -- replace file via callback function
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2003, 2004, 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -48,7 +48,10 @@ zip_replace(struct zip *za, int idx, struct zip_source *source)
 	return -1;
     }
 
-    return _zip_replace(za, idx, NULL, source);
+    if (_zip_replace(za, idx, NULL, source) == -1)
+	return -1;
+
+    return 0;
 }
 
 
@@ -74,5 +77,5 @@ _zip_replace(struct zip *za, int idx, const char *name,
 			    ? ZIP_ST_ADDED : ZIP_ST_REPLACED);
     za->entry[idx].source = source;
 
-    return 0;
+    return idx;
 }

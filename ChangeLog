@@ -1,3 +1,15 @@
+2006-04-09  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+
+	* lib/zip_replace.c (_zip_replace): return idx of changed file,
+	for zip_add.
+	(zip_replace): return 0 on success, as before.
+	* man/zip_add.mdoc: update.
+
+	* lib/Makefile.am (libzip_la_SOURCES): bump libzip major.
+
+	* lib/zip.h: add encryption_method to zip_stat.
+	* man/zip_stat.mdoc: update docs.
+
 2006-03-25  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
 
 	* man/zip_source_function.mdoc: fix return values; correct
