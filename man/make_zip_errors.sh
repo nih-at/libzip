@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#  $NiH: make_zip_errors.sh,v 1.2 2004/12/26 14:21:06 dillo Exp $
+#  $NiH: make_zip_errors.sh,v 1.3 2005/01/20 21:03:36 dillo Exp $
 #
 #  make_zip_errrors.sh: create zip_errors.mdoc from zip.h
 #  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -47,7 +47,7 @@ then
     exit 1
 fi
 
-rcsid=`echo '$NiH: make_zip_errors.sh,v 1.2 2004/12/26 14:21:06 dillo Exp $' | tr -d '$'`
+rcsid=`echo '$NiH: make_zip_errors.sh,v 1.3 2005/01/20 21:03:36 dillo Exp $' | tr -d '$'`
 inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
 date=`date '+%B %e, %Y' | sed 's/  / /'`
 
@@ -111,6 +111,11 @@ sed -n  's/^#define \(ZIP_ER_[A-Z_0-9]*\).*\/\* \(.\) \([^*]*\) \*\//.It Bq Er \
 
 cat <<EOF >> "$2.$$" || exit 1
 .El
+.Sh AUTHORS
+.An -nosplit
+.An Dieter Baron Aq dillo@giga.or.at
+and
+.An Thomas Klausner Aq tk@giga.or.at
 EOF
 
 mv "$2.$$" "$2" || exit 1
