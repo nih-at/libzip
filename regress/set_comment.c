@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: comment.c,v 1.1 2006/04/09 19:05:48 wiz Exp $
 
   comment.c -- test cases for file and archive comments
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -43,6 +43,9 @@
 #include "zip.h"
 
 const char *prg;
+const char *new_archive_comment="This is the new,\r\n"
+"multiline archive comment.\r\n"
+"Ain't it nice?";
 
 int
 main(int argc, char *argv[])
@@ -51,7 +54,6 @@ main(int argc, char *argv[])
     struct zip *za;
     char buf[100];
     int err;
-    const char *com;
     int i, len;
 
     prg = argv[0];
@@ -65,25 +67,29 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(archive, 0, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr,"%s: can't open zip archive %s: %s\n", prg,
+	fprintf(stderr,"%s: can't open zip archive `%s': %s\n", prg,
 		archive, buf);
 	return 1;
     }
 
-    if ((com=zip_get_archive_comment(za, &len)) == NULL)
-	printf("No archive comment\n");
-    else
-	printf("Archive comment: %s\n", com);
+    if (zip_set_archive_comment(za, new_archive_comment,
+				strlen(new_archive_comment)) < 0) {
+	zip_error_to_str(buf, sizeof(buf), err, errno);
+	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n",
+		prg, buf);
+    }
 
     for (i=0; i<zip_get_num_files(za); i++) {
-	if ((com=zip_get_file_comment(za, i, &len)) == NULL)
-	    printf("No comment for `%s'\n", zip_get_name(za, i, 0));
-	else
-	    printf("File comment for `%s': %s\n", zip_get_name(za, i, 0), com);
-    }	
+	snprintf(buf, sizeof(buf), "File comment no %d", i);
+	if (zip_set_file_comment(za, i, buf, strlen(buf)) < 0) {
+	    zip_error_to_str(buf, sizeof(buf), err, errno);
+	    fprintf(stderr, "%s: zip_set_file_comment on file %d failed: %s\n",
+		    prg, i, buf);
+	}
+    }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr,"%s: can't close zip archive %s\n", prg, archive);
+	fprintf(stderr,"%s: can't close zip archive `%s'\n", prg, archive);
 	return 1;
     }
 

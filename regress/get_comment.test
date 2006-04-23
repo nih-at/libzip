@@ -1,9 +1,9 @@
 # show comments of a zip archive
-# $NiH$
-program comment
+# $NiH: comment.test,v 1.1 2006/04/09 19:05:48 wiz Exp $
+program get_comment
 return 0
 args testcomment.zip
-copy testcomment.zip testcomment.zip
+file testcomment.zip testcomment.zip testcomment.zip
 stdout Archive comment: This is the archive comment for the file.
 stdout 
 stdout Long.

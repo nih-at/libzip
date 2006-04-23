@@ -1,7 +1,7 @@
 noinst_PROGRAMS=add_from_buffer add_from_file add_from_filep \
-	comment open name_locate fread
+	fread get_comment open name_locate set_comment
 noinst_HEADERS=mkname.h
-EXTRA_PROGRAMS=ziptest deltest
+EXTRA_PROGRAMS=deltest ziptest
 
 EXTRA_DIST= \
 	runtest \
@@ -23,10 +23,11 @@ TESTCASES= \
 	add_from_buffer.test \
 	add_from_file.test \
 	add_from_filep.test \
-	comment.test \
 	fread.test \
+	get_comment.test \
 	name_locate.test \
-	open.test
+	open.test \
+	set_comment.test
 
 check:
 	@failed=0; all=0; \
