@@ -30,7 +30,7 @@ open_SOURCES=		open.c mkname.c
 deltest_SOURCES=	deltest.c
 ziptest_SOURCES=	ziptest.c
 
-TESTS_ENVIRONMENT=	SRCDIR=${srcdir}
+TESTS_ENVIRONMENT=	SRCDIR=${srcdir} ZIPCMP=../src/zipcmp
 
 TESTCASES= \
 	add_from_buffer.test \
