@@ -6,9 +6,6 @@ AM_INIT_AUTOMAKE
 
 dnl AC_CANONICAL_HOST
 
-# We want these before the checks, so the checks can modify their values.
-dnl test -z "$CFLAGS" && CFLAGS='-Wall -g' auto_cflags=1
-
 AC_PROG_CC
 
 AC_ARG_WITH(zlib,
@@ -45,6 +42,8 @@ AM_PROG_LIBTOOL
 
 AC_CHECK_FUNCS([fseeko])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
+
+AC_CHECK_HEADERS([unistd.h])
 
 case $host_os
 in
