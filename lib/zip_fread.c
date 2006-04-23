@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fread.c,v 1.19 2006/02/21 09:41:00 dillo Exp $
+  $NiH: zip_fread.c,v 1.20 2006/02/22 19:52:20 dillo Exp $
 
   zip_fread.c -- read from file
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -45,6 +45,7 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 {
     int ret;
     size_t out_before, len;
+    int i;
 
     if (!zf)
 	return -1;
@@ -101,15 +102,15 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 
 	case Z_BUF_ERROR:
 	    if (zf->zstr->avail_in == 0) {
-		len = _zip_file_fillbuf(zf->buffer, BUFSIZE, zf);
-		if (len == 0) {
+		i = _zip_file_fillbuf(zf->buffer, BUFSIZE, zf);
+		if (i == 0) {
 		    _zip_error_set(&zf->error, ZIP_ER_INCONS, 0);
 		    return -1;
 		}
-		else if (len < 0)
+		else if (i < 0)
 		    return -1;
 		zf->zstr->next_in = (Bytef *)zf->buffer;
-		zf->zstr->avail_in = len;
+		zf->zstr->avail_in = i;
 		continue;
 	    }
 	    /* fallthrough */
