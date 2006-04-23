@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.57 2006/04/23 13:05:42 wiz Exp $
+  $NiH: zip_close.c,v 1.58 2006/04/23 14:51:45 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -462,7 +462,7 @@ _zip_cdir_set_comment(struct zip_cdir *dest, struct zip *src)
 	    return -1;
 	dest->comment_len = src->ch_comment_len;
     } else {
-	if (src->cdir) {
+	if (src->cdir && src->cdir->comment) {
 	    dest->comment = _zip_memdup(src->cdir->comment,
 					src->cdir->comment_len, &src->error);
 	    if (dest->comment == NULL)
