@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_set_archive_comment.mdoc,v 1.1 2006/04/23 12:47:30 wiz Exp 
-.\" $NiH: zip_set_archive_comment.mdoc,v 1.1 2006/04/23 12:47:30 wiz Exp $
+.\" from NiH: zip_set_archive_comment.mdoc,v 1.2 2006/04/23 14:57:12 wiz Exp 
+.\" $NiH: zip_set_archive_comment.mdoc,v 1.2 2006/04/23 14:57:12 wiz Exp $
 .\"
 .\" zip_set_archive_comment.mdoc \-- set zip archive comment
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -65,7 +65,7 @@ fails if:
 .RS
 .TP 4
 Bq Er ZIP_ER_INVAL
-\fBlen \fR
+\fBlen\fR
 is less than 0 or longer than the maximum comment length in a zip file
 (65535).
 .TP 4
