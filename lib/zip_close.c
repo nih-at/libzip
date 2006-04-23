@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.55 2006/04/23 09:25:53 wiz Exp $
+  $NiH: zip_close.c,v 1.56 2006/04/23 10:13:07 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -144,7 +144,6 @@ zip_close(struct zip *za)
 
 	if (za->entry[i].ch_filename) {
 	    free(de.filename);
-	    de.filename_len = 0;
 	    if ((de.filename=strdup(za->entry[i].ch_filename)) == NULL) {
 		error = 1;
 		break;
@@ -155,7 +154,7 @@ zip_close(struct zip *za)
 	}
 
 	if (za->entry[i].ch_comment_len != -1) {
-	    /* as the rest of cd, its malloc/free is done by za */
+	    /* as the rest of cd entries, its malloc/free is done by za */
 	    cd->entry[j].comment = za->entry[i].ch_comment;
 	    cd->entry[j].comment_len = za->entry[i].ch_comment_len;
 	}
@@ -195,7 +194,7 @@ zip_close(struct zip *za)
 	    error = 1;
     }
     
-    /* pointers in cd are owned by za */
+    /* pointers in cd entries are owned by za */
     cd->nentry = 0;
     _zip_cdir_free(cd);
 
