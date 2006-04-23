@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_unchange_all.c,v 1.8 2006/04/09 19:05:47 wiz Exp $
+  $NiH$
 
-  zip_unchange.c -- undo changes to all files in zip archive
-  Copyright (C) 1999, 2006 Dieter Baron and Thomas Klausner
+  zip_set_archive_comment.c -- set archive comment
+  Copyright (C) 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,24 +35,30 @@
 
 
 
-#include <stdlib.h>
 #include "zip.h"
 #include "zipint.h"
 
 
 
 int
-zip_unchange_all(struct zip *za)
+zip_set_archive_comment(struct zip *za, const char *comment, int len)
 {
-    int ret, i;
+    char *tmpcom;
 
-    ret = 0;
-    for (i=0; i<za->nentry; i++)
-	ret |= _zip_unchange(za, i, 1);
+    if (len < 0 || len > MAXCOMLEN) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
 
+    if ((tmpcom=(char *)malloc(len)) == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return -1;
+    }
+
+    memcpy(tmpcom, comment, len);
     free(za->ch_comment);
-    za->ch_comment = NULL;
-    za->ch_comment_len = -1;
-
-    return ret;
+    za->ch_comment = tmpcom;
+    za->ch_comment_len = len;
+    
+    return 0;
 }

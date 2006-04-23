@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_unchange_all.c,v 1.8 2006/04/09 19:05:47 wiz Exp $
+  $NiH: zip_memdup.c,v 1.34 2006/04/09 19:05:47 wiz Exp $
 
-  zip_unchange.c -- undo changes to all files in zip archive
-  Copyright (C) 1999, 2006 Dieter Baron and Thomas Klausner
+  zip_memdup.c -- internal zip function, "strdup" with len
+  Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -33,26 +33,26 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-
+#include <sys/types.h>
 #include <stdlib.h>
+
 #include "zip.h"
 #include "zipint.h"
 
 
 
-int
-zip_unchange_all(struct zip *za)
+void *
+_zip_memdup(const void *mem, size_t len, struct zip_error *error)
 {
-    int ret, i;
+    void *ret;
 
-    ret = 0;
-    for (i=0; i<za->nentry; i++)
-	ret |= _zip_unchange(za, i, 1);
+    ret = malloc(len);
+    if (!ret) {
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return NULL;
+    }
 
-    free(za->ch_comment);
-    za->ch_comment = NULL;
-    za->ch_comment_len = -1;
+    memcpy(ret, mem, len);
 
     return ret;
 }

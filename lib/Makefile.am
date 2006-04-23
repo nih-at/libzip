@@ -30,11 +30,14 @@ libzip_la_SOURCES=\
 	zip_get_file_comment.c \
 	zip_get_num_files.c \
 	zip_get_name.c \
+	zip_memdup.c \
 	zip_name_locate.c \
 	zip_new.c \
 	zip_open.c \
 	zip_rename.c \
 	zip_replace.c \
+	zip_set_archive_comment.c \
+	zip_set_file_comment.c \
 	zip_source_buffer.c \
 	zip_source_file.c \
 	zip_source_filep.c \

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.52 2006/02/21 09:13:32 dillo Exp $
+  $NiH: zip_close.c,v 1.53 2006/02/21 09:41:00 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -68,8 +68,11 @@ zip_close(struct zip *za)
     struct zip_dirent de;
 
     changed = survivors = 0;
+    if (za->ch_comment_len != -1)
+	changed = 1;
     for (i=0; i<za->nentry; i++) {
-	if (za->entry[i].state != ZIP_ST_UNCHANGED)
+	if ((za->entry[i].state != ZIP_ST_UNCHANGED)
+	    || (za->entry[i].ch_comment_len != -1))
 	    changed = 1;
 	if (za->entry[i].state != ZIP_ST_DELETED)
 	    survivors++;
@@ -94,6 +97,18 @@ zip_close(struct zip *za)
 	
     if ((cd=_zip_cdir_new(survivors, &za->error)) == NULL)
 	return -1;
+
+    if (za->ch_comment_len != -1) {
+	free(cd->comment);
+	if ((cd->comment=(char *)_zip_memdup(za->ch_comment,
+					    za->ch_comment_len,
+					    &za->error)) == NULL) {
+	    	
+	    _zip_cdir_free(cd);
+	    return -1;
+	}
+	cd->comment_len = za->ch_comment_len;
+    }
 
     if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
@@ -157,17 +172,34 @@ zip_close(struct zip *za)
 
 	if (za->entry[i].ch_filename) {
 	    free(de.filename);
-	    de.filename = strdup(za->entry[i].ch_filename);
+	    de.filename_len = 0;
+	    if ((de.filename=strdup(za->entry[i].ch_filename)) == NULL) {
+		error = 1;
+		break;
+	    }
 	    de.filename_len = strlen(de.filename);
 	    cd->entry[j].filename = za->entry[i].ch_filename;
 	    cd->entry[j].filename_len = de.filename_len;
+	}
+
+	if (za->entry[i].ch_comment_len != -1) {
+	    free(cd->entry[j].comment);
+	    cd->entry[j].comment_len = 0;
+	    cd->entry[j].comment=(char*)_zip_memdup(za->entry[i].ch_comment,
+						    za->entry[i].ch_comment_len,
+						    &za->error);
+	    if (cd->entry[j].comment == NULL) {
+		error = 1;
+		break;
+	    }
+	    cd->entry[j].comment_len = za->entry[i].ch_comment_len;
 	}
 
 	cd->entry[j].offset = ftell(tfp);
 
 	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
 	    if (add_data(za, i, &de, tfp) < 0) {
-		error = -1;
+		error = 1;
 		break;
 	    }
 	    cd->entry[j].last_mod = de.last_mod;

@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.33 2006/02/22 19:52:20 dillo Exp $
+  $NiH: zip_open.c,v 1.34 2006/04/09 19:05:47 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -36,11 +36,9 @@
 
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 
 #include "zip.h"
@@ -50,7 +48,6 @@ static void set_error(int *, struct zip_error *, int);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
 static int _zip_headercomp(struct zip_dirent *, int,
 			   struct zip_dirent *, int);
-static void *_zip_memdup(const void *, size_t, struct zip_error *);
 static unsigned char *_zip_memmem(const unsigned char *, int,
 				  const unsigned char *, int);
 static struct zip_cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
@@ -270,8 +267,6 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     cd->offset = _zip_read4(&cdp);
     cd->comment = NULL;
     cd->comment_len = _zip_read2(&cdp);
-    cd->ch_comment = NULL;
-    cd->ch_comment_len = -1;
 
     /* some zip files are broken; their internal comment length
        says 0, but they have 1 or 2 comment bytes */
@@ -454,22 +449,4 @@ _zip_memmem(const unsigned char *big, int biglen, const unsigned char *little,
     }
 
     return NULL;
-}
-
-
-
-static void *
-_zip_memdup(const void *mem, size_t len, struct zip_error *error)
-{
-    void *ret;
-
-    ret = malloc(len);
-    if (!ret) {
-	_zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
-    }
-
-    memcpy(ret, mem, len);
-
-    return ret;
 }

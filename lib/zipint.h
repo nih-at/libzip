@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.45 2006/02/22 19:52:20 dillo Exp $
+  $NiH: zipint.h,v 1.46 2006/04/09 19:05:47 wiz Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -92,6 +92,9 @@ struct zip {
     struct zip_error error;	/* error information */
 
     struct zip_cdir *cdir;	/* central directory */
+    char *ch_comment;		/* changed archive comment */
+    int ch_comment_len;		/* length of changed zip archive
+				 * comment, -1 if unchanged */
     int nentry;			/* number of entries */
     int nentry_alloc;		/* number of entries allocated */
     struct zip_entry *entry;	/* entries */
@@ -152,9 +155,6 @@ struct zip_cdir {
     unsigned int offset;	/* offset of central directory in file */
     char *comment;		/* zip archive comment */
     unsigned short comment_len;	/* length of zip archive comment */
-    char *ch_comment;		/* changed archive comment */
-    int ch_comment_len;		/* length of changed zip archive
-				 * comment, -1 if unchanged */
 };
 
 
@@ -215,6 +215,7 @@ unsigned int _zip_file_get_offset(struct zip *, int);
 void _zip_free(struct zip *);
 const char *_zip_get_name(struct zip *, int, int, struct zip_error *);
 int _zip_local_header_read(struct zip *, int);
+void *_zip_memdup(const void *, size_t, struct zip_error *);
 int _zip_name_locate(struct zip *, const char *, int, struct zip_error *);
 struct zip *_zip_new(struct zip_error *);
 unsigned short _zip_read2(unsigned char **);
