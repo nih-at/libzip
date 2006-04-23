@@ -1,5 +1,5 @@
 /*
-  $NiH: set_comment_all.c,v 1.1 2006/04/23 12:25:00 wiz Exp $
+  $NiH: set_comment_removeglobal.c,v 1.1 2006/04/23 13:28:31 wiz Exp $
 
   set_comment_removeglobal.c -- remove archive comment
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -51,7 +51,6 @@ main(int argc, char *argv[])
     struct zip *za;
     char buf[100];
     int err;
-    int i, len;
 
     prg = argv[0];
 

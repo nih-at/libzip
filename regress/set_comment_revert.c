@@ -1,5 +1,5 @@
 /*
-  $NiH: set_comment_revert.c,v 1.1 2006/04/23 13:21:19 wiz Exp $
+  $NiH: set_comment_revert.c,v 1.2 2006/04/23 13:28:41 wiz Exp $
 
   set_comment_revert.c -- set global and file comments, but revert
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -54,7 +54,7 @@ main(int argc, char *argv[])
     struct zip *za;
     char buf[100];
     int err;
-    int i, len;
+    int i;
 
     prg = argv[0];
 
