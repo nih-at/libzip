@@ -35,7 +35,8 @@ MAN3=	libzip.mdoc \
 	zip_source_zip.mdoc \
 	zip_stat.mdoc \
 	zip_unchange.mdoc \
-	zip_unchange_all.mdoc
+	zip_unchange_all.mdoc \
+	zip_unchange_archive.mdoc
 
 install-data-hook: link-man3
 
