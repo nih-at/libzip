@@ -25,6 +25,8 @@ MAN3=	libzip.mdoc \
 	zip_name_locate.mdoc \
 	zip_open.mdoc \
 	zip_rename.mdoc \
+	zip_set_archive_comment.mdoc \
+	zip_set_file_comment.mdoc \
 	zip_source_buffer.mdoc \
 	zip_source_file.mdoc \
 	zip_source_filep.mdoc \
