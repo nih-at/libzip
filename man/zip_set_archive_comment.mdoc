@@ -1,4 +1,4 @@
-.\" $NiH: zip_get_archive_comment.mdoc,v 1.1 2006/04/09 19:05:48 wiz Exp $
+.\" $NiH: zip_set_archive_comment.mdoc,v 1.1 2006/04/23 12:47:30 wiz Exp $
 .\"
 .\" zip_set_archive_comment.mdoc -- set zip archive comment
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -65,7 +65,7 @@ is set to indicate the error.
 fails if:
 .Bl -tag -width Er
 .It Bq Er ZIP_ER_INVAL
-.Ar len 
+.Ar len
 is less than 0 or longer than the maximum comment length in a zip file
 (65535).
 .It Bq Er ZIP_ER_MEMORY
