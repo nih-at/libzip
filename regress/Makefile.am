@@ -8,6 +8,7 @@ noinst_PROGRAMS= \
 	name_locate \
 	set_comment_all \
 	set_comment_localonly \
+	set_comment_removeglobal \
 	set_comment_revert
 
 noinst_HEADERS=mkname.h
@@ -40,6 +41,7 @@ TESTCASES= \
 	open.test \
 	set_comment_all.test \
 	set_comment_localonly.test \
+	set_comment_removeglobal.test \
 	set_comment_revert.test
 
 check:
