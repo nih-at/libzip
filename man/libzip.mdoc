@@ -1,4 +1,4 @@
-.\" $NiH: libzip.mdoc,v 1.5 2005/06/09 21:14:54 wiz Exp $
+.\" $NiH: libzip.mdoc,v 1.6 2006/04/09 19:05:48 wiz Exp $
 .\"
 .\" libzip.mdoc -- general overview of available functions
 .\" Copyright (C) 2005, 2006 Dieter Baron and Thomas Klausner
@@ -31,7 +31,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd April 9, 2006
+.Dd April 23, 2006
 .Dt LIBZIP 3
 .Os
 .Sh NAME
@@ -71,6 +71,7 @@ from zip archives and one for how to create/modify them.
 .Ss add/change files
 .Xr zip_add 3
 .Xr zip_replace 3
+.Xr zip_set_file_comment 3
 .Xr zip_source_buffer 3
 .Xr zip_source_file 3
 .Xr zip_source_filep 3
@@ -86,6 +87,8 @@ from zip archives and one for how to create/modify them.
 .Xr zip_unchange_all 3
 .Ss close archive
 .Xr zip_close 3
+.Ss miscellaneous
+.Xr zip_set_archive_comment 3
 .Sh ERROR HANDLING
 .Xr zip_error_to_str 3
 .Xr zip_strerror 3
