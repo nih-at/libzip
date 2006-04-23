@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.54 2006/04/23 00:40:47 wiz Exp $
+  $NiH: zip_close.c,v 1.55 2006/04/23 09:25:53 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -53,32 +53,24 @@ static int add_data_uncomp(zip_source_callback, void *, struct zip_stat *,
 			   FILE *, struct zip_error *);
 static void ch_set_error(struct zip_error *, zip_source_callback, void *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
+static int _zip_cdir_set_comment(struct zip_cdir *, struct zip *);
+static int _zip_changed(struct zip *, int *);
+static char *_zip_create_temp_output(struct zip *, FILE **);
 
 
 
 int
 zip_close(struct zip *za)
 {
-    int changed, survivors;
-    int i, j, tfd, error;
+    int survivors;
+    int i, j, error;
     char *temp;
-    FILE *tfp;
+    FILE *out;
     mode_t mask;
     struct zip_cdir *cd;
     struct zip_dirent de;
 
-    changed = survivors = 0;
-    if (za->ch_comment_len != -1)
-	changed = 1;
-    for (i=0; i<za->nentry; i++) {
-	if ((za->entry[i].state != ZIP_ST_UNCHANGED)
-	    || (za->entry[i].ch_comment_len != -1))
-	    changed = 1;
-	if (za->entry[i].state != ZIP_ST_DELETED)
-	    survivors++;
-    }
-
-    if (!changed) {
+    if (!_zip_changed(za, &survivors)) {
 	_zip_free(za);
 	return 0;
     }
@@ -98,38 +90,14 @@ zip_close(struct zip *za)
     if ((cd=_zip_cdir_new(survivors, &za->error)) == NULL)
 	return -1;
 
-    if (za->ch_comment_len != -1) {
-	if ((cd->comment=(char *)_zip_memdup(za->ch_comment,
-					    za->ch_comment_len,
-					    &za->error)) == NULL) {
-	    	
-	    _zip_cdir_free(cd);
-	    return -1;
-	}
-	cd->comment_len = za->ch_comment_len;
-    }
 
-    if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+    if (_zip_cdir_set_comment(cd, za) == -1) {
 	_zip_cdir_free(cd);
 	return -1;
     }
 
-    sprintf(temp, "%s.XXXXXX", za->zn);
-
-    if ((tfd=mkstemp(temp)) == -1) {
-	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);
+    if ((temp=_zip_create_temp_output(za, &out)) == NULL) {
 	_zip_cdir_free(cd);
-	free(temp);
-	return -1;
-    }
-    
-    if ((tfp=fdopen(tfd, "r+b")) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);
-	_zip_cdir_free(cd);
-	close(tfd);
-	remove(temp);
-	free(temp);
 	return -1;
     }
 
@@ -192,10 +160,10 @@ zip_close(struct zip *za)
 	    cd->entry[j].comment_len = za->entry[i].ch_comment_len;
 	}
 
-	cd->entry[j].offset = ftell(tfp);
+	cd->entry[j].offset = ftell(out);
 
 	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
-	    if (add_data(za, i, &de, tfp) < 0) {
+	    if (add_data(za, i, &de, out) < 0) {
 		error = 1;
 		break;
 	    }
@@ -206,12 +174,12 @@ zip_close(struct zip *za)
 	    cd->entry[j].crc = de.crc;
 	}
 	else {
-	    if (_zip_dirent_write(&de, tfp, 1, &za->error) < 0) {
+	    if (_zip_dirent_write(&de, out, 1, &za->error) < 0) {
 		error = 1;
 		break;
 	    }
 	    /* we just read the local dirent, file is at correct position */
-	    if (copy_data(za->zp, de.comp_size, tfp, &za->error) < 0) {
+	    if (copy_data(za->zp, de.comp_size, out, &za->error) < 0) {
 		error = 1;
 		break;
 	    }
@@ -223,7 +191,7 @@ zip_close(struct zip *za)
     }
 
     if (!error) {
-	if (_zip_cdir_write(cd, tfp, &za->error) < 0)
+	if (_zip_cdir_write(cd, out, &za->error) < 0)
 	    error = 1;
     }
     
@@ -233,13 +201,13 @@ zip_close(struct zip *za)
 
     if (error) {
 	_zip_dirent_finalize(&de);
-	fclose(tfp);
+	fclose(out);
 	remove(temp);
 	free(temp);
 	return -1;
     }
 
-    if (fclose(tfp) != 0) {
+    if (fclose(out) != 0) {
 	_zip_error_set(&za->error, ZIP_ER_CLOSE, errno);
 	remove(temp);
 	free(temp);
@@ -482,4 +450,87 @@ copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
     }
 
     return 0;
+}
+
+
+
+static int
+_zip_cdir_set_comment(struct zip_cdir *dest, struct zip *src)
+{
+    if (src->ch_comment_len != -1) {
+	dest->comment = _zip_memdup(src->ch_comment,
+				    src->ch_comment_len, &src->error);
+	if (dest->comment == NULL)
+	    return -1;
+	dest->comment_len = src->ch_comment_len;
+    } else {
+	if (src->cdir) {
+	    dest->comment = _zip_memdup(src->cdir->comment,
+					src->cdir->comment_len, &src->error);
+	    if (dest->comment == NULL)
+		return -1;
+	    dest->comment_len = src->cdir->comment_len;
+	}
+    }
+
+    return 0;
+}
+
+
+
+static int
+_zip_changed(struct zip *za, int *survivorsp)
+{
+    int changed, i, survivors;
+
+    changed = survivors = 0;
+
+    if (za->ch_comment_len != -1)
+	changed = 1;
+
+    for (i=0; i<za->nentry; i++) {
+	if ((za->entry[i].state != ZIP_ST_UNCHANGED)
+	    || (za->entry[i].ch_comment_len != -1))
+	    changed = 1;
+	if (za->entry[i].state != ZIP_ST_DELETED)
+	    survivors++;
+    }
+
+    *survivorsp = survivors;
+
+    return changed;
+}
+
+
+
+static char *
+_zip_create_temp_output(struct zip *za, FILE **outp)
+{
+    char *temp;
+    int tfd;
+    FILE *tfp;
+    
+    if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return NULL;
+    }
+
+    sprintf(temp, "%s.XXXXXX", za->zn);
+
+    if ((tfd=mkstemp(temp)) == -1) {
+	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);
+	free(temp);
+	return NULL;
+    }
+    
+    if ((tfp=fdopen(tfd, "r+b")) == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);
+	close(tfd);
+	remove(temp);
+	free(temp);
+	return NULL;
+    }
+
+    *outp = tfp;
+    return temp;
 }
