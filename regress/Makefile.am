@@ -7,7 +7,8 @@ noinst_PROGRAMS= \
 	open \
 	name_locate \
 	set_comment_all \
-	set_comment_localonly
+	set_comment_localonly \
+	set_comment_revert
 
 noinst_HEADERS=mkname.h
 EXTRA_PROGRAMS=deltest ziptest
@@ -38,7 +39,8 @@ TESTCASES= \
 	name_locate.test \
 	open.test \
 	set_comment_all.test \
-	set_comment_localonly.test
+	set_comment_localonly.test \
+	set_comment_revert.test
 
 check:
 	@failed=0; all=0; \

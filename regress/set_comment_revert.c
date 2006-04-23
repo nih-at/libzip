@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_unchange.c,v 1.18 2006/04/09 19:05:47 wiz Exp $
+  $NiH: set_comment_all.c,v 1.1 2006/04/23 12:25:00 wiz Exp $
 
-  zip_unchange.c -- undo changes to file in zip archive
-  Copyright (C) 1999, 2004, 2006 Dieter Baron and Thomas Klausner
+  comment.c -- test cases for file and archive comments
+  Copyright (C) 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,50 +35,68 @@
 
 
 
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "zip.h"
-#include "zipint.h"
 
-
-
-int
-zip_unchange(struct zip *za, int idx)
-{
-    return _zip_unchange(za, idx, 0);
-}
-
-
+const char *prg;
+const char *new_archive_comment="This is the new,\r\n"
+"multiline archive comment.\r\n"
+"Ain't it nice?";
 
 int
-_zip_unchange(struct zip *za, int idx, int allow_duplicates)
+main(int argc, char *argv[])
 {
-    int i;
+    const char *archive;
+    struct zip *za;
+    char buf[100];
+    int err;
+    int i, len;
+
+    prg = argv[0];
+
+    if (argc != 2) {
+	fprintf(stderr, "usage: %s archive\n", prg);
+	return 1;
+    }
+
+    archive = argv[1];
     
-    if (idx < 0 || idx >= za->nentry) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+    if ((za=zip_open(archive, 0, &err)) == NULL) {
+	zip_error_to_str(buf, sizeof(buf), err, errno);
+	fprintf(stderr,"%s: can't open zip archive `%s': %s\n", prg,
+		archive, buf);
+	return 1;
     }
 
-    if (za->entry[idx].ch_filename) {
-	if (!allow_duplicates) {
-	    i = _zip_name_locate(za,
-			 _zip_get_name(za, idx, ZIP_FL_UNCHANGED, NULL),
-				 0, NULL);
-	    if (i != -1 && i != idx) {
-		_zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
-		return -1;
-	    }
+    if (zip_set_archive_comment(za, new_archive_comment,
+				strlen(new_archive_comment)) < 0) {
+	zip_error_to_str(buf, sizeof(buf), err, errno);
+	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n",
+		prg, buf);
+    }
+
+    for (i=0; i<zip_get_num_files(za); i++) {
+	snprintf(buf, sizeof(buf), "File comment no %d", i);
+	if (zip_set_file_comment(za, i, buf, strlen(buf)) < 0) {
+	    zip_error_to_str(buf, sizeof(buf), err, errno);
+	    fprintf(stderr, "%s: zip_set_file_comment on file %d failed: %s\n",
+		    prg, i, buf);
 	}
-
-	free(za->entry[idx].ch_filename);
-	za->entry[idx].ch_filename = NULL;
     }
 
-    free(za->entry[idx].ch_comment);
-    za->entry[idx].ch_comment = NULL;
-    za->entry[idx].ch_comment_len = -1;
+    if (zip_unchange_all(za) == -1) {
+	fprintf(stderr,"%s: can't revert changes to archive `%s'\n", prg, archive);
+	return 1;
+    }
 
-    _zip_unchange_data(za->entry+idx);
+    if (zip_close(za) == -1) {
+	fprintf(stderr,"%s: can't close zip archive `%s'\n", prg, archive);
+	return 1;
+    }
 
     return 0;
 }
