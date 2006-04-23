@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.34 2006/04/09 19:05:47 wiz Exp $
+  $NiH: zip_open.c,v 1.35 2006/04/23 00:40:48 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -38,7 +38,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/stat.h>
 
 #include "zip.h"
@@ -346,7 +345,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
     for (i=0; i<cd->nentry; i++) {
 	if (cd->entry[i].offset < min)
 	    min = cd->entry[i].offset;
-	if (min < 0) {
+	if (min > cd->offset) {
 	    _zip_error_set(error, ZIP_ER_NOZIP, 0);
 	    return -1;
 	}
