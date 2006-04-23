@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.53 2006/02/21 09:41:00 dillo Exp $
+  $NiH: zip_close.c,v 1.54 2006/04/23 00:40:47 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -99,7 +99,6 @@ zip_close(struct zip *za)
 	return -1;
 
     if (za->ch_comment_len != -1) {
-	free(cd->comment);
 	if ((cd->comment=(char *)_zip_memdup(za->ch_comment,
 					    za->ch_comment_len,
 					    &za->error)) == NULL) {
@@ -139,9 +138,13 @@ zip_close(struct zip *za)
 	if (za->entry[i].state == ZIP_ST_DELETED)
 	    continue;
 
+	/* create new local directory entry */
 	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
 	    _zip_dirent_init(&de);
-	    memcpy(cd->entry+j, &de, sizeof(cd->entry[i]));
+	    /* use it as central directory entry */
+	    memcpy(cd->entry+j, &de, sizeof(cd->entry[j]));
+
+	    /* set/update file name */
 	    if (za->entry[i].ch_filename == NULL) {
 		if (za->entry[i].state == ZIP_ST_REPLACED) {
 		    de.filename = strdup(za->cdir->entry[i].filename);
@@ -158,6 +161,7 @@ zip_close(struct zip *za)
 	    }
 	}
 	else {
+	    /* copy existing directory entries */
 	    if (fseek(za->zp, za->cdir->entry[i].offset, SEEK_SET) != 0) {
 		_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 		error = 1;
@@ -167,7 +171,7 @@ zip_close(struct zip *za)
 		error = 1;
 		break;
 	    }
-	    memcpy(cd->entry+j, za->cdir->entry+i, sizeof(cd->entry[i]));
+	    memcpy(cd->entry+j, za->cdir->entry+i, sizeof(cd->entry[j]));
 	}
 
 	if (za->entry[i].ch_filename) {
@@ -183,15 +187,8 @@ zip_close(struct zip *za)
 	}
 
 	if (za->entry[i].ch_comment_len != -1) {
-	    free(cd->entry[j].comment);
-	    cd->entry[j].comment_len = 0;
-	    cd->entry[j].comment=(char*)_zip_memdup(za->entry[i].ch_comment,
-						    za->entry[i].ch_comment_len,
-						    &za->error);
-	    if (cd->entry[j].comment == NULL) {
-		error = 1;
-		break;
-	    }
+	    /* as the rest of cd, its malloc/free is done by za */
+	    cd->entry[j].comment = za->entry[i].ch_comment;
 	    cd->entry[j].comment_len = za->entry[i].ch_comment_len;
 	}
 
