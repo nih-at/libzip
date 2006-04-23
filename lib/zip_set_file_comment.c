@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_set_file_comment.c,v 1.1 2006/04/23 00:40:48 wiz Exp $
+  $NiH: zip_set_file_comment.c,v 1.2 2006/04/23 13:06:06 wiz Exp $
 
   zip_set_file_comment.c -- set comment for file in archive
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -55,12 +55,9 @@ zip_set_file_comment(struct zip *za, int idx, const char *comment, int len)
 	return -1;
     }
 
-    if ((tmpcom=(char *)malloc(len)) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+    if ((tmpcom=(char *)_zip_memdup(comment, len, &za->error)) == NULL)
 	return -1;
-    }
 
-    memcpy(tmpcom, comment, len);
     free(za->entry[idx].ch_comment);
     za->entry[idx].ch_comment = tmpcom;
     za->entry[idx].ch_comment_len = len;
