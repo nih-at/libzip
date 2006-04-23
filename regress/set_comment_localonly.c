@@ -1,5 +1,5 @@
 /*
-  $NiH: set_comment.c,v 1.1 2006/04/23 00:39:58 wiz Exp $
+  $NiH: set_comment_localonly.c,v 1.1 2006/04/23 12:25:00 wiz Exp $
 
   comment.c -- test cases for file and archive comments
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -76,6 +76,12 @@ main(int argc, char *argv[])
 	    fprintf(stderr, "%s: zip_set_file_comment on file %d failed: %s\n",
 		    prg, i, buf);
 	}
+    }
+    /* remove comment for third file */
+    if (zip_set_file_comment(za, 2, NULL, 0) < 0) {
+	zip_error_to_str(buf, sizeof(buf), err, errno);
+	fprintf(stderr, "%s: zip_set_file_comment on file %d failed: %s\n",
+		prg, i, buf);
     }
 
     if (zip_close(za) == -1) {
