@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_get.mdoc,v 1.8 2005/06/09 21:14:54 wiz Exp 
-.\" $NiH: zip_error_get.mdoc,v 1.8 2005/06/09 21:14:54 wiz Exp $
+.\" from NiH: zip_error_get.mdoc,v 1.9 2006/04/23 12:45:10 wiz Exp 
+.\" $NiH: zip_error_get.mdoc,v 1.9 2006/04/23 12:45:10 wiz Exp $
 .\"
 .\" zip_error_get.mdoc \-- get error codes for archive or file
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ERROR_GET 3 "November 30, 2004" NiH
+.TH ZIP_ERROR_GET 3 "April 23, 2006" NiH
 .SH "NAME"
 zip_error_get , \- .Nm zip_file_error_get
 get error codes for archive or file
@@ -44,7 +44,7 @@ libzip (-lzip)
 .Ft void
 .Fn zip_error_get "struct zip *archive" "int *zep" "int *sep"
 .Ft void
-.Fn zip_file_error_get "struct zip_file *zf" "int *zep" "int *sep"
+.Fn zip_file_error_get "struct zip_file *file" "int *zep" "int *sep"
 .SH "DESCRIPTION"
 The
 .Fn zip_error_get
@@ -69,7 +69,7 @@ to determine the type of system error code.
 The
 .Fn zip_file_error_get
 function does the same for the zip file
-\fBzf.\fR
+\fBfile.\fR
 .SH "SEE ALSO"
 libzip(3),
 zip_error_get_sys_type(3),
