@@ -7,8 +7,6 @@
   . read/set EAs
   . parse/create some EAs?
   . read/set ASCII file flag
-* document that zip_source_free must not be called after
-  zip_{add,replace} was successful.
 * do not compress if storing is smaller
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
