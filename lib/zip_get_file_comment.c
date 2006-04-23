@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_get_file_comment.c,v 1.1 2006/04/09 19:05:47 wiz Exp $
 
   zip_get_file_comment.c -- get file comment
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -41,14 +41,15 @@
 
 
 const char *
-zip_get_file_comment(struct zip *za, int idx, int *lenp)
+zip_get_file_comment(struct zip *za, int idx, int *lenp, int flags)
 {
     if (idx < 0 || idx >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
 
-    if (za->entry[idx].ch_comment_len == -1) {
+    if ((flags & ZIP_FL_UNCHANGED)
+	|| (za->entry[idx].ch_comment_len == -1)) {
 	if (lenp != NULL)
 	    *lenp = za->cdir->entry[idx].comment_len;
 	return za->cdir->entry[idx].comment;

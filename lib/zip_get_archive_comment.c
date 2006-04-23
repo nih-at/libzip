@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_get_archive_comment.c,v 1.1 2006/04/09 19:05:47 wiz Exp $
+  $NiH: zip_get_archive_comment.c,v 1.2 2006/04/23 00:40:47 wiz Exp $
 
   zip_get_archive_comment.c -- get archive comment
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -41,12 +41,13 @@
 
 
 const char *
-zip_get_archive_comment(struct zip *za, int *lenp)
+zip_get_archive_comment(struct zip *za, int *lenp, int flags)
 {
     if (za == NULL)
 	return NULL;
 
-    if (za->ch_comment_len == -1) {
+    if ((flags & ZIP_FL_UNCHANGED)
+	|| (za->ch_comment_len == -1)) {
 	if (lenp != NULL)
 	    *lenp = za->cdir->comment_len;
 	return za->cdir->comment;
