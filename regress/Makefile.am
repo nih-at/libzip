@@ -18,7 +18,8 @@ EXTRA_DIST= \
 	runtest \
 	${TESTCASES} \
 	testbuffer.zip \
-	testcomment.zip testchanged.zip testchangedlocal.zip \
+	testchanged.zip testchangedlocal.zip \
+	testcomment.zip testcommentremoved.zip \
 	testfile.txt testfile.zip \
 	broken.zip test.zip
 
