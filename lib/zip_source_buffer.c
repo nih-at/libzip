@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_buffer.c,v 1.6 2006/02/21 09:41:00 dillo Exp $
+  $NiH: zip_source_buffer.c,v 1.7 2006/02/22 19:52:20 dillo Exp $
 
   zip_source_buffer.c -- create zip data source from buffer
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -105,8 +105,6 @@ read_data(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 	n = z->end - z->buf;
 	if (n > len)
 	    n = len;
-	if (n < 0)
-	    n = 0;
 
 	if (n) {
 	    memcpy(buf, z->buf, n);
