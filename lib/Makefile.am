@@ -50,6 +50,7 @@ libzip_la_SOURCES=\
 	zip_strerror.c \
 	zip_unchange.c \
 	zip_unchange_all.c \
+	zip_unchange_archive.c \
 	zip_unchange_data.c
 
 BUILT_SOURCES=zip_err_str.c

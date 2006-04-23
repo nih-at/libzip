@@ -1,8 +1,8 @@
 /*
   $NiH: zip_unchange_all.c,v 1.9 2006/04/23 00:40:48 wiz Exp $
 
-  zip_unchange.c -- undo changes to all files in zip archive
-  Copyright (C) 1999, 2006 Dieter Baron and Thomas Klausner
+  zip_unchange_archive.c -- undo global changes to ZIP archive
+  Copyright (C) 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -42,15 +42,11 @@
 
 
 int
-zip_unchange_all(struct zip *za)
+zip_unchange_archive(struct zip *za)
 {
-    int ret, i;
+    free(za->ch_comment);
+    za->ch_comment = NULL;
+    za->ch_comment_len = -1;
 
-    ret = 0;
-    for (i=0; i<za->nentry; i++)
-	ret |= _zip_unchange(za, i, 1);
-
-    ret |= zip_unchange_archive(za);
-
-    return ret;
+    return 0;
 }
