@@ -1,4 +1,4 @@
-.\" $NiH$
+.\" $NiH: zip_get_file_comment.mdoc,v 1.1 2006/04/09 19:05:48 wiz Exp $
 .\"
 .\" zip_get_file_comment.mdoc -- get comment for file in zip
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -42,7 +42,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft const char *
-.Fn zip_get_file_comment "struct zip *file" "int index" "int *lenp"
+.Fn zip_get_file_comment "struct zip *archive" "int index" "int *lenp"
 .Sh DESCRIPTION
 The
 .Fn zip_get_file_comment
@@ -65,7 +65,7 @@ if there is no comment.
 In case of an error,
 .Dv NULL
 is returned and the error code in
-.Ar file
+.Ar archive
 is set to indicate the error.
 .Sh ERRORS
 .Fn zip_get_file_comment
