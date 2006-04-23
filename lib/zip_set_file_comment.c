@@ -1,5 +1,5 @@
 /*
-  $NiH$
+  $NiH: zip_set_file_comment.c,v 1.1 2006/04/23 00:40:48 wiz Exp $
 
   zip_set_file_comment.c -- set comment for file in archive
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -44,6 +44,11 @@ int
 zip_set_file_comment(struct zip *za, int idx, const char *comment, int len)
 {
     char *tmpcom;
+
+    if (idx < 0 || idx >= za->nentry) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
 
     if (len < 0 || len > MAXCOMLEN) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
