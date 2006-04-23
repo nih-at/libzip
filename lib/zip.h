@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.54 2006/04/23 00:40:47 wiz Exp $
+  $NiH: zip.h,v 1.55 2006/04/23 13:06:28 wiz Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -177,6 +177,7 @@ int zip_stat_index(struct zip *, int, int, struct zip_stat *);
 const char *zip_strerror(struct zip *);
 int zip_unchange(struct zip *, int);
 int zip_unchange_all(struct zip *);
+int zip_unchange_archive(struct zip *);
 
 #ifdef __cplusplus
 }
