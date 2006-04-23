@@ -1,7 +1,7 @@
 /*
-  $NiH: set_comment.c,v 1.1 2006/04/23 00:39:58 wiz Exp $
+  $NiH: set_comment_all.c,v 1.1 2006/04/23 12:25:00 wiz Exp $
 
-  comment.c -- test cases for file and archive comments
+  set_comment_all.c -- set global and file comments
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
