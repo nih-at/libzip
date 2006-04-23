@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: libzip.mdoc,v 1.6 2006/04/09 19:05:48 wiz Exp 
-.\" $NiH: libzip.mdoc,v 1.6 2006/04/09 19:05:48 wiz Exp $
+.\" from NiH: libzip.mdoc,v 1.8 2006/04/23 16:37:38 wiz Exp 
+.\" $NiH: libzip.mdoc,v 1.8 2006/04/23 16:37:38 wiz Exp $
 .\"
 .\" libzip.mdoc \-- general overview of available functions
 .\" Copyright (C) 2005, 2006 Dieter Baron and Thomas Klausner
@@ -84,6 +84,7 @@ zip_delete(3)
 .SS "revert changes"
 zip_unchange(3)
 zip_unchange_all(3)
+zip_unchange_archive(3)
 .SS "close archive"
 zip_close(3)
 .SS "miscellaneous"
