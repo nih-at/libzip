@@ -1,5 +1,14 @@
-noinst_PROGRAMS=add_from_buffer add_from_file add_from_filep \
-	fread get_comment open name_locate set_comment
+noinst_PROGRAMS= \
+	add_from_buffer \
+	add_from_file \
+	add_from_filep \
+	fread \
+	get_comment \
+	open \
+	name_locate \
+	set_comment_all \
+	set_comment_localonly
+
 noinst_HEADERS=mkname.h
 EXTRA_PROGRAMS=deltest ziptest
 
@@ -7,6 +16,7 @@ EXTRA_DIST= \
 	runtest \
 	${TESTCASES} \
 	testbuffer.zip \
+	testcomment.zip testcommentchanged.zip testcommentlocalchanged.zip \
 	testfile.txt testfile.zip \
 	broken.zip test.zip
 
@@ -27,7 +37,8 @@ TESTCASES= \
 	get_comment.test \
 	name_locate.test \
 	open.test \
-	set_comment.test
+	set_comment_all.test \
+	set_comment_localonly.test
 
 check:
 	@failed=0; all=0; \
