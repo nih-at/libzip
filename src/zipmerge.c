@@ -1,5 +1,5 @@
 /*
-  $NiH: zipmerge.c,v 1.10 2005/06/03 12:55:31 wiz Exp $
+  $NiH: zipmerge.c,v 1.11 2005/06/09 19:57:10 dillo Exp $
 
   zipmerge.c -- merge zip archives
   Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -40,9 +40,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "config.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #include "zip.h"
 
 
