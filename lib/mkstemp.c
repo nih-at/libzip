@@ -1,4 +1,4 @@
-/* $NiH: mkstemp.c,v 1.1 2006/02/21 10:56:44 dillo Exp $ */
+/* $NiH: mkstemp.c,v 1.2 2006/02/22 19:52:20 dillo Exp $ */
 
 /* Adapted from NetBSB libc by Dieter Baron */
 
@@ -42,8 +42,6 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-
 
 int
 _zip_mkstemp(char *path)

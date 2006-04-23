@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_file_get_offset.c,v 1.2 2004/04/14 14:01:24 dillo Exp $
+  $NiH: zip_file_get_offset.c,v 1.3 2004/11/17 21:55:11 wiz Exp $
 
   zip_file_get_offset.c -- get offset of file data in archive.
   Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
@@ -39,7 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 

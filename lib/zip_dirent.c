@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.7 2005/06/18 00:54:08 wiz Exp $
+  $NiH: zip_dirent.c,v 1.8 2006/02/21 09:41:00 dillo Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -39,7 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 

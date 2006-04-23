@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.56 2006/04/23 10:13:07 wiz Exp $
+  $NiH: zip_close.c,v 1.57 2006/04/23 13:05:42 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -39,7 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
