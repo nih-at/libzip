@@ -1,5 +1,5 @@
 /*
-  $NiH: zipcmp.c,v 1.18 2005/06/18 00:54:08 wiz Exp $
+  $NiH: zipcmp.c,v 1.19 2006/04/23 14:51:46 wiz Exp $
 
   zipcmp.c -- compare zip files
   Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -159,7 +159,7 @@ compare_zip(char * const zn[], int verbose)
     char errstr[1024];
 
     for (i=0; i<2; i++) {
-	if ((za=zip_open(zn[i], ZIP_CHECKCONS, &err)) == NULL) {
+	if ((za=zip_open(zn[i], 0, &err)) == NULL) {
 	    zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	    fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		    prg, zn[i], errstr);

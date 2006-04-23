@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_open.c,v 1.35 2006/04/23 00:40:48 wiz Exp $
+  $NiH: zip_open.c,v 1.36 2006/04/23 14:50:30 wiz Exp $
 
   zip_open.c -- open zip archive
-  Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,10 +35,11 @@
 
 
 
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 #include <sys/stat.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "zip.h"
 #include "zipint.h"
@@ -50,7 +51,7 @@ static int _zip_headercomp(struct zip_dirent *, int,
 static unsigned char *_zip_memmem(const unsigned char *, int,
 				  const unsigned char *, int);
 static struct zip_cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
-				 int, struct zip_error *);
+				 int, int, struct zip_error *);
 
 
 
@@ -139,7 +140,8 @@ zip_open(const char *fn, int flags, int *zep)
 	/* found match -- check, if good */
 	/* to avoid finding the same match all over again */
 	match++;
-	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, &err2)) == NULL)
+	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, flags,
+				   &err2)) == NULL)
 	    continue;	    
 
 	if (cdir) {
@@ -229,7 +231,7 @@ set_error(int *zep, struct zip_error *err, int ze)
 
 static struct zip_cdir *
 _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
-	      struct zip_error *error)
+	      int flags, struct zip_error *error)
 {
     struct zip_cdir *cd;
     unsigned char *cdp, **bufp;
@@ -267,13 +269,13 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     cd->comment = NULL;
     cd->comment_len = _zip_read2(&cdp);
 
-    /* some zip files are broken; their internal comment length
-       says 0, but they have 1 or 2 comment bytes */
-    if ((comlen-cd->comment_len < 0) || (comlen-cd->comment_len > 2)
-	|| (cd->nentry != i)) {
-	/* comment size wrong -- too few or too many left after central dir */
-	/* or number of cdir-entries on this disk != number of cdir-entries */
+    if ((comlen < cd->comment_len) || (cd->nentry != i)) {
 	_zip_error_set(error, ZIP_ER_NOZIP, 0);
+	free(cd);
+	return NULL;
+    }
+    if ((flags & ZIP_CHECKCONS) && comlen != cd->comment_len) {
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
 	free(cd);
 	return NULL;
     }
