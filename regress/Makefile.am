@@ -2,6 +2,7 @@ noinst_PROGRAMS= \
 	add_from_buffer \
 	add_from_file \
 	add_from_filep \
+	encrypt \
 	fread \
 	get_comment \
 	open \
@@ -21,7 +22,7 @@ EXTRA_DIST= \
 	testchanged.zip testchangedlocal.zip \
 	testcomment.zip testcommentremoved.zip \
 	testfile.txt testfile.zip \
-	broken.zip test.zip
+	broken.zip test.zip encrypt.zip
 
 fread_SOURCES=		fread.c mkname.c
 name_locate_SOURCES=	name_locate.c mkname.c
@@ -36,6 +37,7 @@ TESTCASES= \
 	add_from_buffer.test \
 	add_from_file.test \
 	add_from_filep.test \
+	encrypt.test \
 	fread.test \
 	get_comment.test \
 	name_locate.test \

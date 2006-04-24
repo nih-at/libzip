@@ -2,10 +2,10 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.55 2006/04/23 13:06:28 wiz Exp $
+  $NiH: zip.h,v 1.56 2006/04/23 16:36:42 wiz Exp $
 
   zip.h -- exported declarations.
-  Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -110,6 +110,23 @@ extern "C" {
 #define ZIP_CM_PKWARE_IMPLODE 10  /* PKWARE imploding */
 /* 11 - Reserved by PKWARE */
 #define ZIP_CM_BZIP2          12  /* compressed using BZIP2 algorithm */
+
+/* encryption methods */
+
+#define ZIP_EM_NONE	       0  /* not encrypted */
+#define ZIP_EM_TRAD_PKWARE     1  /* traditional PKWARE encryption */
+#if 0 /* Strong Encryption Header not parsed yet */
+#define ZIP_EM_DES        0x6601  /* strong encryption: DES */
+#define ZIP_EM_RC2_OLD    0x6602  /* strong encryption: RC2, version < 5.2 */
+#define ZIP_EM_3DES_168   0x6603
+#define ZIP_EM_3DES_112   0x6609
+#define ZIP_EM_AES_128    0x660e
+#define ZIP_EM_AES_192    0x660f
+#define ZIP_EM_AES_256    0x6610
+#define ZIP_EM_RC2        0x6702  /* strong encryption: RC2, version >= 5.2 */
+#define ZIP_EM_RC4        0x6801
+#endif
+#define ZIP_EM_UNKNOWN    0xffff  /* unknown algorithm */
 
 
 

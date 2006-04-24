@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_stat_index.c,v 1.9 2006/04/09 15:09:18 wiz Exp $
+  $NiH$
 
-  zip_stat_index.c -- get information about file by index
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  encrypt.c -- test encryption support
+  Copyright (C) 2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,59 +35,50 @@
 
 
 
-#include "zip.h"
-#include "zipint.h"
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-
+#include "zip.h"
+
+const char *prg;
 
 int
-zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
+main(int argc, char *argv[])
 {
-    const char *name;
-    
-    if (index < 0 || index >= za->nentry) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+    const char *archive;
+    struct zip *za;
+    char buf[100];
+    int err;
+    int i;
+    struct zip_stat st;
+
+    prg = argv[0];
+
+    if (argc != 2) {
+	fprintf(stderr, "usage: %s archive\n", prg);
+	return 1;
     }
 
-    if ((name=zip_get_name(za, index, flags)) == NULL)
-	return -1;
+    archive = argv[1];
     
-
-    if ((flags & ZIP_FL_UNCHANGED) == 0
-	&& ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
-	if (za->entry[index].source->f(za->entry[index].source->ud,
-				     st, sizeof(*st), ZIP_SOURCE_STAT) < 0) {
-	    _zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
-	    return -1;
-	}
+    if ((za=zip_open(archive, 0, &err)) == NULL) {
+	zip_error_to_str(buf, sizeof(buf), err, errno);
+	fprintf(stderr, "%s: can't open zip archive `%s': %s\n", prg,
+		archive, buf);
+	return 1;
     }
-    else {
-	if (za->cdir == NULL || index >= za->cdir->nentry) {
-	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	    return -1;
-	}
-	
-	st->index = index;
-	st->crc = za->cdir->entry[index].crc;
-	st->size = za->cdir->entry[index].uncomp_size;
-	st->mtime = za->cdir->entry[index].last_mod;
-	st->comp_size = za->cdir->entry[index].comp_size;
-	st->comp_method = za->cdir->entry[index].comp_method;
-	if (za->cdir->entry[index].bitflags & ZIP_GPBF_ENCRYPTED) {
-	    if (za->cdir->entry[index].bitflags & ZIP_GPBF_STRONG_ENCRYPTION) {
-		/* XXX */
-		st->encryption_method = ZIP_EM_UNKNOWN;
-	    }
-	    else
-		st->encryption_method = ZIP_EM_TRAD_PKWARE;
-	}
+
+    for (i=0; i<zip_get_num_files(za); i++) {
+	if (zip_stat_index(za, i, 0, &st) < 0)
+	    fprintf(stderr, "%s: can't stat file %d: %s\n",
+		    prg, i, zip_strerror(za));
 	else
-	    st->encryption_method = ZIP_EM_NONE;
-	/* st->bitflags = za->cdir->entry[index].bitflags; */
+	    printf("%d: %d\n", i, st.encryption_method);
     }
 
-    st->name = name;
-    
+    zip_close(za);
+
     return 0;
 }
