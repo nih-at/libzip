@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_set_file_comment.c,v 1.2 2006/04/23 13:06:06 wiz Exp $
+  $NiH: zip_set_file_comment.c,v 1.3 2006/04/23 15:26:30 dillo Exp $
 
   zip_set_file_comment.c -- set comment for file in archive
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -35,6 +35,8 @@
 
 
 
+#include <stdlib.h>
+
 #include "zip.h"
 #include "zipint.h"
 
@@ -45,18 +47,19 @@ zip_set_file_comment(struct zip *za, int idx, const char *comment, int len)
 {
     char *tmpcom;
 
-    if (idx < 0 || idx >= za->nentry) {
+    if (idx < 0 || idx >= za->nentry
+	|| len < 0 || len > MAXCOMLEN
+	|| (len > 0 && comment == NULL)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
-    if (len < 0 || len > MAXCOMLEN) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+    if (len > 0) {
+	if ((tmpcom=(char *)_zip_memdup(comment, len, &za->error)) == NULL)
+	    return -1;
     }
-
-    if ((tmpcom=(char *)_zip_memdup(comment, len, &za->error)) == NULL)
-	return -1;
+    else
+	tmpcom = NULL;
 
     free(za->entry[idx].ch_comment);
     za->entry[idx].ch_comment = tmpcom;

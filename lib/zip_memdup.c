@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_memdup.c,v 1.34 2006/04/09 19:05:47 wiz Exp $
+  $NiH: zip_memdup.c,v 1.1 2006/04/23 00:40:47 wiz Exp $
 
   zip_memdup.c -- internal zip function, "strdup" with len
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -33,8 +33,8 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <sys/types.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "zip.h"
 #include "zipint.h"
