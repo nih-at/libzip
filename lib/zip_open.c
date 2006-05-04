@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.36 2006/04/23 14:50:30 wiz Exp $
+  $NiH: zip_open.c,v 1.37 2006/04/23 18:47:34 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
@@ -132,7 +132,7 @@ zip_open(const char *fn, int flags, int *zep)
 	return NULL;
     }
     
-    best = -1;
+    best = -2;
     cdir = NULL;
     match = buf;
     while ((match=_zip_memmem(match, buflen-(match-buf)-18,
@@ -141,8 +141,13 @@ zip_open(const char *fn, int flags, int *zep)
 	/* to avoid finding the same match all over again */
 	match++;
 	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, flags,
-				   &err2)) == NULL)
-	    continue;	    
+				   &err2)) == NULL) {
+	    if (best == -2) {
+		set_error(zep, &err2, 0);
+		best = -1;
+	    }
+	    continue;
+	}
 
 	if (cdir) {
 	    if (best <= 0)
@@ -170,7 +175,10 @@ zip_open(const char *fn, int flags, int *zep)
     
     if (best < 0) {
 	/* no consistent eocd found */
-	set_error(zep, NULL, ZIP_ER_NOZIP);
+	if (best == -2) {
+	    /* no eocd found at all */
+	    set_error(zep, NULL, ZIP_ER_NOZIP);
+	}
 	_zip_cdir_free(cdir);
 	fclose(fp);
 	return NULL;
