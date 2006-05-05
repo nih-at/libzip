@@ -90,4 +90,4 @@ update-errors:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
-	nroff -mdoc2html $< | sed -e "s,../html./,," > $@.$$$$ && mv $@.$$$$ $@
+	nroff -mdoc2html $< | sed -e "s,../html[0-9]/,," > $@.$$$$ && mv $@.$$$$ $@
