@@ -1,4 +1,4 @@
-0.x [2006/xx/xx]
+0.7 [2006/05/06]
 
 * struct zip_stat increased for future encryption support
 * zip_add return value changed (now returns new index of added file)
