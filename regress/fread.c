@@ -1,5 +1,5 @@
 /*
-  $NiH: fread.c,v 1.5 2005/07/16 17:14:32 wiz Exp $
+  $NiH: fread.c,v 1.6 2006/02/21 10:21:25 dillo Exp $
 
   fread.c -- test cases for reading from zip archives
   Copyright (C) 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -40,7 +40,6 @@
 #include <stdlib.h>
 
 #include "zip.h"
-#include "mkname.h"
 
 enum when {
     WHEN_NEVER, WHEN_OPEN, WHEN_READ, WHEN_CLOSE
@@ -76,7 +75,7 @@ main(int argc, char *argv[])
 
     archive = argv[1];
 
-    if ((z=zip_open(mkname(archive), 0, &ze)) == NULL) {
+    if ((z=zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), ze, errno);
 	printf("%s: opening zip archive ``%s'' failed: %s\n",
 	       prg, archive, errstr);

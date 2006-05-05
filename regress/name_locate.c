@@ -1,8 +1,8 @@
 /*
-  $NiH: name_locate.c,v 1.5 2005/07/16 17:14:32 wiz Exp $
+  $NiH: name_locate.c,v 1.6 2006/02/21 09:41:13 dillo Exp $
 
   name_locate.c -- test cases for finding files in zip archives
-  Copyright (C) 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 2005-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -40,7 +40,6 @@
 #include <stdlib.h>
 
 #include "zip.h"
-#include "mkname.h"
 
 int find_fail(struct zip *, const char *, int, int);
 int find_success(struct zip *, const char *, int);
@@ -66,7 +65,7 @@ main(int argc, char *argv[])
 
     archive = argv[1];
 
-    if ((z=zip_open(mkname(archive), 0, &ze)) == NULL) {
+    if ((z=zip_open(archive, 0, &ze)) == NULL) {
 	printf("%s: opening zip archive ``%s'' failed (%d)\n", prg,
 	       archive, ze);
 	return 1;

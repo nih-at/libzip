@@ -1,6 +1,5 @@
 * php windows fixes:
   . zip_close: close za->zp before rename, reopen on error
-* fix distcheck (3 tests fail, I don't understand why)
 * add functions to:
   . set compression method for new/changed entry
   . set last modification time for entry

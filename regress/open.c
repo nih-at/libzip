@@ -1,8 +1,8 @@
 /*
-  $NiH: open.c,v 1.5 2005/06/09 18:49:38 dillo Exp $
+  $NiH: open.c,v 1.6 2005/07/16 17:14:32 wiz Exp $
 
   open.c -- test cases for opening zip archives
-  Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -40,7 +40,6 @@
 #include <stdlib.h>
 
 #include "zip.h"
-#include "mkname.h"
 
 int open_fail(const char *, int, const char *, int, int);
 int open_success(const char *, int, const char *, int);
@@ -91,7 +90,7 @@ open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
 
     errno = 0;
 
-    if ((z=zip_open(mkname(fname), flags, &ze)) != NULL) {
+    if ((z=zip_open(fname, flags, &ze)) != NULL) {
 	printf("%s: opening %s succeeded\n", prg, desc);
 	zip_close(z);
 	return 1;
@@ -113,7 +112,7 @@ open_success(const char *fname, int flags, const char *desc, int nent)
     struct zip *z;
     int ze, num;
 
-    if ((z=zip_open(mkname(fname), flags, &ze)) == NULL) {
+    if ((z=zip_open(fname, flags, &ze)) == NULL) {
 	printf("%s: opening %s failed (%d)\n", prg, desc, ze);
 	return 1;
     }

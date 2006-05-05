@@ -12,7 +12,6 @@ noinst_PROGRAMS= \
 	set_comment_removeglobal \
 	set_comment_revert
 
-noinst_HEADERS=mkname.h
 EXTRA_PROGRAMS=deltest ziptest
 
 EXTRA_DIST= \
@@ -24,14 +23,7 @@ EXTRA_DIST= \
 	testfile.txt testfile.zip \
 	broken.zip test.zip encrypt.zip
 
-fread_SOURCES=		fread.c mkname.c
-name_locate_SOURCES=	name_locate.c mkname.c
-open_SOURCES=		open.c mkname.c
-
-deltest_SOURCES=	deltest.c
-ziptest_SOURCES=	ziptest.c
-
-TESTS_ENVIRONMENT=	SRCDIR=${srcdir} ZIPCMP=../src/zipcmp
+TESTS_ENVIRONMENT=	ZIPCMP=../src/zipcmp
 
 TESTCASES= \
 	add_from_buffer.test \
