@@ -1,3 +1,36 @@
+2006-05-06 01:13  Dieter Baron <dillo@danbala.tuwien.ac.at>
+
+	* NEWS, configure.ac: Prepare for 0.7 release.
+
+2006-05-06 01:08  Dieter Baron <dillo@danbala.tuwien.ac.at>
+
+	* TODO, regress/Makefile.am, regress/fread.c,
+	  regress/name_locate.c, regress/open.c: Fix distcheck: retire
+	  mkname (remnant from before runtest).
+
+2006-05-04 02:01  Dieter Baron <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip_open.c: Report ZIP_ERR_INCONS for zip archives with
+	  trailing garbage (if using ZIP_CHECK_CONS).
+
+2006-04-24 16:04  Dieter Baron <dillo@danbala.tuwien.ac.at>
+
+	* lib/zip.h, lib/zip_stat_index.c, lib/zipint.h,
+	  regress/Makefile.am, regress/encrypt.c, regress/encrypt.test,
+	  regress/encrypt.zip: Fill in encryption_method in zip_stat.  XXX:
+	  strong encryption algorithms returned as unknown for now.
+
+2006-04-24 12:34  Dieter Baron <dillo@danbala.tuwien.ac.at>
+
+	* lib/: zip_memdup.c, zip_set_archive_comment.c,
+	  zip_set_file_comment.c: Fix warnings due to missing includes.
+	  Check that comment != NULL if len > 0, avoid _zip_memdup with
+	  size 0.
+
+2006-04-23 20:52  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+
+	* ChangeLog: cvs2cl for latest entries.
+
 2006-04-23 20:47  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
 	* lib/zip_open.c, src/zipcmp.c: Only check for garbage at end of
