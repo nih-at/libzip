@@ -1,5 +1,5 @@
 /*
-  $NiH: get_comment.c,v 1.2 2006/04/23 13:06:30 wiz Exp $
+  $NiH: get_comment.c,v 1.3 2006/04/23 14:17:36 wiz Exp $
 
   comment.c -- test cases for file and archive comments
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -73,7 +73,7 @@ main(int argc, char *argv[])
     if ((com=zip_get_archive_comment(za, &len, 0)) == NULL)
 	printf("No archive comment\n");
     else
-	printf("Archive comment: %s\n", com);
+	printf("Archive comment: %.*s\n", len, com);
 
     for (i=0; i<zip_get_num_files(za); i++) {
 	if ((com=zip_get_file_comment(za, i, &len, 0)) == NULL)
