@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.58 2006/04/23 14:51:45 wiz Exp $
+  $NiH: zip_close.c,v 1.59 2006/04/23 16:11:07 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -89,6 +89,8 @@ zip_close(struct zip *za)
     if ((cd=_zip_cdir_new(survivors, &za->error)) == NULL)
 	return -1;
 
+    for (i=0; i<survivors; i++)
+	_zip_dirent_init(&cd->entry[i]);
 
     if (_zip_cdir_set_comment(cd, za) == -1) {
 	_zip_cdir_free(cd);
