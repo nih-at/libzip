@@ -7,6 +7,7 @@
   . parse/create some EAs?
   . read/set ASCII file flag
 * do not compress if storing is smaller
+* zip_open: check whether file can be created and fail if not
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
