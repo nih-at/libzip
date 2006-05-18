@@ -1,5 +1,5 @@
 # not GPL, thus no COPYING
-AUTOMAKE_OPTIONS=foreign
+AUTOMAKE_OPTIONS=dist-bzip2 foreign
 
 SUBDIRS=lib src man regress
 
