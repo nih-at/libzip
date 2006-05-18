@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.59 2006/04/23 16:11:07 wiz Exp $
+  $NiH: zip_close.c,v 1.60 2006/05/09 17:21:47 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -179,7 +179,8 @@ zip_close(struct zip *za)
 		break;
 	    }
 	    /* we just read the local dirent, file is at correct position */
-	    if (copy_data(za->zp, de.comp_size, out, &za->error) < 0) {
+	    if (copy_data(za->zp, cd->entry[j].comp_size, out,
+			  &za->error) < 0) {
 		error = 1;
 		break;
 	    }
