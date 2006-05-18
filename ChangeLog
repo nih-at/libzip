@@ -1,191 +1,227 @@
-2006-05-06 01:13  Dieter Baron <dillo@danbala.tuwien.ac.at>
+2006-05-17 19:54  dillo
+
+	* TODO: add one
+
+2006-05-10 01:55  wiz
+
+	* regress/get_comment.c: Fix printing archive comment.
+
+2006-05-10 01:41  wiz
+
+	* regress/add_from_buffer.c: Correct fprintf argument.
+
+2006-05-09 20:15  wiz
+
+	* configure.ac: Bump to 0.7a.
+
+2006-05-09 19:21  wiz
+
+	* lib/zip_close.c: If _zip_cdir_set_comment or
+	  _zip_create_temp_output failed, cd contained uninitialized data
+	  in cd->entry[i], which might cause bogus free()s.  Initialize cd
+	  entries.
+
+2006-05-09 18:34  wiz
+
+	* src/zipcmp.c: Include unistd.h for optind. From Joerg
+	  Sonnenberger.
+
+2006-05-06 01:36  wiz
+
+	* man/Makefile.am: Be more strict in regex.
+
+2006-05-06 01:16  wiz
+
+	* ChangeLog: cvs2cl for latest entries.
+
+2006-05-06 01:13  dillo
 
 	* NEWS, configure.ac: Prepare for 0.7 release.
 
-2006-05-06 01:08  Dieter Baron <dillo@danbala.tuwien.ac.at>
+2006-05-06 01:08  dillo
 
 	* TODO, regress/Makefile.am, regress/fread.c,
 	  regress/name_locate.c, regress/open.c: Fix distcheck: retire
 	  mkname (remnant from before runtest).
 
-2006-05-04 02:01  Dieter Baron <dillo@danbala.tuwien.ac.at>
+2006-05-04 02:01  dillo
 
 	* lib/zip_open.c: Report ZIP_ERR_INCONS for zip archives with
 	  trailing garbage (if using ZIP_CHECK_CONS).
 
-2006-04-24 16:04  Dieter Baron <dillo@danbala.tuwien.ac.at>
+2006-04-24 16:04  dillo
 
 	* lib/zip.h, lib/zip_stat_index.c, lib/zipint.h,
 	  regress/Makefile.am, regress/encrypt.c, regress/encrypt.test,
 	  regress/encrypt.zip: Fill in encryption_method in zip_stat.  XXX:
 	  strong encryption algorithms returned as unknown for now.
 
-2006-04-24 12:34  Dieter Baron <dillo@danbala.tuwien.ac.at>
+2006-04-24 12:34  dillo
 
 	* lib/: zip_memdup.c, zip_set_archive_comment.c,
 	  zip_set_file_comment.c: Fix warnings due to missing includes.
 	  Check that comment != NULL if len > 0, avoid _zip_memdup with
 	  size 0.
 
-2006-04-23 20:52  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+2006-04-23 20:52  wiz
 
 	* ChangeLog: cvs2cl for latest entries.
 
-2006-04-23 20:47  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2006-04-23 20:47  dillo
 
 	* lib/zip_open.c, src/zipcmp.c: Only check for garbage at end of
 	  file when ZIP_CHECKCONS.
 
-2006-04-23 20:47  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 20:47  wiz
 
 	* configure.ac: Bump to 0.6.1d for another test release.
 
-2006-04-23 18:38  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:38  wiz
 
 	* NEWS: Document comment support.
 
-2006-04-23 18:37  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:37  wiz
 
 	* man/libzip.man: regen.
 
-2006-04-23 18:37  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:37  wiz
 
 	* man/libzip.mdoc: Link zip_unchange_archive.
 
-2006-04-23 18:36  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:36  wiz
 
 	* lib/zip.h: Add zip_unchange_archive.
 
-2006-04-23 18:35  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:35  wiz
 
 	* TODO: Another TODO done.
 
-2006-04-23 18:11  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:11  wiz
 
 	* lib/zip_get_archive_comment.c: We do not check za for NULL
 	  elsewhere, so do not check it here either.
 
-2006-04-23 18:11  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 18:11  wiz
 
 	* lib/zip_close.c: Avoid _zip_memdup of NULL.
 
-2006-04-23 17:26  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2006-04-23 17:26  dillo
 
 	* lib/: zip_set_archive_comment.c, zip_set_file_comment.c: Use
 	  _zip_memdup.
 
-2006-04-23 17:03  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 17:03  wiz
 
 	* man/: zip_set_archive_comment.man, zip_set_file_comment.man:
 	  regen.
 
-2006-04-23 16:57  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:57  wiz
 
 	* man/: zip_set_archive_comment.mdoc, zip_set_file_comment.mdoc:
 	  Drop trailing whitespace.
 
-2006-04-23 16:55  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:55  wiz
 
 	* man/zip_source_free.man: regen.
 
-2006-04-23 16:55  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:55  wiz
 
 	* man/zip_source_free.mdoc: Document that it should not be called
 	  after a successful zip_add or zip_replace.
 
-2006-04-23 16:52  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:52  wiz
 
 	* TODO: UNISTD_H done.
 
-2006-04-23 16:51  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:51  wiz
 
 	* lib/mkstemp.c, lib/zip_close.c, lib/zip_dirent.c,
 	  lib/zip_file_get_offset.c, src/zipcmp.c: Remove unneeded
 	  inclusion of unistd.h.  Tested on Darwin, Irix, NetBSD, Solaris.
 
-2006-04-23 16:51  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:51  wiz
 
 	* src/zipmerge.c: Test for HAVE_UNISTD_H before including it.
 
-2006-04-23 16:50  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:50  wiz
 
 	* lib/zip_source_buffer.c: Unsigned fix for Irix cc.
 
-2006-04-23 16:50  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:50  wiz
 
 	* lib/zip_open.c: Unsigned fix for Irix cc. Remove unneeded
 	  inclusion of unistd.h.
 
-2006-04-23 16:49  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:49  wiz
 
 	* lib/zip_fread.c: unsigned fix for Irix cc.
 
-2006-04-23 16:49  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:49  wiz
 
 	* configure.ac: Check for unistd.h.
 
-2006-04-23 16:33  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:33  wiz
 
 	* regress/Makefile.am: Set path to zipcmp in environment.
 
-2006-04-23 16:17  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:17  wiz
 
 	* regress/get_comment.c: Only print len characters from file
 	  comment.
 
-2006-04-23 16:13  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 16:13  wiz
 
 	* regress/Makefile.am: Add another zip file.
 
-2006-04-23 15:55  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:55  wiz
 
 	* regress/: set_comment_all.c, set_comment_localonly.c,
 	  set_comment_removeglobal.c, set_comment_revert.c: Remove unused
 	  variables found by Irix cc.
 
-2006-04-23 15:33  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:33  wiz
 
 	* TODO: Remove comment related stuff.
 
-2006-04-23 15:30  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:30  wiz
 
 	* man/zip_unchange_archive.man: Add.
 
-2006-04-23 15:30  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:30  wiz
 
 	* man/: zip_get_archive_comment.man, zip_get_file_comment.man,
 	  zip_unchange.man, zip_unchange_all.man: regen
 
-2006-04-23 15:30  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:30  wiz
 
 	* man/Makefile.am: Add zip_unchange_archive.
 
-2006-04-23 15:28  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:28  wiz
 
 	* regress/: set_comment_all.c, set_comment_localonly.c,
 	  set_comment_revert.c: Correct comment.
 
-2006-04-23 15:28  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:28  wiz
 
 	* regress/: Makefile.am, set_comment_removeglobal.c,
 	  set_comment_removeglobal.test, testcommentremoved.zip: Add test
 	  for removing archive comment.
 
-2006-04-23 15:21  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:21  wiz
 
 	* lib/zip_unchange.c, regress/Makefile.am,
 	  regress/set_comment_revert.c, regress/set_comment_revert.test:
 	  Add test for comment reverting via zip_unchange_all, and fix a
 	  bug it found.
 
-2006-04-23 15:14  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:14  wiz
 
 	* lib/Makefile.am, lib/zip_unchange_all.c,
 	  lib/zip_unchange_archive.c, man/zip_unchange.mdoc,
 	  man/zip_unchange_all.mdoc, man/zip_unchange_archive.mdoc: Add
 	  zip_unchange_archive.
 
-2006-04-23 15:06  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:06  wiz
 
 	* lib/zip.h, lib/zip_get_archive_comment.c,
 	  lib/zip_get_file_comment.c, man/zip_get_archive_comment.mdoc,
@@ -193,46 +229,46 @@
 	  regress/get_comment.c: Add flags argument to zip_get_*_comment,
 	  requested by dillo.
 
-2006-04-23 15:06  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:06  wiz
 
 	* lib/zip_set_file_comment.c: Test idx argument validity.
 
-2006-04-23 15:05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 15:05  wiz
 
 	* lib/zip_close.c: Improve some comments, and remove a superfluous
 	  free.
 
-2006-04-23 14:50  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:50  wiz
 
 	* man/: libzip.man, zip_error_get.man, zip_get_archive_comment.man,
 	  zip_get_file_comment.man, zip_get_name.man,
 	  zip_set_archive_comment.man, zip_set_file_comment.man: regen
 
-2006-04-23 14:50  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:50  wiz
 
 	* man/libzip.mdoc: Link zip_set_{archive,file}_comment. Bump date.
 
-2006-04-23 14:47  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:47  wiz
 
 	* man/: Makefile.am, zip_set_archive_comment.mdoc,
 	  zip_set_file_comment.mdoc: Document
 	  zip_set_{archive,file}_comment.
 
-2006-04-23 14:45  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:45  wiz
 
 	* man/zip_get_file_comment.mdoc: Bump date for previous.
 
-2006-04-23 14:44  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:44  wiz
 
 	* man/: zip_get_file_comment.mdoc, zip_error_get.mdoc: Consistency
 	  in argument naming.
 
-2006-04-23 14:28  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:28  wiz
 
 	* regress/: set_comment_localonly.c, testchangedlocal.zip: Test
 	  removing file comments too.
 
-2006-04-23 14:25  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 14:25  wiz
 
 	* regress/: Makefile.am, set_comment.c, set_comment.test,
 	  set_comment_all.c, set_comment_all.test, set_comment_localonly.c,
@@ -241,16 +277,16 @@
 	  local comments.  Add test set_comment_localonly, testing changing
 	  only local comments.
 
-2006-04-23 12:13  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 12:13  wiz
 
 	* lib/zip_close.c: Put from code from zip_close in separate
 	  functions.
 
-2006-04-23 11:25  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 11:25  wiz
 
 	* lib/zip_close.c: Handle malloc/free correctly. Add some comments.
 
-2006-04-23 02:40  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 02:40  wiz
 
 	* lib/: Makefile.am, zip.h, zip_close.c, zip_get_archive_comment.c,
 	  zip_memdup.c, zip_new.c, zip_open.c, zip_set_archive_comment.c,
@@ -258,28 +294,28 @@
 	  set_*_comment support.  XXX: there's a double free somewhere, but
 	  I currently don't find its cause
 
-2006-04-23 02:39  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 02:39  wiz
 
 	* regress/: Makefile.am, comment.c, comment.test, get_comment.c,
 	  get_comment.test, set_comment.c, set_comment.test,
 	  testchanged.zip: Add test for writing comments.  Rename previous
 	  "comment" test to "get_comment" to make clear it's for reading.
 
-2006-04-23 02:38  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 02:38  wiz
 
 	* regress/: add_from_buffer.test, add_from_file.test,
 	  add_from_filep.test, fread.test, name_locate.test, open.test:
 	  Adapt for runtest update.
 
-2006-04-23 02:38  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-23 02:38  wiz
 
 	* regress/runtest: Sync with 1.22 from ckmame.
 
-2006-04-09 23:45  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-09 23:45  wiz
 
 	* TODO: Add some API ideas.
 
-2006-04-09 21:05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-09 21:05  wiz
 
 	* lib/Makefile.am, lib/zip.h, lib/zip_entry_free.c,
 	  lib/zip_entry_new.c, lib/zip_get_archive_comment.c,
@@ -294,334 +330,2509 @@
 
 	  Add documentation and regression test.
 
-2006-04-09  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-09 17:09  wiz
 
-	* lib/zip_replace.c (_zip_replace): return idx of changed file,
-	for zip_add.
-	(zip_replace): return 0 on success, as before.
-	* man/zip_add.mdoc: update.
+	* ChangeLog, lib/zip_stat_index.c: Initialize encrytion_method to 0
+	  for now.
 
-	* lib/Makefile.am (libzip_la_SOURCES): bump libzip major.
+2006-04-09 16:55  wiz
 
-	* lib/zip.h: add encryption_method to zip_stat.
-	* man/zip_stat.mdoc: update docs.
-	* lib/zip_stat_index.c (zip_stat_index): initialize encryption_method.
+	* man/zip_errors.man: Add missing file.  XXX: Why wasn't this in
+	  CVS already?
 
-2006-03-25  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-09 16:54  wiz
 
-	* man/zip_source_function.mdoc: fix return values; correct
-	argument name. Noted by Tara Milana.
+	* man/make_zip_errors.sh: Add AUTHORS section to file generation
+	  too.
 
-2005-07-20  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-09 16:52  wiz
 
-	* man/zip_source_buffer.mdoc, man/zip_source_file.mdoc,
-	man/zip_source_filep.mdoc, man/zip_source_function.mdoc,
-	man/zip_source_zip.mdoc: fix return value.
+	* man/: zip_add.man, zip_source_function.man, zip_source_zip.man,
+	  zip_stat.man: regen.
 
-2005-07-17  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-04-09 16:52  wiz
 
-	* regress/Makefile.am: enable add_from_filep test.
-	* regress/add_from_filep.c, regress/add_from_filep.test: new
-	testcase.
+	* ChangeLog, NEWS, TODO, configure.ac, lib/Makefile.am, lib/zip.h,
+	  lib/zip_replace.c, man/zip_add.mdoc, man/zip_stat.mdoc: * struct
+	  zip_stat increased for future encryption support * zip_add return
+	  value changed (now returns new index of added file) * shared
+	  library major bump because of previous two
 
-2005-07-16  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-03-25 17:14  dillo
 
-	* regress/runtest: fix typo in comment. Do not require args line.
-	* regress/fread.c, regress/name_locate.c, regress/open.c,
-	regress/fread.test, regress/name_locate.test, regress/open.test,
-	regress/Makefile.am: convert remaining tests to new testing
-	framework.
+	* man/zip_source_function.mdoc: add 2006 to copyright
 
-2005-07-15  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-03-25 12:23  wiz
 
-	* regress/Makefile.am: convert for new-style test cases
-	* regress/add_from_file.c: add, based on add_from_buffer.c
-	* regress/add_from_buffer.c: add, based on buffadd.c.
-	* regress/buffadd.c: removed.
-	* regress/runtest: add, based on ckmame's
+	* ChangeLog, man/zip_source_function.mdoc: Fix return values;
+	  correct argument name. From Tara Milana.
 
-2005-07-14  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-03-14 21:06  dillo
 
-	* compile, depcomp, install-sh, missing, mkinstalldirs: update
-	from automake-1.9.6.
+	* TODO: New parts of php diffs.
 
-	* configure.ac: bump version to 0.6.1
+2006-02-22 20:52  dillo
 
-	* lib/zip_fread.c (zip_fread): remove unsigned.
+	* configure.ac, lib/mkstemp.c, lib/zip_fread.c, lib/zip_open.c,
+	  lib/zip_source_buffer.c, lib/zipint.h: - more casts of void
+	  pointers - fseeko replacement - bump version to 0.6.1b
 
-2005-07-14  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2006-02-21 11:56  dillo
 
-	* lib/zip.h: make usable from C++. Patch from Heiko Hund.
+	* configure.ac, lib/Makefile.am, lib/mkstemp.c, lib/zipint.h: Add
+	  mkstemp replacement function.
 
-2005-07-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-02-21 11:55  dillo
 
-	* libzip.pc.in (zipcmp): Fix path to zipcmp.
+	* lib/zip_open.c: (_zip_memmem) Don't pass signed argument when
+	  unsigned is expected.
 
-2005-06-18  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2006-02-21 11:21  dillo
 
-	* lib/zip_close.c, lib/zip_dirent.c, lib/zip_fread.c,
-	lib/zipint.h, src/zipcmp.c: fix some warnings with -Wsign-compare.
+	* TODO: add one
 
-	* configure.ac, man/Makefile.am: smarter man page installation
-	handling, avoiding symlinks.
+2006-02-21 11:21  dillo
 
-2005-06-17  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* configure.ac: bump version to 0.6.1a
 
-	* libzip.pc: return full path to zipcmp.
+2006-02-21 11:21  dillo
 
-2005-06-09  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* regress/fread.c: proper error message in case zip_open fails
 
-	* configure.ac: bump version to 0.6
+2006-02-21 10:41  dillo
 
-2005-06-09  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+	* regress/: add_from_buffer.c, add_from_file.c, add_from_filep.c,
+	  mkname.c, name_locate.c: fix warnings
 
-	* regress/buffadd.c (main): check string length before comparing.
-	* ltmain.sh: update from libtool-1.5.18.
-	* compile, depcomp, install-sh, missing, mkinstalldirs: Update
-	from automake-1.9.5.
+2006-02-21 10:41  dillo
 
-2005-06-09  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* lib/: zip_close.c, zip_dirent.c, zip_error_strerror.c,
+	  zip_fread.c, zip_open.c, zip_source_buffer.c,
+	  zip_source_function.c, zip_source_zip.c, zipint.h: - fix
+	  signed/unsigned comparisions - cast malloc return value
 
-	* lib/zip_source_zip.c (zip_source_zip): if reading uncompressed,
-	set crc in stat buffer to 0.
+2006-02-21 10:13  dillo
 
-	* lib/zip_close.c (ch_set_error): use ZIP_SOURCE_ERROR to get
-	error code from source callback.
-	
-	* regress/Makefile.am: add srcdir to TESTS_ENVIRONMENT.
-	* regress/mkname.c, regress/mkname.h: add.
-	* regress/fread.c, regress/name_locate.c, regress/open.c: use
-	mkname.
+	* lib/zip_close.c: (add_data_uncomp) Don't mix size_t and ssize_t.
+
+2006-01-03 16:30  wiz
+
+	* ltmain.sh: regen (from libtool-base-1.5.18nb6)
+
+2005-09-07 01:46  wiz
+
+	* TODO: Add one.
+
+2005-09-07 01:45  wiz
+
+	* TODO: Add some.
+
+2005-09-07 01:44  wiz
+
+	* lib/zip.h: Add ZIP_CM_BZIP2
+
+2005-09-07 01:44  wiz
+
+	* lib/zipint.h: Fix some typos.
+
+2005-08-01 03:44  wiz
+
+	* TODO: * do not compress if storing is smaller
+
+2005-07-29 16:13  dillo
+
+	* man/zip_source_zip.mdoc: improve wording
+
+2005-07-20 19:18  wiz
+
+	* THANKS: Add Joel Ebrahimi.
+
+2005-07-20 19:18  wiz
+
+	* man/: zip_source_buffer.man, zip_source_file.man,
+	  zip_source_filep.man, zip_source_function.man,
+	  zip_source_zip.man: regen.
+
+2005-07-20 19:18  wiz
+
+	* ChangeLog, man/zip_source_buffer.mdoc, man/zip_source_file.mdoc,
+	  man/zip_source_filep.mdoc, man/zip_source_function.mdoc,
+	  man/zip_source_zip.mdoc: Fix return value. Noted by Joel
+	  Ebrahimi.
+
+2005-07-17 02:01  wiz
+
+	* ChangeLog, regress/Makefile.am, regress/add_from_filep.c,
+	  regress/add_from_filep.test: * regress/Makefile.am: enable
+	  add_from_filep test.	* regress/add_from_filep.c,
+	  regress/add_from_filep.test: new   testcase.
+
+2005-07-16 19:14  wiz
+
+	* ChangeLog: Add entries for regress/ changes.
+
+2005-07-16 19:14  wiz
+
+	* regress/: Makefile.am, fread.c, fread.test, name_locate.c,
+	  name_locate.test, open.c, open.test: Convert remaining tests to
+	  new framework.
+
+2005-07-16 19:12  wiz
+
+	* regress/runtest: Fix typo in comment. Do not require args
+	  argument.
+
+2005-07-15 18:54  wiz
+
+	* regress/: add_from_buffer.test, add_from_file.test: Add tests,
+	  forgotten in previous.
+
+2005-07-15 18:53  wiz
+
+	* ChangeLog, TODO, regress/Makefile.am, regress/add_from_buffer.c,
+	  regress/add_from_file.c, regress/buffadd.c, regress/runtest,
+	  regress/testbuffer.zip, regress/testfile.txt,
+	  regress/testfile.zip: Add runtest from ckmame, and modify it for
+	  libzip's purposes.  Convert buffadd.c to add_from_buffer.c and
+	  make it use runtest.	Add another test, add_from_file.c.
+
+2005-07-15 18:37  wiz
+
+	* man/zip_source_file.man: regen (typo fix).
+
+2005-07-15 16:11  wiz
+
+	* man/zip_source_file.mdoc: Fix typo.
+
+2005-07-14 23:21  wiz
+
+	* TODO: + API for extracting and setting extra fields
+
+2005-07-14 18:56  wiz
+
+	* ChangeLog, compile, depcomp, install-sh, missing, mkinstalldirs:
+	  Update compile, depcomp, install-sh, missing, and mkinstalldirs
+	  from automake-1.9.6.
+
+2005-07-14 18:35  wiz
+
+	* ChangeLog: Remove unsigned in lib/zip_fread.c.
+
+2005-07-14 18:31  wiz
+
+	* ChangeLog: Mention version bump.
+
+2005-07-14 18:20  wiz
+
+	* lib/zip_fread.c: Remove an unsigned, the variable can be set to
+	  -1. Found by Irix cc.
+
+2005-07-14 18:13  wiz
+
+	* configure.ac: Bump version to 0.6.1.
+
+2005-07-14 18:13  wiz
+
+	* NEWS: Make it today.
+
+2005-07-14 18:12  dillo
+
+	* THANKS: mention Heiko Hund
+
+2005-07-14 18:08  wiz
+
+	* NEWS: Update for 0.6.1 (date not yet filled in).
+
+2005-07-14 16:25  wiz
+
+	* ChangeLog: Mention where previous comes from.
+
+2005-07-14 16:08  dillo
+
+	* ChangeLog, lib/zip.h: make usable from C++
+
+2005-07-05 01:29  wiz
+
+	* ChangeLog:	* libzip.pc.in (zipcmp): Fix path to zipcmp.
+
+2005-07-05 00:44  wiz
+
+	* libzip.pc.in: Fix path to zipcmp.
+
+2005-07-03 01:55  wiz
+
+	* ltmain.sh: regen (+dfbsd support).
+
+2005-06-18 02:58  wiz
+
+	* ChangeLog: Mention -Wsign-compare warning fixes.
+
+2005-06-18 02:54  wiz
+
+	* ChangeLog: Mention man page symlink handling improvement.
+
+2005-06-18 02:54  wiz
+
+	* lib/zip_close.c, lib/zip_dirent.c, lib/zip_fread.c, lib/zipint.h,
+	  src/zipcmp.c: Add a few unsigned and casts for less warnings with
+	  -Wsign-compare.
+
+2005-06-18 02:49  wiz
+
+	* configure.ac, man/Makefile.am: Smarter man page handling -- no
+	  symlinks created by configure any longer.  While here, remove
+	  some cruft from configure.ac.
+
+2005-06-17 15:04  dillo
+
+	* ChangeLog, libzip.pc.in: return full path to zipcmp
+
+2005-06-17 14:59  wiz
+
+	* man/: libzip.man, zip_add.man, zip_close.man, zip_delete.man,
+	  zip_error_get.man, zip_error_get_sys_type.man,
+	  zip_error_to_str.man, zip_fclose.man, zip_file_strerror.man,
+	  zip_fopen.man, zip_fread.man, zip_get_name.man,
+	  zip_get_num_files.man, zip_name_locate.man, zip_open.man,
+	  zip_rename.man, zip_source_buffer.man, zip_source_file.man,
+	  zip_source_filep.man, zip_source_free.man,
+	  zip_source_function.man, zip_source_zip.man, zip_stat.man,
+	  zip_unchange.man, zip_unchange_all.man, zipcmp.man, zipcmp.mdoc,
+	  zipmerge.man: Add AUTHORS section.
+
+2005-06-12 18:10  wiz
+
+	* README: Mention that we need zlib.
+
+2005-06-12 18:07  wiz
+
+	* THANKS: Add infozip thank you.
+
+2005-06-09 23:33  wiz
+
+	* man/Makefile.am: Add workaround for broken .An in mdoc2html.
+
+2005-06-09 23:14  wiz
+
+	* man/: libzip.mdoc, zip_add.mdoc, zip_close.mdoc, zip_delete.mdoc,
+	  zip_error_get.mdoc, zip_error_get_sys_type.mdoc,
+	  zip_error_to_str.mdoc, zip_errors.mdoc, zip_fclose.mdoc,
+	  zip_file_strerror.mdoc, zip_fopen.mdoc, zip_fread.mdoc,
+	  zip_get_name.mdoc, zip_get_num_files.mdoc, zip_name_locate.mdoc,
+	  zip_open.mdoc, zip_rename.mdoc, zip_source_buffer.mdoc,
+	  zip_source_file.mdoc, zip_source_filep.mdoc,
+	  zip_source_free.mdoc, zip_source_function.mdoc,
+	  zip_source_zip.mdoc, zip_stat.mdoc, zip_unchange.mdoc,
+	  zip_unchange_all.mdoc, zipmerge.mdoc: Add "and"
+
+2005-06-09 23:13  wiz
+
+	* man/: libzip.mdoc, zip_add.mdoc, zip_close.mdoc, zip_delete.mdoc,
+	  zip_error_get.mdoc, zip_error_get_sys_type.mdoc,
+	  zip_error_to_str.mdoc, zip_errors.mdoc, zip_fclose.mdoc,
+	  zip_file_strerror.mdoc, zip_fopen.mdoc, zip_fread.mdoc,
+	  zip_get_name.mdoc, zip_get_num_files.mdoc, zip_name_locate.mdoc,
+	  zip_open.mdoc, zip_rename.mdoc, zip_source_buffer.mdoc,
+	  zip_source_file.mdoc, zip_source_filep.mdoc,
+	  zip_source_free.mdoc, zip_source_function.mdoc,
+	  zip_source_zip.mdoc, zip_stat.mdoc, zip_unchange.mdoc,
+	  zip_unchange_all.mdoc, zipcmp.mdoc, zipmerge.mdoc: Add AUTHORS
+	  section.
+
+2005-06-09 22:56  wiz
+
+	* man/Makefile.am: Add mkhtml target creating html versions of the
+	  mdoc man pages via mdoc2html.
+
+2005-06-09 22:41  wiz
+
+	* man/zip_unchange_all.man: regen.
+
+2005-06-09 22:41  wiz
+
+	* man/zip_unchange_all.mdoc: Remove superfluous .El.
+
+2005-06-09 22:37  dillo
+
+	* README: improve description and spacing
+
+2005-06-09 22:25  wiz
+
+	* ChangeLog, regress/buffadd.c: Check length of string read from
+	  zip file before comparing with original string, since we do not
+	  NUL-terminate it in the ZIP file.
+
+2005-06-09 22:10  dillo
+
+	* TODO: remove another one
+
+2005-06-09 22:09  wiz
+
+	* README: Remove "beta".
+
+2005-06-09 22:08  wiz
+
+	* ChangeLog: * ltmain.sh: update from libtool-1.5.18.
+
+2005-06-09 22:07  dillo
+
+	* NEWS: add release date
+
+2005-06-09 22:07  dillo
+
+	* ChangeLog, configure.ac: bump version to 0.6
+
+2005-06-09 22:06  wiz
+
+	* ltmain.sh: Update from libtool-1.5.18.
+
+2005-06-09 22:06  wiz
+
+	* configure.ac: Libtoolize claims AC_PROG_RANLIB is obsolete --
+	  remove it.
+
+2005-06-09 22:04  dillo
+
+	* regress/buffadd.c: add 2005 to copyright
+
+2005-06-09 22:04  dillo
+
+	* NEWS: update
+
+2005-06-09 21:57  dillo
+
+	* lib/zip.h, lib/zip_close.c, lib/zip_delete.c, lib/zip_dirent.c,
+	  lib/zip_error.c, lib/zip_fclose.c, lib/zip_fopen.c,
+	  lib/zip_fread.c, lib/zip_free.c, lib/zip_name_locate.c,
+	  lib/zip_new.c, lib/zip_open.c, lib/zip_source_buffer.c,
+	  lib/zip_source_filep.c, lib/zip_source_zip.c, lib/zipint.h,
+	  src/zipcmp.c, src/zipmerge.c: Add 2005 to copyright
+
+2005-06-09 21:52  wiz
+
+	* man/: zip_add.man, zip_close.man, zip_delete.man,
+	  zip_error_get.man, zip_error_get_sys_type.man,
+	  zip_error_to_str.man, zip_fclose.man, zip_file_strerror.man,
+	  zip_fopen.man, zip_fread.man, zip_get_num_files.man,
+	  zip_name_locate.man, zip_open.man, zip_rename.man,
+	  zip_source_buffer.man, zip_source_file.man, zip_source_filep.man,
+	  zip_source_free.man, zip_source_function.man, zip_source_zip.man,
+	  zip_stat.man, zip_unchange.man, zip_unchange_all.man, zipcmp.man,
+	  zipmerge.man: regen.
+
+2005-06-09 21:51  wiz
+
+	* man/: zip_add.mdoc, zip_close.mdoc, zip_delete.mdoc,
+	  zip_error_get.mdoc, zip_error_get_sys_type.mdoc,
+	  zip_error_to_str.mdoc, zip_fclose.mdoc, zip_file_strerror.mdoc,
+	  zip_fopen.mdoc, zip_fread.mdoc, zip_get_num_files.mdoc,
+	  zip_name_locate.mdoc, zip_open.mdoc, zip_rename.mdoc,
+	  zip_source_buffer.mdoc, zip_source_file.mdoc,
+	  zip_source_filep.mdoc, zip_source_free.mdoc,
+	  zip_source_function.mdoc, zip_source_zip.mdoc, zip_stat.mdoc,
+	  zip_unchange.mdoc, zip_unchange_all.mdoc, zipcmp.mdoc,
+	  zipmerge.mdoc: Update copyright.
+
+2005-06-09 21:49  wiz
+
+	* ChangeLog: * compile, depcomp, install-sh, missing,
+	  mkinstalldirs: Update from automake-1.9.5.
+
+2005-06-09 21:48  wiz
+
+	* compile, depcomp, install-sh, missing, mkinstalldirs: Update from
+	  automake-1.9.5.
+
+2005-06-09 21:45  dillo
+
+	* ChangeLog, TODO: mention no-meta merge.  last showstopper done
+
+2005-06-09 21:33  dillo
+
+	* TODO: update. only one showstopper left
+
+2005-06-09 21:31  wiz
+
+	* TODO: man is XXX-free!
+
+2005-06-09 21:30  wiz
+
+	* man/zip_stat.mdoc: Fix typo.
+
+2005-06-09 21:29  dillo
+
+	* man/zip_close.mdoc: document ZIP_ER_INTERNAL
+
+2005-06-09 21:29  wiz
+
+	* man/zip_unchange_all.mdoc: zip_unchange_all does not use callback
+	  functions, remove wrong XXX comment.
+
+2005-06-09 21:28  wiz
+
+	* man/zip_unchange.mdoc: zip_unchange does not use callback
+	  functions, remove wrong XXX comment.
+
+2005-06-09 21:27  wiz
+
+	* lib/zip_delete.c: When unchanging a file before deleting it,
+	  allow duplicate file names (because the file will be removed
+	  anyway).
+
+2005-06-09 21:23  dillo
+
+	* man/zip_stat.mdoc: improve description of ZIP_ER_CHANGED
+
+2005-06-09 21:23  wiz
+
+	* man/zip_delete.mdoc: zip_delete does not use callback functions,
+	  remove wrong XXX comment.
+
+2005-06-09 21:20  wiz
+
+	* man/: zip_fclose.mdoc, zip_fread.mdoc: dillo says code has been
+	  checked, so remove XXX.
+
+2005-06-09 21:19  wiz
+
+	* man/zip_stat.mdoc: Document ZIP_ER_CHANGED and fix a typo.
+
+2005-06-09 21:11  dillo
+
+	* ChangeLog, TODO: remove remaining XXX from lib
+
+2005-06-09 21:11  wiz
+
+	* man/zip_close.mdoc: Document remaining error return codes.
+
+2005-06-09 21:11  dillo
+
+	* lib/zip_close.c: (ch_set_error): use ZIP_SOURCE_ERROR to get
+	  error code from source callback.
+
+2005-06-09 21:11  dillo
+
+	* lib/zip_source_zip.c: If reading uncompressed, set crc in stat
+	  buffer to 0.
+
+2005-06-09 21:01  wiz
+
+	* man/: libzip.man, zip_add.man, zip_close.man, zip_delete.man,
+	  zip_error_get.man, zip_error_get_sys_type.man,
+	  zip_error_to_str.man, zip_fclose.man, zip_file_strerror.man,
+	  zip_fopen.man, zip_fread.man, zip_get_name.man,
+	  zip_get_num_files.man, zip_name_locate.man, zip_open.man,
+	  zip_rename.man, zip_source_buffer.man, zip_source_file.man,
+	  zip_source_filep.man, zip_source_free.man,
+	  zip_source_function.man, zip_source_zip.man, zip_stat.man,
+	  zip_unchange.man, zip_unchange_all.man, zipcmp.man, zipmerge.man:
+	  regen.
+
+2005-06-09 20:58  wiz
+
+	* man/Makefile.am: Add zip_errors(3).
+
+2005-06-09 20:57  wiz
+
+	* configure.ac: Add zip_errors.
+
+2005-06-09 20:56  wiz
+
+	* man/zip_source_function.mdoc: Link zip_errors(3).
+
+2005-06-09 20:54  wiz
+
+	* man/: zip_fopen.mdoc, zip_source_function.mdoc: New sentence, new
+	  line.
+
+2005-06-09 20:53  wiz
+
+	* man/zip_fread.mdoc: Update argument type.
+
+2005-06-09 20:51  wiz
+
+	* man/zip_open.mdoc: Remove outdated comment.
+
+2005-06-09 20:50  wiz
+
+	* man/: zip_close.mdoc, zip_delete.mdoc, zip_error_get.mdoc,
+	  zip_error_get_sys_type.mdoc, zip_error_to_str.mdoc,
+	  zip_fclose.mdoc, zip_file_strerror.mdoc, zip_fopen.mdoc,
+	  zip_fread.mdoc, zip_get_name.mdoc, zip_get_num_files.mdoc,
+	  zip_name_locate.mdoc, zip_open.mdoc, zip_rename.mdoc,
+	  zip_source_buffer.mdoc, zip_source_file.mdoc,
+	  zip_source_filep.mdoc, zip_source_free.mdoc,
+	  zip_source_function.mdoc, zip_source_zip.mdoc, zip_stat.mdoc,
+	  zip_unchange.mdoc, zip_unchange_all.mdoc, zipmerge.mdoc: Add .Xr
+	  to libzip(3).
+
+2005-06-09 20:50  wiz
+
+	* man/zipcmp.mdoc: Add Xr to libzip(3) and zipmerge(1).
+
+2005-06-09 20:49  wiz
+
+	* man/zip_add.mdoc: < -> \*[Lt], add Xr to libzip.
+
+2005-06-09 20:49  dillo
+
+	* ChangeLog, regress/Makefile.am, regress/fread.c,
+	  regress/mkname.c, regress/mkname.h, regress/name_locate.c,
+	  regress/open.c: fix regression tests for $srcdir != "."
+
+2005-06-09 20:49  dillo
 
 	* man/Makefile.am: fix DESTDIR support and uninstall.
-	
-2005-01-20  Dieter Baron  <dillo@danbala.tuwien.ac.at>
 
-	* lib/zip_get_name.c (_zip_get_name): return ZIP_ER_DELETED for
-	deleted entries if ZIP_FL_UNCHANGED isn't set.
+2005-06-09 20:45  wiz
 
-2005-01-11  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+	* man/: zipcmp.mdoc, zipmerge.mdoc: Do not use XXX as width
+	  indicators, since it marks up stuff to review.
 
-	* lib/zip_name_locate.c (_zip_name_locate): fix ZIP_FL_NODIR;
-	also follow appnote.txt and only accept forward slashes as
-	directory separators.
+2005-06-09 20:45  wiz
 
-2005-01-11  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* man/libzip.mdoc: Add one-line description.
 
-	* lib/zip_fopen_index.c (zip_fopen_index), lib/zip_fread.c
-	(zip_fread), lib/zip_fclose.c (zip_fclose): fix CRC checking for
-	stored files.
-	
-	* lib/zip_new.c (_zip_new): init error.
+2005-06-09 20:44  wiz
 
-	* lib/zip_error.c (_zip_error_get): set system error to 0 for
-	ZIP_ET_NONE.
+	* TODO: Remove two.
 
-	* lib/zip_open.c (_zip_memdup): make static, use size_t for size
-	argument, add error argument for passing error code back to
-	caller.
-	* lib/zip_open.c (_zip_readcdir): error out if _zip_memdup
-	failes.
-	
-2004-12-28  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-06-09 19:25  wiz
 
-	* lib/zip_free.c (_zip_free): correctly set error of open
-	files to ZIP_ER_ZIPCLOSED.
+	* man/libzip.man: Add libzip.man.
 
-2004-12-22  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-06-09 19:24  wiz
 
-	* lib/zip.h: rename zip_read_func to zip_source_callback, struct
-	zip_cmd to struct zip_source_cmd, and ZIP_CMD_* to ZIP_SOURCE_*;
-	adapt users.
-	
-	* lib/zip_open.c (_zip_checkcons): always initialize variables
+	* configure.ac, man/Makefile.am: Add libzip.mdoc.
 
-2004-12-22  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+2005-06-09 19:24  wiz
 
-	* zip.h: Rename zip_error_sys_type to zip_error_get_sys_type.
-	Adapt callers and documentation.
+	* man/libzip.mdoc: Slight improvements.
 
-2004-11-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-06-09 19:23  wiz
 
-	* lib/zip_get_name.c (zip_get_name): add flags argument.
-	(_zip_get_name): new function.
-	* lib/zip_uncange.c (zip_unchange): return error if unchanging
-	name would result in duplicate name in archive.
-	
-	* lib/zip_name_locate.c (_zip_name_locate): new function.
-	(zip_name_locate): move actual name lookup to _zip_name_locate.
-	* lib/zip_set_name.c (_zip_set_name): don't allow duplicate names
-	in archive; return error if name is NULL.
-	* lib/zip_replace.c (_zip_replace): don't call _zip_set_name when
-	name is NULL.
-	* lib/zip_get_name.c (zip_get_name): fix when called with
-	partially initialized entry.
-	
-2004-11-30  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+	* README: Fill in README.
 
-	* zipint.h: Include zip.h; add zlib.h.
-	* zip.h: Remove zlib.h.
-	* src/zipcmp.c: Add zlib.h.
+2005-06-03 15:06  wiz
 
-	* zipint.h: Rename _zip_new_entry to _zip_entry_new;
-	rename _zip_free_entry to _zip_entry_free; adapt users.
+	* regress/Makefile.am: We need to distribute broken.zip too.
 
-2004-11-18  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+2005-06-03 14:55  wiz
 
-	* zip.h: Rename zip_source_data to zip_source_buffer.
-	Adapt users and documentation.
+	* src/zipmerge.c: Fix unsigned handling for IRIX cc.
 
-	* lib/zip_source_*: Verify user-supplied data.
+2005-06-03 14:33  wiz
 
-	* zip.h: Rename zip_get_error to zip_error_get;
-	rename zip_file_get_error to zip_file_error_get;
-	rename zip_error_str to zip_error_to_str;
-	replace various zip_add_* and zip_replace_* functions
-	with zip_source_*.  Adapt users.  Update docs.
+	* src/zipmerge.c: Replace %qu with %llu for IRIX.
 
-2004-11-17  Thomas Klausner <wiz@danbala.tuwien.ac.at>
+2005-06-03 14:29  wiz
 
-	* zip.h: Rename ZERR_* to ZIP_ER_*; rename ZIP_ET_ZIP to
-	ZIP_ET_ZLIB; remove ZIP_CH_ISCOMP from zip.h.  Adapt users.
+	* regress/name_locate.c: Remove unused variable, found by IRIX cc.
 
-2004-04-17  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-05-21 00:05  wiz
 
-	* lib/zip_replace_zip.c (_zip_replace_zip): set ZIP_CH_ISCOMP when
-	copying compressed data.
+	* lib/zip_source_filep.c: Fix function declaration. IRIX 6.5 cc.
 
-	* lib/zip_fclose.c (zip_fclose): don't compare crc when reading
-	compressed data.
-	* lib/zip_fread.c (zip_fread): don't compute crc when reading
-	compressed data.
+2005-05-21 00:01  wiz
 
-2004-04-16  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* man/: zip_add.man, zip_error_get.man, zip_error_get_sys_type.man,
+	  zip_error_to_str.man, zip_source_buffer.man, zip_source_file.man,
+	  zip_source_filep.man, zip_source_free.man,
+	  zip_source_function.man, zip_source_zip.man, zipmerge.man: add
+	  some more generated man pages
 
-	* lib/zip_name_locate.c (zip_name_locate): honour
-	ZIP_FL_UNCHANGED, handle `\' for ZIP_FL_NODIR.
+2005-05-21 00:00  wiz
 
-	* lib/zip_stat_index.c (zip_stat_index): return ZERR_INVAL if
-	ZIP_FL_UNCHANGED is specified and file was added.  Honour
-	ZIP_FL_UNCHANGED for name.  If file was changed and
-	ZIP_FL_UNCHANGED is not given, call ch_func with command
-	ZIP_CMD_STAT.
+	* man/: zip_get_name.man, zip_name_locate.man, zip_stat.man: regen.
 
-	* lib/zip_fopen_index.c (zip_fopen_index): return ZERR_INVAL if
-	ZIP_FL_UNCHANGED is specified and file was added.
-	
-2004-04-14  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-05-20 23:56  wiz
 
-        * TODO, lib/Makefile.am, lib/zip.h, lib/zip_add.c,
-          lib/zip_add_data.c, lib/zip_add_file.c, lib/zip_add_filep.c,
-          lib/zip_add_zip.c, lib/zip_close.c, lib/zip_delete.c,
-          lib/zip_dirent.c, lib/zip_error.c, lib/zip_error_str.c,
-          lib/zip_fclose.c, lib/zip_file_get_offset.c, lib/zip_fopen.c,
-          lib/zip_fopen_index.c, lib/zip_fread.c, lib/zip_free.c,
-          lib/zip_free_entry.c, lib/zip_free_meta.c, lib/zip_get_name.c,
-          lib/zip_merge_meta.c, lib/zip_name_locate.c, lib/zip_new.c,
-          lib/zip_new_entry.c, lib/zip_new_meta.c, lib/zip_open.c,
-          lib/zip_rename.c, lib/zip_replace.c, lib/zip_replace_data.c,
-          lib/zip_replace_file.c, lib/zip_replace_filep.c,
-          lib/zip_replace_zip.c, lib/zip_set_name.c, lib/zip_stat.c,
-          lib/zip_stat_index.c, lib/zip_unchange.c,
-          lib/zip_unchange_data.c, lib/zipint.h, man/zip_fopen.man,
-          man/zip_fopen.mdoc, man/zip_name_locate.man,
-          man/zip_name_locate.mdoc, man/zip_stat.man, man/zip_stat.mdoc,
-	  regress/buffadd.c, regress/open.c, src/zipcmp.c: Remove
-	  zip_meta structure.
+	* src/zipcmp.c: Add return(). Add cast. Found by IRIX 6.5 cc.
 
-2003-12-30  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-05-20 23:54  wiz
 
-	* src/zipcmp.c (compare_zip): use correct index.
+	* lib/: zip_close.c, zip_fopen_index.c, zip_fread.c: Add some
+	  Bytef* casts. Found by IRIX 6.5 cc.
 
-2003-10-06  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-05-20 23:54  wiz
 
-	* lib/zip_unchange_all.c (zip_unchange_all): remove check for za
-	!= NULL.
+	* lib/: zip_source_buffer.c, zip_source_filep.c: Fix function
+	  return type. Found by IRIX 6.5 cc.
 
-	* lib/zip_set_name.c (_zip_set_name): adapt to new error code
-	handling.  clean up error handling.
+2005-05-19 20:42  dillo
 
-2003-10-05  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* src/zipcmp.c: no pointer arithmetics on void pointers don't mix
+	  types in ?: both noted by IRIX cc
 
-	* lib/zip.h, lib/zipint.h: Don't expose struct zip, struct
-	zip_file.
-	* lib/zip_open.c (zip_open): new argument errp, use it to store
-	error code.
-	* lib/zip_error_str.c (zip_error_str): new function.
-	* lib/zip_error_sys_type.c (zip_error_sys_type): new function.
-	* lib/zip_get_num_files.c (zip_get_num_files): new function.
-	* src/zipcmp.c (compare_zip): adapt to new API.
+2005-05-19 20:17  dillo
 
-	* lib/zip.h, lib/zipint.h: Don't expose zip_err_str, rename to
-	_zip_err_str.  Adapt users.
-	
-	* lib/zip_error.c(_zip_error_get): new function.
-	* lib/zip_get_error.c (zip_get_error): new function.
-	* lib/zip_file_get_error.c (zip_file_get_error): new function.
-	
-	* lib/zip.h (struct zip_stat): new struct.
-	* lib/zip_stat.c (zip_stat): new function.
-	* lib/zip_stat_index.c (zip_stat_index) new function.
+	* lib/zip_source_buffer.c: no pointer arithmetic on void pointers.
+	  noted by IRIX cc
 
-	* lib/zip_error.c (_zip_error_set): new function.
-	* lib/zip_name_locate.c (zip_name_locate): set za->error if name
-	not found.
-	
-	* lib/zip.h: (struct zip_error): new struct.
-	* lib/zip.h: (struct zip, struct zip_file): add new member error.
-	* lib/zip.h, lib/zipint.h, lib/make_zip_err_str.sh: add
-	_zip_err_errno.
-	* lib/zip_error.c (_zip_error_fini, _zip_error_init): new
-	functions.
-	* lib/zip_error_strerror.c (_zip_error_strerror): new function.
-	* lib/zip_file_strerror.c (zip_file_strerror): new function.
-	* lib/zip_strerror.c (zip_strerror): new function.
+2005-05-18 23:19  wiz
 
-2003-10-04  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* lib/zip_open.c: Remove unused variable, found by Irix 6.5 cc.
 
-	* lib/zip.h, lib/make_zip_err_str.sh: make zip_err_str const.
+2005-04-15 19:58  wiz
 
-	* src/zipcmp.c (entry_cmp, main): add -i flag (compare names
-	ignoring case distinctions). 
+	* man/libzip.mdoc: Add intro page.
 
-2003-10-01  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+2005-01-20 22:14  dillo
 
-	* src/zipcmp.c (compare_zip): exit with 2 in case of error.
+	* man/zip_errors.mdoc: regen
 
-2003-01-30  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+2005-01-20 22:03  dillo
 
-	* configure.ac: bump to 0.5.
+	* man/make_zip_errors.sh: add 2005 to copyright notices
 
-	* libzip/tests/buffadd.c: include <string.h>.
-	* libzip/zip_replace_data.c: include <string.h>.
+2005-01-20 22:02  wiz
 
-2001-10-27  Dieter Baron  <dillo@danbala.tuwien.ac.at>
+	* TODO: name_locate done.
 
-	* libzip/zip_replace_zip.c (read_part): fix typo: pass correct
-	length to zip_read()
+2005-01-20 22:02  wiz
 
-2001-10-20  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+	* regress/name_locate.c: Add two tests.
 
-	* libzip/zip_open.c (_zip_readcdir): Work around some broken zip
-	files.
+2005-01-20 22:02  dillo
 
-2000-11-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+	* TODO: update, add functions missing regressions
 
-	* libzip/Makefile.am: install public header file
+2005-01-20 22:01  dillo
 
-2000-11-04  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+	* regress/fread.c: add tests for changed entries
 
-	* zip/Makefile.am, libzip/tests/Makefile.am: make libzip
-	shared by using libtool
-	* config.guess, config.sub, libtool.m4, ltconfig, ltmain.sh: new
-	files for above
+2005-01-20 22:00  dillo
 
-	* libzip/Makefile.am, zip.h: add zip_get_name
-	* libzip/zip_get_name.c: new file
+	* ChangeLog, lib/zip_get_name.c: (_zip_get_name): return
+	  ZIP_ER_DELETED for deleted entries if ZIP_FL_UNCHANGED isn't set.
 
-	* libzip/tests/ziptest.c (main): add some '\n'
+2005-01-20 22:00  dillo
 
-1999-10-05  Thomas Klausner  <wiz@danbala.tuwien.ac.at>
+	* lib/zip.h: add ZIP_ER_DELETED
 
-	* libzip/zip_close.c (zip_close): make zip_close work under DOS,
-	free zip structure for temp file
+2005-01-20 21:49  wiz
+
+	* man/zip_get_name.mdoc: Document ZIP_ER_DELETED.
+
+2005-01-17 11:45  dillo
+
+	* TODO, regress/fread.c: add a few fopen/fread regression tests,
+	  note a few missing
+
+2005-01-17 11:45  dillo
+
+	* ChangeLog, lib/zip_fopen_index.c: check CRC when reading stored
+	  files without decompressing
+
+2005-01-11 22:22  wiz
+
+	* man/: zip_close.man, zip_delete.man, zip_fclose.man,
+	  zip_file_strerror.man, zip_fopen.man, zip_get_name.man,
+	  zip_open.man, zip_rename.man, zip_unchange.man,
+	  zip_unchange_all.man: regen, because it happened.
+
+2005-01-11 22:18  dillo
+
+	* regress/: Makefile.am, broken.zip, fread.c: add
+	  zip_fopen/zip_fread/zip_fclose regression test
+
+2005-01-11 21:24  wiz
+
+	* regress/broken.zip: Various engineered zipfile errors: . replaced
+	  random characters in zlib stream . CRC modified for deflated file
+	  . CRC modified for stored file
+
+2005-01-11 20:52  wiz
+
+	* lib/: zip_fclose.c, zip_fopen_index.c, zip_fread.c, zipint.h: Add
+	  two flags: ZIP_ZF_CRC and ZIP_ZF_DECOMP to note if we want to
+	  check the CRC of a file and if a file should get decompressed.
+	  Adapt code. Removes some XXX.  From dillo.
+
+2005-01-11 20:01  dillo
+
+	* lib/: zip_close.c, zip_open.c: fix XXX comment
+
+2005-01-11 20:00  wiz
+
+	* lib/zip_dirent.c: Write more obvious code to remove some XXX.
+
+2005-01-11 19:53  wiz
+
+	* regress/: Makefile.am, name_locate.c, open.c, test.zip: Add
+	  name_locate regression test, and adapt open.c for test.zip
+	  change.
+
+2005-01-11 19:52  wiz
+
+	* ChangeLog, lib/zip_name_locate.c: * lib/zip_name_locate.c
+	  (_zip_name_locate): fix ZIP_FL_NODIR; also follow appnote.txt and
+	  only accept forward slashes as directory separators.
+
+2005-01-11 19:38  dillo
+
+	* ChangeLog, lib/zip_new.c: * lib/zip_new.c (_zip_new): init error.
+
+2005-01-11 19:38  wiz
+
+	* compile, config.guess, config.sub, depcomp, install-sh, missing,
+	  mkinstalldirs: Update from automake-1.9.4.
+
+2005-01-11 19:38  wiz
+
+	* lib/zip_fopen.c, lib/zipint.h, libzip.pc.in, man/zip_fopen.mdoc:
+	  Fix tpyo.
+
+2005-01-11 19:30  dillo
+
+	* ChangeLog, lib/zip_error.c: * lib/zip_error.c (_zip_error_get):
+	  set system error to 0 for ZIP_ET_NONE.
+
+2005-01-11 19:29  dillo
+
+	* lib/zip_source_zip.c: remove XXX comment that no longer applies
+
+2005-01-11 19:11  dillo
+
+	* lib/zip_open.c, ChangeLog: * lib/zip_open.c (_zip_memdup): make
+	  static, use size_t for size	argument, add error argument for
+	  passing error code back to caller.  * lib/zip_open.c
+	  (_zip_readcdir): error out if _zip_memdup failes.
+
+2005-01-11 19:00  dillo
+
+	* lib/zipint.h: _zip_memdup is used only in zip_open, move
+	  prototype there.
+
+2005-01-11 18:45  wiz
+
+	* regress/buffadd.c: zip archive, not zipfile; and add test case
+	  for reading from closed archives.
+
+2005-01-11 18:40  dillo
+
+	* lib/zip_free.c: don't allow any reads from zip_file's from closed
+	  archive
+
+2005-01-11 18:26  wiz
+
+	* regress/TODO: Not_good_enough
+
+2004-12-28 19:41  dillo
+
+	* ChangeLog, lib/zip_free.c: (_zip_free): correctly set error of
+	  open files to ZIP_ER_ZIPCLOSED.
+
+2004-12-26 15:21  dillo
+
+	* man/zip_errors.mdoc: regen (now includes ` in comment)
+
+2004-12-26 15:21  dillo
+
+	* man/make_zip_errors.sh: quote ` in comment
+
+2004-12-26 03:00  wiz
+
+	* regress/TODO: Copy of zip.h, with functions/defines removed that
+	  are already used in the two enabled regression tests.
+
+2004-12-26 02:47  wiz
+
+	* TODO: One of the "others" is already fixed, remove it.
+
+2004-12-22 19:43  wiz
+
+	* lib/zip_dirent.c: Fix three XXX.
+
+2004-12-22 19:33  wiz
+
+	* lib/zip_close.c: Fix an XXX.
+
+2004-12-22 19:12  wiz
+
+	* TODO, src/zipcmp.c: Get rid of two warnings.
+
+2004-12-22 18:34  wiz
+
+	* src/: zipcmp.c, zipmerge.c: Sort options.
+
+2004-12-22 18:32  dillo
+
+	* lib/Makefile.am: explicitly invoke sh, don't rely on execute
+	  permissions
+
+2004-12-22 18:31  dillo
+
+	* TODO: update
+
+2004-12-22 18:31  dillo
+
+	* src/: zipcmp.c, zipmerge.c: add program name to help and version
+	  output
+
+2004-12-22 18:31  wiz
+
+	* TODO: zipmerge(1) is written.
+
+2004-12-22 18:27  wiz
+
+	* configure.ac, man/Makefile.am, man/zipmerge.mdoc: Document
+	  zipmerge(1).
+
+2004-12-22 18:04  dillo
+
+	* man/zip_errors.mdoc: create with full contents
+
+2004-12-22 18:03  dillo
+
+	* man/Makefile.am: add update-errors target to recreate
+	  zip_errors.mdoc from zip.h
+
+2004-12-22 18:01  dillo
+
+	* man/make_zip_errors.sh: script to create zip_errors.mdoc from
+	  zip.h
+
+2004-12-22 17:56  wiz
+
+	* man/Makefile.am: Add more links.
+
+2004-12-22 17:50  wiz
+
+	* TODO, configure.ac, man/Makefile.am, man/zip_file_strerror.mdoc,
+	  man/zip_strerror.man, man/zip_strerror.mdoc: Merge
+	  zip_strerror(3) and zip_file_strerror(3) into the latter.
+
+2004-12-22 17:38  wiz
+
+	* TODO: Adapt one, remove one.
+
+2004-12-22 17:37  wiz
+
+	* man/: zip_error_to_str.mdoc, zip_fopen.mdoc,
+	  zip_source_file.mdoc: Drop trailing whitespace.
+
+2004-12-22 17:37  wiz
+
+	* man/zip_close.mdoc: Do not mention errno; xref error functions.
+
+2004-12-22 17:31  dillo
+
+	* ChangeLog, TODO, lib/zip.h, lib/zip_close.c,
+	  lib/zip_source_buffer.c, lib/zip_source_filep.c,
+	  lib/zip_source_free.c, lib/zip_source_function.c,
+	  lib/zip_source_zip.c, lib/zip_stat_index.c,
+	  lib/zip_unchange_data.c, lib/zipint.h: rename zip_source function
+	  and commands
+
+2004-12-22 17:21  wiz
+
+	* man/zip_source_function.mdoc: zip_cmd -> zip_source_cmd.
+
+2004-12-22 17:20  wiz
+
+	* man/zip_errors.mdoc: Add template man page for zip errors.
+
+2004-12-22 17:19  wiz
+
+	* man/zip_source_function.mdoc: Adapt for another API change.
+
+2004-12-22 16:50  dillo
+
+	* TODO: remove two
+
+2004-12-22 16:49  wiz
+
+	* ChangeLog, configure.ac, lib/Makefile.am, lib/zip.h,
+	  lib/zip_error_get_sys_type.c, lib/zip_error_sys_type.c,
+	  lib/zip_open.c, man/Makefile.am, man/zip_error_get.mdoc,
+	  man/zip_error_get_sys_type.mdoc, man/zip_error_sys_type.mdoc,
+	  man/zip_error_to_str.mdoc: Rename zip_error_sys_type to
+	  zip_error_get_sys_type.  Adapt callers and documentation.
+
+2004-12-22 16:48  dillo
+
+	* lib/zip_open.c, ChangeLog: (_zip_checkcons) always initialize
+	  variables
+
+2004-12-22 16:35  dillo
+
+	* man/zip_source_function.mdoc: input data, not input file
+
+2004-12-15 20:41  wiz
+
+	* TODO: Add one.
+
+2004-12-15 20:02  wiz
+
+	* man/zip_source_function.mdoc: Fix two typos.
+
+2004-12-10 07:13  dillo
+
+	* man/zip_source_function.mdoc: document commands more fully
+	  improve and fleshen out
+
+2004-12-03 16:23  dillo
+
+	* TODO: update
+
+2004-12-03 16:23  dillo
+
+	* man/: zip_error_get.mdoc, zip_error_sys_type.mdoc,
+	  zip_error_to_str.mdoc: improve
+
+2004-12-01 01:30  wiz
+
+	* man/zip_close.mdoc: Document a bit more, and note which function
+	  effects are missing.
+
+2004-12-01 01:20  wiz
+
+	* TODO: Code updated for api changes.
+
+2004-12-01 01:16  wiz
+
+	* TODO: All functions should now be documented.
+
+2004-12-01 01:16  wiz
+
+	* configure.ac, man/Makefile.am, man/zip_error_sys_type.mdoc:
+	  Document zip_error_sys_type.
+
+2004-12-01 01:15  wiz
+
+	* man/zip_error_get.mdoc: Fix comment.
+
+2004-12-01 01:07  wiz
+
+	* TODO, configure.ac, man/Makefile.am, man/zip_error_get.mdoc:
+	  Document zip_error_get and zip_file_error_get.
+
+2004-12-01 00:10  wiz
+
+	* TODO: Update.
+
+2004-12-01 00:08  wiz
+
+	* man/zip_unchange.mdoc: Document ZIP_ER_EXISTS.
+
+2004-12-01 00:05  wiz
+
+	* man/zip_get_name.mdoc: Document flags argument.
+
+2004-12-01 00:02  wiz
+
+	* ChangeLog, lib/zip.h, lib/zip_get_name.c, lib/zip_name_locate.c,
+	  lib/zip_set_name.c, lib/zip_stat_index.c, lib/zip_unchange.c,
+	  lib/zip_unchange_all.c, lib/zip_unchange_data.c, lib/zipint.h,
+	  src/zipmerge.c:	  * lib/zip_get_name.c (zip_get_name): add
+	  flags argument.
+		  (_zip_get_name): new function.
+		  * lib/zip_uncange.c (zip_unchange): return error if
+	  unchanging
+		  name would result in duplicate name in archive.
+
+2004-11-30 23:26  wiz
+
+	* man/: zip_close.mdoc, zip_delete.mdoc, zip_fclose.mdoc,
+	  zip_get_name.mdoc, zip_rename.mdoc, zip_unchange.mdoc,
+	  zip_unchange_all.mdoc: Adapt to removal of global variable
+	  zip_err.
+
+2004-11-30 23:21  wiz
+
+	* man/: zip_add.mdoc, zip_rename.mdoc: Document ZIP_ER_EXISTS.
+
+2004-11-30 23:19  wiz
+
+	* ChangeLog, TODO, lib/zip_get_name.c, lib/zip_name_locate.c,
+	  lib/zip_rename.c, lib/zip_replace.c, lib/zip_set_name.c,
+	  lib/zipint.h: don't allow duplicate names in archive
+
+2004-11-30 22:53  wiz
+
+	* ChangeLog: Update.
+
+2004-11-30 22:51  wiz
+
+	* lib/zip.h, src/zipcmp.c, lib/zipint.h: Include zip.h in zipint.h;
+	  remove zlib.h from zip.h; add zlib.h where necessary.
+
+2004-11-30 22:43  wiz
+
+	* ChangeLog: Document function renames in zipint.h.
+
+2004-11-30 22:42  wiz
+
+	* lib/: Makefile.am, zip_entry_new.c, zip_new_entry.c, zip_open.c,
+	  zip_replace.c, zipint.h: Rename _zip_new_entry to _zip_entry_new.
+
+2004-11-30 22:37  wiz
+
+	* lib/: Makefile.am, zip_entry_free.c, zip_free.c,
+	  zip_free_entry.c, zipint.h: Rename _zip_free_entry to
+	  _zip_entry_free.
+
+2004-11-24 17:15  wiz
+
+	* man/Makefile.am, man/zip_error_str.man, man/zip_error_str.mdoc,
+	  man/zip_error_to_str.mdoc, man/zip_open.mdoc, configure.ac:
+	  zip_error_str has been renamed to zip_error_to_str.
+
+2004-11-24 17:15  wiz
+
+	* man/zip_strerror.mdoc: Improve short description.
+
+2004-11-24 12:55  wiz
+
+	* src/zipmerge.c: Prefer unsigned char as tolower() argument.
+
+2004-11-18 18:30  wiz
+
+	* TODO: Add two.
+
+2004-11-18 18:26  wiz
+
+	* ChangeLog, configure.ac, lib/Makefile.am, lib/zip.h,
+	  lib/zip_source_buffer.c, lib/zip_source_data.c, man/Makefile.am,
+	  man/zip_add.mdoc, man/zip_source_buffer.mdoc,
+	  man/zip_source_data.mdoc, man/zip_source_file.mdoc,
+	  man/zip_source_filep.mdoc, man/zip_source_free.mdoc,
+	  man/zip_source_function.mdoc, man/zip_source_zip.mdoc,
+	  regress/buffadd.c:	     * zip.h: Rename zip_source_data to
+	  zip_source_buffer.
+		  Adapt users and documentation.
+
+2004-11-18 18:11  wiz
+
+	* TODO, lib/zip_delete.c, lib/zip_fclose.c, lib/zip_fopen_index.c,
+	  lib/zip_fread.c, lib/zip_free.c, lib/zip_get_name.c,
+	  lib/zip_new_entry.c, lib/zip_rename.c, lib/zip_set_name.c,
+	  lib/zip_unchange.c, lib/zipint.h, regress/add_invalid.c,
+	  regress/buffadd.c, regress/deltest.c, regress/fileadd.c,
+	  regress/ziptest.c, src/zipcmp.c, src/zipmerge.c: Try to be
+	  consistent in calling struct zips za and struct zip_files zf.
+
+2004-11-18 17:49  wiz
+
+	* man/zip_source_free.mdoc: Add another man page.
+
+2004-11-18 17:48  wiz
+
+	* TODO, man/zip_source_file.mdoc, man/zip_source_filep.mdoc,
+	  man/zip_source_function.mdoc, man/zip_source_zip.mdoc: Add some
+	  man pages.
+
+2004-11-18 17:28  wiz
+
+	* ChangeLog, lib/zip_source_data.c, lib/zip_source_file.c,
+	  lib/zip_source_filep.c, lib/zip_source_function.c,
+	  lib/zip_source_zip.c:  * lib/zip_source_*: Verify user-supplied
+	  data.
+
+2004-11-18 16:10  wiz
+
+	* man/zip_source_data.mdoc:	    * zip.h: Rename zip_get_error
+	  to zip_error_get;
+		  rename zip_file_get_error to zip_file_error_get;
+		  rename zip_error_str to zip_error_to_str;
+		  replace various zip_add_* and zip_replace_* functions
+		  with zip_source_*.  Adapt users.  Update docs.
+
+2004-11-18 16:04  wiz
+
+	* ChangeLog, TODO, configure.ac, lib/Makefile.am, lib/zip.h,
+	  lib/zip_add.c, lib/zip_close.c, lib/zip_file_get_error.c,
+	  lib/zip_free.c, lib/zip_free_entry.c, lib/zip_get_error.c,
+	  lib/zip_name_locate.c, lib/zip_new_entry.c, lib/zip_replace.c,
+	  lib/zip_stat_index.c, lib/zip_unchange.c,
+	  lib/zip_unchange_data.c, lib/zipint.h, man/Makefile.am,
+	  man/zip_add.mdoc, man/zip_error_str.man, man/zip_get_name.man,
+	  man/zip_get_num_files.man, regress/buffadd.c, src/zipcmp.c,
+	  src/zipmerge.c, lib/zip_add_data.c, lib/zip_add_file.c,
+	  lib/zip_add_filep.c, lib/zip_add_zip.c, lib/zip_error_get.c,
+	  lib/zip_error_str.c, lib/zip_error_to_str.c,
+	  lib/zip_file_error_get.c, lib/zip_replace_data.c,
+	  lib/zip_replace_file.c, lib/zip_replace_filep.c,
+	  lib/zip_replace_zip.c, lib/zip_source_data.c,
+	  lib/zip_source_file.c, lib/zip_source_filep.c,
+	  lib/zip_source_free.c, lib/zip_source_function.c,
+	  lib/zip_source_zip.c: 	* zip.h: Rename zip_get_error to
+	  zip_error_get;
+		  rename zip_file_get_error to zip_file_error_get;
+		  rename zip_error_str to zip_error_to_str;
+		  replace various zip_add_* and zip_replace_* functions
+		  with zip_source_*.  Adapt users.  Update docs.
+
+2004-11-17 23:26  wiz
+
+	* man/zip_error_str.mdoc: Improve description.
+
+2004-11-17 22:59  wiz
+
+	* lib/zip.h: Add comment for compression type 7.
+
+2004-11-17 22:57  wiz
+
+	* ChangeLog: * zip.h: Rename ZERR_* to ZIP_ER_*; rename ZIP_ET_ZIP
+	  to ZIP_ET_ZLIB; remove ZIP_CH_ISCOMP from zip.h.  Adapt users.
+
+2004-11-17 22:55  wiz
+
+	* TODO, lib/make_zip_err_str.sh, lib/zip.h, lib/zip_add.c,
+	  lib/zip_add_data.c, lib/zip_add_file.c, lib/zip_add_filep.c,
+	  lib/zip_add_zip.c, lib/zip_close.c, lib/zip_delete.c,
+	  lib/zip_dirent.c, lib/zip_error_str.c, lib/zip_error_strerror.c,
+	  lib/zip_file_get_offset.c, lib/zip_fopen_index.c,
+	  lib/zip_fread.c, lib/zip_free.c, lib/zip_get_name.c,
+	  lib/zip_name_locate.c, lib/zip_new.c, lib/zip_new_entry.c,
+	  lib/zip_open.c, lib/zip_rename.c, lib/zip_replace.c,
+	  lib/zip_replace_data.c, lib/zip_replace_file.c,
+	  lib/zip_replace_filep.c, lib/zip_replace_zip.c,
+	  lib/zip_set_name.c, lib/zip_stat_index.c, lib/zip_unchange.c,
+	  lib/zipint.h, man/zip_add.mdoc, man/zip_close.man,
+	  man/zip_close.mdoc, man/zip_delete.man, man/zip_delete.mdoc,
+	  man/zip_fopen.man, man/zip_fopen.mdoc, man/zip_get_name.man,
+	  man/zip_get_name.mdoc, man/zip_open.man, man/zip_open.mdoc,
+	  man/zip_rename.man, man/zip_rename.mdoc, man/zip_stat.man,
+	  man/zip_stat.mdoc, man/zip_unchange.man, man/zip_unchange.mdoc,
+	  regress/open.c: Rename ZERR_* to ZIP_ER_*; rename ZIP_ET_ZIP to
+	  ZIP_ET_ZLIB; remove ZIP_CH_ISCOMP from zip.h.
+
+2004-08-17 22:14  wiz
+
+	* docs/appnote.txt: PKWARE appnotes from 04/26/2004.
+
+2004-07-04 22:45  wiz
+
+	* man/zip_add.mdoc: Add man page for the zip_add* functions.  XXX:
+	  needs more work, but describes the basics.
+
+2004-06-24 18:26  dillo
+
+	* TODO, lib/zip.h, lib/zip_add.c, lib/zip_replace.c,
+	  lib/zip_replace_data.c, lib/zip_replace_filep.c,
+	  lib/zip_replace_zip.c, lib/zipint.h: remove flags argument from
+	  zip_replace and zip_add
+
+2004-06-24 17:02  dillo
+
+	* TODO: one done
+
+2004-06-24 17:01  dillo
+
+	* TODO, lib/zip.h, lib/zip_close.c, lib/zip_free_entry.c,
+	  lib/zip_new_entry.c, lib/zip_replace.c, lib/zip_replace_data.c,
+	  lib/zip_replace_filep.c, lib/zip_replace_zip.c,
+	  lib/zip_unchange_data.c, lib/zipint.h: change functions API
+	  overhaul: - rename ZIP_CMD_INIT to ZIP_CMD_OPEN - ZIP_CMD_CLOSE
+	  is called when reading is done - add ZIP_CMD_FREE to free
+	  resources - ZIP_CMD_STAT is called to retrieve meta info (time
+	  stamp, compression	     method, sizes, crc) - add
+	  ZIP_CMD_ERROR to return error codes
+
+	  get rid of (now unused) zip_entry members ch_flags and ch_mtime
+
+2004-05-16 02:51  dillo
+
+	* src/zipmerge.c: improve overwrite confirmation prompt.  add
+	  option to (not) overwrite identical (by size and crc) files
+
+2004-05-16 02:50  dillo
+
+	* lib/zip_replace_zip.c: return -1 in case of error, not NULL.
+
+2004-05-16 02:50  dillo
+
+	* lib/zip_name_locate.c: ZIP_FL_NOCASE was inverted, fixed.
+
+2004-05-16 01:56  dillo
+
+	* src/: Makefile.am, zipmerge.c: add zipmerge(1) -- merge multiple
+	  zip archives into one
+
+2004-04-25 18:20  dillo
+
+	* lib/make_zip_err_str.sh: add copyright and license blorb.  record
+	  RCS ID of script and input file in output file
+
+2004-04-19 13:49  dillo
+
+	* lib/: zip_close.c, zip_fopen_index.c, zip_open.c, zipint.h:
+	  Rename BUFSIZE to CDBUFSIZE, define BUFSIZE to 8192 and use it.
+
+2004-04-17 21:15  dillo
+
+	* ChangeLog, lib/zip_fclose.c, lib/zip_fread.c,
+	  lib/zip_replace_zip.c: (_zip_replace_zip): set ZIP_CH_ISCOMP when
+	  copying compressed data.
+
+	  (zip_fclose): don't compare crc when reading compressed data.
+	  (zip_fread): don't compute crc when reading compressed data.
+
+2004-04-16 13:50  wiz
+
+	* TODO: Move not-allowing-duplicates up to showstoppers.
+
+2004-04-16 11:42  dillo
+
+	* lib/zip_name_locate.c: remove XXX comment that no longer applies
+
+2004-04-16 11:40  dillo
+
+	* lib/: zip.h, zip_add.c, zip_add_data.c, zip_add_file.c,
+	  zip_add_filep.c, zip_add_zip.c, zip_close.c, zip_delete.c,
+	  zip_error.c, zip_error_str.c, zip_fclose.c, zip_fopen.c,
+	  zip_fopen_index.c, zip_fread.c, zip_free.c, zip_free_entry.c,
+	  zip_get_name.c, zip_new.c, zip_new_entry.c, zip_open.c,
+	  zip_rename.c, zip_replace.c, zip_replace_data.c,
+	  zip_replace_file.c, zip_replace_filep.c, zip_replace_zip.c,
+	  zip_set_name.c, zip_stat.c, zip_stat_index.c, zip_unchange.c,
+	  zip_unchange_data.c, zipint.h: add 2004 to copyright line
+
+2004-04-16 11:39  dillo
+
+	* ChangeLog, lib/zip_name_locate.c: (zip_name_locate): honour
+	  ZIP_FL_UNCHANGED, handle `\' for ZIP_FL_NODIR.
+
+2004-04-16 11:24  dillo
+
+	* lib/zip_get_meta.c: was deleted on branch
+
+2004-04-16 01:48  dillo
+
+	* ChangeLog, lib/zip_fopen_index.c: (zip_fopen_index): return
+	  ZERR_INVAL if ZIP_FL_UNCHANGED is specified and file was added.
+
+2004-04-16 01:47  dillo
+
+	* lib/zip_stat_index.c: (zip_stat_index): return ZERR_INVAL if
+	  ZIP_FL_UNCHANGED is specified and file was added.  Honour
+	  ZIP_FL_UNCHANGED for name.  If file was changed and
+	  ZIP_FL_UNCHANGED is not given, call ch_func with command
+	  ZIP_CMD_STAT.
+
+2004-04-15 14:54  dillo
+
+	* lib/zip_close.c: (zip_close) copy comp_size bytes from old
+	  archive (copy_data) check for premature EOF
+
+2004-04-14 16:36  dillo
+
+	* man/zip_stat.man: regen
+
+2004-04-14 16:36  dillo
+
+	* man/Makefile.am: fix man page installation
+
+2004-04-14 16:13  dillo
+
+	* ltcf-c.sh, ltconfig, ltmain.sh: update libtool to 1.5.2
+
+2004-04-14 16:01  dillo
+
+	* TODO, lib/Makefile.am, lib/zip.h, lib/zip_add.c,
+	  lib/zip_add_data.c, lib/zip_add_file.c, lib/zip_add_filep.c,
+	  lib/zip_add_zip.c, lib/zip_close.c, lib/zip_delete.c,
+	  lib/zip_dirent.c, lib/zip_error.c, lib/zip_error_str.c,
+	  lib/zip_fclose.c, lib/zip_file_get_offset.c, lib/zip_fopen.c,
+	  lib/zip_fopen_index.c, lib/zip_fread.c, lib/zip_free.c,
+	  lib/zip_free_entry.c, lib/zip_free_meta.c, lib/zip_get_name.c,
+	  lib/zip_merge_meta.c, lib/zip_name_locate.c, lib/zip_new.c,
+	  lib/zip_new_entry.c, lib/zip_new_meta.c, lib/zip_open.c,
+	  lib/zip_rename.c, lib/zip_replace.c, lib/zip_replace_data.c,
+	  lib/zip_replace_file.c, lib/zip_replace_filep.c,
+	  lib/zip_replace_zip.c, lib/zip_set_name.c, lib/zip_stat.c,
+	  lib/zip_stat_index.c, lib/zip_unchange.c,
+	  lib/zip_unchange_data.c, lib/zipint.h, man/zip_fopen.man,
+	  man/zip_fopen.mdoc, man/zip_name_locate.man,
+	  man/zip_name_locate.mdoc, man/zip_stat.man, man/zip_stat.mdoc,
+	  regress/buffadd.c, regress/open.c, src/zipcmp.c: Merge no-meta
+	  branch
+
+2004-04-14 15:59  dillo
+
+	* TODO: update
+
+2004-04-14 15:58  dillo
+
+	* lib/zip_name_locate.c: check for fname == NULL
+
+2004-04-14 14:43  dillo
+
+	* man/: zip_fopen.man, zip_fopen.mdoc, zip_name_locate.man,
+	  zip_name_locate.mdoc, zip_stat.man, zip_stat.mdoc: update for
+	  ZIP_FL_* changes/additions
+
+2004-04-14 11:22  dillo
+
+	* src/zipcmp.c: adapt to API change
+
+2004-04-14 11:21  dillo
+
+	* lib/: zip.h, zip_add_zip.c, zip_fopen_index.c, zip_name_locate.c,
+	  zip_replace_zip.c, zip_stat.c, zip_stat_index.c, zipint.h: -
+	  rename ZIP_NAME_* to ZIP_FL_, add ZIP_FL_UNCHANGED - support
+	  ZIP_FL_UNCHANGED to zip_fopen, zip_stat, zip_replace_zip
+
+2004-04-13 21:48  dillo
+
+	* src/zipcmp.c: add option -t (test files in archives) XXX: improve
+	  error messages
+
+2004-04-13 21:47  dillo
+
+	* lib/: zip_close.c, zip_dirent.c, zip_fclose.c, zip_fopen_index.c,
+	  zip_fread.c, zip_open.c, zip_replace_zip.c, zipint.h: fix various
+	  errors in zip_close (_zip_cdir_new) new function change
+	  ZIP_ZF_UNCOMP to ZIP_ZF_COMP fix error reporting in zip_fclose
+
+2004-04-11 01:56  dillo
+
+	* TODO: update
+
+2004-04-11 01:52  dillo
+
+	* regress/open.c: adapt to different error codes, also check errno
+
+2004-04-11 01:52  dillo
+
+	* regress/buffadd.c: make compile
+
+2004-04-11 01:52  dillo
+
+	* lib/zip_replace.c: (_zip_replace) za->cdir can be NULL (when
+	  creating new zip archive)
+
+2004-04-11 01:51  dillo
+
+	* lib/zip_dirent.c: (_zip_dirent_write) write magic marker
+
+2004-04-11 01:50  dillo
+
+	* lib/zip_fopen_index.c: fix setting of ZIP_ZF_UNCOMP (was
+	  inverted)
+
+2004-04-11 01:50  dillo
+
+	* lib/zip_close.c: (add_data_comp, add_data_uncomp) don't call
+	  ch_func with ZIP_CMD_CLOSE,	   that will be done in _zip_free.
+
+2004-04-11 01:15  dillo
+
+	* lib/: zip_fopen_index.c, zip_replace_zip.c, zip_stat_index.c,
+	  zipint.h: add macro ZIP_ENTRY_DATA_CHANGED and use it
+
+2004-04-11 01:15  dillo
+
+	* lib/zip_dirent.c: new function _zip_dirent_init
+
+2004-04-11 01:15  dillo
+
+	* lib/zip_close.c: implement propagation of direntry information to
+	  written central directory
+
+2004-04-08 19:04  dillo
+
+	* lib/zip_merge_meta.c: no longer needed
+
+2004-04-08 18:57  dillo
+
+	* lib/zip_close.c: set zlib error correctly.
+
+2004-04-08 18:56  dillo
+
+	* lib/zip_replace_zip.c: use flag to copy compressed data via
+	  zip_fread
+
+2004-04-08 18:56  dillo
+
+	* lib/: zip_fopen_index.c, zip_fread.c: implement flag to read
+	  compressed data
+
+2004-04-08 18:55  dillo
+
+	* lib/: zip_free.c, zipint.h: garbage collect zip_file member name
+
+2004-04-08 18:53  dillo
+
+	* lib/: zip.h, zip_fopen.c: add flag to read compressed data (XXX:
+	  flag needs renaming)
+
+2004-04-07 14:08  dillo
+
+	* lib/: zip.h, zip_close.c, zip_dirent.c, zip_new_entry.c,
+	  zip_replace_zip.c, zipint.h: - continue zip_close adaptation
+	  (mostly done) - add names for zip_add flags - garbage collect
+	  zip_entry member ch_comp_method - implement ZIP_CMD_STAT in
+	  zip_replace_zip
+
+2004-04-06 23:43  dillo
+
+	* lib/: zip_close.c, zip_dirent.c, zipint.h: begin zip_close
+	  adaptation
+
+2004-04-06 22:30  dillo
+
+	* lib/: zip_dirent.c, zip_fopen_index.c, zip_free.c,
+	  zip_free_entry.c, zip_get_name.c, zip_name_locate.c, zip_new.c,
+	  zip_new_entry.c, zip_open.c, zip_replace.c, zip_replace_zip.c,
+	  zip_set_name.c, zip_stat_index.c, zip_unchange.c,
+	  zip_unchange_data.c, zipint.h: - don't allow opening, statting,
+	  or adding changed zip archive entries - store central directory
+	  in struct zip, remove duplicates from   struct zip_entry
+
+2004-04-06 22:27  dillo
+
+	* lib/zip_file_get_offset.c: pass index instead of struct zip_entry
+
+2004-04-06 22:26  dillo
+
+	* lib/zip.h: revert API change to zip_open
+
+2004-04-06 22:25  dillo
+
+	* lib/Makefile.am: belatedly add zip_error_sys_type.c
+
+2004-03-23 19:38  dillo
+
+	* lib/: zip_dirent.c, zip_open.c, zipint.h: make struct zip_cdir
+	  and _zip_cdir_free non-static, they are needed in zip_close
+
+2004-03-23 19:38  dillo
+
+	* lib/zip_close.c: comment out prototypes to avoid warnings begin
+	  adaptation to new world order
+
+2004-03-23 18:16  dillo
+
+	* lib/: zip.h, zip_open.c, zipint.h: adapt zip_open to recent
+	  changes add argument to zip_open to return zip error and system
+	  error code remove unneeded members from struct zip
+
+2004-03-23 18:14  dillo
+
+	* lib/: Makefile.am, zip_file_get_offset.c: add zip_file_get_offset
+
+2004-03-23 17:08  dillo
+
+	* lib/zip_new.c: adapt to changes in sturct zip add struct
+	  zip_error argument to return error
+
+2004-03-23 17:07  dillo
+
+	* lib/: zip_fopen_index.c, zip_replace_zip.c: use new function
+	  _zip_file_get_offset()
+
+2004-03-23 17:07  dillo
+
+	* lib/zip_error.c: (_zip_error_set) allow err to be NULL.
+
+2004-03-23 17:06  dillo
+
+	* lib/zip_dirent.c: make _zip_read2 and _zip_read4 non-static, they
+	  are needed in zip_open.c XXX: move to own file?
+
+2004-03-23 17:05  dillo
+
+	* lib/zip_close.c: comment out more code so this compiles
+
+2004-03-22 15:56  dillo
+
+	* lib/: Makefile.am, zip_dirent.c, zip_fopen_index.c,
+	  zip_free_meta.c, zip_new.c, zip_new_entry.c, zip_new_meta.c,
+	  zip_replace_zip.c, zipint.h: fix compilation errors (mostly
+	  typos) remove/omit files that solely deal with zip_meta
+
+2004-03-22 15:17  dillo
+
+	* lib/: Makefile.am, zip_dirent.c, zip_fopen_index.c,
+	  zip_free_entry.c, zip_open.c, zip_replace_zip.c,
+	  zip_stat_index.c, zipint.h: - introdue struct zip_dirent to hold
+	  a zip archive directory entry and   add functions to fill in and
+	  clear zip_dirent - move needed members from zip_meta to zip_entry
+	  - remove zip_meta definition
+
+	  XXX: zip_open, zip_close, and zip_replace_zip still reference
+	  zip_meta
+
+2004-03-20 10:59  dillo
+
+	* lib/zip_get_meta.c: remove zip_get_meta from branch
+
+2004-03-20 10:57  dillo
+
+	* lib/zip_get_meta.c: readd, should have been deleted on branch
+	  no-meta
+
+2004-03-20 10:54  dillo
+
+	* lib/: Makefile.am, zip.h, zip_add.c, zip_add_data.c,
+	  zip_add_file.c, zip_add_filep.c, zip_add_zip.c, zip_close.c,
+	  zip_delete.c, zip_error_str.c, zip_fopen_index.c, zip_fread.c,
+	  zip_free_entry.c, zip_free_meta.c, zip_get_meta.c,
+	  zip_merge_meta.c, zip_new_entry.c, zip_new_meta.c, zip_open.c,
+	  zip_rename.c, zip_replace.c, zip_replace_data.c,
+	  zip_replace_file.c, zip_replace_filep.c, zip_replace_zip.c,
+	  zip_unchange.c, zip_unchange_data.c, zipint.h: checkpoint commit
+	  of rewrite to get rid of struct zip_meta does not even compile at
+	  the moment
+
+2003-12-30 21:44  dillo
+
+	* ChangeLog, src/zipcmp.c: (compare_zip): use correct index.
+
+2003-12-30 21:31  dillo
+
+	* configure.ac: it works fine with 2.57
+
+2003-12-28 01:52  wiz
+
+	* man/zip_open.man: regen (Move El to where it bbelongs).
+
+2003-12-28 01:51  wiz
+
+	* man/zip_open.mdoc: Move El to where it belongs.
+
+2003-12-27 23:56  wiz
+
+	* configure.ac, man/Makefile.am, man/zip_get_num_files.man,
+	  man/zip_get_num_files.mdoc: Add zip_get_num_files(3).
+
+2003-12-27 23:53  wiz
+
+	* lib/zip_get_num_files.c: If za invalid, return -1.
+
+2003-12-27 23:51  wiz
+
+	* man/: zip_close.man, zip_delete.man, zip_error_str.man,
+	  zip_fclose.man, zip_file_strerror.man, zip_fopen.man,
+	  zip_fread.man, zip_get_name.man, zip_name_locate.man,
+	  zip_open.man, zip_rename.man, zip_stat.man, zip_strerror.man,
+	  zip_unchange.man, zip_unchange_all.man, zipcmp.man: regen with
+	  current version of mdoc2man.
+
+2003-12-27 23:50  wiz
+
+	* man/: zip_get_name.man, zip_get_name.mdoc: Fix incomplete
+	  copy-pasted man page; xref zip_name_locate.
+
+2003-12-27 23:48  wiz
+
+	* man/: zip_name_locate.man, zip_name_locate.mdoc: Xref
+	  zip_get_name.
+
+2003-12-27 23:38  wiz
+
+	* man/zip_open.man: regen (xref zip_error_str).
+
+2003-12-27 23:37  wiz
+
+	* man/zip_open.mdoc: Xref zip_error_str(3).
+
+2003-12-27 23:33  wiz
+
+	* man/Makefile.am: Remove trailing empty line.
+
+2003-12-27 23:33  wiz
+
+	* configure.ac: Add zip_error_str(3).
+
+2003-12-27 23:31  wiz
+
+	* man/zip_open.man: regen.
+
+2003-12-27 23:29  wiz
+
+	* man/: zip_strerror.mdoc, zip_strerror.man: Improve RETURN VALUES
+	  and add SEE ALSO.
+
+2003-12-27 23:27  wiz
+
+	* man/: zip_file_strerror.man, zip_file_strerror.mdoc: Improve Nd
+	  and RETURN VALUES section.
+
+2003-12-27 23:25  wiz
+
+	* man/: Makefile.am, zip_error_str.man, zip_error_str.mdoc: Add man
+	  page for zip_error_str.
+
+2003-12-27 23:06  wiz
+
+	* compile, config.guess, config.sub, configure.ac, depcomp,
+	  install-sh, missing, mkinstalldirs, regress/Makefile.am,
+	  src/Makefile.am: Update for autoconf-2.59/automake-1.8.
+
+2003-10-09 15:39  wiz
+
+	* man/zip_open.mdoc: Fix typo and unmark a word.
+
+2003-10-07 13:54  dillo
+
+	* man/zip_open.man: regen
+
+2003-10-07 13:54  dillo
+
+	* man/zip_open.mdoc: more consistent use of file vs. zip archive
+
+2003-10-07 00:44  dillo
+
+	* TODO, lib/zip_close.c, lib/zip_fopen_index.c, lib/zip_free.c,
+	  lib/zip_new.c, lib/zip_open.c, lib/zipint.h: fix compile errors
+	  introduced in last, more error handling cleanup
+
+2003-10-06 19:02  wiz
+
+	* man/zip_open.mdoc: Pp doesn't take arguments.  XXX: archive vs.
+	  file usage here is quite inconsistent, even worse after the
+	  previous commit -- please fix.
+
+2003-10-06 18:37  dillo
+
+	* ChangeLog, TODO, lib/zip_close.c, lib/zip_delete.c,
+	  lib/zip_error.c, lib/zip_fopen.c, lib/zip_fopen_index.c,
+	  lib/zip_free.c, lib/zip_get_name.c, lib/zip_open.c,
+	  lib/zip_rename.c, lib/zip_set_name.c, lib/zip_unchange.c,
+	  lib/zip_unchange_all.c, lib/zipint.h: API and error handling
+	  cleanups
+
+2003-10-06 18:37  dillo
+
+	* man/: zip_fopen.man, zip_name_locate.man, zip_open.man: regen
+
+2003-10-06 18:37  dillo
+
+	* man/: zip_fopen.mdoc, zip_name_locate.mdoc: document flags
+	  argument
+
+2003-10-06 18:36  dillo
+
+	* man/zip_open.mdoc: document ZERR_INCONS
+
+2003-10-06 18:36  dillo
+
+	* regress/: Makefile.am, buffadd.c, open.c, test.zip: zip_open test
+	  cases
+
+2003-10-06 09:10  wiz
+
+	* ChangeLog: Fix typo.
+
+2003-10-06 05:01  dillo
+
+	* NEWS, TODO: update
+
+2003-10-06 04:52  dillo
+
+	* man/: zip_file_strerror.man, zip_stat.man, zip_strerror.man:
+	  regen
+
+2003-10-06 04:52  dillo
+
+	* man/Makefile.am: correct pasto in previous
+
+2003-10-06 04:49  dillo
+
+	* ChangeLog, TODO, configure.ac, lib/Makefile.am,
+	  lib/make_zip_err_str.sh, lib/zip.h, lib/zip_error.c,
+	  lib/zip_error_str.c, lib/zip_error_strerror.c,
+	  lib/zip_error_sys_type.c, lib/zip_file_get_error.c,
+	  lib/zip_get_error.c, lib/zip_get_num_files.c,
+	  lib/zip_name_locate.c, lib/zip_open.c, lib/zip_stat.c,
+	  lib/zip_stat_index.c, lib/zipint.h, man/Makefile.am,
+	  man/zip_stat.mdoc, src/zipcmp.c: API cleanup (see ChangeLog)
+
+2003-10-05 18:05  dillo
+
+	* ChangeLog, TODO, configure.ac, lib/Makefile.am,
+	  lib/make_zip_err_str.sh, lib/zip.h, lib/zip_error.c,
+	  lib/zip_error_strerror.c, lib/zip_file_strerror.c,
+	  lib/zip_strerror.c, lib/zipint.h, man/Makefile.am,
+	  man/zip_file_strerror.mdoc, man/zip_strerror.mdoc: add new error
+	  handling infrastructure and strerror functions
+
+2003-10-05 15:20  dillo
+
+	* lib/Makefile.am: list sources one file per line, sort
+
+2003-10-04 09:40  dillo
+
+	* ChangeLog, lib/make_zip_err_str.sh, lib/zip.h: make zip_err_str
+	  const.
+
+2003-10-04 09:39  dillo
+
+	* lib/zip_close.c: close comment
+
+2003-10-04 09:31  dillo
+
+	* TODO, lib/Makefile.am: specify library version number
+
+2003-10-04 02:23  dillo
+
+	* ChangeLog: add entry for zipcmp -i flag
+
+2003-10-04 01:55  dillo
+
+	* man/zipcmp.man: regen
+
+2003-10-04 01:55  dillo
+
+	* man/zipcmp.mdoc: update usage as well
+
+2003-10-04 01:54  dillo
+
+	* TODO, man/zipcmp.mdoc, src/zipcmp.c: add -i flag (case
+	  insensitive name comparison)
+
+2003-10-04 01:40  wiz
+
+	* man/: zip_fclose.man, zip_fopen.man: regen
+
+2003-10-04 01:40  wiz
+
+	* man/zip_fclose.mdoc: nl at eof.
+
+2003-10-04 01:39  wiz
+
+	* man/zip_fopen.mdoc: Fix typo.
+
+2003-10-04 01:37  wiz
+
+	* man/: zip_fopen.man, zip_fread.man, zip_get_name.man: regen
+
+2003-10-04 01:36  wiz
+
+	* man/zip_fread.mdoc: Fix typos, sort SEE ALSO alphabetically.
+
+2003-10-04 01:36  wiz
+
+	* man/zip_fopen.mdoc: Fix Xrefs.
+
+2003-10-04 01:34  wiz
+
+	* man/zip_get_name.mdoc: Fix typo and drop trailing space.
+
+2003-10-04 01:26  dillo
+
+	* man/: zip_delete.man, zip_get_name.man, zip_name_locate.man,
+	  zip_rename.man: regen
+
+2003-10-04 01:25  dillo
+
+	* TODO, configure.ac, man/Makefile.am, man/zip_delete.mdoc,
+	  man/zip_get_name.mdoc, man/zip_name_locate.mdoc,
+	  man/zip_rename.mdoc: add three more man pages
+
+2003-10-04 01:25  dillo
+
+	* lib/zip_rename.c: zip archive, not zip file
+
+2003-10-03 22:41  dillo
+
+	* TODO: mark what needs to be done before release
+
+2003-10-03 14:04  dillo
+
+	* man/: zip_close.man, zip_delete.man, zip_fclose.man,
+	  zip_fopen.man, zip_fread.man, zip_open.man, zip_unchange.man,
+	  zip_unchange_all.man: regen
+
+2003-10-03 14:04  dillo
+
+	* man/: zip_close.mdoc, zip_delete.mdoc, zip_fclose.mdoc,
+	  zip_fopen.mdoc, zip_fread.mdoc, zip_open.mdoc, zip_unchange.mdoc,
+	  zip_unchange_all.mdoc: don't use .Lb, it doesn't work
+
+2003-10-03 13:54  dillo
+
+	* man/: zip_fclose.man, zip_fread.man: regen
+
+2003-10-03 13:53  dillo
+
+	* TODO, configure.ac, man/zip_fclose.mdoc, man/zip_fread.mdoc: add
+	  zip_fclose and zip_fread man pages
+
+2003-10-03 13:53  dillo
+
+	* lib/zip_fclose.c: zip archvie, not zip file
+
+2003-10-03 13:53  dillo
+
+	* man/Makefile.am: remove file before linking it
+
+2003-10-03 13:20  dillo
+
+	* lib/zip_fopen_index.c: use zip archive, not zip file
+
+2003-10-03 13:19  dillo
+
+	* man/: zip_fopen.man, zip_open.man: regen
+
+2003-10-03 13:18  dillo
+
+	* configure.ac, man/Makefile.am, man/zip_fopen.mdoc,
+	  man/zip_open.mdoc: add man page for zip_fopen and zip_fopen_index
+	  add infrastructure for multi-function man pages
+
+2003-10-03 11:47  wiz
+
+	* man/: zip_close.man, zip_delete.man, zip_open.man,
+	  zip_unchange.man, zip_unchange_all.man: regen
+
+2003-10-03 11:44  wiz
+
+	* man/: zip_close.mdoc, zip_delete.mdoc, zip_unchange.mdoc,
+	  zip_unchange_all.mdoc: Fix Dt, Nm, Nd.
+
+2003-10-03 10:34  dillo
+
+	* lib/: zip_delete.c, zip_fopen.c, zip_unchange.c,
+	  zip_unchange_all.c: use ``zip archive'' not ``zip file'' (to
+	  avoid confusion with file in zip archive)
+
+2003-10-03 10:33  dillo
+
+	* man/: zip_close.man, zip_delete.man, zip_unchange.man,
+	  zip_unchange_all.man: regen
+
+2003-10-03 10:30  dillo
+
+	* configure.ac, man/Makefile.am, man/zip_delete.mdoc,
+	  man/zip_unchange.mdoc, man/zip_unchange_all.mdoc: add more man
+	  pages
+
+2003-10-03 10:12  wiz
+
+	* man/zip_close.mdoc: New sentence, new line; quote -;
+	  s/disc$/disk/
+
+2003-10-03 09:59  dillo
+
+	* man/: zip_close.man, zipcmp.man: regen
+
+2003-10-03 09:58  dillo
+
+	* TODO: update
+
+2003-10-03 09:58  dillo
+
+	* lib/zip_close.c: add XXX comments for unhandled errors
+
+2003-10-03 09:58  dillo
+
+	* man/zipcmp.mdoc: wording nits
+
+2003-10-03 09:57  dillo
+
+	* configure.ac, man/Makefile.am, man/zip_close.mdoc: add
+	  zip_close(3) man page
+
+2003-10-03 09:56  dillo
+
+	* libzip-uninstalled.pc.in, libzip.pc.in: add variable zipcmp,
+	  pointing to the zipcmp executable
+
+2003-10-03 09:09  dillo
+
+	* man/: zip_open.man, zipcmp.man: recreate
+
+2003-10-03 09:08  dillo
+
+	* man/Makefile.am: add rule to (re)create .man files
+
+2003-10-02 18:00  dillo
+
+	* man/zip_open.mdoc: that was no typo, that comma is required.
+
+2003-10-02 17:52  wiz
+
+	* man/zip_open.mdoc: Fix typo, drop trailing spaces, mark up path.
+
+2003-10-02 17:48  dillo
+
+	* man/zip_open.mdoc: fill in more detail
+
+2003-10-02 17:32  wiz
+
+	* man/zip_open.mdoc: Improve description and markup; comment out
+	  empty sections.
+
+2003-10-02 17:28  wiz
+
+	* man/zipcmp.mdoc: Fill in some contents.
+
+2003-10-02 16:20  dillo
+
+	* man/: zip_open.mdoc, zipcmp.mdoc: add/correct copyright notice
+	  add license
+
+2003-10-02 16:13  dillo
+
+	* COPYING, Makefile.am, NEWS, lib/zip.h, lib/zip_add.c,
+	  lib/zip_add_data.c, lib/zip_add_file.c, lib/zip_add_filep.c,
+	  lib/zip_add_zip.c, lib/zip_close.c, lib/zip_delete.c,
+	  lib/zip_fclose.c, lib/zip_fopen.c, lib/zip_fopen_index.c,
+	  lib/zip_fread.c, lib/zip_free.c, lib/zip_free_entry.c,
+	  lib/zip_free_meta.c, lib/zip_get_meta.c, lib/zip_get_name.c,
+	  lib/zip_merge_meta.c, lib/zip_name_locate.c, lib/zip_new.c,
+	  lib/zip_new_entry.c, lib/zip_new_meta.c, lib/zip_open.c,
+	  lib/zip_rename.c, lib/zip_replace.c, lib/zip_replace_data.c,
+	  lib/zip_replace_file.c, lib/zip_replace_filep.c,
+	  lib/zip_replace_zip.c, lib/zip_set_name.c, lib/zip_unchange.c,
+	  lib/zip_unchange_all.c, lib/zip_unchange_data.c, lib/zipint.h,
+	  man/zip_open.mdoc, src/zipcmp.c: change to three-clause BSD
+	  license
+
+2003-10-02 01:02  dillo
+
+	* TODO: update and add items from ckmame/TODO
+
+2003-10-02 00:52  dillo
+
+	* man/Makefile.am: don't list man pages twice
+
+2003-10-01 20:38  dillo
+
+	* configure.ac, man/Makefile.am: test before commiting: fix bugs in
+	  man framework
+
+2003-10-01 20:38  dillo
+
+	* ChangeLog: note zipcmp exit cleanup
+
+2003-10-01 20:37  dillo
+
+	* man/: zipcmp.man, zipcmp.mdoc: consistently use zip archive
+	  remove STANDARDS section
+
+2003-10-01 20:28  dillo
+
+	* Makefile.am, configure.ac, man/Makefile.am, man/zip_open.man,
+	  man/zip_open.mdoc, man/zipcmp.man, man/zipcmp.mdoc: add man page
+	  framework and a few (skeleton) man pages
+
+2003-10-01 20:27  dillo
+
+	* src/zipcmp.c: exit with 2 on error
+
+2003-10-01 16:52  dillo
+
+	* TODO: add TODO
+
+2003-10-01 16:51  dillo
+
+	* lib/: zip.h, zipint.h: remove parameter names from prototypes
+	  sort prototypes
+
+2003-10-01 12:20  dillo
+
+	* Makefile.am, configure.ac, libzip-uninstalled.pc.in,
+	  libzip.pc.in: add pkgconfig files
+
+2003-10-01 11:50  dillo
+
+	* lib/: zip.h, zip_add.c, zip_add_data.c, zip_add_file.c,
+	  zip_add_filep.c, zip_add_zip.c, zip_fopen.c, zip_free_entry.c,
+	  zip_get_name.c, zip_name_locate.c, zip_new_entry.c, zip_open.c,
+	  zip_rename.c, zip_replace.c, zip_replace_data.c,
+	  zip_replace_file.c, zip_replace_filep.c, zip_replace_zip.c,
+	  zip_set_name.c, zipint.h: const poisoning
+
+2003-10-01 10:09  dillo
+
+	* COPYING, INSTALL, README: add files requested by automake
+
+2003-10-01 10:08  dillo
+
+	* AUTHORS, ChangeLog, Makefile.am, NEWS, config.guess, config.sub,
+	  configure.ac, depcomp, install-sh, libtool.m4, ltcf-c.sh,
+	  ltconfig, ltmain.sh, missing, mkinstalldirs, notice,
+	  lib/Makefile.am, regress/Makefile.am, src/Makefile.am: convert to
+	  standalone package (and reorganize slightly) XXX: regression
+	  tests need work
+
+2003-03-16 11:21  wiz
+
+	* lib/zip.h, lib/zip_add.c, lib/zip_add_data.c, lib/zip_add_file.c,
+	  src/zipcmp.c, lib/zip_add_filep.c, lib/zip_add_zip.c,
+	  lib/zip_close.c, lib/zip_delete.c, lib/zip_fclose.c,
+	  lib/zip_fopen.c, lib/zip_fopen_index.c, lib/zip_fread.c,
+	  lib/zip_free.c, lib/zip_free_entry.c, lib/zip_free_meta.c,
+	  lib/zip_get_meta.c, lib/zip_get_name.c, lib/zip_merge_meta.c,
+	  lib/zip_name_locate.c, lib/zip_new.c, lib/zip_new_entry.c,
+	  lib/zip_new_meta.c, lib/zip_open.c, lib/zip_rename.c,
+	  lib/zip_replace.c, lib/zip_replace_data.c,
+	  lib/zip_replace_file.c, lib/zip_replace_filep.c,
+	  lib/zip_replace_zip.c, lib/zip_set_name.c, lib/zip_unchange.c,
+	  lib/zip_unchange_all.c, lib/zip_unchange_data.c, lib/zipint.h,
+	  notice: Correct my name(!).
+
+2003-03-14 15:53  dillo
+
+	* lib/Makefile.am, src/zipcmp.c: add a zip comaprison tool (used in
+	  regression tests)
+
+2003-01-30 04:46  wiz
+
+	* lib/zip_replace_data.c, regress/buffadd.c: Include string.h.
+
+2002-11-25 16:57  wiz
+
+	* regress/Makefile.am: Use AM_CPPFLAGS instead of INCLUDES.
+
+2002-06-06 11:27  dillo
+
+	* lib/: zip.h, zip_add.c, zip_add_data.c, zip_add_file.c,
+	  zip_add_filep.c, zip_add_zip.c, zip_close.c, zip_delete.c,
+	  zip_fclose.c, zip_fopen.c, zip_fopen_index.c, zip_fread.c,
+	  zip_free.c, zip_free_entry.c, zip_free_meta.c, zip_get_meta.c,
+	  zip_get_name.c, zip_merge_meta.c, zip_name_locate.c, zip_new.c,
+	  zip_new_entry.c, zip_new_meta.c, zip_open.c, zip_rename.c,
+	  zip_replace.c, zip_replace_data.c, zip_replace_file.c,
+	  zip_replace_filep.c, zip_replace_zip.c, zip_set_name.c,
+	  zip_unchange.c, zip_unchange_all.c, zip_unchange_data.c,
+	  zipint.h: add RCS ids
+
+2001-10-27 15:02  dillo
+
+	* lib/zip_replace_zip.c: (read_part) fix typo: pass correct length
+	  to zip_read()
+
+2001-10-20 16:04  wiz
+
+	* lib/zip_open.c: Work around some broken zip files.
+
+2000-11-05 16:03  wiz
+
+	* lib/Makefile.am: install public header file
+
+2000-11-05 00:26  wiz
+
+	* lib/: Makefile.am, zip.h, zip_get_name.c: add zip_get_name
+
+2000-11-04 23:52  wiz
+
+	* lib/Makefile.am, regress/Makefile.am: libtool support: make
+	  libzip shared
+
+2000-11-04 23:19  wiz
+
+	* regress/ziptest.c: add some '\n'
+
+1999-10-06 02:58  wiz
+
+	* lib/zip_close.c: finally fixed DOS problems (was a UNIX problem
+	  too in this case)
+
+1999-10-05 19:54  wiz
+
+	* lib/zip_close.c: One more fix for closing files
+
+1999-10-05 16:31  wiz
+
+	* lib/zip_close.c: zip_close works under DOS, free temp structure
+
+1999-09-23 21:29  wiz
+
+	* lib/: Makefile.am, zip.h, zip_close.c, zip_fopen_index.c,
+	  zip_fread.c, zip_replace_zip.c, zip_unchange.c,
+	  zip_unchange_all.c: removed misc. XXX, added zip_unchange_all
+
+1999-09-23 18:08  dillo
+
+	* lib/zip.h: added comment
+
+1999-09-23 17:10  dillo
+
+	* lib/zip.h: ZERR_INCONS
+
+1999-08-19 00:47  wiz
+
+	* lib/zip_close.c: bugfix for comp_size when copying compressed
+	  files
+
+1999-07-27 22:38  dillo
+
+	* lib/zip_replace_zip.c: improved logic for copying files
+
+1999-07-27 22:35  wiz
+
+	* lib/: zip.h, zip_close.c, zip_open.c: #include <time.h> moved to
+	  zip.h
+
+1999-07-27 01:55  wiz
+
+	* lib/: zip_close.c, zip_open.c: time.h for linux added
+
+1999-07-27 00:02  dillo
+
+	* lib/: zip_add.c, zip_add_data.c, zip_add_file.c, zip_add_filep.c,
+	  zip_add_zip.c, zip_close.c, zip_delete.c, zip_fclose.c,
+	  zip_fopen.c, zip_fopen_index.c, zip_fread.c, zip_free.c,
+	  zip_free_entry.c, zip_free_meta.c, zip_get_meta.c,
+	  zip_merge_meta.c, zip_name_locate.c, zip_new.c, zip_new_entry.c,
+	  zip_new_meta.c, zip_open.c, zip_rename.c, zip_replace.c,
+	  zip_replace_data.c, zip_replace_file.c, zip_replace_filep.c,
+	  zip_replace_zip.c, zip_set_name.c, zip_unchange.c,
+	  zip_unchange_data.c, zip.h, zipint.h: added copyright notices
+
+1999-07-26 23:54  wiz
+
+	* regress/: Makefile.am, error.c, error.h, ziptest.c: removed
+	  myerror from ziptest.c
+
+1999-07-26 23:48  wiz
+
+	* regress/deltest.c: [no log message]
+
+1999-07-26 23:47  wiz
+
+	* lib/zip_close.c, regress/Makefile.am: delete 0 zipfiles
+
+1999-07-26 23:38  dillo
+
+	* notice: [no log message]
+
+1999-07-26 23:28  dillo
+
+	* lib/zip_replace_zip.c: compress stored files in zip_replace_zip
+
+1999-07-26 23:21  wiz
+
+	* lib/zip_close.c: file permissions ok
+
+1999-07-26 23:05  wiz
+
+	* regress/Makefile.am: [no log message]
+
+1999-07-26 23:02  dillo
+
+	* lib/: Makefile.am, zip.h, zip_get_meta.c, zip_name_locate.c: [no
+	  log message]
+
+1999-07-26 22:58  wiz
+
+	* regress/: buffadd.c, fileadd.c: [no log message]
+
+1999-07-26 22:55  wiz
+
+	* lib/zip_close.c: [no log message]
+
+1999-07-26 22:17  dillo
+
+	* lib/zip_replace_data.c: handle len<0
+
+1999-07-26 22:14  wiz
+
+	* regress/: add_invalid.c, buffadd.c: more tests
+
+1999-07-26 22:13  dillo
+
+	* lib/zip_replace_data.c: [no log message]
+
+1999-07-26 22:12  dillo
+
+	* lib/: zip_replace_filep.c, zip_replace_zip.c: handle zero len as
+	  till eof
+
+1999-07-26 22:07  dillo
+
+	* regress/Makefile.am: INCLUDES fixed for build_dir != srcdir
+
+1999-07-26 22:02  dillo
+
+	* regress/Makefile.am, lib/zip_add_filep.c,
+	  lib/zip_replace_filep.c: [no log message]
+
+1999-07-26 22:02  dillo
+
+	* lib/: Makefile.am, zip.h, zip_add_file.c, zip_replace_file.c:
+	  renamed zip_{add,replace}_file to ..._filep, added ..._file
+
+1999-07-26 21:45  dillo
+
+	* lib/zip_close.c: _zip_entry_add: compress logic fixed
+
+1999-07-26 21:37  dillo
+
+	* lib/: zip_fopen_index.c, zip_replace_zip.c: bug fixes
+
+1999-07-26 21:36  wiz
+
+	* regress/ziptest.c: whatever
+
+1999-07-26 21:36  wiz
+
+	* lib/zip_open.c: don't compare bitflags of local and global
+	  headers
+
+1999-07-26 21:14  dillo
+
+	* lib/zip_close.c: [no log message]
+
+1999-07-26 08:43  dillo
+
+	* regress/Makefile.am: [no log message]
+
+1999-07-26 08:43  dillo
+
+	* lib/Makefile.am: added make_str_err... to EXTRA_DIST
+
+1999-07-26 08:42  dillo
+
+	* lib/zip_close.c: fixed typo
+
+1999-07-26 08:36  wiz
+
+	* regress/ziptest.c: [no log message]
+
+1999-07-26 08:35  dillo
+
+	* lib/zip_close.c: override dangerous entries in meta returned from
+	  ch_func
+
+1999-07-26 07:51  dillo
+
+	* lib/zip_set_name.c: test inverted
+
+1999-07-26 07:41  dillo
+
+	* lib/zip_replace_zip.c: pass through name
+
+1999-07-26 07:32  dillo
+
+	* lib/zip_close.c: cdir write fixed
+
+1999-07-26 07:14  wiz
+
+	* lib/zip_close.c: deiner
+
+1999-07-26 07:09  dillo
+
+	* lib/zip_close.c: [no log message]
+
+1999-07-26 07:08  wiz
+
+	* lib/zip_close.c: jaja
+
+1999-07-26 06:48  wiz
+
+	* lib/: zip_close.c, zip_open.c: compiles again
+
+1999-07-26 06:40  dillo
+
+	* lib/: zip_close.c, zipint.h: read lef
+
+1999-07-26 06:33  wiz
+
+	* lib/: zip_free_meta.c, zip_merge_meta.c, zip_replace_zip.c,
+	  zipint.h: verbose copying of compressed data added again
+
+1999-07-26 05:59  wiz
+
+	* lib/zip_fclose.c, lib/zip_fread.c, lib/zip_free.c,
+	  lib/zip_free_entry.c, lib/zip_merge_meta.c, lib/zip_open.c,
+	  lib/zip_unchange_data.c, regress/Makefile.am, regress/ziptest.c:
+	  misc. small coredump errors
+
+1999-07-26 05:59  dillo
+
+	* lib/zip.h: [no log message]
+
+1999-07-26 05:28  dillo
+
+	* lib/zip.h: fixed typo
+
+1999-07-26 05:27  dillo
+
+	* lib/: zip.h, zip_delete.c, zip_fopen_index.c, zip_rename.c,
+	  zip_replace.c, zip_replace_data.c, zip_replace_file.c,
+	  zip_replace_zip.c, zip_set_name.c, zip_unchange.c: cleanups
+
+1999-07-26 05:06  wiz
+
+	* regress/: Makefile.am, error.c, error.h, ziptest.c: test suite
+
+1999-07-26 05:04  wiz
+
+	* lib/: Makefile.am, zip_free_entry.c, zip_free_meta.c,
+	  zip_set_name.c: compiles even more better and all
+
+1999-07-26 04:50  wiz
+
+	* lib/Makefile.am, zf_new_free.c, lib/zip_free.c, lib/zip_new.c:
+	  better names
+
+1999-07-26 04:48  wiz
+
+	* ziplow.h: [no log message]
+
+1999-07-26 04:45  dillo
+
+	* lib/zip_close.c: comparison with unsigned shorts
+
+1999-07-26 04:44  wiz
+
+	* lib/: zip_free_entry.c, zip_free_meta.c, zip_merge_meta.c,
+	  zip_new_entry.c, zip_new_meta.c, zip_rename.c,
+	  zip_unchange_data.c: compiles
+
+1999-07-26 04:40  dillo
+
+	* lib/zip_merge_meta.c: added forgotten file
+
+1999-07-26 04:37  dillo
+
+	* lib/Makefile.am, zip.c, zip_err.c, zip_meta_merge.c: added new
+	  files
+
+1999-07-26 04:32  dillo
+
+	* lib/: zip.h, zip_add.c, zip_close.c, zip_delete.c, zip_replace.c,
+	  zip_replace_data.c, zip_replace_file.c, zip_unchange_data.c,
+	  zipint.h: it makes a library!
+
+1999-07-26 04:23  wiz
+
+	* zip_meta_merge.c: hmpf
+
+1999-07-26 04:16  wiz
+
+	* zip_meta_merge.c, lib/zipint.h: zip_meta_merge added
+
+1999-07-26 03:47  wiz
+
+	* zip.c, lib/zip.h, lib/zip_delete.c, lib/zip_replace.c,
+	  lib/zip_unchange.c, lib/zip_unchange_data.c, lib/zipint.h: Better
+	  compilation
+
+1999-07-26 03:39  wiz
+
+	* zf_new_free.c, lib/Makefile.am, lib/zip.h, lib/zip_close.c,
+	  lib/zip_delete.c, zip_err.c, lib/zip_fopen_index.c,
+	  lib/zip_free_entry.c, lib/zip_free_meta.c, lib/zip_new_entry.c,
+	  lib/zip_new_meta.c, lib/zip_open.c, lib/zip_replace.c,
+	  lib/zip_replace_data.c, lib/zip_replace_file.c,
+	  lib/zip_replace_zip.c, lib/zip_unchange.c,
+	  lib/zip_unchange_data.c, lib/zipint.h: Whatever
+
+1999-07-26 03:32  dillo
+
+	* zip_err_str.c, lib/zip_close.c: [no log message]
+
+1999-07-26 03:28  dillo
+
+	* lib/: zip.h, zip_close.c: rewrite to use new change data format
+
+1999-07-26 01:37  dillo
+
+	* lib/zip.h: zip_meta
+
+1999-07-26 00:51  dillo
+
+	* lib/make_zip_err_str.sh: beautified?!
+
+1999-07-26 00:47  dillo
+
+	* zip_err_str.c, lib/zip.h, lib/zip_replace_file.c: [no log
+	  message]
+
+1999-07-26 00:40  dillo
+
+	* lib/Makefile.am, zip.c, lib/zip.h, lib/zip_add.c,
+	  lib/zip_add_data.c, lib/zip_add_file.c, lib/zip_add_zip.c,
+	  lib/zip_delete.c, zip_err_str.c, lib/zip_rename.c,
+	  lib/zip_replace.c, lib/zip_replace_data.c,
+	  lib/zip_replace_file.c, lib/zip_replace_zip.c,
+	  lib/zip_unchange.c: all entry points from zip.c splitted
+
+1999-07-26 00:07  dillo
+
+	* lib/: Makefile.am, zip.h: meta
+
+1999-07-25 23:40  dillo
+
+	* lib/Makefile.am: added new files
+
+1999-07-25 23:39  dillo
+
+	* lib/: zip.h, zip_add_zip.c, zip_replace.c, zip_replace_zip.c,
+	  zip_set_name.c, zipint.h: zip.c splitting/rewriting begun
+
+1999-07-25 23:22  wiz
+
+	* lib/: Makefile.am, make_zip_err_str.sh: works now
+
+1999-07-25 23:09  wiz
+
+	* lib/Makefile.am, lib/make_zip_err_str.sh, zip_err_str.c:
+	  autogenerate zip_err_str from zip.h
+
+1999-07-25 22:41  wiz
+
+	* lib/zip_add.c: [no log message]
+
+1999-07-25 22:40  wiz
+
+	* zip_err_str.c, lib/zip.h: more error strings
+
+1999-07-25 22:39  dillo
+
+	* lib/zip_add.c: {:wq
+
+1999-07-25 22:32  wiz
+
+	* lib/: zip.h, zip_close.c, zip_fopen_index.c: renamed Z_ to
+	  ZIP_ST_
+
+1999-07-25 22:15  wiz
+
+	* lib/zip_open.c: compiles
+
+1999-07-25 21:56  dillo
+
+	* lib/: zip_fclose.c, zip_fopen_index.c, zip_fread.c: made compile
+
+1999-07-25 21:47  dillo
+
+	* lib/: zip_fclose.c, zip_fread.c: added forgotten files
+
+1999-07-25 21:46  dillo
+
+	* lib/Makefile.am, zff.c, lib/zip.h, lib/zip_fopen_index.c,
+	  lib/zipint.h: zff split
+
+1999-07-25 21:43  wiz
+
+	* zf_new_free.c, zip.c, lib/zip.h, lib/zip_close.c,
+	  lib/zip_name_locate.c, lib/zip_open.c, lib/zipint.h: cleanup
+
+1999-07-25 21:23  wiz
+
+	* lib/zipint.h: zf->zip
+
+1999-07-25 21:22  wiz
+
+	* lib/zipint.h: zip_zf -> zip
+
+1999-07-25 21:17  dillo
+
+	* zff.c, lib/zip.h, lib/zip_fopen.c, lib/zip_fopen_index.c: reorg,
+	  part x
+
+1999-07-25 21:11  wiz
+
+	* lib/zip.h, lib/zip_close.c, zip_err_str.c, lib/zip_open.c: misc
+	  changes
+
+1999-07-25 20:30  dillo
+
+	* lib/Makefile.am: added files
+
+1999-07-25 20:26  dillo
+
+	* lib/Makefile.am, zf_new_free.c, zff.c, zip.c, lib/zip.h,
+	  lib/zip_close.c, zip_err_str.c, lib/zip_name_locate.c,
+	  lib/zip_open.c, ziplow.h, lib/zipint.h: libzip reorganization
+
