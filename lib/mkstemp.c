@@ -1,4 +1,4 @@
-/* $NiH: mkstemp.c,v 1.2 2006/02/22 19:52:20 dillo Exp $ */
+/* $NiH: mkstemp.c,v 1.3 2006/04/23 14:51:45 wiz Exp $ */
 
 /* Adapted from NetBSB libc by Dieter Baron */
 
@@ -111,7 +111,7 @@ _zip_mkstemp(char *path)
 
 	for (;;) {
 		if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR, 0600)) >= 0)
-			return (1);
+			return (fd);
 		if (errno != EEXIST)
 			return (0);
 
