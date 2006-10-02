@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.47 2006/04/23 00:40:48 wiz Exp $
+  $NiH: zipint.h,v 1.48 2006/04/24 14:04:19 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
@@ -79,6 +79,7 @@ enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 /* directory entry: general purpose bit flags */
 
 #define ZIP_GPBF_ENCRYPTED		0x0001	/* is encrypted */
+#define ZIP_GPBF_DATA_DESCRIPTOR	0x0008	/* crc/size after file data */
 #define ZIP_GPBF_STRONG_ENCRYPTION	0x0040  /* uses strong encryption */
 
 /* error information */

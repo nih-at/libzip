@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.37 2006/04/23 18:47:34 dillo Exp $
+  $NiH: zip_open.c,v 1.38 2006/05/04 00:01:26 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
@@ -132,22 +132,19 @@ zip_open(const char *fn, int flags, int *zep)
 	return NULL;
     }
     
-    best = -2;
+    best = -1;
     cdir = NULL;
     match = buf;
+    _zip_error_set(&err2, ZIP_ER_NOZIP, 0);
+
     while ((match=_zip_memmem(match, buflen-(match-buf)-18,
 			      (const unsigned char *)EOCD_MAGIC, 4))!=NULL) {
 	/* found match -- check, if good */
 	/* to avoid finding the same match all over again */
 	match++;
 	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, flags,
-				   &err2)) == NULL) {
-	    if (best == -2) {
-		set_error(zep, &err2, 0);
-		best = -1;
-	    }
+				   &err2)) == NULL)
 	    continue;
-	}
 
 	if (cdir) {
 	    if (best <= 0)
@@ -174,11 +171,7 @@ zip_open(const char *fn, int flags, int *zep)
     free(buf);
     
     if (best < 0) {
-	/* no consistent eocd found */
-	if (best == -2) {
-	    /* no eocd found at all */
-	    set_error(zep, NULL, ZIP_ER_NOZIP);
-	}
+	set_error(zep, &err2, 0);
 	_zip_cdir_free(cdir);
 	fclose(fp);
 	return NULL;
@@ -378,7 +371,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	    return -1;
 	
 	if (_zip_headercomp(cd->entry+i, 0, &temp, 1) != 0) {
-	    _zip_error_set(error, ZIP_ER_NOZIP, 0);
+	    _zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_dirent_finalize(&temp);
 	    return -1;
 	}
@@ -407,14 +400,32 @@ _zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
 #endif
 	|| (h1->comp_method != h2->comp_method)
 	|| (h1->last_mod != h2->last_mod)
-	|| (h1->crc != h2->crc)
-	|| (h1->comp_size != h2->comp_size)
-	|| (h1->uncomp_size != h2->uncomp_size)
 	|| (h1->filename_len != h2->filename_len)
 	|| !h1->filename || !h2->filename
 	|| strcmp(h1->filename, h2->filename))
 	return -1;
 
+    /* check that CRC and sizes are zero if data descriptor is used */
+    if ((h1->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) && local1p
+	&& (h1->crc != 0
+	    || h1->comp_size != 0
+	    || h1->uncomp_size != 0))
+	return -1;
+    if ((h2->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) && local2p
+	&& (h2->crc != 0
+	    || h2->comp_size != 0
+	    || h2->uncomp_size != 0))
+	return -1;
+    
+    /* check that CRC and sizes are equal if no data descriptor is used */
+    if (((h1->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0 || local1p == 0)
+	&& ((h2->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0 || local2p == 0)) {
+	if ((h1->crc != h2->crc)
+	    || (h1->comp_size != h2->comp_size)
+	    || (h1->uncomp_size != h2->uncomp_size))
+	    return -1;
+    }
+    
     if ((local1p == local2p)
 	&& ((h1->extrafield_len != h2->extrafield_len)
 	    || (h1->extrafield_len && h2->extrafield
