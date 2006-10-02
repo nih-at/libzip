@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_error_strerror.c,v 1.3 2004/11/17 21:55:11 wiz Exp $
+  $NiH: zip_error_strerror.c,v 1.4 2006/02/21 09:41:00 dillo Exp $
 
   zip_error_sterror.c -- get string representation of struct zip_error
   Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
@@ -88,6 +88,6 @@ _zip_error_strerror(struct zip_error *err)
 		ss);
 	err->str = s;
 
-	return ss;
+	return s;
     }
 }
