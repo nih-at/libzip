@@ -1,3 +1,7 @@
+0.8
+
+* fix zip_error_strerror to include libzip error string
+
 0.7.1 [2006/05/18]
 
 * bugfix for zip_close
