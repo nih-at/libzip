@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.56 2006/04/23 16:36:42 wiz Exp $
+  $NiH: zip.h,v 1.57 2006/04/24 14:04:19 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
@@ -160,6 +160,7 @@ struct zip_source;
 
 
 int zip_add(struct zip *, const char *, struct zip_source *);
+int zip_add_dir(struct zip *, const char *);
 int zip_close(struct zip *);
 int zip_delete(struct zip *, int);
 void zip_error_get(struct zip *, int *, int *);

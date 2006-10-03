@@ -7,6 +7,7 @@ libzip_la_LIBADD=@LIBOBJS@
 
 libzip_la_SOURCES=\
 	zip_add.c \
+	zip_add_dir.c \
 	zip_close.c \
 	zip_delete.c \
 	zip_dirent.c \

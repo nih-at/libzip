@@ -1,6 +1,8 @@
 0.8
 
 * fix zip_error_strerror to include libzip error string
+* add support for streamed zip files
+* new function: zip_add_dir
 
 0.7.1 [2006/05/18]
 
