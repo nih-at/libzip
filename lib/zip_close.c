@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.60 2006/05/09 17:21:47 wiz Exp $
+  $NiH: zip_close.c,v 1.61 2006/05/18 23:11:16 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -139,6 +139,12 @@ zip_close(struct zip *za)
 	    if (_zip_dirent_read(&de, za->zp, NULL, 0, 1, &za->error) != 0) {
 		error = 1;
 		break;
+	    }
+	    if (de.bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
+		de.crc = za->cdir->entry[i].crc;
+		de.comp_size = za->cdir->entry[i].comp_size;
+		de.uncomp_size = za->cdir->entry[i].uncomp_size;
+		de.bitflags &= ~ZIP_GPBF_DATA_DESCRIPTOR;
 	    }
 	    memcpy(cd->entry+j, za->cdir->entry+i, sizeof(cd->entry[j]));
 	}
