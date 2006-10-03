@@ -39,13 +39,14 @@ zip_source_zip \- create data source from zip file
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft struct zip_source *
-.Fn zip_source_zip "struct zip *archive" "struct zip *srcarchive" \
+#include <zip.h>
+.PP
+struct zip_source *
+zip_source_zip(struct zip *archive, struct zip *srcarchive); \
 "int srcidx" "int flags" "off_t start" "off_t len"
 .SH "DESCRIPTION"
 The function
-.Fn zip_source_zip
+zip_source_zip
 creates a zip source from a file in a zip archive.
 The
 \fBsrcarchive\fR
@@ -70,7 +71,7 @@ If
 \fBflags\fR
 is
 \fBZIP_FL_UNCHANGED,\fR
-.Fn zip_source_zip
+zip_source_zip
 will try to get the original data without any changes that may
 have been made to
 \fBsrcarchive\fR
@@ -83,14 +84,14 @@ is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_source_zip
+zip_source_zip
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_CHANGED
+[ZIP_ER_CHANGED]
 Unchanged data was requested, but it is not available.
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBsrcarchive,\fR
 \fBsrcidx,\fR
 \fBstart,\fR
@@ -98,13 +99,13 @@ or
 \fBlen\fR
 are invalid.
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .RE
 Additionally, it can return all error codes from
-.Fn zip_stat_index
+zip_stat_index
 and
-.Fn zip_fopen_index.
+zip_fopen_index.
 .SH "SEE ALSO"
 libzip(3),
 zip_add(3),

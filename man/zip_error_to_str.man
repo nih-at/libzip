@@ -39,12 +39,13 @@ zip_error_to_str \- get string representation of zip error
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_error_to_str "char *buf" "int len" "int ze" "int se"
+#include <zip.h>
+.PP
+int
+zip_error_to_str(char *buf, int len, int ze, int se);
 .SH "DESCRIPTION"
 The
-.Fn zip_error_to_str
+zip_error_to_str
 function stores a string describing the libzip error code
 \fBze\fR
 in the user-provided buffer
@@ -58,18 +59,18 @@ should be the value of the global variable
 at the time of the error or the zlib error code, depending on
 \fBze.\fR
 .PP
-.Fn zip_error_to_str
+zip_error_to_str
 is especially useful if
-.Fn zip_open
+zip_open
 failed, since then there is no
 .Vt struct zip
 is available to store the error code; otherwise
-.Fn zip_strerror
+zip_strerror
 or
-.Fn zip_file_strerror
+zip_file_strerror
 are more convenient.
 .SH "RETURN VALUES"
-.Fn zip_error_to_str
+zip_error_to_str
 returns the number of characters that would have been written to a
 sufficiently sized
 \fBbuf,\fR

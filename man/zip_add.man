@@ -40,34 +40,36 @@ add file to zip archive or replace file in zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_add "struct zip *archive" "const char *name" \
+#include <zip.h>
+.PP
+int
+zip_add(struct zip *archive, const char *name); \
 "struct zip_source *source"
-.Ft int
-.Fn zip_replace "struct zip *archive" "int index" \
+.PP
+int
+zip_replace(struct zip *archive, int index); \
 "struct zip_source *source"
 .SH "DESCRIPTION"
 The function
-.Fn zip_add
+zip_add
 adds a file to a zip archive, while
-.Fn zip_replace
+zip_replace
 replaces an existing file in a zip archive.
 The argument
 \fBarchive\fR
 specifies the zip archive to which the file should be added.
 \fBname\fR
 is the file's name in the zip archive (for
-.Fn zip_add ),
+zip_add ),
 while
 \fBindex\fR
 specifies which file should be replaced (for
-.Fn zip_replace ).
+zip_replace ).
 The data is obtained from the
 \fBsource\fR
 argument.
 See the
-.Fn zip_source_*
+zip_source_*
 functions cited in
 SEE ALSO.
 .SH "RETURN VALUES"
@@ -87,20 +89,20 @@ if ((s=zip_source_buffer(archive, buffer, len)) == NULL ||
 }
 .Ed
 .SH "ERRORS"
-.Fn zip_add
+zip_add
 and
-.Fn zip_replace
+zip_replace
 fail if:
 .RS
 .TP 4
-Bq Er ZIP_ER_EXISTS
+[ZIP_ER_EXISTS]
 There is already a file called
 \fBname\fR
 in the archive.
 (Only applies to
-.Fn zip_add ).
+zip_add ).
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBsource\fR
 or
 \fBname\fR
@@ -110,7 +112,7 @@ or
 \fBindex\fR
 is invalid.
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .RE
 .SH "SEE ALSO"

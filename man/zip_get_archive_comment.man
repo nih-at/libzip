@@ -39,12 +39,13 @@ zip_get_archive_comment \- get zip archive comment
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft const char *
-.Fn zip_get_archive_comment "struct zip *archive" "int *lenp" "int flags"
+#include <zip.h>
+.PP
+const char *
+zip_get_archive_comment(struct zip *archive, int *lenp, int flags);
 .SH "DESCRIPTION"
 The
-.Fn zip_get_archive_comment
+zip_get_archive_comment
 function returns the comment for the entire zip archive.
 This pointer should not be modified or
 free(3)

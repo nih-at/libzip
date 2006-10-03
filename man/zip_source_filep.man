@@ -39,13 +39,14 @@ zip_source_filep \- create data source from FILE *
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.Ft struct zip_source *
-.Fn zip_source_filep "struct zip *archive" "FILE *file" "off_t start" "off_t len"
+.PP
+struct zip_source *
+zip_source_filep(struct zip *archive, FILE *file, off_t start, off_t len);
 .SH "DESCRIPTION"
 The function
-.Fn zip_source_filep
+zip_source_filep
 creates a zip source from a file stream.
-.Fn zip_source_filep
+zip_source_filep
 reads
 \fBlen\fR
 bytes from offset
@@ -65,18 +66,18 @@ is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_source_filep
+zip_source_filep
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBfile,\fR
 \fBstart,\fR
 or
 \fBlen\fR
 are invalid.
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .RE
 .SH "SEE ALSO"

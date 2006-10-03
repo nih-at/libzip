@@ -39,13 +39,14 @@ zip_set_archive_comment \- set zip archive comment
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_set_archive_comment "struct zip *archive" \
+#include <zip.h>
+.PP
+int
+zip_set_archive_comment(struct zip *archive); \
 "const char *comment" "int *lenp"
 .SH "DESCRIPTION"
 The
-.Fn zip_set_archive_comment
+zip_set_archive_comment
 function sets the comment for the entire zip archive.
 If
 \fBcomment\fR
@@ -60,16 +61,16 @@ Otherwise, \-1 is returned and the error information in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_set_archive_comment
+zip_set_archive_comment
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBlen\fR
 is less than 0 or longer than the maximum comment length in a zip file
 (65535).
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .RE
 .SH "SEE ALSO"

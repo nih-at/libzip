@@ -39,7 +39,7 @@ libzip \- library for manipulating zip archives
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
+#include <zip.h>
 .SH "DESCRIPTION"
 .B libzip
 is a library for reading, creating, and modifying zip archives.

@@ -40,14 +40,16 @@ get error codes for archive or file
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft void
-.Fn zip_error_get "struct zip *archive" "int *zep" "int *sep"
-.Ft void
-.Fn zip_file_error_get "struct zip_file *file" "int *zep" "int *sep"
+#include <zip.h>
+.PP
+void
+zip_error_get(struct zip *archive, int *zep, int *sep);
+.PP
+void
+zip_file_error_get(struct zip_file *file, int *zep, int *sep);
 .SH "DESCRIPTION"
 The
-.Fn zip_error_get
+zip_error_get
 function returns the error codes for the zip archive
 \fBarchive.\fR
 If
@@ -63,11 +65,11 @@ will contain the corresponding system error code, if
 is not
 \fBNULL;\fR
 use
-.Fn zip_error_get_sys_type
+zip_error_get_sys_type
 to determine the type of system error code.
 .PP
 The
-.Fn zip_file_error_get
+zip_file_error_get
 function does the same for the zip file
 \fBfile.\fR
 .SH "SEE ALSO"

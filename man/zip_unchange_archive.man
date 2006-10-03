@@ -39,9 +39,10 @@ zip_unchange_archive \- undo global changes to zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_unchange_archive "struct zip *archive"
+#include <zip.h>
+.PP
+int
+zip_unchange_archive(struct zip *archive);
 .SH "DESCRIPTION"
 Revert all global changes to the archive
 \fBarchive.\fR

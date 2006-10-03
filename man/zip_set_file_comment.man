@@ -39,13 +39,14 @@ zip_set_file_comment \- set comment for file in zip
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_set_file_comment "struct zip *archive" "int index" \
+#include <zip.h>
+.PP
+int
+zip_set_file_comment(struct zip *archive, int index); \
 "const char *comment" "int len"
 .SH "DESCRIPTION"
 The
-.Fn zip_set_file_comment
+zip_set_file_comment
 function sets the comment for the file at position
 \fBindex\fR
 in the zip archive to
@@ -65,11 +66,11 @@ Otherwise, \-1 is returned and the error information in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_set_file_comment
+zip_set_file_comment
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
 \fBarchive,\fR
@@ -78,7 +79,7 @@ or
 is less than 0 or longer than the maximum comment length in a zip file
 (65535).
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .RE
 .SH "SEE ALSO"

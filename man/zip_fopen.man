@@ -40,14 +40,16 @@ open file in zip archive for reading
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft struct zip_file *
-.Fn zip_fopen "struct zip *archive" "const char *fname" "int flags"
-.Ft struct zip_file *
-.Fn zip_fopen_index "struct zip *archive" "int index" "int flags"
+#include <zip.h>
+.PP
+struct zip_file *
+zip_fopen(struct zip *archive, const char *fname, int flags);
+.PP
+struct zip_file *
+zip_fopen_index(struct zip *archive, int index, int flags);
 .SH "DESCRIPTION"
 The
-.Fn zip_fopen
+zip_fopen
 function opens the file name
 \fBfname\fR
 in
@@ -65,7 +67,7 @@ to it.
 \fBZIP_FL_COMPRESSED\fR
 Read the compressed data.
 Otherwise the data is uncompressed by
-.Fn zip_fread.
+zip_fread.
 .TP 19
 \fBZIP_FL_UNCHANGED\fR
 Read the original data from the zip archive, ignoring any changes made
@@ -73,12 +75,13 @@ to the file.
 .RE
 .PP
 The
-.Fn zip_fopen_index
+zip_fopen_index
 function opens the file at position
 \fBindex.\fR
 .SH "RETURN VALUES"
 Upon successful completion, a
-.Ft struct zip_file
+.PP
+struct zip_file
 pointer is returned.
 Otherwise,
 \fBNULL\fR
@@ -88,36 +91,36 @@ is set to indicate the error.
 .SH "ERRORS"
 .RS
 .TP 4
-Bq Er ZIP_ER_CHANGED
+[ZIP_ER_CHANGED]
 The file data has been changed.
 .TP 4
-Bq Er ZIP_ER_COMPNOTSUPP
+[ZIP_ER_COMPNOTSUPP]
 The compression method used is not supported.
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .TP 4
-Bq Er ZIP_ER_READ
+[ZIP_ER_READ]
 A file read error occurred.
 .TP 4
-Bq Er ZIP_ER_SEEK
+[ZIP_ER_SEEK]
 A file seek error occurred.
 .TP 4
-Bq Er ZIP_ER_ZLIB
+[ZIP_ER_ZLIB]
 Initializing the zlib stream failed.
 .RE
 .PP
 The function
-.Fn zip_fopen
+zip_fopen
 may also fail and set
 .Va zip_err
 for any of the errors specified for the routine
 zip_name_locate(3).
 .PP
 The function
-.Fn zip_fopen_index
+zip_fopen_index
 may also fail with
-.Er ZIP_ER_INVAL
+ZIP_ER_INVAL
 if
 \fBindex\fR
 is invalid.

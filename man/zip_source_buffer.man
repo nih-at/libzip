@@ -39,13 +39,14 @@ zip_source_buffer \- create zip data source from buffer
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft struct zip_source *
-.Fn zip_source_buffer "struct zip *archive" "const void *data" "off_t len" \
+#include <zip.h>
+.PP
+struct zip_source *
+zip_source_buffer(struct zip *archive, const void *data, off_t len); \
 "int freep"
 .SH "DESCRIPTION"
 The function
-.Fn zip_source_buffer
+zip_source_buffer
 creates a zip source from the buffer
 \fBdata\fR
 of size
@@ -61,11 +62,11 @@ is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_source_buffer
+zip_source_buffer
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBlen\fR
 is negative, or
 \fBlen\fR
@@ -74,7 +75,7 @@ is greater than zero and
 is
 \fBNULL.\fR
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .RE
 .SH "SEE ALSO"

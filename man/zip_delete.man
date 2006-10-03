@@ -39,9 +39,10 @@ zip_delete \- delete file from zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_delete "struct zip *archive" "int index"
+#include <zip.h>
+.PP
+int
+zip_delete(struct zip *archive, int index);
 .SH "DESCRIPTION"
 The file at position
 \fBindex\fR
@@ -54,11 +55,11 @@ Otherwise, \-1 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_delete
+zip_delete
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR

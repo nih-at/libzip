@@ -39,12 +39,13 @@ zip_fclose \- close file in zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_fclose "struct zip_file *file"
+#include <zip.h>
+.PP
+int
+zip_fclose(struct zip_file *file);
 .SH "DESCRIPTION"
 The
-.Fn zip_fclose
+zip_fclose
 function closes
 \fBfile\fR
 and frees the memory allocated for it.

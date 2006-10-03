@@ -39,9 +39,10 @@ zip_unchange \- undo changes to file in zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_unchange "struct zip *archive" "int index"
+#include <zip.h>
+.PP
+int
+zip_unchange(struct zip *archive, int index);
 .SH "DESCRIPTION"
 Changes to the file at position
 \fBindex\fR
@@ -52,14 +53,14 @@ Otherwise, \-1 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_unchange
+zip_unchange
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_EXISTS
+[ZIP_ER_EXISTS]
 Unchanging the name would result in a duplicate name in the archive.
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
 \fBzip.\fR

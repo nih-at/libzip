@@ -39,16 +39,17 @@ zip_get_num_files \- get number of files in archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_get_num_files "struct zip *archive"
+#include <zip.h>
+.PP
+int
+zip_get_num_files(struct zip *archive);
 .SH "DESCRIPTION"
 The
-.Fn zip_get_num_files
+zip_get_num_files
 function returns the number of files in
 \fBarchive.\fR
 .SH "RETURN VALUES"
-.Fn zip_get_num_files
+zip_get_num_files
 returns the number of files in the zip archive,
 or \-1 if
 \fBarchive\fR

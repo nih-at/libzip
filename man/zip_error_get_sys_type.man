@@ -39,12 +39,13 @@ zip_error_get_sys_type \- get type of system error code
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_error_get_sys_type "int ze"
+#include <zip.h>
+.PP
+int
+zip_error_get_sys_type(int ze);
 .SH "DESCRIPTION"
 The
-.Fn zip_error_get_sys_type
+zip_error_get_sys_type
 function returns the type of the system error code for the libzip error
 \fBze.\fR
 Possible types are:

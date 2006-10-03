@@ -39,9 +39,10 @@ zip_rename \- rename file in zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_rename "struct zip *archive" "int index" "const char *name"
+#include <zip.h>
+.PP
+int
+zip_rename(struct zip *archive, int index, const char *name);
 .SH "DESCRIPTION"
 The file at position
 \fBindex\fR
@@ -55,16 +56,16 @@ Otherwise, \-1 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_rename
+zip_rename
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_EXISTS
+[ZIP_ER_EXISTS]
 There is already a file called
 \fBname\fR
 in the archive.
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR

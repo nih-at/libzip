@@ -40,14 +40,16 @@ get information about file
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_stat "struct zip *archive" "const char *fname" "int flags" "struct zip_stat *sb"
-.Ft int
-.Fn zip_stat_index "struct zip *archive" "int index" "int flags" "struct zip_stat *sb"
+#include <zip.h>
+.PP
+int
+zip_stat(struct zip *archive, const char *fname, int flags, struct zip_stat *sb);
+.PP
+int
+zip_stat_index(struct zip *archive, int index, int flags, struct zip_stat *sb);
 .SH "DESCRIPTION"
 The
-.Fn zip_stat
+zip_stat
 function obtains information about the file named
 \fBfname\fR
 in
@@ -65,14 +67,15 @@ to it to request information about the original file in the archive,
 ignoring any changes made.
 .PP
 The
-.Fn zip_stat_index
+zip_stat_index
 function obtains information about the file at position
 \fBindex.\fR
 .PP
 The
 \fBsb\fR
 argument is a pointer to a
-.Ft struct zip_stat
+.PP
+struct zip_stat
 (shown below), into which information about the file is placed.
 .Bd \-literal
 struct zip_stat {
@@ -92,14 +95,14 @@ Otherwise, \-1 is returned and the error information in
 is set to indicate the error.
 .SH "ERRORS"
 The function
-.Fn zip_stat
+zip_stat
 can fail for any of the errors specified for the routine
 zip_name_locate(3).
 .PP
 The function
-.Fn zip_stat_index
+zip_stat_index
 fails and sets the error information to
-.Er ZIP_ER_INVAL
+ZIP_ER_INVAL
 if
 \fBindex\fR
 is invalid.
@@ -107,7 +110,7 @@ If
 \fBZIP_FL_UNCHANGED\fR
 is not set and no information can be obtained from the source
 callback, the error information is set to
-.Er ZIP_ER_CHANGED.
+ZIP_ER_CHANGED.
 .SH "SEE ALSO"
 libzip(3),
 zip_name_locate(3)

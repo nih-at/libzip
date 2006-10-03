@@ -39,13 +39,14 @@ zip_source_file \- create data source from a file
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.Ft struct zip_source *
-.Fn zip_source_file "struct zip *archive" "const char *fname" "off_t start" "off_t len"
+.PP
+struct zip_source *
+zip_source_file(struct zip *archive, const char *fname, off_t start, off_t len);
 .SH "DESCRIPTION"
 The function
-.Fn zip_source_file
+zip_source_file
 creates a zip source from a file.
-.Fn zip_source_file
+zip_source_file
 opens
 \fBfname\fR
 and reads
@@ -66,21 +67,21 @@ is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_source_file
+zip_source_file
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBfname,\fR
 \fBstart,\fR
 or
 \fBlen\fR
 are invalid.
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .TP 4
-Bq Er ZIP_ER_OPEN
+[ZIP_ER_OPEN]
 Opening
 \fBfname\fR
 failed.

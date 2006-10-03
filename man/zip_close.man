@@ -39,19 +39,20 @@ zip_close \- close zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_close "struct zip *archive"
+#include <zip.h>
+.PP
+int
+zip_close(struct zip *archive);
 .SH "DESCRIPTION"
 The
-.Fn zip_close
+zip_close
 function closes
 \fBarchive\fR
 and frees the memory allocated for it.
 If any files within were changed, those changes are written to disk
 first.
 If writing changes fails,
-.Fn zip_close
+zip_close
 fails and
 \fBarchive\fR
 is left unchanged.
@@ -61,45 +62,45 @@ Otherwise, \-1 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_close
+zip_close
 will fail if:
 .RS
 .TP 4
-Bq Er ZIP_ER_EOF
+[ZIP_ER_EOF]
 Unexpected end-of-file found while reading from a file.
 .TP 4
-Bq Er ZIP_ER_INTERNAL
+[ZIP_ER_INTERNAL]
 The callback function of an added or replaced file returned an
 error but failed to report which.
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 The
 \fBpath\fR
 argument is
 \fBNULL.\fR
 .TP 4
-Bq Er ZIP_ER_MEMORY
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
 .TP 4
-Bq Er ZIP_ER_NOZIP
+[ZIP_ER_NOZIP]
 File is not a zip archive.
 .TP 4
-Bq Er ZIP_ER_READ
+[ZIP_ER_READ]
 A file read failed.
 .TP 4
-Bq Er ZIP_ER_RENAME
+[ZIP_ER_RENAME]
 A temporary file could not be renamed to its final name.
 .TP 4
-Bq Er ZIP_ER_SEEK
+[ZIP_ER_SEEK]
 A file seek failed.
 .TP 4
-Bq Er ZIP_ER_TMPOPEN
+[ZIP_ER_TMPOPEN]
 A temporary file could not be created.
 .TP 4
-Bq Er ZIP_ER_WRITE
+[ZIP_ER_WRITE]
 A file write failed.
 .TP 4
-Bq Er ZIP_ER_ZLIB
+[ZIP_ER_ZLIB]
 An error occurred while (de)compressing a stream with
 zlib(3).
 .RE

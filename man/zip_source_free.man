@@ -39,12 +39,13 @@ zip_source_free \- free zip data source
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft void
-.Fn zip_source_free "struct zip_source *source"
+#include <zip.h>
+.PP
+void
+zip_source_free(struct zip_source *source);
 .SH "DESCRIPTION"
 The function
-.Fn zip_source_free
+zip_source_free
 frees the zip data source
 \fBsource.\fR
 If

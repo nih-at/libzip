@@ -39,12 +39,13 @@ zip_fread \- read from file
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_fread "struct zip_file *file" "void *buf" "int nbytes"
+#include <zip.h>
+.PP
+int
+zip_fread(struct zip_file *file, void *buf, int nbytes);
 .SH "DESCRIPTION"
 The
-.Fn zip_fread
+zip_fread
 function reads at most
 \fBnbytes\fR
 bytes from

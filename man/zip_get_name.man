@@ -39,12 +39,13 @@ zip_get_name \- get name of file by index
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft const char *
-.Fn zip_get_name "struct zip *archive" "int index" "int flags"
+#include <zip.h>
+.PP
+const char *
+zip_get_name(struct zip *archive, int index, int flags);
 .SH "DESCRIPTION"
 The
-.Fn zip_get_name
+zip_get_name
 function returns the name of the file at position
 \fBindex\fR
 in
@@ -65,18 +66,18 @@ and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_get_name
+zip_get_name
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_DELETED
+[ZIP_ER_DELETED]
 \fBindex\fR
 refers to a file that has been deleted
 (see
 zip_delete(3)
 ).
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
 \fBarchive,\fR

@@ -39,12 +39,13 @@ zip_get_file_comment \- get comment for file in zip
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft const char *
-.Fn zip_get_file_comment "struct zip *archive" "int index" "int *lenp" "int flags"
+#include <zip.h>
+.PP
+const char *
+zip_get_file_comment(struct zip *archive, int index, int *lenp, int flags);
 .SH "DESCRIPTION"
 The
-.Fn zip_get_file_comment
+zip_get_file_comment
 function returns the comment for the file at position
 \fBindex\fR
 in the zip archive.
@@ -73,11 +74,11 @@ is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-.Fn zip_get_file_comment
+zip_get_file_comment
 fails if:
 .RS
 .TP 4
-Bq Er ZIP_ER_INVAL
+[ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR

@@ -39,12 +39,13 @@ zip_name_locate \- get index of file by name
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft int
-.Fn zip_name_locate "struct zip *archive" "const char *fname" "int flags"
+#include <zip.h>
+.PP
+int
+zip_name_locate(struct zip *archive, const char *fname, int flags);
 .SH "DESCRIPTION"
 The
-.Fn zip_name_locate
+zip_name_locate
 function returns the index of the file named
 \fBfname\fR
 in

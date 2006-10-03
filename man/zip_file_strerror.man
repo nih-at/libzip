@@ -40,18 +40,20 @@ get string representation for a zip error
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-.In zip.h
-.Ft const char *
-.Fn zip_file_strerror "struct zip_file *file"
-.Ft const char *
-.Fn zip_strerror "struct zip *archive"
+#include <zip.h>
+.PP
+const char *
+zip_file_strerror(struct zip_file *file);
+.PP
+const char *
+zip_strerror(struct zip *archive);
 .SH "DESCRIPTION"
 The
-.Fn zip_strerror
+zip_strerror
 function returns a string describing the last error for the zip archive
 \fBarchive,\fR
 while the
-.Fn zip_file_strerror
+zip_file_strerror
 function does the same for a zip file
 \fBfile\fR
 (one file in an archive).
@@ -61,15 +63,15 @@ or
 \fBfile,\fR
 respectively,
 is closed or on the next call to
-.Fn zip_strerror
+zip_strerror
 or
-.Fn zip_file_strerror,
+zip_file_strerror,
 respectively,
 for the same archive.
 .SH "RETURN VALUES"
-.Fn zip_file_strerror
+zip_file_strerror
 and
-.Fn zip_strerror
+zip_strerror
 return a pointer to the error string.
 .SH "SEE ALSO"
 libzip(3),
