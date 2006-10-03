@@ -8,6 +8,7 @@ EXTRA_DIST=${MANDOC} ${MAN}
 MAN1=	zipcmp.mdoc zipmerge.mdoc
 MAN3=	libzip.mdoc \
 	zip_add.mdoc \
+	zip_add_dir.mdoc \
 	zip_close.mdoc \
 	zip_delete.mdoc \
 	zip_error_get.mdoc \
