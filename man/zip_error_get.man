@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_get.mdoc,v 1.9 2006/04/23 12:45:10 wiz Exp 
-.\" $NiH: zip_error_get.mdoc,v 1.9 2006/04/23 12:45:10 wiz Exp $
+.\" from NiH: zip_error_get.mdoc,v 1.10 2006/10/04 18:34:03 wiz Exp 
+.\" $NiH: zip_error_get.mdoc,v 1.10 2006/10/04 18:34:03 wiz Exp $
 .\"
 .\" zip_error_get.mdoc \-- get error codes for archive or file
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ERROR_GET 3 "April 23, 2006" NiH
+.TH ZIP_ERROR_GET 3 "October 4, 2006" NiH
 .SH "NAME"
 zip_error_get , \- .Nm zip_file_error_get
 get error codes for archive or file
@@ -74,6 +74,7 @@ function does the same for the zip file
 \fBfile.\fR
 .SH "SEE ALSO"
 libzip(3),
+zip_error_clear(3),
 zip_error_get_sys_type(3),
 zip_error_to_str(3)
 .SH "AUTHORS"
