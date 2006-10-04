@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_file_error_clear.c,v 1.2 2006/10/04 18:23:25 wiz Exp $
+  $NiH: zip_file_error_clear.c,v 1.3 2006/10/04 18:26:42 dillo Exp $
 
   zip_file_error_clear.c -- clear zip file error
   Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
@@ -40,6 +40,7 @@
 
 
 
+void
 zip_file_error_clear(struct zip_file *zf)
 {
     _zip_error_clear(&zf->error);
