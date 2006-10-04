@@ -5,7 +5,7 @@
   $NiH: zipint.h,v 1.48 2006/04/24 14:04:19 dillo Exp $
 
   zipint.h -- internal declarations.
-  Copyright (C) 1999, 2003, 2004, 2005, 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -208,6 +208,7 @@ void _zip_entry_free(struct zip_entry *);
 void _zip_entry_init(struct zip *, int);
 struct zip_entry *_zip_entry_new(struct zip *);
 
+void _zip_error_clear(struct zip_error *);
 void _zip_error_copy(struct zip_error *, struct zip_error *);
 void _zip_error_fini(struct zip_error *);
 void _zip_error_get(struct zip_error *, int *, int *);
