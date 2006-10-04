@@ -1,3 +1,5 @@
+* [bug] zip_open: when consistency checking: return the least drastic error
+* [bug] zip_open: consistency check: check data descriptor
 * php windows fixes:
   . zip_close: close za->zp before rename, reopen on error
 * add functions to:
