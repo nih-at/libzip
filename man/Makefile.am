@@ -11,6 +11,7 @@ MAN3=	libzip.mdoc \
 	zip_add_dir.mdoc \
 	zip_close.mdoc \
 	zip_delete.mdoc \
+	zip_error_clear.mdoc \
 	zip_error_get.mdoc \
 	zip_error_get_sys_type.mdoc \
 	zip_error_to_str.mdoc \
@@ -44,6 +45,8 @@ install-data-hook: link-man3
 LN=ln
 
 link-man3: install-man3 uninstall-hook
+	${LN} ${DESTDIR}${man3dir}/zip_error_clear.3 \
+		${DESTDIR}${man3dir}/zip_file_error_clear.3
 	${LN} ${DESTDIR}${man3dir}/zip_error_get.3 \
 		${DESTDIR}${man3dir}/zip_file_error_get.3
 	${LN} ${DESTDIR}${man3dir}/zip_fopen.3 \
