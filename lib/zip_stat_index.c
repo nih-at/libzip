@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_stat_index.c,v 1.9 2006/04/09 15:09:18 wiz Exp $
+  $NiH: zip_stat_index.c,v 1.10 2006/04/24 14:04:19 dillo Exp $
 
   zip_stat_index.c -- get information about file by index
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -68,7 +68,6 @@ zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 	    return -1;
 	}
 	
-	st->index = index;
 	st->crc = za->cdir->entry[index].crc;
 	st->size = za->cdir->entry[index].uncomp_size;
 	st->mtime = za->cdir->entry[index].last_mod;
@@ -87,6 +86,7 @@ zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 	/* st->bitflags = za->cdir->entry[index].bitflags; */
     }
 
+    st->index = index;
     st->name = name;
     
     return 0;
