@@ -50,6 +50,7 @@ libzip_la_SOURCES=\
 	zip_set_name.c \
 	zip_stat.c \
 	zip_stat_index.c \
+	zip_stat_init.c \
 	zip_strerror.c \
 	zip_unchange.c \
 	zip_unchange_all.c \

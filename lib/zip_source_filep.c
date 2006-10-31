@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_source_filep.c,v 1.5 2005/05/20 22:05:30 wiz Exp $
+  $NiH: zip_source_filep.c,v 1.6 2005/06/09 19:57:10 dillo Exp $
 
   zip_source_filep.c -- create data source from FILE *
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -138,24 +138,20 @@ read_file(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 	    if (len < sizeof(*st))
 		return -1;
 
-	    st = (struct zip_stat *)data;
-
 	    if (fstat(fileno(z->f), &fst) != 0) {
 		z->e[0] = ZIP_ER_READ; /* best match */
 		z->e[1] = errno;
 		return -1;
 	    }
 
+	    st = (struct zip_stat *)data;
+
+	    zip_stat_init(st);
 	    st->mtime = fst.st_mtime;
-	    st->crc = 0;
 	    if (z->len != -1)
 		st->size = z->len;
 	    else if ((fst.st_mode&S_IFMT) == S_IFREG)
 		st->size = fst.st_size;
-	    else
-		st->size = -1;
-	    st->comp_size = -1;
-	    st->comp_method = ZIP_CM_STORE;
 
 	    return sizeof(*st);
 	}

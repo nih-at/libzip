@@ -2,7 +2,7 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.58 2006/10/03 12:23:13 dillo Exp $
+  $NiH: zip.h,v 1.59 2006/10/04 15:21:09 dillo Exp $
 
   zip.h -- exported declarations.
   Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
@@ -194,6 +194,7 @@ struct zip_source *zip_source_zip(struct zip *, struct zip *, int, int,
 				  off_t, off_t);
 int zip_stat(struct zip *, const char *, int, struct zip_stat *);
 int zip_stat_index(struct zip *, int, int, struct zip_stat *);
+void zip_stat_init(struct zip_stat *);
 const char *zip_strerror(struct zip *);
 int zip_unchange(struct zip *, int);
 int zip_unchange_all(struct zip *);
