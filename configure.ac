@@ -7,6 +7,7 @@ AM_INIT_AUTOMAKE
 dnl AC_CANONICAL_HOST
 
 AC_PROG_CC
+AM_PROG_CC_C_O
 
 AC_ARG_WITH(zlib,
     [  --with-zlib=PREFIX  specify prefix for ZLIB library],,
