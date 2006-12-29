@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_add_dir.mdoc,v 1.1 2006/10/03 18:55:51 wiz Exp 
-.\" $NiH: zip_add_dir.mdoc,v 1.1 2006/10/03 18:55:51 wiz Exp $
+.\" from NiH: zip_add_dir.mdoc,v 1.2 2006/10/03 19:35:52 dillo Exp 
+.\" $NiH: zip_add_dir.mdoc,v 1.2 2006/10/03 19:35:52 dillo Exp $
 .\"
 .\" zip_add_dir.mdoc \-- add directory to zip archive
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
@@ -49,7 +49,7 @@ zip_add_dir
 adds a directory to a zip archive.
 The argument
 \fBarchive\fR
-specifies the zip archive to which the file should be added.
+specifies the zip archive to which the directory should be added.
 \fBname\fR
 is the directory's name in the zip archive.
 .SH "RETURN VALUES"
