@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_open.c,v 1.38 2006/05/04 00:01:26 dillo Exp $
+  $NiH: zip_open.c,v 1.39 2006/10/02 20:53:55 dillo Exp $
 
   zip_open.c -- open zip archive
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -107,6 +107,25 @@ zip_open(const char *fn, int flags, int *zep)
     clearerr(fp);
     fseek(fp, 0, SEEK_END);
     len = ftell(fp);
+
+    /* treat empty files as empty archives */
+    if (len == 0) {
+	if ((za=_zip_new(&error)) == NULL) {
+	    set_error(zep, &error, 0);
+	    fclose(fp);
+	    return NULL;
+	}
+
+	za->zp = fp;
+	za->zn = strdup(fn);
+	if (!za->zn) {
+	    _zip_free(za);
+	    set_error(zep, NULL, ZIP_ER_MEMORY);
+	    return NULL;
+	}
+	return za;
+    }
+
     i = fseek(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */
