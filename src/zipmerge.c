@@ -1,8 +1,8 @@
 /*
-  $NiH: zipmerge.c,v 1.11 2005/06/09 19:57:10 dillo Exp $
+  $NiH: zipmerge.c,v 1.12 2006/04/23 14:51:08 wiz Exp $
 
   zipmerge.c -- merge zip archives
-  Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2006 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -256,12 +256,14 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
 		break;
 
 	    case -1:
+		zip_close(zs);
 		return -1;
 		
 	    default:
 		fprintf(stderr,	"%s: internal error: "
 			"unexpected return code from confirm (%d)\n",
 			prg, err);
+		zip_close(zs);
 		return -1;
 	    }
 	}
@@ -272,10 +274,12 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
 		fprintf(stderr,
 			"%s: cannot add `%s' to `%s': %s\n",
 			prg, fname, tname, zip_strerror(za));
+		zip_close(zs);
 		return -1;
 	    }
 	}
     }
 
+    zip_close(zs);
     return 0;
 }
