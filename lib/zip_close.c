@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.61 2006/05/18 23:11:16 dillo Exp $
+  $NiH: zip_close.c,v 1.62 2006/10/03 11:51:22 dillo Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -68,6 +68,9 @@ zip_close(struct zip *za)
     mode_t mask;
     struct zip_cdir *cd;
     struct zip_dirent de;
+    int reopen_on_error;
+
+    reopen_on_error = 0;
 
     if (!_zip_changed(za, &survivors)) {
 	_zip_free(za);
@@ -221,15 +224,20 @@ zip_close(struct zip *za)
 	return -1;
     }
     
+    if (za->zp) {
+	fclose(za->zp);
+	za->zp = NULL;
+	reopen_on_error = 1;
+    }
     if (rename(temp, za->zn) != 0) {
 	_zip_error_set(&za->error, ZIP_ER_RENAME, errno);
 	remove(temp);
 	free(temp);
+	if (reopen_on_error) {
+	    /* ignore errors, since we're already in an error case */
+	    za->zp = fopen(za->zn, "rb");
+	}
 	return -1;
-    }
-    if (za->zp) {
-	fclose(za->zp);
-	za->zp = NULL;
     }
     mask = umask(0);
     umask(mask);
