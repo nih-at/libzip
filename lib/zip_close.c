@@ -1,8 +1,8 @@
 /*
-  $NiH: zip_close.c,v 1.62 2006/10/03 11:51:22 dillo Exp $
+  $NiH: zip_close.c,v 1.63 2007/01/28 08:03:56 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
-  Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999, 2004, 2005, 2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -244,6 +244,7 @@ zip_close(struct zip *za)
     chmod(za->zn, 0666&~mask);
 
     _zip_free(za);
+    free(temp);
     
     return 0;
 }
