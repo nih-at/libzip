@@ -1,7 +1,5 @@
 * [bug] zip_open: consistency check: check data descriptor
 * add way to overwrite file (if existing file has size 0, create new archive)
-* php windows fixes:
-  . zip_close: close za->zp before rename, reopen on error
 * add functions to:
   . set compression method for new/changed entry
   . set last modification time for entry
