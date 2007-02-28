@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.39 2006/10/02 20:53:55 dillo Exp $
+  $NiH: zip_open.c,v 1.40 2007/01/05 13:14:22 dillo Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
@@ -45,7 +45,10 @@
 #include "zipint.h"
 
 static void set_error(int *, struct zip_error *, int);
+static struct zip *_zip_allocate_new(const char *, int *);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
+static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, long);
+static int _zip_file_exists(const char *, int, int *);
 static int _zip_headercomp(struct zip_dirent *, int,
 			   struct zip_dirent *, int);
 static unsigned char *_zip_memmem(const unsigned char *, int,
@@ -59,158 +62,51 @@ struct zip *
 zip_open(const char *fn, int flags, int *zep)
 {
     FILE *fp;
-    unsigned char *buf, *match;
-    int a, i, buflen, best;
     struct zip *za;
-    struct zip_cdir *cdir, *cdirnew;
+    struct zip_cdir *cdir;
+    int i;
     long len;
-    struct stat st;
-    struct zip_error error, err2;
 
-    if (fn == NULL) {
-	set_error(zep, NULL, ZIP_ER_INVAL);
+    switch (_zip_file_exists(fn, flags, zep)) {
+    case -1:
 	return NULL;
+    case 0:
+	return _zip_allocate_new(fn, zep);
+    default:
+	break;
     }
-    
-    if (stat(fn, &st) != 0) {
-	if (flags & ZIP_CREATE) {
-	    if ((za=_zip_new(&error)) == NULL) {
-		set_error(zep, &error, 0);
-		return NULL;
-	    }
-	    
-	    za->zn = strdup(fn);
-	    if (!za->zn) {
-		_zip_free(za);
-		set_error(zep, NULL, ZIP_ER_MEMORY);
-		return NULL;
-	    }
-	    return za;
-	}
-	else {
-	    set_error(zep, NULL, ZIP_ER_OPEN);
-	    return NULL;
-	}
-    }
-    else if ((flags & ZIP_EXCL)) {
-	set_error(zep, NULL, ZIP_ER_EXISTS);
-	return NULL;
-    }
-    /* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
-       just like open() */
-    
+
     if ((fp=fopen(fn, "rb")) == NULL) {
 	set_error(zep, NULL, ZIP_ER_OPEN);
 	return NULL;
     }
-    
-    clearerr(fp);
+
     fseek(fp, 0, SEEK_END);
     len = ftell(fp);
 
     /* treat empty files as empty archives */
     if (len == 0) {
-	if ((za=_zip_new(&error)) == NULL) {
-	    set_error(zep, &error, 0);
+	if ((za=_zip_allocate_new(fn, zep)) == NULL)
 	    fclose(fp);
-	    return NULL;
-	}
-
-	za->zp = fp;
-	za->zn = strdup(fn);
-	if (!za->zn) {
-	    _zip_free(za);
-	    set_error(zep, NULL, ZIP_ER_MEMORY);
-	    return NULL;
-	}
+	else
+	    za->zp = fp;
 	return za;
     }
 
-    i = fseek(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
-    if (i == -1 && errno != EFBIG) {
-	/* seek before start of file on my machine */
-	set_error(zep, NULL, ZIP_ER_SEEK);
+    cdir = _zip_find_central_dir(fp, flags, zep, len);
+    if (cdir == NULL) {
 	fclose(fp);
 	return NULL;
     }
 
-    /* 64k is too much for stack */
-    if ((buf=(unsigned char *)malloc(CDBUFSIZE)) == NULL) {
-	set_error(zep, NULL, ZIP_ER_MEMORY);
-	fclose(fp);
-	return NULL;
-    }
-
-    clearerr(fp);
-    buflen = fread(buf, 1, CDBUFSIZE, fp);
-
-    if (ferror(fp)) {
-	set_error(zep, NULL, ZIP_ER_READ);
-	free(buf);
-	fclose(fp);
-	return NULL;
-    }
-    
-    best = -1;
-    cdir = NULL;
-    match = buf;
-    _zip_error_set(&err2, ZIP_ER_NOZIP, 0);
-
-    while ((match=_zip_memmem(match, buflen-(match-buf)-18,
-			      (const unsigned char *)EOCD_MAGIC, 4))!=NULL) {
-	/* found match -- check, if good */
-	/* to avoid finding the same match all over again */
-	match++;
-	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, flags,
-				   &err2)) == NULL)
-	    continue;
-
-	if (cdir) {
-	    if (best <= 0)
-		best = _zip_checkcons(fp, cdir, &err2);
-	    a = _zip_checkcons(fp, cdirnew, &err2);
-	    if (best < a) {
-		_zip_cdir_free(cdir);
-		cdir = cdirnew;
-		best = a;
-	    }
-	    else
-		_zip_cdir_free(cdirnew);
-	}
-	else {
-	    cdir = cdirnew;
-	    if (flags & ZIP_CHECKCONS)
-		best = _zip_checkcons(fp, cdir, &err2);
-	    else
-		best = 0;
-	}
-	cdirnew = NULL;
-    }
-
-    free(buf);
-    
-    if (best < 0) {
-	set_error(zep, &err2, 0);
+    if ((za=_zip_allocate_new(fn, zep)) == NULL) {
 	_zip_cdir_free(cdir);
 	fclose(fp);
 	return NULL;
     }
 
-    if ((za=_zip_new(&error)) == NULL) {
-	set_error(zep, &error, 0);
-	_zip_cdir_free(cdir);
-	fclose(fp);
-	return NULL;
-    }
-
-    za->zp = fp;
     za->cdir = cdir;
-    
-    if ((za->zn=strdup(fn)) == NULL) {
-	set_error(zep, NULL, ZIP_ER_MEMORY);
-	_zip_free(za);
-	return NULL;
-    }
+    za->zp = fp;
 
     if ((za->entry=(struct zip_entry *)malloc(sizeof(*(za->entry))
 					      * cdir->nentry)) == NULL) {
@@ -467,6 +363,137 @@ _zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
 	return -1;
 
     return 0;
+}
+
+
+
+static struct zip *
+_zip_allocate_new(const char *fn, int *zep)
+{
+    struct zip *za;
+    struct zip_error error;
+
+    if ((za=_zip_new(&error)) == NULL) {
+	set_error(zep, &error, 0);
+	return NULL;
+    }
+	
+    za->zn = strdup(fn);
+    if (!za->zn) {
+	_zip_free(za);
+	set_error(zep, NULL, ZIP_ER_MEMORY);
+	return NULL;
+    }
+    return za;
+}
+
+
+
+static int
+_zip_file_exists(const char *fn, int flags, int *zep)
+{
+    struct stat st;
+
+    if (fn == NULL) {
+	set_error(zep, NULL, ZIP_ER_INVAL);
+	return -1;
+    }
+    
+    if (stat(fn, &st) != 0) {
+	if (flags & ZIP_CREATE)
+	    return 0;
+	else {
+	    set_error(zep, NULL, ZIP_ER_OPEN);
+	    return -1;
+	}
+    }
+    else if ((flags & ZIP_EXCL)) {
+	set_error(zep, NULL, ZIP_ER_EXISTS);
+	return -1;
+    }
+    /* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
+       just like open() */
+
+    return 1;
+}
+
+
+
+static struct zip_cdir *
+_zip_find_central_dir(FILE *fp, int flags, int *zep, long len)
+{
+    struct zip_cdir *cdir, *cdirnew;
+    unsigned char *buf, *match;
+    int a, best, buflen, i;
+    struct zip_error zerr;
+
+    i = fseek(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
+    if (i == -1 && errno != EFBIG) {
+	/* seek before start of file on my machine */
+	set_error(zep, NULL, ZIP_ER_SEEK);
+	return NULL;
+    }
+
+    /* 64k is too much for stack */
+    if ((buf=(unsigned char *)malloc(CDBUFSIZE)) == NULL) {
+	set_error(zep, NULL, ZIP_ER_MEMORY);
+	return NULL;
+    }
+
+    clearerr(fp);
+    buflen = fread(buf, 1, CDBUFSIZE, fp);
+
+    if (ferror(fp)) {
+	set_error(zep, NULL, ZIP_ER_READ);
+	free(buf);
+	return NULL;
+    }
+    
+    best = -1;
+    cdir = NULL;
+    match = buf;
+    _zip_error_set(&zerr, ZIP_ER_NOZIP, 0);
+
+    while ((match=_zip_memmem(match, buflen-(match-buf)-18,
+			      (const unsigned char *)EOCD_MAGIC, 4))!=NULL) {
+	/* found match -- check, if good */
+	/* to avoid finding the same match all over again */
+	match++;
+	if ((cdirnew=_zip_readcdir(fp, buf, match-1, buflen, flags,
+				   &zerr)) == NULL)
+	    continue;
+
+	if (cdir) {
+	    if (best <= 0)
+		best = _zip_checkcons(fp, cdir, &zerr);
+	    a = _zip_checkcons(fp, cdirnew, &zerr);
+	    if (best < a) {
+		_zip_cdir_free(cdir);
+		cdir = cdirnew;
+		best = a;
+	    }
+	    else
+		_zip_cdir_free(cdirnew);
+	}
+	else {
+	    cdir = cdirnew;
+	    if (flags & ZIP_CHECKCONS)
+		best = _zip_checkcons(fp, cdir, &zerr);
+	    else
+		best = 0;
+	}
+	cdirnew = NULL;
+    }
+
+    free(buf);
+    
+    if (best < 0) {
+	set_error(zep, &zerr, 0);
+	_zip_cdir_free(cdir);
+	return NULL;
+    }
+
+    return cdir;
 }
 
 
