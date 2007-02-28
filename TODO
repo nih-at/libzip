@@ -11,6 +11,8 @@
 * [bug] zip_open: check whether file can be created and fail if not
 * [bug] check, if general flags bit 3 is set, and use central
   header information about file sizes in that case
+* check for limits imposed by format (central dir size, file size, others?)
+* handle zip_open/zip_close "race" for new files
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
