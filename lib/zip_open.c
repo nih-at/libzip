@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.40 2007/01/05 13:14:22 dillo Exp $
+  $NiH: zip_open.c,v 1.41 2007/02/28 09:29:27 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
@@ -214,8 +214,10 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	/* go to start of cdir and read it entry by entry */
 	bufp = NULL;
 	clearerr(fp);
-	fseek(fp, -(cd->size+cd->comment_len+EOCDLEN), SEEK_END);
-	if (ferror(fp) || ((unsigned int)ftell(fp) != cd->offset)) {
+	fseek(fp, cd->offset, SEEK_SET);
+	/* possible consistency check: cd->offset =
+	   len-(cd->size+cd->comment_len+EOCDLEN) ? */
+	if (ferror(fp) || ((unsigned long)ftell(fp) != cd->offset)) {
 	    /* seek error or offset of cdir wrong */
 	    if (ferror(fp))
 		_zip_error_set(error, ZIP_ER_SEEK, errno);
