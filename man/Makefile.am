@@ -60,6 +60,7 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_strerror.3
 
 uninstall-hook:
+	-rm -f ${DESTDIR}${man3dir}/zip_file_error_clear.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_error_get.3
 	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index.3
 	-rm -f ${DESTDIR}${man3dir}/zip_replace.3
