@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.63 2007/01/28 08:03:56 wiz Exp $
+  $NiH: zip_close.c,v 1.64 2007/01/28 08:07:40 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005, 2007 Dieter Baron and Thomas Klausner
@@ -71,6 +71,9 @@ zip_close(struct zip *za)
     int reopen_on_error;
 
     reopen_on_error = 0;
+
+    if (za == NULL)
+	return -1;
 
     if (!_zip_changed(za, &survivors)) {
 	_zip_free(za);
