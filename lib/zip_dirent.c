@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.8 2006/02/21 09:41:00 dillo Exp $
+  $NiH: zip_dirent.c,v 1.9 2006/04/23 14:51:45 wiz Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -393,6 +393,8 @@ _zip_d2u_time(int dtime, int ddate)
 
     now = time(NULL);
     tm = localtime(&now);
+    /* let mktime decide if DST is in effect */
+    tm->tm_isdst = -1;
     
     tm->tm_year = ((ddate>>9)&127) + 1980 - 1900;
     tm->tm_mon = ((ddate>>5)&15) - 1;
