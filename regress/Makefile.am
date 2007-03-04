@@ -23,7 +23,7 @@ EXTRA_DIST= \
 	testfile.txt testfile.zip \
 	broken.zip test.zip encrypt.zip
 
-TESTS_ENVIRONMENT=	ZIPCMP=../src/zipcmp
+TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
 
 TESTCASES= \
 	add_from_buffer.test \
@@ -41,10 +41,8 @@ TESTCASES= \
 
 check:
 	@failed=0; all=0; \
-	srcdir=$(srcdir); export srcdir; \
 	for tst in ${TESTCASES}; do \
-	  t=`basename $$tst .test`; \
-	  if ${TESTS_ENVIRONMENT} $(srcdir)/runtest $$t; then \
+	  if ${TESTS_ENVIRONMENT} $(srcdir)/runtest `pwd`/${top_srcdir}/regress/$$tst; then \
 	    all=`expr $$all + 1`; \
 	    echo "PASS: $$tst"; \
 	  elif test $$? -ne 77; then \
@@ -65,4 +63,4 @@ check:
 	test "$$failed" -eq 0
 
 AM_CPPFLAGS=-I${top_srcdir}/lib
-LDADD=../lib/libzip.la
+LDADD=${top_builddir}/lib/libzip.la
