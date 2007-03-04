@@ -1,6 +1,4 @@
-* fix 3 test cases with comments
 * [bug] zip_open: consistency check: check data descriptor
-* add way to overwrite file (if existing file has size 0, create new archive)
 * add functions to:
   . set compression method for new/changed entry
   . set last modification time for entry
