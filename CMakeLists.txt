@@ -1,4 +1,11 @@
-# $NiH$
+# $NiH: CMakeLists.txt,v 1.1 2007/03/04 10:35:17 wiz Exp $
+
+# XXX: TODO
+# 1. pkgconfig file not yet built.
+# 2. installation not tested.
+# 3. Problems generating html pages.
+# 4. distribution tarball not checked for unwanted/missing content.
+# 5. create usable libtool .la file
 
 PROJECT(libzip C)
 
