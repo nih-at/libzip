@@ -1,3 +1,5 @@
+* [consistency check] check that local headers come before central dir
+* [cleanup] remove now useless check of fseek 
 * [bug] zip_open: consistency check: check data descriptor
 * add functions to:
   . set compression method for new/changed entry
