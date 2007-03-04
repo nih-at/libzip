@@ -1,3 +1,5 @@
+# $NiH$
+
 INCLUDE(CheckFunctionExists)
 
 INSTALL(FILES zip.h DESTINATION include)
