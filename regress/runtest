@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#  $NiH$
+#  $NiH: runtest,v 1.3 2006/04/23 00:38:20 wiz Exp $
 
 #  from ckmame:runtest,v 1.22 2005/12/27 09:41:51 dillo Exp
 #
@@ -201,16 +201,23 @@ copy_file() {
 LC_ALL=C
 export LC_ALL
 
-TEST=`echo $1 | sed 's/\.test$//'`
+testdir=$(dirname $1)
+TEST=$(echo $1 | sed -e s',.*/,,' -e 's/\.test$//')
 shift
 
 DIR=${TEST}.d$$
-if [ -z "${srcdir}" ]
+# echo ${TEST}::${srcdir}::${testdir}
+if [ ! -z "${testdir}" ]
 then
-    srcdir=..
+    srcdir=${testdir}
 else
+    if [ -z "${srcdir}" ]
+    then
+	srcdir=..
+    else
 	# XXX: fix for absolute srcdir?
 	srcdir=../${srcdir}
+    fi
 fi
 
 if [ -z "${ZIPCMP}" ]
