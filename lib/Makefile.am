@@ -59,7 +59,8 @@ libzip_la_SOURCES=\
 
 BUILT_SOURCES=zip_err_str.c
 
-EXTRA_DIST=make_zip_err_str.sh
+EXTRA_DIST=	CMakeLists.txt \
+		make_zip_err_str.sh
 
 zip_err_str.c: zip.h make_zip_err_str.sh
 	sh $(srcdir)/make_zip_err_str.sh $(srcdir)/zip.h zip_err_str.c

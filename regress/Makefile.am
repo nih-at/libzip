@@ -15,6 +15,7 @@ noinst_PROGRAMS= \
 EXTRA_PROGRAMS=deltest ziptest
 
 EXTRA_DIST= \
+	CMakeLists.txt \
 	runtest \
 	${TESTCASES} \
 	testbuffer.zip \
