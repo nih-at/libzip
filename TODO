@@ -47,7 +47,6 @@ zip_source_vprintf(struct zip_source *, const char *fmt, va_list ap);
 * add custom compression function support
 * zip_replace_zip: remember compression method, recompress if different speced
 * close even if error...
-* update-zip (instead of close, reopen)
 * support for old compression methods?????
 ------------------------------------------------ regression tests
 * (add, replace)
