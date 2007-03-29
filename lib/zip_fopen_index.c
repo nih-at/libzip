@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.23 2005/01/17 10:45:20 dillo Exp $
+  $NiH: zip_fopen_index.c,v 1.24 2005/05/20 21:54:53 wiz Exp $
 
   zip_fopen_index.c -- open file in zip archive for reading by index
   Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -152,7 +152,7 @@ _zip_file_fillbuf(void *buf, size_t buflen, struct zip_file *zf)
     if ((zf->flags & ZIP_ZF_EOF) || zf->cbytes_left <= 0 || buflen <= 0)
 	return 0;
     
-    if (fseek(zf->za->zp, zf->fpos, SEEK_SET) < 0) {
+    if (fseeko(zf->za->zp, zf->fpos, SEEK_SET) < 0) {
 	_zip_error_set(&zf->error, ZIP_ER_SEEK, errno);
 	return -1;
     }

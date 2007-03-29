@@ -2,7 +2,7 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.48 2006/04/24 14:04:19 dillo Exp $
+  $NiH: zipint.h,v 1.50 2006/10/04 15:21:09 dillo Exp $
 
   zipint.h -- internal declarations.
   Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
@@ -48,6 +48,9 @@ int _zip_mkstemp(char *);
 
 #ifndef HAVE_FSEEKO
 #define fseeko(s, o, w)	(fseek((s), (long int)(o), (w)))
+#endif
+#ifndef HAVE_FTELLO
+#define ftello(s)	((long)ftell((s)))
 #endif
 
 
@@ -117,7 +120,7 @@ struct zip_file {
     int flags;			/* -1: eof, >0: error */
 
     int method;			/* compression method */
-    long fpos;			/* position within zip file (fread/fwrite) */
+    off_t fpos;			/* position within zip file (fread/fwrite) */
     unsigned long bytes_left;	/* number of bytes left to read */
     unsigned long cbytes_left;  /* number of bytes of compressed data left */
     

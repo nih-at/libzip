@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_open.c,v 1.41 2007/02/28 09:29:27 wiz Exp $
+  $NiH: zip_open.c,v 1.42 2007/02/28 18:08:39 wiz Exp $
 
   zip_open.c -- open zip archive
   Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
@@ -47,7 +47,7 @@
 static void set_error(int *, struct zip_error *, int);
 static struct zip *_zip_allocate_new(const char *, int *);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
-static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, long);
+static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, off_t);
 static int _zip_file_exists(const char *, int, int *);
 static int _zip_headercomp(struct zip_dirent *, int,
 			   struct zip_dirent *, int);
@@ -65,8 +65,8 @@ zip_open(const char *fn, int flags, int *zep)
     struct zip *za;
     struct zip_cdir *cdir;
     int i;
-    long len;
-
+    off_t len;
+    
     switch (_zip_file_exists(fn, flags, zep)) {
     case -1:
 	return NULL;
@@ -81,8 +81,8 @@ zip_open(const char *fn, int flags, int *zep)
 	return NULL;
     }
 
-    fseek(fp, 0, SEEK_END);
-    len = ftell(fp);
+    fseeko(fp, 0, SEEK_END);
+    len = ftello(fp);
 
     /* treat empty files as empty archives */
     if (len == 0) {
@@ -214,10 +214,10 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	/* go to start of cdir and read it entry by entry */
 	bufp = NULL;
 	clearerr(fp);
-	fseek(fp, cd->offset, SEEK_SET);
+	fseeko(fp, cd->offset, SEEK_SET);
 	/* possible consistency check: cd->offset =
 	   len-(cd->size+cd->comment_len+EOCDLEN) ? */
-	if (ferror(fp) || ((unsigned long)ftell(fp) != cd->offset)) {
+	if (ferror(fp) || ((unsigned long)ftello(fp) != cd->offset)) {
 	    /* seek error or offset of cdir wrong */
 	    if (ferror(fp))
 		_zip_error_set(error, ZIP_ER_SEEK, errno);
@@ -279,7 +279,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	    return -1;
 	}
 	
-	if (fseek(fp, cd->entry[i].offset, SEEK_SET) != 0) {
+	if (fseeko(fp, cd->entry[i].offset, SEEK_SET) != 0) {
 	    _zip_error_set(error, ZIP_ER_SEEK, 0);
 	    return -1;
 	}
@@ -422,14 +422,14 @@ _zip_file_exists(const char *fn, int flags, int *zep)
 
 
 static struct zip_cdir *
-_zip_find_central_dir(FILE *fp, int flags, int *zep, long len)
+_zip_find_central_dir(FILE *fp, int flags, int *zep, off_t len)
 {
     struct zip_cdir *cdir, *cdirnew;
     unsigned char *buf, *match;
     int a, best, buflen, i;
     struct zip_error zerr;
 
-    i = fseek(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
+    i = fseeko(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */
 	set_error(zep, NULL, ZIP_ER_SEEK);

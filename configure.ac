@@ -41,7 +41,7 @@ AC_EXEEXT
 
 AM_PROG_LIBTOOL
 
-AC_CHECK_FUNCS([fseeko MoveFileEx])
+AC_CHECK_FUNCS([fseeko ftello MoveFileEx])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 AC_CHECK_HEADERS([unistd.h])

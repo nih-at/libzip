@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_close.c,v 1.64 2007/01/28 08:07:40 wiz Exp $
+  $NiH: zip_close.c,v 1.65 2007/02/28 10:44:15 wiz Exp $
 
   zip_close.c -- close zip archive and update changes
   Copyright (C) 1999, 2004, 2005, 2007 Dieter Baron and Thomas Klausner
@@ -137,7 +137,7 @@ zip_close(struct zip *za)
 	}
 	else {
 	    /* copy existing directory entries */
-	    if (fseek(za->zp, za->cdir->entry[i].offset, SEEK_SET) != 0) {
+	    if (fseeko(za->zp, za->cdir->entry[i].offset, SEEK_SET) != 0) {
 		_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 		error = 1;
 		break;
@@ -172,7 +172,7 @@ zip_close(struct zip *za)
 	    cd->entry[j].comment_len = za->entry[i].ch_comment_len;
 	}
 
-	cd->entry[j].offset = ftell(out);
+	cd->entry[j].offset = ftello(out);
 
 	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
 	    if (add_data(za, i, &de, out) < 0) {
@@ -275,7 +275,7 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 	return -1;
     }
 
-    offstart = ftell(ft);
+    offstart = ftello(ft);
 
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
@@ -294,9 +294,9 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
 	return -1;
     }
 
-    offend = ftell(ft);
+    offend = ftello(ft);
 
-    if (fseek(ft, offstart, SEEK_SET) < 0) {
+    if (fseeko(ft, offstart, SEEK_SET) < 0) {
 	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
     }
@@ -310,7 +310,7 @@ add_data(struct zip *za, int idx, struct zip_dirent *de, FILE *ft)
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
     
-    if (fseek(ft, offend, SEEK_SET) < 0) {
+    if (fseeko(ft, offend, SEEK_SET) < 0) {
 	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
     }

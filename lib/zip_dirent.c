@@ -1,5 +1,5 @@
 /*
-  $NiH: zip_dirent.c,v 1.9 2006/04/23 14:51:45 wiz Exp $
+  $NiH: zip_dirent.c,v 1.10 2007/03/03 13:48:08 wiz Exp $
 
   zip_dirent.c -- read directory entry (local or central), clean dirent
   Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
@@ -105,14 +105,14 @@ _zip_cdir_write(struct zip_cdir *cd, FILE *fp, struct zip_error *error)
 {
     int i;
 
-    cd->offset = ftell(fp);
+    cd->offset = ftello(fp);
 
     for (i=0; i<cd->nentry; i++) {
 	if (_zip_dirent_write(cd->entry+i, fp, 0, error) != 0)
 	    return -1;
     }
 
-    cd->size = ftell(fp) - cd->offset;
+    cd->size = ftello(fp) - cd->offset;
     
     /* clearerr(fp); */
     fwrite(EOCD_MAGIC, 1, 4, fp);
