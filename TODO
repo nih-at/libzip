@@ -1,18 +1,18 @@
++ [bug] check/cleaup flags bit 3 (streaming) support
+. [cleanup] remove now useless check of fseek 
 * [consistency check] check that local headers come before central dir
-* [cleanup] remove now useless check of fseek 
 * [bug] zip_open: consistency check: check data descriptor
-* add functions to:
+* [bug] do not compress if storing is smaller
+* [bug] zip_open: check whether file can be created and fail if not
+* [bug] check for limits imposed by format (central dir size, file size, ...)
+- [feature] handle zip_open/zip_close "race" for new files
+- [feature] support streaming output (creating new archive to e.g. stdout)
+- [feature] add functions to:
   . set compression method for new/changed entry
   . set last modification time for entry
   . read/set EAs
   . parse/create some EAs?
   . read/set ASCII file flag
-* [bug] do not compress if storing is smaller
-* [bug] zip_open: check whether file can be created and fail if not
-* [bug] check, if general flags bit 3 is set, and use central
-  header information about file sizes in that case
-* check for limits imposed by format (central dir size, file size, others?)
-* handle zip_open/zip_close "race" for new files
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
