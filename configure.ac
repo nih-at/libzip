@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT([libzip],[0.7.1a],[libzip@nih.at])
+AC_INIT([libzip],[0.7.1b],[libzip@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
