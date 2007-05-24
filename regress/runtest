@@ -201,8 +201,8 @@ copy_file() {
 LC_ALL=C
 export LC_ALL
 
-testdir=$(dirname $1)
-TEST=$(echo $1 | sed -e s',.*/,,' -e 's/\.test$//')
+testdir=`dirname $1`
+TEST=`echo $1 | sed -e s',.*/,,' -e 's/\.test$//'`
 shift
 
 DIR=${TEST}.d$$
