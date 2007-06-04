@@ -4,7 +4,7 @@
 * fix zip_error_strerror to include libzip error string
 * add support for streamed zip files
 * new functions: zip_add_dir, zip_error_clear, zip_file_error_clear
-* add basic support for building with CMake
+* add basic support for building with CMake (incomplete)
 
 0.7.1 [2006/05/18]
 
