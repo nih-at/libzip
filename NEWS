@@ -1,4 +1,4 @@
-0.8
+0.8 [2007/06/06]
 
 * fix for zip archvies larger than 2GiB
 * fix zip_error_strerror to include libzip error string
