@@ -1,6 +1,4 @@
-.\" Converted with mdoc2man 0.2
-.\" from NiH: zip_stat_init.mdoc,v 1.1 2006/12/16 10:13:13 wiz Exp 
-.\" $NiH: zip_stat_init.mdoc,v 1.1 2006/12/16 10:13:13 wiz Exp $
+.\" $NiH$
 .\"
 .\" zip_stat_init.mdoc \-- init zip_stat structure
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner

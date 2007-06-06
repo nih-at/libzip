@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_add_dir.mdoc,v 1.2 2006/10/03 19:35:52 dillo Exp 
-.\" $NiH: zip_add_dir.mdoc,v 1.2 2006/10/03 19:35:52 dillo Exp $
+.\" from NiH: zip_add_dir.mdoc,v 1.1 2006/10/03 18:55:51 wiz Exp 
+.\" $NiH: zip_add_dir.mdoc,v 1.1 2006/10/03 18:55:51 wiz Exp $
 .\"
 .\" zip_add_dir.mdoc \-- add directory to zip archive
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner

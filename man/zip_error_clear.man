@@ -1,6 +1,4 @@
-.\" Converted with mdoc2man 0.2
-.\" from NiH: zip_error_clear.mdoc,v 1.1 2006/10/04 18:31:09 wiz Exp 
-.\" $NiH: zip_error_clear.mdoc,v 1.1 2006/10/04 18:31:09 wiz Exp $
+.\" $NiH$
 .\"
 .\" zip_clear_error.mdoc \-- clear error state for archive or file
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner

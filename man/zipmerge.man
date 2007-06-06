@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zipmerge.mdoc,v 1.6 2005/06/09 21:14:54 wiz Exp 
-.\" $NiH: zipmerge.mdoc,v 1.6 2005/06/09 21:14:54 wiz Exp $
+.\" from NiH: zipmerge.mdoc,v 1.5 2005/06/09 21:13:13 wiz Exp 
+.\" $NiH: zipmerge.mdoc,v 1.5 2005/06/09 21:13:13 wiz Exp $
 .\"
 .\" zipmerge.mdoc \-- merge zip archives
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner

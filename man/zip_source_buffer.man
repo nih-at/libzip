@@ -1,6 +1,6 @@
 .\" Converted with mdoc2man 0.2
-.\" from NiH: zip_source_buffer.mdoc,v 1.6 2005/07/20 17:18:04 wiz Exp 
-.\" $NiH: zip_source_buffer.mdoc,v 1.6 2005/07/20 17:18:04 wiz Exp $
+.\" from NiH: zip_source_buffer.mdoc,v 1.5 2005/06/09 21:14:54 wiz Exp 
+.\" $NiH: zip_source_buffer.mdoc,v 1.5 2005/06/09 21:14:54 wiz Exp $
 .\"
 .\" zip_source_buffer.mdoc \-- create zip data source from buffer
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
