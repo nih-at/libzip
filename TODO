@@ -1,3 +1,10 @@
++ [feature] Windows support:
+  . better mkstemp replacement function (no getpid; other problems?)
+  . snprintf replacement
+  . strcasecmp replacement
+  . ssize_t define
+  . mode_t define
+  . dll_export/dll_import support (to clarify)
 + [bug] check/cleanup flags bit 3 (streaming) support
 . [cleanup] remove now useless check of fseek 
 * [consistency check] check that local headers come before central dir
