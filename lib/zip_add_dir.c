@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_add.c,v 1.14 2004/11/18 15:04:04 wiz Exp $
-
   zip_add_dir.c -- add directory
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -38,12 +36,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-int
+ZIP_EXTERN int
 zip_add_dir(struct zip *za, const char *name)
 {
     int len, ret;

@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_fopen_index.c,v 1.24 2005/05/20 21:54:53 wiz Exp $
-
   zip_fopen_index.c -- open file in zip archive for reading by index
-  Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -39,14 +37,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 static struct zip_file *_zip_file_new(struct zip *za);
 
 
 
-struct zip_file *
+ZIP_EXTERN struct zip_file *
 zip_fopen_index(struct zip *za, int fileno, int flags)
 {
     int len, ret;

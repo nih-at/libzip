@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_fread.c,v 1.20 2006/02/22 19:52:20 dillo Exp $
-
   zip_fread.c -- read from file
-  Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,12 +33,11 @@
 
 
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-ssize_t
+ZIP_EXTERN ssize_t
 zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 {
     int ret;

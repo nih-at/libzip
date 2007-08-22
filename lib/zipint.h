@@ -2,10 +2,8 @@
 #define _HAD_ZIPINT_H
 
 /*
-  $NiH: zipint.h,v 1.50 2006/10/04 15:21:09 dillo Exp $
-
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -37,6 +35,10 @@
 */
 
 #include <zlib.h>
+
+#ifdef _MSC_VER
+#define ZIP_EXTERN __declspec(dllimport)
+#endif
 
 #include "zip.h"
 #include "config.h"

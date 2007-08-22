@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_file_get_offset.c,v 1.4 2006/04/23 14:51:45 wiz Exp $
-
   zip_file_get_offset.c -- get offset of file data in archive.
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -42,7 +40,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 

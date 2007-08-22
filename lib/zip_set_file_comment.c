@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_set_file_comment.c,v 1.3 2006/04/23 15:26:30 dillo Exp $
-
   zip_set_file_comment.c -- set comment for file in archive
-  Copyright (C) 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2006-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -37,12 +35,11 @@
 
 #include <stdlib.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-int
+ZIP_EXTERN int
 zip_set_file_comment(struct zip *za, int idx, const char *comment, int len)
 {
     char *tmpcom;

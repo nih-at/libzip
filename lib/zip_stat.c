@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_stat.c,v 1.2 2004/04/14 14:01:28 dillo Exp $
-
   zip_stat.c -- get information about file by name
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,12 +33,11 @@
 
 
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-int
+ZIP_EXTERN int
 zip_stat(struct zip *za, const char *fname, int flags, struct zip_stat *st)
 {
     int idx;

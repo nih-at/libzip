@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_close.c,v 1.65 2007/02/28 10:44:15 wiz Exp $
-
   zip_close.c -- close zip archive and update changes
-  Copyright (C) 1999, 2004, 2005, 2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -42,7 +40,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 static int add_data(struct zip *, int, struct zip_dirent *, FILE *);
@@ -58,7 +55,7 @@ static char *_zip_create_temp_output(struct zip *, FILE **);
 
 
 
-int
+ZIP_EXTERN int
 zip_close(struct zip *za)
 {
     int survivors;

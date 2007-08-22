@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_new.c,v 1.11 2005/06/09 19:57:10 dillo Exp $
-
   zip_new.c -- create and init struct zip
-  Copyright (C) 1999, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -36,7 +34,7 @@
 
 
 #include <stdlib.h>
-#include "zip.h"
+
 #include "zipint.h"
 
 

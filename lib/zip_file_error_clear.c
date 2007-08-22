@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_file_error_clear.c,v 1.3 2006/10/04 18:26:42 dillo Exp $
-
   zip_file_error_clear.c -- clear zip file error
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,12 +33,11 @@
 
 
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-void
+ZIP_EXTERN void
 zip_file_error_clear(struct zip_file *zf)
 {
     _zip_error_clear(&zf->error);

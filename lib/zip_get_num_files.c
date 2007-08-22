@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_get_num_files.c,v 1.1 2003/10/06 02:50:06 dillo Exp $
-
   zip_get_num_files.c -- get number of files in archive
-  Copyright (C) 1999, 2003 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,12 +33,11 @@
 
 
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-int
+ZIP_EXTERN int
 zip_get_num_files(struct zip *za)
 {
     if (za == NULL)

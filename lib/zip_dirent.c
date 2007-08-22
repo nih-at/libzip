@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_dirent.c,v 1.10 2007/03/03 13:48:08 wiz Exp $
-
   zip_dirent.c -- read directory entry (local or central), clean dirent
-  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -42,7 +40,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 static time_t _zip_d2u_time(int, int);

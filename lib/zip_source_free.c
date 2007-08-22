@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_source_free.c,v 1.1 2004/11/18 15:06:24 wiz Exp $
-
   zip_source_free.c -- free zip data source
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -37,12 +35,11 @@
 
 #include <stdlib.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-void
+ZIP_EXTERN void
 zip_source_free(struct zip_source *source)
 {
     if (source == NULL)

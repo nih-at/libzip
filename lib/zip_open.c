@@ -1,6 +1,4 @@
 /*
-  $NiH: zip_open.c,v 1.42 2007/02/28 18:08:39 wiz Exp $
-
   zip_open.c -- open zip archive
   Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
@@ -41,7 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 static void set_error(int *, struct zip_error *, int);
@@ -58,7 +55,7 @@ static struct zip_cdir *_zip_readcdir(FILE *, unsigned char *, unsigned char *,
 
 
 
-struct zip *
+ZIP_EXTERN struct zip *
 zip_open(const char *fn, int flags, int *zep)
 {
     FILE *fp;

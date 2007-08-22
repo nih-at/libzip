@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_error_to_str.c,v 1.4 2004/11/17 21:55:10 wiz Exp $
-
   zip_error_to_str.c -- get string representation of zip error code
-  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -40,12 +38,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-int
+ZIP_EXTERN int
 zip_error_to_str(char *buf, size_t len, int ze, int se)
 {
     const char *zs, *ss;

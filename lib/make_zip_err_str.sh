@@ -1,9 +1,7 @@
 #!/bin/sh
 
-#  $NiH: make_zip_err_str.sh,v 1.7 2004/04/25 16:20:16 dillo Exp $
-#
 #  make_zip_err_str.sh: create zip_err_str.c from zip.h
-#  Copyright (C) 1999, 2003, 2004 Dieter Baron and Thomas Klausner
+#  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 #
 #  This file is part of libzip, a library to manipulate ZIP archives.
 #  The authors can be contacted at <nih@giga.or.at>
@@ -47,19 +45,15 @@ then
     exit 1
 fi
 
-rcsid=`echo '$NiH: make_zip_err_str.sh,v 1.7 2004/04/25 16:20:16 dillo Exp $' | tr -d '$'`
-inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
+#rcsid=`echo '$NiH: make_zip_err_str.sh,v 1.7 2004/04/25 16:20:16 dillo Exp $' | tr -d '$'`
+#inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
 
 cat <<EOF >> "$2.$$" || exit 1
 /*
    This file was generated automatically by $0
    from $1; make changes there.
-
-	$rcsid
-	$inrcsid
  */
 
-#include "zip.h"
 #include "zipint.h"
 
 

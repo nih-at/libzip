@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_stat_index.c,v 1.10 2006/04/24 14:04:19 dillo Exp $
-
   zip_stat_index.c -- get information about file by index
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,12 +33,11 @@
 
 
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-int
+ZIP_EXTERN int
 zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
 {
     const char *name;

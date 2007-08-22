@@ -1,8 +1,6 @@
 /*
-  $NiH: zip_get_file_comment.c,v 1.1 2006/04/09 19:05:47 wiz Exp $
-
   zip_get_file_comment.c -- get file comment
-  Copyright (C) 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2006-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -35,12 +33,11 @@
 
 
 
-#include "zip.h"
 #include "zipint.h"
 
 
 
-const char *
+ZIP_EXTERN const char *
 zip_get_file_comment(struct zip *za, int idx, int *lenp, int flags)
 {
     if (idx < 0 || idx >= za->nentry) {

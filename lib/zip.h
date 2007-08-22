@@ -2,10 +2,8 @@
 #define _HAD_ZIP_H
 
 /*
-  $NiH: zip.h,v 1.59 2006/10/04 15:21:09 dillo Exp $
-
   zip.h -- exported declarations.
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <nih@giga.or.at>
@@ -37,6 +35,14 @@
 */
 
 
+
+#ifndef ZIP_EXTERN
+#ifdef _MSC_VER
+#define ZIP_EXTERN __declspec(dllexport)
+#else
+#define ZIP_EXTERN
+#endif
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -159,46 +165,49 @@ struct zip_source;
 
 
 
-int zip_add(struct zip *, const char *, struct zip_source *);
-int zip_add_dir(struct zip *, const char *);
-int zip_close(struct zip *);
-int zip_delete(struct zip *, int);
-void zip_error_clear(struct zip *);
-void zip_error_get(struct zip *, int *, int *);
-int zip_error_get_sys_type(int);
-int zip_error_to_str(char *, size_t, int, int);
-int zip_fclose(struct zip_file *);
-void zip_file_error_clear(struct zip_file *);
-void zip_file_error_get(struct zip_file *, int *, int *);
-const char *zip_file_strerror(struct zip_file *);
-struct zip_file *zip_fopen(struct zip *, const char *, int);
-struct zip_file *zip_fopen_index(struct zip *, int, int);
-ssize_t zip_fread(struct zip_file *, void *, size_t);
-const char *zip_get_archive_comment(struct zip *, int *, int);
-const char *zip_get_file_comment(struct zip *, int, int *, int);
-const char *zip_get_name(struct zip *, int, int);
-int zip_get_num_files(struct zip *);
-int zip_name_locate(struct zip *, const char *, int);
-struct zip *zip_open(const char *, int, int *);
-int zip_rename(struct zip *, int, const char *);
-int zip_replace(struct zip *, int, struct zip_source *);
-int zip_set_archive_comment(struct zip *, const char *, int);
-int zip_set_file_comment(struct zip *, int, const char *, int);
-struct zip_source *zip_source_buffer(struct zip *, const void *, off_t, int);
-struct zip_source *zip_source_file(struct zip *, const char *, off_t, off_t);
-struct zip_source *zip_source_filep(struct zip *, FILE *, off_t, off_t);
-void zip_source_free(struct zip_source *);
-struct zip_source *zip_source_function(struct zip *,
-				       zip_source_callback, void *);
-struct zip_source *zip_source_zip(struct zip *, struct zip *, int, int,
-				  off_t, off_t);
-int zip_stat(struct zip *, const char *, int, struct zip_stat *);
-int zip_stat_index(struct zip *, int, int, struct zip_stat *);
-void zip_stat_init(struct zip_stat *);
-const char *zip_strerror(struct zip *);
-int zip_unchange(struct zip *, int);
-int zip_unchange_all(struct zip *);
-int zip_unchange_archive(struct zip *);
+ZIP_EXTERN int zip_add(struct zip *, const char *, struct zip_source *);
+ZIP_EXTERN int zip_add_dir(struct zip *, const char *);
+ZIP_EXTERN int zip_close(struct zip *);
+ZIP_EXTERN int zip_delete(struct zip *, int);
+ZIP_EXTERN void zip_error_clear(struct zip *);
+ZIP_EXTERN void zip_error_get(struct zip *, int *, int *);
+ZIP_EXTERN int zip_error_get_sys_type(int);
+ZIP_EXTERN int zip_error_to_str(char *, size_t, int, int);
+ZIP_EXTERN int zip_fclose(struct zip_file *);
+ZIP_EXTERN void zip_file_error_clear(struct zip_file *);
+ZIP_EXTERN void zip_file_error_get(struct zip_file *, int *, int *);
+ZIP_EXTERN const char *zip_file_strerror(struct zip_file *);
+ZIP_EXTERN struct zip_file *zip_fopen(struct zip *, const char *, int);
+ZIP_EXTERN struct zip_file *zip_fopen_index(struct zip *, int, int);
+ZIP_EXTERN ssize_t zip_fread(struct zip_file *, void *, size_t);
+ZIP_EXTERN const char *zip_get_archive_comment(struct zip *, int *, int);
+ZIP_EXTERN const char *zip_get_file_comment(struct zip *, int, int *, int);
+ZIP_EXTERN const char *zip_get_name(struct zip *, int, int);
+ZIP_EXTERN int zip_get_num_files(struct zip *);
+ZIP_EXTERN int zip_name_locate(struct zip *, const char *, int);
+ZIP_EXTERN struct zip *zip_open(const char *, int, int *);
+ZIP_EXTERN int zip_rename(struct zip *, int, const char *);
+ZIP_EXTERN int zip_replace(struct zip *, int, struct zip_source *);
+ZIP_EXTERN int zip_set_archive_comment(struct zip *, const char *, int);
+ZIP_EXTERN int zip_set_file_comment(struct zip *, int, const char *, int);
+ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
+						off_t, int);
+ZIP_EXTERN struct zip_source *zip_source_file(struct zip *, const char *,
+					      off_t, off_t);
+ZIP_EXTERN struct zip_source *zip_source_filep(struct zip *, FILE *,
+					       off_t, off_t);
+ZIP_EXTERN void zip_source_free(struct zip_source *);
+ZIP_EXTERN struct zip_source *zip_source_function(struct zip *,
+						  zip_source_callback, void *);
+ZIP_EXTERN struct zip_source *zip_source_zip(struct zip *, struct zip *,
+					     int, int, off_t, off_t);
+ZIP_EXTERN int zip_stat(struct zip *, const char *, int, struct zip_stat *);
+ZIP_EXTERN int zip_stat_index(struct zip *, int, int, struct zip_stat *);
+ZIP_EXTERN void zip_stat_init(struct zip_stat *);
+ZIP_EXTERN const char *zip_strerror(struct zip *);
+ZIP_EXTERN int zip_unchange(struct zip *, int);
+ZIP_EXTERN int zip_unchange_all(struct zip *);
+ZIP_EXTERN int zip_unchange_archive(struct zip *);
 
 #ifdef __cplusplus
 }
