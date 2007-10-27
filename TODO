@@ -1,5 +1,6 @@
 - [doc] document that no empty archives will be created
 - [bug] zip_close: on empty archive, don't try to delete non-existant file
+- [bug] zip_merge: zip_close too early for source archives
 + [feature] Windows support:
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement
