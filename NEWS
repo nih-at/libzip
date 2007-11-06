@@ -1,3 +1,8 @@
+0.8.1
+
+* on Windows, explictly set dllimport/dllexport
+* remove erroneous references to GPL
+
 0.8 [2007/06/06]
 
 * fix for zip archives larger than 2GiB
