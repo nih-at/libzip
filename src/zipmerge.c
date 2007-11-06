@@ -1,11 +1,9 @@
 /*
-  $NiH: zipmerge.c,v 1.12 2006/04/23 14:51:08 wiz Exp $
-
   zipmerge.c -- merge zip archives
-  Copyright (C) 2004-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
-  The authors can be contacted at <nih@giga.or.at>
+  The authors can be contacted at <libzip@nih.at>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
@@ -69,14 +67,11 @@ char help[] = "\n\
   -S       don't overwrite identical files\n\
   -s       overwrite identical files without asking\n\
 \n\
-Report bugs to <nih@giga.or.at>.\n";
+Report bugs to <libizp@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2003 Dieter Baron and Thomas Klausner\n\
-" PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n\
-You may redistribute copies of\n\
-" PACKAGE " under the terms of the GNU General Public License.\n\
-For more information about these matters, see the files named COPYING.\n";
+Copyright (C) 2007 Dieter Baron and Thomas Klausner\n\
+" PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVDiIsS"
 

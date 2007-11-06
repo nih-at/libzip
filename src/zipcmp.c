@@ -1,11 +1,9 @@
 /*
-  $NiH: zipcmp.c,v 1.20 2006/04/23 18:47:34 dillo Exp $
-
   zipcmp.c -- compare zip files
-  Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2007 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
-  The authors can be contacted at <nih@giga.or.at>
+  The authors can be contacted at <libzip@nih.at>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
@@ -70,14 +68,12 @@ char help[] = "\n\
   -t       test zip files\n\
   -v       be verbose (print differences, default)\n\
 \n\
-Report bugs to <nih@giga.or.at>.\n";
+Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2003 Dieter Baron and Thomas Klausner\n\
-" PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n\
-You may redistribute copies of\n\
-" PACKAGE " under the terms of the GNU General Public License.\n\
-For more information about these matters, see the files named COPYING.\n";
+Copyright (C) 2007 Dieter Baron and Thomas Klausner\n\
+" PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n
+";
 
 #define OPTIONS "hViqtv"
 
