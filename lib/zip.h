@@ -116,6 +116,13 @@ extern "C" {
 #define ZIP_CM_PKWARE_IMPLODE 10  /* PKWARE imploding */
 /* 11 - Reserved by PKWARE */
 #define ZIP_CM_BZIP2          12  /* compressed using BZIP2 algorithm */
+/* 13 - Reserved by PKWARE */
+#define ZIP_CM_LZMA	      14  /* LZMA (EFS) */
+/* 15-17 - Reserved by PKWARE */
+#define ZIP_CM_TERSE	      18  /* compressed using IBM TERSE (new) */
+#define ZIP_CM_LZ77           19  /* IBM LZ77 z Architecture (PFS) */
+#define ZIP_CM_WAVPACK	      97  /* WavPack compressed data */
+#define ZIP_CM_PPMD	      98  /* PPMd version I, Rev 1 */
 
 /* encryption methods */
 
