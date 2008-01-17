@@ -2,7 +2,7 @@
   $NiH: open.c,v 1.6 2005/07/16 17:14:32 wiz Exp $
 
   open.c -- test cases for opening zip archives
-  Copyright (C) 1999-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -95,7 +95,8 @@ open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
 	zip_close(z);
 	return 1;
     }
-    else if (ze != zerr || errno != serr) {
+    else if (ze != zerr
+	     || (zip_error_get_sys_type(ze) == ZIP_ET_SYS && errno != serr)) {
 	printf("%s: opening %s returned wrong error %d/%d, expected %d/%d\n",
 		prg, desc, ze, errno, zerr, serr);
 	return 1;
