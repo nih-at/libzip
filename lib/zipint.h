@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -46,6 +46,15 @@
 #ifndef HAVE_MKSTEMP
 int _zip_mkstemp(char *);
 #define mkstemp _zip_mkstemp
+#endif
+
+#ifdef HAVE_MOVEFILEEX
+#include <windows.h>
+#define _zip_rename(s, t)						\
+	(!MoveFileEx((s), (t),						\
+		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
+#else
+#define _zip_rename	rename
 #endif
 
 #ifndef HAVE_FSEEKO

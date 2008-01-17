@@ -1,6 +1,6 @@
 /*
   zip_close.c -- close zip archive and update changes
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -229,7 +229,7 @@ zip_close(struct zip *za)
 	za->zp = NULL;
 	reopen_on_error = 1;
     }
-    if (rename(temp, za->zn) != 0) {
+    if (_zip_rename(temp, za->zn) != 0) {
 	_zip_error_set(&za->error, ZIP_ER_RENAME, errno);
 	remove(temp);
 	free(temp);
