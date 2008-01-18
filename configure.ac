@@ -41,8 +41,16 @@ AC_EXEEXT
 
 AM_PROG_LIBTOOL
 
-AC_CHECK_FUNCS([fseeko ftello MoveFileEx])
+AC_CHECK_FUNCS([fseeko ftello])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
+
+AC_MSG_CHECKING([MoveFileEx])
+AC_LINK_IFELSE([AC_LANG_PROGRM([#include <windows.h>],
+			       [MoveFileEx("", "", 0);])],
+	       [AC_MSG_RESULT([yes])
+	        AC_DEFINE([HAVE_MOVEFILEEX], [1],
+			 [Define to 1 if you have the `MoveFileEx' function.])],
+	       [AC_MSG_RESULT([no])])
 
 AC_CHECK_HEADERS([unistd.h])
 
