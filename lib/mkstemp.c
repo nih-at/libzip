@@ -43,6 +43,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
+
+
 int
 _zip_mkstemp(char *path)
 {
@@ -110,7 +116,7 @@ _zip_mkstemp(char *path)
 	}
 
 	for (;;) {
-		if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR, 0600)) >= 0)
+		if ((fd=open(path, O_CREAT|O_EXCL|O_RDWR|O_BINARY, 0600)) >= 0)
 			return (fd);
 		if (errno != EEXIST)
 			return (0);
