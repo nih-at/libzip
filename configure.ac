@@ -45,7 +45,7 @@ AC_CHECK_FUNCS([fseeko ftello])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 AC_MSG_CHECKING([MoveFileEx])
-AC_LINK_IFELSE([AC_LANG_PROGRM([#include <windows.h>],
+AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
 			       [MoveFileEx("", "", 0);])],
 	       [AC_MSG_RESULT([yes])
 	        AC_DEFINE([HAVE_MOVEFILEEX], [1],
