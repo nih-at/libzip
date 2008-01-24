@@ -1,3 +1,4 @@
++ [portability] use _setmode(_fileno(fp), _O_BINARY); where present
 - [doc] document that no empty archives will be created
 - [bug] zip_close: on empty archive, don't try to delete non-existant file
 - [bug] zip_merge: zip_close too early for source archives
