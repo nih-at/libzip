@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libzip.la
 noinst_HEADERS = zipint.h
 include_HEADERS = zip.h
 
-libzip_la_LDFLAGS=-version-info 1:0
+libzip_la_LDFLAGS=-no-undefined -version-info 1:0
 libzip_la_LIBADD=@LTLIBOBJS@
 
 libzip_la_SOURCES=\
