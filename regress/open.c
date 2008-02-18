@@ -91,13 +91,13 @@ open_fail(const char *fname, int flags, const char *desc, int zerr, int serr)
     errno = 0;
 
     if ((z=zip_open(fname, flags, &ze)) != NULL) {
-	printf("%s: opening %s succeeded\n", prg, desc);
+	printf("%s: opening `%s' succeeded, though it shouldn't\n", prg, desc);
 	zip_close(z);
 	return 1;
     }
     else if (ze != zerr
 	     || (zip_error_get_sys_type(ze) == ZIP_ET_SYS && errno != serr)) {
-	printf("%s: opening %s returned wrong error %d/%d, expected %d/%d\n",
+	printf("%s: opening `%s' returned wrong error %d/%d, expected %d/%d\n",
 		prg, desc, ze, errno, zerr, serr);
 	return 1;
     }
@@ -114,15 +114,18 @@ open_success(const char *fname, int flags, const char *desc, int nent)
     int ze, num;
 
     if ((z=zip_open(fname, flags, &ze)) == NULL) {
-	printf("%s: opening %s failed (%d)\n", prg, desc, ze);
+	printf("%s: opening `%s' failed (%d)\n", prg, desc, ze);
 	return 1;
     }
 
     num = zip_get_num_files(z);
-    zip_close(z);
+    if (zip_close(z) == -1) {
+	printf("%s: closing `%s' failed\n", prg, desc);
+	return 1;
+    }
     
     if (num != nent) {
-	printf("%s: opening %s got wrong number of files %d, expected %d\n",
+	printf("%s: opening `%s' got wrong number of files %d, expected %d\n",
 		prg, desc, num, nent);
 	return 1;
     }
