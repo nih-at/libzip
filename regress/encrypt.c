@@ -78,7 +78,10 @@ main(int argc, char *argv[])
 	    printf("%d: %d\n", i, st.encryption_method);
     }
 
-    zip_close(za);
+    if (zip_close(za) == -1) {
+	fprintf(stderr, "%s: can't close zip archive `%s'\n", prg, archive);
+	return 1;
+    }
 
     return 0;
 }
