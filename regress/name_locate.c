@@ -89,6 +89,12 @@ main(int argc, char *argv[])
     zip_unchange_all(z);
     fail += find_success(z, "test", 0);
 
+    if (zip_close(z) == -1) {
+	fprintf(stderr, "%s: can't close zip archive %s\n", prg,
+		archive);
+	return 1;
+    }
+
     exit(fail ? 1 : 0);
 }
 
