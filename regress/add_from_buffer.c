@@ -66,26 +66,26 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr,"%s: can't open zip archive %s: %s\n", prg,
+	fprintf(stderr, "%s: can't open zip archive %s: %s\n", prg,
 		archive, buf);
 	return 1;
     }
 
     if ((zs=zip_source_buffer(za, teststr, strlen(teststr), 0)) == NULL) {
-	fprintf(stderr,"%s: can't create zip_source from buffer: %s\n", prg,
+	fprintf(stderr, "%s: can't create zip_source from buffer: %s\n", prg,
 		zip_strerror(za));
 	exit(1);
     }
 
     if (zip_add(za, file, zs) == -1) {
 	zip_source_free(zs);
-	fprintf(stderr,"%s: can't add file `%s': %s\n", prg,
+	fprintf(stderr, "%s: can't add file `%s': %s\n", prg,
 		file, zip_strerror(za));
 	return 1;
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr,"%s: can't close zip archive %s\n", prg,
+	fprintf(stderr, "%s: can't close zip archive %s\n", prg,
 		archive);
 	return 1;
     }
