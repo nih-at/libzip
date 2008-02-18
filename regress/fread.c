@@ -107,6 +107,11 @@ main(int argc, char *argv[])
     fail += do_read(z, "new_file", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
     zip_unchange_all(z);
 
+    if (zip_close(z) == -1) {
+        fprintf(stderr, "%s: can't close zip archive `%s'\n", prg, archive);
+        return 1;
+    }
+
     exit(fail ? 1 : 0);
 }
 
