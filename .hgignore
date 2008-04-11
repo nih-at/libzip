@@ -15,6 +15,7 @@
 ^stamp-h1$
 ^lib/zip_err_str\.c$
 ^man/.*\.html$
+^regress/add_dir$
 ^regress/add_from_buffer$
 ^regress/add_from_file$
 ^regress/add_from_filep$

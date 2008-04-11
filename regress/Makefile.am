@@ -1,4 +1,5 @@
 noinst_PROGRAMS= \
+	add_dir \
 	add_from_buffer \
 	add_from_file \
 	add_from_filep \
@@ -19,6 +20,7 @@ EXTRA_DIST= \
 	runtest \
 	${TESTCASES} \
 	testbuffer.zip \
+	testdir.zip \
 	testchanged.zip testchangedlocal.zip \
 	testcomment.zip testcommentremoved.zip \
 	testfile.txt testfile.zip \
@@ -27,6 +29,7 @@ EXTRA_DIST= \
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
 
 TESTCASES= \
+	add_dir.test \
 	add_from_buffer.test \
 	add_from_file.test \
 	add_from_filep.test \
