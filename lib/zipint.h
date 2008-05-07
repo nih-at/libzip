@@ -48,10 +48,10 @@ int _zip_mkstemp(char *);
 #define mkstemp _zip_mkstemp
 #endif
 
-#ifdef HAVE_MOVEFILEEX
+#ifdef HAVE_MOVEFILEEXA
 #include <windows.h>
 #define _zip_rename(s, t)						\
-	(!MoveFileEx((s), (t),						\
+	(!MoveFileExA((s), (t),						\
 		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
 #else
 #define _zip_rename	rename

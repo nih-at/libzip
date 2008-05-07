@@ -44,12 +44,12 @@ AM_PROG_LIBTOOL
 AC_CHECK_FUNCS([fseeko ftello])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
-AC_MSG_CHECKING([MoveFileEx])
+AC_MSG_CHECKING([MoveFileExA])
 AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
-			       [MoveFileEx("", "", 0);])],
+			       [MoveFileExA("", "", 0);])],
 	       [AC_MSG_RESULT([yes])
-	        AC_DEFINE([HAVE_MOVEFILEEX], [1],
-			 [Define to 1 if you have the `MoveFileEx' function.])],
+	        AC_DEFINE([HAVE_MOVEFILEEXA], [1],
+			[Define to 1 if you have the `MoveFileExA' function.])],
 	       [AC_MSG_RESULT([no])])
 
 AC_CHECK_HEADERS([unistd.h])
