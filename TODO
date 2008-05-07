@@ -6,6 +6,11 @@
 - [bug] zip_close: on empty archive, don't try to delete non-existant file
 - [bug] zip_merge: zip_close too early for source archives
 - [feature] torrentzip support
+  . two flag members in struct zip (has, should)
+  . zip_get_global_flag(zip, flag, unchanged?)
+  . zip_set_global_flag(zip, flag, value)
+  . if was TZ but shouldn't be, delete comment
+  . if should be TZ, convert existing (if wasn't), normalize added
 + [feature] Windows support:
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement
