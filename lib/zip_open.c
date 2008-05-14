@@ -1,6 +1,6 @@
 /*
   zip_open.c -- open zip archive
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -35,6 +35,7 @@
 
 #include <sys/stat.h>
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,6 +45,7 @@
 static void set_error(int *, struct zip_error *, int);
 static struct zip *_zip_allocate_new(const char *, int *);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
+static void _zip_check_torrentzip(struct zip *);
 static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, off_t);
 static int _zip_file_exists(const char *, int, int *);
 static int _zip_headercomp(struct zip_dirent *, int,
@@ -113,6 +115,9 @@ zip_open(const char *fn, int flags, int *zep)
     }
     for (i=0; i<cdir->nentry; i++)
 	_zip_entry_new(za);
+
+    _zip_check_torrentzip(za);
+    za->ch_flags = za->flags;
 
     return za;
 }
@@ -193,13 +198,14 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	return NULL;
     }
 
-    if (cd->comment_len)
+    if (cd->comment_len) {
 	if ((cd->comment=(char *)_zip_memdup(eocd+EOCDLEN,
 					     cd->comment_len, error))
 	    == NULL) {
 	    free(cd);
 	    return NULL;
 	}
+    }
 
     cdp = eocd;
     if (cd->size < (unsigned int)(eocd-buf)) {
@@ -294,6 +300,52 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 
     return max - min;
 }
+
+
+
+/* _zip_check_torrentzip:
+   check wether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
+
+static void
+_zip_check_torrentzip(struct zip *za)
+{
+    uLong crc_got, crc_should;
+    char *end;
+    Bytef buf[BUFSIZE];
+    unsigned int n, remain;
+
+    if (za->zp == NULL || za->cdir == NULL)
+	return;
+
+    if (za->cdir->comment_len != TORRENT_SIG_LEN+8
+	|| strncmp(za->cdir->comment, TORRENT_SIG, TORRENT_SIG_LEN) != 0)
+	return;
+    
+    errno = 0;
+    crc_should = strtoul(za->cdir->comment+TORRENT_SIG_LEN, &end, 16);
+    if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
+	return;
+    
+    crc_got = crc32(0L, Z_NULL, 0);
+
+    if (fseek(za->zp, za->cdir->offset, SEEK_SET) != 0)
+	return;
+    remain = za->cdir->size;
+
+    while (remain > 0) {
+	n = remain > BUFSIZE ? BUFSIZE : remain;
+	if ((n=fread(buf, 1, n, za->zp)) <= 0)
+	    return;
+
+	crc_got = crc32(crc_got, buf, n);
+
+	remain -= n;
+    }
+
+    if (crc_got == crc_should)
+	za->flags |= ZIP_AFL_TORRENT;
+}
+
 
 
 

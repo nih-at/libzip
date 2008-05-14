@@ -70,6 +70,8 @@ int _zip_mkstemp(char *);
 #define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"
 #define DATADES_MAGIC "PK\7\8"
+#define TORRENT_SIG	"TORRENTZIPPED-"
+#define TORRENT_SIG_LEN	14
 #define CDENTRYSIZE         46u
 #define LENTRYSIZE          30
 #define MAXCOMLEN        65536
@@ -110,6 +112,9 @@ struct zip {
     char *zn;			/* file name */
     FILE *zp;			/* file */
     struct zip_error error;	/* error information */
+
+    unsigned int flags;		/* archive global flags */
+    unsigned int ch_flags;	/* changed archive global flags */
 
     struct zip_cdir *cdir;	/* central directory */
     char *ch_comment;		/* changed archive comment */

@@ -3,7 +3,7 @@
 
 /*
   zip.h -- exported declarations.
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -65,6 +65,10 @@ extern "C" {
 #define ZIP_FL_NODIR		2 /* ignore directory component */
 #define ZIP_FL_COMPRESSED	4 /* read compressed data */
 #define ZIP_FL_UNCHANGED	8 /* use original data, ignoring changes */
+
+/* archive global flags flags */
+
+#define ZIP_AFL_TORRENT		1 /* torrent zipped */
 
 /* libzip error codes */
 
@@ -188,6 +192,7 @@ ZIP_EXTERN struct zip_file *zip_fopen(struct zip *, const char *, int);
 ZIP_EXTERN struct zip_file *zip_fopen_index(struct zip *, int, int);
 ZIP_EXTERN ssize_t zip_fread(struct zip_file *, void *, size_t);
 ZIP_EXTERN const char *zip_get_archive_comment(struct zip *, int *, int);
+ZIP_EXTERN int zip_get_archive_flag(struct zip *, int, int);
 ZIP_EXTERN const char *zip_get_file_comment(struct zip *, int, int *, int);
 ZIP_EXTERN const char *zip_get_name(struct zip *, int, int);
 ZIP_EXTERN int zip_get_num_files(struct zip *);
@@ -196,6 +201,7 @@ ZIP_EXTERN struct zip *zip_open(const char *, int, int *);
 ZIP_EXTERN int zip_rename(struct zip *, int, const char *);
 ZIP_EXTERN int zip_replace(struct zip *, int, struct zip_source *);
 ZIP_EXTERN int zip_set_archive_comment(struct zip *, const char *, int);
+ZIP_EXTERN int zip_set_archive_flag(struct zip *, int, int);
 ZIP_EXTERN int zip_set_file_comment(struct zip *, int, const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
 						off_t, int);
