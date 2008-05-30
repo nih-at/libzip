@@ -5,12 +5,10 @@
 - [doc] document that no empty archives will be created
 - [bug] zip_close: on empty archive, don't try to delete non-existent file
 - [bug] zip_merge: zip_close too early for source archives
-- [feature] torrentzip support
-  . two flag members in struct zip (has, should)
-  . zip_get_global_flag(zip, flag, unchanged?)
-  . zip_set_global_flag(zip, flag, value)
-  . if was TZ but shouldn't be, delete comment
-  . if should be TZ, convert existing (if wasn't), normalize added
++ [doc] zip_source_zip ZIP_FL_RECOMPRESS
++ [doc] zip_get_archive_flag, zip_set_archive_flag
++ [doc] ziptorrent(1)
++ [test] ziptorrent support
 + [feature] Windows support:
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement

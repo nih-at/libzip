@@ -1,6 +1,6 @@
 /*
-  zip_unchange_archive.c -- undo global changes to ZIP archive
-  Copyright (C) 2006-2008 Dieter Baron and Thomas Klausner
+  zip_filerange_crc.c -- compute CRC32 for a range of a file
+  Copyright (C) 2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,20 +33,39 @@
 
 
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
 
 #include "zipint.h"
 
+
 
 
-ZIP_EXTERN int
-zip_unchange_archive(struct zip *za)
+int
+_zip_filerange_crc(FILE *fp, off_t start, off_t len, uLong *crcp,
+		   struct zip_error *errp)
 {
-    free(za->ch_comment);
-    za->ch_comment = NULL;
-    za->ch_comment_len = -1;
+    Bytef buf[BUFSIZE];
+    size_t n;
 
-    za->ch_flags = za->flags;
+    *crcp = crc32(0L, Z_NULL, 0);
+
+    if (fseeko(fp, start, SEEK_SET) != 0) {
+	_zip_error_set(errp, ZIP_ER_SEEK, errno);
+	return -1;
+    }
+    
+    while (len > 0) {
+	n = len > BUFSIZE ? BUFSIZE : len;
+	if ((n=fread(buf, 1, n, fp)) <= 0) {
+	    _zip_error_set(errp, ZIP_ER_READ, errno);
+	    return -1;
+	}
+
+	*crcp = crc32(*crcp, buf, n);
+
+	len-= n;
+    }
 
     return 0;
 }

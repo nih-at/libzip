@@ -1,6 +1,6 @@
 /*
   zip_source_zip.c -- create data source from zip file
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -57,6 +57,8 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
     struct zip_source *zs;
     struct read_zip *p;
 
+    /* XXX: ZIP_FL_RECOMPRESS */
+
     if (za == NULL)
 	return NULL;
 
@@ -74,7 +76,7 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
     if (len == 0)
 	len = -1;
 
-    if (start == 0 && len == -1)
+    if (start == 0 && len == -1 && (flags & ZIP_FL_RECOMPRESS) == 0)
 	flags |= ZIP_FL_COMPRESSED;
     else
 	flags &= ~ZIP_FL_COMPRESSED;

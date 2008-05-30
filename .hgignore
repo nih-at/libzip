@@ -30,3 +30,4 @@
 ^regress/set_comment_revert$
 ^src/zipcmp$
 ^src/zipmerge$
+^src/ziptorrent$

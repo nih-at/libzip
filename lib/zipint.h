@@ -72,6 +72,8 @@ int _zip_mkstemp(char *);
 #define DATADES_MAGIC "PK\7\8"
 #define TORRENT_SIG	"TORRENTZIPPED-"
 #define TORRENT_SIG_LEN	14
+#define TORRENT_CRC_LEN 8
+#define TORRENT_MEM_LEVEL	8
 #define CDENTRYSIZE         46u
 #define LENTRYSIZE          30
 #define MAXCOMLEN        65536
@@ -213,6 +215,7 @@ extern const int _zip_err_type[];
 
 
 
+int _zip_cdir_compute_crc(struct zip *, uLong *);
 void _zip_cdir_free(struct zip_cdir *);
 struct zip_cdir *_zip_cdir_new(int, struct zip_error *);
 int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
@@ -221,6 +224,7 @@ void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
 int _zip_dirent_read(struct zip_dirent *, FILE *,
 		     unsigned char **, unsigned int, int, struct zip_error *);
+void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
 
 void _zip_entry_free(struct zip_entry *);
@@ -237,6 +241,8 @@ const char *_zip_error_strerror(struct zip_error *);
 
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
 unsigned int _zip_file_get_offset(struct zip *, int);
+
+int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 
 void _zip_free(struct zip *);
 const char *_zip_get_name(struct zip *, int, int, struct zip_error *);

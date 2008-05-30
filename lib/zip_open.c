@@ -311,8 +311,6 @@ _zip_check_torrentzip(struct zip *za)
 {
     uLong crc_got, crc_should;
     char *end;
-    Bytef buf[BUFSIZE];
-    unsigned int n, remain;
 
     if (za->zp == NULL || za->cdir == NULL)
 	return;
@@ -325,22 +323,10 @@ _zip_check_torrentzip(struct zip *za)
     crc_should = strtoul(za->cdir->comment+TORRENT_SIG_LEN, &end, 16);
     if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
 	return;
-    
-    crc_got = crc32(0L, Z_NULL, 0);
 
-    if (fseek(za->zp, za->cdir->offset, SEEK_SET) != 0)
+    if (_zip_filerange_crc(za->zp, za->cdir->offset, za->cdir->size,
+			   &crc_got, NULL) < 0)
 	return;
-    remain = za->cdir->size;
-
-    while (remain > 0) {
-	n = remain > BUFSIZE ? BUFSIZE : remain;
-	if ((n=fread(buf, 1, n, za->zp)) <= 0)
-	    return;
-
-	crc_got = crc32(crc_got, buf, n);
-
-	remain -= n;
-    }
 
     if (crc_got == crc_should)
 	za->flags |= ZIP_AFL_TORRENT;

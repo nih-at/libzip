@@ -1,6 +1,6 @@
 /*
-  zip_unchange_archive.c -- undo global changes to ZIP archive
-  Copyright (C) 2006-2008 Dieter Baron and Thomas Klausner
+  zip_get_archive_flag.c -- set archive global flag
+  Copyright (C) 2008 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,20 +33,17 @@
 
 
 
-#include <stdlib.h>
-
 #include "zipint.h"
 
 
 
 ZIP_EXTERN int
-zip_unchange_archive(struct zip *za)
+zip_set_archive_flag(struct zip *za, int flag, int value)
 {
-    free(za->ch_comment);
-    za->ch_comment = NULL;
-    za->ch_comment_len = -1;
-
-    za->ch_flags = za->flags;
+    if (value)
+	za->ch_flags |= flag;
+    else
+	za->ch_flags &= ~flag;
 
     return 0;
 }
