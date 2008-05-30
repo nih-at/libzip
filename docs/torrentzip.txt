@@ -12,10 +12,10 @@ definition fo the Torrentzip normal form.
 
 * compression used
 
-  Deflate at best compression level (Z_BEST_COMPRESSION).
+  Deflate at best compression level:
 
-  XXX: -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY (from zip.h)
-
+  deflateInit2(..., Z_BEST_COMPRESSION, Z_DEFLATED,
+  		    -MAX_WBITS, 8, Z_DEFAULT_STRATEGY);
 
 * fields in local/central directory
 
@@ -23,8 +23,8 @@ definition fo the Torrentzip normal form.
   version needed to extract	20
   general purpose flag		2 (maximum compression)
   compression method		8 (Deflated)
-  last mod file time		XXX (23:32 GMT+1)
-  last mod file date		XXX (1996/12/24)
+  last mod file time		0xbc00 (23:32 GMT+1)
+  last mod file date		0x2198 (1996/12/24)
   extra fields			none
   file comment			none
   disk number start		0
@@ -34,9 +34,9 @@ definition fo the Torrentzip normal form.
 * archive comment:
 
   The archive comment contains a signature and a crc32 checksum of the
-central directory (including start and end markers (XXX?)).  This is
-used to detect wether a torrentziped archive was modified by a
+central directory (as specified by size/offset in EOCD record).  This
+is used to detect wether a torrentziped archive was modified by a
 non-torrentzip aware program.
 
   TORRENTZIPPED-XXXXXXXX where XXXXXXX is the crc32 checksum of
-central dir in hex.
+central dir in hex, using uppercase letters A-F.
