@@ -21,6 +21,7 @@ MAN3=	libzip.mdoc \
 	zip_fopen.mdoc \
 	zip_fread.mdoc \
 	zip_get_archive_comment.mdoc \
+	zip_get_archive_flag.mdoc \
 	zip_get_file_comment.mdoc \
 	zip_get_name.mdoc \
 	zip_get_num_files.mdoc \
@@ -28,6 +29,7 @@ MAN3=	libzip.mdoc \
 	zip_open.mdoc \
 	zip_rename.mdoc \
 	zip_set_archive_comment.mdoc \
+	zip_set_archive_flag.mdoc \
 	zip_set_file_comment.mdoc \
 	zip_source_buffer.mdoc \
 	zip_source_file.mdoc \
