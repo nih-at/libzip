@@ -5,7 +5,7 @@ man3_MANS=${MAN3:.mdoc=.${MANFMT}}
 DISTCLEANFILES=${HTML}
 EXTRA_DIST=${MANDOC} ${MAN} CMakeLists.txt
 
-MAN1=	zipcmp.mdoc zipmerge.mdoc
+MAN1=	zipcmp.mdoc zipmerge.mdoc ziptorrent.mdoc
 MAN3=	libzip.mdoc \
 	zip_add.mdoc \
 	zip_add_dir.mdoc \
