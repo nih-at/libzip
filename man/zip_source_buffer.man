@@ -53,7 +53,7 @@ of size
 \fBlen.\fR
 If
 \fBfreep\fR
-is non-zero, the buffer will be freed when the it is no longer needed.
+is non-zero, the buffer will be freed when it is no longer needed.
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
