@@ -61,8 +61,8 @@ No file comments or extended attributes are allowed and the archive
 comment can not be chosen.
 .RE
 .SH "RETURN VALUES"
-Upon successful completion 0 is returned.
-Currently, there are no error cases.
+Upon successful completion 0 is returned, and \-1 if an error
+occurred.
 .SH "SEE ALSO"
 libzip(3),
 zip_get_archive_flag(3)
