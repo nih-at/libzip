@@ -1,9 +1,5 @@
-.\" Converted with mdoc2man 0.2
-.\" from NiH: zip_source_zip.mdoc,v 1.7 2005/07/20 17:18:04 wiz Exp 
-.\" $NiH: zip_source_zip.mdoc,v 1.7 2005/07/20 17:18:04 wiz Exp $
-.\"
 .\" zip_source_zip.mdoc \-- create data source from zip file
-.\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2004, 2005, 2008 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -33,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_SOURCE_ZIP 3 "July 29, 2005" NiH
+.TH ZIP_SOURCE_ZIP 3 "June 4, 2008" NiH
 .SH "NAME"
 zip_source_zip \- create data source from zip file
 .SH "LIBRARY"
@@ -67,16 +63,22 @@ If
 is zero and
 \fBlen\fR
 is \-1, the whole file will be copied without decompressing it.
-If
-\fBflags\fR
-is
-\fBZIP_FL_UNCHANGED,\fR
-zip_source_zip
-will try to get the original data without any changes that may
-have been made to
+.PP
+Supported flags are:
+.RS
+.TP 23
+\fBZIP_FL_UNCHANGED\fR
+Try to get the original data without any changes that may have been
+made to
 \fBsrcarchive\fR
 after opening it.
-.\" XXX: document ZIP_FL_RECOMPRESS
+.TP 23
+\fBZIP_FL_RECOMPRESS\fR
+When adding the data from
+\fBsrcarchive,\fR
+re-compress it using the current settings instead of copying the
+compressed data.
+.RE
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
