@@ -2,6 +2,7 @@
 + [bug] _zip_u2d_time: handle localtime(3) failure
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
 + [bug] missing -Wl,-R in pkg-config file
++ [bug] zip_rename /dir/ to /file should not work, but does
 - [doc] document that no empty archives will be created
 - [bug] zip_close: on empty archive, don't try to delete non-existent file
 - [bug] zip_merge: zip_close too early for source archives
