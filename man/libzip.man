@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH LIBZIP 3 "June 4, 2008" NiH
+.TH LIBZIP 3 "June 11, 2008" NiH
 .SH "NAME"
 libzip \- library for manipulating zip archives
 .SH "LIBRARY"
@@ -68,8 +68,9 @@ zip_get_num_files(3)
 .SH "CREATING/MODIFYING ZIP ARCHIVES"
 .SS "create/open archive"
 zip_open(3)
-.SS "add/change files"
+.SS "add/change files and directories"
 zip_add(3)
+zip_add_dir(3)
 zip_replace(3)
 zip_set_file_comment(3)
 zip_source_buffer(3)
