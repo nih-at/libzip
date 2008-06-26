@@ -1,3 +1,4 @@
++ [portability] no off_t in API
 - [feature] zip_fdopen (read zip from file descriptor), ZIP_AFL_RDONLY
 + [bug] zip_source_file: open file on ZIP_SOURCE_OPEN, close on ZIP_SOURCE_CLOSE
 + [bug] _zip_u2d_time: handle localtime(3) failure
