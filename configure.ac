@@ -54,6 +54,8 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
 
 AC_CHECK_HEADERS([unistd.h])
 
+AC_STRUCT_TIMEZONE
+
 case $host_os
 in
     *bsd*) MANFMT=mdoc;;

@@ -325,19 +325,32 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 void
 _zip_dirent_torrent_normalize(struct zip_dirent *de)
 {
-    static struct tm torrenttime = {
-	0, 32, 23,  24, 11, 96,  0, 0,  -1, 0, "UTC"
-    };
-    static last_mod = 0;
+    static struct tm torrenttime;
+    static time_t last_mod = 0;
 
     if (last_mod == 0) {
+#ifdef HAVE_STRUCT_TM_TM_ZONE
 	time_t now;
 	struct tm *l;
+#endif
 
+	torrenttime.tm_sec = 0;
+	torrenttime.tm_min = 32;
+	torrenttime.tm_hour = 23;
+	torrenttime.tm_mday = 24;
+	torrenttime.tm_mon = 11;
+	torrenttime.tm_year = 96;
+	torrenttime.tm_wday = 0;
+	torrenttime.tm_yday = 0;
+	torrenttime.tm_isdst = 0;
+
+#ifdef HAVE_STRUCT_TM_TM_ZONE
 	time(&now);
 	l = localtime(&now);
 	torrenttime.tm_gmtoff = l->tm_gmtoff;
 	torrenttime.tm_zone = l->tm_zone;
+#endif
+
 	last_mod = mktime(&torrenttime);
     }
     
