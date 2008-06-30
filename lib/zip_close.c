@@ -91,7 +91,7 @@ zip_close(struct zip *za)
 
     /* don't create zip files with no entries */
     if (survivors == 0) {
-	if (za->zn) {
+	if (za->zn && za->zp) {
 	    if (remove(za->zn) != 0) {
 		_zip_error_set(&za->error, ZIP_ER_REMOVE, errno);
 		return -1;
