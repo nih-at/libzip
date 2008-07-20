@@ -1,31 +1,32 @@
+! [bug] ziptorrent not chaning archive on Solaris
+! [bug] zip_source_file: open file on ZIP_SOURCE_OPEN, close on ZIP_SOURCE_CLOSE
+! [bug] zip_close empty archive: don't try to delete non-existent file (fixed?)
+! [bug] zip_merge: zip_close too early for source archives
+! [doc] document that no empty archives will be created
+! [doc] zip_source_zip ZIP_FL_RECOMPRESS
+! [doc] zip_get_archive_flag, zip_set_archive_flag
+! [doc] ziptorrent(1)
+! [test] ziptorrent support
 + [portability] no off_t in API
-- [feature] zip_fdopen (read zip from file descriptor), ZIP_AFL_RDONLY
-+ [bug] zip_source_file: open file on ZIP_SOURCE_OPEN, close on ZIP_SOURCE_CLOSE
-+ [bug] _zip_u2d_time: handle localtime(3) failure
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
++ [bug] _zip_u2d_time: handle localtime(3) failure
 + [bug] missing -Wl,-R in pkg-config file
 + [bug] zip_rename /dir/ to /file should not work, but does
-- [doc] document that no empty archives will be created
-- [bug] zip_close: on empty archive, don't try to delete non-existent file
-- [bug] zip_merge: zip_close too early for source archives
-+ [doc] zip_source_zip ZIP_FL_RECOMPRESS
-+ [doc] zip_get_archive_flag, zip_set_archive_flag
-+ [doc] ziptorrent(1)
-+ [test] ziptorrent support
-+ [feature] Windows support:
++ [bug] check/cleanup flags bit 3 (streaming) support
+- [feature] zip_fdopen (read zip from file descriptor), ZIP_AFL_RDONLY
+- [feature] Windows support: (paritally fixed?)
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement
   . strcasecmp replacement
   . ssize_t define
   . mode_t define
   . dll_export/dll_import support (to clarify)
-+ [bug] check/cleanup flags bit 3 (streaming) support
-. [cleanup] remove now useless check of fseek 
-* [consistency check] check that local headers come before central dir
-* [bug] zip_open: consistency check: check data descriptor
-* [bug] do not compress if storing is smaller
-* [bug] zip_open: check whether file can be created and fail if not
-* [bug] check for limits imposed by format (central dir size, file size, ...)
+- [cleanup] remove now useless check of fseek 
+- [consistency check] check that local headers come before central dir
+- [bug] zip_open: consistency check: check data descriptor
+- [bug] do not compress if storing is smaller
+- [bug] zip_open: check whether file can be created and fail if not
+- [bug] check for limits imposed by format (central dir size, file size, ...)
 - [feature] handle zip_open/zip_close "race" for new files
 - [feature] support streaming output (creating new archive to e.g. stdout)
 - [feature] add functions to:
