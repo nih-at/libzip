@@ -1,10 +1,11 @@
-0.8.1
+0.9
 
 * on Windows, explictly set dllimport/dllexport
 * remove erroneous references to GPL
 * add support for torrentzip
 * new functions: zip_get_archive_flag, zip_set_archive_flag
 * zip_source_zip: add flag to force recompression
+* zip_sorce_file: only keep file open while reading from it
 
 0.8 [2007/06/06]
 

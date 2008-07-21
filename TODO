@@ -1,7 +1,5 @@
 ! [bug] ziptorrent not chaning archive on Solaris
-! [bug] zip_source_file: open file on ZIP_SOURCE_OPEN, close on ZIP_SOURCE_CLOSE
-! [bug] zip_close empty archive: don't try to delete non-existent file (fixed?)
-! [bug] zip_merge: zip_close too early for source archives
+! [doc] zip_rename: document error codes INVAL: empty name, file->dir/, DELTED
 ! [doc] document that no empty archives will be created
 ! [doc] zip_source_zip ZIP_FL_RECOMPRESS
 ! [doc] zip_get_archive_flag, zip_set_archive_flag
@@ -11,7 +9,6 @@
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
 + [bug] _zip_u2d_time: handle localtime(3) failure
 + [bug] missing -Wl,-R in pkg-config file
-+ [bug] zip_rename /dir/ to /file should not work, but does
 + [bug] check/cleanup flags bit 3 (streaming) support
 - [feature] zip_fdopen (read zip from file descriptor), ZIP_AFL_RDONLY
 - [feature] Windows support: (paritally fixed?)
@@ -35,6 +32,8 @@
   . read/set EAs
   . parse/create some EAs?
   . read/set ASCII file flag
+- [test] rename deleted (fails)
+- [test] rename file to dir/ and vice versa (fails)
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
