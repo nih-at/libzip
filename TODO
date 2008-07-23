@@ -1,9 +1,5 @@
 ! [bug] ziptorrent not changving archive on Solaris
-! [doc] zip_rename: document error codes INVAL: empty name, file->dir/, DELETED
 ! [doc] document that no empty archives will be created
-! [doc] zip_source_zip ZIP_FL_RECOMPRESS
-! [doc] zip_get_archive_flag, zip_set_archive_flag
-! [doc] ziptorrent(1)
 ! [test] ziptorrent support
 + [portability] no off_t in API
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
