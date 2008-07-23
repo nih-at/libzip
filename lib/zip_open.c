@@ -310,6 +310,7 @@ static void
 _zip_check_torrentzip(struct zip *za)
 {
     uLong crc_got, crc_should;
+    char buf[8+1];
     char *end;
 
     if (za->zp == NULL || za->cdir == NULL)
@@ -318,9 +319,11 @@ _zip_check_torrentzip(struct zip *za)
     if (za->cdir->comment_len != TORRENT_SIG_LEN+8
 	|| strncmp(za->cdir->comment, TORRENT_SIG, TORRENT_SIG_LEN) != 0)
 	return;
-    
+
+    memcpy(buf, za->cdir->comment+TORRENT_SIG_LEN, 8);
+    buf[9] = '\0';
     errno = 0;
-    crc_should = strtoul(za->cdir->comment+TORRENT_SIG_LEN, &end, 16);
+    crc_should = strtoul(buf, &end, 16);
     if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
 	return;
 
