@@ -321,7 +321,7 @@ _zip_check_torrentzip(struct zip *za)
 	return;
 
     memcpy(buf, za->cdir->comment+TORRENT_SIG_LEN, 8);
-    buf[9] = '\0';
+    buf[8] = '\0';
     errno = 0;
     crc_should = strtoul(buf, &end, 16);
     if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
