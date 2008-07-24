@@ -1,4 +1,3 @@
-! [doc] document that no empty archives will be created
 + [portability] no off_t in API
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
 + [bug] _zip_u2d_time: handle localtime(3) failure
