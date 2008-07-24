@@ -52,7 +52,7 @@ const char *prg;
 
 #define PROGRAM	"ziptorrent"
 
-char *usage = "usage: %s [-hVnv] zip [...]\n";
+char *usage = "usage: %s [-hnVv] zip [...]\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -60,8 +60,8 @@ char help_head[] =
 char help[] = "\n\
   -h       display this help message\n\
   -n       don't actually change archives, just print what would be done\n\
-  -v       verbose\n\
   -V       display version number\n\
+  -v       verbose\n\
 \n\
 Report bugs to <libzip@nih.at>.\n";
 
