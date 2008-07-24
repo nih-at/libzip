@@ -45,17 +45,22 @@
 
 
 
+#define FLAG_DRYRUN	1
+#define FLAG_VERBOSE	2
+
 const char *prg;
 
 #define PROGRAM	"ziptorrent"
 
-char *usage = "usage: %s [-hV] zip [...]\n";
+char *usage = "usage: %s [-hVnv] zip [...]\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
 
 char help[] = "\n\
   -h       display this help message\n\
+  -n       don't actually change archives, just print what would be done\n\
+  -v       verbose\n\
   -V       display version number\n\
 \n\
 Report bugs to <libzip@nih.at>.\n";
@@ -64,9 +69,9 @@ char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
 Copyright (C) 2008 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
-#define OPTIONS "hV"
+#define OPTIONS "hnVv"
 
-static int torrentzip(const char *);
+static int torrentzip(const char *, int);
 
 
 
@@ -75,8 +80,10 @@ main(int argc, char * const argv[])
 {
     int err;
     int c;
+    int flags;
 
     prg = argv[0];
+    flags = 0;
 
     while ((c=getopt(argc, argv, OPTIONS)) != -1) {
 	switch (c) {
@@ -85,9 +92,15 @@ main(int argc, char * const argv[])
 	    printf(usage, prg);
 	    fputs(help, stdout);
 	    exit(0);
+	case 'n':
+	    flags |= FLAG_DRYRUN|FLAG_VERBOSE;
+	    break;
 	case 'V':
 	    fputs(version_string, stdout);
 	    exit(0);
+	case 'v':
+	    flags |= FLAG_VERBOSE;
+	    break;
 
 	default:
 	    fprintf(stderr, usage, prg);
@@ -102,7 +115,7 @@ main(int argc, char * const argv[])
 
     err = 0;
     while (optind < argc) {
-	err |= torrentzip(argv[optind++]);
+	err |= torrentzip(argv[optind++], flags);
     }
 
     return (err ? 1 : 0);
@@ -111,7 +124,7 @@ main(int argc, char * const argv[])
 
 
 static int
-torrentzip(const char *fname)
+torrentzip(const char *fname, int flags)
 {
     struct zip *za;
     int err;
@@ -124,11 +137,20 @@ torrentzip(const char *fname)
 	return -1;
     }
 
-    if (zip_set_archive_flag(za, ZIP_AFL_TORRENT, 1) < 0) {
-	fprintf(stderr,	"%s: cannot set torrentzip flag in `%s': %s\n",
-		prg, fname, zip_strerror(za));
-	zip_close(za);
-	return -1;
+    if (flags & FLAG_VERBOSE) {
+	if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
+	    printf("%s: already torrentzipped\n", fname);
+	else
+	    printf("%s: torrentzipping\n", fname);
+    }
+
+    if ((flags & FLAG_DRYRUN) == 0) {
+        if (zip_set_archive_flag(za, ZIP_AFL_TORRENT, 1) < 0) {
+	    fprintf(stderr,	"%s: cannot set torrentzip flag in `%s': %s\n",
+		    prg, fname, zip_strerror(za));
+	    zip_close(za);
+	    return -1;
+        }
     }
 
     if (zip_close(za) < 0) {

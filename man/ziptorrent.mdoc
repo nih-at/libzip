@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd June 4, 2008
+.Dd July 24, 2008
 .Dt ZIPTORRENT 1
 .Os
 .Sh NAME
@@ -37,7 +37,7 @@
 .Nd torrentzip zip archives
 .Sh SYNOPSIS
 .Nm
-.Op Fl hV
+.Op Fl hVvn
 .Ar archive Op Ar ...
 .Sh DESCRIPTION
 .Nm
@@ -53,6 +53,11 @@ Supported options:
 .Bl -tag -width MMM
 .It Fl h
 Display a short help message and exit.
+.It Fl n
+Don't actually change archives, just print what would be done.
+.It Fl v
+Be verbose: print which archives are already torrentzipped and which
+need to be rezipped.
 .It Fl V
 Display version information and exit.
 .El
