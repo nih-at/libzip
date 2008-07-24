@@ -18,17 +18,24 @@ EXTRA_PROGRAMS=deltest ziptest
 EXTRA_DIST= \
 	CMakeLists.txt \
 	runtest \
-	${TESTCASES} \
+	${TESTS} \
+	broken.zip \
+	encrypt.zip \
+	test.zip \
 	testbuffer.zip \
 	testdir.zip \
-	testchanged.zip testchangedlocal.zip \
-	testcomment.zip testcommentremoved.zip \
-	testfile.txt testfile.zip \
-	broken.zip test.zip encrypt.zip
+	testchanged.zip \
+	testchangedlocal.zip \
+	testcomment.zip \
+	testcommentremoved.zip \
+	testfile.txt \
+	testfile.zip \
+	testnottorrent.zip \
+	testtorrent.tzip
 
-TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
+TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp ${srcdir}/runtest
 
-TESTCASES= \
+TESTS= \
 	add_dir.test \
 	add_from_buffer.test \
 	add_from_file.test \
@@ -44,29 +51,6 @@ TESTCASES= \
 	set_comment_revert.test \
 	torrent-already.test \
 	torrent-new.test
-
-check:
-	@failed=0; all=0; \
-	for tst in ${TESTCASES}; do \
-	  if ${TESTS_ENVIRONMENT} $(srcdir)/runtest `pwd`/${top_srcdir}/regress/$$tst; then \
-	    all=`expr $$all + 1`; \
-	    echo "PASS: $$tst"; \
-	  elif test $$? -ne 77; then \
-	    all=`expr $$all + 1`; \
-	    failed=`expr $$failed + 1`; \
-	    echo "FAIL: $$tst"; \
-	  fi; \
-	done; \
-	if test "$$failed" -eq 0; then \
-	  banner="All $$all tests passed"; \
-	else \
-	  banner="$$failed of $$all tests failed"; \
-	fi; \
-	dashes=`echo "$$banner" | sed s/./=/g`; \
-	echo "$$dashes"; \
-	echo "$$banner"; \
-	echo "$$dashes"; \
-	test "$$failed" -eq 0
 
 AM_CPPFLAGS=-I${top_srcdir}/lib
 LDADD=${top_builddir}/lib/libzip.la
