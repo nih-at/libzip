@@ -41,7 +41,9 @@ TESTCASES= \
 	set_comment_all.test \
 	set_comment_localonly.test \
 	set_comment_removeglobal.test \
-	set_comment_revert.test
+	set_comment_revert.test \
+	torrent-already.test \
+	torrent-new.test
 
 check:
 	@failed=0; all=0; \
