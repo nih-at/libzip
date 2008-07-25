@@ -194,7 +194,7 @@ test_set() {
 }
 
 copy_file() {
-    src="${srcdir}/$1";;
+    src="${srcdir}/$1"
 
     if [ ! -f "$src" ]
     then
@@ -271,11 +271,11 @@ do
     DESCR="$arg";;
   file)
     set $arg
-    copy_file "${srcdir}/$2" "$1"
+    copy_file "$2" "$1"
     FILES="${FILES} ${srcdir}/$3!$1";;
   file-del)
     set $arg
-    copy_file "${srcdir}/$2" "$1";;
+    copy_file "$2" "$1";;
   file-new)
     set $arg
     FILES="${FILES} ${srcdir}/$2!$1";;
