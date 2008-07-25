@@ -4,7 +4,7 @@
 # installation locations etc.
 
 Name: libzip
-Version: 0.8
+Version: 0.9
 Release: 1
 Group: System/Libraries
 License: BSD
