@@ -194,16 +194,18 @@ test_set() {
 }
 
 copy_file() {
-    if [ ! -f "$1" ]
+    src="${srcdir}/$1";;
+
+    if [ ! -f "$src" ]
     then
-	die "source file '$1' does not exist"
+	die "source file '$src' does not exist"
     fi
     dir=`dirname "$2"`
     if [ ! -d "$dir" ]
     then
 	mkdir -p "$dir"
     fi
-    cp "$1" "$2"
+    cp "$src" "$2"
 }
 
 # GNU sort behaves differently on locales other than C, breaking tests
