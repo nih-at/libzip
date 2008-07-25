@@ -29,12 +29,12 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIPTORRENT 1 "June 4, 2008" NiH
+.TH ZIPTORRENT 1 "July 24, 2008" NiH
 .SH "NAME"
 ziptorrent \- torrentzip zip archives
 .SH "SYNOPSIS"
 .B ziptorrent
-[\fB-hV\fR]
+[\fB-hnVv\fR]
 \fBarchive Op \fB...\fR\fR
 .SH "DESCRIPTION"
 .B ziptorrent
@@ -52,8 +52,15 @@ Supported options:
 \fB-h\fR
 Display a short help message and exit.
 .TP 5
+\fB-n\fR
+Don't actually change archives, just print what would be done.
+.TP 5
 \fB-V\fR
 Display version information and exit.
+.TP 5
+\fB-v\fR
+Be verbose: print which archives are already torrentzipped and which
+need to be rezipped.
 .RE
 .SH "EXIT STATUS"
 .B ziptorrent

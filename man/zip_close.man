@@ -33,7 +33,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_CLOSE 3 "June 9, 2005" NiH
+.TH ZIP_CLOSE 3 "July 24, 2008" NiH
 .SH "NAME"
 zip_close \- close zip archive
 .SH "LIBRARY"
@@ -56,6 +56,10 @@ zip_close
 fails and
 \fBarchive\fR
 is left unchanged.
+If
+\fBarchive\fR
+contains no files, the file is completely removed (no empty archive is
+written).
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error code in
