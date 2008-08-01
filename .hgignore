@@ -14,6 +14,7 @@
 ^libtool$
 ^stamp-h1$
 ^lib/zip_err_str\.c$
+^lib/zipconf\.h$
 ^man/.*\.html$
 ^regress/add_dir$
 ^regress/add_from_buffer$

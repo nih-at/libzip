@@ -54,6 +54,20 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
 
 AC_CHECK_HEADERS([unistd.h])
 
+AC_CHECK_TYPES([int8_t])
+AC_CHECK_TYPES([int16_t])
+AC_CHECK_TYPES([int32_t])
+AC_CHECK_TYPES([int64_t])
+AC_CHECK_TYPES([uint8_t])
+AC_CHECK_TYPES([uint16_t])
+AC_CHECK_TYPES([uint32_t])
+AC_CHECK_TYPES([uint64_t])
+
+AC_CHECK_SIZEOF([short])
+AC_CHECK_SIZEOF([int])
+AC_CHECK_SIZEOF([long])
+AC_CHECK_SIZEOF([long long])
+
 AC_STRUCT_TIMEZONE
 
 case $host_os

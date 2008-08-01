@@ -48,6 +48,8 @@
 extern "C" {
 #endif
 
+#include <zipconf.h>
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <time.h>
@@ -163,12 +165,12 @@ typedef ssize_t (*zip_source_callback)(void *state, void *data,
 struct zip_stat {
     const char *name;			/* name of the file */
     int index;				/* index within archive */
-    unsigned int crc;			/* crc of file data */
+    zip_uint32_t crc;			/* crc of file data */
     time_t mtime;			/* modification time */
-    off_t size;				/* size of file (uncompressed) */
-    off_t comp_size;			/* size of file (compressed) */
-    unsigned short comp_method;		/* compression method used */
-    unsigned short encryption_method;	/* encryption method used */
+    zip_uint64_t size;			/* size of file (uncompressed) */
+    zip_uint64_t comp_size;		/* size of file (compressed) */
+    zip_uint16_t comp_method;		/* compression method used */
+    zip_uint16_t encryption_method;	/* encryption method used */
 };
 
 struct zip;
@@ -205,16 +207,16 @@ ZIP_EXTERN int zip_set_archive_comment(struct zip *, const char *, int);
 ZIP_EXTERN int zip_set_archive_flag(struct zip *, int, int);
 ZIP_EXTERN int zip_set_file_comment(struct zip *, int, const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
-						off_t, int);
+						zip_uint64_t, int);
 ZIP_EXTERN struct zip_source *zip_source_file(struct zip *, const char *,
-					      off_t, off_t);
+					      zip_uint64_t, zip_int64_t);
 ZIP_EXTERN struct zip_source *zip_source_filep(struct zip *, FILE *,
-					       off_t, off_t);
+					       zip_uint64_t, zip_int64_t);
 ZIP_EXTERN void zip_source_free(struct zip_source *);
 ZIP_EXTERN struct zip_source *zip_source_function(struct zip *,
 						  zip_source_callback, void *);
 ZIP_EXTERN struct zip_source *zip_source_zip(struct zip *, struct zip *,
-					     int, int, off_t, off_t);
+				     int, int, zip_uint64_t, zip_int64_t);
 ZIP_EXTERN int zip_stat(struct zip *, const char *, int, struct zip_stat *);
 ZIP_EXTERN int zip_stat_index(struct zip *, int, int, struct zip_stat *);
 ZIP_EXTERN void zip_stat_init(struct zip_stat *);

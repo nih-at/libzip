@@ -1,6 +1,9 @@
+libincludedir = ${libdir}/include/@PACKAGE@
+
 lib_LTLIBRARIES = libzip.la
 noinst_HEADERS = zipint.h
 include_HEADERS = zip.h
+libinclude_HEADERS = zipconf.h
 
 libzip_la_LDFLAGS=-no-undefined -version-info 1:0
 libzip_la_LIBADD=@LTLIBOBJS@
@@ -60,10 +63,13 @@ libzip_la_SOURCES=\
 	zip_unchange_archive.c \
 	zip_unchange_data.c
 
-BUILT_SOURCES=zip_err_str.c
+BUILT_SOURCES=zip_err_str.c zipconf.h
 
 EXTRA_DIST=	CMakeLists.txt \
 		make_zip_err_str.sh
 
 zip_err_str.c: zip.h make_zip_err_str.sh
 	sh $(srcdir)/make_zip_err_str.sh $(srcdir)/zip.h zip_err_str.c
+
+zipconf.h: ${top_builddir}/config.h make_zipconf.sh
+	sh ${srcdir}/make_zipconf.sh ${top_builddir}/config.h zipconf.h

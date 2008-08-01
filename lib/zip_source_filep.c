@@ -44,9 +44,9 @@
 struct read_file {
     char *fname;	/* name of file to copy from */
     FILE *f;		/* file to copy from */
-    off_t off;		/* start offset of */
-    off_t len;		/* lengt of data to copy */
-    off_t remain;	/* bytes remaining to be copied */
+    zip_uint64_t off;	/* start offset of */
+    zip_int64_t len;	/* lengt of data to copy */
+    zip_int64_t remain;	/* bytes remaining to be copied */
     int e[2];		/* error codes */
 };
 
@@ -56,7 +56,8 @@ static ssize_t read_file(void *state, void *data, size_t len,
 
 
 ZIP_EXTERN struct zip_source *
-zip_source_filep(struct zip *za, FILE *file, off_t start, off_t len)
+zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start,
+		 zip_int64_t len)
 {
     if (za == NULL)
 	return NULL;
@@ -73,7 +74,7 @@ zip_source_filep(struct zip *za, FILE *file, off_t start, off_t len)
 
 struct zip_source *
 _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
-		      off_t start, off_t len)
+		      zip_uint64_t start, zip_int64_t len)
 {
     struct read_file *f;
     struct zip_source *zs;
@@ -130,7 +131,7 @@ read_file(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 	    }
 	}
 
-	if (fseeko(z->f, z->off, SEEK_SET) < 0) {
+	if (fseeko(z->f, (off_t)z->off, SEEK_SET) < 0) {
 	    z->e[0] = ZIP_ER_SEEK;
 	    z->e[1] = errno;
 	    return -1;
