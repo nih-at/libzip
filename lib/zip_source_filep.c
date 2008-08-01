@@ -45,7 +45,7 @@ struct read_file {
     char *fname;	/* name of file to copy from */
     FILE *f;		/* file to copy from */
     zip_uint64_t off;	/* start offset of */
-    zip_int64_t len;	/* lengt of data to copy */
+    zip_int64_t len;	/* length of data to copy */
     zip_int64_t remain;	/* bytes remaining to be copied */
     int e[2];		/* error codes */
 };
