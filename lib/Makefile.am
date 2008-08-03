@@ -1,4 +1,4 @@
-libincludedir = ${libdir}/include/@PACKAGE@
+libincludedir = ${libdir}/@PACKAGE@/include
 
 lib_LTLIBRARIES = libzip.la
 noinst_HEADERS = zipint.h
