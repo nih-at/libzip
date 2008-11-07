@@ -1,5 +1,4 @@
 # test encryption support
-# $NiH$
 program encrypt
 return 0
 args encrypt.zip

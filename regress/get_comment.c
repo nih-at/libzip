@@ -1,6 +1,4 @@
 /*
-  $NiH: get_comment.c,v 1.3 2006/04/23 14:17:36 wiz Exp $
-
   comment.c -- test cases for file and archive comments
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
 

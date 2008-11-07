@@ -1,5 +1,4 @@
 # change local comments in a zip archive
-# $NiH: set_comment.test,v 1.1 2006/04/23 00:39:58 wiz Exp $
 program set_comment_localonly
 return 0
 # need filename extension != zip to avoid using zipcmp,

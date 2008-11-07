@@ -1,6 +1,4 @@
 /*
-  $NiH: mkname.c,v 1.1 2005/06/09 18:49:38 dillo Exp $
-
   mkname.c -- add srcdir to name
   Copyright (C) 2005 Dieter Baron and Thomas Klausner
 

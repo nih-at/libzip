@@ -1,6 +1,4 @@
 /*
-  $NiH: open.c,v 1.6 2005/07/16 17:14:32 wiz Exp $
-
   open.c -- test cases for opening zip archives
   Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
 

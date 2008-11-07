@@ -1,6 +1,4 @@
 /*
-  $NiH: set_comment_removeglobal.c,v 1.1 2006/04/23 13:28:31 wiz Exp $
-
   set_comment_removeglobal.c -- remove archive comment
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
 

@@ -1,6 +1,4 @@
 /*
-  $NiH: fread.c,v 1.6 2006/02/21 10:21:25 dillo Exp $
-
   fread.c -- test cases for reading from zip archives
   Copyright (C) 2004, 2005, 2006 Dieter Baron and Thomas Klausner
 

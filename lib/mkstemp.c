@@ -1,5 +1,3 @@
-/* $NiH: mkstemp.c,v 1.3 2006/04/23 14:51:45 wiz Exp $ */
-
 /* Adapted from NetBSB libc by Dieter Baron */
 
 /*	NetBSD: gettemp.c,v 1.13 2003/12/05 00:57:36 uebayasi Exp 	*/
