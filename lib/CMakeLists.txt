@@ -80,8 +80,8 @@ SET(LIBZIP_SOURCES
   zip_get_archive_comment.c
   zip_get_archive_flag.c
   zip_get_file_comment.c
-  zip_get_num_files.c
   zip_get_name.c
+  zip_get_num_files.c
   zip_memdup.c
   zip_name_locate.c
   zip_new.c
@@ -89,14 +89,15 @@ SET(LIBZIP_SOURCES
   zip_rename.c
   zip_replace.c
   zip_set_archive_comment.c
+  zip_set_archive_flag.c
   zip_set_file_comment.c
+  zip_set_name.c
   zip_source_buffer.c
   zip_source_file.c
   zip_source_filep.c
   zip_source_free.c
   zip_source_function.c
   zip_source_zip.c
-  zip_set_name.c
   zip_stat.c
   zip_stat_index.c
   zip_stat_init.c
