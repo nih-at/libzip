@@ -14,6 +14,7 @@ SET(MDOC3_PAGES
   zip_fopen.mdoc
   zip_fread.mdoc
   zip_get_archive_comment.mdoc
+  zip_get_archive_flag.mdoc
   zip_get_file_comment.mdoc
   zip_get_name.mdoc
   zip_get_num_files.mdoc
@@ -21,6 +22,7 @@ SET(MDOC3_PAGES
   zip_open.mdoc
   zip_rename.mdoc
   zip_set_archive_comment.mdoc
+  zip_set_archive_flag.mdoc
   zip_set_file_comment.mdoc
   zip_source_buffer.mdoc
   zip_source_file.mdoc
@@ -37,6 +39,7 @@ SET(MDOC3_PAGES
 SET(MDOC1_PAGES
   zipcmp.mdoc
   zipmerge.mdoc
+  ziptorrent.mdoc
 )
 SET(MDOC_PAGES ${MDOC1_PAGES} ${MDOC3_PAGES})
 STRING(REGEX REPLACE .mdoc "" MAN1_PAGES "${MDOC1_PAGES}")
@@ -61,8 +64,21 @@ FOREACH(MAN_PAGE ${MAN3_PAGES})
   INSTALL(FILES ${MAN_PAGE}.${MANFMT} DESTINATION ${MAN_PATH}/man3
     RENAME ${MAN_PAGE}.3)
 ENDFOREACH(MAN_PAGE ${PROGRAMS})
+# XXX: usually symlinks, but I only know how to do this way
+INSTALL(FILES zip_error_clear.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_file_error_clear.3)
+INSTALL(FILES zip_error_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_file_error_get.3)
+INSTALL(FILES zip_fopen.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_fopen_index.3)
+INSTALL(FILES zip_add.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_replace.3)
+INSTALL(FILES zip_stat.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_stat_index.3)
+INSTALL(FILES zip_file_strerror.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_strerror.3)
 
-# custom targets
+# custom maintainer targets
 
 FOREACH(MAN ${MAN_PAGES})
   ADD_CUSTOM_TARGET(${MAN}.man
