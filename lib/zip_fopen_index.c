@@ -1,6 +1,6 @@
 /*
   zip_fopen_index.c -- open file in zip archive for reading by index
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -63,6 +63,11 @@ zip_fopen_index(struct zip *za, int fileno, int flags)
 
     if (fileno >= za->cdir->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return NULL;
+    }
+
+    if (za->cdir->entry[fileno].bitflags & ZIP_GPBF_ENCRYPTED) {
+	_zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	return NULL;
     }
 

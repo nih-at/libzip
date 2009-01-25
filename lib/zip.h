@@ -3,7 +3,7 @@
 
 /*
   zip.h -- exported declarations.
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -99,6 +99,7 @@ extern "C" {
 #define ZIP_ER_INCONS        21  /* N Zip archive inconsistent */
 #define ZIP_ER_REMOVE        22  /* S Can't remove file */
 #define ZIP_ER_DELETED       23  /* N Entry has been deleted */
+#define ZIP_ER_ENCRNOTSUPP   24  /* N Encryption method not supported */
 
 
 /* type of system error value */
