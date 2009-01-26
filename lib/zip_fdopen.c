@@ -1,6 +1,6 @@
 /*
-  zip_rename.c -- rename file in zip archive
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  zip_fdopen.c -- open read-only archive from file descriptor
+  Copyright (C) 2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,38 +33,29 @@
 
 
 
-#include <string.h>
-
 #include "zipint.h"
 
 
 
-ZIP_EXTERN int
-zip_rename(struct zip *za, int idx, const char *name)
+ZIP_EXTERN struct zip *
+zip_fdopen(int fd_orig, int flags, int *zep)
 {
-    const char *old_name;
-    int old_is_dir, new_is_dir;
-    
-    if (idx >= za->nentry || idx < 0 || name[0] == '\0') {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+    int fd;
+    FILE *fp;
+
+    /* XXX: we dup here to avoid messing with the passed in fd.
+       We could not restore it to the original state in case of error. */
+
+    if ((fd=dup(fd_orig)) < 0) {
+	*zep = ZIP_ER_OPEN;
+	return NULL;
     }
 
-    if (ZIP_IS_RDONLY(za)) {
-	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-	return -1;
+    if ((fp=fdopen(fd, "rb")) == NULL) {
+	close(fd);
+	*zep = ZIP_ER_OPEN;
+	return NULL;
     }
 
-    if ((old_name=zip_get_name(za, idx, 0)) == NULL)
-	return -1;
-								    
-    new_is_dir = (name[strlen(name)-1] == '/');
-    old_is_dir = (old_name[strlen(old_name)-1] == '/');
-
-    if (new_is_dir != old_is_dir) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    return _zip_set_name(za, idx, name);
+    return _zip_open(NULL, fp, flags, ZIP_AFL_RDONLY, zep);
 }

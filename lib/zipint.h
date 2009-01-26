@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -213,6 +213,8 @@ extern const int _zip_err_type[];
 			((x)->state == ZIP_ST_REPLACED  \
 			 || (x)->state == ZIP_ST_ADDED)
 
+#define ZIP_IS_RDONLY(za)	((za)->ch_flags & ZIP_AFL_RDONLY)
+
 
 
 int _zip_cdir_compute_crc(struct zip *, uLong *);
@@ -244,9 +246,12 @@ unsigned int _zip_file_get_offset(struct zip *, int);
 
 int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 
+struct zip *_zip_open(const char *, FILE *, int, int, int *);
+
 struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,
 					 zip_uint64_t, zip_int64_t);
 
+int _zip_changed(struct zip *, int *);
 void _zip_free(struct zip *);
 const char *_zip_get_name(struct zip *, int, int, struct zip_error *);
 int _zip_local_header_read(struct zip *, int);

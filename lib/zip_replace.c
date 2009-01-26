@@ -1,6 +1,6 @@
 /*
   zip_replace.c -- replace file via callback function
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -58,6 +58,11 @@ int
 _zip_replace(struct zip *za, int idx, const char *name,
 	     struct zip_source *source)
 {
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
+
     if (idx == -1) {
 	if (_zip_entry_new(za) == NULL)
 	    return -1;

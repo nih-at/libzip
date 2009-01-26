@@ -1,6 +1,6 @@
 /*
   zip_close.c -- close zip archive and update changes
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -52,7 +52,6 @@ static void ch_set_error(struct zip_error *, zip_source_callback, void *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
 static int write_cdir(struct zip *, struct zip_cdir *, FILE *);
 static int _zip_cdir_set_comment(struct zip_cdir *, struct zip *);
-static int _zip_changed(struct zip *, int *);
 static char *_zip_create_temp_output(struct zip *, FILE **);
 static int _zip_torrentzip_cmp(const void *, const void *);
 
@@ -604,7 +603,7 @@ _zip_cdir_set_comment(struct zip_cdir *dest, struct zip *src)
 
 
 
-static int
+int
 _zip_changed(struct zip *za, int *survivorsp)
 {
     int changed, i, survivors;
@@ -623,7 +622,8 @@ _zip_changed(struct zip *za, int *survivorsp)
 	    survivors++;
     }
 
-    *survivorsp = survivors;
+    if (survivorsp)
+	*survivorsp = survivors;
 
     return changed;
 }

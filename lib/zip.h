@@ -68,10 +68,13 @@ extern "C" {
 #define ZIP_FL_COMPRESSED	4 /* read compressed data */
 #define ZIP_FL_UNCHANGED	8 /* use original data, ignoring changes */
 #define ZIP_FL_RECOMPRESS      16 /* force recompression of data */
+#define ZIP_FL_ENCRYPTED       32 /* read encrypted data
+				     (implies ZIP_FL_COMPRESSED) */
 
 /* archive global flags flags */
 
 #define ZIP_AFL_TORRENT		1 /* torrent zipped */
+#define ZIP_AFL_RDONLY		2 /* read only -- cannot be cleared */
 
 /* libzip error codes */
 
@@ -100,6 +103,8 @@ extern "C" {
 #define ZIP_ER_REMOVE        22  /* S Can't remove file */
 #define ZIP_ER_DELETED       23  /* N Entry has been deleted */
 #define ZIP_ER_ENCRNOTSUPP   24  /* N Encryption method not supported */
+#define ZIP_ER_RDONLY        25  /* N Read-only archive */ 
+#define ZIP_ER_NOPASSWD      26  /* N No password provided */
 
 
 /* type of system error value */
@@ -189,6 +194,7 @@ ZIP_EXTERN void zip_error_get(struct zip *, int *, int *);
 ZIP_EXTERN int zip_error_get_sys_type(int);
 ZIP_EXTERN int zip_error_to_str(char *, size_t, int, int);
 ZIP_EXTERN int zip_fclose(struct zip_file *);
+ZIP_EXTERN struct zip *zip_fdopen(int, int, int *);
 ZIP_EXTERN void zip_file_error_clear(struct zip_file *);
 ZIP_EXTERN void zip_file_error_get(struct zip_file *, int *, int *);
 ZIP_EXTERN const char *zip_file_strerror(struct zip_file *);
