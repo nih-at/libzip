@@ -1,5 +1,5 @@
-.\" zip_open.mdoc -- open zip archive
-.\" Copyright (C) 2003-2009 Dieter Baron and Thomas Klausner
+.\" zip_fdopen.mdoc \-- open zip archive using existing file descriptor
+.\" Copyright (C) 2009 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,107 +29,115 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd February 15, 2009
-.Dt ZIP_OPEN 3
-.Os
-.Sh NAME
-.Nm zip_open
-.Nd open zip archive
-.Sh LIBRARY
+.TH ZIP_FDOPEN 3 "February 15, 2009" NiH
+.SH "NAME"
+zip_fdopen \- open zip archive using open file descriptor
+.SH "LIBRARY"
 libzip (-lzip)
-.Sh SYNOPSIS
-.In zip.h
-.Ft struct zip *
-.Fn zip_open "const char *path" "int flags" "int *errorp"
-.Sh DESCRIPTION
-The zip archive specified by
-.Ar path
+.SH "SYNOPSIS"
+#include <zip.h>
+.PP
+struct zip *
+zip_fdopen(int fd, int flags, int *errorp);
+.SH "DESCRIPTION"
+The zip archive specified by the open file descriptor
+\fBfd\fR
 is opened and a pointer to a
-.Ft struct zip ,
+.PP
+struct zip,
 used to manipulate the archive, is returned.
 The
 .Fa flags
 are specified by
-.Em or Ns No 'ing
+.I or'ing
 the following values, or 0 for none of them.
-.Bl -tag -offset indent -width ZIP_CHECKCONS
-.It Dv ZIP_CREATE
-Create the archive if it does not exist.
-.It Dv ZIP_EXCL
-Error if archive already exists.
-.It Dv ZIP_CHECKCONS
+.RS
+.\".It \fBZIP_CREATE\fR
+.\" Create the archive if it does not exist.
+.\".It \fBZIP_EXCL\fR
+.\" Error if archive already exists.
+.TP 15
+\fBZIP_CHECKCONS\fR
 Perform additional consistency checks on the archive, and error if
 they fail.
-.El
-.Pp
+.RE
+.PP
 If an error occurs and
-.Ar errorp
-is non-NULL, it will be set to the corresponding error code.
-.Sh RETURN VALUES
+\fBerrorp\fR
+is
+.No non-\fBNULL,\fR
+it will be set to the corresponding error code.
+.SH "RETURN VALUES"
 Upon successful completion
-.Fn zip_open
+zip_fdopen
 returns a
-.Ft struct zip
+.PP
+struct zip
 pointer.
 Otherwise,
-.Dv NULL
+\fBNULL\fR
 is returned and
-.Ar *errorp
+\fB*errorp\fR
 is set to indicate the error.
-.Sh ERRORS
+.SH "ERRORS"
 The archive specified by
-.Ar path
+\fBpath\fR
 is opened unless:
-.Bl -tag -width Er
-.It Bq Er ZIP_ER_EXISTS
-The file specified by
-.Ar path
-exists and
-.Dv ZIP_EXCL
-is set.
-.It Bq Er ZIP_ER_INCONS
+.RS
+.\".It [ZIP_ER_EXISTS]
+.\" The file specified by
+.\" \fBpath\fR
+.\" exists and
+.\" \fBZIP_EXCL\fR
+.\" is set.
+.TP 4
+[ZIP_ER_INCONS]
 Inconsistencies were found in the file specified by
-.Ar path
+\fBpath\fR
 and
-.Dv ZIP_CHECKCONS
+\fBZIP_CHECKCONS\fR
 was specified.
-.It Bq Er ZIP_ER_INVAL
-The
-.Ar path
-argument is
-.Dv NULL .
-.It Bq Er ZIP_ER_MEMORY
+.\".It [ZIP_ER_INVAL]
+.\" The
+.\" \fBpath\fR
+.\" argument is
+.\" \fBNULL.\fR
+.TP 4
+[ZIP_ER_MEMORY]
 Required memory could not be allocated.
-.It Bq Er ZIP_ER_NOENT
+.\".It [ZIP_ER_NOENT]
+.\" The file specified by
+.\" \fBpath\fR
+.\" does not exist and
+.\" \fBZIP_CREATE\fR
+.\" is not set.
+.\".It [ZIP_ER_NOZIP]
+.\" The file specified by
+.\" \fBpath\fR
+.\" is not a zip archive.
+.TP 4
+[ZIP_ER_OPEN]
 The file specified by
-.Ar path
-does not exist and
-.Dv ZIP_CREATE
-is not set.
-.It Bq Er ZIP_ER_NOZIP
-The file specified by
-.Ar path
-is not a zip archive.
-.It Bq Er ZIP_ER_OPEN
-The file specified by
-.Ar path
+\fBfd\fR
 could not be opened.
-.It Bq Er ZIP_ER_READ
+.TP 4
+[ZIP_ER_READ]
 A read error occurred; see
 .Va errno
 for details.
-.It Bq Er ZIP_ER_SEEK
+.TP 4
+[ZIP_ER_SEEK]
 The file specified by
-.Ar path
+\fBfd\fR
 does not allow seeks.
-.El
-.Sh SEE ALSO
-.Xr libzip 3 ,
-.Xr zip_close 3 ,
-.Xr zip_error_to_str 3 ,
-.Xr zip_fdopen 3
-.Sh AUTHORS
-.An -nosplit
-.An Dieter Baron Aq dillo@giga.or.at
+.RE
+.SH "SEE ALSO"
+libzip(3),
+zip_close(3),
+zip_error_to_str(3),
+zip_open(3)
+.SH "AUTHORS"
+
+Dieter Baron <dillo@giga.or.at>
 and
-.An Thomas Klausner Aq tk@giga.or.at
+Thomas Klausner <tk@giga.or.at>

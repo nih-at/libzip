@@ -10,6 +10,7 @@ SET(MDOC3_PAGES
   zip_error_to_str.mdoc
   zip_errors.mdoc
   zip_fclose.mdoc
+  zip_fdopen.mdoc
   zip_file_strerror.mdoc
   zip_fopen.mdoc
   zip_fread.mdoc
