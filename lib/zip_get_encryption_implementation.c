@@ -1,6 +1,6 @@
 /*
-  zip_fread.c -- read from file
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  zip_get_encryption_implementation.c -- get encryption implementation
+  Copyright (C) 2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -37,48 +37,10 @@
 
 
 
-ZIP_EXTERN ssize_t
-zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
+ZIP_EXTERN zip_encryption_implementation
+zip_get_encryption_implementation(zip_uint16_t em)
 {
-    ssize_t n;
-
-    if (!zf)
-	return -1;
-
-    if (zf->error.zip_err != 0)
-	return -1;
-
-    if ((zf->flags & ZIP_ZF_EOF) || (toread == 0))
-	return 0;
-
-    if ((n=zip_source_call(zf->src, outbuf, toread, ZIP_SOURCE_READ)) < 0) {
-	int e[2];
-	zip_source_call(zf->src, e, sizeof(e), ZIP_SOURCE_ERROR);
-	_zip_error_set(&zf->error, e[0], e[1]);
-	return -1;
-    }
-
-    if (n == 0) {
-	zf->flags |= ZIP_ZF_EOF;
-
-	if (zf->flags & ZIP_ZF_CRC) {
-	    if (zf->bytes_left != 0) {
-		_zip_error_set(&zf->error, ZIP_ER_INCONS, 0);
-		return -1;
-	    }
-
-	    if (zf->crc != zf->crc_orig) {
-		_zip_error_set(&zf->error, ZIP_ER_CRC, 0);
-		return -1;
-	    }
-	}
-    }
-    else {
-	if (zf->flags & ZIP_ZF_CRC) {
-	    zf->bytes_left -= n;
-	    zf->crc = crc32(zf->crc, (Bytef *)outbuf, n);
-	}
-    }
-
-    return n;
+    if (em == ZIP_EM_TRAD_PKWARE)
+	return zip_source_pkware;
+    return NULL;
 }

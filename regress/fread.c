@@ -152,11 +152,14 @@ do_read(struct zip *z, const char *name, int flags,
     if (when_got != when_ex || ze_got != ze_ex || se_got != se_ex) {
 	zip_error_to_str(expected, sizeof(expected), ze_ex, se_ex);
 	zip_error_to_str(got, sizeof(got), ze_got, se_got);
-	printf("%s: got %s error (%s), expected %s error (%s)\n", prg,
+	printf("%s: %s: got %s error (%s), expected %s error (%s)\n",
+	       prg, name,
 	       when_name[when_got], got, 
 	       when_name[when_ex], expected);
 	return 1;
     }
+    else if (getenv("VERBOSE"))
+	printf("%s: %s: passed\n", prg, name);
 
     return 0;
 }

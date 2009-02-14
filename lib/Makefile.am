@@ -32,11 +32,15 @@ libzip_la_SOURCES=\
 	zip_file_strerror.c \
 	zip_filerange_crc.c \
 	zip_fopen.c \
+	zip_fopen_encrypted.c \
 	zip_fopen_index.c \
+	zip_fopen_index_encrypted.c \
 	zip_fread.c \
 	zip_free.c \
 	zip_get_archive_comment.c \
 	zip_get_archive_flag.c \
+	zip_get_compression_implementation.c \
+	zip_get_encryption_implementation.c \
 	zip_get_file_comment.c \
 	zip_get_num_files.c \
 	zip_get_name.c \
@@ -50,10 +54,13 @@ libzip_la_SOURCES=\
 	zip_set_archive_flag.c \
 	zip_set_file_comment.c \
 	zip_source_buffer.c \
+	zip_source_call.c \
+	zip_source_deflate.c \
 	zip_source_file.c \
 	zip_source_filep.c \
 	zip_source_free.c \
 	zip_source_function.c \
+	zip_source_pkware.c \
 	zip_source_zip.c \
 	zip_set_name.c \
 	zip_stat.c \

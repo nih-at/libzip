@@ -91,8 +91,7 @@ enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 /* constants for struct zip_file's member flags */
 
 #define ZIP_ZF_EOF	1 /* EOF reached */
-#define ZIP_ZF_DECOMP	2 /* decompress data */
-#define ZIP_ZF_CRC	4 /* compute and compare CRC */
+#define ZIP_ZF_CRC	2 /* compute and compare CRC */
 
 /* directory entry: general purpose bit flags */
 
@@ -118,6 +117,8 @@ struct zip {
     unsigned int flags;		/* archive global flags */
     unsigned int ch_flags;	/* changed archive global flags */
 
+    char *default_password;	/* password used when no other supplied */
+
     struct zip_cdir *cdir;	/* central directory */
     char *ch_comment;		/* changed archive comment */
     int ch_comment_len;		/* length of changed zip archive
@@ -137,16 +138,11 @@ struct zip_file {
     struct zip_error error;	/* error information */
     int flags;			/* -1: eof, >0: error */
 
-    int method;			/* compression method */
-    off_t fpos;			/* position within zip file (fread/fwrite) */
     unsigned long bytes_left;	/* number of bytes left to read */
-    unsigned long cbytes_left;  /* number of bytes of compressed data left */
-    
     unsigned long crc;		/* CRC so far */
     unsigned long crc_orig;	/* CRC recorded in archive */
-    
-    char *buffer;
-    z_stream *zstr;
+
+    struct zip_source *src;	/* data source */
 };
 
 /* zip archive directory entry (central or local) */
@@ -187,6 +183,7 @@ struct zip_cdir {
 
 
 struct zip_source {
+    struct zip_source *src;
     zip_source_callback f;
     void *ud;
 };
@@ -249,7 +246,8 @@ int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 struct zip *_zip_open(const char *, FILE *, int, int, int *);
 
 struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,
-					 zip_uint64_t, zip_int64_t);
+					 zip_uint64_t, zip_int64_t, int,
+					 const struct zip_stat *);
 
 int _zip_changed(struct zip *, int *);
 void _zip_free(struct zip *);

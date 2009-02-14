@@ -40,7 +40,7 @@
 ZIP_EXTERN int
 zip_set_archive_flag(struct zip *za, int flag, int value)
 {
-    int new_flags;
+    unsigned int new_flags;
     
     if (value)
 	new_flags = za->ch_flags | flag;
