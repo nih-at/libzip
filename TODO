@@ -1,3 +1,4 @@
+! zip_fdopen: upon error, fd should remain unchanged
 ! [compat] test calls against old API
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
 + [bug] _zip_checkcons return value can overflow

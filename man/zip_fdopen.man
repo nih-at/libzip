@@ -46,16 +46,21 @@ is opened and a pointer to a
 .PP
 struct zip,
 used to manipulate the archive, is returned.
+In contrast to
+zip_open(3),
+using
+.Nm zip_fdopen
+the archive can only be opened in read-only mode.
+The
+\fBfd\fR
+argument may not be used any longer after calling
+.Nm zip_fdopen.
 The
 .Fa flags
 are specified by
 .I or'ing
 the following values, or 0 for none of them.
 .RS
-.\".It \fBZIP_CREATE\fR
-.\" Create the archive if it does not exist.
-.\".It \fBZIP_EXCL\fR
-.\" Error if archive already exists.
 .TP 15
 \fBZIP_CHECKCONS\fR
 Perform additional consistency checks on the archive, and error if
@@ -73,23 +78,24 @@ zip_fdopen
 returns a
 .PP
 struct zip
-pointer.
+pointer, and
+\fBfd\fR
+should not be used any longer.
 Otherwise,
 \fBNULL\fR
 is returned and
 \fB*errorp\fR
 is set to indicate the error.
+In the error case,
+\fBfd\fR
+remains unchanged.
 .SH "ERRORS"
-The archive specified by
-\fBpath\fR
-is opened unless:
+The file specified by
+\fBfd\fR
+is prepared for use by
+libzip(3)
+unless:
 .RS
-.\".It [ZIP_ER_EXISTS]
-.\" The file specified by
-.\" \fBpath\fR
-.\" exists and
-.\" \fBZIP_EXCL\fR
-.\" is set.
 .TP 4
 [ZIP_ER_INCONS]
 Inconsistencies were found in the file specified by
@@ -97,29 +103,31 @@ Inconsistencies were found in the file specified by
 and
 \fBZIP_CHECKCONS\fR
 was specified.
-.\".It [ZIP_ER_INVAL]
-.\" The
-.\" \fBpath\fR
-.\" argument is
-.\" \fBNULL.\fR
+.TP 4
+[ZIP_ER_INVAL]
+The
+\fBflags\fR
+argument is invalid.
+Not all
+zip_open(3)
+flags are allowed for
+.Nm zip_fdopen,
+see
+DESCRIPTION.
 .TP 4
 [ZIP_ER_MEMORY]
 Required memory could not be allocated.
-.\".It [ZIP_ER_NOENT]
-.\" The file specified by
-.\" \fBpath\fR
-.\" does not exist and
-.\" \fBZIP_CREATE\fR
-.\" is not set.
-.\".It [ZIP_ER_NOZIP]
-.\" The file specified by
-.\" \fBpath\fR
-.\" is not a zip archive.
+.TP 4
+[ZIP_ER_NOZIP]
+The file specified by
+\fBfd\fR
+is not a zip archive.
 .TP 4
 [ZIP_ER_OPEN]
 The file specified by
 \fBfd\fR
-could not be opened.
+could not be prepared for use by
+libzip(3).
 .TP 4
 [ZIP_ER_READ]
 A read error occurred; see
