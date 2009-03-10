@@ -105,23 +105,30 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
     if ((start=_zip_file_get_offset(za, fileno)) == 0)
 	return NULL;
 
-    if ((src=_zip_source_file_or_p(za, NULL, za->zp, start, st.comp_size,
-				   0, &st)) == NULL)
-	return NULL;
-    if (enc_impl) {
-	if ((s2=enc_impl(za, src, ZIP_EM_TRAD_PKWARE, 0, password)) == NULL) {
-	    zip_source_free(src);
+    if (st.comp_size == 0) {
+	if ((src=zip_source_buffer(za, NULL, 0, 0)) == NULL)
 	    return NULL;
-	}
-	src = s2;
     }
-    if (comp_impl) {
-	if ((s2=comp_impl(za, src, za->cdir->entry[fileno].comp_method,
-			  0)) == NULL) {
-	    zip_source_free(src);
+    else {
+	if ((src=_zip_source_file_or_p(za, NULL, za->zp, start, st.comp_size,
+				       0, &st)) == NULL)
 	    return NULL;
+	if (enc_impl) {
+	    if ((s2=enc_impl(za, src, ZIP_EM_TRAD_PKWARE, 0,
+			     password)) == NULL) {
+		zip_source_free(src);
+		return NULL;
+	    }
+	    src = s2;
 	}
-	src = s2;
+	if (comp_impl) {
+	    if ((s2=comp_impl(za, src, za->cdir->entry[fileno].comp_method,
+			      0)) == NULL) {
+		zip_source_free(src);
+		return NULL;
+	    }
+	    src = s2;
+	}
     }
 
     if (zip_source_call(src, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
