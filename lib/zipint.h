@@ -123,8 +123,8 @@ struct zip {
     char *ch_comment;		/* changed archive comment */
     int ch_comment_len;		/* length of changed zip archive
 				 * comment, -1 if unchanged */
-    int nentry;			/* number of entries */
-    int nentry_alloc;		/* number of entries allocated */
+    zip_uint64_t nentry;	/* number of entries */
+    zip_uint64_t nentry_alloc;	/* number of entries allocated */
     struct zip_entry *entry;	/* entries */
     int nfile;			/* number of opened files within archive */
     int nfile_alloc;		/* number of files allocated */
@@ -251,16 +251,17 @@ struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,
 
 int _zip_changed(struct zip *, int *);
 void _zip_free(struct zip *);
-const char *_zip_get_name(struct zip *, int, int, struct zip_error *);
+const char *_zip_get_name(struct zip *, zip_uint64_t, int, struct zip_error *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, size_t, struct zip_error *);
 int _zip_name_locate(struct zip *, const char *, int, struct zip_error *);
 struct zip *_zip_new(struct zip_error *);
 unsigned short _zip_read2(unsigned char **);
 unsigned int _zip_read4(unsigned char **);
-int _zip_replace(struct zip *, int, const char *, struct zip_source *);
-int _zip_set_name(struct zip *, int, const char *);
-int _zip_unchange(struct zip *, int, int);
+zip_int64_t _zip_replace(struct zip *, zip_uint64_t, const char *,
+			 struct zip_source *);
+int _zip_set_name(struct zip *, zip_uint64_t, const char *);
+int _zip_unchange(struct zip *, zip_uint64_t, int);
 void _zip_unchange_data(struct zip_entry *);
 
 #endif /* zipint.h */

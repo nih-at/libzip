@@ -38,11 +38,12 @@
 
 
 ZIP_EXTERN int
-zip_stat_index(struct zip *za, int index, int flags, struct zip_stat *st)
+zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
+	       struct zip_stat *st)
 {
     const char *name;
     
-    if (index < 0 || index >= za->nentry) {
+    if (index >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }

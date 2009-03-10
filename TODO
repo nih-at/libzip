@@ -6,12 +6,10 @@
 + [bug] missing -Wl,-R in pkg-config file
 + [bug] check/cleanup flags bit 3 (streaming) support
 + [cleanup] use zip_*int*_t internally
-- [feature] zip_fdopen (read zip from file descriptor), ZIP_AFL_RDONLY
 - [feature] Windows support: (paritally fixed?)
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement
   . strcasecmp replacement
-  . ssize_t define
   . mode_t define
   . dll_export/dll_import support (to clarify)
 - [cleanup] remove now useless check of fseek 

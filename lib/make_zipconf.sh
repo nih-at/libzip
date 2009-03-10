@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #  make_zipconf.sh: create platform specific include file zipconf.h
-#  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+#  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 #
 #  This file is part of libzip, a library to manipulate ZIP archives.
 #  The authors can be contacted at <libzip@nih.at>
@@ -43,19 +43,26 @@ define_type()
     outfile="$5"
 
     bits=`expr $bytes '*' 8`
-    type="${short}int${bits}_t"
+    type="${short}int${bits}"
     TYPE=`echo $type | tr a-z A-Z`
-    if grep -q "define HAVE_${TYPE}" "$infile"
+    if grep -q "define HAVE_${TYPE}_T" "$infile"
     then
-	echo "typedef $type zip_$type;" >> "$outfile"
+	echo "typedef ${type}_t zip_${type}_t;" >> "$outfile"
+	LTYPE="$TYPE"
     else
+	SHORT=`echo $short | tr a-z A-Z`
+	if [ -z "$SHORT" ]
+	then
+	    SHORT='S'
+	fi
 	if [ "$bytes" -eq 1 ]
 	then
 	    if [ -z "$long" ]
 	    then
 		long='signed'
 	    fi
-	    echo "typedef $long char $type;" >> $outfile
+	    echo "typedef $long char ${type}_t;" >> $outfile
+	    LTYPE="${SHORT}CHAR"
 	else
 	    ctype=`sed -n "s/.define SIZEOF_\([A-Z_]*\) $bytes/\1/p" "$infile" \
 		| head -1 | tr A-Z_ 'a-z '`
@@ -64,9 +71,22 @@ define_type()
 		echo "$0: no $bits bit type found" >&2
 		exit 1
 	    fi
-	    echo "typedef $long $ctype $type;" >> $outfile
+	    echo "typedef $long $ctype ${type}_t;" >> "$outfile"
+	    case "$ctype" in
+		short) LTYPE=${SHORT}SHRT;;
+		int) LTYPE=${SHORT}INT;;
+                long) LTYPE=${SHORT}LONG;;
+		"long long") LTYPE=${SHORT}LLONG;;
+            esac
 	fi
     fi
+
+    if [ -z "$long" ]
+    then
+	echo "#define ZIP_${TYPE}_MIN ${LTYPE}_MIN" >> "$outfile"
+    fi
+    echo "#define ZIP_${TYPE}_MAX ${LTYPE}_MAX" >> "$outfile"
+    echo >> "$outfile"
 }
 
 
@@ -99,8 +119,10 @@ EOF
 if grep -q 'define HAVE_INTTYPES_H' "$1"
 then
     echo '#include <inttypes.h>' >> "$2.$$"
-    echo >> "$2.$$"
+else
+    echo '#include <limits.h>' >> "$2.$$"
 fi
+echo >> "$2.$$"
 
 for size in 1 2 4 8
 do

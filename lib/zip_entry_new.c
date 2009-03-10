@@ -1,6 +1,6 @@
 /*
   zip_entry_new.c -- create and init struct zip_entry
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -51,7 +51,7 @@ _zip_entry_new(struct zip *za)
 	}
     }
     else {
-	if (za->nentry >= za->nentry_alloc-1) {
+	if (za->nentry+1 >= za->nentry_alloc) {
 	    za->nentry_alloc += 16;
 	    za->entry = (struct zip_entry *)realloc(za->entry,
 						    sizeof(struct zip_entry)

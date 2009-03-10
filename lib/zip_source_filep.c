@@ -53,7 +53,7 @@ struct read_file {
     int e[2];		/* error codes */
 };
 
-static ssize_t read_file(void *state, void *data, size_t len,
+static zip_int64_t read_file(void *state, void *data, zip_uint64_t len,
 		     enum zip_source_cmd cmd);
 
 
@@ -120,8 +120,8 @@ _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
 
 
 
-static ssize_t
-read_file(void *state, void *data, size_t len, enum zip_source_cmd cmd)
+static zip_int64_t
+read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct read_file *z;
     char *buf;
@@ -151,6 +151,7 @@ read_file(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 	return 0;
 	
     case ZIP_SOURCE_READ:
+	/* XXX: return INVAL if len > size_t max */
 	if (z->remain != -1)
 	    n = len > z->remain ? z->remain : len;
 	else

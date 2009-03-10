@@ -41,7 +41,7 @@ ZIP_EXTERN void
 zip_stat_init(struct zip_stat *st)
 {
     st->name = NULL;
-    st->index = -1;
+    st->index = ZIP_UINT64_MAX;
     st->crc = 0;
     st->mtime = (time_t)-1;
     st->size = -1;

@@ -323,7 +323,7 @@ add_data(struct zip *za, struct zip_source *zs, struct zip_dirent *de, FILE *ft)
     cb = zs->f;
     ud = zs->ud;
 
-    if (cb(ud, &st, sizeof(st), ZIP_SOURCE_STAT) < (ssize_t)sizeof(st)) {
+    if (cb(ud, &st, sizeof(st), ZIP_SOURCE_STAT) < (zip_int64_t)sizeof(st)) {
 	ch_set_error(&za->error, cb, ud);
 	return -1;
     }
@@ -387,7 +387,7 @@ add_data_comp(zip_source_callback cb, void *ud, struct zip_stat *st,FILE *ft,
 	      struct zip_error *error)
 {
     char buf[BUFSIZE];
-    ssize_t n;
+    zip_int64_t n;
 
     st->comp_size = 0;
     while ((n=cb(ud, buf, sizeof(buf), ZIP_SOURCE_READ)) > 0) {
@@ -414,8 +414,8 @@ add_data_uncomp(struct zip *za, zip_source_callback cb, void *ud,
 {
     char b1[BUFSIZE], b2[BUFSIZE];
     int end, flush, ret;
-    ssize_t n;
-    size_t n2;
+    zip_int64_t n;
+    zip_uint64_t n2;
     z_stream zstr;
     int mem_level;
 
@@ -496,7 +496,7 @@ ch_set_error(struct zip_error *error, zip_source_callback cb, void *ud)
 {
     int e[2];
 
-    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_ERROR)) < (ssize_t)sizeof(e)) {
+    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_ERROR)) < (zip_int64_t)sizeof(e)) {
 	error->zip_err = ZIP_ER_INTERNAL;
 	error->sys_err = 0;
     }

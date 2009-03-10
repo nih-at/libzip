@@ -44,7 +44,7 @@ static struct zip_file *_zip_file_new(struct zip *za);
 
 
 ZIP_EXTERN struct zip_file *
-zip_fopen_index_encrypted(struct zip *za, int fileno, int flags,
+zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 			  const char *password)
 {
     int zfflags;
@@ -55,7 +55,7 @@ zip_fopen_index_encrypted(struct zip *za, int fileno, int flags,
     zip_uint64_t start;
     struct zip_stat st;
 
-    if ((fileno < 0) || (fileno >= za->nentry)) {
+    if (fileno >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }

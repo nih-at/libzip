@@ -37,8 +37,9 @@
 
 
 
-ZIP_EXTERN ssize_t zip_source_call(struct zip_source *src, void *data,
-				   size_t len, enum zip_source_cmd cmd)
+ZIP_EXTERN zip_int64_t zip_source_call(struct zip_source *src, void *data,
+				       zip_uint64_t len,
+				       enum zip_source_cmd cmd)
 {
     return src->f(src->ud, data, len, cmd);
 }

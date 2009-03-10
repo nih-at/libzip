@@ -1,6 +1,6 @@
 /*
   zip_source_zip.c -- create data source from zip file
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -45,14 +45,14 @@ struct read_zip {
     zip_int64_t len;
 };
 
-static ssize_t read_zip(void *st, void *data, size_t len,
+static zip_int64_t read_zip(void *st, void *data, zip_uint64_t len,
 			enum zip_source_cmd cmd);
 
 
 
 ZIP_EXTERN struct zip_source *
-zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
-	       zip_uint64_t start, zip_int64_t len)
+zip_source_zip(struct zip *za, struct zip *srcza, zip_uint64_t srcidx,
+	       int flags, zip_uint64_t start, zip_int64_t len)
 {
     struct zip_error error;
     struct zip_source *zs;
@@ -116,8 +116,8 @@ zip_source_zip(struct zip *za, struct zip *srcza, int srcidx, int flags,
 
 
 
-static ssize_t
-read_zip(void *state, void *data, size_t len, enum zip_source_cmd cmd)
+static zip_int64_t
+read_zip(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct read_zip *z;
     char b[8192], *buf;

@@ -173,7 +173,7 @@ enum zip_source_cmd {
 
 struct zip_stat {
     const char *name;			/* name of the file */
-    int index;				/* index within archive */
+    zip_uint64_t index;			/* index within archive */
     zip_uint32_t crc;			/* crc of file data */
     time_t mtime;			/* modification time */
     zip_uint64_t size;			/* size of file (uncompressed) */
@@ -186,8 +186,8 @@ struct zip;
 struct zip_file;
 struct zip_source;
 
-typedef ssize_t (*zip_source_callback)(void *state, void *data,
-				       size_t len, enum zip_source_cmd cmd);
+typedef zip_int64_t (*zip_source_callback)(void *, void *, zip_uint64_t,
+					   enum zip_source_cmd);
 typedef struct zip_source *(*zip_compression_implementation)(struct zip *,
 						     struct zip_source *,
 						     zip_uint16_t, int);
@@ -198,14 +198,14 @@ typedef struct zip_source *(*zip_encryption_implementation)(struct zip *,
 
 
 
-ZIP_EXTERN int zip_add(struct zip *, const char *, struct zip_source *);
-ZIP_EXTERN int zip_add_dir(struct zip *, const char *);
+ZIP_EXTERN zip_int64_t zip_add(struct zip *, const char *, struct zip_source *);
+ZIP_EXTERN zip_int64_t zip_add_dir(struct zip *, const char *);
 ZIP_EXTERN int zip_close(struct zip *);
-ZIP_EXTERN int zip_delete(struct zip *, int);
+ZIP_EXTERN int zip_delete(struct zip *, zip_uint64_t);
 ZIP_EXTERN void zip_error_clear(struct zip *);
 ZIP_EXTERN void zip_error_get(struct zip *, int *, int *);
 ZIP_EXTERN int zip_error_get_sys_type(int);
-ZIP_EXTERN int zip_error_to_str(char *, size_t, int, int);
+ZIP_EXTERN int zip_error_to_str(char *, zip_uint64_t, int, int);
 ZIP_EXTERN int zip_fclose(struct zip_file *);
 ZIP_EXTERN struct zip *zip_fdopen(int, int, int *);
 ZIP_EXTERN void zip_file_error_clear(struct zip_file *);
@@ -214,30 +214,33 @@ ZIP_EXTERN const char *zip_file_strerror(struct zip_file *);
 ZIP_EXTERN struct zip_file *zip_fopen(struct zip *, const char *, int);
 ZIP_EXTERN struct zip_file *zip_fopen_encrypted(struct zip *, const char *,
 						int, const char *);
-ZIP_EXTERN struct zip_file *zip_fopen_index(struct zip *, int, int);
-ZIP_EXTERN struct zip_file *zip_fopen_index_encrypted(struct zip *, int, int,
+ZIP_EXTERN struct zip_file *zip_fopen_index(struct zip *, zip_uint64_t, int);
+ZIP_EXTERN struct zip_file *zip_fopen_index_encrypted(struct zip *,
+						      zip_uint64_t, int,
 						      const char *);
-ZIP_EXTERN ssize_t zip_fread(struct zip_file *, void *, size_t);
+ZIP_EXTERN zip_int64_t zip_fread(struct zip_file *, void *, zip_uint64_t);
 ZIP_EXTERN const char *zip_get_archive_comment(struct zip *, int *, int);
 ZIP_EXTERN int zip_get_archive_flag(struct zip *, int, int);
 ZIP_EXTERN zip_compression_implementation zip_get_compression_implementation(
     zip_uint16_t);
 ZIP_EXTERN zip_encryption_implementation zip_get_encryption_implementation(
     zip_uint16_t);
-ZIP_EXTERN const char *zip_get_file_comment(struct zip *, int, int *, int);
-ZIP_EXTERN const char *zip_get_name(struct zip *, int, int);
+ZIP_EXTERN const char *zip_get_file_comment(struct zip *, zip_uint64_t,
+					    int *, int);
+ZIP_EXTERN const char *zip_get_name(struct zip *, zip_uint64_t, int);
 ZIP_EXTERN int zip_get_num_files(struct zip *);
 ZIP_EXTERN int zip_name_locate(struct zip *, const char *, int);
 ZIP_EXTERN struct zip *zip_open(const char *, int, int *);
-ZIP_EXTERN int zip_rename(struct zip *, int, const char *);
-ZIP_EXTERN int zip_replace(struct zip *, int, struct zip_source *);
+ZIP_EXTERN int zip_rename(struct zip *, zip_uint64_t, const char *);
+ZIP_EXTERN int zip_replace(struct zip *, zip_uint64_t, struct zip_source *);
 ZIP_EXTERN int zip_set_archive_comment(struct zip *, const char *, int);
 ZIP_EXTERN int zip_set_archive_flag(struct zip *, int, int);
-ZIP_EXTERN int zip_set_file_comment(struct zip *, int, const char *, int);
+ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t,
+				    const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
 						zip_uint64_t, int);
-ZIP_EXTERN ssize_t zip_source_call(struct zip_source *, void *, size_t,
-				   enum zip_source_cmd);
+ZIP_EXTERN zip_int64_t zip_source_call(struct zip_source *, void *,
+				       zip_uint64_t, enum zip_source_cmd);
 ZIP_EXTERN struct zip_source *zip_source_deflate(struct zip *,
 						 struct zip_source *,
 						 zip_uint16_t, int);
@@ -253,12 +256,14 @@ ZIP_EXTERN struct zip_source *zip_source_pkware(struct zip *,
 						zip_uint16_t, int,
 						const char *);
 ZIP_EXTERN struct zip_source *zip_source_zip(struct zip *, struct zip *,
-				     int, int, zip_uint64_t, zip_int64_t);
+					     zip_uint64_t, int,
+					     zip_uint64_t, zip_int64_t);
 ZIP_EXTERN int zip_stat(struct zip *, const char *, int, struct zip_stat *);
-ZIP_EXTERN int zip_stat_index(struct zip *, int, int, struct zip_stat *);
+ZIP_EXTERN int zip_stat_index(struct zip *, zip_uint64_t, int,
+			      struct zip_stat *);
 ZIP_EXTERN void zip_stat_init(struct zip_stat *);
 ZIP_EXTERN const char *zip_strerror(struct zip *);
-ZIP_EXTERN int zip_unchange(struct zip *, int);
+ZIP_EXTERN int zip_unchange(struct zip *, zip_uint64_t);
 ZIP_EXTERN int zip_unchange_all(struct zip *);
 ZIP_EXTERN int zip_unchange_archive(struct zip *);
 

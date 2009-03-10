@@ -40,10 +40,13 @@
 
 
 
-ZIP_EXTERN int
+/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
+
+ZIP_EXTERN zip_int64_t
 zip_add_dir(struct zip *za, const char *name)
 {
-    int len, ret;
+    int len;
+    zip_int64_t ret;
     char *s;
     struct zip_source *source;
 

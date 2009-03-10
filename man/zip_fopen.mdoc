@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd January 25, 2009
+.Dd March 10, 2009
 .Dt ZIP_FOPEN 3
 .Os
 .Sh NAME
@@ -43,7 +43,7 @@ libzip (-lzip)
 .Ft struct zip_file *
 .Fn zip_fopen "struct zip *archive" "const char *fname" "int flags"
 .Ft struct zip_file *
-.Fn zip_fopen_index "struct zip *archive" "int index" "int flags"
+.Fn zip_fopen_index "struct zip *archive" "zip_uint64_t index" "int flags"
 .Sh DESCRIPTION
 The
 .Fn zip_fopen

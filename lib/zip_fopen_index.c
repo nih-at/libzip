@@ -42,7 +42,7 @@
 
 
 ZIP_EXTERN struct zip_file *
-zip_fopen_index(struct zip *za, int fileno, int flags)
+zip_fopen_index(struct zip *za, zip_uint64_t fileno, int flags)
 {
     return zip_fopen_index_encrypted(za, fileno, flags, za->default_password);
 }

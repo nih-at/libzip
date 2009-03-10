@@ -1,6 +1,6 @@
 /*
   zip_fread.c -- read from file
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -37,16 +37,21 @@
 
 
 
-ZIP_EXTERN ssize_t
-zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
+ZIP_EXTERN zip_int64_t
+zip_fread(struct zip_file *zf, void *outbuf, zip_uint64_t toread)
 {
-    ssize_t n;
+    zip_int64_t n;
 
     if (!zf)
 	return -1;
 
     if (zf->error.zip_err != 0)
 	return -1;
+
+    if (toread > ZIP_INT64_MAX) {
+	_zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
 
     if ((zf->flags & ZIP_ZF_EOF) || (toread == 0))
 	return 0;

@@ -1,6 +1,6 @@
 /*
   zip_source_buffer.c -- create zip data source from buffer
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -44,8 +44,7 @@ struct read_data {
     int freep;
 };
 
-static ssize_t read_data(void *state, void *data, size_t len,
-			 enum zip_source_cmd cmd);
+static zip_int64_t read_data(void *, void *, zip_uint64_t, enum zip_source_cmd);
 
 
 
@@ -83,12 +82,12 @@ zip_source_buffer(struct zip *za, const void *data, zip_uint64_t len, int freep)
 
 
 
-static ssize_t
-read_data(void *state, void *data, size_t len, enum zip_source_cmd cmd)
+static zip_int64_t
+read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct read_data *z;
     char *buf;
-    size_t n;
+    zip_uint64_t n;
 
     z = (struct read_data *)state;
     buf = (char *)data;
@@ -99,6 +98,8 @@ read_data(void *state, void *data, size_t len, enum zip_source_cmd cmd)
 	return 0;
 	
     case ZIP_SOURCE_READ:
+	/* XXX: return error if (len > ZIP_INT64_MAX) */
+
 	n = z->end - z->buf;
 	if (n > len)
 	    n = len;

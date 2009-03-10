@@ -50,10 +50,12 @@ struct deflate {
     z_stream zstr;
 };
 
-static ssize_t compress_read(struct deflate *, void *, size_t);
-static ssize_t decompress_read(struct deflate *, void *, size_t);
-static ssize_t deflate_compress(void *, void *, size_t, enum zip_source_cmd);
-static ssize_t deflate_decompress(void *, void *, size_t, enum zip_source_cmd);
+static zip_int64_t compress_read(struct deflate *, void *, zip_uint64_t);
+static zip_int64_t decompress_read(struct deflate *, void *, zip_uint64_t);
+static zip_int64_t deflate_compress(void *, void *, zip_uint64_t,
+				    enum zip_source_cmd);
+static zip_int64_t deflate_decompress(void *, void *, zip_uint64_t,
+				      enum zip_source_cmd);
 
 
 
@@ -90,12 +92,12 @@ zip_source_deflate(struct zip *za, struct zip_source *src,
 
 
 
-static ssize_t
-compress_read(struct deflate *ctx, void *data, size_t len)
+static zip_int64_t
+compress_read(struct deflate *ctx, void *data, zip_uint64_t len)
 {
     int end, ret;
-    ssize_t n;
-    size_t out_before;
+    zip_int64_t n;
+    zip_uint64_t out_before;
 
     if (ctx->e[0] != 0)
 	return -1;
@@ -167,11 +169,11 @@ compress_read(struct deflate *ctx, void *data, size_t len)
 
 
 
-static ssize_t
-decompress_read(struct deflate *ctx, void *data, size_t len)
+static zip_int64_t
+decompress_read(struct deflate *ctx, void *data, zip_uint64_t len)
 {
     int end, ret;
-    ssize_t n;
+    zip_int64_t n;
 
     if (ctx->e[0] != 0)
 	return -1;
@@ -232,8 +234,9 @@ decompress_read(struct deflate *ctx, void *data, size_t len)
 
 
 
-static ssize_t
-deflate_compress(void *ud, void *data, size_t len, enum zip_source_cmd cmd)
+static zip_int64_t
+deflate_compress(void *ud, void *data, zip_uint64_t len,
+		 enum zip_source_cmd cmd)
 {
     struct deflate *ctx;
     int ret;
@@ -320,11 +323,12 @@ deflate_compress(void *ud, void *data, size_t len, enum zip_source_cmd cmd)
 
 
 
-static ssize_t
-deflate_decompress(void *ud, void *data, size_t len, enum zip_source_cmd cmd)
+static zip_int64_t
+deflate_decompress(void *ud, void *data, zip_uint64_t len,
+		   enum zip_source_cmd cmd)
 {
     struct deflate *ctx;
-    ssize_t n;
+    zip_int64_t n;
     int ret;
 
     ctx = (struct deflate *)ud;

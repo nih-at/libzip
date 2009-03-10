@@ -40,11 +40,12 @@
 
 
 ZIP_EXTERN int
-zip_set_file_comment(struct zip *za, int idx, const char *comment, int len)
+zip_set_file_comment(struct zip *za, zip_uint64_t idx,
+		     const char *comment, int len)
 {
     char *tmpcom;
 
-    if (idx < 0 || idx >= za->nentry
+    if (idx >= za->nentry
 	|| len < 0 || len > MAXCOMLEN
 	|| (len > 0 && comment == NULL)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
