@@ -40,7 +40,7 @@
 ZIP_EXTERN int
 zip_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source)
 {
-    if (idx < 0 || idx >= za->nentry || source == NULL) {
+    if (idx >= za->nentry || source == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
