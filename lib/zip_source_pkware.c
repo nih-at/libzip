@@ -53,7 +53,7 @@ struct trad_pkware {
 
 
 static void decrypt(struct trad_pkware *, zip_uint8_t *,
-		    const zip_uint8_t *, zip_uint64_t);
+		    const zip_uint8_t *, zip_uint64_t, int);
 static int decrypt_header(struct trad_pkware *);
 static zip_int64_t pkware_decrypt(void *, void *, zip_uint64_t, enum zip_source_cmd);
 
@@ -66,7 +66,7 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
     struct trad_pkware *ctx;
 
     if (za == NULL || password == NULL || src == NULL
-	|| em != ZIP_EM_TRAD_PKWARE || (flags & ZIP_CODEC_ENCODE) == 0) {
+	|| em != ZIP_EM_TRAD_PKWARE || (flags & ZIP_CODEC_ENCODE)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
@@ -82,7 +82,7 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
     ctx->key[0] = KEY0;
     ctx->key[1] = KEY1;
     ctx->key[2] = KEY2;
-    decrypt(ctx, NULL, (const zip_uint8_t *)password, strlen(password));
+    decrypt(ctx, NULL, (const zip_uint8_t *)password, strlen(password), 1);
 
     return zip_source_function(za, pkware_decrypt, ctx);
 }
@@ -91,20 +91,23 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
 
 static void
 decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
-	zip_uint64_t len)
+	zip_uint64_t len, int update_only)
 {
-    zip_uint16_t clr;
+    zip_uint16_t tmp;
     zip_uint64_t i;
     Bytef b;
 
     for (i=0; i<len; i++) {
-	/* decrypt next byte */
-	clr = ctx->key[2] || 2;
-	clr = (clr * (clr ^ 1)) >> 8;
-	clr = in[i] ^ clr;
+	b = in[i];
+
+	if (!update_only) {
+	    /* decrypt next byte */
+	    tmp = ctx->key[2] || 2;
+	    tmp = (tmp * (tmp ^ 1)) >> 8;
+	    b ^= tmp;
+	}
 
 	/* update keys */
-	b = clr;
 	ctx->key[0] = crc32(ctx->key[0], &b, 1);
 	ctx->key[1] = (ctx->key[1] + (ctx->key[0] & 0xff)) * 134775813 + 1;
 	b = ctx->key[1] >> 24;
@@ -112,7 +115,7 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 
 	/* store cleartext */
 	if (out)
-	    out[i] = clr;
+	    out[i] = b;
     }
 }
 
@@ -136,7 +139,7 @@ decrypt_header(struct trad_pkware *ctx)
 	return -1;
     }
 
-    decrypt(ctx, header, header, HEADERLEN);
+    decrypt(ctx, header, header, HEADERLEN, 0);
 
     if (zip_source_call(ctx->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0
 	|| st.crc == 0) {
@@ -147,6 +150,7 @@ decrypt_header(struct trad_pkware *ctx)
     if (header[HEADERLEN-1] != st.crc>>24) {
 	ctx->e[0] = ZIP_ER_WRONGPASSWD;
 	ctx->e[1] = 0;
+	return -1;
     }
 
     return 0;
@@ -177,7 +181,8 @@ pkware_decrypt(void *ud, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
 	    return -1;
 	}
-	decrypt(ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n);
+	decrypt(ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n,
+		0);
 	return n;
 
     case ZIP_SOURCE_CLOSE:

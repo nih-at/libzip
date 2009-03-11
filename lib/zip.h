@@ -235,6 +235,7 @@ ZIP_EXTERN int zip_rename(struct zip *, zip_uint64_t, const char *);
 ZIP_EXTERN int zip_replace(struct zip *, zip_uint64_t, struct zip_source *);
 ZIP_EXTERN int zip_set_archive_comment(struct zip *, const char *, int);
 ZIP_EXTERN int zip_set_archive_flag(struct zip *, int, int);
+ZIP_EXTERN int zip_set_default_password(struct zip *, const char *);
 ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t,
 				    const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,

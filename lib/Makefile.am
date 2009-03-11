@@ -52,6 +52,7 @@ libzip_la_SOURCES=\
 	zip_replace.c \
 	zip_set_archive_comment.c \
 	zip_set_archive_flag.c \
+	zip_set_default_password.c \
 	zip_set_file_comment.c \
 	zip_source_buffer.c \
 	zip_source_call.c \

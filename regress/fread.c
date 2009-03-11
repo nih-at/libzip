@@ -1,6 +1,6 @@
 /*
   fread.c -- test cases for reading from zip archives
-  Copyright (C) 2004, 2005, 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -92,6 +92,13 @@ main(int argc, char *argv[])
     fail += do_read(z, "storedcrcerror", ZIP_FL_COMPRESSED,
 		    WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "storedok", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
+
+    fail += do_read(z, "cryptok", 0, WHEN_OPEN, ZIP_ER_NOPASSWD, 0);
+    zip_set_default_password(z, "crypt");
+    fail += do_read(z, "cryptok", 0, WHEN_NEVER, 0, 0);
+    zip_set_default_password(z, "wrong");
+    fail += do_read(z, "cryptok", 0, WHEN_OPEN, ZIP_ER_WRONGPASSWD, 0);
+    zip_set_default_password(z, NULL);
 
     zs = zip_source_buffer(z, "asdf", 4, 0);
     zip_replace(z, zip_name_locate(z, "storedok", 0), zs);

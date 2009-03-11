@@ -187,16 +187,16 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 
     case ZIP_SOURCE_STAT:
         {
-	    struct zip_stat *st;
-	    struct stat fst;
-	    int err;
-	    
-	    if (len < sizeof(*st))
+	    if (len < sizeof(z->st))
 		return -1;
 
 	    if (z->st.size != -1)
-		memcpy(st, &z->st, sizeof(st));
+		memcpy(data, &z->st, sizeof(z->st));
 	    else {
+		struct zip_stat *st;
+		struct stat fst;
+		int err;
+	    
 		if (z->f)
 		    err = fstat(fileno(z->f), &fst);
 		else
@@ -217,7 +217,7 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 		else if ((fst.st_mode&S_IFMT) == S_IFREG)
 		    st->size = fst.st_size;
 	    }
-	    return sizeof(*st);
+	    return sizeof(z->st);
 	}
 
     case ZIP_SOURCE_ERROR:
