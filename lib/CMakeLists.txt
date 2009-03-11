@@ -95,6 +95,7 @@ SET(LIBZIP_SOURCES
   zip_replace.c
   zip_set_archive_comment.c
   zip_set_archive_flag.c
+  zip_set_default_password.c
   zip_set_file_comment.c
   zip_set_name.c
   zip_source_buffer.c
