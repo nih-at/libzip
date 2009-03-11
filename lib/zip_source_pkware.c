@@ -150,7 +150,7 @@ decrypt_header(struct trad_pkware *ctx)
     decrypt(ctx, header, header, HEADERLEN, 0);
 
     if (zip_source_call(ctx->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0) {
-	/* stat failed, skip password validataion */
+	/* stat failed, skip password validation */
 
 	return 0;
     }
