@@ -68,17 +68,22 @@ SET(LIBZIP_SOURCES
   zip_error_strerror.c
   zip_error_to_str.c
   zip_fclose.c
+  zip_fdopen.c
   zip_file_error_clear.c
   zip_file_error_get.c
   zip_file_get_offset.c
   zip_file_strerror.c
   zip_filerange_crc.c
   zip_fopen.c
+  zip_fopen_encrypted.c
   zip_fopen_index.c
+  zip_fopen_index_encrypted.c
   zip_fread.c
   zip_free.c
   zip_get_archive_comment.c
   zip_get_archive_flag.c
+  zip_get_compression_implementation.c
+  zip_get_encryption_implementation.c
   zip_get_file_comment.c
   zip_get_name.c
   zip_get_num_files.c
@@ -93,10 +98,13 @@ SET(LIBZIP_SOURCES
   zip_set_file_comment.c
   zip_set_name.c
   zip_source_buffer.c
+  zip_source_call.c
+  zip_source_deflate.c
   zip_source_file.c
   zip_source_filep.c
   zip_source_free.c
   zip_source_function.c
+  zip_source_pkware.c
   zip_source_zip.c
   zip_stat.c
   zip_stat_index.c
