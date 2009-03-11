@@ -50,6 +50,10 @@ struct trad_pkware {
 #define KEY1		591751049
 #define KEY2		878082192
 
+static const uLongf *crc = NULL;
+
+#define CRC32(c, b) (crc[((c) ^ (b)) & 0xff] ^ ((c) >> 8))
+
 
 
 static void decrypt(struct trad_pkware *, zip_uint8_t *,
@@ -70,6 +74,9 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
+
+    if (crc == NULL)
+	crc = get_crc_table();
 
     if ((ctx=(struct trad_pkware *)malloc(sizeof(*ctx))) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
@@ -102,20 +109,20 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 
 	if (!update_only) {
 	    /* decrypt next byte */
-	    tmp = ctx->key[2] || 2;
+	    tmp = ctx->key[2] | 2;
 	    tmp = (tmp * (tmp ^ 1)) >> 8;
 	    b ^= tmp;
 	}
 
-	/* update keys */
-	ctx->key[0] = crc32(ctx->key[0], &b, 1);
-	ctx->key[1] = (ctx->key[1] + (ctx->key[0] & 0xff)) * 134775813 + 1;
-	b = ctx->key[1] >> 24;
-	ctx->key[2] = crc32(ctx->key[2], &b, 1);
-
 	/* store cleartext */
 	if (out)
 	    out[i] = b;
+
+	/* update keys */
+	ctx->key[0] = CRC32(ctx->key[0], b);
+	ctx->key[1] = (ctx->key[1] + (ctx->key[0] & 0xff)) * 134775813 + 1;
+	b = ctx->key[1] >> 24;
+	ctx->key[2] = CRC32(ctx->key[2], b);
     }
 }
 
@@ -127,6 +134,7 @@ decrypt_header(struct trad_pkware *ctx)
     zip_uint8_t header[HEADERLEN];
     struct zip_stat st;
     zip_int64_t n;
+    unsigned short dostime, dosdate;
 
     if ((n=zip_source_call(ctx->src, header, HEADERLEN, ZIP_SOURCE_READ)) < 0) {
 	zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
@@ -141,13 +149,16 @@ decrypt_header(struct trad_pkware *ctx)
 
     decrypt(ctx, header, header, HEADERLEN, 0);
 
-    if (zip_source_call(ctx->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0
-	|| st.crc == 0) {
-	/* no CRC available, skip password validataion */
+    if (zip_source_call(ctx->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0) {
+	/* stat failed, skip password validataion */
+
 	return 0;
     }
 
-    if (header[HEADERLEN-1] != st.crc>>24) {
+    _zip_u2d_time(st.mtime, &dostime, &dosdate);
+
+    if (header[HEADERLEN-1] != st.crc>>24
+	&& header[HEADERLEN-1] != dostime>>8) {
 	ctx->e[0] = ZIP_ER_WRONGPASSWD;
 	ctx->e[1] = 0;
 	return -1;

@@ -261,6 +261,7 @@ unsigned int _zip_read4(unsigned char **);
 zip_int64_t _zip_replace(struct zip *, zip_uint64_t, const char *,
 			 struct zip_source *);
 int _zip_set_name(struct zip *, zip_uint64_t, const char *);
+void _zip_u2d_time(time_t, unsigned short *, unsigned short *);
 int _zip_unchange(struct zip *, zip_uint64_t, int);
 void _zip_unchange_data(struct zip_entry *);
 
