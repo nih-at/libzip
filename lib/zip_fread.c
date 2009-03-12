@@ -53,35 +53,32 @@ zip_fread(struct zip_file *zf, void *outbuf, zip_uint64_t toread)
 	return -1;
     }
 
-    if ((zf->flags & ZIP_ZF_EOF) || (toread == 0))
+    if ((zf->eof) || (toread == 0))
 	return 0;
 
     if ((n=zip_source_call(zf->src, outbuf, toread, ZIP_SOURCE_READ)) < 0) {
-	int e[2];
-	zip_source_call(zf->src, e, sizeof(e), ZIP_SOURCE_ERROR);
-	_zip_error_set(&zf->error, e[0], e[1]);
+	_zip_error_set_from_source(&zf->error, zf->src);
 	return -1;
     }
 
     if (n == 0) {
-	zf->flags |= ZIP_ZF_EOF;
+	struct zip_stat st;
 
-	if (zf->flags & ZIP_ZF_CRC) {
-	    if (zf->bytes_left != 0) {
-		_zip_error_set(&zf->error, ZIP_ER_INCONS, 0);
-		return -1;
-	    }
-
-	    if (zf->crc != zf->crc_orig) {
-		_zip_error_set(&zf->error, ZIP_ER_CRC, 0);
-		return -1;
-	    }
+	if (zip_source_call(zf->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0) {
+	    _zip_error_set_from_source(&zf->error, zf->src);
+	    return -1;
 	}
-    }
-    else {
-	if (zf->flags & ZIP_ZF_CRC) {
-	    zf->bytes_left -= n;
-	    zf->crc = crc32(zf->crc, (Bytef *)outbuf, n);
+
+	zf->eof = 1;
+
+	if ((st.valid & ZIP_STAT_SIZE) && zf->size != st.size) {
+	    _zip_error_set(&zf->error, ZIP_ER_INCONS, 0);
+	    return -1;
+	}
+
+	if ((st.valid & ZIP_STAT_CRC) && zf->crc != st.crc) {
+	    _zip_error_set(&zf->error, ZIP_ER_CRC, 0);
+	    return -1;
 	}
     }
 

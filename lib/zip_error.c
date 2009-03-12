@@ -99,3 +99,14 @@ _zip_error_set(struct zip_error *err, int ze, int se)
 	err->sys_err = se;
     }
 }
+
+
+
+void
+_zip_error_set_from_source(struct zip_error *err, struct zip_source *src)
+{
+    int e[2];
+    
+    zip_source_call(src, e, sizeof(e), ZIP_SOURCE_ERROR);
+    _zip_error_set(err, e[0], e[1]);
+}

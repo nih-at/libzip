@@ -136,11 +136,10 @@ struct zip {
 struct zip_file {
     struct zip *za;		/* zip archive containing this file */
     struct zip_error error;	/* error information */
-    int flags;			/* -1: eof, >0: error */
+    int eof;
 
-    unsigned long bytes_left;	/* number of bytes left to read */
-    unsigned long crc;		/* CRC so far */
-    unsigned long crc_orig;	/* CRC recorded in archive */
+    zip_uint64_t size;		/* uncompressed size recorded in archive */
+    zip_uint32_t crc;		/* CRC recorded in archive */
 
     struct zip_source *src;	/* data source */
 };
@@ -236,6 +235,7 @@ void _zip_error_fini(struct zip_error *);
 void _zip_error_get(struct zip_error *, int *, int *);
 void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
+void _zip_error_set_from_source(struct zip_error *, struct zip_source *);
 const char *_zip_error_strerror(struct zip_error *);
 
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);

@@ -252,6 +252,7 @@ ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
 						zip_uint64_t, int);
 ZIP_EXTERN zip_int64_t zip_source_call(struct zip_source *, void *,
 				       zip_uint64_t, enum zip_source_cmd);
+ZIP_EXTERN struct zip_source *zip_source_crc(struct zip *, struct zip_source *);
 ZIP_EXTERN struct zip_source *zip_source_deflate(struct zip *,
 						 struct zip_source *,
 						 zip_uint16_t, int);

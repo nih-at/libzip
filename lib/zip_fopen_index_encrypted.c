@@ -47,7 +47,6 @@ ZIP_EXTERN struct zip_file *
 zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 			  const char *password)
 {
-    int zfflags;
     struct zip_file *zf;
     zip_compression_implementation comp_impl;
     zip_encryption_implementation enc_impl;
@@ -75,10 +74,6 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 	flags |= ZIP_FL_COMPRESSED;
 
     zip_stat_index(za, fileno, flags, &st);
-
-    zfflags = 0;
-    if (st.comp_method == ZIP_CM_STORE || (flags & ZIP_FL_COMPRESSED) == 0)
-	zfflags |= ZIP_ZF_CRC;
 
     enc_impl = NULL;
     if ((flags & ZIP_FL_ENCRYPTED) == 0) {
@@ -135,6 +130,15 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 	    }
 	    src = s2;
 	}
+	if ((flags & ZIP_FL_COMPRESSED) == 0
+	    || st.comp_method == ZIP_CM_STORE ) {
+	    if ((s2=zip_source_crc(za, src)) == NULL) {
+		zip_source_free(src);
+		/* XXX: set error (how?) */
+		return NULL;
+	    }
+	    src = s2;
+	}
     }
 
     if (zip_source_call(src, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
@@ -150,9 +154,8 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 
     zf = _zip_file_new(za);
 
-    zf->flags = zfflags;
-    zf->bytes_left = za->cdir->entry[fileno].uncomp_size;
-    zf->crc_orig = za->cdir->entry[fileno].crc;
+    zf->size = za->cdir->entry[fileno].uncomp_size;
+    zf->crc = za->cdir->entry[fileno].crc;
     zf->src = src;
 
     return zf;
@@ -188,10 +191,9 @@ _zip_file_new(struct zip *za)
 
     zf->za = za;
     _zip_error_init(&zf->error);
-    zf->flags = 0;
-    zf->crc = crc32(0L, Z_NULL, 0);
-    zf->crc_orig = 0;
-    zf->bytes_left = 0;
+    zf->eof = 0;
+    zf->crc = 0;
+    zf->size = 0;
     zf->src = NULL;
 
     return zf;

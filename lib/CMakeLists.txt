@@ -100,6 +100,7 @@ SET(LIBZIP_SOURCES
   zip_set_name.c
   zip_source_buffer.c
   zip_source_call.c
+  zip_source_crc.c
   zip_source_deflate.c
   zip_source_file.c
   zip_source_filep.c

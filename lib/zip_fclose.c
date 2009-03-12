@@ -58,11 +58,6 @@ zip_fclose(struct zip_file *zf)
     ret = 0;
     if (zf->error.zip_err)
 	ret = zf->error.zip_err;
-    else if ((zf->flags & ZIP_ZF_CRC) && (zf->flags & ZIP_ZF_EOF)) {
-	/* if EOF, compare CRC */
-	if (zf->crc_orig != zf->crc)
-	    ret = ZIP_ER_CRC;
-    }
 
     free(zf);
     return ret;
