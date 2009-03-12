@@ -120,7 +120,8 @@ crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    st = (struct zip_stat *)data;
 
 	    if (ctx->eof) {
-		/* XXX: error if mismatch with what src provided? */
+		/* XXX: Set comp_size, comp_method, encryption_method?
+		        After all, this only works for uncompressed data. */
 		st->size = ctx->size;
 		st->crc = ctx->crc;
 		st->valid |= ZIP_STAT_SIZE|ZIP_STAT_CRC;

@@ -28,23 +28,23 @@
   . read/set ASCII file flag
 - [test] rename deleted (fails)
 - [test] rename file to dir/ and vice versa (fails)
+------------------------------------------------ API issues
+* character encoding in file names and comments
+* pop source from stack (needed to handle failures in zip_close)
+* parameters for compression/crypt implementations
+  ZIP_CM_DEFLATE/ZIP_CM_BZIP2: compression level
+  			       memlevel?
+* compression/crypt implementations: how to set error code on failure
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
-void zip_set_default_password(struct zip *archive, const char *password);
-(NULL for unsetting)
 
-struct zip_file *zip_fopen_encrypted(struct zip *archive,
-                                     const char *fname, int flags,
-                                     const char *password);
-struct zip_file *zip_fopen_index_encrypted(struct zip *archive,
-                                           int index, int flags,
-                                           const char *password);
-
-int zip_set_encryption(struct zip *archive, int idx, int method,
-                       const char *password);
-void zip_set_archive_encryption(struct zip *archive, int encryption_method,
-                                const char *password);
+int zip_set_compression(struct zip *archive, zip_uint64_t idx,
+    			zip_uint64_t method);
+int zip_set_encryption(struct zip *archive, zip_uint64_t idx,
+    		       zip_uint16_t method, const char *password);
+void zip_set_archive_encryption(struct zip *archive,
+     				zip_uint16_t method, const char *password);
 
 struct zip_source *zip_source_writable(struct zip *archive);
 zip_source_write(struct zip_source *, const void *data, size_t len);
