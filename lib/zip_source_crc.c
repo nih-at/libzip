@@ -64,9 +64,6 @@ zip_source_crc(struct zip *za, struct zip_source *src)
 	return NULL;
     }
 
-    ctx->eof = 0;
-    ctx->crc = crc32(0, NULL, 0);
-    ctx->size = 0;
     ctx->src = src;
 
 
@@ -87,6 +84,10 @@ crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
     case ZIP_SOURCE_OPEN:
 	if (zip_source_call(ctx->src, data, len, cmd) < 0)
 	    return -1;
+
+	ctx->eof = 0;
+	ctx->crc = crc32(0, NULL, 0);
+	ctx->size = 0;
 
 	return 0;
 
