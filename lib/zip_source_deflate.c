@@ -45,7 +45,6 @@ struct deflate {
     int eof;
     int mem_level;
     zip_uint64_t size;
-    zip_uint32_t crc;
     char buffer[BUFSIZE];
     z_stream zstr;
 };
@@ -142,7 +141,6 @@ compress_read(struct deflate *ctx, void *data, zip_uint64_t len)
 		    /* XXX: check against stat of src? */
 		}
 		else {
-		    ctx->crc = crc32(ctx->crc, (Bytef *)ctx->buffer, n);
 		    ctx->zstr.next_in = (Bytef *)ctx->buffer;
 		    ctx->zstr.avail_in = n;
 		}
@@ -291,12 +289,13 @@ deflate_compress(void *ud, void *data, zip_uint64_t len,
 	    st = (struct zip_stat *)data;
 
 	    st->comp_method = ZIP_CM_DEFLATE;
+	    st->valid |= ZIP_STAT_COMP_METHOD;
 	    if (ctx->eof) {
 		st->comp_size = ctx->size;
-		st->crc = ctx->crc;
+		st->valid |= ZIP_STAT_COMP_SIZE;
 	    }
 	    else
-		st->comp_size = -1;
+		st->valid &= ~ZIP_STAT_COMP_SIZE;
 	}
 	return 0;
 

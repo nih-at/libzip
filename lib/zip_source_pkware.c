@@ -218,7 +218,8 @@ pkware_decrypt(void *ud, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    st = (struct zip_stat *)data;
 
 	    st->encryption_method = ZIP_EM_NONE;
-	    if (st->comp_size > 0)
+	    st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
+	    if (st->valid & ZIP_STAT_COMP_SIZE)
 		st->comp_size -= HEADERLEN;
 	}
 	return 0;

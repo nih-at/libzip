@@ -1,6 +1,6 @@
 /*
   zip_stat_index.c -- get information about file by index
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -54,8 +54,8 @@ zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
 
     if ((flags & ZIP_FL_UNCHANGED) == 0
 	&& ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
-	if (za->entry[index].source->f(za->entry[index].source->ud,
-				     st, sizeof(*st), ZIP_SOURCE_STAT) < 0) {
+	if (zip_source_call(za->entry[index].source,
+			    st, sizeof(*st), ZIP_SOURCE_STAT) < 0) {
 	    _zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
 	    return -1;
 	}
@@ -65,7 +65,9 @@ zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
 	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	    return -1;
 	}
-	
+
+	zip_stat_init(st);
+
 	st->crc = za->cdir->entry[index].crc;
 	st->size = za->cdir->entry[index].uncomp_size;
 	st->mtime = za->cdir->entry[index].last_mod;
@@ -81,11 +83,13 @@ zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
 	}
 	else
 	    st->encryption_method = ZIP_EM_NONE;
-	/* st->bitflags = za->cdir->entry[index].bitflags; */
+	st->valid = ZIP_STAT_CRC|ZIP_STAT_SIZE|ZIP_STAT_MTIME
+	    |ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_ENCRYPTION_METHOD;
     }
 
     st->index = index;
     st->name = name;
+    st->valid |= ZIP_STAT_INDEX|ZIP_STAT_NAME;
     
     return 0;
 }

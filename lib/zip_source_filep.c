@@ -190,7 +190,7 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    if (len < sizeof(z->st))
 		return -1;
 
-	    if (z->st.size != -1)
+	    if (z->st.valid != 0)
 		memcpy(data, &z->st, sizeof(z->st));
 	    else {
 		struct zip_stat *st;
@@ -212,10 +212,15 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 		
 		zip_stat_init(st);
 		st->mtime = fst.st_mtime;
-		if (z->len != -1)
+		st->valid |= ZIP_STAT_MTIME;
+		if (z->len != -1) {
 		    st->size = z->len;
-		else if ((fst.st_mode&S_IFMT) == S_IFREG)
+		    st->valid |= ZIP_STAT_SIZE;
+		}
+		else if ((fst.st_mode&S_IFMT) == S_IFREG) {
 		    st->size = fst.st_size;
+		    st->valid |= ZIP_STAT_SIZE;
+		}
 	    }
 	    return sizeof(z->st);
 	}

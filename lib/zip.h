@@ -171,13 +171,23 @@ enum zip_source_cmd {
     ZIP_SOURCE_FREE	/* cleanup and free resources */
 };
 
+#define ZIP_STAT_NAME			0x0001
+#define ZIP_STAT_INDEX			0x0002
+#define ZIP_STAT_SIZE			0x0004
+#define ZIP_STAT_COMP_SIZE		0x0008
+#define ZIP_STAT_MTIME			0x0010
+#define ZIP_STAT_CRC			0x0020
+#define ZIP_STAT_COMP_METHOD		0x0040
+#define ZIP_STAT_ENCRYPTION_METHOD	0x0080
+
 struct zip_stat {
+    zip_uint64_t valid;			/* which fields have valid values */
     const char *name;			/* name of the file */
     zip_uint64_t index;			/* index within archive */
-    zip_uint32_t crc;			/* crc of file data */
-    time_t mtime;			/* modification time */
     zip_uint64_t size;			/* size of file (uncompressed) */
     zip_uint64_t comp_size;		/* size of file (compressed) */
+    time_t mtime;			/* modification time */
+    zip_uint32_t crc;			/* crc of file data */
     zip_uint16_t comp_method;		/* compression method used */
     zip_uint16_t encryption_method;	/* encryption method used */
 };

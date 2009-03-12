@@ -126,6 +126,10 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    zip_stat_init(st);
 	    st->mtime = z->mtime;
 	    st->size = z->end - z->data;
+	    st->comp_method = ZIP_CM_STORE;
+	    st->encryption_method = ZIP_EM_NONE;
+	    st->valid = ZIP_STAT_MTIME|ZIP_STAT_SIZE
+		|ZIP_STAT_COMP_METHOD|ZIP_STAT_ENCRYPTION_METHOD;
 	    
 	    return sizeof(*st);
 	}
