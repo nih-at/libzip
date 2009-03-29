@@ -1,5 +1,5 @@
 /*
-  zip_source_crc.c -- pass-through source that calculates CRC32
+  zip_source_crc.c -- pass-through source that calculates CRC32 and size
   Copyright (C) 2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -39,18 +39,20 @@
 #include "zipint.h"
 
 struct crc {
-    struct zip_source *src;
     int eof;
+    int validate;
+    int e[2];
     zip_uint64_t size;
     zip_uint32_t crc;
 };
 
-static zip_int64_t crc_read(void *, void *, zip_uint64_t, enum zip_source_cmd);
+static zip_int64_t crc_read(struct zip_source *, void *, void *
+			    , zip_uint64_t, enum zip_source_cmd);
 
 
 
 ZIP_EXTERN struct zip_source *
-zip_source_crc(struct zip *za, struct zip_source *src)
+zip_source_crc(struct zip *za, struct zip_source *src, int validate)
 {
     struct crc *ctx;
 
@@ -64,16 +66,16 @@ zip_source_crc(struct zip *za, struct zip_source *src)
 	return NULL;
     }
 
-    ctx->src = src;
+    ctx->validate = validate;
 
-
-    return zip_source_function(za, crc_read, ctx);
+    return zip_source_layered(za, src, crc_read, ctx);
 }
 
 
 
 static zip_int64_t
-crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+crc_read(struct zip_source *src, void *_ctx, void *data,
+	 zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct crc *ctx;
     zip_int64_t n;
@@ -82,9 +84,6 @@ crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
-	if (zip_source_call(ctx->src, data, len, cmd) < 0)
-	    return -1;
-
 	ctx->eof = 0;
 	ctx->crc = crc32(0, NULL, 0);
 	ctx->size = 0;
@@ -95,11 +94,31 @@ crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	if (ctx->eof || len == 0)
 	    return 0;
 
-	if ((n=zip_source_call(ctx->src, data, len, cmd)) < 0)
-	    return -1;
+	if ((n=zip_source_read(src, data, len)) < 0)
+	    return ZIP_SOURCE_ERR_LOWER;
 
-	if (n == 0)
+	if (n == 0) {
 	    ctx->eof = 1;
+	    if (ctx->validate) {
+		struct zip_stat st;
+
+		if (zip_source_stat(src, &st) < 0)
+		    return ZIP_SOURCE_ERR_LOWER;
+
+		if ((st.valid & ZIP_STAT_CRC) && st.crc != ctx->crc) {
+		    ctx->e[0] = ZIP_ER_CRC;
+		    ctx->e[1] = 0;
+		    
+		    return -1;
+		}
+		if ((st.valid & ZIP_STAT_SIZE) && st.size != ctx->size) {
+		    ctx->e[0] = ZIP_ER_INCONS;
+		    ctx->e[1] = 0;
+		    
+		    return -1;
+		}
+	    }
+	}
 	else {
 	    ctx->size += n;
 	    ctx->crc = crc32(ctx->crc, data, n);
@@ -107,14 +126,10 @@ crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return n;
 
     case ZIP_SOURCE_CLOSE:
-	if (zip_source_call(ctx->src, data, len, cmd) < 0)
-	    return -1;
 	return 0;
 
     case ZIP_SOURCE_STAT:
-	if (zip_source_call(ctx->src, data, len, cmd) < 0)
-	    return -1;
-	else {
+	{
 	    struct zip_stat *st;
 
 	    st = (struct zip_stat *)data;
@@ -130,15 +145,15 @@ crc_read(void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return 0;
 	
     case ZIP_SOURCE_ERROR:
-	return zip_source_call(ctx->src, data, len, cmd);
+	memcpy(data, ctx->e, sizeof(ctx->e));
+	return 0;
 
     case ZIP_SOURCE_FREE:
-	zip_source_call(ctx->src, data, len, cmd);
 	free(ctx);
 	return 0;
 
     default:
-	return zip_source_call(ctx->src, data, len, cmd);
+	return -1;
     }
     
 }

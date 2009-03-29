@@ -56,30 +56,9 @@ zip_fread(struct zip_file *zf, void *outbuf, zip_uint64_t toread)
     if ((zf->eof) || (toread == 0))
 	return 0;
 
-    if ((n=zip_source_call(zf->src, outbuf, toread, ZIP_SOURCE_READ)) < 0) {
+    if ((n=zip_source_read(zf->src, outbuf, toread)) < 0) {
 	_zip_error_set_from_source(&zf->error, zf->src);
 	return -1;
-    }
-
-    if (n == 0) {
-	struct zip_stat st;
-
-	if (zip_source_call(zf->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0) {
-	    _zip_error_set_from_source(&zf->error, zf->src);
-	    return -1;
-	}
-
-	zf->eof = 1;
-
-	if ((st.valid & ZIP_STAT_SIZE) && zf->size != st.size) {
-	    _zip_error_set(&zf->error, ZIP_ER_INCONS, 0);
-	    return -1;
-	}
-
-	if ((st.valid & ZIP_STAT_CRC) && zf->crc != st.crc) {
-	    _zip_error_set(&zf->error, ZIP_ER_CRC, 0);
-	    return -1;
-	}
     }
 
     return n;

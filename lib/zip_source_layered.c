@@ -1,6 +1,6 @@
 /*
-  zip_source_function.c -- create zip data source from callback function
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  zip_source_layered.c -- create layered source
+  Copyright (C) 2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -40,7 +40,8 @@
 
 
 ZIP_EXTERN struct zip_source *
-zip_source_function(struct zip *za, zip_source_callback zcb, void *ud)
+zip_source_layered(struct zip *za, struct zip_source *src,
+		   zip_source_layered_callback cb, void *ud)
 {
     struct zip_source *zs;
 
@@ -52,9 +53,10 @@ zip_source_function(struct zip *za, zip_source_callback zcb, void *ud)
 	return NULL;
     }
 
-    zs->src = NULL;
-    zs->cb.f = zcb;
+    zs->src = src;
+    zs->cb.l = cb;
     zs->ud = ud;
+    zs->error_source = ZIP_LES_NONE;
     
     return zs;
 }

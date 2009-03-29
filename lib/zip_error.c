@@ -1,6 +1,6 @@
 /*
   zip_error.c -- struct zip_error helper functions
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -105,8 +105,8 @@ _zip_error_set(struct zip_error *err, int ze, int se)
 void
 _zip_error_set_from_source(struct zip_error *err, struct zip_source *src)
 {
-    int e[2];
+    int ze, se;
     
-    zip_source_call(src, e, sizeof(e), ZIP_SOURCE_ERROR);
-    _zip_error_set(err, e[0], e[1]);
+    zip_source_error(src, &ze, &se);
+    _zip_error_set(err, ze, se);
 }

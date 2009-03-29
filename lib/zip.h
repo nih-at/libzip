@@ -168,8 +168,10 @@ enum zip_source_cmd {
     ZIP_SOURCE_CLOSE,	/* reading is done */
     ZIP_SOURCE_STAT,	/* get meta information */
     ZIP_SOURCE_ERROR,	/* get error information */
-    ZIP_SOURCE_FREE	/* cleanup and free resources */
+    ZIP_SOURCE_FREE,	/* cleanup and free resources */
 };
+
+#define ZIP_SOURCE_ERR_LOWER	-2
 
 #define ZIP_STAT_NAME			0x0001
 #define ZIP_STAT_INDEX			0x0002
@@ -198,6 +200,9 @@ struct zip_source;
 
 typedef zip_int64_t (*zip_source_callback)(void *, void *, zip_uint64_t,
 					   enum zip_source_cmd);
+typedef zip_int64_t (*zip_source_layered_callback)(struct zip_source *, void *,
+						   void *, zip_uint64_t,
+						   enum zip_source_cmd);
 typedef struct zip_source *(*zip_compression_implementation)(struct zip *,
 						     struct zip_source *,
 						     zip_uint16_t, int);
@@ -250,12 +255,13 @@ ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t,
 				    const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
 						zip_uint64_t, int);
-ZIP_EXTERN zip_int64_t zip_source_call(struct zip_source *, void *,
-				       zip_uint64_t, enum zip_source_cmd);
-ZIP_EXTERN struct zip_source *zip_source_crc(struct zip *, struct zip_source *);
+ZIP_EXTERN int zip_source_close(struct zip_source *);
+ZIP_EXTERN struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
+					     int);
 ZIP_EXTERN struct zip_source *zip_source_deflate(struct zip *,
 						 struct zip_source *,
 						 zip_uint16_t, int);
+ZIP_EXTERN void zip_source_error(struct zip_source *, int *, int *);
 ZIP_EXTERN struct zip_source *zip_source_file(struct zip *, const char *,
 					      zip_uint64_t, zip_int64_t);
 ZIP_EXTERN struct zip_source *zip_source_filep(struct zip *, FILE *,
@@ -263,10 +269,19 @@ ZIP_EXTERN struct zip_source *zip_source_filep(struct zip *, FILE *,
 ZIP_EXTERN void zip_source_free(struct zip_source *);
 ZIP_EXTERN struct zip_source *zip_source_function(struct zip *,
 						  zip_source_callback, void *);
+ZIP_EXTERN struct zip_source *zip_source_layered(struct zip *,
+						 struct zip_source *,
+						 zip_source_layered_callback,
+						 void *);
+ZIP_EXTERN int zip_source_open(struct zip_source *);
 ZIP_EXTERN struct zip_source *zip_source_pkware(struct zip *,
 						struct zip_source *,
 						zip_uint16_t, int,
 						const char *);
+ZIP_EXTERN struct zip_source *zip_source_pop(struct zip_source *);
+ZIP_EXTERN zip_int64_t zip_source_read(struct zip_source *, void *,
+				       zip_uint64_t);
+ZIP_EXTERN int zip_source_stat(struct zip_source *, struct zip_stat *);
 ZIP_EXTERN struct zip_source *zip_source_zip(struct zip *, struct zip *,
 					     zip_uint64_t, int,
 					     zip_uint64_t, zip_int64_t);

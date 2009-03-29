@@ -132,7 +132,7 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 	}
 	if ((flags & ZIP_FL_COMPRESSED) == 0
 	    || st.comp_method == ZIP_CM_STORE ) {
-	    if ((s2=zip_source_crc(za, src)) == NULL) {
+	    if ((s2=zip_source_crc(za, src, 1)) == NULL) {
 		zip_source_free(src);
 		/* XXX: set error (how?) */
 		return NULL;
@@ -141,13 +141,8 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 	}
     }
 
-    if (zip_source_call(src, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
-	int e[2];
-	
-	if (zip_source_call(src, e, sizeof(e), ZIP_SOURCE_ERROR) < 0)
-	    _zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
-	else
-	    _zip_error_set(&za->error, e[0], e[1]);
+    if (zip_source_open(src) < 0) {
+	_zip_error_set_from_source(&za->error, src);
 	zip_source_free(src);
 	return NULL;
     }

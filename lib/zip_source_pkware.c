@@ -39,7 +39,6 @@
 #include "zipint.h"
 
 struct trad_pkware {
-    struct zip_source *src;
     int e[2];
 
     zip_uint32_t key[3];
@@ -58,8 +57,10 @@ static const uLongf *crc = NULL;
 
 static void decrypt(struct trad_pkware *, zip_uint8_t *,
 		    const zip_uint8_t *, zip_uint64_t, int);
-static int decrypt_header(struct trad_pkware *);
-static zip_int64_t pkware_decrypt(void *, void *, zip_uint64_t, enum zip_source_cmd);
+static int decrypt_header(struct zip_source *, struct trad_pkware *);
+static zip_int64_t pkware_decrypt(struct zip_source *, void *, void *,
+				  zip_uint64_t, enum zip_source_cmd);
+static void pkware_free(struct trad_pkware *);
 
 
 
@@ -68,6 +69,7 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
 		  zip_uint16_t em, int flags, const char *password)
 {
     struct trad_pkware *ctx;
+    struct zip_source *s2;
 
     if (za == NULL || password == NULL || src == NULL
 	|| em != ZIP_EM_TRAD_PKWARE) {
@@ -87,7 +89,6 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
 	return NULL;
     }
 
-    ctx->src = src;
     ctx->e[0] = ctx->e[1] = 0;
 
     ctx->key[0] = KEY0;
@@ -95,7 +96,12 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
     ctx->key[2] = KEY2;
     decrypt(ctx, NULL, (const zip_uint8_t *)password, strlen(password), 1);
 
-    return zip_source_function(za, pkware_decrypt, ctx);
+    if ((s2=zip_source_layered(za, src, pkware_decrypt, ctx)) == NULL) {
+	pkware_free(ctx);
+	return NULL;
+    }
+
+    return s2;
 }
 
 
@@ -133,15 +139,15 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 
 
 static int
-decrypt_header(struct trad_pkware *ctx)
+decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
 {
     zip_uint8_t header[HEADERLEN];
     struct zip_stat st;
     zip_int64_t n;
     unsigned short dostime, dosdate;
 
-    if ((n=zip_source_call(ctx->src, header, HEADERLEN, ZIP_SOURCE_READ)) < 0) {
-	zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
+    if ((n=zip_source_read(src, header, HEADERLEN)) < 0) {
+	zip_source_error(src, ctx->e, ctx->e+1);
 	return -1;
     }
     
@@ -153,9 +159,8 @@ decrypt_header(struct trad_pkware *ctx)
 
     decrypt(ctx, header, header, HEADERLEN, 0);
 
-    if (zip_source_call(ctx->src, &st, sizeof(st), ZIP_SOURCE_STAT) < 0) {
+    if (zip_source_stat(src, &st) < 0) {
 	/* stat failed, skip password validation */
-
 	return 0;
     }
 
@@ -174,7 +179,8 @@ decrypt_header(struct trad_pkware *ctx)
 
 
 static zip_int64_t
-pkware_decrypt(void *ud, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+pkware_decrypt(struct zip_source *src, void *ud, void *data,
+	       zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct trad_pkware *ctx;
     zip_int64_t n;
@@ -183,57 +189,41 @@ pkware_decrypt(void *ud, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
-	if (zip_source_call(ctx->src, data, len, cmd) < 0) {
-	    zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
-	    return -1;
-	}
-	if (decrypt_header(ctx) < 0)
+	if (decrypt_header(src, ctx) < 0)
 	    return -1;
 	return 0;
 
     case ZIP_SOURCE_READ:
-	if ((n=zip_source_call(ctx->src, data, len, cmd)) < 0) {
-	    zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
-	    return -1;
-	}
+	if ((n=zip_source_read(src, data, len)) < 0)
+	    return ZIP_SOURCE_ERR_LOWER;
+
 	decrypt(ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n,
 		0);
 	return n;
 
     case ZIP_SOURCE_CLOSE:
-	if (zip_source_call(ctx->src, data, len, cmd) < 0) {
-	    zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
-	    return -1;
-	}
 	return 0;
 
     case ZIP_SOURCE_STAT:
-	if (zip_source_call(ctx->src, data, len, cmd) < 0) {
-	    zip_source_call(ctx->src, ctx->e, sizeof(ctx->e), ZIP_SOURCE_ERROR);
-	    return -1;
-	}
-	else {
+	{
 	    struct zip_stat *st;
 
 	    st = (struct zip_stat *)data;
 
 	    st->encryption_method = ZIP_EM_NONE;
 	    st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
+	    /* XXX: deduce HEADERLEN from size for uncompressed */
 	    if (st->valid & ZIP_STAT_COMP_SIZE)
 		st->comp_size -= HEADERLEN;
 	}
 	return 0;
 
     case ZIP_SOURCE_ERROR:
-	if (len < sizeof(int)*2)
-	    return -1;
-
 	memcpy(data, ctx->e, sizeof(int)*2);
 	return sizeof(int)*2;
 
     case ZIP_SOURCE_FREE:
-	zip_source_call(ctx->src, data, len, cmd);
-	free(ud);
+	pkware_free(ctx);
 	return 0;
 
     default:
@@ -241,4 +231,12 @@ pkware_decrypt(void *ud, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	ctx->e[1] = 0;
 	return -1;
     }
+}
+
+
+
+static void
+pkware_free(struct trad_pkware *ctx)
+{
+    free(ctx);
 }

@@ -88,10 +88,9 @@ int _zip_mkstemp(char *);
 enum zip_state { ZIP_ST_UNCHANGED, ZIP_ST_DELETED, ZIP_ST_REPLACED,
 		 ZIP_ST_ADDED, ZIP_ST_RENAMED };
 
-/* constants for struct zip_file's member flags */
+/* error source for layered sources */
 
-#define ZIP_ZF_EOF	1 /* EOF reached */
-#define ZIP_ZF_CRC	2 /* compute and compare CRC */
+enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 
 /* directory entry: general purpose bit flags */
 
@@ -183,8 +182,12 @@ struct zip_cdir {
 
 struct zip_source {
     struct zip_source *src;
-    zip_source_callback f;
+    union {
+	zip_source_callback f;
+	zip_source_layered_callback l;
+    } cb;
     void *ud;
+    enum zip_les error_source;
 };
 
 /* entry in zip archive directory */

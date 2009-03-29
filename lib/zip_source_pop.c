@@ -1,6 +1,6 @@
 /*
-  zip_source_function.c -- create zip data source from callback function
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  zip_source_pop.c -- pop top layer from zip data source
+  Copyright (C) 2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -40,21 +40,18 @@
 
 
 ZIP_EXTERN struct zip_source *
-zip_source_function(struct zip *za, zip_source_callback zcb, void *ud)
+zip_source_pop(struct zip_source *src)
 {
-    struct zip_source *zs;
+    struct zip_source *lower;
 
-    if (za == NULL)
+    if (src == NULL)
 	return NULL;
 
-    if ((zs=(struct zip_source *)malloc(sizeof(*zs))) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	return NULL;
-    }
+    lower = src->src;
 
-    zs->src = NULL;
-    zs->cb.f = zcb;
-    zs->ud = ud;
-    
-    return zs;
+    (void)src->cb.f(src->ud, NULL, 0, ZIP_SOURCE_FREE);
+
+    free(src);
+
+    return lower;
 }
