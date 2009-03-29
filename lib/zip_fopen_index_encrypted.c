@@ -149,8 +149,6 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 
     zf = _zip_file_new(za);
 
-    zf->size = za->cdir->entry[fileno].uncomp_size;
-    zf->crc = za->cdir->entry[fileno].crc;
     zf->src = src;
 
     return zf;
@@ -187,8 +185,6 @@ _zip_file_new(struct zip *za)
     zf->za = za;
     _zip_error_init(&zf->error);
     zf->eof = 0;
-    zf->crc = 0;
-    zf->size = 0;
     zf->src = NULL;
 
     return zf;

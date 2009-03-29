@@ -136,10 +136,6 @@ struct zip_file {
     struct zip *za;		/* zip archive containing this file */
     struct zip_error error;	/* error information */
     int eof;
-
-    zip_uint64_t size;		/* uncompressed size recorded in archive */
-    zip_uint32_t crc;		/* CRC recorded in archive */
-
     struct zip_source *src;	/* data source */
 };
 
