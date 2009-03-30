@@ -45,8 +45,7 @@
 static int add_data(struct zip *, struct zip_source *, struct zip_dirent *,
 		    FILE *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
-static int copy_source(struct zip *, struct zip_source *, struct zip_stat *,
-		       FILE *);
+static int copy_source(struct zip *, struct zip_source *, FILE *);
 static int write_cdir(struct zip *, struct zip_cdir *, FILE *);
 static int _zip_cdir_set_comment(struct zip_cdir *, struct zip *);
 static char *_zip_create_temp_output(struct zip *, FILE **);
@@ -318,7 +317,7 @@ static int
 add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
 	 FILE *ft)
 {
-    off_t offstart, offend;
+    off_t offstart, offdata, offend;
     struct zip_stat st;
     struct zip_source *s2;
     zip_compression_implementation comp_impl;
@@ -334,6 +333,11 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
 
+    if ((s2=zip_source_crc(za, src, 0)) == NULL) {
+	zip_source_pop(s2);
+	return -1;
+    }
+    
     /* XXX: deflate 0-byte files for torrentzip? */
     if (((st.valid & ZIP_STAT_COMP_METHOD) == 0
 	 || st.comp_method == ZIP_CM_STORE)
@@ -342,20 +346,26 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
 	if ((comp_impl=zip_get_compression_implementation(ZIP_CM_DEFLATE))
 	    == NULL) {
 	    _zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	    zip_source_pop(s2);
 	    return -1;
 	}
-	if ((s2=comp_impl(za, src, ZIP_CM_DEFLATE, ZIP_CODEC_ENCODE))
+	if ((s2=comp_impl(za, s2, ZIP_CM_DEFLATE, ZIP_CODEC_ENCODE))
 	    == NULL) {
 	    /* XXX: set error? */
-	    zip_source_free(src);
+	    zip_source_pop(s2);
 	    return -1;
 	}
     }
     else
 	s2 = src;
 
-    ret = copy_source(za, s2, &st, ft);
-
+    offdata = ftello(ft);
+	
+    ret = copy_source(za, s2, ft);
+	
+    if (zip_source_stat(s2, &st) < 0)
+	ret = -1;
+    
     while (s2 != src) {
 	if ((s2=zip_source_pop(s2)) == NULL) {
 	    /* XXX: set erorr */
@@ -367,7 +377,6 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
     if (ret < 0)
 	return -1;
 
-
     offend = ftello(ft);
 
     if (fseeko(ft, offstart, SEEK_SET) < 0) {
@@ -375,12 +384,11 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
 	return -1;
     }
 
-    
     de->last_mod = st.mtime;
     de->comp_method = st.comp_method;
     de->crc = st.crc;
     de->uncomp_size = st.size;
-    de->comp_size = st.comp_size;
+    de->comp_size = offend - offdata;
 
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	_zip_dirent_torrent_normalize(de);
@@ -432,8 +440,7 @@ copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
 
 
 static int
-copy_source(struct zip *za, struct zip_source *src, struct zip_stat *st,
-	    FILE *ft)
+copy_source(struct zip *za, struct zip_source *src, FILE *ft)
 {
     char buf[BUFSIZE];
     zip_int64_t n;
@@ -444,7 +451,6 @@ copy_source(struct zip *za, struct zip_source *src, struct zip_stat *st,
 	return -1;
     }
 
-    st->comp_size = 0;
     ret = 0;
     while ((n=zip_source_read(src, buf, sizeof(buf))) > 0) {
 	if (fwrite(buf, 1, n, ft) != (size_t)n) {
@@ -452,8 +458,6 @@ copy_source(struct zip *za, struct zip_source *src, struct zip_stat *st,
 	    ret = -1;
 	    break;
 	}
-	
-	st->comp_size += n;
     }
     
     if (n < 0) {
@@ -462,11 +466,7 @@ copy_source(struct zip *za, struct zip_source *src, struct zip_stat *st,
 	ret = -1;
     }	
 
-    if (zip_source_close(src) < 0) {
-	if (ret == 0)
-	    _zip_error_set_from_source(&za->error, src);
-	ret = -1;
-    }
+    zip_source_close(src);
     
     return ret;
 }

@@ -6,6 +6,7 @@
 + [bug] missing -Wl,-R in pkg-config file
 + [bug] check/cleanup flags bit 3 (streaming) support
 + [cleanup] use zip_*int*_t internally
++ [cleanup] don't make zip_source_zip go through zip_fread
 - [feature] Windows support: (paritally fixed?)
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement
@@ -30,11 +31,11 @@
 - [test] rename file to dir/ and vice versa (fails)
 ------------------------------------------------ API issues
 * character encoding in file names and comments
-* pop source from stack (needed to handle failures in zip_close)
 * parameters for compression/crypt implementations
   ZIP_CM_DEFLATE/ZIP_CM_BZIP2: compression level
   			       memlevel?
 * compression/crypt implementations: how to set error code on failure
+* compression/crypt error messages a la ZIP_ER_ZLIB
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);

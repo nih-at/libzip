@@ -255,7 +255,7 @@ ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t,
 				    const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
 						zip_uint64_t, int);
-ZIP_EXTERN int zip_source_close(struct zip_source *);
+ZIP_EXTERN void zip_source_close(struct zip_source *);
 ZIP_EXTERN struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
 					     int);
 ZIP_EXTERN struct zip_source *zip_source_deflate(struct zip *,

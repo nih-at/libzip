@@ -45,12 +45,15 @@ zip_source_free(struct zip_source *src)
     if (src == NULL)
 	return;
 
-    if (src->src) {
+    if (src->is_open)
+	zip_source_close(src);
+
+    if (src->src == NULL)
+	(void)src->cb.f(src->ud, NULL, 0, ZIP_SOURCE_FREE);
+    else {
 	(void)src->cb.l(src->src, src->ud, NULL, 0, ZIP_SOURCE_FREE);
 	zip_source_free(src->src);
     }
-    else
-	(void)src->cb.f(src->ud, NULL, 0, ZIP_SOURCE_FREE);
 
     free(src);
 }

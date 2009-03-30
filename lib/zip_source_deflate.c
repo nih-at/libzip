@@ -105,7 +105,6 @@ compress_read(struct zip_source *src, struct deflate *ctx,
 {
     int end, ret;
     zip_int64_t n;
-    zip_uint64_t out_before;
 
     if (ctx->e[0] != 0)
 	return -1;
@@ -115,7 +114,6 @@ compress_read(struct zip_source *src, struct deflate *ctx,
 	
     ctx->zstr.next_out = (Bytef *)data;
     ctx->zstr.avail_out = len;
-    out_before = ctx->zstr.total_out;
 
     end = 0;
     while (!end) {
@@ -126,7 +124,8 @@ compress_read(struct zip_source *src, struct deflate *ctx,
 	case Z_STREAM_END:
 	    /* all ok */
 
-	    if (ctx->zstr.total_out - out_before >= len)
+	    if (ctx->zstr.avail_out == 0
+		|| (ctx->eof && ctx->zstr.avail_in == 0))
 		end = 1;
 	    break;
 
@@ -167,8 +166,8 @@ compress_read(struct zip_source *src, struct deflate *ctx,
 	}
     }
 
-    if (ctx->zstr.total_out > out_before)
-	return ctx->zstr.total_out - out_before;
+    if (ctx->zstr.avail_out < len)
+	return len - ctx->zstr.avail_out;
 
     return (ctx->e[0] == 0) ? 0 : -1;
 }
@@ -321,6 +320,9 @@ deflate_decompress(struct zip_source *src, void *ud, void *data,
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
+	if ((n=zip_source_read(src, ctx->buffer, sizeof(ctx->buffer))) < 0)
+	    return ZIP_SOURCE_ERR_LOWER;
+
 	ctx->zstr.zalloc = Z_NULL;
 	ctx->zstr.zfree = Z_NULL;
 	ctx->zstr.opaque = NULL;

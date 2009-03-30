@@ -37,28 +37,18 @@
 
 
 
-ZIP_EXTERN int
+ZIP_EXTERN void
 zip_source_close(struct zip_source *src)
 {
-    int ret;
-
-    /* XXX: Should we even allow ZIP_SOURCE_CLOSE to return an error? */
+    if (!src->is_open)
+	return;
 
     if (src->src == NULL)
-	return src->cb.f(src->ud, NULL, 0, ZIP_SOURCE_CLOSE);
-
-    ret =  src->cb.l(src->src, src->ud, NULL, 0, ZIP_SOURCE_CLOSE);
-    if (ret < 0) {
-	if (ret == ZIP_SOURCE_ERR_LOWER)
-	    src->error_source = ZIP_LES_LOWER;
-	else
-	    src->error_source = ZIP_LES_UPPER;
-    }
-
-    if (zip_source_close(src->src) < 0) {
-	src->error_source = ZIP_LES_LOWER;
-	return -1;
+	(void)src->cb.f(src->ud, NULL, 0, ZIP_SOURCE_CLOSE);
+    else {
+	(void)src->cb.l(src->src, src->ud, NULL, 0, ZIP_SOURCE_CLOSE);
+	zip_source_close(src->src);
     }
     
-    return ret < 0 ? -1 : 0;
+    src->is_open = 0;
 }

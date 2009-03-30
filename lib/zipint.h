@@ -184,6 +184,7 @@ struct zip_source {
     } cb;
     void *ud;
     enum zip_les error_source;
+    int is_open;
 };
 
 /* entry in zip archive directory */
@@ -247,6 +248,7 @@ struct zip *_zip_open(const char *, FILE *, int, int, int *);
 struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,
 					 zip_uint64_t, zip_int64_t, int,
 					 const struct zip_stat *);
+struct zip_source *_zip_source_new(struct zip *);
 
 int _zip_changed(struct zip *, int *);
 void _zip_free(struct zip *);

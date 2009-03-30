@@ -48,15 +48,12 @@ zip_source_layered(struct zip *za, struct zip_source *src,
     if (za == NULL)
 	return NULL;
 
-    if ((zs=(struct zip_source *)malloc(sizeof(*zs))) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+    if ((zs=_zip_source_new(za)) == NULL)
 	return NULL;
-    }
 
     zs->src = src;
     zs->cb.l = cb;
     zs->ud = ud;
-    zs->error_source = ZIP_LES_NONE;
     
     return zs;
 }
