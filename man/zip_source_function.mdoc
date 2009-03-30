@@ -79,14 +79,17 @@ Return the number of bytes placed into
 .Ar data
 on success, \-1 on error.
 .It Dv ZIP_SOURCE_CLOSE
-Reading is done.  Return 0.
+Reading is done.
+Return 0.
 .It Dv ZIP_SOURCE_STAT
 Get meta information for the input data.
 .Ar data
-points to a initialized struct zip_stat, which should be filled in.
+points to an initialized
+.Vt struct zip_stat ,
+which should be filled in.
 (See
 .Xr zip_stat_init 3 . )
-Infromation only available after the source has been read (e.g. size)
+Information only available after the source has been read (e.g. size)
 can be omitted in an earlier call.
 Return sizeof(struct zip_stat) on success, \-1 on error.
 .It Dv ZIP_SOURCE_ERROR
@@ -126,7 +129,8 @@ will be the last command issued;
 if
 .Dv ZIP_SOURCE_OPEN
 was called and succeeded,
-.Dv ZIP_SOURCE_CLOSE will be called before
+.Dv ZIP_SOURCE_CLOSE
+will be called before
 .Dv ZIP_SOURCE_FREE .
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
