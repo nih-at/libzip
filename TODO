@@ -4,7 +4,7 @@
 + [bug] _zip_checkcons return value can overflow
 + [bug] _zip_u2d_time: handle localtime(3) failure
 + [bug] missing -Wl,-R in pkg-config file
-+ [bug] check/cleanup flags bit 3 (streaming) support
++ [bug] check/cleanup flags bit 3 (streaming) support (breaks OpenOffice)
 + [cleanup] use zip_*int*_t internally
 + [cleanup] don't make zip_source_zip go through zip_fread
 - [feature] Windows support: (paritally fixed?)
