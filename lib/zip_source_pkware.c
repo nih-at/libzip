@@ -71,8 +71,7 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
     struct trad_pkware *ctx;
     struct zip_source *s2;
 
-    if (za == NULL || password == NULL || src == NULL
-	|| em != ZIP_EM_TRAD_PKWARE) {
+    if (password == NULL || src == NULL || em != ZIP_EM_TRAD_PKWARE) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }

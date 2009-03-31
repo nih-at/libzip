@@ -56,7 +56,7 @@ zip_source_crc(struct zip *za, struct zip_source *src, int validate)
 {
     struct crc *ctx;
 
-    if (za == NULL || src == NULL) {
+    if (src == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
