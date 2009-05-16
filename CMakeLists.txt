@@ -98,8 +98,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
   "config.h$"
   "config.log$"
   "config.status$"
-  "dccsend$"
-  "dccserver$"
   "html$"
   "install_manifest.txt$"
   "stamp-h1$"
