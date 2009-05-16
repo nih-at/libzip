@@ -166,6 +166,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     struct zip_cdir *cd;
     unsigned char *cdp, **bufp;
     int i, comlen, nentry;
+    zip_uint32_t left;
 
     comlen = buf + buflen - eocd - EOCDLEN;
     if (comlen < 0) {
@@ -219,7 +220,6 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	}
     }
 
-    cdp = eocd;
     if (cd->size < (unsigned int)(eocd-buf)) {
 	/* if buffer already read in, use it */
 	cdp = eocd - cd->size;
@@ -243,12 +243,17 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	}
     }
 
+    left = cd->size;
     for (i=0; i<cd->nentry; i++) {
-	if ((_zip_dirent_read(cd->entry+i, fp, bufp, eocd-cdp, 0,
-			      error)) < 0) {
+	if ((_zip_dirent_read(cd->entry+i, fp, bufp, &left, 0, error)) < 0) {
 	    cd->nentry = i;
 	    _zip_cdir_free(cd);
 	    return NULL;
+	}
+	if (i == cd->nentry && left > 0) {
+	    /* Infozip extension for more than 64k entries:
+	       nentries wraps around, size indicates correct EOCD */
+	    _zip_cdir_grow(cd, cd->nentry+ZIP_UINT16_MAX, error);
 	}
     }
     
@@ -299,7 +304,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	    return -1;
 	}
 	
-	if (_zip_dirent_read(&temp, fp, NULL, 0, 1, error) == -1)
+	if (_zip_dirent_read(&temp, fp, NULL, NULL, 1, error) == -1)
 	    return -1;
 	
 	if (_zip_headercomp(cd->entry+i, 0, &temp, 1) != 0) {
