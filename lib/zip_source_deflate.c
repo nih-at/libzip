@@ -205,6 +205,11 @@ decompress_read(struct zip_source *src, struct deflate *ctx,
 
 	case Z_BUF_ERROR:
 	    if (ctx->zstr.avail_in == 0) {
+		if (ctx->eof) {
+		    end = 1;
+		    break;
+		}
+
 		if ((n=zip_source_read(src, ctx->buffer,
 			    sizeof(ctx->buffer))) < 0) {
 		    zip_source_error(src, ctx->e, ctx->e+1);
