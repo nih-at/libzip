@@ -116,6 +116,33 @@ cat <<EOF > "$2.$$"
 
 EOF
 
+version=`sed -n 's/^#define VERSION "\(.*\)"/\1/p' "$1"`
+
+version_major=`expr "$version" : '^\([0-9]*\)' || true`
+version_minor=`expr "$version" : '^[0-9]*\.\([0-9]*\)' || true`
+version_micro=`expr "$version" : '^[0-9]*\.[0-9]\.\([0-9]*\)' || true`
+
+if [ -z "$version_major" ]
+then
+    version_major=0
+fi
+if [ -z "$version_minor" ]
+then
+    version_minor=0
+fi
+if [ -z "$version_micro" ]
+then
+    version_micro=0
+fi
+
+cat <<EOF >> "$2.$$"
+#define LIBZIP_VERSION "$version"
+#define LIBZIP_VERSION_MAJOR $version_major
+#define LIBZIP_VERSION_MINOR $version_minor
+#define LIBZIP_VERSION_MICRO $version_micro
+
+EOF
+
 if grep -q 'define HAVE_INTTYPES_H' "$1"
 then
     echo '#include <inttypes.h>' >> "$2.$$"
