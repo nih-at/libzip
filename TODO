@@ -5,7 +5,6 @@
 + [bug] _zip_checkcons return value can overflow
 + [bug] _zip_u2d_time: handle localtime(3) failure
 + [bug] missing -Wl,-R in pkg-config file
-+ [bug] check/cleanup flags bit 3 (streaming) support (breaks OpenOffice)
 + [cleanup] use zip_*int*_t internally
 + [cleanup] don't make zip_source_zip go through zip_fread
 - [feature] Windows support: (partially fixed?)
@@ -31,18 +30,19 @@
 - [test] rename deleted (fails)
 - [test] rename file to dir/ and vice versa (fails)
 ------------------------------------------------ API issues
-* character encoding in file names and comments
-* parameters for compression/crypt implementations
+- character encoding in file names and comments (ZIP_AFL_UTF8, see mail)
+- parameters for compression/crypt implementations (extra function)
   ZIP_CM_DEFLATE/ZIP_CM_BZIP2: compression level
   			       memlevel?
 * compression/crypt implementations: how to set error code on failure
-* compression/crypt error messages a la ZIP_ER_ZLIB
++ compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
+* I/O methods
 ------------------------------------------------ API ideas
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
 
 int zip_set_compression(struct zip *archive, zip_uint64_t idx,
-    			zip_uint64_t method);
+    			zip_uint16_t method);
 int zip_set_encryption(struct zip *archive, zip_uint64_t idx,
     		       zip_uint16_t method, const char *password);
 void zip_set_archive_encryption(struct zip *archive,

@@ -181,6 +181,7 @@ enum zip_source_cmd {
 #define ZIP_STAT_CRC			0x0020
 #define ZIP_STAT_COMP_METHOD		0x0040
 #define ZIP_STAT_ENCRYPTION_METHOD	0x0080
+#define ZIP_STAT_FLAGS			0x0100
 
 struct zip_stat {
     zip_uint64_t valid;			/* which fields have valid values */
@@ -192,6 +193,7 @@ struct zip_stat {
     zip_uint32_t crc;			/* crc of file data */
     zip_uint16_t comp_method;		/* compression method used */
     zip_uint16_t encryption_method;	/* encryption method used */
+    zip_uint32_t flags;			/* reserved for future use */
 };
 
 struct zip;
