@@ -7,6 +7,8 @@
 + [bug] missing -Wl,-R in pkg-config file
 + [cleanup] use zip_*int*_t internally
 + [cleanup] don't make zip_source_zip go through zip_fread
++ [bug] set "version of encoding software" to 2.0
++ [bug?] keep extended local headers when copying?
 - [feature] Windows support: (partially fixed?)
   . better mkstemp replacement function (no getpid; other problems?)
   . snprintf replacement
