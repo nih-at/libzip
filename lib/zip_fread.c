@@ -1,6 +1,6 @@
 /*
   zip_fread.c -- read from file
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -83,11 +83,19 @@ zip_fread(struct zip_file *zf, void *outbuf, size_t toread)
 	ret = inflate(zf->zstr, Z_SYNC_FLUSH);
 
 	switch (ret) {
-	case Z_OK:
 	case Z_STREAM_END:
-	    /* all ok */
-	    /* Z_STREAM_END probably won't happen, since we didn't
-	       have a header */
+	    if (zf->zstr->total_out == out_before) {
+		if (zf->crc != zf->crc_orig) {
+		    _zip_error_set(&zf->error, ZIP_ER_CRC, 0);
+		    return -1;
+		}
+		else
+		    return 0;
+	    }
+
+	    /* fallthrough */
+
+	case Z_OK:
 	    len = zf->zstr->total_out - out_before;
 	    if (len >= zf->bytes_left || len >= toread) {
 		if (zf->flags & ZIP_ZF_CRC)
