@@ -1,6 +1,6 @@
-0.9.1
+0.9.1 [2010/01/24]
 
-* Fix infinite loop on reading ome broken files.
+* Fix infinite loop on reading some broken files.
 * Optimization in time conversion (don't call localtime()).
 * Clear data descriptor flag in central directory, fixing Open Office files.
 * Allow more than 64k entries.
