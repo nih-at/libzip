@@ -81,6 +81,7 @@ libzip_la_SOURCES=\
 	zip_unchange_data.c
 
 BUILT_SOURCES=zip_err_str.c zipconf.h
+CLEANFILES=	${BUILT_SOURCES}
 
 EXTRA_DIST=	CMakeLists.txt \
 		make_zip_err_str.sh \
