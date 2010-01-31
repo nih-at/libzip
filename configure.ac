@@ -2,6 +2,7 @@ AC_PREREQ(2.57)
 AC_INIT([libzip],[0.9.2],[libzip@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
 dnl AC_CANONICAL_HOST
