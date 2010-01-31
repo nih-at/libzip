@@ -1,6 +1,4 @@
 /*
-  $NiH: name_locate.c,v 1.6 2006/02/21 09:41:13 dillo Exp $
-
   name_locate.c -- test cases for finding files in zip archives
   Copyright (C) 2005-2006 Dieter Baron and Thomas Klausner
 

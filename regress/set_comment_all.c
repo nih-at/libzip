@@ -1,6 +1,4 @@
 /*
-  $NiH: set_comment_all.c,v 1.2 2006/04/23 13:28:41 wiz Exp $
-
   set_comment_all.c -- set global and file comments
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
 

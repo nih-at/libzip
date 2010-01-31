@@ -1,5 +1,3 @@
-.\" $NiH$
-.\"
 .\" zip_stat_init.mdoc \-- init zip_stat structure
 .\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
 .\"

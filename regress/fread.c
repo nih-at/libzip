@@ -1,8 +1,6 @@
 /*
-  $NiH: fread.c,v 1.6 2006/02/21 10:21:25 dillo Exp $
-
   fread.c -- test cases for reading from zip archives
-  Copyright (C) 2004, 2005, 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -95,6 +93,13 @@ main(int argc, char *argv[])
 		    WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "storedok", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
 
+    fail += do_read(z, "cryptok", 0, WHEN_OPEN, ZIP_ER_NOPASSWD, 0);
+    zip_set_default_password(z, "crypt");
+    fail += do_read(z, "cryptok", 0, WHEN_NEVER, 0, 0);
+    zip_set_default_password(z, "wrong");
+    fail += do_read(z, "cryptok", 0, WHEN_OPEN, ZIP_ER_WRONGPASSWD, 0);
+    zip_set_default_password(z, NULL);
+
     zs = zip_source_buffer(z, "asdf", 4, 0);
     zip_replace(z, zip_name_locate(z, "storedok", 0), zs);
     fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
@@ -154,11 +159,14 @@ do_read(struct zip *z, const char *name, int flags,
     if (when_got != when_ex || ze_got != ze_ex || se_got != se_ex) {
 	zip_error_to_str(expected, sizeof(expected), ze_ex, se_ex);
 	zip_error_to_str(got, sizeof(got), ze_got, se_got);
-	printf("%s: got %s error (%s), expected %s error (%s)\n", prg,
+	printf("%s: %s: got %s error (%s), expected %s error (%s)\n",
+	       prg, name,
 	       when_name[when_got], got, 
 	       when_name[when_ex], expected);
 	return 1;
     }
+    else if (getenv("VERBOSE"))
+	printf("%s: %s: passed\n", prg, name);
 
     return 0;
 }

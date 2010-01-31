@@ -1,6 +1,6 @@
 /*
   zip_close.c -- close zip archive and update changes
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -44,15 +44,10 @@
 
 static int add_data(struct zip *, struct zip_source *, struct zip_dirent *,
 		    FILE *);
-static int add_data_comp(zip_source_callback, void *, struct zip_stat *,
-			 FILE *, struct zip_error *);
-static int add_data_uncomp(struct zip *, zip_source_callback, void *,
-			   struct zip_stat *, FILE *);
-static void ch_set_error(struct zip_error *, zip_source_callback, void *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
+static int copy_source(struct zip *, struct zip_source *, FILE *);
 static int write_cdir(struct zip *, struct zip_cdir *, FILE *);
 static int _zip_cdir_set_comment(struct zip_cdir *, struct zip *);
-static int _zip_changed(struct zip *, int *);
 static char *_zip_create_temp_output(struct zip *, FILE **);
 static int _zip_torrentzip_cmp(const void *, const void *);
 
@@ -242,8 +237,13 @@ zip_close(struct zip *za)
 
 	    if (add_data(za, zs ? zs : za->entry[i].source, &de, out) < 0) {
 		error = 1;
+		if (zs)
+		    zip_source_free(zs);
 		break;
 	    }
+	    if (zs)
+		zip_source_free(zs);
+	    
 	    cd->entry[j].last_mod = de.last_mod;
 	    cd->entry[j].comp_method = de.comp_method;
 	    cd->entry[j].comp_size = de.comp_size;
@@ -320,23 +320,17 @@ zip_close(struct zip *za)
 
 
 static int
-add_data(struct zip *za, struct zip_source *zs, struct zip_dirent *de, FILE *ft)
+add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
+	 FILE *ft)
 {
-    off_t offstart, offend;
-    zip_source_callback cb;
-    void *ud;
+    off_t offstart, offdata, offend;
     struct zip_stat st;
+    struct zip_source *s2;
+    zip_compression_implementation comp_impl;
+    int ret;
     
-    cb = zs->f;
-    ud = zs->ud;
-
-    if (cb(ud, &st, sizeof(st), ZIP_SOURCE_STAT) < (ssize_t)sizeof(st)) {
-	ch_set_error(&za->error, cb, ud);
-	return -1;
-    }
-
-    if (cb(ud, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
-	ch_set_error(&za->error, cb, ud);
+    if (zip_source_stat(src, &st) < 0) {
+	_zip_error_set_from_source(&za->error, src);
 	return -1;
     }
 
@@ -345,19 +339,49 @@ add_data(struct zip *za, struct zip_source *zs, struct zip_dirent *de, FILE *ft)
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
 
-    if (st.comp_method != ZIP_CM_STORE) {
-	if (add_data_comp(cb, ud, &st, ft, &za->error) < 0)
-	    return -1;
-    }
-    else {
-	if (add_data_uncomp(za, cb, ud, &st, ft) < 0)
-	    return -1;
-    }
-
-    if (cb(ud, NULL, 0, ZIP_SOURCE_CLOSE) < 0) {
-	ch_set_error(&za->error, cb, ud);
+    if ((s2=zip_source_crc(za, src, 0)) == NULL) {
+	zip_source_pop(s2);
 	return -1;
     }
+    
+    /* XXX: deflate 0-byte files for torrentzip? */
+    if (((st.valid & ZIP_STAT_COMP_METHOD) == 0
+	 || st.comp_method == ZIP_CM_STORE)
+	&& ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
+	comp_impl = NULL;
+	if ((comp_impl=zip_get_compression_implementation(ZIP_CM_DEFLATE))
+	    == NULL) {
+	    _zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	    zip_source_pop(s2);
+	    return -1;
+	}
+	if ((s2=comp_impl(za, s2, ZIP_CM_DEFLATE, ZIP_CODEC_ENCODE))
+	    == NULL) {
+	    /* XXX: set error? */
+	    zip_source_pop(s2);
+	    return -1;
+	}
+    }
+    else
+	s2 = src;
+
+    offdata = ftello(ft);
+	
+    ret = copy_source(za, s2, ft);
+	
+    if (zip_source_stat(s2, &st) < 0)
+	ret = -1;
+    
+    while (s2 != src) {
+	if ((s2=zip_source_pop(s2)) == NULL) {
+	    /* XXX: set erorr */
+	    ret = -1;
+	    break;
+	}
+    }
+
+    if (ret < 0)
+	return -1;
 
     offend = ftello(ft);
 
@@ -366,12 +390,11 @@ add_data(struct zip *za, struct zip_source *zs, struct zip_dirent *de, FILE *ft)
 	return -1;
     }
 
-    
     de->last_mod = st.mtime;
     de->comp_method = st.comp_method;
     de->crc = st.crc;
     de->uncomp_size = st.size;
-    de->comp_size = st.comp_size;
+    de->comp_size = offend - offdata;
 
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	_zip_dirent_torrent_normalize(de);
@@ -385,133 +408,6 @@ add_data(struct zip *za, struct zip_source *zs, struct zip_dirent *de, FILE *ft)
     }
 
     return 0;
-}
-
-
-
-static int
-add_data_comp(zip_source_callback cb, void *ud, struct zip_stat *st,FILE *ft,
-	      struct zip_error *error)
-{
-    char buf[BUFSIZE];
-    ssize_t n;
-
-    st->comp_size = 0;
-    while ((n=cb(ud, buf, sizeof(buf), ZIP_SOURCE_READ)) > 0) {
-	if (fwrite(buf, 1, n, ft) != (size_t)n) {
-	    _zip_error_set(error, ZIP_ER_WRITE, errno);
-	    return -1;
-	}
-	
-	st->comp_size += n;
-    }
-    if (n < 0) {
-	ch_set_error(error, cb, ud);
-	return -1;
-    }	
-
-    return 0;
-}
-
-
-
-static int
-add_data_uncomp(struct zip *za, zip_source_callback cb, void *ud,
-		struct zip_stat *st, FILE *ft)
-{
-    char b1[BUFSIZE], b2[BUFSIZE];
-    int end, flush, ret;
-    ssize_t n;
-    size_t n2;
-    z_stream zstr;
-    int mem_level;
-
-    st->comp_method = ZIP_CM_DEFLATE;
-    st->comp_size = st->size = 0;
-    st->crc = crc32(0, NULL, 0);
-
-    zstr.zalloc = Z_NULL;
-    zstr.zfree = Z_NULL;
-    zstr.opaque = NULL;
-    zstr.avail_in = 0;
-    zstr.avail_out = 0;
-
-    if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
-	mem_level = TORRENT_MEM_LEVEL;
-    else
-	mem_level = MAX_MEM_LEVEL;
-
-    /* -MAX_WBITS: undocumented feature of zlib to _not_ write a zlib header */
-    deflateInit2(&zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -MAX_WBITS, mem_level,
-		 Z_DEFAULT_STRATEGY);
-
-    zstr.next_out = (Bytef *)b2;
-    zstr.avail_out = sizeof(b2);
-    zstr.next_in = NULL;
-    zstr.avail_in = 0;
-
-    flush = 0;
-    end = 0;
-    while (!end) {
-	if (zstr.avail_in == 0 && !flush) {
-	    if ((n=cb(ud, b1, sizeof(b1), ZIP_SOURCE_READ)) < 0) {
-		ch_set_error(&za->error, cb, ud);
-		deflateEnd(&zstr);
-		return -1;
-	    }
-	    if (n > 0) {
-		zstr.avail_in = n;
-		zstr.next_in = (Bytef *)b1;
-		st->size += n;
-		st->crc = crc32(st->crc, (Bytef *)b1, n);
-	    }
-	    else
-		flush = Z_FINISH;
-	}
-
-	ret = deflate(&zstr, flush);
-	if (ret != Z_OK && ret != Z_STREAM_END) {
-	    _zip_error_set(&za->error, ZIP_ER_ZLIB, ret);
-	    return -1;
-	}
-	
-	if (zstr.avail_out != sizeof(b2)) {
-	    n2 = sizeof(b2) - zstr.avail_out;
-	    
-	    if (fwrite(b2, 1, n2, ft) != n2) {
-		_zip_error_set(&za->error, ZIP_ER_WRITE, errno);
-		return -1;
-	    }
-	
-	    zstr.next_out = (Bytef *)b2;
-	    zstr.avail_out = sizeof(b2);
-	    st->comp_size += n2;
-	}
-
-	if (ret == Z_STREAM_END) {
-	    deflateEnd(&zstr);
-	    end = 1;
-	}
-    }
-
-    return 0;
-}
-
-
-
-static void
-ch_set_error(struct zip_error *error, zip_source_callback cb, void *ud)
-{
-    int e[2];
-
-    if ((cb(ud, e, sizeof(e), ZIP_SOURCE_ERROR)) < (ssize_t)sizeof(e)) {
-	error->zip_err = ZIP_ER_INTERNAL;
-	error->sys_err = 0;
-    }
-    else {
-	error->zip_err = e[0];
-	error->sys_err = e[1];
-    }
 }
 
 
@@ -545,6 +441,40 @@ copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
     }
 
     return 0;
+}
+
+
+
+static int
+copy_source(struct zip *za, struct zip_source *src, FILE *ft)
+{
+    char buf[BUFSIZE];
+    zip_int64_t n;
+    int ret;
+
+    if (zip_source_open(src) < 0) {
+	_zip_error_set_from_source(&za->error, src);
+	return -1;
+    }
+
+    ret = 0;
+    while ((n=zip_source_read(src, buf, sizeof(buf))) > 0) {
+	if (fwrite(buf, 1, n, ft) != (size_t)n) {
+	    _zip_error_set(&za->error, ZIP_ER_WRITE, errno);
+	    ret = -1;
+	    break;
+	}
+    }
+    
+    if (n < 0) {
+	if (ret == 0)
+	    _zip_error_set_from_source(&za->error, src);
+	ret = -1;
+    }	
+
+    zip_source_close(src);
+    
+    return ret;
 }
 
 
@@ -611,7 +541,7 @@ _zip_cdir_set_comment(struct zip_cdir *dest, struct zip *src)
 
 
 
-static int
+int
 _zip_changed(struct zip *za, int *survivorsp)
 {
     int changed, i, survivors;
@@ -630,7 +560,8 @@ _zip_changed(struct zip *za, int *survivorsp)
 	    survivors++;
     }
 
-    *survivorsp = survivors;
+    if (survivorsp)
+	*survivorsp = survivors;
 
     return changed;
 }

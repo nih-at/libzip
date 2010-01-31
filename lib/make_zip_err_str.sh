@@ -45,9 +45,6 @@ then
     exit 1
 fi
 
-#rcsid=`echo '$NiH: make_zip_err_str.sh,v 1.7 2004/04/25 16:20:16 dillo Exp $' | tr -d '$'`
-#inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
-
 cat <<EOF >> "$2.$$" || exit 1
 /*
    This file was generated automatically by $0

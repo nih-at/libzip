@@ -1,6 +1,6 @@
 /*
-  zip_open.c -- open zip archive
-  Copyright (C) 1999-2008 Dieter Baron and Thomas Klausner
+  zip_open.c -- open zip archive by name
+  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -61,10 +61,6 @@ ZIP_EXTERN struct zip *
 zip_open(const char *fn, int flags, int *zep)
 {
     FILE *fp;
-    struct zip *za;
-    struct zip_cdir *cdir;
-    int i;
-    off_t len;
     
     switch (_zip_file_exists(fn, flags, zep)) {
     case -1:
@@ -80,7 +76,23 @@ zip_open(const char *fn, int flags, int *zep)
 	return NULL;
     }
 
-    fseeko(fp, 0, SEEK_END);
+    return _zip_open(fn, fp, flags, 0, zep);
+}
+
+
+
+struct zip *
+_zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
+{
+    struct zip *za;
+    struct zip_cdir *cdir;
+    int i;
+    off_t len;
+
+    if (fseeko(fp, 0, SEEK_END) < 0) {
+	*zep = ZIP_ER_SEEK;
+	return NULL;
+    }
     len = ftello(fp);
 
     /* treat empty files as empty archives */
@@ -154,7 +166,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
     struct zip_cdir *cd;
     unsigned char *cdp, **bufp;
     int i, comlen, nentry;
-    unsigned int left;
+    zip_uint32_t left;
 
     comlen = buf + buflen - eocd - EOCDLEN;
     if (comlen < 0) {
@@ -237,7 +249,7 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	if (i == cd->nentry && left > 0) {
 	    /* Infozip extension for more than 64k entries:
 	       nentries wraps around, size indicates correct EOCD */
-	    _zip_cdir_grow(cd, cd->nentry+0x10000, error);
+	    _zip_cdir_grow(cd, cd->nentry+ZIP_UINT16_MAX, error);
 	}
 
 	if ((_zip_dirent_read(cd->entry+i, fp, bufp, &left, 0, error)) < 0) {
@@ -426,12 +438,16 @@ _zip_allocate_new(const char *fn, int *zep)
 	set_error(zep, &error, 0);
 	return NULL;
     }
-	
-    za->zn = strdup(fn);
-    if (!za->zn) {
-	_zip_free(za);
-	set_error(zep, NULL, ZIP_ER_MEMORY);
-	return NULL;
+
+    if (fn == NULL)
+	za->zn = NULL;
+    else {
+	za->zn = strdup(fn);
+	if (!za->zn) {
+	    _zip_free(za);
+	    set_error(zep, NULL, ZIP_ER_MEMORY);
+	    return NULL;
+	}
     }
     return za;
 }

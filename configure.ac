@@ -1,5 +1,6 @@
 AC_PREREQ(2.57)
-AC_INIT([libzip],[0.9.2],[libzip@nih.at])
+# also update CMakeLists.txt when changing version
+AC_INIT([libzip],[0.9.2a],[libzip@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -54,6 +55,20 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
 	       [AC_MSG_RESULT([no])])
 
 AC_CHECK_HEADERS([unistd.h])
+
+AC_CHECK_TYPES([int8_t])
+AC_CHECK_TYPES([int16_t])
+AC_CHECK_TYPES([int32_t])
+AC_CHECK_TYPES([int64_t])
+AC_CHECK_TYPES([uint8_t])
+AC_CHECK_TYPES([uint16_t])
+AC_CHECK_TYPES([uint32_t])
+AC_CHECK_TYPES([uint64_t])
+
+AC_CHECK_SIZEOF([short])
+AC_CHECK_SIZEOF([int])
+AC_CHECK_SIZEOF([long])
+AC_CHECK_SIZEOF([long long])
 
 AC_STRUCT_TIMEZONE
 
