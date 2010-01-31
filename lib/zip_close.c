@@ -444,6 +444,7 @@ add_data_uncomp(struct zip *za, zip_source_callback cb, void *ud,
 
     zstr.next_out = (Bytef *)b2;
     zstr.avail_out = sizeof(b2);
+    zstr.next_in = NULL;
     zstr.avail_in = 0;
 
     flush = 0;
