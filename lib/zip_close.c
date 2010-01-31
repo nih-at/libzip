@@ -266,6 +266,8 @@ zip_close(struct zip *za)
 	_zip_dirent_finalize(&de);
     }
 
+    free(filelist);
+
     if (!error) {
 	if (write_cdir(za, cd, out) < 0)
 	    error = 1;

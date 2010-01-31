@@ -259,7 +259,9 @@ deflate_compress(struct zip_source *src, void *ud, void *data,
 	ctx->zstr.zfree = Z_NULL;
 	ctx->zstr.opaque = NULL;
 	ctx->zstr.avail_in = 0;
+	ctx->zstr.next_in = NULL;
 	ctx->zstr.avail_out = 0;
+	ctx->zstr.next_out = NULL;
 
 	/* negative value to tell zlib not to write a header */
 	if ((ret=deflateInit2(&ctx->zstr, Z_BEST_COMPRESSION, Z_DEFLATED,

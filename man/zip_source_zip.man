@@ -39,7 +39,7 @@ libzip (-lzip)
 .PP
 struct zip_source *
 zip_source_zip(struct zip *archive, struct zip *srcarchive); \
-"int srcidx" "int flags" "off_t start" "off_t len"
+"zip_uint64_t srcidx" "int flags" "zip_uint64_t start" "zip_int64_t len"
 .SH "DESCRIPTION"
 The function
 zip_source_zip
