@@ -158,7 +158,7 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    n = len;
 
 	if (!z->closep) {
-	    /* we might share this file with others, so let's be save */
+	    /* we might share this file with others, so let's be safe */
 	    if (fseeko(z->f, (off_t)(z->off + z->len-z->remain),
 		       SEEK_SET) < 0) {
 		z->e[0] = ZIP_ER_SEEK;
