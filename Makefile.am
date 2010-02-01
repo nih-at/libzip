@@ -12,4 +12,5 @@ EXTRA_DIST=	LICENSE \
 		CMakeLists.txt \
 		cmake-config.h.in \
 		libzip.pc.in \
-		libzip-uninstalled.pc.in
+		libzip-uninstalled.pc.in \
+		m4
