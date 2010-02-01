@@ -43,7 +43,7 @@ zip_fdopen(int fd_orig, int flags, int *zep)
     int fd;
     FILE *fp;
 
-    /* XXX: we dup here to avoid messing with the passed in fd.
+    /* We dup() here to avoid messing with the passed in fd.
        We could not restore it to the original state in case of error. */
 
     if ((fd=dup(fd_orig)) < 0) {
@@ -57,5 +57,6 @@ zip_fdopen(int fd_orig, int flags, int *zep)
 	return NULL;
     }
 
+    close(fd_orig);
     return _zip_open(NULL, fp, flags, ZIP_AFL_RDONLY, zep);
 }
