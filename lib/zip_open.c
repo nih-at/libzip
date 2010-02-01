@@ -190,12 +190,14 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 
     if ((comlen < cd->comment_len) || (cd->nentry != i)) {
 	_zip_error_set(error, ZIP_ER_NOZIP, 0);
-	free(cd);
+	cd->nentry = 0;
+	_zip_cdir_free(cd);
 	return NULL;
     }
     if ((flags & ZIP_CHECKCONS) && comlen != cd->comment_len) {
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
-	free(cd);
+	cd->nentry = 0;
+	_zip_cdir_free(cd);
 	return NULL;
     }
 
@@ -203,7 +205,8 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 	if ((cd->comment=(char *)_zip_memdup(eocd+EOCDLEN,
 					     cd->comment_len, error))
 	    == NULL) {
-	    free(cd);
+	    cd->nentry = 0;
+	    _zip_cdir_free(cd);
 	    return NULL;
 	}
     }
@@ -226,7 +229,8 @@ _zip_readcdir(FILE *fp, unsigned char *buf, unsigned char *eocd, int buflen,
 		_zip_error_set(error, ZIP_ER_SEEK, errno);
 	    else
 		_zip_error_set(error, ZIP_ER_NOZIP, 0);
-	    free(cd);
+	    cd->nentry = 0;
+	    _zip_cdir_free(cd);
 	    return NULL;
 	}
     }
