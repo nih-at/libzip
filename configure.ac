@@ -1,6 +1,5 @@
 AC_PREREQ(2.57)
-# also update CMakeLists.txt when changing version
-AC_INIT([libzip],[0.9.3a],[libzip@nih.at])
+AC_INIT([libzip],[0.9.3a],[libzip-discuss@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
