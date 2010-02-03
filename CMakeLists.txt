@@ -13,6 +13,8 @@ INCLUDE(CheckFunctionExists)
 INCLUDE(CheckIncludeFiles)
 INCLUDE(CheckSymbolExists)
 INCLUDE(CheckTypeSize)
+INCLUDE(CheckCSourceRuns)
+INCLUDE(CheckCSourceCompiles)
 
 SET(PACKAGE "libzip")
 SET(PACKAGE_NAME ${PACKAGE})
