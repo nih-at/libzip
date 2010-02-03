@@ -92,6 +92,6 @@ typedef unsigned long long zip_uint64_t;
 
 #define ZIP_INT64_MIN	-0x8000000000000000LL
 #define ZIP_INT64_MAX	 0x7fffffffffffffffLL
-#define ZIP_UINT64_MAX	 0xffffffffffffffffLLU
+#define ZIP_UINT64_MAX	 0xffffffffffffffffULL
 
 #endif /* zipconf.h */
