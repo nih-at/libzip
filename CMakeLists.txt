@@ -7,11 +7,15 @@
 # 4. distribution tarball not checked for unwanted/missing content.
 # 5. create usable libtool .la file
 
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
 PROJECT(libzip C)
 
 INCLUDE(CheckFunctionExists)
 INCLUDE(CheckIncludeFiles)
 INCLUDE(CheckSymbolExists)
+INCLUDE(CheckCSourceRuns)
+INCLUDE(CheckCSourceCompiles)
 
 SET(PACKAGE "libzip")
 SET(PACKAGE_NAME ${PACKAGE})
