@@ -74,11 +74,13 @@ SET(LIBZIP_SOURCES
   zip_file_error_get.c
   zip_file_get_offset.c
   zip_file_strerror.c
+  zip_filerange_crc.c
   zip_fopen.c
   zip_fopen_index.c
   zip_fread.c
   zip_free.c
   zip_get_archive_comment.c
+  zip_get_archive_flag.c
   zip_get_file_comment.c
   zip_get_num_files.c
   zip_get_name.c
