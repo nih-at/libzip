@@ -43,6 +43,14 @@
 #include "zip.h"
 #include "config.h"
 
+#ifndef HAVE_FSEEKO
+#define fseeko(s, o, w)	(fseek((s), (long int)(o), (w)))
+#endif
+
+#ifndef HAVE_FTELLO
+#define ftello(s)	((long)ftell((s)))
+#endif
+
 #ifndef HAVE_MKSTEMP
 int _zip_mkstemp(char *);
 #define mkstemp _zip_mkstemp
@@ -57,11 +65,27 @@ int _zip_mkstemp(char *);
 #define _zip_rename	rename
 #endif
 
-#ifndef HAVE_FSEEKO
-#define fseeko(s, o, w)	(fseek((s), (long int)(o), (w)))
+/* Windows' open() doesn't understand Unix permissions */
+#if defined(HAVE__OPEN) && !defined(HAVE_OPEN)
+#define open(a, b, c)	_open((a), (b))
 #endif
-#ifndef HAVE_FTELLO
-#define ftello(s)	((long)ftell((s)))
+
+#if !defined(HAVE_SNPRINTF)
+#if defined(HAVE__SNPRINTF)
+#define snprintf	_snprintf
+#endif
+#endif
+
+#if !defined(HAVE_STRCASECMP)
+#if defined(HAVE__STRCMPI)
+#define strcasecmp	_strcmpi
+#endif
+#endif
+
+#if !defined(HAVE_STRDUP)
+#if defined(HAVE__STRDUP)
+#define strdup		_strdup
+#endif
 #endif
 
 
