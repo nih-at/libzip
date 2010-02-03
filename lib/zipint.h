@@ -66,8 +66,10 @@ int _zip_mkstemp(char *);
 #endif
 
 /* Windows' open() doesn't understand Unix permissions */
-#if defined(HAVE__OPEN) && !defined(HAVE_OPEN)
+#if !defined(HAVE_OPEN)
+#if defined(HAVE__OPEN)
 #define open(a, b, c)	_open((a), (b))
+#endif
 #endif
 
 #if !defined(HAVE_SNPRINTF)
