@@ -4,6 +4,7 @@ SET(TEST_PROGRAMS
   add_from_buffer
   add_from_file
   add_from_filep
+  add_from_zip
   encrypt
   fread
   get_comment
