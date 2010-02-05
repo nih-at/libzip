@@ -56,7 +56,7 @@ TESTS= \
 	torrent-new.test
 # problems with comparing stderr output
 NOTYET= \
-	add_from_file_duplicate.test \
+	add_from_file_duplicate.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib
 LDADD=${top_builddir}/lib/libzip.la
