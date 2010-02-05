@@ -36,7 +36,7 @@
 
 #include <zlib.h>
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define ZIP_EXTERN __declspec(dllimport)
 #endif
 
