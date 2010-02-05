@@ -21,6 +21,7 @@
 ^regress/add_from_buffer$
 ^regress/add_from_file$
 ^regress/add_from_filep$
+^regress/add_from_zip$
 ^regress/encrypt$
 ^regress/fread$
 ^regress/get_comment$
