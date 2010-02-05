@@ -37,15 +37,11 @@
 
 
 #ifndef ZIP_EXTERN
-# ifdef _WIN32
-#  ifdef zip_EXPORTS
-#   define ZIP_EXTERN __declspec(dllexport)
-#  else
-#   define ZIP_EXTERN __declspec(dllimport)
-#  endif
-# else
-#  define ZIP_EXTERN
-# endif
+#ifdef _MSC_VER
+#define ZIP_EXTERN __declspec(dllexport)
+#else
+#define ZIP_EXTERN
+#endif
 #endif
 
 #ifdef __cplusplus
