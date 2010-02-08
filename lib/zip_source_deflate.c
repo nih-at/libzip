@@ -109,7 +109,7 @@ compress_read(struct zip_source *src, struct deflate *ctx,
     if (ctx->e[0] != 0)
 	return -1;
     
-    if (ctx->eof || (len == 0))
+    if (len == 0)
 	return 0;
 	
     ctx->zstr.next_out = (Bytef *)data;
@@ -184,7 +184,7 @@ decompress_read(struct zip_source *src, struct deflate *ctx,
     if (ctx->e[0] != 0)
 	return -1;
     
-    if (ctx->eof || (len == 0))
+    if (len == 0)
 	return 0;
 	
     ctx->zstr.next_out = (Bytef *)data;
