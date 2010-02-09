@@ -3,7 +3,7 @@
 
 /*
   zip.h -- exported declarations.
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2010 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -37,8 +37,8 @@
 
 
 #ifndef ZIP_EXTERN
-#ifdef _WIN32
-#define ZIP_EXTERN __declspec(dllexport)
+#ifdef _MSC_VER
+#define ZIP_EXTERN __declspec(dllimport)
 #else
 #define ZIP_EXTERN
 #endif

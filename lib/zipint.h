@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2010 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -36,8 +36,8 @@
 
 #include <zlib.h>
 
-#ifdef _WIN32
-#define ZIP_EXTERN __declspec(dllimport)
+#ifdef _MSC_VER
+#define ZIP_EXTERN __declspec(dllexport)
 #endif
 
 #include "zip.h"
