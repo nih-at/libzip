@@ -596,6 +596,14 @@ _zip_create_temp_output(struct zip *za, FILE **outp)
 	return NULL;
     }
 
+#ifdef _WIN32
+    /*
+      According to Pierre Joye, Windows in some environments per
+      default creates text files, so force binary mode.
+    */
+    _setmode(_fileno(tfp), _O_BINARY );
+#endif
+
     *outp = tfp;
     return temp;
 }
