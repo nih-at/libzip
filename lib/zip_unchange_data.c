@@ -1,6 +1,4 @@
 /*
-  $NiH: zip_unchange_data.c,v 1.14 2004/11/30 23:02:47 wiz Exp $
-
   zip_unchange_data.c -- undo helper function
   Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
 
@@ -43,8 +41,7 @@ void
 _zip_unchange_data(struct zip_entry *ze)
 {
     if (ze->source) {
-	(void)ze->source->f(ze->source->ud, NULL, 0, ZIP_SOURCE_FREE);
-	free(ze->source);
+	zip_source_free(ze->source);
 	ze->source = NULL;
     }
     

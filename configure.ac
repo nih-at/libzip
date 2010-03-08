@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT([libzip],[0.9.3],[libzip-discuss@nih.at])
+AC_INIT([libzip],[0.9.3a],[libzip-discuss@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -42,7 +42,7 @@ AC_EXEEXT
 
 AM_PROG_LIBTOOL
 
-AC_CHECK_FUNCS([fseeko ftello])
+AC_CHECK_FUNCS([_open _snprintf _strcmpi _strdup fseeko ftello open snprintf strcasecmp strdup])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 AC_MSG_CHECKING([MoveFileExA])
@@ -54,6 +54,20 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
 	       [AC_MSG_RESULT([no])])
 
 AC_CHECK_HEADERS([unistd.h])
+
+AC_CHECK_TYPES([int8_t])
+AC_CHECK_TYPES([int16_t])
+AC_CHECK_TYPES([int32_t])
+AC_CHECK_TYPES([int64_t])
+AC_CHECK_TYPES([uint8_t])
+AC_CHECK_TYPES([uint16_t])
+AC_CHECK_TYPES([uint32_t])
+AC_CHECK_TYPES([uint64_t])
+
+AC_CHECK_SIZEOF([short])
+AC_CHECK_SIZEOF([int])
+AC_CHECK_SIZEOF([long])
+AC_CHECK_SIZEOF([long long])
 
 AC_STRUCT_TIMEZONE
 

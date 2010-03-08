@@ -3,6 +3,7 @@ noinst_PROGRAMS= \
 	add_from_buffer \
 	add_from_file \
 	add_from_filep \
+	add_from_zip \
 	encrypt \
 	fread \
 	get_comment \
@@ -31,6 +32,7 @@ EXTRA_DIST= \
 	testfile.txt \
 	testfile.zip \
 	testnottorrent.zip \
+	teststored.zip \
 	testtorrent.tzip
 
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp ${srcdir}/runtest
@@ -40,6 +42,7 @@ TESTS= \
 	add_from_buffer.test \
 	add_from_file.test \
 	add_from_filep.test \
+	add_from_zip.test \
 	encrypt.test \
 	fread.test \
 	get_comment.test \
@@ -51,6 +54,9 @@ TESTS= \
 	set_comment_revert.test \
 	torrent-already.test \
 	torrent-new.test
+# problems with comparing stderr output
+NOTYET= \
+	add_from_file_duplicate.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib
 LDADD=${top_builddir}/lib/libzip.la

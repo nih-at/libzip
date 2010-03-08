@@ -1,6 +1,4 @@
 /*
-  $NiH$
-
   encrypt.c -- test encryption support
   Copyright (C) 2006 Dieter Baron and Thomas Klausner
 

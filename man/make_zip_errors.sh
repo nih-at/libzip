@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#  $NiH: make_zip_errors.sh,v 1.3 2005/01/20 21:03:36 dillo Exp $
-#
 #  make_zip_errrors.sh: create zip_errors.mdoc from zip.h
 #  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
 #
@@ -47,13 +45,9 @@ then
     exit 1
 fi
 
-rcsid=`echo '$NiH: make_zip_errors.sh,v 1.3 2005/01/20 21:03:36 dillo Exp $' | tr -d '$'`
-inrcsid=`sed -n 's/^  \$\([^$]*[^ ]\) *\$$/\1/p' "$1"`
 date=`date '+%B %e, %Y' | sed 's/  / /'`
 
 cat <<EOF >> "$2.$$" || exit 1
-.\" \$NiH\$
-.\"
 .\" zip_errors.mdoc -- list of all libzip error codes
 .\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
 .\"
@@ -87,8 +81,6 @@ cat <<EOF >> "$2.$$" || exit 1
 .\"
 .\"   This file was generated automatically by $0
 .\"   from $1; make changes there.
-.\"	$rcsid
-.\"	$inrcsid
 .\"
 .Dd $date
 .Dt ZIP_ERRORS 3

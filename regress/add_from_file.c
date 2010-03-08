@@ -1,6 +1,4 @@
 /*
-  $NiH: add_from_file.c,v 1.1 2005/07/15 16:53:37 wiz Exp $
-
   add_from_file.c -- test case for adding file to archive
   Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
 

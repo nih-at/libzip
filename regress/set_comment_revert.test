@@ -1,5 +1,4 @@
 # start changing local and global comments, but revert before closing
-# $NiH: set_comment_all.test,v 1.1 2006/04/23 12:25:00 wiz Exp $
 program set_comment_revert
 return 0
 # need filename extension != zip to avoid using zipcmp,

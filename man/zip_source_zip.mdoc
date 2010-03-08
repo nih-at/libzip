@@ -41,7 +41,7 @@ libzip (-lzip)
 .In zip.h
 .Ft struct zip_source *
 .Fn zip_source_zip "struct zip *archive" "struct zip *srcarchive" \
-"int srcidx" "int flags" "off_t start" "off_t len"
+"zip_uint64_t srcidx" "int flags" "zip_uint64_t start" "zip_int64_t len"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_zip

@@ -1,7 +1,3 @@
-.\" Converted with mdoc2man 0.2
-.\" from NiH: zip_file_strerror.mdoc,v 1.6 2005/06/09 21:13:12 wiz Exp 
-.\" $NiH: zip_file_strerror.mdoc,v 1.6 2005/06/09 21:13:12 wiz Exp $
-.\"
 .\" zip_file_strerror.mdoc \-- get string representation for a zip error
 .\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
 .\"

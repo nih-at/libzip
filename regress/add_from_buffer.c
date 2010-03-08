@@ -1,6 +1,4 @@
 /*
-  $NiH: add_from_buffer.c,v 1.2 2006/02/21 09:41:13 dillo Exp $
-
   add_from_buffer.c -- test case for adding file from buffer to archive
   Copyright (C) 1999, 2003, 2005 Dieter Baron and Thomas Klausner
 

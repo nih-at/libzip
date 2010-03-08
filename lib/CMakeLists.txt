@@ -1,5 +1,3 @@
-# $NiH$
-
 INCLUDE(CheckFunctionExists)
 
 INSTALL(FILES zip.h DESTINATION include)
@@ -62,7 +60,7 @@ SET(LIBZIP_SOURCES
   zip_dirent.c
   zip_entry_free.c
   zip_entry_new.c
-  ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
+  zip_err_str.c
   zip_error.c
   zip_error_clear.c
   zip_error_get.c
@@ -70,20 +68,25 @@ SET(LIBZIP_SOURCES
   zip_error_strerror.c
   zip_error_to_str.c
   zip_fclose.c
+  zip_fdopen.c
   zip_file_error_clear.c
   zip_file_error_get.c
   zip_file_get_offset.c
   zip_file_strerror.c
   zip_filerange_crc.c
   zip_fopen.c
+  zip_fopen_encrypted.c
   zip_fopen_index.c
+  zip_fopen_index_encrypted.c
   zip_fread.c
   zip_free.c
   zip_get_archive_comment.c
   zip_get_archive_flag.c
+  zip_get_compression_implementation.c
+  zip_get_encryption_implementation.c
   zip_get_file_comment.c
-  zip_get_num_files.c
   zip_get_name.c
+  zip_get_num_files.c
   zip_memdup.c
   zip_name_locate.c
   zip_new.c
@@ -91,14 +94,26 @@ SET(LIBZIP_SOURCES
   zip_rename.c
   zip_replace.c
   zip_set_archive_comment.c
+  zip_set_archive_flag.c
+  zip_set_default_password.c
   zip_set_file_comment.c
+  zip_set_name.c
   zip_source_buffer.c
+  zip_source_close.c
+  zip_source_crc.c
+  zip_source_deflate.c
+  zip_source_error.c
   zip_source_file.c
   zip_source_filep.c
   zip_source_free.c
   zip_source_function.c
+  zip_source_layered.c
+  zip_source_open.c
+  zip_source_pkware.c
+  zip_source_pop.c
+  zip_source_read.c
+  zip_source_stat.c
   zip_source_zip.c
-  zip_set_name.c
   zip_stat.c
   zip_stat_index.c
   zip_stat_init.c
@@ -113,21 +128,21 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/..)
 
 # XXX: distribute instead?
-ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
-  COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
-    ${CMAKE_CURRENT_SOURCE_DIR}/zip.h
-    ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zip.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
-)
+#ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
+#  COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
+#    ${CMAKE_CURRENT_SOURCE_DIR}/zip.h
+#    ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
+#  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zip.h
+#    ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
+#)
 CHECK_FUNCTION_EXISTS(mkstemp HAVE_MKSTEMP)
 IF(NOT HAVE_MKSTEMP)
   SET(LIBZIP_EXTRA_FILES mkstemp.c)
 ENDIF(NOT HAVE_MKSTEMP)
 
 ADD_LIBRARY(zip SHARED ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES})
-SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 1.0 SOVERSION 1 )
-TARGET_LINK_LIBRARIES(zip z)
+SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 2.0 SOVERSION 2 )
+TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY})
 INSTALL(TARGETS zip
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib)

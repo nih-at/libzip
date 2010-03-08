@@ -40,7 +40,7 @@
 
 
 ZIP_EXTERN int
-zip_unchange(struct zip *za, int idx)
+zip_unchange(struct zip *za, zip_uint64_t idx)
 {
     return _zip_unchange(za, idx, 0);
 }
@@ -48,11 +48,11 @@ zip_unchange(struct zip *za, int idx)
 
 
 int
-_zip_unchange(struct zip *za, int idx, int allow_duplicates)
+_zip_unchange(struct zip *za, zip_uint64_t idx, int allow_duplicates)
 {
     int i;
     
-    if (idx < 0 || idx >= za->nentry) {
+    if (idx >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
