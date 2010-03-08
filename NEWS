@@ -1,3 +1,8 @@
+0.9.4 [2010/XX/XX]
+
+* Fix cmake build and installation
+* Fix memory leak in error case in zip_open()
+
 0.9.3 [2010/02/01]
 
 * Include m4/ directory in distribution; some packagers need it.
