@@ -55,6 +55,9 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
     const char *fn, *p;
     int i, n;
 
+    if (za == NULL)
+	return -1;
+
     if (fname == NULL) {
 	_zip_error_set(error, ZIP_ER_INVAL, 0);
 	return -1;
