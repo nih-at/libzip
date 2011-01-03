@@ -25,6 +25,7 @@ SET(MDOC3_PAGES
   zip_rename.mdoc
   zip_set_archive_comment.mdoc
   zip_set_archive_flag.mdoc
+  zip_set_default_password.mdoc
   zip_set_file_comment.mdoc
   zip_source_buffer.mdoc
   zip_source_file.mdoc
