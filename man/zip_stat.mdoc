@@ -84,6 +84,7 @@ struct zip_stat {
     zip_uint32_t crc;                   /* crc of file data */
     zip_uint16_t comp_method;           /* compression method used */
     zip_uint16_t encryption_method;     /* encryption method used */
+    zip_uint32_t flags;                 /* reserved for future use */
 };
 .Ed
 The structure pointed to by
@@ -116,6 +117,8 @@ before accessing the fields:
 .Ar comp_method
 .It ZIP_STAT_ENCRYPTION_METHOD
 .Ar encryption_method
+.It ZIP_STAT_FLAGS
+.Ar flags
 .El
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
