@@ -1,5 +1,5 @@
-.\" zip_fopen.mdoc -- open file in zip archive for reading
-.\" Copyright (C) 2003-2011 Dieter Baron and Thomas Klausner
+.\" zip_fopen_encrypted.mdoc -- open encrypted file in zip archive for reading
+.\" Copyright (C) 2011 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -65,6 +65,11 @@ function opens the file at position
 .Ar index ,
 see
 .Xr zip_fopen_index 3 .
+These functions are called automatically by
+.Xr zip_fopen 3 ;
+you only need to call them if you want to specify a non-default password
+(see
+.Xr zip_set_default_password 3 ) .
 .Sh RETURN VALUES
 Upon successful completion, a
 .Ft struct zip_file
@@ -76,42 +81,27 @@ is returned and the error code in
 is set to indicate the error.
 .Sh ERRORS
 .Bl -tag -width ZIP_ER_ENCRNOTSUPPXX
-.It Bq Er ZIP_ER_CHANGED
-The file data has been changed.
-.It Bq Er ZIP_ER_COMPNOTSUPP
-The compression method used is not supported.
-.It Bq Er ZIP_ER_ENCRNOTSUPP
-The encryption method used is not supported.
 .It Bq Er ZIP_ER_NOPASSWD
 No password was provided.
-.It Bq Er ZIP_ER_MEMORY
-Required memory could not be allocated.
-.It Bq Er ZIP_ER_READ
-A file read error occurred.
-.It Bq Er ZIP_ER_SEEK
-A file seek error occurred.
-.It Bq Er ZIP_ER_ZLIB
-Initializing the zlib stream failed.
 .El
 .Pp
 The function
-.Fn zip_fopen
+.Fn zip_fopen_encrypted
 may also fail and set
 .Va zip_err
 for any of the errors specified for the routine
-.Xr zip_name_locate 3 .
+.Xr zip_fopen 3 .
 .Pp
 The function
-.Fn zip_fopen_index
-may also fail with
-.Er ZIP_ER_INVAL
-if
-.Ar index
-is invalid.
+.Fn zip_fopen_index_encrypted
+may also fail and set
+.Va zip_err
+for any of the errors specified for the routine
+.Xr zip_fopen_index 3 .
 .Sh SEE ALSO
 .Xr libzip 3 ,
-.Xr zip_fopen 3 ,
 .Xr zip_fclose 3 ,
+.Xr zip_fopen 3 ,
 .Xr zip_fread 3 ,
 .Xr zip_get_num_files 3 ,
 .Xr zip_name_locate 3
