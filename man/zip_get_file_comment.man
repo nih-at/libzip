@@ -1,5 +1,5 @@
 .\" zip_get_file_comment.mdoc \-- get comment for file in zip
-.\" Copyright (C) 2006 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2009 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_GET_FILE_COMMENT 3 "April 23, 2006" NiH
+.TH ZIP_GET_FILE_COMMENT 3 "March 10, 2009" NiH
 .SH "NAME"
 zip_get_file_comment \- get comment for file in zip
 .SH "LIBRARY"
@@ -38,7 +38,7 @@ libzip (-lzip)
 #include <zip.h>
 .PP
 const char *
-zip_get_file_comment(struct zip *archive, int index, int *lenp, int flags);
+zip_get_file_comment(struct zip *archive, zip_uint64_t index, int *lenp, int flags);
 .SH "DESCRIPTION"
 The
 zip_get_file_comment

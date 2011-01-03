@@ -1,5 +1,5 @@
 .\" zip_fdopen.mdoc \-- open zip archive using existing file descriptor
-.\" Copyright (C) 2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2009-2010 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FDOPEN 3 "February 15, 2009" NiH
+.TH ZIP_FDOPEN 3 "February 1, 2010" NiH
 .SH "NAME"
 zip_fdopen \- open zip archive using open file descriptor
 .SH "LIBRARY"
@@ -80,7 +80,8 @@ returns a
 struct zip
 pointer, and
 \fBfd\fR
-should not be used any longer.
+should not be used any longer, nor passed to
+close(2).
 Otherwise,
 \fBNULL\fR
 is returned and
