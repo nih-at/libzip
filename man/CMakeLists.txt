@@ -13,6 +13,7 @@ SET(MDOC3_PAGES
   zip_fdopen.mdoc
   zip_file_strerror.mdoc
   zip_fopen.mdoc
+  zip_fopen_encrypted.mdoc
   zip_fread.mdoc
   zip_get_archive_comment.mdoc
   zip_get_archive_flag.mdoc
@@ -24,6 +25,7 @@ SET(MDOC3_PAGES
   zip_rename.mdoc
   zip_set_archive_comment.mdoc
   zip_set_archive_flag.mdoc
+  zip_set_default_password.mdoc
   zip_set_file_comment.mdoc
   zip_source_buffer.mdoc
   zip_source_file.mdoc
@@ -72,6 +74,8 @@ INSTALL(FILES zip_error_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_error_get.3)
 INSTALL(FILES zip_fopen.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_fopen_index.3)
+INSTALL(FILES zip_fopen_encrypted.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_fopen_index_encrypted.3)
 INSTALL(FILES zip_add.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_replace.3)
 INSTALL(FILES zip_stat.${MANFMT} DESTINATION ${MAN_PATH}/man3

@@ -1,5 +1,5 @@
 .\" zip_close.mdoc \-- close zip archive
-.\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2009 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_CLOSE 3 "July 24, 2008" NiH
+.TH ZIP_CLOSE 3 "February 15, 2009" NiH
 .SH "NAME"
 zip_close \- close zip archive
 .SH "LIBRARY"
@@ -109,6 +109,7 @@ for added or replaced files will be passed back.
 .SH "SEE ALSO"
 libzip(3),
 zip_error_get(3),
+zip_fdopen(3),
 zip_open(3),
 zip_strerror(3)
 .SH "AUTHORS"
