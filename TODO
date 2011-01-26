@@ -1,3 +1,4 @@
+! [cleanup] get rid of zip_get_{compression,encryption}_implementation
 ! [compat] test calls against old API
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
 + [bug] fix permissions of new file to match old one
