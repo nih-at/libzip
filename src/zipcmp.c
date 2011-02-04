@@ -33,6 +33,8 @@
 
 
 
+#include "config.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,7 +44,6 @@
 #endif
 #include <zlib.h>
 
-#include "config.h"
 #include "zip.h"
 
 struct entry {
