@@ -1,6 +1,6 @@
 /*
-  zip_entry_new.c -- create and init struct zip_entry
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  zip_set_file_extra.c -- set extra field for file in archive
+  Copyright (C) 2006-2010 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,50 +31,42 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+
 
 #include <stdlib.h>
 
 #include "zipint.h"
 
-
 
-struct zip_entry *
-_zip_entry_new(struct zip *za)
+
+ZIP_EXTERN int
+zip_set_file_extra(struct zip *za, zip_uint64_t idx,
+		   const char *extra, int len)
 {
-    struct zip_entry *ze;
-    if (!za) {
-	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
-	if (!ze) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    return NULL;
-	}
-    }
-    else {
-	if (za->nentry+1 >= za->nentry_alloc) {
-	    za->nentry_alloc += 16;
-	    za->entry = (struct zip_entry *)realloc(za->entry,
-						    sizeof(struct zip_entry)
-						    * za->nentry_alloc);
-	    if (!za->entry) {
-		_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-		return NULL;
-	    }
-	}
-	ze = za->entry+za->nentry;
+    char *tmpext;
+
+    if (idx >= za->nentry
+	|| len < 0 || len > MAXEXTLEN
+	|| (len > 0 && extra == NULL)) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
     }
 
-    ze->state = ZIP_ST_UNCHANGED;
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
 
-    ze->ch_filename = NULL;
-    ze->ch_extra = NULL;
-    ze->ch_extra_len = -1;
-    ze->ch_comment = NULL;
-    ze->ch_comment_len = -1;
-    ze->source = NULL;
+    if (len > 0) {
+	if ((tmpext=(char *)_zip_memdup(extra, len, &za->error)) == NULL)
+	    return -1;
+    }
+    else
+	tmpext = NULL;
 
-    if (za)
-	za->nentry++;
+    free(za->entry[idx].ch_extra);
+    za->entry[idx].ch_extra = tmpext;
+    za->entry[idx].ch_extra_len = len;
 
-    return ze;
+    return 0;
 }

@@ -1,6 +1,6 @@
 /*
-  zip_entry_new.c -- create and init struct zip_entry
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  zip_get_file_extra.c -- get file extra field
+  Copyright (C) 2006-2010 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,50 +31,28 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
-#include <stdlib.h>
 
 #include "zipint.h"
 
-
 
-struct zip_entry *
-_zip_entry_new(struct zip *za)
+
+ZIP_EXTERN const char *
+zip_get_file_extra(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
 {
-    struct zip_entry *ze;
-    if (!za) {
-	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
-	if (!ze) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    return NULL;
-	}
-    }
-    else {
-	if (za->nentry+1 >= za->nentry_alloc) {
-	    za->nentry_alloc += 16;
-	    za->entry = (struct zip_entry *)realloc(za->entry,
-						    sizeof(struct zip_entry)
-						    * za->nentry_alloc);
-	    if (!za->entry) {
-		_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-		return NULL;
-	    }
-	}
-	ze = za->entry+za->nentry;
+    if (idx >= za->nentry) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return NULL;
     }
 
-    ze->state = ZIP_ST_UNCHANGED;
+    if ((flags & ZIP_FL_UNCHANGED)
+	|| (za->entry[idx].ch_extra_len == -1)) {
+	if (lenp != NULL)
+	    *lenp = za->cdir->entry[idx].extrafield_len;
+	return za->cdir->entry[idx].extrafield;
+    }
 
-    ze->ch_filename = NULL;
-    ze->ch_extra = NULL;
-    ze->ch_extra_len = -1;
-    ze->ch_comment = NULL;
-    ze->ch_comment_len = -1;
-    ze->source = NULL;
-
-    if (za)
-	za->nentry++;
-
-    return ze;
+    if (lenp != NULL)
+	*lenp = za->entry[idx].ch_extra_len;
+    return za->entry[idx].ch_extra;
 }

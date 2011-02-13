@@ -103,6 +103,7 @@ int _zip_mkstemp(char *);
 #define CDENTRYSIZE         46u
 #define LENTRYSIZE          30
 #define MAXCOMLEN        65536
+#define MAXEXTLEN        65536
 #define EOCDLEN             22
 #define CDBUFSIZE       (MAXCOMLEN+EOCDLEN)
 #define BUFSIZE		8192
@@ -275,6 +276,8 @@ struct zip_entry {
     enum zip_state state;
     struct zip_source *source;
     char *ch_filename;
+    char *ch_extra;
+    int ch_extra_len;
     char *ch_comment;
     int ch_comment_len;
 };

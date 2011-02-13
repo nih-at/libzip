@@ -217,6 +217,22 @@ zip_close(struct zip *za)
 	    cd->entry[j].filename_len = de.filename_len;
 	}
 
+	if (za->entry[i].ch_extra_len != -1) {
+	    free(de.extrafield);
+	    if ((de.extrafield=malloc(za->entry[i].ch_extra_len)) == NULL) {
+		error = 1;
+		break;
+	    }
+	    memcpy(de.extrafield, za->entry[i].ch_extra, za->entry[i].ch_extra_len);
+	    de.extrafield_len = za->entry[i].ch_extra_len;
+	    /* as the rest of cd entries, its malloc/free is done by za */
+	    /* TODO unsure if this should also be set in the CD --
+	     * not done for now
+	    cd->entry[j].extrafield = za->entry[i].ch_extra;
+	    cd->entry[j].extrafield_len = za->entry[i].ch_extra_len;
+	    */
+	}
+
 	if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0) == 0
 	    && za->entry[i].ch_comment_len != -1) {
 	    /* as the rest of cd entries, its malloc/free is done by za */
@@ -557,6 +573,7 @@ _zip_changed(struct zip *za, int *survivorsp)
 
     for (i=0; i<za->nentry; i++) {
 	if ((za->entry[i].state != ZIP_ST_UNCHANGED)
+	    || (za->entry[i].ch_extra_len != -1)
 	    || (za->entry[i].ch_comment_len != -1))
 	    changed = 1;
 	if (za->entry[i].state != ZIP_ST_DELETED)

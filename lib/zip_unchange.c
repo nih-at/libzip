@@ -72,6 +72,9 @@ _zip_unchange(struct zip *za, zip_uint64_t idx, int allow_duplicates)
 	za->entry[idx].ch_filename = NULL;
     }
 
+    free(za->entry[idx].ch_extra);
+    za->entry[idx].ch_extra = NULL;
+    za->entry[idx].ch_extra_len = -1;
     free(za->entry[idx].ch_comment);
     za->entry[idx].ch_comment = NULL;
     za->entry[idx].ch_comment_len = -1;

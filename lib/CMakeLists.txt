@@ -85,6 +85,7 @@ SET(LIBZIP_SOURCES
   zip_get_compression_implementation.c
   zip_get_encryption_implementation.c
   zip_get_file_comment.c
+  zip_get_file_extra.c
   zip_get_name.c
   zip_get_num_files.c
   zip_memdup.c
@@ -97,6 +98,7 @@ SET(LIBZIP_SOURCES
   zip_set_archive_flag.c
   zip_set_default_password.c
   zip_set_file_comment.c
+  zip_set_file_extra.c
   zip_set_name.c
   zip_source_buffer.c
   zip_source_close.c
