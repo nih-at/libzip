@@ -60,7 +60,8 @@ zip_source_vprintf(struct zip_source *, const char *fmt, va_list ap);
 * regression tests (duplicate file names, unchange, .{200})
 * zip_commit
 * zip_replace_zip: allow rewinding
-* API for extracting and setting extra fields
+* API for parsing extra fields?
+* API for setting/getting extra fields in cdir?
 * zipcmp: add option for file content comparison
 * support for zip64 (large file)
 
