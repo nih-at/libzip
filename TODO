@@ -1,3 +1,4 @@
+! [API] zip_get_num_files should take flags (ZIP_FL_UNCHANGED) and return zip_uint64_t.
 ! [cleanup] get rid of zip_get_{compression,encryption}_implementation
 ! [compat] test calls against old API
 + [portability] use _setmode(_fileno(fp), _O_BINARY); where present
