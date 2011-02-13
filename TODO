@@ -90,6 +90,7 @@ zip_source_vprintf(struct zip_source *, const char *fmt, va_list ap);
 * (error_get)
 * (error_get_sys_type)
 * (error_to_str)
+* (extra_fields)
 * (file_error_get)
 * (file_strerror)
 * (fopen_index)
