@@ -4,6 +4,7 @@
 * Fix some memory leaks.
 * Fix cmake build and installation
 * Fix memory leak in error case in zip_open()
+* More documentation.
 
 0.9.3 [2010/02/01]
 
