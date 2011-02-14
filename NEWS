@@ -1,8 +1,7 @@
+0.10rc1 [2010/02/14]
+
 * Better windows support.
 * Fix some memory leaks.
-
-0.9.4 [2010/XX/XX]
-
 * Fix cmake build and installation
 * Fix memory leak in error case in zip_open()
 
