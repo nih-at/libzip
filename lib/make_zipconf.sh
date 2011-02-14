@@ -45,7 +45,7 @@ define_type()
     bits=`expr $bytes '*' 8`
     type="${short}int${bits}"
     TYPE=`echo $type | tr a-z A-Z`
-    if grep -q "define HAVE_${TYPE}_T" "$infile"
+    if grep "define HAVE_${TYPE}_T" "$infile" > /dev/null
     then
 	echo "typedef ${type}_t zip_${type}_t;" >> "$outfile"
 	LTYPE="$TYPE"
@@ -143,7 +143,7 @@ cat <<EOF >> "$2.$$"
 
 EOF
 
-if grep -q 'define HAVE_INTTYPES_H' "$1"
+if grep 'define HAVE_INTTYPES_H' "$1" > /dev/null
 then
     echo '#include <inttypes.h>' >> "$2.$$"
 else
