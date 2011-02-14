@@ -233,7 +233,8 @@ ZIP_EXTERN const char *zip_get_file_comment(struct zip *, zip_uint64_t,
 ZIP_EXTERN const char *zip_get_file_extra(struct zip *, zip_uint64_t,
 					  int *, int);
 ZIP_EXTERN const char *zip_get_name(struct zip *, zip_uint64_t, int);
-ZIP_EXTERN int zip_get_num_files(struct zip *);
+ZIP_EXTERN zip_uint64_t zip_get_num_entries(struct zip *, int);
+ZIP_EXTERN int zip_get_num_files(struct zip *);  /* deprecated, use zip_get_num_entries instead */
 ZIP_EXTERN int zip_name_locate(struct zip *, const char *, int);
 ZIP_EXTERN struct zip *zip_open(const char *, int, int *);
 ZIP_EXTERN int zip_rename(struct zip *, zip_uint64_t, const char *);
