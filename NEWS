@@ -4,6 +4,8 @@
 * Fix some memory leaks.
 * Fix cmake build and installation
 * Fix memory leak in error case in zip_open()
+* Replaced zip_get_num_files() with zip_get_num_entries().
+* Fixed CVE-2011-0421 (no security implications though)
 * More documentation.
 
 0.9.3 [2010/02/01]
