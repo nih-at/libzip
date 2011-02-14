@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH LIBZIP 3 "January 3, 2011" NiH
+.TH LIBZIP 3 "February 14, 2011" NiH
 .SH "NAME"
 libzip \- library for manipulating zip archives
 .SH "LIBRARY"
@@ -63,7 +63,7 @@ zip_get_archive_comment(3)
 zip_get_archive_flag(3)
 zip_get_file_comment(3)
 zip_get_name(3)
-zip_get_num_files(3)
+zip_get_num_entries(3)
 zip_set_default_password(3)
 .SH "CREATING/MODIFYING ZIP ARCHIVES"
 .SS "create/open archive"

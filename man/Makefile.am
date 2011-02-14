@@ -27,6 +27,7 @@ MAN3=	libzip.mdoc \
 	zip_get_file_comment.mdoc \
         zip_get_file_extra.mdoc \
 	zip_get_name.mdoc \
+	zip_get_num_entries.mdoc \
 	zip_get_num_files.mdoc \
 	zip_name_locate.mdoc \
 	zip_open.mdoc \

@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_STAT 3 "January 3, 2011" NiH
+.TH ZIP_STAT 3 "February 14, 2011" NiH
 .SH "NAME"
 zip_stat , \- .Nm zip_stat_index
 get information about file
@@ -154,7 +154,7 @@ callback, the error information is set to
 ZIP_ER_CHANGED.
 .SH "SEE ALSO"
 libzip(3),
-zip_get_num_files(3),
+zip_get_num_entries(3),
 zip_name_locate(3),
 zip_stat_init(3)
 .SH "AUTHORS"
