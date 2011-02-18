@@ -44,6 +44,10 @@
 #endif
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
 
 static int add_data(struct zip *, struct zip_source *, struct zip_dirent *,
 		    FILE *);
