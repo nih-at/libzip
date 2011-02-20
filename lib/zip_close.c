@@ -74,7 +74,9 @@ zip_close(struct zip *za)
     int i, j, error;
     char *temp;
     FILE *out;
+#ifndef _WIN32
     mode_t mask;
+#endif
     struct zip_cdir *cd;
     struct zip_dirent de;
     struct filelist *filelist;
@@ -330,9 +332,11 @@ zip_close(struct zip *za)
 	}
 	return -1;
     }
+#ifndef _WIN32
     mask = umask(0);
     umask(mask);
     chmod(za->zn, 0666&~mask);
+#endif
 
     _zip_free(za);
     free(temp);
