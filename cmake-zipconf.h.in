@@ -5,10 +5,11 @@
    zipconf.h -- platform specific include file
 
    This file was generated automatically by CMake
-   based on ../cmake-zipconf.h.
+   based on ../cmake-zipconf.h. (stdint.h support added by hand by dillo.)
  */
 
 #cmakedefine HAVE_INTTYPES_H_LIBZIP
+#cmakedefine HAVE_STDINT_H_LIBZIP
 #cmakedefine HAVE_SYS_TYPES_H_LIBZIP
 #cmakedefine HAVE_INT8_T_LIBZIP
 #cmakedefine HAVE_UINT8_T_LIBZIP
@@ -23,7 +24,9 @@
 #cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
 #cmakedefine LONGLONG_LIBZIP ${LONGLONG_LIBZIP}
 
-#if defined(HAVE_INTTYPES_H_LIBZIP)
+#if defined(HAVE_STDINT_H_LIBZIP)
+#include <stdint.h>
+#elif defined(HAVE_INTTYPES_H_LIBZIP)
 #include <inttypes.h>
 #elif defined(HAVE_SYS_TYPES_H_LIBZIP)
 #include <sys/types.h>
