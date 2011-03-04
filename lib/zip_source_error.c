@@ -63,7 +63,8 @@ zip_source_error(struct zip_source *src, int *ze, int *se)
 	    break;
 
 	case ZIP_LES_LOWER:
-	    return zip_source_error(src->src, ze, se);
+	    zip_source_error(src->src, ze, se);
+	    return;
 
 	case ZIP_LES_UPPER:
 	    if (src->cb.l(src->src, src->ud, e, sizeof(e),
