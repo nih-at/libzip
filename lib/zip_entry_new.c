@@ -46,7 +46,6 @@ _zip_entry_new(struct zip *za)
     if (!za) {
 	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
 	if (!ze) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	    return NULL;
 	}
     }

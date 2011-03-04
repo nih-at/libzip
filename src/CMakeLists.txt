@@ -1,14 +1,19 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../lib
   ${CMAKE_CURRENT_BINARY_DIR}/..)
 
-ADD_EXECUTABLE(zipcmp zipcmp.c)
+CHECK_FUNCTION_EXISTS(getopt HAVE_GETOPT)
+IF(!HAVE_GETOPT)
+  SET(getopt_SRCS getopt.c)
+ENDIF(!HAVE_GETOPT)
+
+ADD_EXECUTABLE(zipcmp zipcmp.c ${getopt_SRCS})
 TARGET_LINK_LIBRARIES(zipcmp zip)
 INSTALL(TARGETS zipcmp RUNTIME DESTINATION bin)
 
-ADD_EXECUTABLE(zipmerge zipmerge.c)
+ADD_EXECUTABLE(zipmerge zipmerge.c ${getopt_SRCS})
 TARGET_LINK_LIBRARIES(zipmerge zip)
 INSTALL(TARGETS zipmerge RUNTIME DESTINATION bin)
 
-ADD_EXECUTABLE(ziptorrent ziptorrent.c)
+ADD_EXECUTABLE(ziptorrent ziptorrent.c ${getopt_SRCS})
 TARGET_LINK_LIBRARIES(ziptorrent zip)
 INSTALL(TARGETS ziptorrent RUNTIME DESTINATION bin)
