@@ -51,14 +51,16 @@ _zip_entry_new(struct zip *za)
     }
     else {
 	if (za->nentry+1 >= za->nentry_alloc) {
+	    struct zip_entry *rentries;
 	    za->nentry_alloc += 16;
-	    za->entry = (struct zip_entry *)realloc(za->entry,
-						    sizeof(struct zip_entry)
-						    * za->nentry_alloc);
-	    if (!za->entry) {
+	    rentries = (struct zip_entry *)realloc(za->entry,
+						   sizeof(struct zip_entry)
+						   * za->nentry_alloc);
+	    if (!rentries) {
 		_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 		return NULL;
 	    }
+	    za->entry = rentries;
 	}
 	ze = za->entry+za->nentry;
     }
