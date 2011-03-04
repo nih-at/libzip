@@ -42,7 +42,7 @@ AC_EXEEXT
 
 AM_PROG_LIBTOOL
 
-AC_CHECK_FUNCS([_open _snprintf _strcmpi _strdup fseeko ftello open snprintf strcasecmp strdup])
+AC_CHECK_FUNCS([_open _snprintf _strcmpi _strdup _stricmp fseeko ftello open snprintf strcasecmp strdup])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 AC_MSG_CHECKING([MoveFileExA])
