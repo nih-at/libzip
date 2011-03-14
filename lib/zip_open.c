@@ -258,12 +258,6 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     left = cd->size;
     i=0;
     do {
-	if (i == cd->nentry && left > 0) {
-	    /* Infozip extension for more than 64k entries:
-	       nentries wraps around, size indicates correct EOCD */
-	    _zip_cdir_grow(cd, cd->nentry+ZIP_UINT16_MAX, error);
-	}
-
 	if ((_zip_dirent_read(cd->entry+i, fp, bufp, &left, 0, error)) < 0) {
 	    cd->nentry = i;
 	    _zip_cdir_free(cd);
@@ -271,7 +265,18 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	}
 	i++;
 	
-    } while (i<cd->nentry);
+	if (i == cd->nentry && left > 0) {
+	    /* Infozip extension for more than 64k entries:
+	       nentries wraps around, size indicates correct EOCD */
+	    if (_zip_cdir_grow(cd, cd->nentry+ZIP_UINT16_MAX, error) < 0) {
+		cd->nentry = i;
+		_zip_cdir_free(cd);
+		return NULL;
+	    }
+	}
+    } while (i<cd->nentry && left > 0);
+
+    cd->nentry = i;
     
     return cd;
 }
