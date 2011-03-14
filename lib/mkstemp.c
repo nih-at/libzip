@@ -38,6 +38,9 @@
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
+#ifdef _WIN32
+#include <io.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -50,6 +53,15 @@
 int
 _zip_mkstemp(char *path)
 {
+#ifdef _WIN32
+	int ret;
+	ret = _creat(_mktemp(path), _S_IREAD|_S_IWRITE);
+	if (ret == -1) {
+		return 0;
+	} else {
+		return ret;
+	}
+#else
 	int fd;   
 	char *start, *trv;
 	struct stat sbuf;
@@ -135,4 +147,5 @@ _zip_mkstemp(char *path)
 		}
 	}
 	/*NOTREACHED*/
+#endif
 }

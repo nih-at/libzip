@@ -10,14 +10,9 @@
 + [cleanup] don't make zip_source_zip go through zip_fread
 + [bug] set "version of encoding software" to 2.0
 + [bug?] keep extended local headers when copying?
-- [feature] Windows support: (partially fixed?)
-  . better mkstemp replacement function (no getpid; other problems?)
-  . snprintf replacement
-  . strcasecmp replacement
-  . mode_t define
-  . dll_export/dll_import support (to clarify)
 - [cleanup] remove now useless check of fseek 
 - [consistency check] check that local headers come before central dir
+- [consistency] check arguments for every entry point into libzip
 - [bug] zip_open: consistency check: check data descriptor
 - [bug] do not compress if storing is smaller
 - [bug] zip_open: check whether file can be created and fail if not
@@ -30,6 +25,7 @@
   . read/set EAs
   . parse/create some EAs?
   . read/set ASCII file flag
++ [test] run regression tests also from CMake framework
 - [test] rename deleted (fails)
 - [test] rename file to dir/ and vice versa (fails)
 ------------------------------------------------ API issues

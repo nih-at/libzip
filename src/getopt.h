@@ -1,6 +1,9 @@
+#ifndef _HAD_GETOPT_H
+#define _HAD_GETOPT_H
+
 /*
-  zip_source_error.c -- get last error from zip_source
-  Copyright (C) 2009 Dieter Baron and Thomas Klausner
+  getopt.h -- header for getopt() replacement function
+  Copyright (C) 1999-2011 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +20,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,57 +34,18 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "zipint.h"
+extern char *optarg;
+extern int optind;
+extern int opterr;
 
-
+extern int getopt(int, char * const *, const char *);
 
-ZIP_EXTERN void
-zip_source_error(struct zip_source *src, int *ze, int *se)
-{
-    int e[2];
-
-    if (src->src == NULL) {
-    }
-    else {
-	switch (src->error_source) {
-	case ZIP_LES_NONE:
-	    if (src->src == NULL) {
-		if (src->cb.f(src->ud, e, sizeof(e), ZIP_SOURCE_ERROR) < 0) {
-		    e[0] = ZIP_ER_INTERNAL;
-		    e[1] = 0;
-		}
-	    }
-	    else
-		e[0] = e[1] = 0;
-	    break;
-
-	case ZIP_LES_INVAL:
-	    e[0] = ZIP_ER_INVAL;
-	    e[1] = 0;
-	    break;
-
-	case ZIP_LES_LOWER:
-	    zip_source_error(src->src, ze, se);
-	    return;
-
-	case ZIP_LES_UPPER:
-	    if (src->cb.l(src->src, src->ud, e, sizeof(e),
-			  ZIP_SOURCE_ERROR) < 0) {
-		e[0] = ZIP_ER_INTERNAL;
-		e[1] = 0;
-	    }
-	    break;
-
-	default:
-	    e[0] = ZIP_ER_INTERNAL;
-	    e[1] = 0;
-	}
-    }
-
-    if (ze)
-	*ze = e[0];
-    if (se)
-	*se = e[1];
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* _HAD_GETOPT_H */

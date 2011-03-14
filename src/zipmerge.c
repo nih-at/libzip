@@ -45,6 +45,10 @@
 #include <unistd.h>
 #endif
 
+#ifndef HAVE_GETOPT
+#include "getopt.h"
+#endif
+
 #include "zip.h"
 
 

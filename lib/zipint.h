@@ -38,6 +38,8 @@
 
 #ifdef _WIN32
 #define ZIP_EXTERN __declspec(dllexport)
+/* for dup(), close(), etc. */
+#include <io.h>
 #endif
 
 #include "zip.h"
@@ -81,6 +83,8 @@ int _zip_mkstemp(char *);
 #if !defined(HAVE_STRCASECMP)
 #if defined(HAVE__STRCMPI)
 #define strcasecmp	_strcmpi
+#elif defined(HAVE__STRICMP)
+#define strcasecmp	_stricmp
 #endif
 #endif
 

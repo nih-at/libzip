@@ -7,4 +7,4 @@ zipmerge_LDADD=${top_builddir}/lib/libzip.la
 ziptorrent_CPPFLAGS=-I${top_srcdir}/lib
 ziptorrent_LDADD=${top_builddir}/lib/libzip.la
 
-EXTRA_DIST=	CMakeLists.txt
+EXTRA_DIST=	CMakeLists.txt getopt.c getopt.h

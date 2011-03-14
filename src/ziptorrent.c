@@ -44,6 +44,10 @@
 #endif
 #include <zlib.h>
 
+#ifndef HAVE_GETOPT
+#include "getopt.h"
+#endif
+
 #include "zip.h"
 
 

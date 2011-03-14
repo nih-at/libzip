@@ -168,7 +168,7 @@ enum zip_source_cmd {
     ZIP_SOURCE_CLOSE,	/* reading is done */
     ZIP_SOURCE_STAT,	/* get meta information */
     ZIP_SOURCE_ERROR,	/* get error information */
-    ZIP_SOURCE_FREE,	/* cleanup and free resources */
+    ZIP_SOURCE_FREE	/* cleanup and free resources */
 };
 
 #define ZIP_SOURCE_ERR_LOWER	-2

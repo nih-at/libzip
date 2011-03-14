@@ -5,7 +5,7 @@
    zipconf.h -- platform specific include file
 
    This file was generated automatically by CMake
-   based on ../cmake-zipconf.h. (stdint.h support added by hand by dillo.)
+   based on ../cmake-zipconf.h.in.
  */
 
 #cmakedefine HAVE_INTTYPES_H_LIBZIP
