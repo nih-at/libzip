@@ -7,7 +7,6 @@ noinst_PROGRAMS= \
 	encrypt \
 	fread \
 	get_comment \
-	open \
 	name_locate \
 	set_comment_all \
 	set_comment_localonly \
@@ -48,7 +47,11 @@ TESTS= \
 	fread.test \
 	get_comment.test \
 	name_locate.test \
-	open.test \
+	open_new_but_exists.test \
+	open_new_ok.test \
+	open_nonarchive.test \
+	open_nosuchfile.test \
+	open_ok.test \
 	set_comment_all.test \
 	set_comment_localonly.test \
 	set_comment_removeglobal.test \

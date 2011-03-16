@@ -1,6 +1,0 @@
-# various tests for zip_open
-program open
-args test.zip Makefile.am
-return 0
-file test.zip test.zip test.zip
-file Makefile.am Makefile.am Makefile.am

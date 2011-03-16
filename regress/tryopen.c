@@ -85,12 +85,12 @@ main(int argc, char *argv[])
 
     if ((z=zip_open(fname, flags, &ze)) != NULL) {
 	count = zip_get_num_files(z);
-	printf("%s: opening `%s' succeeded, %d entries\n", prg, fname, count);
+	printf("opening `%s' succeeded, %d entries\n", fname, count);
 	zip_close(z);
 	return 0;
     }
 
-    printf("%s: opening `%s' returned error %d/%d\n",
-	   prg, fname, ze, errno);
+    printf("opening `%s' returned error %d/%d\n",
+	   fname, ze, errno);
     return 1;
 }
