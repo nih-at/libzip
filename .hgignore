@@ -31,6 +31,7 @@
 ^regress/set_comment_localonly$
 ^regress/set_comment_removeglobal$
 ^regress/set_comment_revert$
+^regress/tryopen$
 ^src/zipcmp$
 ^src/zipmerge$
 ^src/ziptorrent$
