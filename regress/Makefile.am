@@ -12,7 +12,8 @@ noinst_PROGRAMS= \
 	set_comment_all \
 	set_comment_localonly \
 	set_comment_removeglobal \
-	set_comment_revert
+	set_comment_revert \
+	tryopen
 
 EXTRA_PROGRAMS=deltest ziptest
 
