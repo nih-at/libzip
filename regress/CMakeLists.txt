@@ -9,7 +9,6 @@ SET(STANDALONE_TEST_PROGRAMS
   fread
   get_comment
   name_locate
-  open
   set_comment_all
   set_comment_localonly
   set_comment_removeglobal
@@ -21,7 +20,11 @@ SET(HELPER_TEST_PROGRAMS
 )
 
 SET(EXTRA_TESTS
-
+  open_new_but_exists.test \
+  open_new_ok.test \
+  open_nonarchive.test \
+  open_nosuchfile.test \
+  open_ok.test \
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})
