@@ -22,6 +22,7 @@ EXTRA_DIST= \
 	${TESTS} \
 	broken.zip \
 	encrypt.zip \
+	manyfiles.zip \
 	test.zip \
 	testbuffer.zip \
 	testdir.zip \
@@ -47,6 +48,7 @@ TESTS= \
 	fread.test \
 	get_comment.test \
 	name_locate.test \
+	open_many_ok.test \
 	open_new_but_exists.test \
 	open_new_ok.test \
 	open_nonarchive.test \
