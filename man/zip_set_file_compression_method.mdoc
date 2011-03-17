@@ -51,14 +51,25 @@ in the zip archive to
 .Ar comp_method
 with the compression method specific
 .Ar flags .
-The flags are the same as returned by
+The
+.Ar comp_method
+is the same as returned by
 .Xr zip_stat 3 .
-Currently, only the
+For the
+.Ar comp_method
+argument, currently only the
 .\" XXX: adapt to real defines
 .Dv DEFLATE
 and
 .Dv STORE
 methods are supported.
+.Pp
+For the flags argument, the lower 4 bits define the compression
+level.
+0 is fastest compression, 15 is highest compression
+.Dv ZIP_COMP_FL_DEFAULT
+can be used to specify that the default shall be used.
+Further compression method specific flags will be added over time.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
