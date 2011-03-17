@@ -1,4 +1,4 @@
-.\" zip_set_file_compression_method.mdoc -- set compression method and its flags
+.\" zip_set_file_compression.mdoc -- set compression method and its flags
 .\" Copyright (C) 2011 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
@@ -30,33 +30,33 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd March 17, 2011
-.Dt ZIP_SET_FILE_COMPRESSION_METHOD 3
+.Dt ZIP_SET_FILE_COMPRESSION 3
 .Os
 .Sh NAME
-.Nm zip_set_file_compression_method
+.Nm zip_set_file_compression
 .Nd set compression method and corresponding options for file in zip
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_set_file_compression_method "struct zip *archive" "zip_uint64_t index" \
-"zip_uint16_t comp_method" "zip_uint32_t comp_flags"
+.Fn zip_set_file_compression "struct zip *archive" "zip_uint64_t index" \
+"zip_uint16_t comp" "zip_uint32_t comp_flags"
 .Sh DESCRIPTION
 The
-.Fn zip_set_file_compression_method
+.Fn zip_set_file_compression
 function sets the compression method for the file at position
 .Ar index
 in the zip archive to
-.Ar comp_method
+.Ar comp
 with the compression method specific
 .Ar flags .
 The
-.Ar comp_method
+.Ar comp
 is the same as returned by
 .Xr zip_stat 3 .
 For the
-.Ar comp_method
+.Ar comp
 argument, currently only the
 .\" XXX: adapt to real defines
 .Dv DEFLATE
@@ -76,7 +76,7 @@ Otherwise, \-1 is returned and the error information in
 .Ar archive
 is set to indicate the error.
 .Sh ERRORS
-.Fn zip_set_file_compression_method
+.Fn zip_set_file_compression
 fails if:
 .Bl -tag -width Er
 .It Bq Er ZIP_ER_INVAL
