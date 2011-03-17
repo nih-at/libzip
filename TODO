@@ -40,8 +40,11 @@
 struct zip *zip_open_encrypted(const char *path, int flags,
                                const char *password, int *errorp);
 
-int zip_set_compression(struct zip *archive, zip_uint64_t idx,
-    			zip_uint16_t method);
+int zip_set_file_compression(struct zip *archive, zip_uint64_t idx,
+    			zip_uint16_t method, zip_uint32_t flags);
+	flags: 0-15: compression ratio (0: fast, 15: best)
+		16: default	
+		higher bits: method specific
 int zip_set_encryption(struct zip *archive, zip_uint64_t idx,
     		       zip_uint16_t method, const char *password);
 void zip_set_archive_encryption(struct zip *archive,
