@@ -109,4 +109,4 @@ update-errors:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
-	nroff -mdoc2html $< | sed -e "s,../html[0-9]/,," > $@.$$$$ && mv $@.$$$$ $@
+	mandoc -Thtml -Oman="%N.html",style=../nih-man.css > $@.$$$$ && mv $@.$$$$ $@
