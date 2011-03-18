@@ -30,6 +30,7 @@ EXTRA_DIST= \
 	testchangedlocal.zip \
 	testcomment.zip \
 	testcommentremoved.zip \
+	testextrabytes.zip \
 	testfile.txt \
 	testfile.zip \
 	testnottorrent.zip \
@@ -48,6 +49,8 @@ TESTS= \
 	fread.test \
 	get_comment.test \
 	name_locate.test \
+	open_cons_extrabytes.test \
+	open_extrabytes.test \
 	open_many_ok.test \
 	open_new_but_exists.test \
 	open_new_ok.test \

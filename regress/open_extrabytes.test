@@ -1,0 +1,6 @@
+# zip_open: file has extra bytes at end of archive
+program tryopen
+file testextrabytes.zip testextrabytes.zip testextrabytes.zip
+args testextrabytes.zip
+return 0
+stdout opening `testextrabytes.zip' succeeded, 1 entries
