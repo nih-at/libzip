@@ -109,4 +109,4 @@ update-errors:
 	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
-	mandoc -Thtml -Oman="%N.html",style=../nih-man.css > $@.$$$$ && mv $@.$$$$ $@
+	mandoc -Thtml -Oman="%N.html",style=../nih-man.css $< > $@.$$$$ && mv $@.$$$$ $@
