@@ -20,11 +20,11 @@ SET(HELPER_TEST_PROGRAMS
 )
 
 SET(EXTRA_TESTS
-  open_new_but_exists.test \
-  open_new_ok.test \
-  open_nonarchive.test \
-  open_nosuchfile.test \
-  open_ok.test \
+  open_new_but_exists.test
+  open_new_ok.test
+  open_nonarchive.test
+  open_nosuchfile.test
+  open_ok.test
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})
