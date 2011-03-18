@@ -1,4 +1,4 @@
-0.10rc1 [2010/02/14]
+0.10 [2010/03/18]
 
 * Added zip_get_num_files(), deprecated zip_get_num_entries().
 * Better windows support.
