@@ -1,4 +1,4 @@
-# add directories to zip
+# convert archive to torrentzip format
 program ../src/ziptorrent
 return 0
 args -v test.zip
