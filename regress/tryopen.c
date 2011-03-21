@@ -90,7 +90,9 @@ main(int argc, char *argv[])
 	return 0;
     }
 
-    printf("opening `%s' returned error %d/%d\n",
-	   fname, ze, errno);
+    printf("opening `%s' returned error %d", fname, ze);
+    if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
+	printf("/%d", errno);
+    printf("\n");
     return 1;
 }

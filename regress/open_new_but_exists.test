@@ -3,4 +3,4 @@ program tryopen
 args -e test.zip
 return 1
 file test.zip test.zip test.zip
-stdout opening `test.zip' returned error 10/0
+stdout opening `test.zip' returned error 10
