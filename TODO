@@ -29,7 +29,6 @@
 - [test] rename deleted (fails)
 - [test] rename file to dir/ and vice versa (fails)
 - [test] fix comment test to be newline insensitive
-- [test] investigate open_nonarchive.test 19/2 vs 19/0
 ------------------------------------------------ API issues
 - character encoding in file names and comments (ZIP_AFL_UTF8, see mail)
 - parameters for compression/crypt implementations (extra function)
