@@ -11,12 +11,16 @@
 #cmakedefine HAVE_INTTYPES_H_LIBZIP
 #cmakedefine HAVE_STDINT_H_LIBZIP
 #cmakedefine HAVE_SYS_TYPES_H_LIBZIP
+#cmakedefine HAVE___INT8_LIBZIP
 #cmakedefine HAVE_INT8_T_LIBZIP
 #cmakedefine HAVE_UINT8_T_LIBZIP
+#cmakedefine HAVE___INT16_LIBZIP
 #cmakedefine HAVE_INT16_T_LIBZIP
 #cmakedefine HAVE_UINT16_T_LIBZIP
+#cmakedefine HAVE___INT32_LIBZIP
 #cmakedefine HAVE_INT32_T_LIBZIP
 #cmakedefine HAVE_UINT32_T_LIBZIP
+#cmakedefine HAVE___INT64_LIBZIP
 #cmakedefine HAVE_INT64_T_LIBZIP
 #cmakedefine HAVE_UINT64_T_LIBZIP
 #cmakedefine SHORT_LIBZIP ${SHORT_LIBZIP}
@@ -34,26 +38,36 @@
 
 #if defined(HAVE_INT8_T_LIBZIP)
 typedef int8_t zip_int8_t;
+#elif defined(HAVE___INT8_LIBZIP_)
+typedef __int8 zip_int8_t;
 #else
 typedef signed char zip_int8_t;
 #endif
 #if defined(HAVE_UINT8_T_LIBZIP)
 typedef uint8_t zip_uint8_t;
+#elif defined(HAVE___INT8_LIBZIP_)
+typedef unsigned __int8 zip_uint8_t;
 #else
 typedef unsigned char zip_uint8_t;
 #endif
 #if defined(HAVE_INT16_T_LIBZIP)
 typedef int16_t zip_int16_t;
+#elif defined(HAVE___INT16_LIBZIP_)
+typedef __int16 zip_int16_t;
 #elif defined(SHORT_LIBZIP) && SHORT_LIBZIP == 2
 typedef signed short zip_int16_t;
 #endif
 #if defined(HAVE_UINT16_T_LIBZIP)
 typedef uint16_t zip_uint16_t;
+#elif defined(HAVE___INT16_LIBZIP_)
+typedef unsigned __int16 zip_uint16_t;
 #elif defined(SHORT_LIBZIP) && SHORT_LIBZIP == 2
 typedef unsigned short zip_uint16_t;
 #endif
 #if defined(HAVE_INT32_T_LIBZIP)
 typedef int32_t zip_int32_t;
+#elif defined(HAVE___INT32_LIBZIP_)
+typedef __int32 zip_int32_t;
 #elif defined(INT_LIBZIP) && INT_LIBZIP == 4
 typedef signed int zip_int32_t;
 #elif defined(LONG_LIBZIP) && LONG_LIBZIP == 4
@@ -61,6 +75,8 @@ typedef signed long zip_int32_t;
 #endif
 #if defined(HAVE_UINT32_T_LIBZIP)
 typedef uint32_t zip_uint32_t;
+#elif defined(HAVE___INT32_LIBZIP_)
+typedef unsigned __int32 zip_uint32_t;
 #elif defined(INT_LIBZIP) && INT_LIBZIP == 4
 typedef unsigned int zip_uint32_t;
 #elif defined(LONG_LIBZIP) && LONG_LIBZIP == 4
@@ -68,6 +84,8 @@ typedef unsigned long zip_uint32_t;
 #endif
 #if defined(HAVE_INT64_T_LIBZIP)
 typedef int64_t zip_int64_t;
+#elif defined(HAVE___INT64_LIBZIP_)
+typedef __int64 zip_int64_t;
 #elif defined(LONG_LIBZIP) && LONG_LIBZIP == 8
 typedef signed long zip_int64_t;
 #elif defined(LONGLONG_LIBZIP) && LONGLONG_LIBZIP == 8
@@ -75,6 +93,8 @@ typedef signed long long zip_int64_t;
 #endif
 #if defined(HAVE_UINT64_T_LIBZIP)
 typedef uint64_t zip_uint64_t;
+#elif defined(HAVE___INT64_LIBZIP_)
+typedef unsigned __int64 zip_uint64_t;
 #elif defined(LONG_LIBZIP) && LONGLONG_LIBZIP == 8
 typedef unsigned long zip_uint64_t;
 #elif defined(LONGLONG_LIBZIP) && LONGLONG_LIBZIP == 8

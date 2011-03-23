@@ -1,4 +1,3 @@
-! [doc] zip_source_function: mention that stat is called after close
 ! [cleanup] get rid of zip_get_{compression,encryption}_implementation
 ! [compat] test calls against old API
 + [bug] POSIX: fix permissions of new file to match old one

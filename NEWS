@@ -1,3 +1,8 @@
+0.xx [20xx/xx/xx]
+
+* more changes for Windows support
+* additional test cases
+
 0.10 [2010/03/18]
 
 * Added zip_get_num_files(), deprecated zip_get_num_entries().
