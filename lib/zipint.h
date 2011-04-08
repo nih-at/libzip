@@ -333,6 +333,8 @@ unsigned int _zip_file_get_offset(struct zip *, int);
 
 int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 
+enum zip_encoding_type _zip_guess_encoding(const zip_uint8_t * const, zip_uint32_t);
+
 struct zip *_zip_open(const char *, FILE *, int, int, int *);
 
 struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,

@@ -4,6 +4,7 @@ noinst_PROGRAMS= \
 	add_from_file \
 	add_from_filep \
 	add_from_zip \
+	encoding \
 	encrypt \
 	fread \
 	get_comment \
@@ -45,6 +46,9 @@ TESTS= \
 	add_from_file.test \
 	add_from_filep.test \
 	add_from_zip.test \
+	encoding-ascii.test \
+	encoding-cp437.test \
+	encoding-utf-8.test \
 	encrypt.test \
 	fread.test \
 	get_comment.test \

@@ -1,0 +1,5 @@
+# recognize UTF-8
+program encoding
+return 0
+args TestÄÖAÜß^$
+stdout guessing TestÄÖAÜß^$: UTF-8

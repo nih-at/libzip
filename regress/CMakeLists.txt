@@ -5,6 +5,7 @@ SET(STANDALONE_TEST_PROGRAMS
   add_from_file
   add_from_filep
   add_from_zip
+  encoding
   encrypt
   fread
   get_comment

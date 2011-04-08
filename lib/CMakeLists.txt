@@ -124,6 +124,7 @@ SET(LIBZIP_SOURCES
   zip_unchange_all.c
   zip_unchange_archive.c
   zip_unchange_data.c
+  zip_utf-8.c
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}

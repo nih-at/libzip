@@ -22,11 +22,11 @@
 ^regress/add_from_file$
 ^regress/add_from_filep$
 ^regress/add_from_zip$
+^regress/encoding$
 ^regress/encrypt$
 ^regress/fread$
 ^regress/get_comment$
 ^regress/name_locate$
-^regress/open$
 ^regress/set_comment_all$
 ^regress/set_comment_localonly$
 ^regress/set_comment_removeglobal$

@@ -1,0 +1,5 @@
+# recognize CP437
+program encoding
+return 0
+args Test™Ašá^$
+stdout guessing Test™Ašá^$: CP437

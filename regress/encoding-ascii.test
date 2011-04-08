@@ -1,0 +1,5 @@
+# recognize ASCII
+program encoding
+return 0
+args ABC%^&&*!@#_.as./-
+stdout guessing ABC%^&&*!@#_.as./-: ASCII
