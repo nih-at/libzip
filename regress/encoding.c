@@ -47,10 +47,21 @@ const char *result[] = {
 int
 main(int argc, char *argv[])
 {
+    int ret;
+    const char *conv = NULL;
+    int err;
+
     if (argc != 2) {
 	fprintf(stderr, "usage: %s string_to_guess\n", argv[0]);
 	exit(1);
     }
-    printf("guessing %s: %s\n", argv[1], result[_zip_guess_encoding(argv[1], strlen(argv[1]))]);
+    ret = _zip_guess_encoding(argv[1], strlen(argv[1]));
+
+    printf("guessing %s: %s\n", argv[1], result[ret]);
+    if (ret == ZIP_ENCODING_CP437) {
+	conv = _zip_cp437_to_utf8(argv[1], strlen(argv[1]), &err);
+	printf("UTF-8 version: %s\n", conv ? conv : "(conversion error)");
+    }
+
     exit(0);
 }
