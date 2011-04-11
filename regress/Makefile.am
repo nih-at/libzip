@@ -31,6 +31,7 @@ EXTRA_DIST= \
 	testchangedlocal.zip \
 	testcomment.zip \
 	testcommentremoved.zip \
+	testempty.zip \
 	testextrabytes.zip \
 	testfile.txt \
 	testfile.zip \
@@ -54,6 +55,7 @@ TESTS= \
 	get_comment.test \
 	name_locate.test \
 	open_cons_extrabytes.test \
+	open_empty.test \
 	open_extrabytes.test \
 	open_many_ok.test \
 	open_new_but_exists.test \

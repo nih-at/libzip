@@ -22,6 +22,7 @@ SET(HELPER_TEST_PROGRAMS
 
 SET(EXTRA_TESTS
   open_cons_extrabytes.test
+  open_empty.test
   open_extrabytes.test
   open_new_but_exists.test
   open_new_ok.test

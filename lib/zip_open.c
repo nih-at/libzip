@@ -257,7 +257,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 
     left = cd->size;
     i=0;
-    do {
+    while (i<cd->nentry && left > 0) {
 	if ((_zip_dirent_read(cd->entry+i, fp, bufp, &left, 0, error)) < 0) {
 	    cd->nentry = i;
 	    _zip_cdir_free(cd);
@@ -274,8 +274,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 		return NULL;
 	    }
 	}
-    } while (i<cd->nentry && left > 0);
-
+    }
     cd->nentry = i;
     
     return cd;
