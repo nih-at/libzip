@@ -130,17 +130,18 @@ _zip_guess_encoding(const zip_uint8_t * const name, zip_uint32_t len)
 	    continue;
 
 	ret = ZIP_ENCODING_UTF8;
-	if ((name[i] & UTF_8_LEN_2_MASK) == UTF_8_LEN_2_MATCH) {
+	if ((name[i] & UTF_8_LEN_2_MASK) == UTF_8_LEN_2_MATCH)
 	    ulen = 1;
-	} else if ((name[i] & UTF_8_LEN_3_MASK) == UTF_8_LEN_3_MATCH) {
+	else if ((name[i] & UTF_8_LEN_3_MASK) == UTF_8_LEN_3_MATCH)
 	    ulen = 2;
-	} else if ((name[i] & UTF_8_LEN_4_MASK) == UTF_8_LEN_4_MATCH) {
+	else if ((name[i] & UTF_8_LEN_4_MASK) == UTF_8_LEN_4_MATCH)
 	    ulen = 3;
-	} else
+	else
 	    return ZIP_ENCODING_CP437;
 
 	if (i + ulen >= len)
 	    return ZIP_ENCODING_CP437;
+
 	for (j=1; j<=ulen; j++) {
 	    if ((name[i+j] & UTF_8_CONTINUE_MASK) != UTF_8_CONTINUE_MATCH)
 		return ZIP_ENCODING_CP437;
@@ -196,7 +197,7 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 
 zip_uint8_t *
 _zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
-		   int *zep)
+		   struct zip_error *error)
 {
     zip_uint8_t *utf8buf;
     zip_uint32_t buflen, i, offset;
@@ -205,9 +206,8 @@ _zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
     for (i=0; i<len; i++)
 	buflen += _zip_unicode_to_utf8_len(_cp437_to_unicode[cp437buf[i]]);
 
-    /* XXX: adapt error handling to caller usage */
     if ((utf8buf=(zip_uint8_t*)malloc(buflen)) == NULL) {
-	*zep = ZIP_ER_MEMORY;
+	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
