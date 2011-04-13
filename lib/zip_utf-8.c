@@ -161,7 +161,7 @@ _zip_unicode_to_utf8_len(zip_uint32_t codepoint)
 	return 1;
     if (codepoint < 0x0800)
 	return 2;
-    if (codepoint < 0x1000)
+    if (codepoint < 0x10000)
 	return 3;
     return 4;
 }
@@ -180,7 +180,7 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 	buf[1] = UTF_8_CONTINUE_MATCH | (codepoint & 0x3f);
 	return 2;
     }
-    if (codepoint < 0x1000) {
+    if (codepoint < 0x10000) {
 	buf[0] = UTF_8_LEN_3_MATCH | ((codepoint >> 12) & 0x0f);
 	buf[1] = UTF_8_CONTINUE_MATCH | ((codepoint >> 6) & 0x3f);
 	buf[2] = UTF_8_CONTINUE_MATCH | (codepoint & 0x3f);
