@@ -4,6 +4,7 @@ noinst_PROGRAMS= \
 	add_from_file \
 	add_from_filep \
 	add_from_zip \
+	cp437 \
 	encoding \
 	encrypt \
 	fread \
@@ -49,6 +50,7 @@ TESTS= \
 	add_from_zip.test \
 	encoding-ascii.test \
 	encoding-cp437.test \
+	encoding-cp437-all.test \
 	encoding-utf-8.test \
 	encrypt.test \
 	fread.test \
