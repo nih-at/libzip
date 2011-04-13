@@ -59,6 +59,7 @@ Features
 
 Bugs
 ====
+* fix CP437 conversion
 * check for limits imposed by format (central dir size, file size, ...)
 * set "version of encoding software" to proper value (2.0?)
 * _zip_checkcons return value can overflow
