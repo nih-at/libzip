@@ -49,7 +49,7 @@ main(int argc, char *argv[])
 {
     int ret;
     const char *conv = NULL;
-    int err;
+    struct zip_error err;
 
     if (argc != 2) {
 	fprintf(stderr, "usage: %s string_to_guess\n", argv[0]);
