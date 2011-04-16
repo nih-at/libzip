@@ -59,6 +59,7 @@ Features
 
 Bugs
 ====
+* some systems return NULL for malloc(0); fix libzip to not use malloc(0)
 * check for limits imposed by format (central dir size, file size, ...)
 * set "version of encoding software" to proper value (2.0?)
 * _zip_checkcons return value can overflow
