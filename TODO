@@ -71,9 +71,10 @@ Bugs
 
 Cleanup
 =======
-* [cleanup] get rid of zip_get_{compression,encryption}_implementation
-* [cleanup] use zip_*int*_t internally
-* [cleanup] don't make zip_source_zip go through zip_fread
+* get rid of zip_get_{compression,encryption}_implementation
+* use zip_*int*_t internally
+* don't make zip_source_zip go through zip_fread
+* completely get rid of off_t
 
 
 Consistency
