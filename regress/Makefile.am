@@ -46,6 +46,8 @@ TESTS= \
 	add_dir.test \
 	add_from_buffer.test \
 	add_from_file.test \
+	add_from_file_duplicate.test \
+	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_zip.test \
 	encoding-ascii.test \
@@ -71,9 +73,6 @@ TESTS= \
 	set_comment_revert.test \
 	torrent-already.test \
 	torrent-new.test
-# problems with comparing stderr output
-NOTYET= \
-	add_from_file_duplicate.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib
 LDADD=${top_builddir}/lib/libzip.la

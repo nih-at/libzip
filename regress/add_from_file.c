@@ -52,42 +52,45 @@ main(int argc, char *argv[])
     struct zip_source *zs;
     char buf[100];
     int err;
+    int i;
 
     prg = argv[0];
 
-    if (argc != 3) {
-	fprintf(stderr, "usage: %s archive file\n", prg);
+    if (argc < 3) {
+	fprintf(stderr, "usage: %s archive file [file ...]\n", prg);
 	return 1;
     }
 
     archive = argv[1];
-    file = argv[2];
-    
     if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive %s: %s\n", prg,
+	fprintf(stderr, "can't open zip archive %s: %s\n",
 		archive, buf);
 	return 1;
     }
 
-    if ((zs=zip_source_file(za, file, 0, -1)) == NULL) {
-	fprintf(stderr, "%s: error creating file source for `%s': %s\n", prg,
-		file, zip_strerror(za));
-	return 1;
-    }
+    for (i=2; i<argc; i++) {
+	file = argv[i];
+    
+	if ((zs=zip_source_file(za, file, 0, -1)) == NULL) {
+	    fprintf(stderr, "error creating file source for `%s': %s\n",
+		    file, zip_strerror(za));
+	    return 1;
+	}
 
-    if ((name=strrchr(file, '/')) == NULL)
-	name = file;
+	if ((name=strrchr(file, '/')) == NULL)
+	    name = file;
 
-    if (zip_add(za, name, zs) == -1) {
-	zip_source_free(zs);
-	fprintf(stderr, "%s: can't add file `%s': %s\n", prg,
-		file, zip_strerror(za));
-	return 1;
+	if (zip_add(za, name, zs) == -1) {
+	    zip_source_free(zs);
+	    fprintf(stderr, "can't add file `%s': %s\n",
+		    file, zip_strerror(za));
+	    return 1;
+	}
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s'\n", prg,
+	fprintf(stderr, "can't close zip archive `%s'\n",
 		archive);
 	return 1;
     }

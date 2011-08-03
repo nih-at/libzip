@@ -288,7 +288,7 @@ do
     test_empty "${RET}" return
     RET="$arg";;
   stderr)
-    echo "${PROGRAM}: $arg" >> stderr;;
+    echo "$arg" >> stderr;;
   stdout)
     echo "$arg" >> stdout;;
   *)
