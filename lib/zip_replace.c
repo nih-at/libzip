@@ -65,6 +65,7 @@ _zip_replace(struct zip *za, zip_uint64_t idx, const char *name,
 	return -1;
     }
 
+    zip_uint64_t za_nentry_prev = za->nentry;
     if (idx == ZIP_UINT64_MAX) {
 	if (_zip_entry_new(za) == NULL)
 	    return -1;
@@ -73,7 +74,7 @@ _zip_replace(struct zip *za, zip_uint64_t idx, const char *name,
     }
     
     if (name && _zip_set_name(za, idx, name) != 0) {
-	za->nentry--;
+	za->nentry = za_nentry_prev;
 	return -1;
     }
 
