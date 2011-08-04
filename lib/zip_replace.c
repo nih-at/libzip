@@ -72,11 +72,15 @@ _zip_replace(struct zip *za, zip_uint64_t idx, const char *name,
 	idx = za->nentry - 1;
     }
     
+    if (name && _zip_set_name(za, idx, name) != 0) {
+	za->nentry--;
+	return -1;
+    }
+
+    /* does not change any name related data, so we can do it here;
+     * needed for a double add of the same file name */
     _zip_unchange_data(za->entry+idx);
 
-    if (name && _zip_set_name(za, idx, name) != 0)
-	return -1;
-    
     za->entry[idx].state = ((za->cdir == NULL || idx >= za->cdir->nentry)
 			    ? ZIP_ST_ADDED : ZIP_ST_REPLACED);
     za->entry[idx].source = source;

@@ -53,6 +53,7 @@ main(int argc, char *argv[])
     char buf[100];
     int err;
     int i;
+    int ret = 0;
 
     prg = argv[0];
 
@@ -75,7 +76,8 @@ main(int argc, char *argv[])
 	if ((zs=zip_source_file(za, file, 0, -1)) == NULL) {
 	    fprintf(stderr, "error creating file source for `%s': %s\n",
 		    file, zip_strerror(za));
-	    return 1;
+	    ret = 1;
+	    continue;
 	}
 
 	if ((name=strrchr(file, '/')) == NULL)
@@ -85,7 +87,7 @@ main(int argc, char *argv[])
 	    zip_source_free(zs);
 	    fprintf(stderr, "can't add file `%s': %s\n",
 		    file, zip_strerror(za));
-	    return 1;
+	    ret = 1;
 	}
     }
 
@@ -95,5 +97,5 @@ main(int argc, char *argv[])
 	return 1;
     }
 
-    return 0;
+    return ret;
 }
