@@ -82,6 +82,7 @@ or
 points to an added file and
 \fBZIP_FL_UNCHANGED\fR
 is set.
+.RE
 .SH "SEE ALSO"
 libzip(3),
 zip_name_locate(3)

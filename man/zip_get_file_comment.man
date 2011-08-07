@@ -78,6 +78,7 @@ fails if:
 \fBindex\fR
 is not a valid file index in
 \fBarchive.\fR
+.RE
 .SH "SEE ALSO"
 libzip(3),
 zip_get_archive_comment(3)
