@@ -16,7 +16,7 @@ noinst_PROGRAMS= \
 	set_comment_revert \
 	tryopen
 
-EXTRA_PROGRAMS=deltest ziptest
+EXTRA_PROGRAMS=deltest
 
 EXTRA_DIST= \
 	CMakeLists.txt \
