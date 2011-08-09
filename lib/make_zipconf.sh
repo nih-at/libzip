@@ -44,13 +44,13 @@ define_type()
 
     bits=`expr $bytes '*' 8`
     type="${short}int${bits}"
-    TYPE=`echo $type | tr a-z A-Z`
+    TYPE=`echo $type | tr '[a-z]' '[A-Z]'`
     if grep "define HAVE_${TYPE}_T" "$infile" > /dev/null
     then
 	echo "typedef ${type}_t zip_${type}_t;" >> "$outfile"
 	LTYPE="$TYPE"
     else
-	SHORT=`echo $short | tr a-z A-Z`
+	SHORT=`echo $short | tr '[a-z]' '[A-Z]'`
 	if [ -z "$SHORT" ]
 	then
 	    SHORT='S'
@@ -65,7 +65,7 @@ define_type()
 	    LTYPE="${SHORT}CHAR"
 	else
 	    ctype=`sed -n "s/.define SIZEOF_\([A-Z_]*\) $bytes/\1/p" "$infile" \
-		| head -1 | tr A-Z_ 'a-z '`
+		| head -1 | tr '[A-Z_]' '[a-z ]'`
 	    if [ -z "$ctype" ]
 	    then
 		echo "$0: no $bits bit type found" >&2
