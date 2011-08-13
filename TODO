@@ -46,6 +46,9 @@ Features
 * add functions to:
   . set last modification time for entry
   . read/set ASCII file flag? (wiz: more general options?)
+  . get/set "version made by" and "external file attributes"
+    (can be used to decide if an entry is a directory, if the
+     archive was created on DOS)
 * zip_commit (to finish changes without closing archive)
 * support for zip64 (large file)
 * add custom compression function support
