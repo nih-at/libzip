@@ -63,7 +63,7 @@ zip_source_zip(struct zip *za, struct zip *srcza, zip_uint64_t srcidx,
     if (za == NULL)
 	return NULL;
 
-    if (srcza == NULL || len < -1 || srcidx < 0 || srcidx >= srcza->nentry) {
+    if (srcza == NULL || len < -1 || srcidx >= srcza->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
