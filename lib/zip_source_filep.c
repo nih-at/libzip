@@ -65,7 +65,7 @@ zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start,
     if (za == NULL)
 	return NULL;
 
-    if (file == NULL || start < 0 || len < -1) {
+    if (file == NULL || len < -1) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
