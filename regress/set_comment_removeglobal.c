@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zip.h"
+#include "zipint.h"
 
 const char *prg;
 

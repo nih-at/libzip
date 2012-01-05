@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zip.h"
+#include "zipint.h"
 
 const char *prg;
 const char *new_archive_comment="This is the new,\r\n"
