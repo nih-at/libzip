@@ -202,6 +202,9 @@ _zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
     zip_uint8_t *utf8buf;
     zip_uint32_t buflen, i, offset;
 
+    if (len == 0)
+	return NULL;
+
     buflen = 0;
     for (i=0; i<len; i++)
 	buflen += _zip_unicode_to_utf8_len(_cp437_to_unicode[cp437buf[i]]);

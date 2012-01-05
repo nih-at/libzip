@@ -171,23 +171,27 @@ compare_zip(char * const zn[], int verbose)
 
 	n[i] = zip_get_num_files(za);
 
-	if ((e[i]=malloc(sizeof(*e[i]) * n[i])) == NULL) {
-	    fprintf(stderr, "%s: malloc failure\n", prg);
-	    exit(1);
-	}
+	if (n[i] == 0)
+	    e[i] = NULL;
+        else {
+	    if ((e[i]=malloc(sizeof(*e[i]) * n[i])) == NULL) {
+	        fprintf(stderr, "%s: malloc failure\n", prg);
+	        exit(1);
+	    }
 
-	for (j=0; j<n[i]; j++) {
-	    zip_stat_index(za, j, 0, &st);
-	    e[i][j].name = strdup(st.name);
-	    e[i][j].size = st.size;
-	    e[i][j].crc = st.crc;
-	    if (test_files)
-		test_file(za, j, st.size, st.crc);
-	}
+	    for (j=0; j<n[i]; j++) {
+	        zip_stat_index(za, j, 0, &st);
+	        e[i][j].name = strdup(st.name);
+	        e[i][j].size = st.size;
+	        e[i][j].crc = st.crc;
+	        if (test_files)
+		    test_file(za, j, st.size, st.crc);
+	    }
+	    qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
+        }
 
 	zip_close(za);
 
-	qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
     }
 
     switch (compare_list(zn, verbose,

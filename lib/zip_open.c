@@ -119,8 +119,10 @@ _zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
     za->cdir = cdir;
     za->zp = fp;
 
-    if ((za->entry=(struct zip_entry *)malloc(sizeof(*(za->entry))
-					      * cdir->nentry)) == NULL) {
+    if (cdir->nentry == 0)
+	za->entry = NULL;
+    else if ((za->entry=(struct zip_entry *)malloc(sizeof(*(za->entry))
+						   * cdir->nentry)) == NULL) {
 	set_error(zep, NULL, ZIP_ER_MEMORY);
 	_zip_free(za);
 	return NULL;

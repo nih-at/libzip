@@ -43,6 +43,9 @@ _zip_memdup(const void *mem, size_t len, struct zip_error *error)
 {
     void *ret;
 
+    if (len == 0)
+	return NULL;
+
     ret = malloc(len);
     if (!ret) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);

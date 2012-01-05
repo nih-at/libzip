@@ -225,11 +225,15 @@ zip_close(struct zip *za)
 
 	if (za->entry[i].ch_extra_len != -1) {
 	    free(de.extrafield);
-	    if ((de.extrafield=malloc(za->entry[i].ch_extra_len)) == NULL) {
-		error = 1;
-		break;
-	    }
-	    memcpy(de.extrafield, za->entry[i].ch_extra, za->entry[i].ch_extra_len);
+	    if (za->entry[i].ch_extra_len > 0) {
+	        if ((de.extrafield=malloc(za->entry[i].ch_extra_len)) == NULL) {
+		    error = 1;
+		    break;
+	        }
+	        memcpy(de.extrafield, za->entry[i].ch_extra, za->entry[i].ch_extra_len);
+            }
+	    else
+		de.extrafield = NULL;
 	    de.extrafield_len = za->entry[i].ch_extra_len;
 	    /* as the rest of cd entries, its malloc/free is done by za */
 	    /* TODO unsure if this should also be set in the CD --
@@ -548,13 +552,18 @@ static int
 _zip_cdir_set_comment(struct zip_cdir *dest, struct zip *src)
 {
     if (src->ch_comment_len != -1) {
-	dest->comment = _zip_memdup(src->ch_comment,
-				    src->ch_comment_len, &src->error);
-	if (dest->comment == NULL)
-	    return -1;
 	dest->comment_len = src->ch_comment_len;
-    } else {
-	if (src->cdir && src->cdir->comment) {
+	if (src->ch_comment_len == 0)
+	    dest->comment = NULL;
+	else {
+	    dest->comment = _zip_memdup(src->ch_comment,
+				        src->ch_comment_len, &src->error);
+	    if (dest->comment == NULL)
+	        return -1;
+	}
+    }
+    else {
+	if (src->cdir && src->cdir->comment_len > 0) {
 	    dest->comment = _zip_memdup(src->cdir->comment,
 					src->cdir->comment_len, &src->error);
 	    if (dest->comment == NULL)

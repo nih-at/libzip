@@ -77,6 +77,9 @@ _zip_cdir_grow(struct zip_cdir *cd, int nentry, struct zip_error *error)
 	return -1;
     }
 
+    if (nentry == cd->nentry)
+	return 0;
+
     if ((entry=((struct zip_dirent *)
 		realloc(cd->entry, sizeof(*(cd->entry))*nentry))) == NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -101,7 +104,9 @@ _zip_cdir_new(int nentry, struct zip_error *error)
 	return NULL;
     }
 
-    if ((cd->entry=(struct zip_dirent *)malloc(sizeof(*(cd->entry))*nentry))
+    if (nentry == 0)
+	cd->entry = NULL;
+    else if ((cd->entry=(struct zip_dirent *)malloc(sizeof(*(cd->entry))*nentry))
 	== NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	free(cd);
@@ -523,6 +528,9 @@ _zip_readfpstr(FILE *fp, unsigned int len, int nulp, struct zip_error *error)
 {
     char *r, *o;
 
+    if (len == 0 && nulp == 0)
+	return NULL;
+
     r = (char *)malloc(nulp ? len+1 : len);
     if (!r) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -552,6 +560,9 @@ static char *
 _zip_readstr(unsigned char **buf, int len, int nulp, struct zip_error *error)
 {
     char *r, *o;
+
+    if (len == 0 && nulp == 0)
+	return NULL;
 
     r = (char *)malloc(nulp ? len+1 : len);
     if (!r) {

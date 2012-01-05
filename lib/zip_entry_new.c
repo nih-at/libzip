@@ -45,9 +45,8 @@ _zip_entry_new(struct zip *za)
     struct zip_entry *ze;
     if (!za) {
 	ze = (struct zip_entry *)malloc(sizeof(struct zip_entry));
-	if (!ze) {
+	if (!ze)
 	    return NULL;
-	}
     }
     else {
 	if (za->nentry+1 >= za->nentry_alloc) {
