@@ -49,6 +49,7 @@
 #endif
 
 #include "zip.h"
+#include "zipint.h"
 
 struct entry {
     char *name;
