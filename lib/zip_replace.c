@@ -60,12 +60,13 @@ zip_int64_t
 _zip_replace(struct zip *za, zip_uint64_t idx, const char *name,
 	     struct zip_source *source)
 {
+    zip_uint64_t za_nentry_prev;
     if (ZIP_IS_RDONLY(za)) {
 	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
     }
 
-    zip_uint64_t za_nentry_prev = za->nentry;
+    za_nentry_prev = za->nentry;
     if (idx == ZIP_UINT64_MAX) {
 	if (_zip_entry_new(za) == NULL)
 	    return -1;
