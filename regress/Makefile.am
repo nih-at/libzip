@@ -7,6 +7,7 @@ noinst_PROGRAMS= \
 	cp437 \
 	encoding \
 	encrypt \
+	fopen_unchanged \
 	fread \
 	get_comment \
 	name_locate \
@@ -57,6 +58,7 @@ TESTS= \
 	encoding-cp437-all.test \
 	encoding-utf-8.test \
 	encrypt.test \
+	fopen_unchanged.test \
 	fread.test \
 	get_comment.test \
 	name_locate.test \

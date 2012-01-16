@@ -25,6 +25,7 @@
 ^regress/cp437$
 ^regress/encoding$
 ^regress/encrypt$
+^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/get_comment$
 ^regress/name_locate$
