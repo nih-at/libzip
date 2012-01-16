@@ -70,8 +70,10 @@ _zip_replace(struct zip *za, zip_uint64_t idx, const char *name,
     if (idx == ZIP_UINT64_MAX) {
 	if (_zip_entry_new(za) == NULL)
 	    return -1;
-
+	
 	idx = za->nentry - 1;
+	za->entry[idx].changes.valid |= ZIP_DIRENT_COMP_METHOD;
+	za->entry[idx].changes.comp_method = ZIP_CM_DEFLATE; /* XXX: default */
     }
     
     if (name && _zip_set_name(za, idx, name) != 0) {

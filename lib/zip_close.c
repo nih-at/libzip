@@ -162,15 +162,22 @@ zip_close(struct zip *za)
 					      ZIP_FL_UNCHANGED) == 0);
     error = 0;
     for (j=0; j<survivors; j++) {
+	int new_data;
+
 	i = filelist[j].idx;
 
+	new_data = (ZIP_ENTRY_DATA_CHANGED(za->entry+i) || new_torrentzip || (za->entry[i].changes.valid & ZIP_DIRENT_COMP_METHOD));
+
 	/* create new local directory entry */
-	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i) || new_torrentzip) {
+	if (new_data) {
 	    _zip_dirent_init(&de);
 
 	    if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 		_zip_dirent_torrent_normalize(&de);
 		
+	    if (za->entry[i].changes.valid & ZIP_DIRENT_COMP_METHOD)
+		de.settable.comp_method = za->entry[i].changes.comp_method;
+
 	    /* use it as central directory entry */
 	    memcpy(cd->entry+j, &de, sizeof(cd->entry[j]));
 
@@ -247,14 +254,12 @@ zip_close(struct zip *za)
 
 	cd->entry[j].offset = ftello(out);
 
-	if (ZIP_ENTRY_DATA_CHANGED(za->entry+i) || new_torrentzip || (za->entry[i].changes.valid & ZIP_DIRENT_COMP_METHOD)) {
+	if (new_data) {
 	    struct zip_source *zs;
 
 	    zs = NULL;
 	    if (!ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
-		/* XXX: decompress, recompress with correct compression */
-		if ((zs=zip_source_zip(za, za, i, ZIP_FL_RECOMPRESS, 0, -1))
-		    == NULL) {
+		if ((zs=zip_source_zip(za, za, i, 0, 0, -1)) == NULL) {
 		    error = 1;
 		    break;
 		}
@@ -353,7 +358,6 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
     off_t offstart, offdata, offend;
     struct zip_stat st;
     struct zip_source *s2;
-    zip_compression_implementation comp_impl;
     int ret;
     
     if (zip_source_stat(src, &st) < 0) {
@@ -366,27 +370,49 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
     if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
 	return -1;
 
-    if ((s2=zip_source_crc(za, src, 0)) == NULL) {
-	zip_source_pop(s2);
-	return -1;
+    if ((st.valid & ZIP_STAT_COMP_METHOD) == 0) {
+	st.valid |= ZIP_STAT_COMP_METHOD;
+	st.comp_method = ZIP_CM_STORE;
     }
-    
-    /* XXX: deflate 0-byte files for torrentzip? */
-    if (((st.valid & ZIP_STAT_COMP_METHOD) == 0
-	 || st.comp_method == ZIP_CM_STORE)
-	&& ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
-	comp_impl = NULL;
-	if ((comp_impl=zip_get_compression_implementation(ZIP_CM_DEFLATE))
-	    == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-	    zip_source_pop(s2);
+
+    if (st.comp_method != de->settable.comp_method) {
+	struct zip_source *s_store, *s_crc;
+	zip_compression_implementation comp_impl;
+	
+	if (st.comp_method != ZIP_CM_STORE) {
+	    if ((comp_impl=zip_get_compression_implementation(st.comp_method)) == NULL) {
+		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+		return -1;
+	    }
+	    if ((s_store=comp_impl(za, src, st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
+		/* error set by comp_impl */
+		return -1;
+	    }
+	}
+	else
+	    s_store = src;
+
+	if ((s_crc=zip_source_crc(za, s_store, 0)) == NULL) {
+	    if (s_store != src)
+		zip_source_pop(s_store);
 	    return -1;
 	}
-	if ((s2=comp_impl(za, s2, ZIP_CM_DEFLATE, ZIP_CODEC_ENCODE))
-	    == NULL) {
-	    /* XXX: set error? */
-	    zip_source_pop(s2);
-	    return -1;
+
+	/* XXX: deflate 0-byte files for torrentzip? */
+	if (de->settable.comp_method != ZIP_CM_STORE && ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
+	    if ((comp_impl=zip_get_compression_implementation(de->settable.comp_method)) == NULL) {
+		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+		zip_source_pop(s_crc);
+		if (s_store != src)
+		    zip_source_pop(s_store);
+		return -1;
+	    }
+	    if ((s2=comp_impl(za, s_crc, de->settable.comp_method, ZIP_CODEC_ENCODE)) == NULL) {
+		zip_source_pop(s_crc);
+		if (s_store != src)
+		    zip_source_pop(s_store);
+		return -1;
+	    }
 	}
     }
     else

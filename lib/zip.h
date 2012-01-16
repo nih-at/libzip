@@ -79,6 +79,7 @@ extern "C" {
 
 /* flags for compression and encryption sources */
 
+#define ZIP_CODEC_DECODE	0 /* decompress/decrypt (encode flag not set) */
 #define ZIP_CODEC_ENCODE	1 /* compress/encrypt */
 
 
@@ -253,6 +254,8 @@ ZIP_EXTERN int zip_set_archive_flag(struct zip *, int, int);
 ZIP_EXTERN int zip_set_default_password(struct zip *, const char *);
 ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t,
 				    const char *, int);
+ZIP_EXTERN int zip_set_file_compression(struct zip *, zip_uint64_t,
+					zip_uint16_t, zip_uint32_t);
 ZIP_EXTERN int zip_set_file_extra(struct zip *, zip_uint64_t,
 				  const char *, int);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
