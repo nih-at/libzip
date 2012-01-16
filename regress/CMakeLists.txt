@@ -5,7 +5,7 @@ SET(STANDALONE_TEST_PROGRAMS
   add_from_file
   add_from_filep
   add_from_zip
-  encoding
+#  encoding # uses internal function, which doesn't work on Windows
   encrypt
   fread
   get_comment
