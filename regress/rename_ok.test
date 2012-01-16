@@ -1,0 +1,5 @@
+# rename file inside zip archive
+program rename
+return 0
+args rename.zip file2 notfile2
+file rename.zip testcomment.zip rename_ok.zip

@@ -17,6 +17,7 @@ SET(STANDALONE_TEST_PROGRAMS
 )
 
 SET(HELPER_TEST_PROGRAMS
+  rename
   tryopen
 )
 
@@ -29,6 +30,8 @@ SET(EXTRA_TESTS
   open_nonarchive.test
   open_nosuchfile.test
   open_ok.test
+  rename_fail.test
+  rename_ok.test
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})

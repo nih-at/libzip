@@ -10,6 +10,7 @@ noinst_PROGRAMS= \
 	fread \
 	get_comment \
 	name_locate \
+	rename \
 	set_comment_all \
 	set_comment_localonly \
 	set_comment_removeglobal \
@@ -25,6 +26,7 @@ EXTRA_DIST= \
 	broken.zip \
 	encrypt.zip \
 	manyfiles.zip \
+	rename_ok.zip \
 	test.zip \
 	testbuffer.zip \
 	testdir.zip \
@@ -67,6 +69,8 @@ TESTS= \
 	open_nonarchive.test \
 	open_nosuchfile.test \
 	open_ok.test \
+	rename_fail.test \
+	rename_ok.test \
 	set_comment_all.test \
 	set_comment_localonly.test \
 	set_comment_removeglobal.test \
