@@ -59,8 +59,8 @@ _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
 	    _zip_error_set(error, ZIP_ER_DELETED, 0);
 	    return NULL;
 	}
-	if (za->entry[idx].ch_filename)
-	    return za->entry[idx].ch_filename;
+	if (za->entry[idx].changes.valid & ZIP_DIRENT_FILENAME)
+	    return za->entry[idx].changes.filename;
     }
 
     if (za->cdir == NULL || idx >= za->cdir->nentry) {
@@ -68,5 +68,5 @@ _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
 	return NULL;
     }
     
-    return za->cdir->entry[idx].filename;
+    return za->cdir->entry[idx].settable.filename;
 }

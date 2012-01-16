@@ -71,7 +71,7 @@ zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
 	st->size = za->cdir->entry[index].uncomp_size;
 	st->mtime = za->cdir->entry[index].last_mod;
 	st->comp_size = za->cdir->entry[index].comp_size;
-	st->comp_method = za->cdir->entry[index].comp_method;
+	st->comp_method = za->cdir->entry[index].settable.comp_method;
 	if (za->cdir->entry[index].bitflags & ZIP_GPBF_ENCRYPTED) {
 	    if (za->cdir->entry[index].bitflags & ZIP_GPBF_STRONG_ENCRYPTION) {
 		/* XXX */

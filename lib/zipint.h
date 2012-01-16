@@ -228,25 +228,35 @@ struct zip_file {
 
 /* zip archive directory entry (central or local) */
 
+#define ZIP_DIRENT_COMP_METHOD	0x0001
+#define ZIP_DIRENT_FILENAME	0x0002
+#define ZIP_DIRENT_COMMENT	0x0004
+#define ZIP_DIRENT_EXTRAFIELD	0x0008
+#define ZIP_DIRENT_ALL		0xffff
+
+struct zip_dirent_settable {
+    zip_uint32_t valid;
+    zip_int32_t comp_method;		/* (cl) compression method used (uint16 and ZIP_CM_DEFAULT (-1)) */
+    char *filename;			/* (cl) file name (NUL-terminated) */
+    char *comment;			/* (c)  file comment */
+    zip_uint16_t comment_len;		/* (c)  length of file comment */
+    char *extrafield;			/* (cl) extra field */
+    zip_uint16_t extrafield_len;	/* (cl) length of extra field */
+};
+
 struct zip_dirent {
     unsigned short version_madeby;	/* (c)  version of creator */
     unsigned short version_needed;	/* (cl) version needed to extract */
     unsigned short bitflags;		/* (cl) general purpose bit flag */
-    unsigned short comp_method;		/* (cl) compression method used */
     time_t last_mod;			/* (cl) time of last modification */
     unsigned int crc;			/* (cl) CRC-32 of uncompressed data */
-    unsigned int comp_size;		/* (cl) size of commpressed data */
-    unsigned int uncomp_size;		/* (cl) size of uncommpressed data */
-    char *filename;			/* (cl) file name (NUL-terminated) */
-    unsigned short filename_len;	/* (cl) length of filename (w/o NUL) */
-    char *extrafield;			/* (cl) extra field */
-    unsigned short extrafield_len;	/* (cl) length of extra field */
-    char *comment;			/* (c)  file comment */
-    unsigned short comment_len;		/* (c)  length of file comment */
+    unsigned int comp_size;		/* (cl) size of compressed data */
+    unsigned int uncomp_size;		/* (cl) size of uncompressed data */
     unsigned short disk_number;		/* (c)  disk number start */
     unsigned short int_attrib;		/* (c)  internal file attributes */
     unsigned int ext_attrib;		/* (c)  external file attributes */
     unsigned int offset;		/* (c)  offset of local header  */
+    struct zip_dirent_settable settable;
 };
 
 /* zip archive central directory */
@@ -279,11 +289,7 @@ struct zip_source {
 struct zip_entry {
     enum zip_state state;
     struct zip_source *source;
-    char *ch_filename;
-    char *ch_extra;
-    int ch_extra_len;
-    char *ch_comment;
-    int ch_comment_len;
+    struct zip_dirent_settable changes;
 };
 
 

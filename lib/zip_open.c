@@ -313,7 +313,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	}
 	
 	j = cd->entry[i].offset + cd->entry[i].comp_size
-	    + cd->entry[i].filename_len + LENTRYSIZE;
+	    + strlen(cd->entry[i].settable.filename) + LENTRYSIZE;
 	if (j > max)
 	    max = j;
 	if (max > cd->offset) {
@@ -392,11 +392,9 @@ _zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
 	   and global headers for the bitflags */
 	|| (h1->bitflags != h2->bitflags)
 #endif
-	|| (h1->comp_method != h2->comp_method)
+	|| (h1->settable.comp_method != h2->settable.comp_method)
 	|| (h1->last_mod != h2->last_mod)
-	|| (h1->filename_len != h2->filename_len)
-	|| !h1->filename || !h2->filename
-	|| strcmp(h1->filename, h2->filename))
+	|| strcmp(h1->settable.filename, h2->settable.filename))
 	return -1;
 
     /* check that CRC and sizes are zero if data descriptor is used */
@@ -421,10 +419,10 @@ _zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
     }
     
     if ((local1p == local2p)
-	&& ((h1->extrafield_len != h2->extrafield_len)
-	    || (h1->extrafield_len && h2->extrafield
-		&& memcmp(h1->extrafield, h2->extrafield,
-			  h1->extrafield_len))))
+	&& ((h1->settable.extrafield_len != h2->settable.extrafield_len)
+	    || (h1->settable.extrafield_len && h2->settable.extrafield
+		&& memcmp(h1->settable.extrafield, h2->settable.extrafield,
+			  h1->settable.extrafield_len))))
 	return -1;
 
     /* if either is local, nothing more to check */
@@ -436,9 +434,9 @@ _zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
 	|| (h1->int_attrib != h2->int_attrib)
 	|| (h1->ext_attrib != h2->ext_attrib)
 	|| (h1->offset != h2->offset)
-	|| (h1->comment_len != h2->comment_len)
-	|| (h1->comment_len && h2->comment
-	    && memcmp(h1->comment, h2->comment, h1->comment_len)))
+	|| (h1->settable.comment_len != h2->settable.comment_len)
+	|| (h1->settable.comment_len && h2->settable.comment
+	    && memcmp(h1->settable.comment, h2->settable.comment, h1->settable.comment_len)))
 	return -1;
 
     return 0;

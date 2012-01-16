@@ -45,6 +45,6 @@ _zip_unchange_data(struct zip_entry *ze)
 	ze->source = NULL;
     }
     
-    ze->state = ze->ch_filename ? ZIP_ST_RENAMED : ZIP_ST_UNCHANGED;
+    ze->state = (ze->changes.valid & ZIP_DIRENT_FILENAME) ? ZIP_ST_RENAMED : ZIP_ST_UNCHANGED;
 }
 

@@ -113,8 +113,7 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 				       0, &st)) == NULL)
 	    return NULL;
 	if (enc_impl) {
-	    if ((s2=enc_impl(za, src, ZIP_EM_TRAD_PKWARE, 0,
-			     password)) == NULL) {
+	    if ((s2=enc_impl(za, src, st.encryption_method, 0, password)) == NULL) {
 		zip_source_free(src);
 		/* XXX: set error (how?) */
 		return NULL;
@@ -122,8 +121,7 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, int flags,
 	    src = s2;
 	}
 	if (comp_impl) {
-	    if ((s2=comp_impl(za, src, za->cdir->entry[fileno].comp_method,
-			      0)) == NULL) {
+	    if ((s2=comp_impl(za, src, st.comp_method, 0)) == NULL) {
 		zip_source_free(src);
 		/* XXX: set error (how?) */
 		return NULL;

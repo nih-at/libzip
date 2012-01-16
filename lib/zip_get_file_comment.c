@@ -45,14 +45,18 @@ zip_get_file_comment(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
 	return NULL;
     }
 
-    if ((flags & ZIP_FL_UNCHANGED)
-	|| (za->entry[idx].ch_comment_len == -1)) {
+    if ((flags & ZIP_FL_UNCHANGED) || (za->entry[idx].changes.valid & ZIP_DIRENT_COMMENT) == 0) {
+	if (idx >= za->cdir->nentry) {
+	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	    return NULL;
+	}
+	    
 	if (lenp != NULL)
-	    *lenp = za->cdir->entry[idx].comment_len;
-	return za->cdir->entry[idx].comment;
+	    *lenp = za->cdir->entry[idx].settable.comment_len;
+	return za->cdir->entry[idx].settable.comment;
     }
-    
+
     if (lenp != NULL)
-	*lenp = za->entry[idx].ch_comment_len;
-    return za->entry[idx].ch_comment;
+	*lenp = za->entry[idx].changes.comment_len;
+    return za->entry[idx].changes.comment;
 }

@@ -64,9 +64,11 @@ zip_set_file_extra(struct zip *za, zip_uint64_t idx,
     else
 	tmpext = NULL;
 
-    free(za->entry[idx].ch_extra);
-    za->entry[idx].ch_extra = tmpext;
-    za->entry[idx].ch_extra_len = len;
+    if (za->entry[idx].changes.valid & ZIP_DIRENT_EXTRAFIELD)
+	free(za->entry[idx].changes.extrafield);
+    za->entry[idx].changes.extrafield = tmpext;
+    za->entry[idx].changes.extrafield_len = len;
+    za->entry[idx].changes.valid |= ZIP_DIRENT_EXTRAFIELD;
 
     return 0;
 }

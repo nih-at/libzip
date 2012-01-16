@@ -42,14 +42,13 @@
 void
 _zip_entry_free(struct zip_entry *ze)
 {
-    free(ze->ch_filename);
-    ze->ch_filename = NULL;
-    free(ze->ch_extra);
-    ze->ch_extra = NULL;
-    ze->ch_extra_len = -1;
-    free(ze->ch_comment);
-    ze->ch_comment = NULL;
-    ze->ch_comment_len = -1;
+    if (ze->changes.valid & ZIP_DIRENT_FILENAME)
+	free(ze->changes.filename);
+    if (ze->changes.valid & ZIP_DIRENT_EXTRAFIELD)
+	free(ze->changes.extrafield);
+    if (ze->changes.valid & ZIP_DIRENT_COMMENT)
+	free(ze->changes.comment);
+    ze->changes.valid = 0;
 
     _zip_unchange_data(ze);
 }

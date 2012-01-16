@@ -57,7 +57,7 @@ _zip_unchange(struct zip *za, zip_uint64_t idx, int allow_duplicates)
 	return -1;
     }
 
-    if (za->entry[idx].ch_filename) {
+    if (za->entry[idx].changes.valid & ZIP_DIRENT_FILENAME) {
 	if (!allow_duplicates) {
 	    i = _zip_name_locate(za,
 			 _zip_get_name(za, idx, ZIP_FL_UNCHANGED, NULL),
@@ -68,16 +68,14 @@ _zip_unchange(struct zip *za, zip_uint64_t idx, int allow_duplicates)
 	    }
 	}
 
-	free(za->entry[idx].ch_filename);
-	za->entry[idx].ch_filename = NULL;
+	free(za->entry[idx].changes.filename);
     }
 
-    free(za->entry[idx].ch_extra);
-    za->entry[idx].ch_extra = NULL;
-    za->entry[idx].ch_extra_len = -1;
-    free(za->entry[idx].ch_comment);
-    za->entry[idx].ch_comment = NULL;
-    za->entry[idx].ch_comment_len = -1;
+    if (za->entry[idx].changes.valid & ZIP_DIRENT_EXTRAFIELD)
+	free(za->entry[idx].changes.extrafield);
+    if (za->entry[idx].changes.valid & ZIP_DIRENT_COMMENT)
+	free(za->entry[idx].changes.comment);
+    za->entry[idx].changes.valid = 0;
 
     _zip_unchange_data(za->entry+idx);
 

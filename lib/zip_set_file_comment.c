@@ -64,9 +64,11 @@ zip_set_file_comment(struct zip *za, zip_uint64_t idx,
     else
 	tmpcom = NULL;
 
-    free(za->entry[idx].ch_comment);
-    za->entry[idx].ch_comment = tmpcom;
-    za->entry[idx].ch_comment_len = len;
+    if (za->entry[idx].changes.valid & ZIP_DIRENT_COMMENT)
+	free(za->entry[idx].changes.comment);
+    za->entry[idx].changes.comment = tmpcom;
+    za->entry[idx].changes.comment_len = len;
+    za->entry[idx].changes.valid |= ZIP_DIRENT_COMMENT;
     
     return 0;
 }

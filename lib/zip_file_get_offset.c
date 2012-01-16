@@ -66,7 +66,7 @@ _zip_file_get_offset(struct zip *za, int idx)
     if (_zip_dirent_read(&de, za->zp, NULL, NULL, 1, &za->error) != 0)
 	return 0;
 
-    offset += LENTRYSIZE + de.filename_len + de.extrafield_len;
+    offset += LENTRYSIZE + strlen(de.settable.filename) + de.settable.extrafield_len;
 
     _zip_dirent_finalize(&de);
 

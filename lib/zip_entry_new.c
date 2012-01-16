@@ -65,13 +65,8 @@ _zip_entry_new(struct zip *za)
     }
 
     ze->state = ZIP_ST_UNCHANGED;
-
-    ze->ch_filename = NULL;
-    ze->ch_extra = NULL;
-    ze->ch_extra_len = -1;
-    ze->ch_comment = NULL;
-    ze->ch_comment_len = -1;
     ze->source = NULL;
+    ze->changes.valid = 0;
 
     if (za)
 	za->nentry++;

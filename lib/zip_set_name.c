@@ -68,8 +68,10 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
     if (za->entry[idx].state == ZIP_ST_UNCHANGED) 
 	za->entry[idx].state = ZIP_ST_RENAMED;
 
-    free(za->entry[idx].ch_filename);
-    za->entry[idx].ch_filename = s;
+    if (za->entry[idx].changes.valid & ZIP_DIRENT_FILENAME)
+	free(za->entry[idx].changes.filename);
+    za->entry[idx].changes.filename = s;
+    za->entry[idx].changes.valid |= ZIP_DIRENT_FILENAME;
 
     return 0;
 }
