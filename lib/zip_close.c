@@ -414,6 +414,8 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
 		return -1;
 	    }
 	}
+	else
+	    s2 = s_crc;
     }
     else
 	s2 = src;
