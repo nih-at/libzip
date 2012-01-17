@@ -16,6 +16,7 @@ noinst_PROGRAMS= \
 	set_comment_localonly \
 	set_comment_removeglobal \
 	set_comment_revert \
+	set_compression \
 	tryopen
 
 EXTRA_PROGRAMS=deltest
@@ -35,6 +36,7 @@ EXTRA_DIST= \
 	testchangedlocal.zip \
 	testcomment.zip \
 	testcommentremoved.zip \
+	testdeflated.zip \
 	testempty.zip \
 	testextrabytes.zip \
 	testfile.txt \
@@ -77,6 +79,11 @@ TESTS= \
 	set_comment_localonly.test \
 	set_comment_removeglobal.test \
 	set_comment_revert.test \
+	set_compression_deflate_to_deflate.test \
+	set_compression_deflate_to_store.test \
+	set_compression_store_to_deflate.test \
+	set_compression_store_to_store.test \
+	set_compression_unknown.test \
 	torrent-already.test \
 	torrent-new.test
 

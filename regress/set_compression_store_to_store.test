@@ -1,0 +1,5 @@
+# change method from stored to stored (no change)
+program set_compression
+return 0
+args test.zip abac-repeat.txt 0
+file test.zip teststored.zip teststored.zip

@@ -19,6 +19,7 @@ SET(STANDALONE_TEST_PROGRAMS
 
 SET(HELPER_TEST_PROGRAMS
   rename
+  set_compression
   tryopen
 )
 
@@ -33,6 +34,11 @@ SET(EXTRA_TESTS
   open_ok.test
   rename_fail.test
   rename_ok.test
+  set_compression_deflate_to_deflate.test
+  set_compression_deflate_to_store.test
+  set_compression_store_to_deflate.test
+  set_compression_store_to_store.test
+  set_compression_unknown.test
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})

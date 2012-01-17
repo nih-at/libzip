@@ -1,0 +1,6 @@
+# change method to unknown
+program set_compression
+return 1
+args test.zip abac-repeat.txt -99
+file test.zip teststored.zip teststored.zip
+stderr zip_set_file_compression with method `-99' on file 0 failed: Compression method not supported
