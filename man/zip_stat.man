@@ -102,31 +102,31 @@ Check if the flag defined by the following defines are in
 before accessing the fields:
 .RS
 .TP 30
-ZIP_STAT_NAME
+\fBZIP_STAT_NAME\fR
 \fBname\fR
 .TP 30
-ZIP_STAT_INDEX
+\fBZIP_STAT_INDEX\fR
 \fBindex\fR
 .TP 30
-ZIP_STAT_SIZE
+\fBZIP_STAT_SIZE\fR
 \fBsize\fR
 .TP 30
-ZIP_STAT_COMP_SIZE
+\fBZIP_STAT_COMP_SIZE\fR
 \fBcomp_size\fR
 .TP 30
-ZIP_STAT_MTIME
+\fBZIP_STAT_MTIME\fR
 \fBmtime\fR
 .TP 30
-ZIP_STAT_CRC
+\fBZIP_STAT_CRC\fR
 \fBcrc\fR
 .TP 30
-ZIP_STAT_COMP_METHOD
+\fBZIP_STAT_COMP_METHOD\fR
 \fBcomp_method\fR
 .TP 30
-ZIP_STAT_ENCRYPTION_METHOD
+\fBZIP_STAT_ENCRYPTION_METHOD\fR
 \fBencryption_method\fR
 .TP 30
-ZIP_STAT_FLAGS
+\fBZIP_STAT_FLAGS\fR
 \fBflags\fR
 .RE
 .SH "RETURN VALUES"
