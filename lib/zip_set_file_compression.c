@@ -56,7 +56,8 @@ zip_set_file_compression(struct zip *za, zip_uint64_t idx,
 	return -1;
     }
 
-    /* XXX: needs support for better of deflate/store */
+    /* XXX: needs support for better of deflate/store
+     *      update man page when fixing this */
     if (method == ZIP_CM_DEFAULT)
 	method = ZIP_CM_DEFLATE;
 
