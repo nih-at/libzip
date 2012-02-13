@@ -1,5 +1,5 @@
 .\" zip_open.mdoc \-- open zip archive
-.\" Copyright (C) 2003-2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_OPEN 3 "February 15, 2009" NiH
+.TH ZIP_OPEN 3 "February 13, 2012" NiH
 .SH "NAME"
 zip_open \- open zip archive
 .SH "LIBRARY"
@@ -60,8 +60,8 @@ Create the archive if it does not exist.
 Error if archive already exists.
 .TP 15
 \fBZIP_CHECKCONS\fR
-Perform additional consistency checks on the archive, and error if
-they fail.
+Perform additional stricter consistency checks on the archive, and
+error if they fail.
 .RE
 .PP
 If an error occurs and
@@ -94,10 +94,10 @@ is set.
 .TP 4
 [ZIP_ER_INCONS]
 Inconsistencies were found in the file specified by
-\fBpath\fR
-and
+\fBpath.\fR
+This error is often caused by specifying
 \fBZIP_CHECKCONS\fR
-was specified.
+but can also happen without it.
 .TP 4
 [ZIP_ER_INVAL]
 The
