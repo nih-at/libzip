@@ -4,8 +4,6 @@ noinst_PROGRAMS= \
 	add_from_file \
 	add_from_filep \
 	add_from_zip \
-	cp437 \
-	encoding \
 	encrypt \
 	fopen_unchanged \
 	fread \
@@ -55,10 +53,6 @@ TESTS= \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_zip.test \
-	encoding-ascii.test \
-	encoding-cp437.test \
-	encoding-cp437-all.test \
-	encoding-utf-8.test \
 	encrypt.test \
 	fopen_unchanged.test \
 	fread.test \
@@ -86,6 +80,12 @@ TESTS= \
 	set_compression_unknown.test \
 	torrent-already.test \
 	torrent-new.test
+
+DISABLED_TESTS= \
+	encoding-ascii.test \
+	encoding-cp437.test \
+	encoding-cp437-all.test \
+	encoding-utf-8.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
