@@ -124,7 +124,7 @@ _zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
     else if ((za->entry=(struct zip_entry *)malloc(sizeof(*(za->entry))
 						   * cdir->nentry)) == NULL) {
 	set_error(zep, NULL, ZIP_ER_MEMORY);
-	_zip_free(za);
+	zip_discard(za);
 	return NULL;
     }
     for (i=0; i<cdir->nentry; i++)
@@ -460,7 +460,7 @@ _zip_allocate_new(const char *fn, int *zep)
     else {
 	za->zn = strdup(fn);
 	if (!za->zn) {
-	    _zip_free(za);
+	    zip_discard(za);
 	    set_error(zep, NULL, ZIP_ER_MEMORY);
 	    return NULL;
 	}

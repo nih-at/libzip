@@ -1,5 +1,5 @@
-.\" zip_close.mdoc \-- close zip archive
-.\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
+.\" zip_discard.mdoc \-- close zip archive and discard changes
+.\" Copyright (C) 2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,93 +29,26 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_CLOSE 3 "February 13, 2012" NiH
+.TH ZIP_DISCARD 3 "February 13, 2012" NiH
 .SH "NAME"
-zip_close \- close zip archive
+zip_discard \- close zip archive and discard changes
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
 #include <zip.h>
 .PP
-int
-zip_close(struct zip *archive);
+void
+zip_discard(struct zip *archive);
 .SH "DESCRIPTION"
 The
-zip_close
+zip_discard
 function closes
 \fBarchive\fR
 and frees the memory allocated for it.
-If any files within were changed, those changes are written to disk
-first.
-If writing changes fails,
-zip_close
-fails and
-\fBarchive\fR
-is left unchanged.
-If
-\fBarchive\fR
-contains no files, the file is completely removed (no empty archive is
-written).
-.PP
-To close a zip file without saving changes, use
-zip_discard(3).
-.SH "RETURN VALUES"
-Upon successful completion 0 is returned.
-Otherwise, \-1 is returned and the error code in
-\fBarchive\fR
-is set to indicate the error.
-.SH "ERRORS"
-zip_close
-will fail if:
-.RS
-.TP 4
-[ZIP_ER_EOF]
-Unexpected end-of-file found while reading from a file.
-.TP 4
-[ZIP_ER_INTERNAL]
-The callback function of an added or replaced file returned an
-error but failed to report which.
-.TP 4
-[ZIP_ER_INVAL]
-The
-\fBpath\fR
-argument is
-\fBNULL.\fR
-.TP 4
-[ZIP_ER_MEMORY]
-Required memory could not be allocated.
-.TP 4
-[ZIP_ER_NOZIP]
-File is not a zip archive.
-.TP 4
-[ZIP_ER_READ]
-A file read failed.
-.TP 4
-[ZIP_ER_RENAME]
-A temporary file could not be renamed to its final name.
-.TP 4
-[ZIP_ER_SEEK]
-A file seek failed.
-.TP 4
-[ZIP_ER_TMPOPEN]
-A temporary file could not be created.
-.TP 4
-[ZIP_ER_WRITE]
-A file write failed.
-.TP 4
-[ZIP_ER_ZLIB]
-An error occurred while (de)compressing a stream with
-zlib(3).
-.RE
-Additionally, any errors returned by the callback function
-for added or replaced files will be passed back.
+Any changes to the archive are not written to disk and discarded.
 .SH "SEE ALSO"
 libzip(3),
-zip_discard(3),
-zip_error_get(3),
-zip_fdopen(3),
-zip_open(3),
-zip_strerror(3)
+zip_close(3)
 .SH "AUTHORS"
 
 Dieter Baron <dillo@giga.or.at>

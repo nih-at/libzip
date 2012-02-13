@@ -89,7 +89,7 @@ zip_close(struct zip *za)
 	return -1;
 
     if (!_zip_changed(za, &survivors)) {
-	_zip_free(za);
+	zip_discard(za);
 	return 0;
     }
 
@@ -101,7 +101,7 @@ zip_close(struct zip *za)
 		return -1;
 	    }
 	}
-	_zip_free(za);
+	zip_discard(za);
 	return 0;
     }	       
 
@@ -347,7 +347,7 @@ zip_close(struct zip *za)
     chmod(za->zn, 0666&~mask);
 #endif
 
-    _zip_free(za);
+    zip_discard(za);
     free(temp);
     
     return 0;

@@ -4,6 +4,7 @@ SET(MDOC3_PAGES
   zip_add_dir.mdoc
   zip_close.mdoc
   zip_delete.mdoc
+  zip_discard.mdoc
   zip_error_clear.mdoc
   zip_error_get.mdoc
   zip_error_get_sys_type.mdoc

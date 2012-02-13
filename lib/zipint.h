@@ -356,7 +356,6 @@ struct zip_source *_zip_source_zip_new(struct zip *, struct zip *, zip_uint64_t,
 				       zip_uint64_t, zip_int64_t, const char *);
 
 int _zip_changed(struct zip *, int *);
-void _zip_free(struct zip *);
 const char *_zip_get_name(struct zip *, zip_uint64_t, int, struct zip_error *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, size_t, struct zip_error *);

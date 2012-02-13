@@ -57,6 +57,7 @@ zip_fread(3)
 zip_fclose(3)
 .SS "close archive"
 zip_close(3)
+zip_discard(3)
 .SS "miscellaneous"
 zip_stat(3)
 zip_get_archive_comment(3)

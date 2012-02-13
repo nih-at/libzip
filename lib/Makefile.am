@@ -15,6 +15,7 @@ libzip_la_SOURCES=\
 	zip_close.c \
 	zip_delete.c \
 	zip_dirent.c \
+	zip_discard.c \
 	zip_entry_free.c \
 	zip_entry_new.c \
 	zip_err_str.c \
@@ -36,7 +37,6 @@ libzip_la_SOURCES=\
 	zip_fopen_index.c \
 	zip_fopen_index_encrypted.c \
 	zip_fread.c \
-	zip_free.c \
 	zip_get_archive_comment.c \
 	zip_get_archive_flag.c \
 	zip_get_compression_implementation.c \

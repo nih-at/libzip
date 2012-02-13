@@ -218,6 +218,7 @@ typedef zip_int64_t (*zip_source_callback)(void *, void *, zip_uint64_t,
 ZIP_EXTERN zip_int64_t zip_add(struct zip *, const char *, struct zip_source *);
 ZIP_EXTERN zip_int64_t zip_add_dir(struct zip *, const char *);
 ZIP_EXTERN int zip_close(struct zip *);
+ZIP_EXTERN void zip_discard(struct zip *);
 ZIP_EXTERN int zip_delete(struct zip *, zip_uint64_t);
 ZIP_EXTERN void zip_error_clear(struct zip *);
 ZIP_EXTERN void zip_error_get(struct zip *, int *, int *);

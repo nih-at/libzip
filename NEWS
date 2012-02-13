@@ -1,5 +1,6 @@
 0.xx [20xx/xx/xx]
 
+* Added zip_discard()
 * more changes for Windows support
 * additional test cases
 
