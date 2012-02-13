@@ -1,8 +1,10 @@
 0.xx [20xx/xx/xx]
 
 * Added zip_discard()
-* more changes for Windows support
-* additional test cases
+* Added ZIP_TRUNCATE for zip_open()
+* Added zip_set_compression()
+* More changes for Windows support
+* Additional test cases
 
 0.10 [2010/03/18]
 

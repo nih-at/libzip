@@ -43,6 +43,11 @@ zip_fdopen(int fd_orig, int flags, int *zep)
     int fd;
     FILE *fp;
 
+    if (flags & ZIP_TRUNCATE) {
+	*zep = ZIP_ER_INVAL;
+	return NULL;
+    }
+
     /* We dup() here to avoid messing with the passed in fd.
        We could not restore it to the original state in case of error. */
 

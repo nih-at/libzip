@@ -68,6 +68,8 @@ zip_open(const char *fn, int flags, int *zep)
     case 0:
 	return _zip_allocate_new(fn, zep);
     default:
+	if (flags & ZIP_TRUNCATE)
+	    return _zip_allocate_new(fn, zep);
 	break;
     }
 
