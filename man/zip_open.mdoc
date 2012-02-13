@@ -53,13 +53,16 @@ are specified by
 .Em or Ns No 'ing
 the following values, or 0 for none of them.
 .Bl -tag -offset indent -width ZIP_CHECKCONS
+.It Dv ZIP_CHECKCONS
+Perform additional stricter consistency checks on the archive, and
+error if they fail.
 .It Dv ZIP_CREATE
 Create the archive if it does not exist.
 .It Dv ZIP_EXCL
 Error if archive already exists.
-.It Dv ZIP_CHECKCONS
-Perform additional stricter consistency checks on the archive, and
-error if they fail.
+.It Dv ZIP_TRUNCATE
+If archive exists, ignore its current contents.
+In other words, handle it the same way as an empty archive.
 .El
 .Pp
 If an error occurs and

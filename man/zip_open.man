@@ -53,15 +53,19 @@ are specified by
 the following values, or 0 for none of them.
 .RS
 .TP 15
+\fBZIP_CHECKCONS\fR
+Perform additional stricter consistency checks on the archive, and
+error if they fail.
+.TP 15
 \fBZIP_CREATE\fR
 Create the archive if it does not exist.
 .TP 15
 \fBZIP_EXCL\fR
 Error if archive already exists.
 .TP 15
-\fBZIP_CHECKCONS\fR
-Perform additional stricter consistency checks on the archive, and
-error if they fail.
+\fBZIP_TRUNCATE\fR
+If archive exists, ignore its current contents.
+In other words, handle it the same way as an empty archive.
 .RE
 .PP
 If an error occurs and
