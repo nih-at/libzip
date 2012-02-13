@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH LIBZIP 3 "January 17, 2012" NiH
+.TH LIBZIP 3 "February 13, 2012" NiH
 .SH "NAME"
 libzip \- library for manipulating zip archives
 .SH "LIBRARY"
@@ -88,6 +88,9 @@ zip_delete(3)
 zip_unchange(3)
 zip_unchange_all(3)
 zip_unchange_archive(3)
+.SS "modify extra fields"
+zip_get_file_extra(3)
+zip_set_file_extra(3)
 .SS "close archive"
 zip_close(3)
 .SS "miscellaneous"
