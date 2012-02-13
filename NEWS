@@ -3,6 +3,7 @@
 * Added zip_discard()
 * Added ZIP_TRUNCATE for zip_open()
 * Added zip_set_compression()
+* Use gcc4's visibility __attribute__
 * More changes for Windows support
 * Additional test cases
 
