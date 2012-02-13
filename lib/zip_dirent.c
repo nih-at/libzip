@@ -175,6 +175,7 @@ _zip_dirent_finalize(struct zip_dirent *zde)
 void
 _zip_dirent_init(struct zip_dirent *de)
 {
+    de->settable.valid = 0;
     de->settable.comp_method = 0;
     de->settable.filename = NULL;
     de->settable.extrafield = NULL;

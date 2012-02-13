@@ -51,7 +51,7 @@
 */
 
 unsigned int
-_zip_file_get_offset(struct zip *za, int idx)
+_zip_file_get_offset(struct zip *za, int idx, struct zip_error *ze)
 {
     struct zip_dirent de;
     unsigned int offset;
@@ -59,11 +59,11 @@ _zip_file_get_offset(struct zip *za, int idx)
     offset = za->cdir->entry[idx].offset;
 
     if (fseeko(za->zp, offset, SEEK_SET) != 0) {
-	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
+	_zip_error_set(ze, ZIP_ER_SEEK, errno);
 	return 0;
     }
 
-    if (_zip_dirent_read(&de, za->zp, NULL, NULL, 1, &za->error) != 0)
+    if (_zip_dirent_read(&de, za->zp, NULL, NULL, 1, ze) != 0)
 	return 0;
 
     offset += LENTRYSIZE + strlen(de.settable.filename) + de.settable.extrafield_len;

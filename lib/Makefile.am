@@ -73,7 +73,9 @@ libzip_la_SOURCES=\
 	zip_source_pop.c \
 	zip_source_read.c \
 	zip_source_stat.c \
+	zip_source_window.c \
 	zip_source_zip.c \
+	zip_source_zip_new.c \
 	zip_set_name.c \
 	zip_stat.c \
 	zip_stat_index.c \

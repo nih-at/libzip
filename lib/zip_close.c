@@ -175,8 +175,10 @@ zip_close(struct zip *za)
 	    if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 		_zip_dirent_torrent_normalize(&de);
 		
-	    if (za->entry[i].changes.valid & ZIP_DIRENT_COMP_METHOD)
+	    if (za->entry[i].changes.valid & ZIP_DIRENT_COMP_METHOD) {
 		de.settable.comp_method = za->entry[i].changes.comp_method;
+		de.settable.valid |= ZIP_DIRENT_COMP_METHOD;
+	    }
 
 	    /* use it as central directory entry */
 	    memcpy(cd->entry+j, &de, sizeof(cd->entry[j]));
@@ -192,6 +194,8 @@ zip_close(struct zip *za)
 		    de.settable.filename = strdup(za->cdir->entry[i].settable.filename);
 		    cd->entry[j].settable.filename = za->cdir->entry[i].settable.filename;
 		}
+		de.settable.valid |= ZIP_DIRENT_FILENAME;
+		cd->entry[j].settable.valid |= ZIP_DIRENT_FILENAME;
 	    }
 	}
 	else {
@@ -259,7 +263,7 @@ zip_close(struct zip *za)
 
 	    zs = NULL;
 	    if (!ZIP_ENTRY_DATA_CHANGED(za->entry+i)) {
-		if ((zs=zip_source_zip(za, za, i, 0, 0, -1)) == NULL) {
+		if ((zs=_zip_source_zip_new(za, za, i, ZIP_FL_UNCHANGED, 0, -1, NULL)) == NULL) {
 		    error = 1;
 		    break;
 		}
@@ -373,6 +377,11 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de,
     if ((st.valid & ZIP_STAT_COMP_METHOD) == 0) {
 	st.valid |= ZIP_STAT_COMP_METHOD;
 	st.comp_method = ZIP_CM_STORE;
+    }
+
+    if ((de->settable.valid & ZIP_DIRENT_COMP_METHOD) == 0 || de->settable.comp_method == ZIP_CM_DEFAULT) {
+	de->settable.valid |= ZIP_DIRENT_COMP_METHOD;
+	de->settable.comp_method = ZIP_CM_DEFLATE;
     }
 
     if (st.comp_method != de->settable.comp_method) {

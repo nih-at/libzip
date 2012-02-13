@@ -81,7 +81,7 @@ main(int argc, char *argv[])
 	return 1;
     }
     if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s'\n", prg, archive);
+	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg, archive, zip_strerror(za));
 	return 1;
     }
 

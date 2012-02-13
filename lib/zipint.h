@@ -160,6 +160,8 @@ ZIP_EXTERN struct zip_source *zip_source_pkware(struct zip *,
 ZIP_EXTERN zip_int64_t zip_source_read(struct zip_source *, void *,
 				       zip_uint64_t);
 ZIP_EXTERN int zip_source_stat(struct zip_source *, struct zip_stat *);
+ZIP_EXTERN struct zip_source *zip_source_window(struct zip *, struct zip_source *,
+						zip_uint64_t, zip_uint64_t);
 
 
 /* This function will probably remain private.  It is not needed to
@@ -335,7 +337,7 @@ void _zip_error_set_from_source(struct zip_error *, struct zip_source *);
 const char *_zip_error_strerror(struct zip_error *);
 
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
-unsigned int _zip_file_get_offset(struct zip *, int);
+unsigned int _zip_file_get_offset(struct zip *, int, struct zip_error *);
 
 int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 
@@ -350,6 +352,8 @@ struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,
 					 zip_uint64_t, zip_int64_t, int,
 					 const struct zip_stat *);
 struct zip_source *_zip_source_new(struct zip *);
+struct zip_source *_zip_source_zip_new(struct zip *, struct zip *, zip_uint64_t, int,
+				       zip_uint64_t, zip_int64_t, const char *);
 
 int _zip_changed(struct zip *, int *);
 void _zip_free(struct zip *);
