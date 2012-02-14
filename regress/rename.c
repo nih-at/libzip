@@ -33,6 +33,7 @@
 
 
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -64,27 +65,29 @@ main(int argc, char *argv[])
     newname = argv[3];
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
-	printf("%s: opening zip archive ``%s'' failed (%d)\n", prg,
-	       archive, ze);
+	char buf[100];
+	zip_error_to_str(buf, sizeof(buf), ze, errno);
+	printf("%s: can't open zip archive `%s': %s\n", prg,
+	       archive, buf);
 	return 1;
     }
 
     if ((idx=zip_name_locate(z, oldname, 0)) < 0) {
-	printf("%s: unexpected error while looking for ``%s'': %s\n",
+	printf("%s: unexpected error while looking for `%s': %s\n",
 	       prg, oldname, zip_strerror(z));
 	return 1;
     }
 
     if (zip_rename(z, idx, newname) < 0) {
 	/* expected error, so no prg prefix */
-	printf("error renaming ``%s'' to ``%s'': %s\n",
+	printf("error renaming `%s' to `%s': %s\n",
 	       oldname, newname, zip_strerror(z));
 	return 1;
     }
 
     if (zip_close(z) == -1) {
-	fprintf(stderr, "%s: can't close zip archive %s\n", prg,
-		archive);
+	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg,
+		archive, zip_strerror(z));
 	return 1;
     }
 

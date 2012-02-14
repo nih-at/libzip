@@ -64,8 +64,10 @@ main(int argc, char *argv[])
     archive = argv[1];
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
-	printf("%s: opening zip archive ``%s'' failed (%d)\n", prg,
-	       archive, ze);
+        char buf[100];
+        zip_error_to_str(buf, sizeof(buf), ze, errno);
+	printf("%s: can't open zip archive `%s': %s\n", prg,
+	       archive, buf);
 	return 1;
     }
 
@@ -88,8 +90,8 @@ main(int argc, char *argv[])
     fail += find_success(z, "test", 0);
 
     if (zip_close(z) == -1) {
-	fprintf(stderr, "%s: can't close zip archive %s\n", prg,
-		archive);
+	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg,
+		archive, zip_strerror(z));
 	return 1;
     }
 
@@ -108,8 +110,8 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 	zip_error_get(z, &ze, &se);
 	if (ze != zerr) {
 	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
-	    printf("%s: unexpected error while looking for ``%s'': "
-		   "got ``%s'', expected ``%s''\n", prg, name,
+	    printf("%s: unexpected error while looking for `%s': "
+		   "got `%s', expected `%s'\n", prg, name,
 		   zip_strerror(z), expected);
 	    return 1;
 	}
@@ -127,7 +129,7 @@ find_success(struct zip *z, const char *name, int flags)
 {
 
     if (zip_name_locate(z, name, flags) < 0) {
-	printf("%s: unexpected error while looking for ``%s'': %s\n",
+	printf("%s: unexpected error while looking for `%s': %s\n",
 	       prg, name, zip_strerror(z));
 	return 1;
     }

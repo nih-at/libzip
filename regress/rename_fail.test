@@ -3,4 +3,4 @@ program rename
 return 1
 args rename.zip file2 file4
 file rename.zip testcomment.zip testcomment.zip
-stdout error renaming ``file2'' to ``file4'': File already exists
+stdout error renaming `file2' to `file4': File already exists

@@ -71,7 +71,7 @@ main(int argc, char *argv[])
 	return 1;
     }
     if ((idx=zip_name_locate(za, name, 0)) < 0) {
-	printf("%s: unexpected error while looking for ``%s'': %s\n",
+	printf("%s: unexpected error while looking for `%s': %s\n",
 	       prg, name, zip_strerror(za));
 	return 1;
     }
