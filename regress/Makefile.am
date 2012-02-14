@@ -17,8 +17,6 @@ noinst_PROGRAMS= \
 	set_compression \
 	tryopen
 
-EXTRA_PROGRAMS=deltest
-
 EXTRA_DIST= \
 	CMakeLists.txt \
 	runtest \
