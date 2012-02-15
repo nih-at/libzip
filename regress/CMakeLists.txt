@@ -17,19 +17,15 @@ SET(STANDALONE_TEST_PROGRAMS
 )
 
 SET(HELPER_TEST_PROGRAMS
-  get_num_entries
   rename
   set_compression
   tryopen
 )
 
 SET(EXTRA_TESTS
-  get_num_entries_0.test
-  get_num_entries_0b.test
-  get_num_entries_4.test
-  get_num_entries_70000.test
   open_cons_extrabytes.test
   open_empty.test
+  open_empty_2.test
   open_extrabytes.test
   open_new_but_exists.test
   open_new_ok.test

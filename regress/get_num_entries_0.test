@@ -1,6 +1,0 @@
-# list number of entries in zip archive
-program get_num_entries
-return 0
-args testfile.txt
-file testfile.txt testfile.txt testfile.txt
-stdout 0
