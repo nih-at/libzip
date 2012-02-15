@@ -85,6 +85,7 @@ TESTS= \
 	torrent-new.test
 
 DISABLED_TESTS= \
+	open_truncate.test \
 	encoding-ascii.test \
 	encoding-cp437.test \
 	encoding-cp437-all.test \

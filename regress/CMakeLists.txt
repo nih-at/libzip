@@ -36,6 +36,7 @@ SET(EXTRA_TESTS
   open_nonarchive.test
   open_nosuchfile.test
   open_ok.test
+  open_truncate.test
   rename_fail.test
   rename_ok.test
   set_compression_deflate_to_deflate.test
