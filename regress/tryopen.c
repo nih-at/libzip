@@ -53,7 +53,8 @@ main(int argc, char *argv[])
 {
     const char *fname;
     struct zip *z;
-    int c, count, flags, ze;
+    int c, flags, ze;
+    zip_uint64_t count;
 
     flags = 0;
     prg = argv[0];
@@ -87,8 +88,8 @@ main(int argc, char *argv[])
     errno = 0;
 
     if ((z=zip_open(fname, flags, &ze)) != NULL) {
-	count = zip_get_num_files(z);
-	printf("opening `%s' succeeded, %d entries\n", fname, count);
+	count = zip_get_num_entries(z, 0);
+	printf("opening `%s' succeeded, %lld entries\n", fname, count);
 	zip_close(z);
 	return 0;
     }
