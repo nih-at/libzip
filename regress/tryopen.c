@@ -44,7 +44,7 @@
 
 const char *prg;
 
-const char *usage = "usage: %s [-cen] file\n";
+const char *usage = "usage: %s [-cent] file\n";
 
 
 
@@ -58,7 +58,7 @@ main(int argc, char *argv[])
     flags = 0;
     prg = argv[0];
 
-    while ((c=getopt(argc, argv, "cen")) != -1) {
+    while ((c=getopt(argc, argv, "cent")) != -1) {
 	switch (c) {
 	case 'c':
 	    flags |= ZIP_CHECKCONS;
@@ -68,6 +68,9 @@ main(int argc, char *argv[])
 	    break;
 	case 'n':
 	    flags |= ZIP_CREATE;
+	    break;
+	case 't':
+	    flags |= ZIP_TRUNCATE;
 	    break;
 
 	default:
