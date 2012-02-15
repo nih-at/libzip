@@ -28,6 +28,7 @@
 ^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/get_comment$
+^regress/get_num_entries$
 ^regress/name_locate$
 ^regress/rename$
 ^regress/set_comment_all$

@@ -8,6 +8,7 @@ noinst_PROGRAMS= \
 	fopen_unchanged \
 	fread \
 	get_comment \
+	get_num_entries \
 	name_locate \
 	rename \
 	set_comment_all \
@@ -55,6 +56,10 @@ TESTS= \
 	fopen_unchanged.test \
 	fread.test \
 	get_comment.test \
+	get_num_entries_0.test \
+	get_num_entries_0b.test \
+	get_num_entries_4.test \
+	get_num_entries_70000.test \
 	name_locate.test \
 	open_cons_extrabytes.test \
 	open_empty.test \

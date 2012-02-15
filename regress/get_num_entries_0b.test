@@ -1,0 +1,6 @@
+# list number of entries in zip archive
+program get_num_entries
+return 0
+args testempty.arg
+file testempty.arg testempty.zip testempty.zip
+stdout 0

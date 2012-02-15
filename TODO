@@ -118,7 +118,6 @@ Test Case Issues
 * (fopen_index)
 	illegal index
 * (get_name)
-* (get_num_files)
 * (rename)
 * (replace)
 * (source_buffer)

@@ -1,0 +1,6 @@
+# list number of entries in zip archive
+program get_num_entries
+return 0
+args testcomment.zip
+file testcomment.zip testcomment.zip testcomment.zip
+stdout 4
