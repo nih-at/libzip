@@ -70,6 +70,7 @@ SET(LIBZIP_SOURCES
   zip_error_to_str.c
   zip_fclose.c
   zip_fdopen.c
+  zip_set_file_compression.c
   zip_file_error_clear.c
   zip_file_error_get.c
   zip_file_get_offset.c
