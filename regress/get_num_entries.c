@@ -34,11 +34,6 @@
 
 
 #include <errno.h>
-#if 0
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#endif
 
 #include "zip.h"
 
