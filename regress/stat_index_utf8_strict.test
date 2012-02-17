@@ -1,0 +1,15 @@
+# follow strict rules and convert UTF-8 as if it was CP437
+# XXX: ignores UTF-8 flag here!
+program stat_index
+args -s test-utf8.zip 0
+return 0
+file test-utf8.zip test-utf8.zip test-utf8.zip
+stdout name: `├ä├û├£├ñ├╢├╝├ƒ─ç├º─ë├⌐├¿├¬├½─ô'
+stdout index: `0'
+stdout size: `0'
+stdout compressed size: `0'
+stdout mtime: `Fri Feb 17 23:15:08 CET 2012'
+stdout crc: `0'
+stdout compression method: `0'
+stdout encryption method: `0'
+stdout 

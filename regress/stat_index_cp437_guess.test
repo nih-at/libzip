@@ -1,8 +1,8 @@
 # guess CP437 file names and autoconvert them
 program stat_index
-args cp437.zip 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+args test-cp437.zip 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
 return 0
-file cp437.zip cp437.zip cp437.zip
+file test-cp437.zip test-cp437.zip test-cp437.zip
 stdout name: `☺☻♥♦♣♠•○◘◙♂♀♪♫☼►'
 stdout index: `0'
 stdout size: `0'

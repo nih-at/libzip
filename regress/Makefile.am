@@ -27,6 +27,8 @@ EXTRA_DIST= \
 	manyfiles.zip \
 	rename_ok.zip \
 	test.zip \
+	test-cp437.zip \
+	test-utf8.zip \
 	testbuffer.zip \
 	testdir.zip \
 	testchanged.zip \
@@ -81,6 +83,9 @@ TESTS= \
 	stat_index_cp437_guess.test \
 	stat_index_cp437_raw.test \
 	stat_index_cp437_strict.test \
+	stat_index_utf8_guess.test \
+	stat_index_utf8_raw.test \
+	stat_index_utf8_strict.test \
 	torrent-already.test \
 	torrent-new.test
 
