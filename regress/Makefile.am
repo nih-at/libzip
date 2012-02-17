@@ -29,6 +29,7 @@ EXTRA_DIST= \
 	test.zip \
 	test-cp437.zip \
 	test-utf8.zip \
+	test-utf8-unmarked.zip \
 	testbuffer.zip \
 	testdir.zip \
 	testchanged.zip \
@@ -86,6 +87,7 @@ TESTS= \
 	stat_index_utf8_guess.test \
 	stat_index_utf8_raw.test \
 	stat_index_utf8_strict.test \
+	stat_index_utf8_unmarked_strict.test \
 	torrent-already.test \
 	torrent-new.test
 

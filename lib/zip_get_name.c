@@ -77,6 +77,11 @@ _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
     if (flags & ZIP_FL_NAME_RAW)
 	return ret;
 
+    /* file name already is UTF-8? */
+    if (za->cdir->entry[idx].bitflags & ZIP_GPBF_ENCODING_UTF_8)
+	return ret;
+
+    /* undeclared, start guessing */
     if (za->cdir->entry[idx].fn_type == ZIP_ENCODING_UNKNOWN)
 	za->cdir->entry[idx].fn_type = _zip_guess_encoding(ret, strlen(ret));
 
