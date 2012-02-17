@@ -162,6 +162,8 @@ _zip_cdir_write(struct zip_cdir *cd, FILE *fp, struct zip_error *error)
 void
 _zip_dirent_finalize(struct zip_dirent *zde)
 {
+    free(zde->filename_converted);
+    zde->filename_converted = NULL;
     free(zde->settable.filename);
     zde->settable.filename = NULL;
     free(zde->settable.extrafield);
@@ -193,6 +195,8 @@ _zip_dirent_init(struct zip_dirent *de)
     de->int_attrib = 0;
     de->ext_attrib = 0;
     de->offset = 0;
+    de->fn_type = ZIP_ENCODING_UNKNOWN;
+    de->filename_converted = NULL;
 }
 
 
@@ -255,9 +259,10 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     }
     cur += 4;
 
-    
+
     /* convert buffercontents to zip_dirent */
-    
+
+    _zip_dirent_init(zde);
     if (!local)
 	zde->version_madeby = _zip_read2(&cur);
     else

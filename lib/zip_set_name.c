@@ -51,6 +51,11 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
 	return -1;
     }
 
+    if (_zip_guess_encoding(name, strlen(name)) == ZIP_ENCODING_CP437) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
     if ((i=_zip_name_locate(za, name, 0, NULL)) != -1 && i != idx) {
 	_zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
 	return -1;

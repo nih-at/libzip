@@ -1,5 +1,5 @@
 .\" zip_get_name.mdoc \-- get name of file by index
-.\" Copyright (C) 2003, 2004, 2005 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_GET_NAME 3 "January 20, 2005" NiH
+.TH ZIP_GET_NAME 3 "February 15, 2012" NiH
 .SH "NAME"
 zip_get_name \- get name of file by index
 .SH "LIBRARY"
@@ -46,6 +46,11 @@ function returns the name of the file at position
 \fBindex\fR
 in
 \fBarchive.\fR
+The name is in UTF-8 encoding unless
+\fBZIP_FL_NAME_RAW\fR
+was specified (see below).
+(ASCII is a subset of UTF-8.)
+.PP
 If
 \fBflags\fR
 is set to
@@ -54,6 +59,24 @@ the original unchanged filename is returned.
 The returned string must not be modified or freed, and becomes invalid when
 \fBarchive\fR
 is closed.
+.PP
+Additionally, the following flags are supported:
+.RS
+.TP 22
+\fBZIP_FL_NAME_RAW\fR
+Return the unmodified names as it is in the ZIP archive.
+.TP 22
+\fBZIP_FL_NAME_GUESS\fR
+(Default.)
+Guess the encoding of the name in the ZIP archive and convert it
+to UTF-8, if necessary.
+.TP 22
+\fBZIP_FL_NAME_STRICT\fR
+Follow the ZIP specification and expect CP-437 encoded names in
+the ZIP archive.
+(ASCII is a subset of CP-437.)
+Convert it to UTF-8.
+.RE
 .SH "RETURN VALUES"
 Upon successful completion, a pointer to the name is returned.
 Otherwise,
@@ -82,6 +105,9 @@ or
 points to an added file and
 \fBZIP_FL_UNCHANGED\fR
 is set.
+.TP 4
+[ZIP_ER_MEMORY]
+Required memory could not be allocated.
 .RE
 .SH "SEE ALSO"
 libzip(3),

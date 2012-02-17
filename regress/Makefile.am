@@ -15,6 +15,7 @@ noinst_PROGRAMS= \
 	set_comment_removeglobal \
 	set_comment_revert \
 	set_compression \
+	stat_index \
 	tryopen
 
 EXTRA_DIST= \
@@ -77,6 +78,9 @@ TESTS= \
 	set_compression_store_to_deflate.test \
 	set_compression_store_to_store.test \
 	set_compression_unknown.test \
+	stat_index_cp437_guess.test \
+	stat_index_cp437_raw.test \
+	stat_index_cp437_strict.test \
 	torrent-already.test \
 	torrent-new.test
 

@@ -1,6 +1,6 @@
 /*
   zip_get_name.c -- get filename for a file in zip file
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -49,6 +49,10 @@ const char *
 _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
 	      struct zip_error *error)
 {
+    enum zip_encoding_type enc;
+    const char *ret;
+
+    ret = NULL;
     if (idx >= za->nentry) {
 	_zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
@@ -60,13 +64,28 @@ _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
 	    return NULL;
 	}
 	if (za->entry[idx].changes.valid & ZIP_DIRENT_FILENAME)
-	    return za->entry[idx].changes.filename;
+	    return za->entry[idx].changes.filename; /* must be UTF-8 */
     }
 
+    /* XXX: read Infozip UTF-8 Extension 0x7075 file name? */
     if (za->cdir == NULL || idx >= za->cdir->nentry) {
 	_zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
-    
-    return za->cdir->entry[idx].settable.filename;
+    ret = za->cdir->entry[idx].settable.filename;
+
+    if (flags & ZIP_FL_NAME_RAW)
+	return ret;
+
+    if (za->cdir->entry[idx].fn_type == ZIP_ENCODING_UNKNOWN)
+	za->cdir->entry[idx].fn_type = _zip_guess_encoding(ret, strlen(ret));
+
+    if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->entry[idx].fn_type != ZIP_ENCODING_ASCII))
+	|| (za->cdir->entry[idx].fn_type == ZIP_ENCODING_CP437)) {
+	if (za->cdir->entry[idx].filename_converted == NULL)
+	    za->cdir->entry[idx].filename_converted = _zip_cp437_to_utf8(ret, strlen(ret), error);
+	ret = za->cdir->entry[idx].filename_converted;
+    }
+
+    return ret;
 }

@@ -73,6 +73,9 @@ extern "C" {
 #define ZIP_FL_RECOMPRESS      16 /* force recompression of data */
 #define ZIP_FL_ENCRYPTED       32 /* read encrypted data
 				     (implies ZIP_FL_COMPRESSED) */
+#define ZIP_FL_NAME_RAW        64 /* get unmodified name */
+#define ZIP_FL_NAME_GUESS     128 /* guess name encoding */
+#define ZIP_FL_NAME_STRICT    256 /* follow specification strictly */
 
 /* archive global flags flags */
 
@@ -168,6 +171,7 @@ extern "C" {
 
 /* encoding type */
 enum zip_encoding_type {
+    ZIP_ENCODING_UNKNOWN, /* not yet analyzed */
     ZIP_ENCODING_ASCII,   /* plain ASCII */
     ZIP_ENCODING_UTF8,    /* possibly UTF-8 */
     ZIP_ENCODING_CP437    /* Code Page 437 */

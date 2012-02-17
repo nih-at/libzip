@@ -1,5 +1,5 @@
 .\" zip_add.mdoc \-- add files to zip archive
-.\" Copyright (C) 2004-2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2004-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ADD 3 "March 10, 2009" NiH
+.TH ZIP_ADD 3 "February 18, 2012" NiH
 .SH "NAME"
 zip_add , \- .Nm zip_replace
 add file to zip archive or replace file in zip archive
@@ -110,6 +110,9 @@ are
 or
 \fBindex\fR
 is invalid.
+This error is also returned when
+\fBname\fR
+is not a valid UTF-8 encoded string.
 .TP 4
 [ZIP_ER_MEMORY]
 Required memory could not be allocated.

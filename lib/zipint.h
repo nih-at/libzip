@@ -257,7 +257,9 @@ struct zip_dirent {
     unsigned short disk_number;		/* (c)  disk number start */
     unsigned short int_attrib;		/* (c)  internal file attributes */
     unsigned int ext_attrib;		/* (c)  external file attributes */
-    unsigned int offset;		/* (c)  offset of local header  */
+    unsigned int offset;		/* (c)  offset of local header */
+    unsigned short fn_type;		/*      encoding (autorecognition) */
+    char *filename_converted;		/*      file name (autoconverted) */
     struct zip_dirent_settable settable;
 };
 

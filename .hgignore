@@ -35,6 +35,7 @@
 ^regress/set_comment_removeglobal$
 ^regress/set_comment_revert$
 ^regress/set_compression$
+^regress/stat_index$
 ^regress/tryopen$
 ^src/zipcmp$
 ^src/zipmerge$

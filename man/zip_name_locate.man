@@ -1,5 +1,5 @@
 .\" zip_name_locate.mdoc \-- get index of file by name
-.\" Copyright (C) 2003, 2005 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_NAME_LOCATE 3 "October 4, 2006" NiH
+.TH ZIP_NAME_LOCATE 3 "February 15, 2012" NiH
 .SH "NAME"
 zip_name_locate \- get index of file by name
 .SH "LIBRARY"
@@ -58,9 +58,25 @@ the following values, or 0 for none of them.
 .TP 15
 \fBZIP_FL_NOCASE\fR
 Ignore case distinctions.
+(Will only work well if the file names are ASCII.)
 .TP 15
 \fBZIP_FL_NODIR\fR
 Ignore directory part of file name in archive.
+.TP 15
+\fBZIP_FL_NAME_RAW\fR
+Compare against the unmodified names as it is in the ZIP archive.
+.TP 15
+\fBZIP_FL_NAME_GUESS\fR
+(Default.)
+Guess the encoding of the name in the ZIP archive and convert it
+to UTF-8, if necessary, before comparing.
+.TP 15
+\fBZIP_FL_NAME_STRICT\fR
+Follow the ZIP specification and expect CP-437 encoded names in
+the ZIP archive.
+(ASCII is a subset of CP-437.)
+Convert it to UTF-8 before comparing.
+.RE
 .RE
 .SH "RETURN VALUES"
 zip_name_locate
@@ -70,15 +86,21 @@ or \-1, if
 \fBarchive\fR
 does not contain an entry of that name.
 .SH "ERRORS"
-The
 zip_name_locate
-function fails and sets the error information to
-ZIP_ER_NOENT
-if no entry of the name
+fails if:
+.RS
+.TP 4
+[ZIP_ER_NOENT]
+No entry of the name
 \fBfname\fR
 is found in the archive.
-If one of the arguments is invalid, the error information is set to
-ZIP_ER_INVAL.
+.TP 4
+[ZIP_ER_INVAL]
+One of the arguments is invalid.
+.TP 4
+[ZIP_ER_MEMORY]
+Required memory could not be allocated.
+.RE
 .SH "SEE ALSO"
 libzip(3),
 zip_get_name(3)
