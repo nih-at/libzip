@@ -126,7 +126,7 @@ _zip_guess_encoding(const zip_uint8_t * const name, zip_uint32_t len)
 
     ret = ZIP_ENCODING_ASCII;
     for (i=0; i<len; i++) {
-	if (name[i] < 128)
+	if (name[i] > 31 && name[i] < 128)
 	    continue;
 
 	ret = ZIP_ENCODING_UTF8;
