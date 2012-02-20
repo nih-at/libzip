@@ -40,5 +40,8 @@
 ZIP_EXTERN void
 zip_error_clear(struct zip *za)
 {
+    if (za == NULL)
+	return;
+
     _zip_error_clear(&za->error);
 }

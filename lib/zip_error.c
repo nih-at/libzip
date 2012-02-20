@@ -42,6 +42,9 @@
 void
 _zip_error_clear(struct zip_error *err)
 {
+    if (err == NULL)
+	return;
+
     err->zip_err = ZIP_ER_OK;
     err->sys_err = 0;
 }
