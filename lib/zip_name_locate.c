@@ -72,12 +72,7 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 
     n = (flags & ZIP_FL_UNCHANGED) ? za->cdir->nentry : za->nentry;
     for (i=0; i<n; i++) {
-#if 0
-	if (flags & ZIP_FL_UNCHANGED)
-	    fn = za->cdir->entry[i].settable.filename;
-	else
-#endif
-	    fn = _zip_get_name(za, i, flags, error);
+	fn = _zip_get_name(za, i, flags, error);
 
 	/* newly added (partially filled) entry or error */
 	if (fn == NULL)
@@ -89,8 +84,10 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 		fn = p+1;
 	}
 
-	if (cmp(fname, fn) == 0)
-	    return i; /* XXX: clear error before returning? */
+	if (cmp(fname, fn) == 0) {
+	    _zip_error_clear(error);
+	    return i;
+	}
     }
 
     _zip_error_set(error, ZIP_ER_NOENT, 0);
