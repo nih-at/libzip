@@ -1,0 +1,6 @@
+# rename file to UTF-8 name in zip archive with CP437 comment (fails)
+program modify
+return 0
+args testfile rename 0 ÄÖÜßäöü
+file testfile test-cp437-fc.zip test-cp437-fc.zip
+stderr can't rename file at index `0' to `ÄÖÜßäöü': Encoding of name and comment do not match

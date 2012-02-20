@@ -46,6 +46,7 @@ SET(EXTRA_TESTS
   rename_fail.test
   rename_ok.test
   rename_utf8.test
+  rename_utf8_encmismatch.test
   set_compression_deflate_to_deflate.test
   set_compression_deflate_to_store.test
   set_compression_store_to_deflate.test

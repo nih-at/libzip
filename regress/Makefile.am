@@ -29,6 +29,7 @@ EXTRA_DIST= \
 	rename_ok.zip \
 	test.zip \
 	test-cp437.zip \
+	test-cp437-fc.zip \
 	test-utf8.zip \
 	test-utf8-unmarked.zip \
 	testbuffer.zip \
@@ -83,6 +84,7 @@ TESTS= \
 	rename_fail.test \
 	rename_ok.test \
 	rename_utf8.test \
+	rename_utf8_encmismatch.test \
 	set_comment_all.test \
 	set_comment_localonly.test \
 	set_comment_removeglobal.test \
