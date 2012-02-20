@@ -70,7 +70,7 @@ Bugs
 * zip_open: consistency check: check data descriptor
 * POSIX: zip_open: check whether file can be created and fail if not
 * POSIX: fix permissions of new file to match old one
-
+* fix inconsistent usage of valid flags (not checked in many places)
 
 Cleanup
 =======
@@ -89,7 +89,6 @@ Test Case Issues
 ================
 * test calls against old API
 * run regression tests also from CMake framework
-* rename deleted (fails)
 * rename file to dir/ and vice versa (fails)
 * fix comment test to be newline insensitive
 
