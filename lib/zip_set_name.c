@@ -1,6 +1,6 @@
 /*
   zip_set_name.c -- rename helper function
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -44,14 +44,17 @@ int
 _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
 {
     char *s;
+    const char *com;
+    int comlen;
     zip_int64_t i;
+    enum zip_encoding_type enc, com_enc;
     
     if (idx >= za->nentry || name == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
-    if (_zip_guess_encoding(name, strlen(name)) == ZIP_ENCODING_CP437) {
+    if ((enc=_zip_guess_encoding(name, strlen(name))) == ZIP_ENCODING_CP437) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
@@ -64,7 +67,17 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
     /* no effective name change */
     if (i == idx)
 	return 0;
-    
+
+    com = zip_get_file_comment(za, idx, &comlen, 0);
+    if (com == NULL)
+	com_enc = ZIP_ENCODING_ASCII;
+    else
+	com_enc = _zip_guess_encoding(com, comlen);
+    if (com_enc == ZIP_ENCODING_CP437 && enc == ZIP_ENCODING_UTF8) {
+	_zip_error_set(&za->error, ZIP_ER_ENCMISMATCH, 0);
+	return -1;
+    }
+
     if ((s=strdup(name)) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;

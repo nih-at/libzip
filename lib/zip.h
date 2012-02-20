@@ -3,7 +3,7 @@
 
 /*
   zip.h -- exported declarations.
-  Copyright (C) 1999-2011 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -119,6 +119,7 @@ extern "C" {
 #define ZIP_ER_RDONLY        25  /* N Read-only archive */ 
 #define ZIP_ER_NOPASSWD      26  /* N No password provided */
 #define ZIP_ER_WRONGPASSWD   27  /* N Wrong password provided */
+#define ZIP_ER_ENCMISMATCH   28  /* N Encoding of name and comment do not match */
 
 /* type of system error value */
 

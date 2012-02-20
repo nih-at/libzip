@@ -61,6 +61,7 @@ _zip_cdir_free(struct zip_cdir *cd)
     for (i=0; i<cd->nentry; i++)
 	_zip_dirent_finalize(cd->entry+i);
     free(cd->comment);
+    free(cd->comment_converted);
     free(cd->entry);
     free(cd);
 }
@@ -119,6 +120,8 @@ _zip_cdir_new(int nentry, struct zip_error *error)
     cd->size = cd->offset = 0;
     cd->comment = NULL;
     cd->comment_len = 0;
+    cd->comment_type = ZIP_ENCODING_UNKNOWN;
+    cd->comment_converted = NULL;
 
     return cd;
 }
@@ -164,6 +167,8 @@ _zip_dirent_finalize(struct zip_dirent *zde)
 {
     free(zde->filename_converted);
     zde->filename_converted = NULL;
+    free(zde->comment_converted);
+    zde->comment_converted = NULL;
     free(zde->settable.filename);
     zde->settable.filename = NULL;
     free(zde->settable.extrafield);
@@ -197,6 +202,8 @@ _zip_dirent_init(struct zip_dirent *de)
     de->offset = 0;
     de->fn_type = ZIP_ENCODING_UNKNOWN;
     de->filename_converted = NULL;
+    de->fc_type = ZIP_ENCODING_UNKNOWN;
+    de->comment_converted = NULL;
 }
 
 
@@ -270,6 +277,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     zde->version_needed = _zip_read2(&cur);
     zde->bitflags = _zip_read2(&cur);
     zde->settable.comp_method = _zip_read2(&cur);
+    zde->settable.valid |= ZIP_DIRENT_COMP_METHOD;
     
     /* convert to time_t */
     dostime = _zip_read2(&cur);
@@ -355,6 +363,12 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     }
     if (strlen(zde->settable.filename) != filename_len)
 	return -1;
+    zde->settable.valid |= ZIP_DIRENT_FILENAME;
+
+    if (zde->settable.comment_len)
+	zde->settable.valid |= ZIP_DIRENT_COMMENT;
+    if (zde->settable.extrafield_len)
+	zde->settable.valid |= ZIP_DIRENT_EXTRAFIELD;
 
     if (bufp)
       *bufp = cur;
@@ -406,6 +420,7 @@ _zip_dirent_torrent_normalize(struct zip_dirent *de)
     de->version_needed = 20; /* 2.0 */
     de->bitflags = 2; /* maximum compression */
     de->settable.comp_method = ZIP_CM_DEFLATE;
+    de->settable.valid |= ZIP_DIRENT_COMP_METHOD;
     de->last_mod = last_mod;
 
     de->disk_number = 0;
@@ -419,6 +434,7 @@ _zip_dirent_torrent_normalize(struct zip_dirent *de)
     free(de->settable.comment);
     de->settable.comment = NULL;
     de->settable.comment_len = 0;
+    de->settable.valid &= ~(ZIP_DIRENT_COMMENT|ZIP_DIRENT_EXTRAFIELD);
 }
 
 

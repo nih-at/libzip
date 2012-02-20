@@ -33,6 +33,8 @@
 
 
 
+#include <string.h>
+
 #include "zipint.h"
 
 

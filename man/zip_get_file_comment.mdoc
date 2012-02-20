@@ -1,5 +1,5 @@
 .\" zip_get_file_comment.mdoc -- get comment for file in zip
-.\" Copyright (C) 2006-2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd March 10, 2009
+.Dd February 20, 2012
 .Dt ZIP_GET_FILE_COMMENT 3
 .Os
 .Sh NAME
@@ -47,8 +47,14 @@ The
 function returns the comment for the file at position
 .Ar index
 in the zip archive.
+The name is in UTF-8 encoding unless
+.Dv ZIP_FL_NAME_RAW
+was specified (see below).
 This pointer should not be modified or
-.Xr free 3 Ap d .
+.Xr free 3 Ap d ,
+and becomes invalid when
+.Ar archive
+is closed.
 If
 .Ar lenp
 is not
@@ -60,6 +66,21 @@ If
 is set to
 .Dv ZIP_FL_UNCHANGED ,
 the original unchanged comment is returned.
+.Pp
+Additionally, the following flags are supported:
+.Bl -tag -width ZIP_FL_NAME_STRICTXX -offset indent
+.It Dv ZIP_FL_NAME_RAW
+Return the unmodified comment as it is in the ZIP archive.
+.It Dv ZIP_FL_NAME_GUESS
+(Default.)
+Guess the encoding of the comment in the ZIP archive and convert it
+to UTF-8, if necessary.
+.It Dv ZIP_FL_NAME_STRICT
+Follow the ZIP specification for file names and extend it to file comments,
+expecting them to be encoded in CP-437 in the ZIP archive.
+(ASCII is a subset of CP-437.)
+Convert it to UTF-8.
+.El
 .Sh RETURN VALUES
 Upon successful completion, a pointer to the comment is returned,
 or

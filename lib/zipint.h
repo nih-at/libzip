@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2011 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -259,21 +259,25 @@ struct zip_dirent {
     unsigned short int_attrib;		/* (c)  internal file attributes */
     unsigned int ext_attrib;		/* (c)  external file attributes */
     unsigned int offset;		/* (c)  offset of local header */
-    unsigned short fn_type;		/*      encoding (autorecognition) */
+    unsigned short fn_type;		/*      file name encoding (autorecognition) */
     char *filename_converted;		/*      file name (autoconverted) */
+    unsigned short fc_type;		/*      file comment encoding (autorecognition) */
+    char *comment_converted;		/*      file comment (autoconverted) */
     struct zip_dirent_settable settable;
 };
 
 /* zip archive central directory */
 
 struct zip_cdir {
-    struct zip_dirent *entry;	/* directory entries */
-    int nentry;			/* number of entries */
+    struct zip_dirent *entry;	 /* directory entries */
+    int nentry;			 /* number of entries */
 
-    unsigned int size;		/* size of central direcotry */
-    unsigned int offset;	/* offset of central directory in file */
-    char *comment;		/* zip archive comment */
-    unsigned short comment_len;	/* length of zip archive comment */
+    unsigned int size;		 /* size of central direcotry */
+    unsigned int offset;	 /* offset of central directory in file */
+    char *comment;		 /* zip archive comment */
+    unsigned short comment_len;	 /* length of zip archive comment */
+    unsigned short comment_type; /* archive comment encoding (autorecognition) */
+    char *comment_converted;     /* archive comment (autoconverted) */
 };
 
 

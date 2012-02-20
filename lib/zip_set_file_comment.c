@@ -1,6 +1,6 @@
 /*
   zip_set_file_comment.c -- set comment for file in archive
-  Copyright (C) 2006-2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -34,6 +34,7 @@
 
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "zipint.h"
 
@@ -44,6 +45,8 @@ zip_set_file_comment(struct zip *za, zip_uint64_t idx,
 		     const char *comment, int len)
 {
     char *tmpcom;
+    const char *name;
+    enum zip_encoding_type com_enc, enc;
 
     if (idx >= za->nentry
 	|| len < 0 || len > MAXCOMLEN
@@ -54,6 +57,20 @@ zip_set_file_comment(struct zip *za, zip_uint64_t idx,
 
     if (ZIP_IS_RDONLY(za)) {
 	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
+
+    if ((com_enc=_zip_guess_encoding(comment, len)) == ZIP_ENCODING_CP437) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
+    if ((name=zip_get_name(za, idx, 0)) == NULL)
+	return -1;
+    enc = _zip_guess_encoding(name, strlen(name));
+
+    if (enc == ZIP_ENCODING_CP437 && com_enc == ZIP_ENCODING_UTF8) {
+	_zip_error_set(&za->error, ZIP_ER_ENCMISMATCH, 0);
 	return -1;
     }
 

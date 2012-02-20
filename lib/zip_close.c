@@ -82,6 +82,7 @@ zip_close(struct zip *za)
     struct filelist *filelist;
     int reopen_on_error;
     int new_torrentzip;
+    enum zip_encoding_type com_enc, enc;
 
     reopen_on_error = 0;
 
@@ -185,15 +186,8 @@ zip_close(struct zip *za)
 
 	    /* set/update file name */
 	    if ((za->entry[i].changes.valid & ZIP_DIRENT_FILENAME) == 0) {
-		if (za->entry[i].state == ZIP_ST_ADDED) {
-		    /* XXX: this can't happen, remove code */
-		    de.settable.filename = strdup("-");
-		    cd->entry[j].settable.filename = "-";
-		}
-		else {
-		    de.settable.filename = strdup(za->cdir->entry[i].settable.filename);
-		    cd->entry[j].settable.filename = za->cdir->entry[i].settable.filename;
-		}
+		de.settable.filename = strdup(za->cdir->entry[i].settable.filename);
+		cd->entry[j].settable.filename = za->cdir->entry[i].settable.filename;
 		de.settable.valid |= ZIP_DIRENT_FILENAME;
 		cd->entry[j].settable.valid |= ZIP_DIRENT_FILENAME;
 	    }
@@ -255,6 +249,17 @@ zip_close(struct zip *za)
 	    cd->entry[j].settable.comment = za->entry[i].changes.comment;
 	    cd->entry[j].settable.comment_len = za->entry[i].changes.comment_len;
 	}
+
+	/* set general purpose bit flag for file name/comment encoding */
+	enc = _zip_guess_encoding(de.settable.filename, strlen(de.settable.filename));
+	com_enc = _zip_guess_encoding(cd->entry[i].settable.comment, cd->entry[i].settable.comment_len);
+	if ((enc == ZIP_ENCODING_UTF8  && com_enc == ZIP_ENCODING_ASCII) ||
+	    (enc == ZIP_ENCODING_ASCII && com_enc == ZIP_ENCODING_UTF8 ) ||
+	    (enc == ZIP_ENCODING_UTF8  && com_enc == ZIP_ENCODING_UTF8 ))
+	    de.bitflags |= ZIP_GPBF_ENCODING_UTF_8;
+	else
+	    de.bitflags &= ~ZIP_GPBF_ENCODING_UTF_8;
+	cd->entry[i].bitflags = de.bitflags;
 
 	cd->entry[j].offset = ftello(out);
 

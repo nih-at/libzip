@@ -1,6 +1,6 @@
 /*
   zip_get_archive_comment.c -- get archive comment
-  Copyright (C) 2006-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,6 +33,8 @@
 
 
 
+#include <string.h>
+
 #include "zipint.h"
 
 
@@ -40,12 +42,31 @@
 ZIP_EXTERN const char *
 zip_get_archive_comment(struct zip *za, int *lenp, int flags)
 {
+    const char *ret;
     if ((flags & ZIP_FL_UNCHANGED)
 	|| (za->ch_comment_len == -1)) {
 	if (za->cdir) {
 	    if (lenp != NULL)
 		*lenp = za->cdir->comment_len;
-	    return za->cdir->comment;
+	    ret = za->cdir->comment;
+	    
+	    if (flags & ZIP_FL_NAME_RAW)
+		return ret;
+
+	    /* start guessing */
+	    if (za->cdir->comment_type == ZIP_ENCODING_UNKNOWN)
+		za->cdir->comment_type = _zip_guess_encoding(ret, za->cdir->comment_len);
+
+	    if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->comment_type != ZIP_ENCODING_ASCII))
+		|| (za->cdir->comment_type == ZIP_ENCODING_CP437)) {
+		if (za->cdir->comment_converted == NULL)
+		    za->cdir->comment_converted = _zip_cp437_to_utf8(ret, za->cdir->comment_len, &za->error);
+		ret = za->cdir->comment_converted;
+		if (lenp != NULL)
+		    *lenp = strlen(ret);
+	    }
+
+	    return ret;
 	}
 	else {
 	    if (lenp != NULL)
@@ -53,7 +74,8 @@ zip_get_archive_comment(struct zip *za, int *lenp, int flags)
 	    return NULL;
 	}
     }
-    
+
+    /* already UTF-8, no conversion needed */
     if (lenp != NULL)
 	*lenp = za->ch_comment_len;
     return za->ch_comment;
