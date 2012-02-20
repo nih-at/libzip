@@ -107,7 +107,6 @@ Test Case Issues
 	close
 	zipcmp copy expected
 	remove copy
-* (delete)
 * (error_get)
 * (error_get_sys_type)
 * (error_to_str)
