@@ -68,7 +68,7 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
     if (i == idx)
 	return 0;
 
-    com = zip_get_file_comment(za, idx, &comlen, 0);
+    com = zip_get_file_comment(za, idx, &comlen, ZIP_FL_NAME_RAW);
     if (com == NULL)
 	com_enc = ZIP_ENCODING_ASCII;
     else

@@ -29,6 +29,7 @@ SET(EXTRA_TESTS
   delete_last.test
   delete_multiple_last.test
   delete_multiple_partial.test
+  file_comment_encmismatch.test
   open_cons_extrabytes.test
   open_empty.test
   open_empty_2.test

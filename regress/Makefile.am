@@ -62,6 +62,7 @@ TESTS= \
 	delete_multiple_last.test \
 	delete_multiple_partial.test \
 	encrypt.test \
+	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \
 	get_comment.test \

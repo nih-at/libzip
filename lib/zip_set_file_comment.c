@@ -65,7 +65,7 @@ zip_set_file_comment(struct zip *za, zip_uint64_t idx,
 	return -1;
     }
 
-    if ((name=zip_get_name(za, idx, 0)) == NULL)
+    if ((name=zip_get_name(za, idx, ZIP_FL_NAME_RAW)) == NULL)
 	return -1;
     enc = _zip_guess_encoding(name, strlen(name));
 
