@@ -8,6 +8,7 @@ noinst_PROGRAMS= \
 	fopen_unchanged \
 	fread \
 	get_comment \
+	modify \
 	name_locate \
 	rename \
 	set_comment_all \
@@ -35,6 +36,7 @@ EXTRA_DIST= \
 	testchanged.zip \
 	testchangedlocal.zip \
 	testcomment.zip \
+	testcomment13.zip \
 	testcommentremoved.zip \
 	testdeflated.zip \
 	testempty.zip \
@@ -55,6 +57,10 @@ TESTS= \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_zip.test \
+	delete_invalid.test \
+	delete_last.test \
+	delete_multiple_last.test \
+	delete_multiple_partial.test \
 	encrypt.test \
 	fopen_unchanged.test \
 	fread.test \
@@ -70,8 +76,12 @@ TESTS= \
 	open_nonarchive.test \
 	open_nosuchfile.test \
 	open_ok.test \
+	rename_ascii.test \
+	rename_cp437.test \
+	rename_deleted.test \
 	rename_fail.test \
 	rename_ok.test \
+	rename_utf8.test \
 	set_comment_all.test \
 	set_comment_localonly.test \
 	set_comment_removeglobal.test \

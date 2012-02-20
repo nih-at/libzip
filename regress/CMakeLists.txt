@@ -17,6 +17,7 @@ SET(STANDALONE_TEST_PROGRAMS
 )
 
 SET(HELPER_TEST_PROGRAMS
+  modify
   rename
   set_compression
   stat_index
@@ -24,6 +25,10 @@ SET(HELPER_TEST_PROGRAMS
 )
 
 SET(EXTRA_TESTS
+  delete_invalid.test
+  delete_last.test
+  delete_multiple_last.test
+  delete_multiple_partial.test
   open_cons_extrabytes.test
   open_empty.test
   open_empty_2.test
@@ -34,8 +39,12 @@ SET(EXTRA_TESTS
   open_nosuchfile.test
   open_ok.test
   open_truncate.test
+  rename_ascii.test
+  rename_cp437.test
+  rename_deleted.test
   rename_fail.test
   rename_ok.test
+  rename_utf8.test
   set_compression_deflate_to_deflate.test
   set_compression_deflate_to_store.test
   set_compression_store_to_deflate.test
