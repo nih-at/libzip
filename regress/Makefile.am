@@ -28,6 +28,7 @@ EXTRA_DIST= \
 	manyfiles.zip \
 	rename_ok.zip \
 	test.zip \
+	test2.zip \
 	test-cp437.zip \
 	test-cp437-fc.zip \
 	test-utf8.zip \
@@ -58,10 +59,12 @@ TESTS= \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_zip.test \
+	delete_add_same.test \
 	delete_invalid.test \
 	delete_last.test \
 	delete_multiple_last.test \
 	delete_multiple_partial.test \
+	delete_renamed_rename.test \
 	encrypt.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \

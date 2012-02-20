@@ -25,10 +25,12 @@ SET(HELPER_TEST_PROGRAMS
 )
 
 SET(EXTRA_TESTS
+  delete_add_same.test
   delete_invalid.test
   delete_last.test
   delete_multiple_last.test
   delete_multiple_partial.test
+  delete_renamed_rename.test
   file_comment_encmismatch.test
   open_cons_extrabytes.test
   open_empty.test
