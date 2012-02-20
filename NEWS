@@ -1,5 +1,6 @@
 0.xx [20xx/xx/xx]
 
+* Add UTF-8 support for file names, file comments, and archive comments
 * Added zip_discard()
 * Added ZIP_TRUNCATE for zip_open()
 * Added zip_set_compression()
