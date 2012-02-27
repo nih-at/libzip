@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd January 17, 2012
+.Dd February 27, 2012
 .Dt ZIP_SET_FILE_COMPRESSION 3
 .Os
 .Sh NAME
@@ -41,7 +41,7 @@ libzip (-lzip)
 .In zip.h
 .Ft int
 .Fn zip_set_file_compression "struct zip *archive" "zip_uint64_t index" \
-"zip_uint16_t comp" "zip_uint32_t comp_flags"
+"zip_int32_t comp" "zip_uint32_t comp_flags"
 .Sh DESCRIPTION
 The
 .Fn zip_set_file_compression

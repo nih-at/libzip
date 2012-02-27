@@ -39,7 +39,7 @@
 
 ZIP_EXTERN int
 zip_set_file_compression(struct zip *za, zip_uint64_t idx,
-			 zip_uint16_t method, zip_uint32_t flags)
+			 zip_int32_t method, zip_uint32_t flags)
 {
     if (idx >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
