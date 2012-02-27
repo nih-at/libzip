@@ -100,6 +100,8 @@ int _zip_mkstemp(char *);
 #define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"
 #define DATADES_MAGIC "PK\7\8"
+#define EOCD64LOC_MAGIC "PK\6\7"
+#define EOCD64_MAGIC  "PK\6\6"
 #define TORRENT_SIG	"TORRENTZIPPED-"
 #define TORRENT_SIG_LEN	14
 #define TORRENT_CRC_LEN 8
@@ -109,7 +111,9 @@ int _zip_mkstemp(char *);
 #define MAXCOMLEN        65536
 #define MAXEXTLEN        65536
 #define EOCDLEN             22
-#define CDBUFSIZE       (MAXCOMLEN+EOCDLEN)
+#define EOCD64LOCLEN	    20
+#define EOCD64LEN	    56
+#define CDBUFSIZE       (MAXCOMLEN+EOCDLEN+EOCD64LOCLEN)
 #define BUFSIZE		8192
 
 
@@ -328,7 +332,7 @@ int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
 
 void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
-int _zip_dirent_read(struct zip_dirent *, FILE *, unsigned char **,
+int _zip_dirent_read(struct zip_dirent *, FILE *, const unsigned char **,
 		     zip_uint32_t *, int, struct zip_error *);
 void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
@@ -371,8 +375,9 @@ int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, size_t, struct zip_error *);
 int _zip_name_locate(struct zip *, const char *, int, struct zip_error *);
 struct zip *_zip_new(struct zip_error *);
-unsigned short _zip_read2(unsigned char **);
-unsigned int _zip_read4(unsigned char **);
+zip_uint16_t _zip_read2(const unsigned char **);
+zip_uint32_t _zip_read4(const unsigned char **);
+zip_uint64_t _zip_read8(const unsigned char **);
 zip_int64_t _zip_replace(struct zip *, zip_uint64_t, const char *,
 			 struct zip_source *);
 int _zip_set_name(struct zip *, zip_uint64_t, const char *);

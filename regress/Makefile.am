@@ -82,6 +82,7 @@ TESTS= \
 	open_nosuchfile.test \
 	open_ok.test \
 	open_truncate.test \
+	open_zip64_ok.test \
 	rename_ascii.test \
 	rename_cp437.test \
 	rename_deleted.test \
