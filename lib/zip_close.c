@@ -83,20 +83,18 @@ zip_close(struct zip *za)
     int reopen_on_error;
     int new_torrentzip;
     enum zip_encoding_type com_enc, enc;
+    int changed;
 
     reopen_on_error = 0;
 
     if (za == NULL)
 	return -1;
 
-    if (!_zip_changed(za, &survivors)) {
-	zip_discard(za);
-	return 0;
-    }
+    changed = _zip_changed(za, &survivors);
 
     /* don't create zip files with no entries */
     if (survivors == 0) {
-	if (za->zn && za->zp) {
+	if (za->zn && ((za->open_flags & ZIP_TRUNCATE) || (changed && za->zp))) {
 	    if (remove(za->zn) != 0) {
 		_zip_error_set(&za->error, ZIP_ER_REMOVE, errno);
 		return -1;
@@ -105,6 +103,11 @@ zip_close(struct zip *za)
 	zip_discard(za);
 	return 0;
     }	       
+
+    if (!changed) {
+	zip_discard(za);
+	return 0;
+    }
 
     if ((filelist=(struct filelist *)malloc(sizeof(filelist[0])*survivors))
 	== NULL)

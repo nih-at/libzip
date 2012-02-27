@@ -43,7 +43,7 @@
 #include "zipint.h"
 
 static void set_error(int *, struct zip_error *, int);
-static struct zip *_zip_allocate_new(const char *, int *);
+static struct zip *_zip_allocate_new(const char *, int, int *);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
 static void _zip_check_torrentzip(struct zip *);
 static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, off_t);
@@ -66,10 +66,18 @@ zip_open(const char *fn, int flags, int *zep)
     case -1:
 	return NULL;
     case 0:
-	return _zip_allocate_new(fn, zep);
+	return _zip_allocate_new(fn, flags, zep);
     default:
-	if (flags & ZIP_TRUNCATE)
-	    return _zip_allocate_new(fn, zep);
+	if (flags & ZIP_TRUNCATE) {
+	    FILE *f;
+	    
+	    if ((f = fopen(fn, "rb")) == NULL) {
+		set_error(zep, NULL, ZIP_ER_OPEN);
+		return NULL;
+	    }
+	    fclose(f);
+	    return _zip_allocate_new(fn, flags, zep);
+	}
 	break;
     }
 
@@ -99,7 +107,7 @@ _zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
 
     /* treat empty files as empty archives */
     if (len == 0) {
-	if ((za=_zip_allocate_new(fn, zep)) == NULL)
+	if ((za=_zip_allocate_new(fn, flags, zep)) == NULL)
 	    fclose(fp);
 	else
 	    za->zp = fp;
@@ -112,7 +120,7 @@ _zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
 	return NULL;
     }
 
-    if ((za=_zip_allocate_new(fn, zep)) == NULL) {
+    if ((za=_zip_allocate_new(fn, flags, zep)) == NULL) {
 	_zip_cdir_free(cdir);
 	fclose(fp);
 	return NULL;
@@ -447,7 +455,7 @@ _zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
 
 
 static struct zip *
-_zip_allocate_new(const char *fn, int *zep)
+_zip_allocate_new(const char *fn, int flags, int *zep)
 {
     struct zip *za;
     struct zip_error error;
@@ -467,6 +475,7 @@ _zip_allocate_new(const char *fn, int *zep)
 	    return NULL;
 	}
     }
+    za->open_flags = flags;
     return za;
 }
 

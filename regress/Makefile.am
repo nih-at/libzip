@@ -81,6 +81,7 @@ TESTS= \
 	open_nonarchive.test \
 	open_nosuchfile.test \
 	open_ok.test \
+	open_truncate.test \
 	rename_ascii.test \
 	rename_cp437.test \
 	rename_deleted.test \
@@ -108,7 +109,6 @@ TESTS= \
 	torrent-new.test
 
 DISABLED_TESTS= \
-	open_truncate.test \
 	encoding-ascii.test \
 	encoding-cp437.test \
 	encoding-cp437-all.test \

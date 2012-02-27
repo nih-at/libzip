@@ -201,6 +201,7 @@ struct zip_error {
 struct zip {
     char *zn;			/* file name */
     FILE *zp;			/* file */
+    int open_flags;		/* flags passed to zip_open */
     struct zip_error error;	/* error information */
 
     unsigned int flags;		/* archive global flags */
