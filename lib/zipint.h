@@ -263,21 +263,23 @@ struct zip_dirent {
     char *filename_converted;		/*      file name (autoconverted) */
     unsigned short fc_type;		/*      file comment encoding (autorecognition) */
     char *comment_converted;		/*      file comment (autoconverted) */
+    zip_uint32_t comment_converted_len;	/*      file comment length (autoconverted) */
     struct zip_dirent_settable settable;
 };
 
 /* zip archive central directory */
 
 struct zip_cdir {
-    struct zip_dirent *entry;	 /* directory entries */
-    int nentry;			 /* number of entries */
+    struct zip_dirent *entry;	 	/* directory entries */
+    int nentry;			 	/* number of entries */
 
-    unsigned int size;		 /* size of central direcotry */
-    unsigned int offset;	 /* offset of central directory in file */
-    char *comment;		 /* zip archive comment */
-    unsigned short comment_len;	 /* length of zip archive comment */
-    unsigned short comment_type; /* archive comment encoding (autorecognition) */
-    char *comment_converted;     /* archive comment (autoconverted) */
+    unsigned int size;		 	/* size of central direcotry */
+    unsigned int offset;	 	/* offset of central directory in file */
+    char *comment;		 	/* zip archive comment */
+    unsigned short comment_len;	 	/* length of zip archive comment */
+    unsigned short comment_type; 	/* archive comment encoding (autorecognition) */
+    char *comment_converted;     	/* archive comment (autoconverted) */
+    zip_uint32_t comment_converted_len;	/* archive comment length (autoconverted) */
 };
 
 
@@ -351,7 +353,7 @@ int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 enum zip_encoding_type _zip_guess_encoding(const zip_uint8_t * const,
 					   zip_uint32_t);
 zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t,
-				struct zip_error *error);
+				zip_uint32_t *, struct zip_error *error);
 
 struct zip *_zip_open(const char *, FILE *, int, int, int *);
 

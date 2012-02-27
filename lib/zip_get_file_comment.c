@@ -77,10 +77,11 @@ zip_get_file_comment(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
 	if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->entry[idx].fc_type != ZIP_ENCODING_ASCII))
 	    || (za->cdir->entry[idx].fc_type == ZIP_ENCODING_CP437)) {
 	    if (za->cdir->entry[idx].comment_converted == NULL)
-		za->cdir->entry[idx].comment_converted = _zip_cp437_to_utf8(ret, za->cdir->entry[idx].settable.comment_len, &za->error);
+		za->cdir->entry[idx].comment_converted = _zip_cp437_to_utf8(ret, za->cdir->entry[idx].settable.comment_len,
+									    &za->cdir->entry[idx].comment_converted_len, &za->error);
 	    ret = za->cdir->entry[idx].comment_converted;
 	    if (lenp != NULL)
-		*lenp = strlen(ret);
+		*lenp = za->cdir->entry[idx].comment_converted_len;
 	}
 
 	return ret;

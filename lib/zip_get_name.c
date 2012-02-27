@@ -90,7 +90,7 @@ _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
     if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->entry[idx].fn_type != ZIP_ENCODING_ASCII))
 	|| (za->cdir->entry[idx].fn_type == ZIP_ENCODING_CP437)) {
 	if (za->cdir->entry[idx].filename_converted == NULL)
-	    za->cdir->entry[idx].filename_converted = _zip_cp437_to_utf8(ret, strlen(ret), error);
+	    za->cdir->entry[idx].filename_converted = _zip_cp437_to_utf8(ret, strlen(ret), NULL, error);
 	ret = za->cdir->entry[idx].filename_converted;
     }
 

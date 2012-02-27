@@ -197,13 +197,16 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 
 zip_uint8_t *
 _zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
-		   struct zip_error *error)
+		   zip_uint32_t *utf8_lenp, struct zip_error *error)
 {
     zip_uint8_t *utf8buf;
     zip_uint32_t buflen, i, offset;
 
-    if (len == 0)
+    if (len == 0) {
+	if (utf8_lenp)
+	    *utf8_lenp = 0;
 	return NULL;
+    }
 
     buflen = 1;
     for (i=0; i<len; i++)
@@ -220,5 +223,7 @@ _zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
 				       utf8buf+offset);
 
     utf8buf[buflen-1] = 0;
+    if (utf8_lenp)
+	*utf8_lenp = buflen-1;
     return utf8buf;
 }

@@ -60,10 +60,11 @@ zip_get_archive_comment(struct zip *za, int *lenp, int flags)
 	    if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->comment_type != ZIP_ENCODING_ASCII))
 		|| (za->cdir->comment_type == ZIP_ENCODING_CP437)) {
 		if (za->cdir->comment_converted == NULL)
-		    za->cdir->comment_converted = _zip_cp437_to_utf8(ret, za->cdir->comment_len, &za->error);
+		    za->cdir->comment_converted = _zip_cp437_to_utf8(ret, za->cdir->comment_len,
+								     &za->cdir->comment_converted_len, &za->error);
 		ret = za->cdir->comment_converted;
 		if (lenp != NULL)
-		    *lenp = strlen(ret);
+		    *lenp = za->cdir->comment_converted_len;
 	    }
 
 	    return ret;
