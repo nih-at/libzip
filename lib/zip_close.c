@@ -254,8 +254,10 @@ zip_close(struct zip *za)
 	}
 
 	/* set general purpose bit flag for file name/comment encoding */
-	enc = _zip_guess_encoding(de.settable.filename, strlen(de.settable.filename));
-	com_enc = _zip_guess_encoding(cd->entry[i].settable.comment, cd->entry[i].settable.comment_len);
+	enc = _zip_guess_encoding((zip_uint8_t *)de.settable.filename,
+				  strlen(de.settable.filename));
+	com_enc = _zip_guess_encoding((zip_uint8_t *)cd->entry[i].settable.comment,
+				      cd->entry[i].settable.comment_len);
 	if ((enc == ZIP_ENCODING_UTF8  && com_enc == ZIP_ENCODING_ASCII) ||
 	    (enc == ZIP_ENCODING_ASCII && com_enc == ZIP_ENCODING_UTF8 ) ||
 	    (enc == ZIP_ENCODING_UTF8  && com_enc == ZIP_ENCODING_UTF8 ))
