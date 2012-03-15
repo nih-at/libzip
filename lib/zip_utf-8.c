@@ -118,8 +118,9 @@ static const zip_uint16_t _cp437_to_unicode[256] = {
 
 
 enum zip_encoding_type
-_zip_guess_encoding(const zip_uint8_t * const name, zip_uint32_t len)
+_zip_guess_encoding(const char * const _name, zip_uint32_t len)
 {
+    zip_uint8_t *name = (zip_uint8_t *)_name;
     zip_uint32_t i;
     int ret;
     int j, ulen;
@@ -195,10 +196,11 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 
 
 
-zip_uint8_t *
-_zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
+char *
+_zip_cp437_to_utf8(const char * const _cp437buf, zip_uint32_t len,
 		   zip_uint32_t *utf8_lenp, struct zip_error *error)
 {
+    zip_uint8_t *cp437buf = (zip_uint8_t *)_cp437buf;
     zip_uint8_t *utf8buf;
     zip_uint32_t buflen, i, offset;
 
@@ -225,5 +227,5 @@ _zip_cp437_to_utf8(const zip_uint8_t * const cp437buf, zip_uint32_t len,
     utf8buf[buflen-1] = 0;
     if (utf8_lenp)
 	*utf8_lenp = buflen-1;
-    return utf8buf;
+    return (char *)utf8buf;
 }

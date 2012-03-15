@@ -82,7 +82,7 @@ _zip_file_new(struct zip *za)
 	return NULL;
     }
     
-    if (za->nfile >= za->nfile_alloc-1) {
+    if (za->nfile+1 >= za->nfile_alloc) {
 	n = za->nfile_alloc + 10;
 	file = (struct zip_file **)realloc(za->file,
 					   n*sizeof(struct zip_file *));

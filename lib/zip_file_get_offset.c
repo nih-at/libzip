@@ -50,7 +50,7 @@
    On error, fills in za->error and returns 0.
 */
 
-unsigned int
+zip_uint64_t
 _zip_file_get_offset(struct zip *za, int idx, struct zip_error *ze)
 {
     struct zip_dirent de;

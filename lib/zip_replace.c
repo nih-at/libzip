@@ -68,6 +68,7 @@ _zip_replace(struct zip *za, zip_uint64_t idx, const char *name,
 
     za_nentry_prev = za->nentry;
     if (idx == ZIP_UINT64_MAX) {
+	/* create and use new entry, used by zip_add */
 	if (_zip_entry_new(za) == NULL)
 	    return -1;
 	
