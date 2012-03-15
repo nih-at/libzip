@@ -116,6 +116,8 @@ int _zip_mkstemp(char *);
 #define CDBUFSIZE       (MAXCOMLEN+EOCDLEN+EOCD64LOCLEN)
 #define BUFSIZE		8192
 
+#define ZIP_EF_ZIP64	0x0001
+
 
 
 /* This section contains API that won't materialize like this.  It's
@@ -129,13 +131,15 @@ typedef struct zip_source *(*zip_encryption_implementation)(struct zip *,
 						    zip_uint16_t, int,
 						    const char *);
 
-ZIP_EXTERN zip_compression_implementation zip_get_compression_implementation(
-    zip_uint16_t);
-ZIP_EXTERN zip_encryption_implementation zip_get_encryption_implementation(
-    zip_uint16_t);
+zip_compression_implementation zip_get_compression_implementation(zip_uint16_t);
+zip_encryption_implementation zip_get_encryption_implementation(zip_uint16_t);
 
 
 
+
+/* This API is not final yet, but we need it internally, so it's private for now. */
+
+const zip_uint8_t *zip_get_extra_field_by_id(struct zip *, int, int, zip_uint16_t, int, zip_uint16_t *);
 
 /* This section contains API that is of limited use until support for
    user-supplied compression/encryption implementation is finished.
@@ -145,34 +149,34 @@ typedef zip_int64_t (*zip_source_layered_callback)(struct zip_source *, void *,
 						   void *, zip_uint64_t,
 						   enum zip_source_cmd);
 
-ZIP_EXTERN void zip_source_close(struct zip_source *);
-ZIP_EXTERN struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
-					     int);
-ZIP_EXTERN struct zip_source *zip_source_deflate(struct zip *,
-						 struct zip_source *,
-						 zip_uint16_t, int);
-ZIP_EXTERN void zip_source_error(struct zip_source *, int *, int *);
-ZIP_EXTERN struct zip_source *zip_source_layered(struct zip *,
-						 struct zip_source *,
-						 zip_source_layered_callback,
-						 void *);
-ZIP_EXTERN int zip_source_open(struct zip_source *);
-ZIP_EXTERN struct zip_source *zip_source_pkware(struct zip *,
-						struct zip_source *,
-						zip_uint16_t, int,
-						const char *);
-ZIP_EXTERN zip_int64_t zip_source_read(struct zip_source *, void *,
-				       zip_uint64_t);
-ZIP_EXTERN int zip_source_stat(struct zip_source *, struct zip_stat *);
-ZIP_EXTERN struct zip_source *zip_source_window(struct zip *, struct zip_source *,
-						zip_uint64_t, zip_uint64_t);
+void zip_source_close(struct zip_source *);
+struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
+				  int);
+struct zip_source *zip_source_deflate(struct zip *,
+				      struct zip_source *,
+				      zip_uint16_t, int);
+void zip_source_error(struct zip_source *, int *, int *);
+struct zip_source *zip_source_layered(struct zip *,
+				      struct zip_source *,
+				      zip_source_layered_callback,
+				      void *);
+int zip_source_open(struct zip_source *);
+struct zip_source *zip_source_pkware(struct zip *,
+				     struct zip_source *,
+				     zip_uint16_t, int,
+				     const char *);
+zip_int64_t zip_source_read(struct zip_source *, void *,
+			    zip_uint64_t);
+int zip_source_stat(struct zip_source *, struct zip_stat *);
+struct zip_source *zip_source_window(struct zip *, struct zip_source *,
+				     zip_uint64_t, zip_uint64_t);
 
 
 /* This function will probably remain private.  It is not needed to
    implement compression/encryption routines.  (We should probably
    rename it to _zip_source_pop.) */
 
-ZIP_EXTERN struct zip_source *zip_source_pop(struct zip_source *);
+struct zip_source *zip_source_pop(struct zip_source *);
 
 
 
@@ -364,6 +368,8 @@ void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
 void _zip_error_set_from_source(struct zip_error *, struct zip_source *);
 const char *_zip_error_strerror(struct zip_error *);
+
+const zip_uint8_t *_zip_extract_extra_field_by_id(struct zip_error *, zip_uint16_t, int, const zip_uint8_t *, zip_uint16_t, zip_uint16_t *);
 
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
 zip_uint64_t _zip_file_get_offset(struct zip *, int, struct zip_error *);

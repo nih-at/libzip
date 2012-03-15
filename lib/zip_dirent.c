@@ -370,6 +370,43 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     if (zde->settable.extrafield_len)
 	zde->settable.valid |= ZIP_DIRENT_EXTRAFIELD;
 
+
+    /* Zip64 */
+
+    if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
+	zip_uint16_t ef_len, needed_len;
+	const zip_uint8_t *ef = _zip_extract_extra_field_by_id(error, ZIP_EF_ZIP64, 0,
+							       (zip_uint8_t *)zde->settable.extrafield, zde->settable.extrafield_len, &ef_len);
+
+	if (ef == NULL)
+	    return -1;
+
+	/* XXX: if ef_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
+	if (local)
+	    needed_len = 16;
+	else
+	    needed_len = ((zde->uncomp_size == ZIP_UINT32_MAX) + (zde->comp_size == ZIP_UINT32_MAX) + (zde->offset == ZIP_UINT32_MAX)) * 8
+		+ (zde->disk_number == ZIP_UINT16_MAX) * 4;
+
+	if (ef_len != needed_len) {
+	    _zip_error_set(error, ZIP_ER_INCONS, 0);
+	    return -1;
+	}
+	
+	if (zde->uncomp_size == ZIP_UINT32_MAX)
+	    zde->uncomp_size = _zip_read8(&ef);
+	else if (local)
+	    ef += 8;
+	if (zde->comp_size == ZIP_UINT32_MAX)
+	    zde->comp_size = _zip_read8(&ef);
+	if (!local) {
+	    if (zde->offset == ZIP_UINT32_MAX)
+		zde->offset = _zip_read8(&ef);
+	    if (zde->disk_number == ZIP_UINT16_MAX)
+		zde->disk_number = _zip_read4(&ef);
+	}
+    }
+
     if (bufp)
       *bufp = cur;
     if (leftp)

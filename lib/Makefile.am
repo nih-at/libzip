@@ -41,6 +41,7 @@ libzip_la_SOURCES=\
 	zip_get_archive_flag.c \
 	zip_get_compression_implementation.c \
 	zip_get_encryption_implementation.c \
+	zip_get_extra_field_by_id.c \
 	zip_get_file_comment.c \
 	zip_get_file_extra.c \
 	zip_get_num_entries.c \
