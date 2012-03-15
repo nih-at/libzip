@@ -254,17 +254,17 @@ zip_close(struct zip *za)
 	}
 
 	/* set general purpose bit flag for file name/comment encoding */
-	enc = _zip_guess_encoding((zip_uint8_t *)de.settable.filename,
+	enc = _zip_guess_encoding(de.settable.filename,
 				  strlen(de.settable.filename));
-	com_enc = _zip_guess_encoding((zip_uint8_t *)cd->entry[i].settable.comment,
-				      cd->entry[i].settable.comment_len);
+	com_enc = _zip_guess_encoding(cd->entry[j].settable.comment,
+				      cd->entry[j].settable.comment_len);
 	if ((enc == ZIP_ENCODING_UTF8  && com_enc == ZIP_ENCODING_ASCII) ||
 	    (enc == ZIP_ENCODING_ASCII && com_enc == ZIP_ENCODING_UTF8 ) ||
 	    (enc == ZIP_ENCODING_UTF8  && com_enc == ZIP_ENCODING_UTF8 ))
 	    de.bitflags |= ZIP_GPBF_ENCODING_UTF_8;
 	else
 	    de.bitflags &= ~ZIP_GPBF_ENCODING_UTF_8;
-	cd->entry[i].bitflags = de.bitflags;
+	cd->entry[j].bitflags = de.bitflags;
 
 	cd->entry[j].offset = ftello(out);
 
