@@ -61,6 +61,7 @@ SET(EXTRA_TESTS
   stat_index_utf8_guess.test
   stat_index_utf8_raw.test
   stat_index_utf8_strict.test
+  stat_index_zip64.test
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})

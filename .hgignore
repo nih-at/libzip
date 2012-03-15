@@ -37,6 +37,8 @@
 ^regress/set_comment_revert$
 ^regress/set_compression$
 ^regress/stat_index$
+^regress/manyfiles.zip$
+^regress/bigzero.zip$
 ^regress/tryopen$
 ^src/zipcmp$
 ^src/zipmerge$
