@@ -182,7 +182,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     struct zip_cdir *cd;
     const unsigned char *cdp;
     const unsigned char **bufp;
-    zip_uint32_t comlen;
+    zip_int32_t comlen;
     int i;
     zip_uint32_t left;
 
