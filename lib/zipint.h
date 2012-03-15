@@ -188,6 +188,14 @@ enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 #define ZIP_GPBF_STRONG_ENCRYPTION	0x0040  /* uses strong encryption */
 #define ZIP_GPBF_ENCODING_UTF_8		0x0800  /* file name encoding is UTF-8 */
 
+/* encoding type */
+enum zip_encoding_type {
+    ZIP_ENCODING_UNKNOWN, /* not yet analyzed */
+    ZIP_ENCODING_ASCII,   /* plain ASCII */
+    ZIP_ENCODING_UTF8,    /* possibly UTF-8 */
+    ZIP_ENCODING_CP437    /* Code Page 437 */
+};
+
 /* error information */
 
 struct zip_error {

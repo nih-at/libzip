@@ -170,16 +170,6 @@ extern "C" {
 
 
 
-/* encoding type */
-enum zip_encoding_type {
-    ZIP_ENCODING_UNKNOWN, /* not yet analyzed */
-    ZIP_ENCODING_ASCII,   /* plain ASCII */
-    ZIP_ENCODING_UTF8,    /* possibly UTF-8 */
-    ZIP_ENCODING_CP437    /* Code Page 437 */
-};
-
-
-
 enum zip_source_cmd {
     ZIP_SOURCE_OPEN,	/* prepare for reading */
     ZIP_SOURCE_READ, 	/* read data */
