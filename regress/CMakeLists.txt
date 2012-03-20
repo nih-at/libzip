@@ -42,6 +42,7 @@ SET(EXTRA_TESTS
   open_nosuchfile.test
   open_ok.test
   open_truncate.test
+  open_zip64_ok.test
   rename_ascii.test
   rename_cp437.test
   rename_deleted.test
@@ -60,6 +61,7 @@ SET(EXTRA_TESTS
   stat_index_utf8_guess.test
   stat_index_utf8_raw.test
   stat_index_utf8_strict.test
+  stat_index_zip64.test
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})

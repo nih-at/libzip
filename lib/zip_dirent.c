@@ -44,7 +44,7 @@
 
 static time_t _zip_d2u_time(int, int);
 static char *_zip_readfpstr(FILE *, unsigned int, int, struct zip_error *);
-static char *_zip_readstr(unsigned char **, int, int, struct zip_error *);
+static char *_zip_readstr(const unsigned char **, int, int, struct zip_error *);
 static void _zip_write2(unsigned short, FILE *);
 static void _zip_write4(unsigned int, FILE *);
 
@@ -228,11 +228,11 @@ _zip_dirent_init(struct zip_dirent *de)
 
 int
 _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
-		 unsigned char **bufp, zip_uint32_t *leftp, int local,
+		 const unsigned char **bufp, zip_uint32_t *leftp, int local,
 		 struct zip_error *error)
 {
     unsigned char buf[CDENTRYSIZE];
-    unsigned char *cur;
+    const unsigned char *cur;
     unsigned short dostime, dosdate;
     zip_uint32_t size;
     zip_uint16_t filename_len;
@@ -369,6 +369,43 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 	zde->settable.valid |= ZIP_DIRENT_COMMENT;
     if (zde->settable.extrafield_len)
 	zde->settable.valid |= ZIP_DIRENT_EXTRAFIELD;
+
+
+    /* Zip64 */
+
+    if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
+	zip_uint16_t ef_len, needed_len;
+	const zip_uint8_t *ef = _zip_extract_extra_field_by_id(error, ZIP_EF_ZIP64, 0,
+							       (zip_uint8_t *)zde->settable.extrafield, zde->settable.extrafield_len, &ef_len);
+
+	if (ef == NULL)
+	    return -1;
+
+	/* XXX: if ef_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
+	if (local)
+	    needed_len = 16;
+	else
+	    needed_len = ((zde->uncomp_size == ZIP_UINT32_MAX) + (zde->comp_size == ZIP_UINT32_MAX) + (zde->offset == ZIP_UINT32_MAX)) * 8
+		+ (zde->disk_number == ZIP_UINT16_MAX) * 4;
+
+	if (ef_len != needed_len) {
+	    _zip_error_set(error, ZIP_ER_INCONS, 0);
+	    return -1;
+	}
+	
+	if (zde->uncomp_size == ZIP_UINT32_MAX)
+	    zde->uncomp_size = _zip_read8(&ef);
+	else if (local)
+	    ef += 8;
+	if (zde->comp_size == ZIP_UINT32_MAX)
+	    zde->comp_size = _zip_read8(&ef);
+	if (!local) {
+	    if (zde->offset == ZIP_UINT32_MAX)
+		zde->offset = _zip_read8(&ef);
+	    if (zde->disk_number == ZIP_UINT16_MAX)
+		zde->disk_number = _zip_read4(&ef);
+	}
+    }
 
     if (bufp)
       *bufp = cur;
@@ -529,10 +566,10 @@ _zip_d2u_time(int dtime, int ddate)
 
 
 
-unsigned short
-_zip_read2(unsigned char **a)
+zip_uint16_t
+_zip_read2(const unsigned char **a)
 {
-    unsigned short ret;
+    zip_uint16_t ret;
 
     ret = (*a)[0]+((*a)[1]<<8);
     *a += 2;
@@ -542,15 +579,30 @@ _zip_read2(unsigned char **a)
 
 
 
-unsigned int
-_zip_read4(unsigned char **a)
+zip_uint32_t
+_zip_read4(const unsigned char **a)
 {
-    unsigned int ret;
+    zip_uint32_t ret;
 
     ret = ((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
     *a += 4;
 
     return ret;
+}
+
+
+
+zip_uint64_t
+_zip_read8(const unsigned char **a)
+{
+    zip_uint64_t x, y;
+
+    x = ((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
+    *a += 4;
+    y = (((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0]);
+    *a += 4;
+
+    return x+(y<<32);
 }
 
 
@@ -589,7 +641,7 @@ _zip_readfpstr(FILE *fp, unsigned int len, int nulp, struct zip_error *error)
 
 
 static char *
-_zip_readstr(unsigned char **buf, int len, int nulp, struct zip_error *error)
+_zip_readstr(const unsigned char **buf, int len, int nulp, struct zip_error *error)
 {
     char *r, *o;
 

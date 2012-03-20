@@ -23,9 +23,10 @@ EXTRA_DIST= \
 	CMakeLists.txt \
 	runtest \
 	${TESTS} \
+	bigzero-zip.zip \
 	broken.zip \
 	encrypt.zip \
-	manyfiles.zip \
+	manyfiles-zip.zip \
 	rename_ok.zip \
 	test.zip \
 	test2.zip \
@@ -45,9 +46,11 @@ EXTRA_DIST= \
 	testextrabytes.zip \
 	testfile.txt \
 	testfile.zip \
+	testfile-UTF8.zip \
 	testnottorrent.zip \
 	teststored.zip \
-	testtorrent.tzip
+	testtorrent.tzip \
+	zip64.tzip
 
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp ${srcdir}/runtest
 
@@ -82,6 +85,7 @@ TESTS= \
 	open_nosuchfile.test \
 	open_ok.test \
 	open_truncate.test \
+	open_zip64_ok.test \
 	rename_ascii.test \
 	rename_cp437.test \
 	rename_deleted.test \
@@ -105,6 +109,7 @@ TESTS= \
 	stat_index_utf8_raw.test \
 	stat_index_utf8_strict.test \
 	stat_index_utf8_unmarked_strict.test \
+	stat_index_zip64.test \
 	torrent-already.test \
 	torrent-new.test
 
@@ -116,3 +121,15 @@ DISABLED_TESTS= \
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
+
+check-am: bigzero.zip manyfiles.zip
+
+bigzero.zip: bigzero-zip.zip
+	${UNZIP} ${srcdir}/bigzero-zip.zip
+	${TOUCH} ${builddir}/bigzero.zip
+
+manyfiles.zip: manyfiles-zip.zip
+	${UNZIP} ${srcdir}/manyfiles-zip.zip
+	${TOUCH} ${builddir}/manyfiles.zip
+
+CLEANFILES=bigzero.zip manyfiles.zip

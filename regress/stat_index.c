@@ -114,7 +114,7 @@ main(int argc, char *argv[])
 	    char buf[50];
 	    struct tm *tpm;
 	    tpm = gmtime(&sb.mtime);
-	    strftime(buf, sizeof(buf), "%a %b %d %T %Z %Y", tpm);
+	    strftime(buf, sizeof(buf), "%a %b %d %T %Y", tpm);
 	    printf("mtime: `%s'\n", buf);
 	}
 	if (sb.valid & ZIP_STAT_CRC)

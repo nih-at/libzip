@@ -1,5 +1,5 @@
 # not GPL, thus no COPYING
-AUTOMAKE_OPTIONS=dist-bzip2 foreign
+AUTOMAKE_OPTIONS=dist-xz foreign
 
 ACLOCAL_AMFLAGS=	-I m4
 

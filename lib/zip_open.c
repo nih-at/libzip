@@ -54,6 +54,10 @@ static unsigned char *_zip_memmem(const unsigned char *, int,
 				  const unsigned char *, int);
 static struct zip_cdir *_zip_readcdir(FILE *, off_t, unsigned char *, unsigned char *,
 				 int, int, struct zip_error *);
+static struct zip_cdir *_zip_read_eocd(const unsigned char *, unsigned char *, off_t,
+				       int, int, struct zip_error *);
+static struct zip_cdir *_zip_read_eocd64(FILE *, const unsigned char *, unsigned char *,
+					 off_t, int, int, struct zip_error *);
 
 
 
@@ -176,8 +180,10 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	      int flags, struct zip_error *error)
 {
     struct zip_cdir *cd;
-    unsigned char *cdp, **bufp;
-    int i, comlen, nentry;
+    const unsigned char *cdp;
+    const unsigned char **bufp;
+    zip_int32_t comlen;
+    int i;
     zip_uint32_t left;
 
     comlen = buf + buflen - eocd - EOCDLEN;
@@ -198,17 +204,15 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	return NULL;
     }
 
-    cdp = eocd + 8;
-    /* number of cdir-entries on this disk */
-    i = _zip_read2(&cdp);
-    /* number of cdir-entries */
-    nentry = _zip_read2(&cdp);
+    if (eocd-buf < EOCD64LOCLEN && memcmp(eocd-EOCD64LOCLEN, EOCD64LOC_MAGIC, 4) == 0)
+	cd = _zip_read_eocd64(fp, eocd-EOCD64LOCLEN, buf, buf_offset, buflen, flags, error);
+    else
+	cd = _zip_read_eocd(eocd, buf, buf_offset, buflen, flags, error);
 
-    if ((cd=_zip_cdir_new(nentry, error)) == NULL)
+    if (cd == NULL)
 	return NULL;
 
-    cd->size = _zip_read4(&cdp);
-    cd->offset = _zip_read4(&cdp);
+    cdp = eocd + 20;
     cd->comment = NULL;
     cd->comment_len = _zip_read2(&cdp);
 
@@ -220,7 +224,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	return NULL;
     }
 
-    if ((comlen < cd->comment_len) || (cd->nentry != i)) {
+    if (comlen < cd->comment_len) {
 	_zip_error_set(error, ZIP_ER_NOZIP, 0);
 	cd->nentry = 0;
 	_zip_cdir_free(cd);
@@ -332,7 +336,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	}
 	
 	if (fseeko(fp, cd->entry[i].offset, SEEK_SET) != 0) {
-	    _zip_error_set(error, ZIP_ER_SEEK, 0);
+	    _zip_error_set(error, ZIP_ER_SEEK, errno);
 	    return -1;
 	}
 	
@@ -545,10 +549,10 @@ _zip_find_central_dir(FILE *fp, int flags, int *zep, off_t len)
     
     best = -1;
     cdir = NULL;
-    match = buf;
+    match = buf+ (buflen < CDBUFSIZE ? 0 : EOCD64LOCLEN);
     _zip_error_set(&zerr, ZIP_ER_NOZIP, 0);
 
-    while ((match=_zip_memmem(match, buflen-(match-buf)-18,
+    while ((match=_zip_memmem(match, buflen-(match-buf)-(EOCDLEN-4),
 			      (const unsigned char *)EOCD_MAGIC, 4))!=NULL) {
 	/* found match -- check, if good */
 	/* to avoid finding the same match all over again */
@@ -609,4 +613,121 @@ _zip_memmem(const unsigned char *big, int biglen, const unsigned char *little,
     }
 
     return NULL;
+}
+
+
+
+static struct zip_cdir *
+_zip_read_eocd(const unsigned char *eocd, unsigned char *buf, off_t buf_offset, int buflen,
+	       int flags, struct zip_error *error)
+{
+    struct zip_cdir *cd;
+    const unsigned char *cdp;
+    int i, nentry;
+    zip_uint64_t size, offset;
+    
+    cdp = eocd + 8;
+
+    /* number of cdir-entries on this disk */
+    i = _zip_read2(&cdp);
+    /* number of cdir-entries */
+    nentry = _zip_read2(&cdp);
+
+    if (nentry != i) {
+	_zip_error_set(error, ZIP_ER_NOZIP, 0);
+	return NULL;
+    }
+
+    size = _zip_read4(&cdp);
+    offset = _zip_read4(&cdp);
+
+    if (offset+size > buf_offset + (eocd-buf)) {
+	/* cdir spans past EOCD record */
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
+    if ((cd=_zip_cdir_new(nentry, error)) == NULL)
+	return NULL;
+
+    cd->size = size;
+    cd->offset = offset;
+    
+    return cd;
+}
+
+
+
+static struct zip_cdir *
+_zip_read_eocd64(FILE *f, const unsigned char *eocd64loc, unsigned char *buf,
+		 off_t buf_offset, int buflen, int flags, struct zip_error *error)
+{
+    struct zip_cdir *cd;
+    zip_uint64_t offset;
+    const unsigned char *cdp;
+    unsigned char eocd[EOCD64LEN];
+    zip_uint64_t eocd_offset;
+    zip_uint64_t size, nentry, i;
+
+    cdp = eocd64loc+8;
+    eocd_offset = _zip_read8(&cdp);
+
+    if (eocd_offset >= buf_offset)
+	cdp = buf+(eocd_offset-buf_offset);
+    else {
+	if (fseeko(f, eocd_offset, SEEK_SET) != 0) {
+	    _zip_error_set(error, ZIP_ER_SEEK, errno);
+	    return NULL;
+	}
+
+	clearerr(f);
+	buflen = fread(eocd, 1, EOCD64LEN, f);
+
+	if (ferror(f)) {
+	    _zip_error_set(error, ZIP_ER_READ, errno);
+	    return NULL;
+	}
+
+	cdp = eocd;
+    }
+
+    if (memcmp(cdp, EOCD64_MAGIC, 4) != 0) {
+	_zip_error_set(error, ZIP_ER_NOZIP, 0);
+	return NULL;
+    }
+    cdp += 4;
+    
+    size = _zip_read8(&cdp);
+
+    if ((flags & ZIP_CHECKCONS) && size+eocd_offset != buf_offset+(eocd64loc-buf)) {
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
+    cdp += 4; /* skip version made by/needed */
+    cdp += 8; /* skip num disks */
+    
+    nentry = _zip_read8(&cdp);
+    i = _zip_read8(&cdp);
+
+    if (nentry != i) {
+	_zip_error_set(error, ZIP_ER_MULTIDISK, 0);
+	return NULL;
+    }
+
+    size = _zip_read8(&cdp);
+    offset = _zip_read8(&cdp);
+
+    if ((flags & ZIP_CHECKCONS) && offset+size != eocd_offset) {
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
+    if ((cd=_zip_cdir_new(nentry, error)) == NULL)
+	return NULL;
+
+    cd->size = size;
+    cd->offset = offset;
+
+    return cd;
 }

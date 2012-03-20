@@ -100,6 +100,8 @@ int _zip_mkstemp(char *);
 #define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"
 #define DATADES_MAGIC "PK\7\8"
+#define EOCD64LOC_MAGIC "PK\6\7"
+#define EOCD64_MAGIC  "PK\6\6"
 #define TORRENT_SIG	"TORRENTZIPPED-"
 #define TORRENT_SIG_LEN	14
 #define TORRENT_CRC_LEN 8
@@ -109,8 +111,12 @@ int _zip_mkstemp(char *);
 #define MAXCOMLEN        65536
 #define MAXEXTLEN        65536
 #define EOCDLEN             22
-#define CDBUFSIZE       (MAXCOMLEN+EOCDLEN)
+#define EOCD64LOCLEN	    20
+#define EOCD64LEN	    56
+#define CDBUFSIZE       (MAXCOMLEN+EOCDLEN+EOCD64LOCLEN)
 #define BUFSIZE		8192
+
+#define ZIP_EF_ZIP64	0x0001
 
 
 
@@ -125,13 +131,15 @@ typedef struct zip_source *(*zip_encryption_implementation)(struct zip *,
 						    zip_uint16_t, int,
 						    const char *);
 
-ZIP_EXTERN zip_compression_implementation zip_get_compression_implementation(
-    zip_uint16_t);
-ZIP_EXTERN zip_encryption_implementation zip_get_encryption_implementation(
-    zip_uint16_t);
+zip_compression_implementation zip_get_compression_implementation(zip_uint16_t);
+zip_encryption_implementation zip_get_encryption_implementation(zip_uint16_t);
 
 
 
+
+/* This API is not final yet, but we need it internally, so it's private for now. */
+
+const zip_uint8_t *zip_get_extra_field_by_id(struct zip *, int, int, zip_uint16_t, int, zip_uint16_t *);
 
 /* This section contains API that is of limited use until support for
    user-supplied compression/encryption implementation is finished.
@@ -141,34 +149,34 @@ typedef zip_int64_t (*zip_source_layered_callback)(struct zip_source *, void *,
 						   void *, zip_uint64_t,
 						   enum zip_source_cmd);
 
-ZIP_EXTERN void zip_source_close(struct zip_source *);
-ZIP_EXTERN struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
-					     int);
-ZIP_EXTERN struct zip_source *zip_source_deflate(struct zip *,
-						 struct zip_source *,
-						 zip_uint16_t, int);
-ZIP_EXTERN void zip_source_error(struct zip_source *, int *, int *);
-ZIP_EXTERN struct zip_source *zip_source_layered(struct zip *,
-						 struct zip_source *,
-						 zip_source_layered_callback,
-						 void *);
-ZIP_EXTERN int zip_source_open(struct zip_source *);
-ZIP_EXTERN struct zip_source *zip_source_pkware(struct zip *,
-						struct zip_source *,
-						zip_uint16_t, int,
-						const char *);
-ZIP_EXTERN zip_int64_t zip_source_read(struct zip_source *, void *,
-				       zip_uint64_t);
-ZIP_EXTERN int zip_source_stat(struct zip_source *, struct zip_stat *);
-ZIP_EXTERN struct zip_source *zip_source_window(struct zip *, struct zip_source *,
-						zip_uint64_t, zip_uint64_t);
+void zip_source_close(struct zip_source *);
+struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
+				  int);
+struct zip_source *zip_source_deflate(struct zip *,
+				      struct zip_source *,
+				      zip_uint16_t, int);
+void zip_source_error(struct zip_source *, int *, int *);
+struct zip_source *zip_source_layered(struct zip *,
+				      struct zip_source *,
+				      zip_source_layered_callback,
+				      void *);
+int zip_source_open(struct zip_source *);
+struct zip_source *zip_source_pkware(struct zip *,
+				     struct zip_source *,
+				     zip_uint16_t, int,
+				     const char *);
+zip_int64_t zip_source_read(struct zip_source *, void *,
+			    zip_uint64_t);
+int zip_source_stat(struct zip_source *, struct zip_stat *);
+struct zip_source *zip_source_window(struct zip *, struct zip_source *,
+				     zip_uint64_t, zip_uint64_t);
 
 
 /* This function will probably remain private.  It is not needed to
    implement compression/encryption routines.  (We should probably
    rename it to _zip_source_pop.) */
 
-ZIP_EXTERN struct zip_source *zip_source_pop(struct zip_source *);
+struct zip_source *zip_source_pop(struct zip_source *);
 
 
 
@@ -209,7 +217,7 @@ struct zip_error {
 struct zip {
     char *zn;			/* file name */
     FILE *zp;			/* file */
-    int open_flags;		/* flags passed to zip_open */
+    unsigned int open_flags;	/* flags passed to zip_open */
     struct zip_error error;	/* error information */
 
     unsigned int flags;		/* archive global flags */
@@ -219,13 +227,13 @@ struct zip {
 
     struct zip_cdir *cdir;	/* central directory */
     char *ch_comment;		/* changed archive comment */
-    int ch_comment_len;		/* length of changed zip archive
+    zip_int32_t ch_comment_len;	/* length of changed zip archive
 				 * comment, -1 if unchanged */
     zip_uint64_t nentry;	/* number of entries */
     zip_uint64_t nentry_alloc;	/* number of entries allocated */
     struct zip_entry *entry;	/* entries */
-    int nfile;			/* number of opened files within archive */
-    int nfile_alloc;		/* number of files allocated */
+    unsigned int nfile;		/* number of opened files within archive */
+    unsigned int nfile_alloc;	/* number of files allocated */
     struct zip_file **file;	/* opened files within archive */
 };
 
@@ -252,25 +260,32 @@ struct zip_dirent_settable {
     char *filename;			/* (cl) file name (NUL-terminated) */
     char *comment;			/* (c)  file comment */
     zip_uint16_t comment_len;		/* (c)  length of file comment */
-    char *extrafield;			/* (cl) extra field */
-    zip_uint16_t extrafield_len;	/* (cl) length of extra field */
+    char *extrafield;			/*  (l) extra field local header */
+    zip_uint16_t extrafield_len;	/*  (l) length of extra field from local header*/
+#if 0
+    char *cdir_extrafield;		/* (c)  extra field from cdir */
+    zip_uint16_t cdir_extrafield_len;	/* (c)  length of extra field from cdir*/
+    struct zip_extrafield *extra_parsed;	/*      parsed extra fields */
+    zip_uint16_t nextra_parsed;		/*      number of parsed extra fields */
+    zip_uint16_t nextra_parsed_alloc;   /*      number of parsed extra fields allocated */
+#endif
 };
 
 struct zip_dirent {
-    unsigned short version_madeby;	/* (c)  version of creator */
-    unsigned short version_needed;	/* (cl) version needed to extract */
-    unsigned short bitflags;		/* (cl) general purpose bit flag */
+    zip_uint16_t version_madeby;	/* (c)  version of creator */
+    zip_uint16_t version_needed;	/* (cl) version needed to extract */
+    zip_uint16_t bitflags;		/* (cl) general purpose bit flag */
     time_t last_mod;			/* (cl) time of last modification */
-    unsigned int crc;			/* (cl) CRC-32 of uncompressed data */
-    unsigned int comp_size;		/* (cl) size of compressed data */
-    unsigned int uncomp_size;		/* (cl) size of uncompressed data */
-    unsigned short disk_number;		/* (c)  disk number start */
-    unsigned short int_attrib;		/* (c)  internal file attributes */
-    unsigned int ext_attrib;		/* (c)  external file attributes */
-    unsigned int offset;		/* (c)  offset of local header */
-    unsigned short fn_type;		/*      file name encoding (autorecognition) */
+    zip_uint32_t crc;			/* (cl) CRC-32 of uncompressed data */
+    zip_uint64_t comp_size;		/* (cl) size of compressed data */
+    zip_uint64_t uncomp_size;		/* (cl) size of uncompressed data */
+    zip_uint32_t disk_number;		/* (c)  disk number start */
+    zip_uint16_t int_attrib;		/* (c)  internal file attributes */
+    zip_uint32_t ext_attrib;		/* (c)  external file attributes */
+    zip_uint64_t offset;		/* (c)  offset of local header */
+    enum zip_encoding_type fn_type;	/*      file name encoding (autorecognition) */
     char *filename_converted;		/*      file name (autoconverted) */
-    unsigned short fc_type;		/*      file comment encoding (autorecognition) */
+    enum zip_encoding_type fc_type;	/*      file comment encoding (autorecognition) */
     char *comment_converted;		/*      file comment (autoconverted) */
     zip_uint32_t comment_converted_len;	/*      file comment length (autoconverted) */
     struct zip_dirent_settable settable;
@@ -279,16 +294,16 @@ struct zip_dirent {
 /* zip archive central directory */
 
 struct zip_cdir {
-    struct zip_dirent *entry;	 	/* directory entries */
-    int nentry;			 	/* number of entries */
+    struct zip_dirent *entry;	 		/* directory entries */
+    unsigned int nentry;			/* number of entries */
 
-    unsigned int size;		 	/* size of central direcotry */
-    unsigned int offset;	 	/* offset of central directory in file */
-    char *comment;		 	/* zip archive comment */
-    unsigned short comment_len;	 	/* length of zip archive comment */
-    unsigned short comment_type; 	/* archive comment encoding (autorecognition) */
-    char *comment_converted;     	/* archive comment (autoconverted) */
-    zip_uint32_t comment_converted_len;	/* archive comment length (autoconverted) */
+    zip_uint64_t size;		 		/* size of central direcotry */
+    zip_uint64_t offset;	 		/* offset of central directory in file */
+    char *comment;		 		/* zip archive comment */
+    zip_uint16_t comment_len;	 		/* length of zip archive comment */
+    enum zip_encoding_type comment_type;	/* archive comment encoding (autorecognition) */
+    char *comment_converted;     		/* archive comment (autoconverted) */
+    zip_uint32_t comment_converted_len;		/* archive comment length (autoconverted) */
 };
 
 
@@ -336,7 +351,7 @@ int _zip_cdir_write(struct zip_cdir *, FILE *, struct zip_error *);
 
 void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
-int _zip_dirent_read(struct zip_dirent *, FILE *, unsigned char **,
+int _zip_dirent_read(struct zip_dirent *, FILE *, const unsigned char **,
 		     zip_uint32_t *, int, struct zip_error *);
 void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
@@ -354,14 +369,15 @@ void _zip_error_set(struct zip_error *, int, int);
 void _zip_error_set_from_source(struct zip_error *, struct zip_source *);
 const char *_zip_error_strerror(struct zip_error *);
 
+const zip_uint8_t *_zip_extract_extra_field_by_id(struct zip_error *, zip_uint16_t, int, const zip_uint8_t *, zip_uint16_t, zip_uint16_t *);
+
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
-unsigned int _zip_file_get_offset(struct zip *, int, struct zip_error *);
+zip_uint64_t _zip_file_get_offset(struct zip *, int, struct zip_error *);
 
 int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 
-enum zip_encoding_type _zip_guess_encoding(const zip_uint8_t * const,
-					   zip_uint32_t);
-zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t,
+enum zip_encoding_type _zip_guess_encoding(const char * const, zip_uint32_t);
+char *_zip_cp437_to_utf8(const char * const, zip_uint32_t,
 				zip_uint32_t *, struct zip_error *error);
 
 struct zip *_zip_open(const char *, FILE *, int, int, int *);
@@ -379,12 +395,13 @@ int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, size_t, struct zip_error *);
 int _zip_name_locate(struct zip *, const char *, int, struct zip_error *);
 struct zip *_zip_new(struct zip_error *);
-unsigned short _zip_read2(unsigned char **);
-unsigned int _zip_read4(unsigned char **);
+zip_uint16_t _zip_read2(const unsigned char **);
+zip_uint32_t _zip_read4(const unsigned char **);
+zip_uint64_t _zip_read8(const unsigned char **);
 zip_int64_t _zip_replace(struct zip *, zip_uint64_t, const char *,
 			 struct zip_source *);
 int _zip_set_name(struct zip *, zip_uint64_t, const char *);
-void _zip_u2d_time(time_t, unsigned short *, unsigned short *);
+void _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *);
 int _zip_unchange(struct zip *, zip_uint64_t, int);
 void _zip_unchange_data(struct zip_entry *);
 
