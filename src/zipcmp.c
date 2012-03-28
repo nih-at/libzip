@@ -61,7 +61,7 @@ struct entry {
 
 const char *prg;
 
-#define PROGRAM	"zipmerge"
+#define PROGRAM	"zipcmp"
 
 char *usage = "usage: %s [-hiqtVv] zip1 zip2\n";
 
