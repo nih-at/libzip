@@ -51,7 +51,6 @@ const char *
 _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
 	      struct zip_error *error)
 {
-    enum zip_encoding_type enc;
     const char *ret;
 
     ret = NULL;
