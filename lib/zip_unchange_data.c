@@ -1,6 +1,6 @@
 /*
   zip_unchange_data.c -- undo helper function
-  Copyright (C) 1999, 2004 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,8 +33,6 @@
 
 
 
-#include <stdlib.h>
-
 #include "zipint.h"
 
 void
@@ -44,7 +42,7 @@ _zip_unchange_data(struct zip_entry *ze)
 	zip_source_free(ze->source);
 	ze->source = NULL;
     }
-    
-    ze->state = (ze->changes.valid & ZIP_DIRENT_FILENAME) ? ZIP_ST_RENAMED : ZIP_ST_UNCHANGED;
+
+    ze->deleted = 0;
 }
 

@@ -118,39 +118,65 @@ static const zip_uint16_t _cp437_to_unicode[256] = {
 
 
 enum zip_encoding_type
-_zip_guess_encoding(const char * const _name, zip_uint32_t len)
+_zip_guess_encoding(struct zip_string *str, enum zip_encoding_type expected_encoding)
 {
-    zip_uint8_t *name = (zip_uint8_t *)_name;
+    enum zip_encoding_type enc;
+    const zip_uint8_t *name;
     zip_uint32_t i;
-    int ret;
     int j, ulen;
 
-    ret = ZIP_ENCODING_ASCII;
-    for (i=0; i<len; i++) {
-	if ((name[i] > 31 && name[i] < 128) || name[i] == '\r' || name[i] == '\n' || name[i] == '\t')
-	    continue;
+    if (str == NULL)
+	return ZIP_ENCODING_ASCII;
 
-	ret = ZIP_ENCODING_UTF8;
-	if ((name[i] & UTF_8_LEN_2_MASK) == UTF_8_LEN_2_MATCH)
-	    ulen = 1;
-	else if ((name[i] & UTF_8_LEN_3_MASK) == UTF_8_LEN_3_MATCH)
-	    ulen = 2;
-	else if ((name[i] & UTF_8_LEN_4_MASK) == UTF_8_LEN_4_MATCH)
-	    ulen = 3;
-	else
-	    return ZIP_ENCODING_CP437;
+    name = str->raw;
 
-	if (i + ulen >= len)
-	    return ZIP_ENCODING_CP437;
+    if (str->encoding != ZIP_ENCODING_UNKNOWN)
+	enc = str->encoding;
+    else {
+	enc = ZIP_ENCODING_ASCII;
+	for (i=0; i<str->length; i++) {
+	    if ((name[i] > 31 && name[i] < 128) || name[i] == '\r' || name[i] == '\n' || name[i] == '\t')
+		continue;
 
-	for (j=1; j<=ulen; j++) {
-	    if ((name[i+j] & UTF_8_CONTINUE_MASK) != UTF_8_CONTINUE_MATCH)
-		return ZIP_ENCODING_CP437;
+	    enc = ZIP_ENCODING_UTF8_GUESSED;
+	    if ((name[i] & UTF_8_LEN_2_MASK) == UTF_8_LEN_2_MATCH)
+		ulen = 1;
+	    else if ((name[i] & UTF_8_LEN_3_MASK) == UTF_8_LEN_3_MATCH)
+		ulen = 2;
+	    else if ((name[i] & UTF_8_LEN_4_MASK) == UTF_8_LEN_4_MATCH)
+		ulen = 3;
+	    else {
+		enc = ZIP_ENCODING_CP437;
+		break;
+	    }
+
+	    if (i + ulen >= str->length) {
+		enc = ZIP_ENCODING_CP437;
+		break;
+	    }
+
+	    for (j=1; j<=ulen; j++) {
+		if ((name[i+j] & UTF_8_CONTINUE_MASK) != UTF_8_CONTINUE_MATCH) {
+		    enc = ZIP_ENCODING_CP437;
+		    goto done;
+		}
+	    }
+	    i += ulen;
 	}
-	i += ulen;
     }
 
-    return ret;
+done:
+    str->encoding = enc;
+
+    if (expected_encoding != ZIP_ENCODING_UNKNOWN) {
+	if (expected_encoding == ZIP_ENCODING_UTF8_KNOWN && enc == ZIP_ENCODING_UTF8_GUESSED)
+	    str->encoding = enc = ZIP_ENCODING_UTF8_KNOWN;
+
+	if (expected_encoding != enc && enc != ZIP_ENCODING_ASCII)
+	    return ZIP_ENCODING_ERROR;
+    }
+    
+    return enc;
 }
 
 
@@ -196,8 +222,8 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 
 
 
-char *
-_zip_cp437_to_utf8(const char * const _cp437buf, zip_uint32_t len,
+zip_uint8_t *
+_zip_cp437_to_utf8(const zip_uint8_t * const _cp437buf, zip_uint32_t len,
 		   zip_uint32_t *utf8_lenp, struct zip_error *error)
 {
     zip_uint8_t *cp437buf = (zip_uint8_t *)_cp437buf;
@@ -227,5 +253,5 @@ _zip_cp437_to_utf8(const char * const _cp437buf, zip_uint32_t len,
     utf8buf[buflen-1] = 0;
     if (utf8_lenp)
 	*utf8_lenp = buflen-1;
-    return (char *)utf8buf;
+    return utf8buf;
 }

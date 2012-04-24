@@ -1,6 +1,6 @@
 /*
   comment.c -- test cases for file and archive comments
-  Copyright (C) 2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -75,6 +75,8 @@ main(int argc, char *argv[])
 
     for (i=0; i<zip_get_num_files(za); i++) {
 	if ((com=zip_get_file_comment(za, i, &len, 0)) == NULL)
+	    printf("Error getting comment for `%s': %s\n", zip_get_name(za, i, 0), zip_strerror(za));
+	else if (len == 0)
 	    printf("No comment for `%s'\n", zip_get_name(za, i, 0));
 	else
 	    printf("File comment for `%s': %.*s\n", zip_get_name(za, i, 0), len, com);

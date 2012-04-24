@@ -58,13 +58,13 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
     }
 
     if ((flags & ZIP_FL_UNCHANGED) == 0
-	&& (ZIP_ENTRY_DATA_CHANGED(srcza->entry+srcidx) || srcza->entry[srcidx].state == ZIP_ST_DELETED)) {
+	&& (ZIP_ENTRY_DATA_CHANGED(srcza->entry+srcidx) || srcza->entry[srcidx].deleted)) {
 	_zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
 	return NULL;
     }
 
-    if (srcza->cdir == NULL || srcidx >= srcza->cdir->nentry) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+    if (zip_stat_index(srcza, srcidx, flags|ZIP_FL_UNCHANGED, &st) < 0) {
+	_zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return NULL;
     }
 
@@ -73,11 +73,6 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
 
     if ((start > 0 || len > 0) && (flags & ZIP_FL_COMPRESSED)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return NULL;
-    }
-
-    if (zip_stat_index(srcza, srcidx, flags, &st) < 0) {
-	_zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return NULL;
     }
 
@@ -96,8 +91,7 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
 	    _zip_error_set(&za->error, ZIP_ER_NOPASSWD, 0);
 	    return NULL;
 	}
-	if ((enc_impl=zip_get_encryption_implementation(
-		 st.encryption_method)) == NULL) {
+	if ((enc_impl=zip_get_encryption_implementation(st.encryption_method)) == NULL) {
 	    _zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	    return NULL;
 	}
@@ -106,8 +100,7 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
     comp_impl = NULL;
     if ((flags & ZIP_FL_COMPRESSED) == 0) {
 	if (st.comp_method != ZIP_CM_STORE) {
-	    if ((comp_impl=zip_get_compression_implementation(
-		     st.comp_method)) == NULL) {
+	    if ((comp_impl=zip_get_compression_implementation(st.comp_method)) == NULL) {
 		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 		return NULL;
 	    }
@@ -123,9 +116,15 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
     }
     else {
 	if (start+len > 0 && enc_impl == NULL && comp_impl == NULL) {
-	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset+start,
-					   len ? len : st.size-start,
-					   0, &st)) == NULL)
+	    struct zip_stat st2;
+
+	    st2.size = len ? len : st.size-start;
+	    st2.comp_size = st2.size;
+	    st2.comp_method = ZIP_CM_STORE;
+	    st2.mtime = st.mtime;
+	    st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
+
+	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset+start, st2.size, 0, &st2)) == NULL)
 		return NULL;
 	}
 	else {
@@ -151,7 +150,7 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
 	    src = s2;
 	}
 	if (((flags & ZIP_FL_COMPRESSED) == 0 || st.comp_method == ZIP_CM_STORE)
-	    && (len == 0 || start+len == st.comp_size)) {
+	    && (len == 0 || len == st.comp_size)) {
 	    /* when reading the whole file, check for crc errors */
 	    if ((s2=zip_source_crc(za, src, 1)) == NULL) {
 		zip_source_free(src);

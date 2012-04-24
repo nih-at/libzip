@@ -51,48 +51,14 @@ const char *
 _zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
 	      struct zip_error *error)
 {
-    enum zip_encoding_type enc;
-    const char *ret;
+    struct zip_dirent *de;
+    const zip_uint8_t *str;
 
-    ret = NULL;
-    if (idx >= za->nentry) {
-	_zip_error_set(error, ZIP_ER_INVAL, 0);
+    if ((de=_zip_get_dirent(za, idx, flags, NULL)) == NULL)
 	return NULL;
-    }
 
-    if ((flags & ZIP_FL_UNCHANGED) == 0) {
-	if (za->entry[idx].state == ZIP_ST_DELETED) {
-	    _zip_error_set(error, ZIP_ER_DELETED, 0);
-	    return NULL;
-	}
-	if (za->entry[idx].changes.valid & ZIP_DIRENT_FILENAME)
-	    return za->entry[idx].changes.filename; /* must be UTF-8 */
-    }
-
-    /* XXX: read Infozip UTF-8 Extension 0x7075 file name? */
-    if (za->cdir == NULL || idx >= za->cdir->nentry) {
-	_zip_error_set(error, ZIP_ER_INVAL, 0);
+    if ((str=_zip_string_get(de->filename, NULL, flags, &za->error)) == NULL)
 	return NULL;
-    }
-    ret = za->cdir->entry[idx].settable.filename;
 
-    if (flags & ZIP_FL_NAME_RAW)
-	return ret;
-
-    /* file name already is UTF-8? */
-    if (za->cdir->entry[idx].bitflags & ZIP_GPBF_ENCODING_UTF_8)
-	return ret;
-
-    /* undeclared, start guessing */
-    if (za->cdir->entry[idx].fn_type == ZIP_ENCODING_UNKNOWN)
-	za->cdir->entry[idx].fn_type = _zip_guess_encoding(ret, strlen(ret));
-
-    if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->entry[idx].fn_type != ZIP_ENCODING_ASCII))
-	|| (za->cdir->entry[idx].fn_type == ZIP_ENCODING_CP437)) {
-	if (za->cdir->entry[idx].filename_converted == NULL)
-	    za->cdir->entry[idx].filename_converted = _zip_cp437_to_utf8(ret, strlen(ret), NULL, error);
-	ret = za->cdir->entry[idx].filename_converted;
-    }
-
-    return ret;
+    return (const char *)str;
 }

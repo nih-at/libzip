@@ -1,6 +1,6 @@
 /*
-  zip_set_file_extra.c -- set extra field for file in archive
-  Copyright (C) 2006-2010 Dieter Baron and Thomas Klausner
+  zip_entry.c -- struct zip_entry helper functions
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
-
+ 
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,44 +31,25 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-
-#include <stdlib.h>
+
 
 #include "zipint.h"
 
-
-
-ZIP_EXTERN int
-zip_set_file_extra(struct zip *za, zip_uint64_t idx,
-		   const char *extra, int len)
+void
+_zip_entry_finalize(struct zip_entry *e)
 {
-    char *tmpext;
+    _zip_unchange_data(e);
+    _zip_dirent_free(e->orig);
+    _zip_dirent_free(e->changes);
+}
 
-    if (idx >= za->nentry
-	|| len < 0 || len > MAXEXTLEN
-	|| (len > 0 && extra == NULL)) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
+
 
-    if (ZIP_IS_RDONLY(za)) {
-	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-	return -1;
-    }
-
-    if (len > 0) {
-	if ((tmpext=(char *)_zip_memdup(extra, len, &za->error)) == NULL)
-	    return -1;
-    }
-    else
-	tmpext = NULL;
-
-    if (za->entry[idx].changes.valid & ZIP_DIRENT_EXTRAFIELD)
-	free(za->entry[idx].changes.extrafield);
-    za->entry[idx].changes.extrafield = tmpext;
-    za->entry[idx].changes.extrafield_len = len;
-    za->entry[idx].changes.valid |= ZIP_DIRENT_EXTRAFIELD;
-
-    return 0;
+void
+_zip_entry_init(struct zip_entry *e)
+{
+    e->orig = NULL;
+    e->changes = NULL;
+    e->source = NULL;
+    e->deleted = 0;
 }

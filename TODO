@@ -62,6 +62,7 @@ Features
 
 Bugs
 ====
+* split zip archive torrentzip state from user requested torrentzip state
 * check for limits imposed by format (central dir size, file size, ...)
 * set "version of encoding software" to proper value (2.0?)
 * _zip_checkcons return value can overflow

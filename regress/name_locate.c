@@ -105,20 +105,21 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 {
     int ze, se;
     char expected[80];
+    int idx;
 
-    if (zip_name_locate(z, name, flags) < 0) {
+    if ((idx=zip_name_locate(z, name, flags)) < 0) {
 	zip_error_get(z, &ze, &se);
 	if (ze != zerr) {
 	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
-	    printf("%s: unexpected error while looking for `%s': "
-		   "got `%s', expected `%s'\n", prg, name,
-		   zip_strerror(z), expected);
+	    printf("unexpected error while looking for `%s' with flags %x: got `%s', expected `%s'\n",
+		   name, flags, zip_strerror(z), expected);
 	    return 1;
 	}
 
 	return 0;
     }
 
+    printf("unexpected success while looking for `%s' with flags %x: index %d\n", name, flags, idx);
     return 1;
 }
 
@@ -129,8 +130,8 @@ find_success(struct zip *z, const char *name, int flags)
 {
 
     if (zip_name_locate(z, name, flags) < 0) {
-	printf("%s: unexpected error while looking for `%s': %s\n",
-	       prg, name, zip_strerror(z));
+	printf("unexpected error while looking for `%s' with flags %x: %s\n",
+	       name, flags, zip_strerror(z));
 	return 1;
     }
 

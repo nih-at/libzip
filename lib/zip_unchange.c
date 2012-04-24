@@ -57,25 +57,16 @@ _zip_unchange(struct zip *za, zip_uint64_t idx, int allow_duplicates)
 	return -1;
     }
 
-    if (za->entry[idx].changes.valid & ZIP_DIRENT_FILENAME) {
-	if (!allow_duplicates) {
-	    i = _zip_name_locate(za,
-			 _zip_get_name(za, idx, ZIP_FL_UNCHANGED, NULL),
-				 0, NULL);
-	    if (i != -1 && i != idx) {
-		_zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
-		return -1;
-	    }
+    if (!allow_duplicates && za->entry[idx].changes && (za->entry[idx].changes->changed & ZIP_DIRENT_FILENAME)) {
+	i = _zip_name_locate(za, _zip_get_name(za, idx, ZIP_FL_UNCHANGED, NULL), 0, NULL);
+	if (i != -1 && i != idx) {
+	    _zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
+	    return -1;
 	}
-
-	free(za->entry[idx].changes.filename);
     }
 
-    if (za->entry[idx].changes.valid & ZIP_DIRENT_EXTRAFIELD)
-	free(za->entry[idx].changes.extrafield);
-    if (za->entry[idx].changes.valid & ZIP_DIRENT_COMMENT)
-	free(za->entry[idx].changes.comment);
-    za->entry[idx].changes.valid = 0;
+    _zip_dirent_free(za->entry[idx].changes);
+    za->entry[idx].changes = NULL;
 
     _zip_unchange_data(za->entry+idx);
 

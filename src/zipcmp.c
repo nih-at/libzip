@@ -51,10 +51,22 @@
 #include "zip.h"
 #include "zipint.h"
 
+struct ef {
+    const char *name;
+    zip_uint16_t flags;
+    zip_uint16_t id;
+    zip_uint16_t size;
+    const zip_uint8_t *data;
+};
+
 struct entry {
     char *name;
-    unsigned int size;
-    unsigned int crc;
+    zip_uint64_t size;
+    zip_uint32_t crc;
+    zip_uint32_t comp_method;
+    zip_uint64_t comp_size;
+    struct ef *extra_fields;
+    int n_extra_fields;
 };
 
 
@@ -63,7 +75,7 @@ const char *prg;
 
 #define PROGRAM	"zipmerge"
 
-char *usage = "usage: %s [-hiqtVv] zip1 zip2\n";
+char *usage = "usage: %s [-hipqtVv] zip1 zip2\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -72,6 +84,7 @@ char help[] = "\n\
   -h       display this help message\n\
   -V       display version number\n\
   -i       compare names ignoring case distinctions\n\
+  -p       compare as many details as possible\n\
   -q       be quiet\n\
   -t       test zip files\n\
   -v       be verbose (print differences, default)\n\
@@ -82,39 +95,49 @@ char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
 Copyright (C) 2012 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
-#define OPTIONS "hViqtv"
+#define OPTIONS "hVipqtv"
 
 
 
+static int ef_read(struct zip *za, int idx, struct entry *e);
+static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
+static int ef_order(const void *a, const void *b);
+static void ef_print(const void *p);
 static int entry_cmp(const void *p1, const void *p2);
+static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
 static void entry_print(const void *p);
-static int compare_list(char * const name[], int verbose,
-		 const void *l[], const int n[], int size,
-		 int (*cmp)(const void *, const void *),
-		 void print(const void *));
-static int compare_zip(char * const zn[], int verbose);
+static int compare_list(char * const name[],
+			const void *l[], const int n[], int size,
+			int (*cmp)(const void *, const void *),
+			int (*checks)(char *const name[2], const void *, const void *),
+			void (*print)(const void *));
+static int compare_zip(char * const zn[]);
 static int test_file(struct zip *za, int idx, off_t size, unsigned int crc);
 
-int ignore_case, test_files;
+int ignore_case, test_files, paranoid, verbose;
+int header_done;
 
 
 
 int
 main(int argc, char * const argv[])
 {
-    int verbose;
     int c;
 
     prg = argv[0];
 
     ignore_case = 0;
     test_files = 0;
+    paranoid = 0;
     verbose = 1;
 
     while ((c=getopt(argc, argv, OPTIONS)) != -1) {
 	switch (c) {
 	case 'i':
 	    ignore_case = 1;
+	    break;
+	case 'p':
+	    paranoid = 1;
 	    break;
 	case 'q':
 	    verbose = 0;
@@ -146,13 +169,13 @@ main(int argc, char * const argv[])
 	exit(2);
     }
 
-    exit((compare_zip(argv+optind, verbose) == 0) ? 0 : 1);
+    exit((compare_zip(argv+optind) == 0) ? 0 : 1);
 }
 
 
 
 static int
-compare_zip(char * const zn[], int verbose)
+compare_zip(char * const zn[])
 {
     struct zip *za;
     struct zip_stat st;
@@ -163,7 +186,7 @@ compare_zip(char * const zn[], int verbose)
     char errstr[1024];
 
     for (i=0; i<2; i++) {
-	if ((za=zip_open(zn[i], 0, &err)) == NULL) {
+	if ((za=zip_open(zn[i], paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
 	    zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	    fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		    prg, zn[i], errstr);
@@ -187,6 +210,16 @@ compare_zip(char * const zn[], int verbose)
 	        e[i][j].crc = st.crc;
 	        if (test_files)
 		    test_file(za, j, st.size, st.crc);
+		if (paranoid) {
+		    e[i][j].comp_method = st.comp_method;
+		    e[i][j].comp_size = st.comp_size;
+		    ef_read(za, j, e[i]+j);
+		}
+		else {
+		    e[i][j].comp_method = 0;
+		    e[i][j].comp_size = 0;
+		    e[i][j].n_extra_fields = 0;
+		}
 	    }
 	    qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
         }
@@ -195,9 +228,8 @@ compare_zip(char * const zn[], int verbose)
 
     }
 
-    switch (compare_list(zn, verbose,
-			 (void *)e, n, sizeof(e[i][0]),
-			 entry_cmp, entry_print)) {
+    switch (compare_list(zn, (void *)e, n, sizeof(e[i][0]),
+			 entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print)) {
     case 0:
 	exit(0);
 
@@ -214,24 +246,29 @@ compare_zip(char * const zn[], int verbose)
 
 
 static int
-compare_list(char * const name[2], int verbose,
+compare_list(char * const name[2],
 	     const void *l[2], const int n[2], int size,
 	     int (*cmp)(const void *, const void *),
-	     void print(const void *))
+	     int (*check)(char *const name[2], const void *, const void *),
+	     void (*print)(const void *))
 {
     int i[2], j, c;
     int diff;
 
 #define INC(k)	(i[k]++, l[k]=((const char *)l[k])+size)
-#define PRINT(k)	do {						      \
-			    if (diff==0 && verbose)			      \
+#define PRINT(k)	do {						\
+			    if (header_done==0 && verbose) {		\
 			        printf("--- %s\n+++ %s\n", name[0], name[1]); \
-			    if (verbose) {				      \
-			        printf("%c ", (k)?'+':'-');		      \
-				print(l[k]);				      \
-			    }						      \
-			    diff = 1;					      \
+				header_done = 1;			\
+			    }						\
+			    if (verbose) {				\
+			        printf("%c ", (k)?'+':'-');		\
+				print(l[k]);				\
+			    }						\
+			    diff = 1;					\
 			} while (0)
+
+    header_done = 0;
 
     i[0] = i[1] = 0;
     diff = 0;
@@ -239,6 +276,8 @@ compare_list(char * const name[2], int verbose,
 	c = cmp(l[0], l[1]);
 
 	if (c == 0) {
+	    if (check)
+		diff |= check(name, l[0], l[1]);
 	    INC(0);
 	    INC(1);
 	}
@@ -265,6 +304,90 @@ compare_list(char * const name[2], int verbose,
 
 
 static int
+ef_read(struct zip *za, int idx, struct entry *e)
+{
+    int n_local, n_central;
+    int i;
+    zip_uint16_t len;
+
+    n_local = zip_get_file_num_extra_fields(za, idx, ZIP_FL_LOCAL);
+    n_central = zip_get_file_num_extra_fields(za, idx, ZIP_FL_CENTRAL);
+    e->n_extra_fields = n_local + n_central;
+    
+    if ((e->extra_fields=malloc(sizeof(e->extra_fields[0])*e->n_extra_fields)) == NULL)
+	return -1;
+
+    for (i=0; i<n_local; i++) {
+	e->extra_fields[i].name = e->name;
+	if ((e->extra_fields[i].data=zip_get_file_extra_field(za, idx, ZIP_FL_LOCAL, i, &e->extra_fields[i].id, &e->extra_fields[i].size)) == NULL)
+	    return -1;
+	e->extra_fields[i].flags = ZIP_FL_LOCAL;
+    }
+    for (; i<e->n_extra_fields; i++) {
+	e->extra_fields[i].name = e->name;
+	if ((e->extra_fields[i].data=zip_get_file_extra_field(za, idx, ZIP_FL_CENTRAL, i-n_local, &e->extra_fields[i].id, &e->extra_fields[i].size)) == NULL)
+	    return -1;
+	e->extra_fields[i].flags = ZIP_FL_CENTRAL;
+    }
+
+    qsort(e->extra_fields, e->n_extra_fields, sizeof(e->extra_fields[0]), ef_order);
+
+    return 0;
+}
+
+
+
+static int
+ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2)
+{
+    struct ef *ef[2];
+    int n[2];
+
+    ef[0] = e1->extra_fields;
+    ef[1] = e2->extra_fields;
+    n[0] = e1->n_extra_fields;
+    n[1] = e2->n_extra_fields;
+
+    return compare_list(name, (void *)ef, n, sizeof(struct ef), ef_order, NULL, ef_print);
+}
+
+
+
+
+static int
+ef_order(const void *ap, const void *bp) {
+    const struct ef *a, *b;
+
+    a = ap;
+    b = bp;
+
+    if (a->flags != b->flags)
+	return a->flags - b->flags;
+    if (a->id != b->id)
+	return a->id - b->id;
+    if (a->size != b->size)
+	return a->size - b->size;
+    return memcmp(a->data, b->data, a->size);
+}
+
+
+
+static void
+ef_print(const void *p)
+{
+    const struct ef *ef = p;
+    int i;
+
+    printf("                    %s  ", ef->name);
+    printf("%04x %c <", ef->id, ef->flags == ZIP_FL_LOCAL ? 'l' : 'c', ef->data);
+    for (i=0; i<ef->size; i++)
+	printf("%s%02x", i ? " " : "", ef->data[i]);
+    printf(">\n");
+}
+
+
+
+static int
 entry_cmp(const void *p1, const void *p2)
 {
     const struct entry *e1, *e2;
@@ -285,6 +408,36 @@ entry_cmp(const void *p1, const void *p2)
 
 
 
+static int
+entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
+    const struct entry *e1, *e2;
+
+    e1 = p1;
+    e2 = p2;
+
+    if (ef_compare(name, e1, e2) != 0)
+	return 1;
+
+    if (e1->comp_method != e2->comp_method || e1->comp_size != e2->comp_size) {
+	if (verbose) {
+	    if (header_done==0) {
+		printf("--- %s\n+++ %s\n", name[0], name[1]);
+		header_done = 1;
+	    }
+	    printf("---                     %s  ", e1->name);
+	    printf("method %d size %lu\n", e1->comp_method, (long unsigned)e1->comp_size);
+	    printf("+++                     %s  ", e1->name);
+	    printf("method %d size %lu\n", e2->comp_method, (long unsigned)e2->comp_size);
+	}
+	return 1;
+    }
+
+    return 0;
+}
+
+
+
+
 static void
 entry_print(const void *p)
 {
@@ -292,7 +445,8 @@ entry_print(const void *p)
 
     e = p;
 
-    printf("%10u %08x %s\n", e->size, e->crc, e->name);
+    /* XXX PRId64 */
+    printf("%10lu %08x %s\n", (unsigned long)e->size, e->crc, e->name);
 }
 
 

@@ -44,48 +44,74 @@ ZIP_EXTERN int
 zip_set_file_comment(struct zip *za, zip_uint64_t idx,
 		     const char *comment, int len)
 {
-    char *tmpcom;
-    const char *name;
-    enum zip_encoding_type com_enc, enc;
+    struct zip_entry *e;
+    struct zip_string *cstr;
+    struct zip_dirent *de;
+    enum zip_encoding_type com_enc, name_enc;
+    int changed;
 
-    if (idx >= za->nentry
-	|| len < 0 || len > MAXCOMLEN
-	|| (len > 0 && comment == NULL)) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+    if ((de=_zip_get_dirent(za, idx, 0, NULL)) == NULL)
 	return -1;
-    }
 
     if (ZIP_IS_RDONLY(za)) {
 	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
     }
 
-    if ((com_enc=_zip_guess_encoding(comment, len)) == ZIP_ENCODING_CP437) {
+    if (len < 0 || len > MAXCOMLEN
+	|| (len > 0 && comment == NULL)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
-    if ((name=zip_get_name(za, idx, ZIP_FL_NAME_RAW)) == NULL)
-	return -1;
-    enc = _zip_guess_encoding(name, strlen(name));
+    if (len > 0) {
+	if ((cstr=_zip_string_new((const zip_uint8_t *)comment, len, &za->error)) == NULL)
+	    return -1;
 
-    if (enc == ZIP_ENCODING_CP437 && com_enc == ZIP_ENCODING_UTF8) {
+	if ((com_enc=_zip_guess_encoding(cstr, ZIP_ENCODING_UTF8_KNOWN)) == ZIP_ENCODING_ERROR) {
+	    _zip_string_free(cstr);
+	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	    return -1;
+	}
+    }
+    else {
+	cstr = NULL;
+	com_enc = ZIP_ENCODING_ASCII;
+    }
+
+    name_enc = _zip_guess_encoding(de->filename, ZIP_ENCODING_UNKNOWN);
+
+    if (name_enc == ZIP_ENCODING_CP437 && com_enc == ZIP_ENCODING_UTF8_KNOWN) {
 	_zip_error_set(&za->error, ZIP_ER_ENCMISMATCH, 0);
 	return -1;
     }
 
-    if (len > 0) {
-	if ((tmpcom=(char *)_zip_memdup(comment, len, &za->error)) == NULL)
-	    return -1;
-    }
-    else
-	tmpcom = NULL;
+    e = za->entry+idx;
 
-    if (za->entry[idx].changes.valid & ZIP_DIRENT_COMMENT)
-	free(za->entry[idx].changes.comment);
-    za->entry[idx].changes.comment = tmpcom;
-    za->entry[idx].changes.comment_len = len;
-    za->entry[idx].changes.valid |= ZIP_DIRENT_COMMENT;
-    
+    if (e->changes) {
+	_zip_string_free(e->changes->comment);
+	e->changes->comment = NULL;
+	e->changes->changed &= ~ZIP_DIRENT_COMMENT;
+    }
+
+    if (e->orig && e->orig->comment)
+	changed = !_zip_string_equal(e->orig->comment, cstr);
+    else
+	changed = (cstr != NULL);
+	
+    if (changed) {
+	if (e->changes == NULL)
+	    e->changes = _zip_dirent_clone(e->orig);
+	e->changes->comment = cstr;
+	e->changes->changed |= ZIP_DIRENT_COMMENT;
+    }
+    else {
+	_zip_string_free(cstr);
+	if (e->changes && e->changes->changed == 0) {
+	    _zip_dirent_free(e->changes);
+	    e->changes = NULL;
+	}
+    }
+
     return 0;
 }

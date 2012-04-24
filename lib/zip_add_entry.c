@@ -1,6 +1,6 @@
 /*
-  zip_get_extra_field_by_id.c -- get extrafield by ID
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  zip_add_entry.c -- create and init struct zip_entry
+  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,70 +33,34 @@
 
 
 
+#include <stdlib.h>
+
 #include "zipint.h"
 
 
 
-const zip_uint8_t *
-zip_get_extra_field_by_id(struct zip *za, int idx, int flags,
-			  zip_uint16_t id, int id_index, zip_uint16_t *lenp)
-{
-    static zip_uint8_t empty[1];
-    
-    const zip_uint8_t *ef;
-    int len;
+/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
 
-    len = 17;
-    ef = (const zip_uint8_t *)zip_get_file_extra(za, idx, &len, flags);
-    
-    if (ef == NULL) {
-	if (len == 17)
-	    return NULL;
-	if (lenp)
-	    *lenp = 0;
-	return empty;
+zip_int64_t
+_zip_add_entry(struct zip *za)
+{
+    zip_uint64_t idx;
+
+    if (za->nentry+1 >= za->nentry_alloc) {
+	struct zip_entry *rentries;
+	zip_uint64_t nalloc = za->nentry_alloc + 16;
+	rentries = (struct zip_entry *)realloc(za->entry, sizeof(struct zip_entry) * nalloc);
+	if (!rentries) {
+	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	    return -1;
+	}
+	za->entry = rentries;
+	za->nentry_alloc = nalloc;
     }
 
-    return _zip_extract_extra_field_by_id(&za->error, id, id_index, ef, len, lenp);
+    idx = za->nentry++;
+
+    _zip_entry_init(za->entry+idx);
+
+    return idx;
 }
-    
-
-const zip_uint8_t *
-_zip_extract_extra_field_by_id(struct zip_error *errorp, zip_uint16_t id, int id_index,
-			       const zip_uint8_t *ef, zip_uint16_t ef_len, zip_uint16_t *lenp)
-{
-    int i;
-    const zip_uint8_t *p;
-    zip_uint16_t fid, flen;
-
-    i = 0;
-    for (p=ef; p<ef+ef_len; p+=flen+4) {
-	if (p+4 > ef+ef_len) {
-	    _zip_error_set(errorp, ZIP_ER_INCONS, 0);
-	    return NULL;
-	}
-
-	fid = p[0]+(p[1]<<8);
-	flen = p[2]+(p[3]<<8);
-
-	if (p+flen+4 > ef+ef_len) {
-	    _zip_error_set(errorp, ZIP_ER_INCONS, 0);
-	    return NULL;
-	}
-
-	if (fid == id) {
-	    if (i < id_index) {
-		i++;
-		continue;
-	    }
-
-	    if (lenp)
-		*lenp = flen;
-	    return p+4;
-	}
-    }
-
-    _zip_error_set(errorp, ZIP_ER_NOENT, 0);
-    return NULL;
-}
-

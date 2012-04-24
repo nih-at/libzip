@@ -45,11 +45,10 @@
 static void set_error(int *, struct zip_error *, int);
 static struct zip *_zip_allocate_new(const char *, int, int *);
 static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
-static void _zip_check_torrentzip(struct zip *);
+static void _zip_check_torrentzip(struct zip *, const struct zip_cdir *);
 static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, off_t);
 static int _zip_file_exists(const char *, int, int *);
-static int _zip_headercomp(struct zip_dirent *, int,
-			   struct zip_dirent *, int);
+static int _zip_headercomp(struct zip_dirent *, struct zip_dirent *);
 static unsigned char *_zip_memmem(const unsigned char *, int,
 				  const unsigned char *, int);
 static struct zip_cdir *_zip_readcdir(FILE *, off_t, unsigned char *, unsigned char *,
@@ -100,7 +99,6 @@ _zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
 {
     struct zip *za;
     struct zip_cdir *cdir;
-    int i;
     off_t len;
 
     if (fseeko(fp, 0, SEEK_END) < 0) {
@@ -130,22 +128,18 @@ _zip_open(const char *fn, FILE *fp, int flags, int aflags, int *zep)
 	return NULL;
     }
 
-    za->cdir = cdir;
+    za->entry = cdir->entry;
+    za->nentry = cdir->nentry;
+    za->nentry_alloc = cdir->nentry_alloc;
+    za->comment_orig = cdir->comment;
+    
     za->zp = fp;
 
-    if (cdir->nentry == 0)
-	za->entry = NULL;
-    else if ((za->entry=(struct zip_entry *)malloc(sizeof(*(za->entry))
-						   * cdir->nentry)) == NULL) {
-	set_error(zep, NULL, ZIP_ER_MEMORY);
-	zip_discard(za);
-	return NULL;
-    }
-    for (i=0; i<cdir->nentry; i++)
-	_zip_entry_new(za);
+    _zip_check_torrentzip(za, cdir);
 
-    _zip_check_torrentzip(za);
     za->ch_flags = za->flags;
+
+    free(cdir);
 
     return za;
 }
@@ -182,12 +176,12 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     struct zip_cdir *cd;
     const unsigned char *cdp;
     const unsigned char **bufp;
-    zip_int32_t comlen;
+    zip_int32_t tail_len, comment_len;
     int i;
     zip_uint32_t left;
 
-    comlen = buf + buflen - eocd - EOCDLEN;
-    if (comlen < 0) {
+    tail_len = buf + buflen - eocd - EOCDLEN;
+    if (tail_len < 0) {
 	/* not enough bytes left for comment */
 	_zip_error_set(error, ZIP_ER_NOZIP, 0);
 	return NULL;
@@ -204,7 +198,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	return NULL;
     }
 
-    if (eocd-buf < EOCD64LOCLEN && memcmp(eocd-EOCD64LOCLEN, EOCD64LOC_MAGIC, 4) == 0)
+    if (eocd-EOCD64LOCLEN >= buf && memcmp(eocd-EOCD64LOCLEN, EOCD64LOC_MAGIC, 4) == 0)
 	cd = _zip_read_eocd64(fp, eocd-EOCD64LOCLEN, buf, buf_offset, buflen, flags, error);
     else
 	cd = _zip_read_eocd(eocd, buf, buf_offset, buflen, flags, error);
@@ -213,35 +207,28 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	return NULL;
 
     cdp = eocd + 20;
-    cd->comment = NULL;
-    cd->comment_len = _zip_read2(&cdp);
+    comment_len = _zip_read2(&cdp);
 
     if (((zip_uint64_t)cd->offset)+cd->size > buf_offset + (eocd-buf)) {
 	/* cdir spans past EOCD record */
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
-	cd->nentry = 0;
 	_zip_cdir_free(cd);
 	return NULL;
     }
 
-    if (comlen < cd->comment_len) {
+    if (tail_len < comment_len) {
 	_zip_error_set(error, ZIP_ER_NOZIP, 0);
-	cd->nentry = 0;
 	_zip_cdir_free(cd);
 	return NULL;
     }
-    if ((flags & ZIP_CHECKCONS) && comlen != cd->comment_len) {
+    if ((flags & ZIP_CHECKCONS) && tail_len != comment_len) {
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
-	cd->nentry = 0;
 	_zip_cdir_free(cd);
 	return NULL;
     }
 
-    if (cd->comment_len) {
-	if ((cd->comment=(char *)_zip_memdup(eocd+EOCDLEN,
-					     cd->comment_len, error))
-	    == NULL) {
-	    cd->nentry = 0;
+    if (comment_len) {
+	if ((cd->comment=_zip_string_new(eocd+EOCDLEN, comment_len, error)) == NULL) {
 	    _zip_cdir_free(cd);
 	    return NULL;
 	}
@@ -265,7 +252,6 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 		_zip_error_set(error, ZIP_ER_SEEK, errno);
 	    else
 		_zip_error_set(error, ZIP_ER_NOZIP, 0);
-	    cd->nentry = 0;
 	    _zip_cdir_free(cd);
 	    return NULL;
 	}
@@ -274,8 +260,8 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     left = cd->size;
     i=0;
     while (i<cd->nentry && left > 0) {
-	if ((_zip_dirent_read(cd->entry+i, fp, bufp, &left, 0, error)) < 0) {
-	    cd->nentry = i;
+	if ((cd->entry[i].orig=_zip_dirent_new()) == NULL
+	    || (_zip_dirent_read(cd->entry[i].orig, fp, bufp, &left, 0, error)) < 0) {
 	    _zip_cdir_free(cd);
 	    return NULL;
 	}
@@ -285,7 +271,6 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	    /* Infozip extension for more than 64k entries:
 	       nentries wraps around, size indicates correct EOCD */
 	    if (_zip_cdir_grow(cd, cd->nentry+ZIP_UINT16_MAX, error) < 0) {
-		cd->nentry = i;
 		_zip_cdir_free(cd);
 		return NULL;
 	    }
@@ -312,22 +297,22 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
     struct zip_dirent temp;
 
     if (cd->nentry) {
-	max = cd->entry[0].offset;
-	min = cd->entry[0].offset;
+	max = cd->entry[0].orig->offset;
+	min = cd->entry[0].orig->offset;
     }
     else
 	min = max = 0;
 
     for (i=0; i<cd->nentry; i++) {
-	if (cd->entry[i].offset < min)
-	    min = cd->entry[i].offset;
+	if (cd->entry[i].orig->offset < min)
+	    min = cd->entry[i].orig->offset;
 	if (min > cd->offset) {
 	    _zip_error_set(error, ZIP_ER_NOZIP, 0);
 	    return -1;
 	}
 	
-	j = cd->entry[i].offset + cd->entry[i].comp_size
-	    + strlen(cd->entry[i].settable.filename) + LENTRYSIZE;
+	j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size
+	    + _zip_string_length(cd->entry[i].orig->filename) + LENTRYSIZE;
 	if (j > max)
 	    max = j;
 	if (max > cd->offset) {
@@ -335,7 +320,7 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	    return -1;
 	}
 	
-	if (fseeko(fp, cd->entry[i].offset, SEEK_SET) != 0) {
+	if (fseeko(fp, cd->entry[i].orig->offset, SEEK_SET) != 0) {
 	    _zip_error_set(error, ZIP_ER_SEEK, errno);
 	    return -1;
 	}
@@ -343,11 +328,16 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	if (_zip_dirent_read(&temp, fp, NULL, NULL, 1, error) == -1)
 	    return -1;
 	
-	if (_zip_headercomp(cd->entry+i, 0, &temp, 1) != 0) {
+	if (_zip_headercomp(cd->entry[i].orig, &temp) != 0) {
 	    _zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_dirent_finalize(&temp);
 	    return -1;
 	}
+	
+	cd->entry[i].orig->extra_fields = _zip_ef_merge(cd->entry[i].orig->extra_fields, temp.extra_fields);
+	cd->entry[i].orig->local_extra_fields_read = 1;
+	temp.extra_fields = NULL;
+	
 	_zip_dirent_finalize(&temp);
     }
 
@@ -360,28 +350,27 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
    check wether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
 
 static void
-_zip_check_torrentzip(struct zip *za)
+_zip_check_torrentzip(struct zip *za, const struct zip_cdir *cdir)
 {
     uLong crc_got, crc_should;
     char buf[8+1];
     char *end;
 
-    if (za->zp == NULL || za->cdir == NULL)
+    if (za->zp == NULL || cdir == NULL)
 	return;
 
-    if (za->cdir->comment_len != TORRENT_SIG_LEN+8
-	|| strncmp(za->cdir->comment, TORRENT_SIG, TORRENT_SIG_LEN) != 0)
+    if (_zip_string_length(cdir->comment) != TORRENT_SIG_LEN+8
+	|| strncmp((const char *)cdir->comment->raw, TORRENT_SIG, TORRENT_SIG_LEN) != 0)
 	return;
 
-    memcpy(buf, za->cdir->comment+TORRENT_SIG_LEN, 8);
+    memcpy(buf, cdir->comment->raw+TORRENT_SIG_LEN, 8);
     buf[8] = '\0';
     errno = 0;
     crc_should = strtoul(buf, &end, 16);
     if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
 	return;
 
-    if (_zip_filerange_crc(za->zp, za->cdir->offset, za->cdir->size,
-			   &crc_got, NULL) < 0)
+    if (_zip_filerange_crc(za->zp, cdir->offset, cdir->size, &crc_got, NULL) < 0)
 	return;
 
     if (crc_got == crc_should)
@@ -392,66 +381,32 @@ _zip_check_torrentzip(struct zip *za)
 
 
 /* _zip_headercomp:
-   compares two headers h1 and h2; if they are local headers, set
-   local1p or local2p respectively to 1, else 0. Return 0 if they
-   are identical, -1 if not. */
+   compares a central directory entry and a local file header
+   Return 0 if they are consistent, -1 if not. */
 
 static int
-_zip_headercomp(struct zip_dirent *h1, int local1p, struct zip_dirent *h2,
-	   int local2p)
+_zip_headercomp(struct zip_dirent *central, struct zip_dirent *local)
 {
-    if ((h1->version_needed != h2->version_needed)
+    if ((central->version_needed != local->version_needed)
 #if 0
 	/* some zip-files have different values in local
 	   and global headers for the bitflags */
-	|| (h1->bitflags != h2->bitflags)
+	|| (central->bitflags != local->bitflags)
 #endif
-	|| (h1->settable.comp_method != h2->settable.comp_method)
-	|| (h1->last_mod != h2->last_mod)
-	|| strcmp(h1->settable.filename, h2->settable.filename))
+	|| (central->comp_method != local->comp_method)
+	|| (central->last_mod != local->last_mod)
+	|| !_zip_string_equal(central->filename, local->filename))
 	return -1;
 
-    /* check that CRC and sizes are zero if data descriptor is used */
-    if ((h1->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) && local1p
-	&& (h1->crc != 0
-	    || h1->comp_size != 0
-	    || h1->uncomp_size != 0))
-	return -1;
-    if ((h2->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) && local2p
-	&& (h2->crc != 0
-	    || h2->comp_size != 0
-	    || h2->uncomp_size != 0))
-	return -1;
-    
-    /* check that CRC and sizes are equal if no data descriptor is used */
-    if (((h1->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0 || local1p == 0)
-	&& ((h2->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0 || local2p == 0)) {
-	if ((h1->crc != h2->crc)
-	    || (h1->comp_size != h2->comp_size)
-	    || (h1->uncomp_size != h2->uncomp_size))
+
+    if ((central->crc != local->crc) || (central->comp_size != local->comp_size)
+	|| (central->uncomp_size != local->uncomp_size)) {
+	/* InfoZip stores valid values in local header even when data descriptor is used.
+	   This is in violation of the appnote. */
+	if (((local->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0
+	     || local->crc != 0 || local->comp_size != 0 || local->uncomp_size != 0))
 	    return -1;
     }
-    
-    if ((local1p == local2p)
-	&& ((h1->settable.extrafield_len != h2->settable.extrafield_len)
-	    || (h1->settable.extrafield_len && h2->settable.extrafield
-		&& memcmp(h1->settable.extrafield, h2->settable.extrafield,
-			  h1->settable.extrafield_len))))
-	return -1;
-
-    /* if either is local, nothing more to check */
-    if (local1p || local2p)
-	return 0;
-
-    if ((h1->version_madeby != h2->version_madeby)
-	|| (h1->disk_number != h2->disk_number)
-	|| (h1->int_attrib != h2->int_attrib)
-	|| (h1->ext_attrib != h2->ext_attrib)
-	|| (h1->offset != h2->offset)
-	|| (h1->settable.comment_len != h2->settable.comment_len)
-	|| (h1->settable.comment_len && h2->settable.comment
-	    && memcmp(h1->settable.comment, h2->settable.comment, h1->settable.comment_len)))
-	return -1;
 
     return 0;
 }
@@ -672,6 +627,11 @@ _zip_read_eocd64(FILE *f, const unsigned char *eocd64loc, unsigned char *buf,
     cdp = eocd64loc+8;
     eocd_offset = _zip_read8(&cdp);
 
+    if (eocd_offset+EOCD64LEN > buf_offset+(eocd64loc-buf)) {
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
     if (eocd_offset >= buf_offset)
 	cdp = buf+(eocd_offset-buf_offset);
     else {
@@ -692,14 +652,14 @@ _zip_read_eocd64(FILE *f, const unsigned char *eocd64loc, unsigned char *buf,
     }
 
     if (memcmp(cdp, EOCD64_MAGIC, 4) != 0) {
-	_zip_error_set(error, ZIP_ER_NOZIP, 0);
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
 	return NULL;
     }
     cdp += 4;
     
     size = _zip_read8(&cdp);
 
-    if ((flags & ZIP_CHECKCONS) && size+eocd_offset != buf_offset+(eocd64loc-buf)) {
+    if ((flags & ZIP_CHECKCONS) && size+eocd_offset+12 != buf_offset+(eocd64loc-buf)) {
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
 	return NULL;
     }

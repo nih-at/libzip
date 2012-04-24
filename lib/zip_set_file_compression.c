@@ -41,13 +41,10 @@ ZIP_EXTERN int
 zip_set_file_compression(struct zip *za, zip_uint64_t idx,
 			 zip_int32_t method, zip_uint32_t flags)
 {
+    struct zip_entry *e;
+
     if (idx >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    if (method != ZIP_CM_DEFAULT && method != ZIP_CM_STORE && method != ZIP_CM_DEFLATE) {
-	_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 	return -1;
     }
 
@@ -56,17 +53,26 @@ zip_set_file_compression(struct zip *za, zip_uint64_t idx,
 	return -1;
     }
 
-    /* XXX: needs support for better of deflate/store
-     *      update man page when fixing this */
-    if (method == ZIP_CM_DEFAULT)
-	method = ZIP_CM_DEFLATE;
+    if (method != ZIP_CM_DEFAULT && method != ZIP_CM_STORE && method != ZIP_CM_DEFLATE) {
+	_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	return -1;
+    }
 
-    if (za->cdir != NULL && idx < za->cdir->nentry &&
-	method == za->cdir->entry[idx].settable.comp_method)
-	za->entry[idx].changes.valid &= ~ZIP_DIRENT_COMP_METHOD;
-    else {
-	za->entry[idx].changes.valid |= ZIP_DIRENT_COMP_METHOD;
-	za->entry[idx].changes.comp_method = method;
+    e = za->entry+idx;
+    
+    if (method != (e->orig ? e->orig->comp_method : ZIP_CM_DEFAULT)) {
+	if (e->changes == NULL)
+	    e->changes = _zip_dirent_clone(e->orig);
+
+	e->changes->comp_method = method;
+	e->changes->changed |= ZIP_DIRENT_COMP_METHOD;
+    }
+    else if (e->changes) {
+	e->changes->changed &= ~ZIP_DIRENT_COMP_METHOD;
+	if (e->changes->changed == 0) {
+	    _zip_dirent_free(e->changes);
+	    e->changes = NULL;
+	}
     }
     
     return 0;

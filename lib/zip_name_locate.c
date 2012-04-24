@@ -53,7 +53,7 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 {
     int (*cmp)(const char *, const char *);
     const char *fn, *p;
-    int i, n;
+    zip_uint64_t i;
 
     if (za == NULL)
 	return -1;
@@ -63,15 +63,9 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 	return -1;
     }
 
-    if ((flags & ZIP_FL_UNCHANGED)  && za->cdir == NULL) {
-        _zip_error_set(error, ZIP_ER_NOENT, 0);
-        return -1;
-    }
-
     cmp = (flags & ZIP_FL_NOCASE) ? strcasecmp : strcmp;
 
-    n = (flags & ZIP_FL_UNCHANGED) ? za->cdir->nentry : za->nentry;
-    for (i=0; i<n; i++) {
+    for (i=0; i<za->nentry; i++) {
 	fn = _zip_get_name(za, i, flags, error);
 
 	/* newly added (partially filled) entry or error */

@@ -33,8 +33,6 @@
 
 
 
-#include <string.h>
-
 #include "zipint.h"
 
 
@@ -42,53 +40,18 @@
 ZIP_EXTERN const char *
 zip_get_file_comment(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
 {
-    const char *ret;
+    struct zip_dirent *de;
+    zip_uint32_t len;
+    const zip_uint8_t *str;
 
-    if (idx >= za->nentry) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+    if ((de=_zip_get_dirent(za, idx, flags, NULL)) == NULL)
 	return NULL;
-    }
 
-    if ((flags & ZIP_FL_UNCHANGED) || (za->entry[idx].changes.valid & ZIP_DIRENT_COMMENT) == 0) {
-	if (za->cdir == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_NOENT, 0);
-	    return NULL;
-	}
-	if (idx >= za->cdir->nentry) {
-	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	    return NULL;
-	}
-	    
-	if (lenp != NULL)
-	    *lenp = za->cdir->entry[idx].settable.comment_len;
-	ret = za->cdir->entry[idx].settable.comment;
+    if ((str=_zip_string_get(de->comment, &len, flags, &za->error)) == NULL)
+	return NULL;
 
-	if (flags & ZIP_FL_NAME_RAW)
-	    return ret;
+    if (lenp)
+	*lenp = len;
 
-	/* file comment already is UTF-8? */
-	if (za->cdir->entry[idx].bitflags & ZIP_GPBF_ENCODING_UTF_8)
-	    return ret;
-	
-	/* undeclared, start guessing */
-	if (za->cdir->entry[idx].fc_type == ZIP_ENCODING_UNKNOWN)
-	    za->cdir->entry[idx].fc_type = _zip_guess_encoding(ret, za->cdir->entry[idx].settable.comment_len);
-
-	if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->entry[idx].fc_type != ZIP_ENCODING_ASCII))
-	    || (za->cdir->entry[idx].fc_type == ZIP_ENCODING_CP437)) {
-	    if (za->cdir->entry[idx].comment_converted == NULL)
-		za->cdir->entry[idx].comment_converted = _zip_cp437_to_utf8(ret, za->cdir->entry[idx].settable.comment_len,
-									    &za->cdir->entry[idx].comment_converted_len, &za->error);
-	    ret = za->cdir->entry[idx].comment_converted;
-	    if (lenp != NULL)
-		*lenp = za->cdir->entry[idx].comment_converted_len;
-	}
-
-	return ret;
-    }
-
-    /* already UTF-8, no conversion necessary */
-    if (lenp != NULL)
-	*lenp = za->entry[idx].changes.comment_len;
-    return za->entry[idx].changes.comment;
+    return (const char *)str;
 }

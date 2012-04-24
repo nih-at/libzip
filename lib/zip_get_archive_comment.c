@@ -42,42 +42,20 @@
 ZIP_EXTERN const char *
 zip_get_archive_comment(struct zip *za, int *lenp, int flags)
 {
-    const char *ret;
-    if ((flags & ZIP_FL_UNCHANGED)
-	|| (za->ch_comment_len == -1)) {
-	if (za->cdir) {
-	    if (lenp != NULL)
-		*lenp = za->cdir->comment_len;
-	    ret = za->cdir->comment;
-	    
-	    if (flags & ZIP_FL_NAME_RAW)
-		return ret;
+    struct zip_string *comment;
+    zip_uint32_t len;
+    const zip_uint8_t *str;
 
-	    /* start guessing */
-	    if (za->cdir->comment_type == ZIP_ENCODING_UNKNOWN)
-		za->cdir->comment_type = _zip_guess_encoding(ret, za->cdir->comment_len);
+    if ((flags & ZIP_FL_UNCHANGED) || (za->comment_changes == NULL))
+	comment = za->comment_orig;
+    else
+	comment = za->comment_changes;
 
-	    if (((flags & ZIP_FL_NAME_STRICT) && (za->cdir->comment_type != ZIP_ENCODING_ASCII))
-		|| (za->cdir->comment_type == ZIP_ENCODING_CP437)) {
-		if (za->cdir->comment_converted == NULL)
-		    za->cdir->comment_converted = _zip_cp437_to_utf8(ret, za->cdir->comment_len,
-									     &za->cdir->comment_converted_len, &za->error);
-		ret = za->cdir->comment_converted;
-		if (lenp != NULL)
-		    *lenp = za->cdir->comment_converted_len;
-	    }
+    if ((str=_zip_string_get(comment, &len, flags, &za->error)) == NULL)
+	return NULL;
 
-	    return ret;
-	}
-	else {
-	    if (lenp != NULL)
-		*lenp = -1;
-	    return NULL;
-	}
-    }
+    if (lenp)
+	*lenp = len;
 
-    /* already UTF-8, no conversion needed */
-    if (lenp != NULL)
-	*lenp = za->ch_comment_len;
-    return za->ch_comment;
+    return (const char *)str;
 }

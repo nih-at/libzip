@@ -58,13 +58,12 @@ zip_discard(struct zip *za)
 	fclose(za->zp);
 
     free(za->default_password);
-    _zip_cdir_free(za->cdir);
-    free(za->ch_comment);
+    _zip_string_free(za->comment_orig);
+    _zip_string_free(za->comment_changes);
 
     if (za->entry) {
-	for (i=0; i<za->nentry; i++) {
-	    _zip_entry_free(za->entry+i);
-	}
+	for (i=0; i<za->nentry; i++)
+	    _zip_entry_finalize(za->entry+i);
 	free(za->entry);
     }
 

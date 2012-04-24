@@ -42,7 +42,6 @@
 
 const char *teststr="This is a test.\n";
 const char *file="teststring.txt";
-const char *prg;
 
 int
 main(int argc, char *argv[])
@@ -53,10 +52,8 @@ main(int argc, char *argv[])
     char buf[100];
     int err;
 
-    prg = argv[0];
-
     if (argc != 2) {
-	fprintf(stderr, "usage: %s archive\n", prg);
+	fprintf(stderr, "usage: %s archive\n", argv[0]);
 	return 1;
     }
 
@@ -64,34 +61,28 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive `%s': %s\n", prg,
-		archive, buf);
+	fprintf(stderr, "can't open zip archive `%s': %s\n", archive, buf);
 	return 1;
     }
 
     if ((zs=zip_source_buffer(za, teststr, strlen(teststr), 0)) == NULL) {
-	fprintf(stderr, "%s: can't create zip_source from buffer: %s\n", prg,
-		zip_strerror(za));
+	fprintf(stderr, "can't create zip_source from buffer: %s\n", zip_strerror(za));
 	exit(1);
     }
 
     if (zip_add(za, file, zs) == -1) {
 	zip_source_free(zs);
-	fprintf(stderr, "%s: can't add file `%s': %s\n", prg,
-		file, zip_strerror(za));
+	fprintf(stderr, "can't add file `%s': %s\n", file, zip_strerror(za));
 	return 1;
     }
 
     if (zip_fopen(za, file, ZIP_FL_UNCHANGED) == NULL) {
-	/* expected error, don't pollute with prg */
-	fprintf(stderr, "can't zip_fopen file `%s': %s\n",
-		file, zip_strerror(za));
+	fprintf(stderr, "can't zip_fopen file `%s': %s\n", file, zip_strerror(za));
 	return 1;
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg,
-		archive, zip_strerror(za));
+	fprintf(stderr, "can't close zip archive `%s': %s\n", archive, zip_strerror(za));
 	return 1;
     }
 
