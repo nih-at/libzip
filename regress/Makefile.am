@@ -110,14 +110,14 @@ TESTS= \
 	stat_index_utf8_strict.test \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
-	torrent-already.test \
-	torrent-new.test
+	torrent-already.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \
 	encoding-cp437.test \
 	encoding-cp437-all.test \
-	encoding-utf-8.test
+	encoding-utf-8.test \
+	torrent-new.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la

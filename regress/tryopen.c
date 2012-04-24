@@ -42,8 +42,6 @@
 
 #include "zip.h"
 
-const char *prg;
-
 const char *usage = "usage: %s [-cent] file\n";
 
 
@@ -55,9 +53,9 @@ main(int argc, char *argv[])
     struct zip *z;
     int c, flags, ze;
     zip_uint64_t count;
+    int error;
 
     flags = 0;
-    prg = argv[0];
 
     while ((c=getopt(argc, argv, "cent")) != -1) {
 	switch (c) {
@@ -75,28 +73,32 @@ main(int argc, char *argv[])
 	    break;
 
 	default:
-	    fprintf(stderr, usage, prg);
+	    fprintf(stderr, usage, argv[0]);
 	    return 1;
 	}
     }
-    if (argc != optind+1) {
-	fprintf(stderr, usage, prg);
-	return 1;
+
+    error = 0;
+    for (; optind < argc; optind++) {
+	fname = argv[optind];
+	errno = 0;
+
+	if ((z=zip_open(fname, flags, &ze)) != NULL) {
+	    count = zip_get_num_entries(z, 0);
+	    printf("opening `%s' succeeded, %lld entries\n", fname, count);
+	    zip_close(z);
+	    continue;
+	}
+	
+	printf("opening `%s' returned error %d", fname, ze);
+	if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
+	    printf("/%d", errno);
+	printf("\n");
+	error++;
     }
 
-    fname = argv[optind];
-    errno = 0;
+    if (error > 0)
+	fprintf(stderr, "%d errors\n", error);
 
-    if ((z=zip_open(fname, flags, &ze)) != NULL) {
-	count = zip_get_num_entries(z, 0);
-	printf("opening `%s' succeeded, %lld entries\n", fname, count);
-	zip_close(z);
-	return 0;
-    }
-
-    printf("opening `%s' returned error %d", fname, ze);
-    if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
-	printf("/%d", errno);
-    printf("\n");
-    return 1;
+    return error ? 1 : 0;
 }

@@ -1,6 +1,6 @@
 /*
-  zipcmp.c -- compare zip files
-  Copyright (C) 2008-2010 Dieter Baron and Thomas Klausner
+  ziptorrent.c -- convert zip to torrentzip
+  Copyright (C) 2008-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
