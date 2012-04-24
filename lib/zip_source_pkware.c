@@ -49,10 +49,6 @@ struct trad_pkware {
 #define KEY1		591751049
 #define KEY2		878082192
 
-static const uLongf *crc = NULL;
-
-#define CRC32(c, b) (crc[((c) ^ (b)) & 0xff] ^ ((c) >> 8))
-
 
 
 static void decrypt(struct trad_pkware *, zip_uint8_t *,
@@ -79,9 +75,6 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
 	_zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	return NULL;
     }
-
-    if (crc == NULL)
-	crc = get_crc_table();
 
     if ((ctx=(struct trad_pkware *)malloc(sizeof(*ctx))) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
@@ -128,10 +121,10 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 	    out[i] = b;
 
 	/* update keys */
-	ctx->key[0] = CRC32(ctx->key[0], b);
+	ctx->key[0] = crc32(ctx->key[0] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
 	ctx->key[1] = (ctx->key[1] + (ctx->key[0] & 0xff)) * 134775813 + 1;
 	b = ctx->key[1] >> 24;
-	ctx->key[2] = CRC32(ctx->key[2], b);
+	ctx->key[2] = crc32(ctx->key[2] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
     }
 }
 
