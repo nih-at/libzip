@@ -64,7 +64,6 @@ struct entry {
     zip_uint64_t size;
     zip_uint32_t crc;
     zip_uint32_t comp_method;
-    zip_uint64_t comp_size;
     struct ef *extra_fields;
     int n_extra_fields;
 };
@@ -212,12 +211,10 @@ compare_zip(char * const zn[])
 		    test_file(za, j, st.size, st.crc);
 		if (paranoid) {
 		    e[i][j].comp_method = st.comp_method;
-		    e[i][j].comp_size = st.comp_size;
 		    ef_read(za, j, e[i]+j);
 		}
 		else {
 		    e[i][j].comp_method = 0;
-		    e[i][j].comp_size = 0;
 		    e[i][j].n_extra_fields = 0;
 		}
 	    }
@@ -418,16 +415,16 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
     if (ef_compare(name, e1, e2) != 0)
 	return 1;
 
-    if (e1->comp_method != e2->comp_method || e1->comp_size != e2->comp_size) {
+    if (e1->comp_method != e2->comp_method) {
 	if (verbose) {
 	    if (header_done==0) {
 		printf("--- %s\n+++ %s\n", name[0], name[1]);
 		header_done = 1;
 	    }
 	    printf("---                     %s  ", e1->name);
-	    printf("method %d size %lu\n", e1->comp_method, (long unsigned)e1->comp_size);
+	    printf("method %d\n", e1->comp_method);
 	    printf("+++                     %s  ", e1->name);
-	    printf("method %d size %lu\n", e2->comp_method, (long unsigned)e2->comp_size);
+	    printf("method %d\n", e2->comp_method);
 	}
 	return 1;
     }
