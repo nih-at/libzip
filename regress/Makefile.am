@@ -28,6 +28,8 @@ EXTRA_DIST= \
 	encrypt.zip \
 	manyfiles-zip.zip \
 	rename_ok.zip \
+	streamed.zip \
+	streamed-zip64.zip \
 	test.zip \
 	test2.zip \
 	test-cp437.zip \
@@ -105,6 +107,8 @@ TESTS= \
 	stat_index_cp437_guess.test \
 	stat_index_cp437_raw.test \
 	stat_index_cp437_strict.test \
+	stat_index_streamed.test \
+	stat_index_streamed_zip64.test \
 	stat_index_utf8_guess.test \
 	stat_index_utf8_raw.test \
 	stat_index_utf8_strict.test \
