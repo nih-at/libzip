@@ -121,6 +121,7 @@ DISABLED_TESTS= \
 	encoding-cp437.test \
 	encoding-cp437-all.test \
 	encoding-utf-8.test \
+	open_incons.test \
 	torrent-new.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
