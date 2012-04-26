@@ -1,6 +1,6 @@
 # delete last entry in zip archive
 program modify
 return 0
-args testfile.zip delete 5
-file testfile.zip testfile.zip testfile.zip
+args testfile.zzip delete 5
+file testfile.zzip testfile.zip testfile.zip
 stderr can't delete file at index `5': Invalid argument

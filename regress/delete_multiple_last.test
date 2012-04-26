@@ -1,5 +1,5 @@
 # delete multiple entries in zip archive, emptying it
 program modify
 return 0
-args testfile.zip delete 0 delete 1 delete 2 delete 3
-file-del testfile.zip testcomment.zip
+args testfile.zzip delete 0 delete 1 delete 2 delete 3
+file-del testfile.zzip testcomment.zip
