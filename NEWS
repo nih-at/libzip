@@ -3,7 +3,7 @@
 * Add UTF-8 support for file names, file comments, and archive comments
 * Added zip_discard()
 * Added ZIP_TRUNCATE for zip_open()
-* Added zip_set_compression()
+* Added zip_set_file_compression()
 * Added zip_get_file_extra()/zip_set_file_extra()
 * Use gcc4's visibility __attribute__
 * More changes for Windows support
