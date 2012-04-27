@@ -42,6 +42,7 @@ EXTRA_DIST= \
 	testextrabytes.zip \
 	testfile.txt \
 	testfile.zip \
+	testfile-UTF8.zip \
 	testnottorrent.zip \
 	teststored.zip \
 	testtorrent.tzip
