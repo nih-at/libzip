@@ -125,6 +125,9 @@ _zip_guess_encoding(const zip_uint8_t * const name, zip_uint32_t len)
     int j, ulen;
 
     ret = ZIP_ENCODING_ASCII;
+    if (name == NULL)
+	return ret;
+
     for (i=0; i<len; i++) {
 	if ((name[i] > 31 && name[i] < 128) || name[i] == '\r' || name[i] == '\n' || name[i] == '\t')
 	    continue;
