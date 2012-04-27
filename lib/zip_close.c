@@ -199,11 +199,21 @@ zip_close(struct zip *za)
 		zip_source_free(zs);
 	}
 	else {
+	    zip_uint64_t offset;
+	    
 	    if (_zip_dirent_write(de, out, 1, &za->error) < 0) {
 		error = 1;
 		break;
 	    }
-	    /* we just read the local dirent, file is at correct position */
+	    if ((offset=_zip_file_get_offset(za, i, &za->error)) == 0) {
+		error = 1;
+		break;
+	    }
+	    if ((fseek(za->zp, offset, SEEK_SET) < 0)) {
+		_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
+		error = 1;
+		break;
+	    }
 	    if (copy_data(za->zp, de->comp_size, out, &za->error) < 0) {
 		error = 1;
 		break;
