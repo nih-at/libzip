@@ -4,7 +4,6 @@ noinst_PROGRAMS= \
 	add_from_zip \
 	fopen_unchanged \
 	fread \
-	get_comment \
 	modify \
 	name_locate \
 	rename \

@@ -24,7 +24,6 @@
 ^regress/encoding$
 ^regress/fopen_unchanged$
 ^regress/fread$
-^regress/get_comment$
 ^regress/modify$
 ^regress/name_locate$
 ^regress/rename$

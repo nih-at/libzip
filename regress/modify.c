@@ -56,7 +56,17 @@ main(int argc, char *argv[])
     prg = argv[arg++];
 
     if (argc < 2) {
-	fprintf(stderr, "usage: %s archive [add name content|add_dir name|add_file name filename offset len|delete index|file_comment index comment|rename index name]\n", prg);
+	fprintf(stderr, "usage: %s archive command1 [args] command2 [args] ...]\n\n"
+		"Supported commands and arguments are:\n"
+		"\tadd name content\n"
+		"\tadd_dir name\n"
+		"\tadd_file name filename offset len\n"
+		"\tdelete index\n"
+		"\tget_archive_comment\n"
+		"\tget_file_comment index\n"
+		"\trename index name\n"
+		"\tset_file_comment index comment\n"
+		"\nThe index is zero-based.\n", prg);
 	return 1;
     }
 
@@ -117,20 +127,39 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 2;
-	} else if (strcmp(argv[arg], "file_comment") == 0 && arg+2 < argc) {
-	    /* set file comment */
+	} else if (strcmp(argv[arg], "get_archive_comment") == 0) {
+	    const char *comment;
+	    int len;
+	    /* get archive comment */
+	    if ((comment=zip_get_archive_comment(za, &len, 0)) == NULL)
+		printf("No archive comment\n");
+	    else
+		printf("Archive comment: %.*s\n", len, comment);
+	    arg += 1;
+	} else if (strcmp(argv[arg], "get_file_comment") == 0 && arg+1 < argc) {
+	    const char *comment;
+	    int len;
+	    /* get file comment */
 	    idx = atoi(argv[arg+1]);
-	    if (zip_set_file_comment(za, idx, argv[arg+2], strlen(argv[arg+2])) < 0) {
-		fprintf(stderr, "can't set file comment at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
-		err = 1;
-		break;
-	    }
-	    arg += 3;
+	    if ((comment=zip_get_file_comment(za, idx, &len, 0)) == NULL)
+		printf("No comment for `%s'\n", zip_get_name(za, idx, 0));
+	    else
+		printf("File comment for `%s': %.*s\n", zip_get_name(za, idx, 0), len, comment);
+	    arg += 2;
 	} else if (strcmp(argv[arg], "rename") == 0 && arg+2 < argc) {
 	    /* rename */
 	    idx = atoi(argv[arg+1]);
 	    if (zip_rename(za, idx, argv[arg+2]) < 0) {
 		fprintf(stderr, "can't rename file at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
+		err = 1;
+		break;
+	    }
+	    arg += 3;
+	} else if (strcmp(argv[arg], "set_file_comment") == 0 && arg+2 < argc) {
+	    /* set file comment */
+	    idx = atoi(argv[arg+1]);
+	    if (zip_set_file_comment(za, idx, argv[arg+2], strlen(argv[arg+2])) < 0) {
+		fprintf(stderr, "can't set file comment at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
 		err = 1;
 		break;
 	    }

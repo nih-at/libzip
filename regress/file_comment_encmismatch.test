@@ -1,6 +1,6 @@
 # set file comment to UTF-8 for CP437 encoded filename (fails)
 program modify
 return 1
-args testfile file_comment 0 ÄÖÜßäöü
+args testfile   set_file_comment 0 ÄÖÜßäöü
 file testfile test-cp437.zip test-cp437.zip
 stderr can't set file comment at index `0' to `ÄÖÜßäöü': Encoding of name and comment do not match
