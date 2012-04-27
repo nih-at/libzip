@@ -1,13 +1,9 @@
 noinst_PROGRAMS= \
-	add_dir \
 	add_from_buffer \
-	add_from_file \
 	add_from_filep \
 	add_from_zip \
-	encrypt \
 	fopen_unchanged \
 	fread \
-	get_comment \
 	modify \
 	name_locate \
 	rename \
