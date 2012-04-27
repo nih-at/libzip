@@ -1,5 +1,5 @@
 .\" zip_set_archive_comment.mdoc \-- set zip archive comment
-.\" Copyright (C) 2006-2007 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_SET_ARCHIVE_COMMENT 3 "October 26, 2007" NiH
+.TH ZIP_SET_ARCHIVE_COMMENT 3 "February 20, 2012" NiH
 .SH "NAME"
 zip_set_archive_comment \- set zip archive comment
 .SH "LIBRARY"
@@ -51,6 +51,8 @@ is
 and
 \fBlen\fR
 is 0, the archive comment will be removed.
+\fBcomment\fR
+must be encoded in ASCII or UTF-8.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
@@ -64,7 +66,9 @@ fails if:
 [ZIP_ER_INVAL]
 \fBlen\fR
 is less than 0 or longer than the maximum comment length in a zip file
-(65535).
+(65535), or
+\fBcomment\fR
+is not a valid UTF-8 encoded string.
 .TP 4
 [ZIP_ER_MEMORY]
 Required memory could not be allocated.

@@ -1,5 +1,5 @@
 .\" zip_set_file_comment.mdoc \-- set comment for file in zip
-.\" Copyright (C) 2006-2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_SET_FILE_COMMENT 3 "March 10, 2009" NiH
+.TH ZIP_SET_FILE_COMMENT 3 "February 20, 2012" NiH
 .SH "NAME"
 zip_set_file_comment \- set comment for file in zip
 .SH "LIBRARY"
@@ -56,6 +56,8 @@ is
 and
 \fBlen\fR
 is 0, the file comment will be removed.
+\fBcomment\fR
+must be encoded in ASCII or UTF-8.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
@@ -66,6 +68,11 @@ zip_set_file_comment
 fails if:
 .RS
 .TP 4
+[ZIP_ER_ENCMISMATCH]
+The file name is encoded in CP437 and the file comment is in UTF-8.
+Workaround: see
+zip_rename(3).
+.TP 4
 [ZIP_ER_INVAL]
 \fBindex\fR
 is not a valid file index in
@@ -73,7 +80,9 @@ is not a valid file index in
 or
 \fBlen\fR
 is less than 0 or longer than the maximum comment length in a zip file
-(65535).
+(65535), or
+\fBcomment\fR
+is not a valid UTF-8 encoded string.
 .TP 4
 [ZIP_ER_MEMORY]
 Required memory could not be allocated.
