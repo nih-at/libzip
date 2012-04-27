@@ -1,5 +1,4 @@
 noinst_PROGRAMS= \
-	add_dir \
 	add_from_buffer \
 	add_from_file \
 	add_from_filep \
