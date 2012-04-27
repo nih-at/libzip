@@ -4,7 +4,6 @@ SET(STANDALONE_TEST_PROGRAMS
   add_from_buffer
   add_from_filep
   add_from_zip
-  encrypt
   fopen_unchanged
   fread
   get_comment
