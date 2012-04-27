@@ -22,6 +22,7 @@ EXTRA_DIST= \
 	bigzero-zip.zip \
 	broken.zip \
 	encrypt.zip \
+	fileorder.zip \
 	manyfiles-zip.zip \
 	rename_ok.zip \
 	streamed.zip \
@@ -104,6 +105,7 @@ TESTS= \
 	stat_index_cp437_guess.test \
 	stat_index_cp437_raw.test \
 	stat_index_cp437_strict.test \
+	stat_index_fileorder.test \
 	stat_index_streamed.test \
 	stat_index_streamed_zip64.test \
 	stat_index_utf8_guess.test \
