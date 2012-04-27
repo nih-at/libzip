@@ -1,7 +1,7 @@
 # add file to zip twice, making duplicate names
-program add_from_file
+program modify
 return 1
-args testfile.zip testfile.txt testfile.txt
+args testfile.zip   add_file testfile.txt testfile.txt 0 -1   add_file testfile.txt testfile.txt 0 -1
 file testfile.txt testfile.txt testfile.txt
 file-new testfile.zip testfile.zip
 stderr can't add file `testfile.txt': File already exists
