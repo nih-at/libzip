@@ -41,38 +41,67 @@
 
 const char *prg;
 
+const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 [args] ...]\n\n"
+    "Supported options are:\n"
+    "\t-c\tcheck consistency\n"
+    "\t-e\terror if archive already exists (only useful with -n)\n"
+    "\t-n\tcreate archive if it doesn't exist (default)\n"
+    "\t-t\tdisregard current archive contents, if any\n"
+    "\nSupported commands and arguments are:\n"
+    "\tadd name content\n"
+    "\tadd_dir name\n"
+    "\tadd_file name filename offset len\n"
+    "\tdelete index\n"
+    "\tget_archive_comment\n"
+    "\tget_file_comment index\n"
+    "\trename index name\n"
+    "\tset_file_comment index comment\n"
+    "\nThe index is zero-based.\n";
+
 int
 main(int argc, char *argv[])
 {
     const char *archive;
     struct zip *za;
     struct zip_source *zs;
-    char buf[100];
-    int err;
-    int arg;
-    int idx;
+    char buf[100], c;
+    int arg, err, flags, idx;
 
-    arg = 0;
+    arg = flags = 0;
     prg = argv[arg++];
 
     if (argc < 2) {
-	fprintf(stderr, "usage: %s archive command1 [args] command2 [args] ...]\n\n"
-		"Supported commands and arguments are:\n"
-		"\tadd name content\n"
-		"\tadd_dir name\n"
-		"\tadd_file name filename offset len\n"
-		"\tdelete index\n"
-		"\tget_archive_comment\n"
-		"\tget_file_comment index\n"
-		"\trename index name\n"
-		"\tset_file_comment index comment\n"
-		"\nThe index is zero-based.\n", prg);
+	fprintf(stderr, usage, prg);
 	return 1;
     }
 
+    while ((c=getopt(argc, argv, "cent")) != -1) {
+	switch (c) {
+	case 'c':
+	    flags |= ZIP_CHECKCONS;
+	    break;
+	case 'e':
+	    flags |= ZIP_EXCL;
+	    break;
+	case 'n':
+	    flags |= ZIP_CREATE;
+	    break;
+	case 't':
+	    flags |= ZIP_TRUNCATE;
+	    break;
+
+	default:
+	    fprintf(stderr, usage, argv[0]);
+	    return 1;
+	}
+    }
+
     archive = argv[arg++];
-    
-    if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
+
+    if (flags == 0)
+	flags = ZIP_CREATE;
+
+    if ((za=zip_open(archive, flags, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
 	fprintf(stderr, "can't open zip archive `%s': %s\n", archive, buf);
 	return 1;
