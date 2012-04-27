@@ -56,7 +56,7 @@ main(int argc, char *argv[])
     prg = argv[arg++];
 
     if (argc < 2) {
-	fprintf(stderr, "usage: %s archive [add name content|add_dir name|delete index|file_comment index comment|rename index name]\n", prg);
+	fprintf(stderr, "usage: %s archive [add name content|add_dir name|add_file name filename offset len|delete index|file_comment index comment|rename index name]\n", prg);
 	return 1;
     }
 
@@ -68,17 +68,20 @@ main(int argc, char *argv[])
 	return 1;
     }
 
+    err = 0;
     while (arg < argc) {
 	if (strcmp(argv[arg], "add") == 0 && arg+2 < argc) {
 	    /* add */
     	    if ((zs=zip_source_buffer(za, argv[arg+2], strlen(argv[arg+2]), 0)) == NULL) {
 		fprintf(stderr, "can't create zip_source from buffer: %s\n", zip_strerror(za));
+		err = 1;
 		break;
 	    }
 
 	    if (zip_add(za, argv[arg+1], zs) == -1) {
 		zip_source_free(zs);
 		fprintf(stderr, "can't add file `%s': %s\n", argv[arg+1], zip_strerror(za));
+		err = 1;
 		break;
 	    }
 	    arg += 3;
@@ -86,14 +89,31 @@ main(int argc, char *argv[])
 	    /* add directory */
 	    if (zip_add_dir(za, argv[arg+1]) < 0) {
 		fprintf(stderr, "can't add directory `%s': %s\n", argv[arg+1], zip_strerror(za));
+		err = 1;
 		break;
 	    }
 	    arg += 2;
+	} else if (strcmp(argv[arg], "add_file") == 0 && arg+4 < argc) {
+	    /* add */
+    	    if ((zs=zip_source_file(za, argv[arg+2], atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
+		fprintf(stderr, "can't create zip_source from file: %s\n", zip_strerror(za));
+		err = 1;
+		break;
+	    }
+
+	    if (zip_add(za, argv[arg+1], zs) == -1) {
+		zip_source_free(zs);
+		fprintf(stderr, "can't add file `%s': %s\n", argv[arg+1], zip_strerror(za));
+		err = 1;
+		break;
+	    }
+	    arg += 5;
 	} else if (strcmp(argv[arg], "delete") == 0 && arg+1 < argc) {
 	    /* delete */
 	    idx = atoi(argv[arg+1]);
 	    if (zip_delete(za, idx) < 0) {
 		fprintf(stderr, "can't delete file at index `%d': %s\n", idx, zip_strerror(za));
+		err = 1;
 		break;
 	    }
 	    arg += 2;
@@ -102,6 +122,7 @@ main(int argc, char *argv[])
 	    idx = atoi(argv[arg+1]);
 	    if (zip_set_file_comment(za, idx, argv[arg+2], strlen(argv[arg+2])) < 0) {
 		fprintf(stderr, "can't set file comment at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
+		err = 1;
 		break;
 	    }
 	    arg += 3;
@@ -110,11 +131,13 @@ main(int argc, char *argv[])
 	    idx = atoi(argv[arg+1]);
 	    if (zip_rename(za, idx, argv[arg+2]) < 0) {
 		fprintf(stderr, "can't rename file at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
+		err = 1;
 		break;
 	    }
 	    arg += 3;
 	} else {
-	    fprintf(stderr, "unrecognized command `%s'\n", argv[arg]);
+	    fprintf(stderr, "unrecognized command `%s', or not enough arguments\n", argv[arg]);
+	    err = 1;
 	    break;
 	}
     }
@@ -124,5 +147,5 @@ main(int argc, char *argv[])
 	return 1;
     }
 
-    return 0;
+    return err;
 }
