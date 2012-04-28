@@ -5,7 +5,6 @@ noinst_PROGRAMS= \
 	fread \
 	modify \
 	name_locate \
-	rename \
 	set_comment_all \
 	set_comment_localonly \
 	set_comment_removeglobal \
