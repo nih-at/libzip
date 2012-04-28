@@ -1,7 +1,6 @@
 noinst_PROGRAMS= \
 	add_from_buffer \
 	add_from_filep \
-	add_from_zip \
 	fopen_unchanged \
 	fread \
 	modify \
@@ -23,6 +22,8 @@ EXTRA_DIST= \
 	broken.zip \
 	encrypt.zip \
 	fileorder.zip \
+	firstsecond.zip \
+	firstsecond-split.zip \
 	manyfiles-zip.zip \
 	rename_ok.zip \
 	streamed.zip \
@@ -61,6 +62,7 @@ TESTS= \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_zip_deflated.test \
+	add_from_zip_partial.test \
 	add_from_zip_stored.test \
 	delete_add_same.test \
 	delete_invalid.test \

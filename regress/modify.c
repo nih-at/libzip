@@ -51,6 +51,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tadd name content\n"
     "\tadd_dir name\n"
     "\tadd_file name filename offset len\n"
+    "\tadd_from_zip name archivename index offset len\n"
     "\tdelete index\n"
     "\tget_archive_comment\n"
     "\tget_file_comment index\n"
@@ -62,7 +63,7 @@ int
 main(int argc, char *argv[])
 {
     const char *archive;
-    struct zip *za;
+    struct zip *za, *z_in;
     struct zip_source *zs;
     char buf[100], c;
     int arg, err, flags, idx;
@@ -147,6 +148,30 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 5;
+	} else if (strcmp(argv[arg], "add_from_zip") == 0 && arg+5 < argc) {
+	    /* add from another zip file */
+	    int idx;
+	    idx = atoi(argv[arg+3]);
+	    if ((z_in=zip_open(argv[arg+2], ZIP_CHECKCONS, &err)) == NULL) {
+		zip_error_to_str(buf, sizeof(buf), err, errno);
+		fprintf(stderr, "can't open source zip archive `%s': %s\n", argv[arg+2], buf);
+		err = 1;
+		break;
+	    }
+	    if ((zs=zip_source_zip(za, z_in, idx, 0, atoi(argv[arg+4]), atoi(argv[arg+5]))) == NULL) {
+		fprintf(stderr, "error creating file source from `%s' index '%d': %s\n", argv[arg+2], idx, zip_strerror(za));
+		zip_close(z_in);
+		err = 1;
+		break;
+	    }
+	    if (zip_add(za, argv[arg+1], zs) == -1) {
+		fprintf(stderr, "can't add file `%s': %s\n", argv[arg+1], zip_strerror(za));
+		zip_source_free(zs);
+		zip_close(z_in);
+		err = 1;
+		break;
+	    }
+	    arg += 6;
 	} else if (strcmp(argv[arg], "delete") == 0 && arg+1 < argc) {
 	    /* delete */
 	    idx = atoi(argv[arg+1]);

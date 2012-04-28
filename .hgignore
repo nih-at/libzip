@@ -19,9 +19,6 @@
 ^man/.*\.html$
 ^regress/add_from_buffer$
 ^regress/add_from_filep$
-^regress/add_from_zip$
-^regress/cp437$
-^regress/encoding$
 ^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/modify$
