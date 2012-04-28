@@ -1,7 +1,6 @@
 noinst_PROGRAMS= \
 	add_from_buffer \
 	add_from_filep \
-	add_from_zip \
 	fopen_unchanged \
 	fread \
 	modify \
