@@ -62,12 +62,12 @@ static void deflate_free(struct deflate *);
 
 ZIP_EXTERN struct zip_source *
 zip_source_deflate(struct zip *za, struct zip_source *src,
-		   zip_uint16_t cm, int flags)
+		   zip_int32_t cm, int flags)
 {
     struct deflate *ctx;
     struct zip_source *s2;
 
-    if (src == NULL || cm != ZIP_CM_DEFLATE) {
+    if (src == NULL || (cm != ZIP_CM_DEFLATE && cm != ZIP_CM_DEFAULT)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }

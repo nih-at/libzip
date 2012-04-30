@@ -299,7 +299,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	de->comp_method = ZIP_CM_DEFLATE;
     }
 
-    if (st.comp_method != de->comp_method || st.comp_method == ZIP_CM_STORE) {
+    if (st.comp_method == ZIP_CM_STORE || (de->comp_method != ZIP_CM_DEFAULT && st.comp_method != de->comp_method)) {
 	struct zip_source *s_store, *s_crc;
 	zip_compression_implementation comp_impl;
 	

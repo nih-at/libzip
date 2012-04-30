@@ -125,13 +125,13 @@ int _zip_mkstemp(char *);
 
 typedef struct zip_source *(*zip_compression_implementation)(struct zip *,
 						     struct zip_source *,
-						     zip_uint16_t, int);
+						     zip_int32_t, int);
 typedef struct zip_source *(*zip_encryption_implementation)(struct zip *,
 						    struct zip_source *,
 						    zip_uint16_t, int,
 						    const char *);
 
-zip_compression_implementation zip_get_compression_implementation(zip_uint16_t);
+zip_compression_implementation zip_get_compression_implementation(zip_int32_t);
 zip_encryption_implementation zip_get_encryption_implementation(zip_uint16_t);
 
 
@@ -154,7 +154,7 @@ struct zip_source *zip_source_crc(struct zip *, struct zip_source *,
 				  int);
 struct zip_source *zip_source_deflate(struct zip *,
 				      struct zip_source *,
-				      zip_uint16_t, int);
+				      zip_int32_t, int);
 void zip_source_error(struct zip_source *, int *, int *);
 struct zip_source *zip_source_layered(struct zip *,
 				      struct zip_source *,

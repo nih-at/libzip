@@ -38,9 +38,9 @@
 
 
 ZIP_EXTERN zip_compression_implementation
-zip_get_compression_implementation(zip_uint16_t cm)
+zip_get_compression_implementation(zip_int32_t cm)
 {
-    if (cm == ZIP_CM_DEFLATE)
+    if (cm == ZIP_CM_DEFLATE || cm == ZIP_CM_DEFAULT)
 	return zip_source_deflate;
     return NULL;
 }
