@@ -139,7 +139,10 @@ crc_read(struct zip_source *src, void *_ctx, void *data,
 		        After all, this only works for uncompressed data. */
 		st->size = ctx->size;
 		st->crc = ctx->crc;
-		st->valid |= ZIP_STAT_SIZE|ZIP_STAT_CRC;
+		st->comp_size = ctx->size;
+		st->comp_method = ZIP_CM_STORE;
+		st->encryption_method = ZIP_EM_NONE;
+		st->valid |= ZIP_STAT_SIZE|ZIP_STAT_CRC|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_ENCRYPTION_METHOD;;
 	    }
 	}
 	return 0;

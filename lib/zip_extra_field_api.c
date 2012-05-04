@@ -177,6 +177,9 @@ zip_get_file_num_extra_fields_by_id(struct zip *za, zip_uint64_t idx, zip_uint32
 ZIP_EXTERN int
 zip_set_file_extra_field(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len)
 {
+    /* XXX: ZIP_ER_INVAL if ef_id == ZIP_EF_ZIP64 */
+    /* XXX: size of ef + new <= ZIP_UINT16_MAX */
+
     /* XXX */
     return -1;
 }

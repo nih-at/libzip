@@ -132,27 +132,53 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, int survivo
     zip_uint64_t offset, size;
     struct zip_string *comment;
     int i;
+    int is_zip64;
+    int ret;
 
     offset = ftello(fp);
+
+    is_zip64 = 0;
 
     for (i=0; i<survivors; i++) {
 	struct zip_entry *entry = za->entry+filelist[i].idx;
 
-	if (_zip_dirent_write(entry->changes ? entry->changes : entry->orig, fp, 0, &za->error) != 0)
+	if ((ret=_zip_dirent_write(entry->changes ? entry->changes : entry->orig, fp, ZIP_FL_CENTRAL, &za->error)) < 0)
 	    return -1;
+	if (ret)
+	    is_zip64 = 1;
     }
 
     size = ftello(fp) - offset;
-    
-    /* EOCD64 */
+
+    if (offset > ZIP_UINT32_MAX || survivors > ZIP_UINT16_MAX)
+	is_zip64 = 1;
+
+    if (is_zip64) {
+	fwrite(EOCD64_MAGIC, 1, 4, fp);
+	_zip_write8(EOCD64LEN, fp);
+	_zip_write2(45, fp);
+	_zip_write2(45, fp);
+	_zip_write4(1, fp);
+	_zip_write4(1, fp);
+	_zip_write8(survivors, fp);
+	_zip_write8(survivors, fp);
+	_zip_write8(size, fp);
+	_zip_write8(offset, fp);
+
+	fwrite(EOCD64LOC_MAGIC, 1, 4, fp);
+	_zip_write4(1, fp);
+	_zip_write8(offset+size, fp);
+	_zip_write4(1, fp);
+		    
+    }
 
     /* clearerr(fp); */
     fwrite(EOCD_MAGIC, 1, 4, fp);
     _zip_write4(0, fp);
-    _zip_write2((unsigned short)survivors, fp);
-    _zip_write2((unsigned short)survivors, fp);
-    _zip_write4(size, fp);
-    _zip_write4(offset, fp);
+    _zip_write2(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors, fp);
+    _zip_write2(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors, fp);
+    _zip_write4(size >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : size, fp);
+    _zip_write4(offset >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : offset, fp);
 
     comment = za->comment_changed ? za->comment_changes : za->comment_orig;
 
@@ -236,6 +262,18 @@ _zip_dirent_init(struct zip_dirent *de)
     de->int_attrib = 0;
     de->ext_attrib = 0;
     de->offset = 0;
+}
+
+
+
+int
+_zip_dirent_needs_zip64(const struct zip_dirent *de, zip_flags_t flags)
+{
+    if (de->uncomp_size >= ZIP_UINT32_MAX || de->comp_size >= ZIP_UINT32_MAX
+	|| ((flags & ZIP_FL_CENTRAL) && de->offset >= ZIP_UINT32_MAX))
+	return 1;
+
+    return 0;
 }
 
 
@@ -435,6 +473,8 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 	    if (zde->disk_number == ZIP_UINT16_MAX)
 		zde->disk_number = _zip_read4(&ef);
 	}
+
+	zde->extra_fields = _zip_ef_delete_by_id(zde->extra_fields, ZIP_EF_ZIP64, ZIP_EXTRA_FIELD_ALL, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL);
     }
 
     if (bufp)
@@ -532,27 +572,31 @@ _zip_dirent_torrent_normalize(struct zip_dirent *de)
 
 
 
-/* _zip_dirent_write(zde, fp, localp, error):
+/* _zip_dirent_write(zde, fp, flags, error):
    Writes zip directory entry zde to file fp.
 
-   If localp != 0, it writes a local header instead of a central
-   directory entry.
+   If flags & ZIP_EF_LOCAL, it writes a local header instead of a central
+   directory entry.  If flags & ZIP_EF_FORCE_ZIP64, a ZIP64 extra field is written, even if not needed.
 
-   Returns 0 if successful. On error, error is filled in and -1 is
+   Returns 0 if successful, 1 if successful and wrote ZIP64 extra field. On error, error is filled in and -1 is
    returned.
 */
 
 int
-_zip_dirent_write(struct zip_dirent *zde, FILE *fp, int localp,
+_zip_dirent_write(struct zip_dirent *zde, FILE *fp, int flags,
 		  struct zip_error *error)
 {
     unsigned short dostime, dosdate;
+    zip_uint16_t zip64_ef_size;
 
-    fwrite(localp ? LOCAL_MAGIC : CENTRAL_MAGIC, 1, 4, fp);
+    zip64_ef_size = 0;
 
-    if (!localp)
+    fwrite((flags & ZIP_FL_LOCAL) ? LOCAL_MAGIC : CENTRAL_MAGIC, 1, 4, fp);
+
+
+    if ((flags & ZIP_FL_LOCAL) == 0)
 	_zip_write2(zde->version_madeby, fp);
-    _zip_write2(zde->version_needed, fp);
+    _zip_write2(zde->version_needed, fp);    /* XXX: at least 4.5 if zip64 */
     _zip_write2(zde->bitflags, fp);
     _zip_write2(zde->comp_method, fp);
 
@@ -561,27 +605,58 @@ _zip_dirent_write(struct zip_dirent *zde, FILE *fp, int localp,
     _zip_write2(dosdate, fp);
     
     _zip_write4(zde->crc, fp);
-    _zip_write4(zde->comp_size, fp);
-    _zip_write4(zde->uncomp_size, fp);
-    
+    if (zde->comp_size < ZIP_UINT32_MAX)
+	_zip_write4(zde->comp_size, fp);
+    else {
+	_zip_write4(ZIP_UINT32_MAX-1, fp);
+	zip64_ef_size += 8;
+    }
+    if (zde->uncomp_size < ZIP_UINT32_MAX)
+	_zip_write4(zde->uncomp_size, fp);
+    else {
+	_zip_write4(ZIP_UINT32_MAX-1, fp);
+	zip64_ef_size += 8;
+    }
+
+    if (flags & ZIP_FL_LOCAL) {
+	if (zip64_ef_size > 0 || (flags & ZIP_FL_FORCE_ZIP64))
+	    zip64_ef_size = 16;
+    }
+    else if (zde->offset >= ZIP_UINT32_MAX)
+	zip64_ef_size += 8;
+
     _zip_write2(_zip_string_length(zde->filename), fp);
-    _zip_write2(_zip_ef_size(zde->extra_fields, localp ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL), fp);
+    _zip_write2(_zip_ef_size(zde->extra_fields, flags) + (zip64_ef_size ? (zip64_ef_size+4) : 0), fp);
     
-    if (!localp) {
+    if ((flags & ZIP_FL_LOCAL) == 0) {
 	_zip_write2(_zip_string_length(zde->comment), fp);
 	_zip_write2(zde->disk_number, fp);
 	_zip_write2(zde->int_attrib, fp);
 	_zip_write4(zde->ext_attrib, fp);
-	_zip_write4(zde->offset, fp);
+	if (zde->offset < ZIP_UINT32_MAX)
+	    _zip_write4(zde->offset, fp);
+	else
+	    _zip_write4(ZIP_UINT32_MAX-1, fp);
     }
 
     if (zde->filename)
 	_zip_string_write(zde->filename, fp);
 
     if (zde->extra_fields)
-	_zip_ef_write(zde->extra_fields, localp ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, fp);
+	_zip_ef_write(zde->extra_fields, flags, fp);
 
-    if (!localp) {
+    if (zip64_ef_size > 0) {
+	_zip_write2(ZIP_EF_ZIP64, fp);
+	_zip_write2(zip64_ef_size, fp);
+	if ((flags & ZIP_EF_LOCAL) || zde->uncomp_size >= ZIP_UINT32_MAX)
+	    _zip_write8(zde->uncomp_size, fp);
+	if ((flags & ZIP_EF_LOCAL) || zde->comp_size >= ZIP_UINT32_MAX)
+	    _zip_write8(zde->comp_size, fp);
+	if (((flags & ZIP_EF_LOCAL) == 0) && zde->offset >= ZIP_UINT32_MAX)
+	    _zip_write8(zde->offset, fp);
+    }
+
+    if ((flags & ZIP_FL_LOCAL) == 0) {
 	if (zde->comment)
 	    _zip_string_write(zde->comment, fp);
     }
@@ -591,7 +666,7 @@ _zip_dirent_write(struct zip_dirent *zde, FILE *fp, int localp,
 	return -1;
     }
 
-    return 0;
+    return zip64_ef_size > 0;
 }
 
 
@@ -758,6 +833,23 @@ _zip_write4(zip_uint32_t i, FILE *fp)
     putc((i>>8)&0xff, fp);
     putc((i>>16)&0xff, fp);
     putc((i>>24)&0xff, fp);
+    
+    return;
+}
+
+
+
+void
+_zip_write8(zip_uint64_t i, FILE *fp)
+{
+    putc(i&0xff, fp);
+    putc((i>>8)&0xff, fp);
+    putc((i>>16)&0xff, fp);
+    putc((i>>24)&0xff, fp);
+    putc((i>>32)&0xff, fp);
+    putc((i>>40)&0xff, fp);
+    putc((i>>48)&0xff, fp);
+    putc((i>>56)&0xff, fp);
     
     return;
 }

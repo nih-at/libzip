@@ -197,6 +197,8 @@ enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 #define ZIP_EF_CENTRAL		ZIP_FL_CENTRAL			/* include in central directory */
 #define ZIP_EF_BOTH		(ZIP_EF_LOCAL|ZIP_EF_CENTRAL)	/* include in both */
 
+#define ZIP_FL_FORCE_ZIP64	1024  /* force zip64 extra field (_zip_dirent_write) */
+
 
 /* encoding type */
 enum zip_encoding_type {
@@ -371,6 +373,7 @@ struct zip_dirent *_zip_dirent_clone(const struct zip_dirent *);
 void _zip_dirent_free(struct zip_dirent *);
 void _zip_dirent_finalize(struct zip_dirent *);
 void _zip_dirent_init(struct zip_dirent *);
+int _zip_dirent_needs_zip64(const struct zip_dirent *, zip_flags_t);
 struct zip_dirent *_zip_dirent_new(void);
 int _zip_dirent_read(struct zip_dirent *, FILE *, const unsigned char **,
 		     zip_uint32_t *, int, struct zip_error *);
@@ -378,13 +381,14 @@ zip_int32_t _zip_dirent_size(FILE *, zip_uint16_t, struct zip_error *);
 void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, int, struct zip_error *);
 
+struct zip_extra_field *_zip_ef_delete_by_id(struct zip_extra_field *, zip_uint16_t, zip_uint16_t, zip_flags_t);
 void _zip_ef_free(struct zip_extra_field *);
-const zip_uint8_t *_zip_ef_get_by_id(struct zip_extra_field *, zip_uint16_t *, zip_uint16_t, zip_uint16_t, zip_uint16_t, struct zip_error *);
+const zip_uint8_t *_zip_ef_get_by_id(struct zip_extra_field *, zip_uint16_t *, zip_uint16_t, zip_uint16_t, zip_flags_t, struct zip_error *);
 struct zip_extra_field *_zip_ef_merge(struct zip_extra_field *, struct zip_extra_field *);
-struct zip_extra_field *_zip_ef_new(zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_uint16_t);
-struct zip_extra_field *_zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_uint16_t, struct zip_error *);
-zip_uint16_t _zip_ef_size(struct zip_extra_field *, zip_uint16_t);
-void _zip_ef_write(struct zip_extra_field *, zip_uint16_t, FILE *);
+struct zip_extra_field *_zip_ef_new(zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_flags_t);
+struct zip_extra_field *_zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_flags_t, struct zip_error *);
+zip_uint16_t _zip_ef_size(struct zip_extra_field *, zip_flags_t);
+void _zip_ef_write(struct zip_extra_field *, zip_flags_t, FILE *);
 
 void _zip_entry_finalize(struct zip_entry *);
 void _zip_entry_init(struct zip_entry *);
@@ -448,6 +452,7 @@ void _zip_unchange_data(struct zip_entry *);
 
 void _zip_write2(zip_uint16_t, FILE *);
 void _zip_write4(zip_uint32_t, FILE *);
+void _zip_write8(zip_uint64_t, FILE *);
 
 
 #endif /* zipint.h */

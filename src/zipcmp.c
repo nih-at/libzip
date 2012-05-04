@@ -66,6 +66,8 @@ struct entry {
     zip_uint32_t comp_method;
     struct ef *extra_fields;
     int n_extra_fields;
+    const char *comment;
+    int comment_length;
 };
 
 
@@ -105,6 +107,7 @@ static void ef_print(const void *p);
 static int entry_cmp(const void *p1, const void *p2);
 static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
 static void entry_print(const void *p);
+static int comment_compare(const char *c1, int l1, const char *c2, int l2);
 static int compare_list(char * const name[],
 			const void *l[], const int n[], int size,
 			int (*cmp)(const void *, const void *),
@@ -176,13 +179,17 @@ main(int argc, char * const argv[])
 static int
 compare_zip(char * const zn[])
 {
-    struct zip *za;
+    struct zip *za, *z[2];
     struct zip_stat st;
     struct entry *e[2];
     int n[2];
     int i, j;
     int err;
     char errstr[1024];
+    int res;
+
+    const char *archive_comment[2];
+    int archive_comment_len[2];
 
     for (i=0; i<2; i++) {
 	if ((za=zip_open(zn[i], paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
@@ -192,6 +199,7 @@ compare_zip(char * const zn[])
 	    return -1;
 	}
 
+	z[i] = za;
 	n[i] = zip_get_num_files(za);
 
 	if (n[i] == 0)
@@ -212,6 +220,8 @@ compare_zip(char * const zn[])
 		if (paranoid) {
 		    e[i][j].comp_method = st.comp_method;
 		    ef_read(za, j, e[i]+j);
+		    e[i][j].comment = zip_get_file_comment(za, j, &e[i][j].comment_length, 0);
+		    
 		}
 		else {
 		    e[i][j].comp_method = 0;
@@ -221,12 +231,29 @@ compare_zip(char * const zn[])
 	    qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
         }
 
-	zip_close(za);
-
+	if (paranoid)
+	    archive_comment[i] = zip_get_archive_comment(za, &archive_comment_len[i], 0);
     }
 
-    switch (compare_list(zn, (void *)e, n, sizeof(e[i][0]),
-			 entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print)) {
+    header_done = 0;
+
+    res = compare_list(zn, (void *)e, n, sizeof(e[i][0]),
+		       entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print);
+
+    if (paranoid) {
+	if (comment_compare(archive_comment[0], archive_comment_len[0], archive_comment[1], archive_comment_len[1]) != 0) {
+	    if (verbose) {
+		printf("--- archive comment (%d)\n", archive_comment_len[0]);
+		printf("+++ archive comment (%d)\n", archive_comment_len[1]);
+	    }
+	    res = 1;
+	}
+    }
+
+    for (i=0; i<2; i++)
+	zip_close(z[i]);
+
+    switch (res) {
     case 0:
 	exit(0);
 
@@ -236,8 +263,19 @@ compare_zip(char * const zn[])
     default:
 	exit(2);
     }
+}
 
-    return 0;
+
+
+static int
+comment_compare(const char *c1, int l1, const char *c2, int l2) {
+    if (l1 != l2)
+	return 1;
+
+    if (l1 == 0)
+	return 0;
+
+    return memcmp(c1, c2, l2);
 }
 
 
@@ -264,8 +302,6 @@ compare_list(char * const name[2],
 			    }						\
 			    diff = 1;					\
 			} while (0)
-
-    header_done = 0;
 
     i[0] = i[1] = 0;
     diff = 0;
@@ -408,12 +444,15 @@ entry_cmp(const void *p1, const void *p2)
 static int
 entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
     const struct entry *e1, *e2;
+    int ret;
 
     e1 = p1;
     e2 = p2;
 
+    ret = 0;
+
     if (ef_compare(name, e1, e2) != 0)
-	return 1;
+	ret = 1;
 
     if (e1->comp_method != e2->comp_method) {
 	if (verbose) {
@@ -426,10 +465,23 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 	    printf("+++                     %s  ", e1->name);
 	    printf("method %d\n", e2->comp_method);
 	}
-	return 1;
+	ret =  1;
+    }
+    if (comment_compare(e1->comment, e1->comment_length, e2->comment, e2->comment_length) != 0) {
+	if (verbose) {
+	    if (header_done==0) {
+		printf("--- %s\n+++ %s\n", name[0], name[1]);
+		header_done = 1;
+	    }
+	    printf("---                     %s  ", e1->name);
+	    printf("comment %d\n", e1->comment_length);
+	    printf("+++                     %s  ", e1->name);
+	    printf("comment %d\n", e2->comment_length);
+	}
+	ret = 1;
     }
 
-    return 0;
+    return ret;
 }
 
 

@@ -41,6 +41,45 @@
 
 
 
+struct zip_extra_field *
+_zip_ef_delete_by_id(struct zip_extra_field *ef, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags)
+{
+    struct zip_extra_field *head, *prev;
+    int i;
+
+    i = 0;
+    head = ef;
+    prev = NULL;
+    for (; ef; ef=(prev ? prev->next : head)) {
+	if ((ef->flags & flags & ZIP_EF_BOTH) && ef->id == id) {
+	    if (id_idx == ZIP_EXTRA_FIELD_ALL || i == id_idx) {
+		ef->flags &= ~(flags & ZIP_EF_BOTH);
+		if ((ef->flags & ZIP_EF_BOTH) == 0) {
+		    if (prev)
+			prev->next = ef->next;
+		    else
+			head = ef->next;
+		    ef->next = NULL;
+		    _zip_ef_free(ef);
+
+		    if (id_idx == ZIP_EXTRA_FIELD_ALL)
+			continue;
+		}
+	    }
+	    
+	    i++;
+	    if (i > id_idx)
+		break;
+	}
+	prev = ef;
+    }
+
+    return head;
+}
+
+
+
+
 void
 _zip_ef_free(struct zip_extra_field *ef)
 {
@@ -57,7 +96,7 @@ _zip_ef_free(struct zip_extra_field *ef)
 
 
 const zip_uint8_t *
-_zip_ef_get_by_id(struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_uint16_t flags, struct zip_error *error)
+_zip_ef_get_by_id(struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags, struct zip_error *error)
 {
     static const zip_uint8_t empty[1];
     
@@ -123,7 +162,7 @@ _zip_ef_merge(struct zip_extra_field *to, struct zip_extra_field *from)
 
 
 struct zip_extra_field *
-_zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_uint16_t flags)
+_zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_flags_t flags)
 {
     struct zip_extra_field *ef;
 
@@ -149,7 +188,7 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_uin
 
 
 struct zip_extra_field *
-_zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_uint16_t flags, struct zip_error *error)
+_zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, struct zip_error *error)
 {
     struct zip_extra_field *ef, *ef2, *ef_head;
     int i;
@@ -194,7 +233,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_uint16_t flags, str
 
 
 zip_uint16_t
-_zip_ef_size(struct zip_extra_field *ef, zip_uint16_t flags)
+_zip_ef_size(struct zip_extra_field *ef, zip_flags_t flags)
 {
     zip_uint16_t size;
 
@@ -210,7 +249,7 @@ _zip_ef_size(struct zip_extra_field *ef, zip_uint16_t flags)
 
 
 void
-_zip_ef_write(struct zip_extra_field *ef, zip_uint16_t flags, FILE *f)
+_zip_ef_write(struct zip_extra_field *ef, zip_flags_t flags, FILE *f)
 {
     for (; ef; ef=ef->next) {
 	if (ef->flags & flags & ZIP_EF_BOTH) {

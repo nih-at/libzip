@@ -77,6 +77,7 @@ extern "C" {
 #define ZIP_FL_NAME_STRICT    128 /* follow specification strictly */
 #define ZIP_FL_LOCAL	      256 /* in local header */
 #define ZIP_FL_CENTRAL	      512 /* in central directory */
+/*                           1024    reserved for internal use */
 
 /* archive global flags flags */
 
@@ -86,6 +87,7 @@ extern "C" {
 
 /* create a new extra field */
 
+#define ZIP_EXTRA_FIELD_ALL	ZIP_UINT16_MAX
 #define ZIP_EXTRA_FIELD_NEW	ZIP_UINT16_MAX
 
 /* flags for compression and encryption sources */
@@ -213,6 +215,8 @@ struct zip;
 struct zip_file;
 struct zip_source;
 
+typedef zip_uint32_t zip_flags_t;    
+
 typedef zip_int64_t (*zip_source_callback)(void *, void *, zip_uint64_t,
 					   enum zip_source_cmd);
 
@@ -223,8 +227,8 @@ ZIP_EXTERN zip_int64_t zip_add_dir(struct zip *, const char *);
 ZIP_EXTERN int zip_close(struct zip *);
 ZIP_EXTERN void zip_discard(struct zip *);
 ZIP_EXTERN int zip_delete(struct zip *, zip_uint64_t);
-ZIP_EXTERN int zip_delete_file_extra_field(struct zip *, zip_uint64_t, zip_uint32_t, zip_uint16_t);
-ZIP_EXTERN int zip_delete_file_extra_field_by_id(struct zip *, zip_uint64_t, zip_uint32_t, zip_uint16_t, zip_uint16_t);
+ZIP_EXTERN int zip_delete_file_extra_field(struct zip *, zip_uint64_t, zip_flags_t, zip_uint16_t);
+ZIP_EXTERN int zip_delete_file_extra_field_by_id(struct zip *, zip_uint64_t, zip_flags_t, zip_uint16_t, zip_uint16_t);
 ZIP_EXTERN void zip_error_clear(struct zip *);
 ZIP_EXTERN void zip_error_get(struct zip *, int *, int *);
 ZIP_EXTERN int zip_error_get_sys_type(int);
@@ -246,10 +250,10 @@ ZIP_EXTERN const char *zip_get_archive_comment(struct zip *, int *, int);
 ZIP_EXTERN int zip_get_archive_flag(struct zip *, int, int);
 ZIP_EXTERN const char *zip_get_file_comment(struct zip *, zip_uint64_t,
 					    int *, int);
-ZIP_EXTERN const zip_uint8_t *zip_get_file_extra_field(struct zip *, zip_uint64_t, zip_uint32_t, zip_uint16_t, zip_uint16_t *, zip_uint16_t *);
-ZIP_EXTERN const zip_uint8_t *zip_get_file_extra_field_by_id(struct zip *, zip_uint64_t, zip_uint32_t, zip_uint16_t, zip_uint16_t, zip_uint16_t *);
-ZIP_EXTERN zip_int16_t zip_get_file_num_extra_fields(struct zip *, zip_uint64_t, zip_uint32_t);
-ZIP_EXTERN zip_int16_t zip_get_file_num_extra_fields_by_id(struct zip *, zip_uint64_t, zip_uint32_t, zip_uint16_t);
+ZIP_EXTERN const zip_uint8_t *zip_get_file_extra_field(struct zip *, zip_uint64_t, zip_flags_t, zip_uint16_t, zip_uint16_t *, zip_uint16_t *);
+ZIP_EXTERN const zip_uint8_t *zip_get_file_extra_field_by_id(struct zip *, zip_uint64_t, zip_flags_t, zip_uint16_t, zip_uint16_t, zip_uint16_t *);
+ZIP_EXTERN zip_int16_t zip_get_file_num_extra_fields(struct zip *, zip_uint64_t, zip_flags_t);
+ZIP_EXTERN zip_int16_t zip_get_file_num_extra_fields_by_id(struct zip *, zip_uint64_t, zip_flags_t, zip_uint16_t);
 ZIP_EXTERN const char *zip_get_name(struct zip *, zip_uint64_t, int);
 ZIP_EXTERN zip_uint64_t zip_get_num_entries(struct zip *, int);
 ZIP_EXTERN int zip_get_num_files(struct zip *);  /* deprecated, use zip_get_num_entries instead */
@@ -264,7 +268,7 @@ ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t,
 				    const char *, int);
 ZIP_EXTERN int zip_set_file_compression(struct zip *, zip_uint64_t,
 					zip_int32_t, zip_uint32_t);
-ZIP_EXTERN int zip_set_file_extra_field(struct zip *, zip_uint64_t, zip_uint32_t, zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_uint16_t);
+ZIP_EXTERN int zip_set_file_extra_field(struct zip *, zip_uint64_t, zip_flags_t, zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_uint16_t);
 ZIP_EXTERN struct zip_source *zip_source_buffer(struct zip *, const void *,
 						zip_uint64_t, int);
 ZIP_EXTERN struct zip_source *zip_source_file(struct zip *, const char *,

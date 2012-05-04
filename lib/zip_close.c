@@ -51,8 +51,10 @@
 
 
 
-static int add_data(struct zip *, struct zip_source *, struct zip_dirent *,
-		    FILE *);
+/* max deflate size increase: size + ceil(size/16k)*5+6 */
+#define MAX_DEFLATE_SIZE_32	4293656963
+
+static int add_data(struct zip *, struct zip_source *, struct zip_dirent *, FILE *);
 static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
 static int copy_source(struct zip *, struct zip_source *, FILE *);
 static int write_cdir(struct zip *, const struct zip_filelist *, int, FILE *);
@@ -75,10 +77,9 @@ zip_close(struct zip *za)
     int reopen_on_error;
     int new_torrentzip;
     enum zip_encoding_type com_enc, enc;
-    int changed, is_zip64;
+    int changed;
 
     reopen_on_error = 0;
-    is_zip64 = 0; /* for wiz */
 
     if (za == NULL)
 	return -1;
@@ -201,7 +202,7 @@ zip_close(struct zip *za)
 	else {
 	    zip_uint64_t offset;
 	    
-	    if (_zip_dirent_write(de, out, 1, &za->error) < 0) {
+	    if (_zip_dirent_write(de, out, ZIP_FL_LOCAL, &za->error) < 0) {
 		error = 1;
 		break;
 	    }
@@ -278,26 +279,53 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
     struct zip_stat st;
     struct zip_source *s2;
     int ret;
+    int is_zip64;
+    zip_flags_t flags;
     
     if (zip_source_stat(src, &st) < 0) {
 	_zip_error_set_from_source(&za->error, src);
 	return -1;
     }
 
-    offstart = ftello(ft);
-
-    if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
-	return -1;
-
     if ((st.valid & ZIP_STAT_COMP_METHOD) == 0) {
 	st.valid |= ZIP_STAT_COMP_METHOD;
 	st.comp_method = ZIP_CM_STORE;
     }
 
-    if (de->comp_method == ZIP_CM_DEFAULT) {
-	/* XXX: set changed? */
-	de->comp_method = ZIP_CM_DEFLATE;
+    if (de->comp_method == ZIP_CM_DEFAULT && st.comp_method != ZIP_CM_STORE)
+	de->comp_method = st.comp_method;
+    else if (de->comp_method == ZIP_CM_STORE && (st.valid & ZIP_STAT_SIZE)) {
+	st.valid |= ZIP_STAT_COMP_SIZE;
+	st.comp_size = st.size;
     }
+    else {
+	/* we'll recompress */
+	st.valid &= ~ZIP_STAT_COMP_SIZE;
+    }
+
+
+    flags = ZIP_EF_LOCAL;
+
+    if ((st.valid & ZIP_STAT_SIZE) == 0)
+	flags |= ZIP_FL_FORCE_ZIP64;
+    else {
+	de->uncomp_size = st.size;
+	
+	if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
+	    if ((((de->comp_method == ZIP_CM_DEFLATE || de->comp_method == ZIP_CM_DEFAULT) && st.size > MAX_DEFLATE_SIZE_32)
+		 || de->comp_method != ZIP_CM_STORE && de->comp_method != ZIP_CM_DEFLATE && de->comp_method != ZIP_CM_DEFAULT))
+		flags |= ZIP_FL_FORCE_ZIP64;
+	}
+	else
+	    de->comp_size = st.comp_size;
+    }
+
+
+    offstart = ftello(ft);
+
+    if ((is_zip64=_zip_dirent_write(de, ft, flags, &za->error)) < 0)
+	return -1;
+
 
     if (st.comp_method == ZIP_CM_STORE || (de->comp_method != ZIP_CM_DEFAULT && st.comp_method != de->comp_method)) {
 	struct zip_source *s_store, *s_crc;
@@ -369,7 +397,15 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	return -1;
     }
 
-    de->last_mod = st.mtime;
+    if ((st.valid & (ZIP_STAT_COMP_METHOD|ZIP_STAT_CRC|ZIP_STAT_SIZE)) != (ZIP_STAT_COMP_METHOD|ZIP_STAT_CRC|ZIP_STAT_SIZE)) {
+	_zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+	return -1;
+    }
+
+    if (st.valid & ZIP_STAT_MTIME)
+	de->last_mod = st.mtime;
+    else
+	time(&de->last_mod);
     de->comp_method = st.comp_method;
     de->crc = st.crc;
     de->uncomp_size = st.size;
@@ -378,9 +414,16 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	_zip_dirent_torrent_normalize(de);
 
-    if (_zip_dirent_write(de, ft, 1, &za->error) < 0)
+    if ((ret=_zip_dirent_write(de, ft, flags, &za->error)) < 0)
 	return -1;
-    
+ 
+    if (is_zip64 != ret) {
+	/* Zip64 mismatch between preliminary file header written before data and final file header written afterwards */
+	_zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+	return -1;
+    }
+
+   
     if (fseeko(ft, offend, SEEK_SET) < 0) {
 	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
