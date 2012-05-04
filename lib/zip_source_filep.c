@@ -140,7 +140,7 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    }
 	}
 
-	if (z->closep) {
+	if (z->closep && z->off > 0) {
 	    if (fseeko(z->f, (off_t)z->off, SEEK_SET) < 0) {
 		z->e[0] = ZIP_ER_SEEK;
 		z->e[1] = errno;
