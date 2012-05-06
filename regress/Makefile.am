@@ -57,7 +57,8 @@ TESTS= \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_zip_deflated.test \
-	add_from_zip_partial.test \
+	add_from_zip_partial_deflated.test \
+	add_from_zip_partial_stored.test \
 	add_from_zip_stored.test \
 	delete_add_same.test \
 	delete_invalid.test \
