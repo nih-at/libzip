@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd February 27, 2012
+.Dd May 1, 2012
 .Dt ZIP_SET_FILE_COMPRESSION 3
 .Os
 .Sh NAME
@@ -50,7 +50,7 @@ function sets the compression method for the file at position
 in the zip archive to
 .Ar comp
 with the compression method specific
-.Ar flags .
+.Ar comp_flags .
 The
 .Ar comp
 is the same as returned by
@@ -70,8 +70,10 @@ Deflate the file with the
 algorithm and default options
 .El
 .Pp
-The flags argument is currently ignored.
-.\" For the flags argument, the lower 4 bits define the compression
+The
+.Ar comp_flags
+argument is currently ignored.
+.\" For the comp_flags argument, the lower 4 bits define the compression
 .\" level.
 .\" 0 is fastest compression, 15 is highest compression
 .\" .Dv ZIP_COMP_FL_DEFAULT

@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_SET_FILE_COMPRESSION 3 "February 27, 2012" NiH
+.TH ZIP_SET_FILE_COMPRESSION 3 "May 1, 2012" NiH
 .SH "NAME"
 zip_set_file_compression \- set compression method for file in zip
 .SH "LIBRARY"
@@ -48,7 +48,7 @@ function sets the compression method for the file at position
 in the zip archive to
 \fBcomp\fR
 with the compression method specific
-\fBflags.\fR
+\fBcomp_flags.\fR
 The
 \fBcomp\fR
 is the same as returned by
@@ -71,8 +71,10 @@ zlib(3)
 algorithm and default options
 .RE
 .PP
-The flags argument is currently ignored.
-.\" For the flags argument, the lower 4 bits define the compression
+The
+\fBcomp_flags\fR
+argument is currently ignored.
+.\" For the comp_flags argument, the lower 4 bits define the compression
 .\" level.
 .\" 0 is fastest compression, 15 is highest compression
 .\" \fBZIP_COMP_FL_DEFAULT\fR
