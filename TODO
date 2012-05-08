@@ -3,43 +3,39 @@ API Plans
 
 Encryption
 ----------
-struct zip *zip_open_encrypted(const char *path, int flags,
-                               const char *password, int *errorp);
-
-int zip_set_encryption(struct zip *archive, zip_uint64_t idx,
-    		       zip_uint16_t method, const char *password);
-void zip_set_archive_encryption(struct zip *archive,
-     				zip_uint16_t method, const char *password);
+* struct zip *zip_open_encrypted(const char *path, int flags, const char *password, int *errorp);
+* int zip_set_encryption(struct zip *archive, zip_uint64_t idx, zip_uint16_t method, const char *password);
+* void zip_set_archive_encryption(struct zip *archive, zip_uint16_t method, const char *password);
 
 API Issues
 ==========
-* character encoding in file names and comments (allow non-UTF8)
+! character encoding in file names and comments (allow non-UTF8)
   Replacement functions with flags:
   * zip_archive_set_comment
   * zip_file_add
   * zip_file_rename
   * zip_file_set_comment
-* use this case to go over all function names and make them consistent
+! use this case to go over all function names and make them consistent
   (e.g., zip_*_file_extra_* -> zip_file_*)
-* clean up first version of extra field support
+! clean up first version of extra field support
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
+* check arguments for every entry point into libzip
 
 
 Features
 ========
-* read InfoZIP extra fields for UTF-8 file name/file comment
-* set "version needed" correctly for zip64
-* Implement missing extra field functions
-* Document extra field functions
-* Document API changes
+! read InfoZIP extra fields for UTF-8 file name/file comment
+! Implement missing extra field functions
+! Document extra field functions
+! Document API changes
   . _set_name allows NULL (document)
   . old extra fields API removed
   . change in return value of get_comment: NULL if error, else pointer to empty array and len=0
   . add ZIP_DISABLE_DEPRECATED and rename deprecated functions so they are only available when it's not set
+* do not compress if storing is smaller
 
 * I/O methods
-* do not compress if storing is smaller
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
   . set last modification time for entry
@@ -49,43 +45,43 @@ Features
      archive was created on DOS)
 * zip_commit (to finish changes without closing archive)
 * add custom compression function support
-* support for old compression methods?????
 * zip_source_zip: allow rewinding
+* zip_source_seek, zip_fseek
 * zipcmp: add option for file content comparison
-* zipcmp: compare bit flags
-* append to files (for self-extracting files)
-* consistency: compare number of entries with cdir value
-* consistency: for stored files, test compressed = uncompressed
+* zipcmp: compare bit flags if paranoid
+* consistency
+  . compare number of entries with cdir value
+  . for stored files, test compressed = uncompressed
+  . data descriptor
+  . local headers come before central dir
+
+- support for old compression methods?????
+- append to files (for self-extracting files)
 
 
 Bugs
 ====
-* check inconsistent file test case result
-* fix build dir runtest (bigzero.zip)
-* zip_replace: set compression method to default unless user-set
-* reset compression specific bits in bitflags when (re)compressing
+! set "version needed"/"version made by" correctly (zip64)
+! check inconsistent file test case result
+! zip_replace: set compression method to default unless user-set
+! reset compression specific bits in bitflags when (re)compressing
 * split zip archive torrentzip state from user requested torrentzip state
-* check for limits imposed by format (central dir size, file size, ...)
-* set "version of encoding software" to proper value
+* check for limits imposed by format (central dir size, file size, extra fields, ...)
 * _zip_u2d_time: handle localtime(3) failure
 * missing -Wl,-R in pkg-config file
-* zip_open: consistency check: check data descriptor
 * POSIX: zip_open: check whether file can be created and fail if not
 * POSIX: fix permissions of new file to match old one
 * fix inconsistent usage of valid flags (not checked in many places)
 * cdr == NULL -> ER_NOENT vs. idx > cdir->nentry -> ER_INVAL inconsistent (still there?)
+* torrentzip broken on NetBSD/amd64 6.99
+
 
 Cleanup
 =======
+! rename zip_get_{compression,encryption}_implementation to _zip_*
 * get rid of zip_get_{compression,encryption}_implementation
 * use zip_*int*_t internally
 * completely get rid of off_t
-
-
-Consistency
-===========
-* check arguments for every entry point into libzip
-* check that local headers come before central dir
 
 
 Test Case Issues
