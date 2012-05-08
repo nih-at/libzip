@@ -50,7 +50,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\nSupported commands and arguments are:\n"
     "\tadd name content\n"
     "\tadd_dir name\n"
-    "\tadd_file name filename offset len\n"
+    "\tadd_file name file_to_add offset len\n"
     "\tadd_from_zip name archivename index offset len\n"
     "\tdelete index\n"
     "\tget_archive_comment\n"
