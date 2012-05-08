@@ -21,6 +21,7 @@ API Issues
   * zip_file_set_comment
 * use this case to go over all function names and make them consistent
   (e.g., zip_*_file_extra_* -> zip_file_*)
+* clean up first version of extra field support
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
 
