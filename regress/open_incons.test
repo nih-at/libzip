@@ -54,7 +54,7 @@ stdout opening `incons-central-size-larger.zzip' returned error 21
 # tryopen does not test checksums, so this is fine.
 stdout opening `incons-data.zzip' succeeded, 1 entries
 stdout opening `incons-ef-local-id-size.zzip' returned error 21
-# XXX: analyze
+# different extra fields local vs. central is fine
 stdout opening `incons-ef-local-id.zzip' succeeded, 1 entries
 stdout opening `incons-ef-local-incomplete1.zzip' returned error 21
 stdout opening `incons-ef-local-incomplete2.zzip' returned error 21
