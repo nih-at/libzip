@@ -22,7 +22,8 @@ EXTRA_DIST= \
 	encrypt.zip \
 	fileorder.zip \
 	firstsecond.zip \
-	firstsecond-split.zip \
+	firstsecond-split-deflated.zip \
+	firstsecond-split-stored.zip \
 	manyfiles-zip.zip \
 	rename_ok.zip \
 	streamed.zip \
