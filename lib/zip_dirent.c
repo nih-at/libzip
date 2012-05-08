@@ -155,18 +155,18 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, int survivo
 
     if (is_zip64) {
 	fwrite(EOCD64_MAGIC, 1, 4, fp);
-	_zip_write8(EOCD64LEN, fp);
+	_zip_write8(EOCD64LEN-12, fp);
 	_zip_write2(45, fp);
 	_zip_write2(45, fp);
-	_zip_write4(1, fp);
-	_zip_write4(1, fp);
+	_zip_write4(0, fp);
+	_zip_write4(0, fp);
 	_zip_write8(survivors, fp);
 	_zip_write8(survivors, fp);
 	_zip_write8(size, fp);
 	_zip_write8(offset, fp);
 
 	fwrite(EOCD64LOC_MAGIC, 1, 4, fp);
-	_zip_write4(1, fp);
+	_zip_write4(0, fp);
 	_zip_write8(offset+size, fp);
 	_zip_write4(1, fp);
 		    
@@ -608,13 +608,13 @@ _zip_dirent_write(struct zip_dirent *zde, FILE *fp, int flags,
     if (zde->comp_size < ZIP_UINT32_MAX)
 	_zip_write4(zde->comp_size, fp);
     else {
-	_zip_write4(ZIP_UINT32_MAX-1, fp);
+	_zip_write4(ZIP_UINT32_MAX, fp);
 	zip64_ef_size += 8;
     }
     if (zde->uncomp_size < ZIP_UINT32_MAX)
 	_zip_write4(zde->uncomp_size, fp);
     else {
-	_zip_write4(ZIP_UINT32_MAX-1, fp);
+	_zip_write4(ZIP_UINT32_MAX, fp);
 	zip64_ef_size += 8;
     }
 
@@ -636,7 +636,7 @@ _zip_dirent_write(struct zip_dirent *zde, FILE *fp, int flags,
 	if (zde->offset < ZIP_UINT32_MAX)
 	    _zip_write4(zde->offset, fp);
 	else
-	    _zip_write4(ZIP_UINT32_MAX-1, fp);
+	    _zip_write4(ZIP_UINT32_MAX, fp);
     }
 
     if (zde->filename)
@@ -753,7 +753,7 @@ _zip_read8(const unsigned char **a)
 {
     zip_uint64_t x, y;
 
-    x = ((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
+    x = ((((((zip_uint64_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
     *a += 4;
     y = (((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0]);
     *a += 4;

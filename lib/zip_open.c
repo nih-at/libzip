@@ -44,7 +44,7 @@
 
 static void set_error(int *, struct zip_error *, int);
 static struct zip *_zip_allocate_new(const char *, int, int *);
-static int _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
+static zip_int64_t _zip_checkcons(FILE *, struct zip_cdir *, struct zip_error *);
 static void _zip_check_torrentzip(struct zip *, const struct zip_cdir *);
 static struct zip_cdir *_zip_find_central_dir(FILE *, int, int *, off_t);
 static int _zip_file_exists(const char *, int, int *);
@@ -289,11 +289,11 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
    file and header offsets. Returns -1 if not plausible, else the
    difference between the lowest and the highest fileposition reached */
 
-static int
+static zip_int64_t
 _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 {
     int i;
-    unsigned int min, max, j;
+    zip_uint64_t min, max, j;
     struct zip_dirent temp;
 
     if (cd->nentry) {
@@ -476,7 +476,8 @@ _zip_find_central_dir(FILE *fp, int flags, int *zep, off_t len)
     struct zip_cdir *cdir, *cdirnew;
     unsigned char *buf, *match;
     off_t buf_offset;
-    int a, best, buflen, i;
+    int a, buflen, i;
+    zip_int64_t best;
     struct zip_error zerr;
 
     i = fseeko(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
