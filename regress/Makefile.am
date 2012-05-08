@@ -134,11 +134,11 @@ LDADD=${top_builddir}/lib/libzip.la
 check-am: bigzero.zip manyfiles.zip
 
 bigzero.zip: bigzero-zip.zip
-	${UNZIP} ${srcdir}/bigzero-zip.zip
+	${UNZIP} -o ${srcdir}/bigzero-zip.zip
 	${TOUCH} ${builddir}/bigzero.zip
 
 manyfiles.zip: manyfiles-zip.zip
-	${UNZIP} ${srcdir}/manyfiles-zip.zip
+	${UNZIP} -o ${srcdir}/manyfiles-zip.zip
 	${TOUCH} ${builddir}/manyfiles.zip
 
 CLEANFILES=bigzero.zip manyfiles.zip

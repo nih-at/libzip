@@ -198,7 +198,7 @@ test_set() {
 }
 
 copy_file() {
-    src="${srcdir}/$1"
+    src="$1"
 
     if [ ! -f "$src" ]
     then
@@ -210,6 +210,17 @@ copy_file() {
 	mkdir -p "$dir"
     fi
     cp "$src" "$2"
+}
+
+find_input_file() {
+    if [ -f "../$1" ]
+    then
+	src_file="../$1"
+    else
+	src_file="${srcdir}/$1"
+    fi
+
+    echo "$src_file"
 }
 
 # GNU sort behaves differently on locales other than C, breaking tests
@@ -277,14 +288,18 @@ do
     DESCR="$arg";;
   file)
     set $arg
-    copy_file "$2" "$1"
-    FILES="${FILES} ${srcdir}/$3!$1";;
+    in_file=`find_input_file "$2"`
+    out_file=`find_input_file "$3"`
+    copy_file "${in_file}" "$1"
+    FILES="${FILES} ${out_file}!$1";;
   file-del)
     set $arg
-    copy_file "$2" "$1";;
+    src_file=`find_input_file "$2"`
+    copy_file "${src_file}" "$1";;
   file-new)
     set $arg
-    FILES="${FILES} ${srcdir}/$2!$1";;
+    src_file=`find_input_file "$2"`
+    FILES="${FILES} ${src_file}!$1";;
   mkdir)
     set $arg
     mkdir "$2" && chmod "$1" "$2";;
