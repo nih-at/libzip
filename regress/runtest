@@ -63,6 +63,9 @@
 #	mkdir MODE NAME
 #	    create directory NAME with permissions MODE.
 #
+#	pipein PRG ARGS ...
+#	    execute PRG ARGS ... and pipe output to test program.
+#
 #	program PRG
 #	    run PRG.
 #
@@ -78,6 +81,8 @@
 #	    program is expected to print TEXT to stdout.  If multiple
 #	    stdout commands are used, the messages are expected in
 #	    the order given. 
+#
+#
 #   
 # exit status
 #	runtest uses the following exit codes:
@@ -256,6 +261,7 @@ ARGS=''
 FILES=''
 FILES_SHOULD=''
 DESCR=''
+PIPEIN=''
 
 touch stderr stdout
 
@@ -282,6 +288,9 @@ do
   mkdir)
     set $arg
     mkdir "$2" && chmod "$1" "$2";;
+  pipein)
+    test_empty "${PIPEIN}" pipein
+    PIPEIN="$arg";;
   program)
     PROGRAM=../"$arg";;
   return)
@@ -312,11 +321,16 @@ fi
 
 if [ ! -z "${VERBOSE}" ]
 then
-	echo "${TEST}: ${DESCR}"
-	echo "running: ${PROGRAM} ${ARGS}"
+    echo "${TEST}: ${DESCR}"
+    echo "running: ${PROGRAM} ${ARGS}"
 fi
 
-${PROGRAM} ${ARGS} > gotout 2> goterr
+if [ ! -z "${PIPEIN}" ]
+then
+    ${PIPEIN} | ${PROGRAM} ${ARGS} > gotout 2> goterr
+else
+    ${PROGRAM} ${ARGS} > gotout 2> goterr
+fi
 ret=$?
 
 if [ $ret -ne ${RET} ]

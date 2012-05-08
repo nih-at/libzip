@@ -48,6 +48,7 @@ EXTRA_DIST= \
 	testfile.zip \
 	testfile-UTF8.zip \
 	testnottorrent.zip \
+	teststdin.zip \
 	teststored.zip \
 	testtorrent.tzip \
 	zip64.tzip
@@ -61,6 +62,7 @@ TESTS= \
 	add_from_file_duplicate.test \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
+	add_from_stdin.test \
 	add_from_zip_deflated.test \
 	add_from_zip_partial_deflated.test \
 	add_from_zip_partial_stored.test \
