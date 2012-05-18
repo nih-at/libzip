@@ -80,6 +80,7 @@ Cleanup
 
 Test Case Issues
 ================
+! test reading of Unicode Extra Fields
 * test calls against old API
 * run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)
