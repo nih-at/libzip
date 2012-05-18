@@ -54,7 +54,7 @@ EXTRA_DIST= \
 	teststdin.zip \
 	teststored.zip \
 	testtorrent.tzip \
-	zip64.tzip
+	zip64.zip
 
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp ${srcdir}/runtest
 
