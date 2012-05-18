@@ -76,7 +76,6 @@ zip_close(struct zip *za)
     struct zip_filelist *filelist;
     int reopen_on_error;
     int new_torrentzip;
-    enum zip_encoding_type com_enc, enc;
     int changed;
 
     reopen_on_error = 0;
@@ -166,15 +165,6 @@ zip_close(struct zip *za)
 	if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	    _zip_dirent_torrent_normalize(entry->changes);
 
-	/* set general purpose bit flag for file name/comment encoding */
-	enc = _zip_guess_encoding(de->filename, ZIP_ENCODING_UNKNOWN);
-	com_enc = _zip_guess_encoding(de->comment, ZIP_ENCODING_UNKNOWN);
-	if ((enc == ZIP_ENCODING_UTF8_KNOWN  && com_enc == ZIP_ENCODING_ASCII) ||
-	    (enc == ZIP_ENCODING_ASCII && com_enc == ZIP_ENCODING_UTF8_KNOWN ) ||
-	    (enc == ZIP_ENCODING_UTF8_KNOWN  && com_enc == ZIP_ENCODING_UTF8_KNOWN ))
-	    de->bitflags |= ZIP_GPBF_ENCODING_UTF_8;
-	else
-	    de->bitflags &= ~ZIP_GPBF_ENCODING_UTF_8;
 
 	de->offset = ftello(out);
 

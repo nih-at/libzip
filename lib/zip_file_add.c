@@ -1,5 +1,5 @@
 /*
-  zip_rename.c -- rename file in zip archive
+  zip_file_add.c -- add file via callback function
   Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,14 +33,23 @@
 
 
 
-#include <string.h>
-
 #include "zipint.h"
-
 
 
-ZIP_EXTERN int
-zip_rename(struct zip *za, zip_uint64_t idx, const char *name)
+/*
+  NOTE: Return type is signed so we can return -1 on error.
+        The index can not be larger than ZIP_INT64_MAX since the size
+        of the central directory cannot be larger than
+        ZIP_UINT64_MAX, and each entry is larger than 2 bytes.
+*/
+
+ZIP_EXTERN zip_int64_t
+zip_file_add(struct zip *za, const char *name, struct zip_source *source, zip_flags_t flags)
 {
-    return zip_file_rename(za, idx, name, 0);
+    if (name == NULL || source == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+	
+    return _zip_file_replace(za, ZIP_UINT64_MAX, name, source, flags);
 }

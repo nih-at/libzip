@@ -56,7 +56,7 @@ zip_set_archive_comment(struct zip *za, const char *comment, int len)
     }
 
     if (len > 0) {
-	if ((cstr=_zip_string_new((const zip_uint8_t *)comment, len, &za->error)) == NULL)
+	if ((cstr=_zip_string_new((const zip_uint8_t *)comment, len, ZIP_FL_ENC_GUESS, &za->error)) == NULL)
 	    return -1;
 
 	if (_zip_guess_encoding(cstr, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_CP437) {

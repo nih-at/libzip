@@ -228,7 +228,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     }
 
     if (comment_len) {
-	if ((cd->comment=_zip_string_new(eocd+EOCDLEN, comment_len, error)) == NULL) {
+	if ((cd->comment=_zip_string_new(eocd+EOCDLEN, comment_len, ZIP_FL_ENC_GUESS, error)) == NULL) {
 	    _zip_cdir_free(cd);
 	    return NULL;
 	}

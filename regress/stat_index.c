@@ -66,13 +66,13 @@ main(int argc, char *argv[])
     while ((c=getopt(argc, argv, "grs")) != -1) {
 	switch (c) {
 	case 'g':
-	    flags = ZIP_FL_NAME_GUESS;
+	    flags = ZIP_FL_ENC_GUESS;
 	    break;
 	case 'r':
-	    flags = ZIP_FL_NAME_RAW;
+	    flags = ZIP_FL_ENC_RAW;
 	    break;
 	case 's':
-	    flags = ZIP_FL_NAME_STRICT;
+	    flags = ZIP_FL_ENC_STRICT;
 	    break;
 
 	default:

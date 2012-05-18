@@ -1,5 +1,5 @@
 /*
-  zip_rename.c -- rename file in zip archive
+  zip_file_replace.c -- replace file via callback function
   Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,14 +33,61 @@
 
 
 
-#include <string.h>
-
 #include "zipint.h"
 
 
 
 ZIP_EXTERN int
-zip_rename(struct zip *za, zip_uint64_t idx, const char *name)
+zip_file_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source, zip_flags_t flags)
 {
-    return zip_file_rename(za, idx, name, 0);
+    if (idx >= za->nentry || source == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
+    if (_zip_file_replace(za, idx, NULL, source, flags) == -1)
+	return -1;
+
+    return 0;
+}
+
+
+
+
+/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
+
+zip_int64_t
+_zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip_source *source, zip_flags_t flags)
+{
+    zip_uint64_t za_nentry_prev;
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
+
+    za_nentry_prev = za->nentry;
+    if (idx == ZIP_UINT64_MAX) {
+	zip_int64_t i;
+	
+	/* create and use new entry, used by zip_add */
+	if ((i=_zip_add_entry(za)) < 0)
+	    return -1;
+	idx = i;
+    }
+    
+    if (name && _zip_set_name(za, idx, name, flags) != 0) {
+	if (za->nentry != za_nentry_prev) {
+	    _zip_entry_finalize(za->entry+idx);
+	    za->nentry = za_nentry_prev;
+	}
+	return -1;
+    }
+
+    /* does not change any name related data, so we can do it here;
+     * needed for a double add of the same file name */
+    _zip_unchange_data(za->entry+idx);
+
+    za->entry[idx].source = source;
+
+    return idx;
 }

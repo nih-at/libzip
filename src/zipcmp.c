@@ -343,8 +343,8 @@ ef_read(struct zip *za, int idx, struct entry *e)
     int i;
     zip_uint16_t len;
 
-    n_local = zip_get_file_num_extra_fields(za, idx, ZIP_FL_LOCAL);
-    n_central = zip_get_file_num_extra_fields(za, idx, ZIP_FL_CENTRAL);
+    n_local = zip_file_extra_fields_count(za, idx, ZIP_FL_LOCAL);
+    n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL);
     e->n_extra_fields = n_local + n_central;
     
     if ((e->extra_fields=malloc(sizeof(e->extra_fields[0])*e->n_extra_fields)) == NULL)
@@ -352,13 +352,13 @@ ef_read(struct zip *za, int idx, struct entry *e)
 
     for (i=0; i<n_local; i++) {
 	e->extra_fields[i].name = e->name;
-	if ((e->extra_fields[i].data=zip_get_file_extra_field(za, idx, ZIP_FL_LOCAL, i, &e->extra_fields[i].id, &e->extra_fields[i].size)) == NULL)
+	if ((e->extra_fields[i].data=zip_file_extra_field_get(za, idx, i, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_LOCAL)) == NULL)
 	    return -1;
 	e->extra_fields[i].flags = ZIP_FL_LOCAL;
     }
     for (; i<e->n_extra_fields; i++) {
 	e->extra_fields[i].name = e->name;
-	if ((e->extra_fields[i].data=zip_get_file_extra_field(za, idx, ZIP_FL_CENTRAL, i-n_local, &e->extra_fields[i].id, &e->extra_fields[i].size)) == NULL)
+	if ((e->extra_fields[i].data=zip_file_extra_field_get(za, idx, i-n_local, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_CENTRAL)) == NULL)
 	    return -1;
 	e->extra_fields[i].flags = ZIP_FL_CENTRAL;
     }

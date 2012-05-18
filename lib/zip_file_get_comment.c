@@ -1,6 +1,6 @@
 /*
-  zip_rename.c -- rename file in zip archive
-  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
+  zip_file_get_comment.c -- get file comment
+  Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,14 +33,25 @@
 
 
 
-#include <string.h>
-
 #include "zipint.h"
 
 
 
-ZIP_EXTERN int
-zip_rename(struct zip *za, zip_uint64_t idx, const char *name)
+ZIP_EXTERN const char *
+zip_file_get_comment(struct zip *za, zip_uint64_t idx, zip_uint32_t *lenp, zip_flags_t flags)
 {
-    return zip_file_rename(za, idx, name, 0);
+    struct zip_dirent *de;
+    zip_uint32_t len;
+    const zip_uint8_t *str;
+
+    if ((de=_zip_get_dirent(za, idx, flags, NULL)) == NULL)
+	return NULL;
+
+    if ((str=_zip_string_get(de->comment, &len, flags, &za->error)) == NULL)
+	return NULL;
+
+    if (lenp)
+	*lenp = len;
+
+    return (const char *)str;
 }

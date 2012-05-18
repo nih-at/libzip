@@ -40,18 +40,13 @@
 ZIP_EXTERN const char *
 zip_get_file_comment(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
 {
-    struct zip_dirent *de;
     zip_uint32_t len;
-    const zip_uint8_t *str;
+    const char *s;
 
-    if ((de=_zip_get_dirent(za, idx, flags, NULL)) == NULL)
-	return NULL;
+    if ((s=zip_file_get_comment(za, idx, &len, flags)) != NULL) {
+	if (lenp)
+	    *lenp = len;
+    }
 
-    if ((str=_zip_string_get(de->comment, &len, flags, &za->error)) == NULL)
-	return NULL;
-
-    if (lenp)
-	*lenp = len;
-
-    return (const char *)str;
+    return s;
 }

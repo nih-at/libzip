@@ -1,5 +1,5 @@
 /*
-  zip_rename.c -- rename file in zip archive
+  zip_dir_add.c -- add directory
   Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,14 +33,56 @@
 
 
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "zipint.h"
 
 
 
-ZIP_EXTERN int
-zip_rename(struct zip *za, zip_uint64_t idx, const char *name)
+/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
+
+ZIP_EXTERN zip_int64_t
+zip_dir_add(struct zip *za, const char *name, zip_flags_t flags)
 {
-    return zip_file_rename(za, idx, name, 0);
+    int len;
+    zip_int64_t ret;
+    char *s;
+    struct zip_source *source;
+
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
+
+    if (name == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
+    s = NULL;
+    len = strlen(name);
+
+    if (name[len-1] != '/') {
+	if ((s=(char *)malloc(len+2)) == NULL) {
+	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	    return -1;
+	}
+	strcpy(s, name);
+	s[len] = '/';
+	s[len+1] = '\0';
+    }
+
+    if ((source=zip_source_buffer(za, NULL, 0, 0)) == NULL) {
+	free(s);
+	return -1;
+    }
+	
+    ret = _zip_file_replace(za, -1, s ? s : name, source, flags);
+
+    free(s);
+    if (ret < 0)
+	zip_source_free(source);
+
+    return ret;
 }

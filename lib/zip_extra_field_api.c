@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_delete_file_extra_field(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_idx)
+zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags)
 {
     /* XXX */
     return -1;
@@ -47,7 +47,7 @@ zip_delete_file_extra_field(struct zip *za, zip_uint64_t idx, zip_uint32_t flags
 
 
 ZIP_EXTERN int
-zip_delete_file_extra_field_by_id(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_id, zip_uint16_t ef_idx)
+zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags)
 {
     /* XXX */
     return -1;
@@ -56,7 +56,7 @@ zip_delete_file_extra_field_by_id(struct zip *za, zip_uint64_t idx, zip_uint32_t
 
 
 ZIP_EXTERN const zip_uint8_t *
-zip_get_file_extra_field(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp)
+zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags)
 {
     static const zip_uint8_t empty[1];
 
@@ -101,7 +101,7 @@ zip_get_file_extra_field(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, z
 
 
 ZIP_EXTERN const zip_uint8_t *
-zip_get_file_extra_field_by_id(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp)
+zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp, zip_flags_t flags)
 {
     struct zip_dirent *de;
 
@@ -121,7 +121,7 @@ zip_get_file_extra_field_by_id(struct zip *za, zip_uint64_t idx, zip_uint32_t fl
 
 
 ZIP_EXTERN zip_int16_t
-zip_get_file_num_extra_fields(struct zip *za, zip_uint64_t idx, zip_uint32_t flags)
+zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
 {
     struct zip_dirent *de;
     struct zip_extra_field *ef;
@@ -148,7 +148,7 @@ zip_get_file_num_extra_fields(struct zip *za, zip_uint64_t idx, zip_uint32_t fla
 
 
 ZIP_EXTERN zip_int16_t
-zip_get_file_num_extra_fields_by_id(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_id)
+zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_flags_t flags)
 {
     struct zip_dirent *de;
     struct zip_extra_field *ef;
@@ -175,7 +175,7 @@ zip_get_file_num_extra_fields_by_id(struct zip *za, zip_uint64_t idx, zip_uint32
 
 
 ZIP_EXTERN int
-zip_set_file_extra_field(struct zip *za, zip_uint64_t idx, zip_uint32_t flags, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len)
+zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags)
 {
     /* XXX: ZIP_ER_INVAL if ef_id == ZIP_EF_ZIP64 */
     /* XXX: size of ef + new <= ZIP_UINT16_MAX */

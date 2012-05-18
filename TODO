@@ -9,14 +9,6 @@ Encryption
 
 API Issues
 ==========
-! character encoding in file names and comments (allow non-UTF8)
-  Replacement functions with flags:
-  * zip_archive_set_comment
-  * zip_file_add
-  * zip_file_rename
-  * zip_file_set_comment
-! use this case to go over all function names and make them consistent
-  (e.g., zip_*_file_extra_* -> zip_file_*)
 ! clean up first version of extra field support
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
@@ -25,14 +17,16 @@ API Issues
 
 Features
 ========
-! read InfoZIP extra fields for UTF-8 file name/file comment
 ! Implement missing extra field functions
 ! Document extra field functions
 ! Document API changes
   . _set_name allows NULL (document)
   . old extra fields API removed
   . change in return value of get_comment: NULL if error, else pointer to empty array and len=0
-  . add ZIP_DISABLE_DEPRECATED and rename deprecated functions so they are only available when it's not set
+  . document ZIP_DISABLE_DEPRECATED (libzip man page)
+  . renames of zip_add, zip_rename, zip_replace, zip_add_dir, zip_{set,get}_file_comment
+  . NULL is now allowed for file names (zip_add, zip_add_dir, zip_rename)
+! add flag for zip_file_add that overwrites any existing entry with same name
 * do not compress if storing is smaller
 
 * I/O methods

@@ -31,7 +31,9 @@ EXTRA_DIST= \
 	test.zip \
 	test2.zip \
 	test-cp437.zip \
+	test-cp437-comment-utf-8.zip \
 	test-cp437-fc.zip \
+	test-cp437-fc-utf-8-filename.zip \
 	test-utf8.zip \
 	test-utf8-unmarked.zip \
 	testbuffer.zip \
@@ -46,6 +48,7 @@ EXTRA_DIST= \
 	testextrabytes.zip \
 	testfile.txt \
 	testfile.zip \
+	testfile-cp437.zip \
 	testfile-UTF8.zip \
 	testnottorrent.zip \
 	teststdin.zip \

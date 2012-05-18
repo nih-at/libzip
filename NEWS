@@ -2,6 +2,7 @@
 
 * Added Zip64 support (large file support)
 * Added UTF-8 support for file names, file comments, and archive comments
+* Changed API for name and comment related functions for UTF-8 support
 * Added zip_discard()
 * Added ZIP_TRUNCATE for zip_open()
 * Added zip_set_file_compression()
@@ -16,7 +17,7 @@
 
 0.10 [2010/03/18]
 
-* Added zip_get_num_files(), deprecated zip_get_num_entries().
+* Added zip_get_num_entries(), deprecated zip_get_num_files().
 * Better windows support.
 * Support for traditional PKWARE encryption added.
 * Fix opening archives with more than 65535 entries.

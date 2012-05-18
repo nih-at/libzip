@@ -42,6 +42,8 @@
 #include <io.h>
 #endif
 
+#define ZIP_DISABLE_DEPRECATED
+
 #include "zip.h"
 #include "config.h"
 
@@ -116,7 +118,9 @@ int _zip_mkstemp(char *);
 #define CDBUFSIZE       (MAXCOMLEN+EOCDLEN+EOCD64LOCLEN)
 #define BUFSIZE		8192
 
-#define ZIP_EF_ZIP64	0x0001
+#define ZIP_EF_UTF_8_COMMENT	0x6375
+#define ZIP_EF_UTF_8_NAME	0x7075
+#define ZIP_EF_ZIP64		0x0001
 
 
 
@@ -198,6 +202,8 @@ enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 #define ZIP_EF_BOTH		(ZIP_EF_LOCAL|ZIP_EF_CENTRAL)	/* include in both */
 
 #define ZIP_FL_FORCE_ZIP64	1024  /* force zip64 extra field (_zip_dirent_write) */
+
+#define ZIP_FL_ENCODING_ALL	(ZIP_FL_ENC_GUESS|ZIP_FL_ENC_CP437|ZIP_FL_ENC_UTF_8)
 
 
 /* encoding type */
@@ -331,7 +337,7 @@ struct zip_entry {
 struct zip_string {
     zip_uint8_t *raw;			/* raw string */
     zip_uint16_t length;		/* length of raw string */
-    unsigned short encoding; 		/* autorecognized encoding */
+    enum zip_encoding_type encoding; 	/* autorecognized encoding */
     zip_uint8_t *converted;     	/* autoconverted string */
     zip_uint32_t converted_length;	/* length of converted */
 };
@@ -428,9 +434,10 @@ struct zip_source *_zip_source_zip_new(struct zip *, struct zip *, zip_uint64_t,
 
 int _zip_string_equal(const struct zip_string *, const struct zip_string *);
 void _zip_string_free(struct zip_string *);
-const zip_uint8_t *_zip_string_get(struct zip_string *, zip_uint32_t *, int, struct zip_error *);
+zip_uint32_t _zip_string_crc32(const struct zip_string *);
+const zip_uint8_t *_zip_string_get(struct zip_string *, zip_uint32_t *, zip_flags_t, struct zip_error *);
 zip_uint16_t _zip_string_length(const struct zip_string *);
-struct zip_string *_zip_string_new(const zip_uint8_t *, zip_uint16_t, struct zip_error *);
+struct zip_string *_zip_string_new(const zip_uint8_t *, zip_uint16_t, zip_flags_t, struct zip_error *);
 void _zip_string_write(const struct zip_string *, FILE *);
 
 int _zip_changed(struct zip *, int *);
@@ -443,13 +450,14 @@ zip_uint16_t _zip_read2(const unsigned char **);
 zip_uint32_t _zip_read4(const unsigned char **);
 zip_uint64_t _zip_read8(const unsigned char **);
 zip_uint8_t *_zip_read_data(const unsigned char **, FILE *, int, int, struct zip_error *);
-zip_int64_t _zip_replace(struct zip *, zip_uint64_t, const char *,
-			 struct zip_source *);
-int _zip_set_name(struct zip *, zip_uint64_t, const char *);
+zip_int64_t _zip_file_replace(struct zip *, zip_uint64_t, const char *, struct zip_source *, zip_flags_t);
+int _zip_set_name(struct zip *, zip_uint64_t, const char *, zip_flags_t);
 void _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *);
 int _zip_unchange(struct zip *, zip_uint64_t, int);
 void _zip_unchange_data(struct zip_entry *);
 
+void _zip_poke4(zip_uint32_t, zip_uint8_t **);
+void _zip_poke8(zip_uint64_t, zip_uint8_t **);
 void _zip_write2(zip_uint16_t, FILE *);
 void _zip_write4(zip_uint32_t, FILE *);
 void _zip_write8(zip_uint64_t, FILE *);

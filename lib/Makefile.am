@@ -15,6 +15,7 @@ libzip_la_SOURCES=\
 	zip_add_entry.c \
 	zip_close.c \
 	zip_delete.c \
+	zip_dir_add.c \
 	zip_dirent.c \
 	zip_discard.c \
 	zip_entry.c \
@@ -29,9 +30,14 @@ libzip_la_SOURCES=\
 	zip_extra_field_api.c \
 	zip_fclose.c \
 	zip_fdopen.c \
+	zip_file_add.c \
 	zip_file_error_clear.c \
 	zip_file_error_get.c \
+	zip_file_get_comment.c \
 	zip_file_get_offset.c \
+	zip_file_rename.c \
+	zip_file_replace.c \
+	zip_file_set_comment.c \
 	zip_file_strerror.c \
 	zip_filerange_crc.c \
 	zip_fopen.c \

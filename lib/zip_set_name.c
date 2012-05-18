@@ -41,12 +41,10 @@
 
 
 int
-_zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
+_zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t flags)
 {
     struct zip_entry *e;
     struct zip_string *str;
-    struct zip_dirent *de;
-    enum zip_encoding_type com_enc, name_enc;
     int changed;
     int i;
 
@@ -61,20 +59,15 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
     }
 
     if (name && strlen(name) > 0) {
-	if ((str=_zip_string_new((const zip_uint8_t *)name, strlen(name), &za->error)) == NULL)
+	if ((str=_zip_string_new((const zip_uint8_t *)name, strlen(name), flags, &za->error)) == NULL)
 	    return -1;
-
-	if ((name_enc=_zip_guess_encoding(str, ZIP_ENCODING_UTF8_KNOWN)) == ZIP_ENCODING_ERROR) {
-	    _zip_string_free(str);
-	    _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	    return -1;
-	}
+	if ((flags & ZIP_FL_ENCODING_ALL) == ZIP_FL_ENC_GUESS && _zip_guess_encoding(str, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_UTF8_GUESSED)
+	    str->encoding = ZIP_ENCODING_UTF8_KNOWN;
     }
-    else {
+    else
 	str = NULL;
-	name_enc = ZIP_ENCODING_ASCII;
-    }
 
+    /* XXX: encoding flags needed for CP437? */
     if ((i=_zip_name_locate(za, name, 0, NULL)) != -1 && i != idx) {
 	_zip_string_free(str);
 	_zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
@@ -86,20 +79,6 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name)
 	_zip_string_free(str);
 	return 0;
     }
-
-    de = _zip_get_dirent(za, idx, 0, NULL);
-
-    if (de)
-	com_enc = _zip_guess_encoding(de->comment, ZIP_ENCODING_UNKNOWN);
-    else
-	com_enc = ZIP_ENCODING_ASCII;
-
-    if (com_enc == ZIP_ENCODING_CP437 && name_enc == ZIP_ENCODING_UTF8_KNOWN) {
-	_zip_string_free(str);
-	_zip_error_set(&za->error, ZIP_ER_ENCMISMATCH, 0);
-	return -1;
-    }
-
 
     e = za->entry+idx;
 
