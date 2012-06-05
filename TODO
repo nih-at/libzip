@@ -9,7 +9,6 @@ Encryption
 
 API Issues
 ==========
-! clean up first version of extra field support
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
 * check arguments for every entry point into libzip
@@ -17,7 +16,6 @@ API Issues
 
 Features
 ========
-! Implement missing extra field functions
 ! Document extra field functions
 ! Document API changes
   . _set_name allows NULL (document)
@@ -26,9 +24,10 @@ Features
   . document ZIP_DISABLE_DEPRECATED (libzip man page)
   . renames of zip_add, zip_rename, zip_replace, zip_add_dir, zip_{set,get}_file_comment
   . NULL is now allowed for file names (zip_add, zip_add_dir, zip_rename)
-! add flag for zip_file_add that overwrites any existing entry with same name
+! document ZIP_FL_OVERWRITE (flag for zip_file_add that overwrites any existing entry with same name)
 * do not compress if storing is smaller
 
+! test extra fields api
 * I/O methods
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
@@ -55,10 +54,7 @@ Features
 
 Bugs
 ====
-! set "version needed"/"version made by" correctly (zip64)
 ! check inconsistent file test case result
-! zip_replace: set compression method to default unless user-set
-! reset compression specific bits in bitflags when (re)compressing
 * split zip archive torrentzip state from user requested torrentzip state
 * check for limits imposed by format (central dir size, file size, extra fields, ...)
 * _zip_u2d_time: handle localtime(3) failure
@@ -72,7 +68,6 @@ Bugs
 
 Cleanup
 =======
-! rename zip_get_{compression,encryption}_implementation to _zip_*
 * get rid of zip_get_{compression,encryption}_implementation
 * use zip_*int*_t internally
 * completely get rid of off_t

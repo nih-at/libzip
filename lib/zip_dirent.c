@@ -249,7 +249,7 @@ _zip_dirent_init(struct zip_dirent *de)
     de->changed = 0;
     de->local_extra_fields_read = 0;
 
-    de->version_madeby = 0;
+    de->version_madeby = 20;
     de->version_needed = 20; /* 2.0 */
     de->bitflags = 0;
     de->comp_method = ZIP_CM_DEFAULT;
@@ -627,6 +627,7 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *
     struct zip_extra_field *ef;
     zip_uint8_t ef_zip64[24], *ef_zip64_p;
     int is_zip64;
+    int is_really_zip64;
 
     ef = NULL;
 
@@ -684,10 +685,15 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *
 	is_zip64 = 1;
     }
 
+    if ((flags & (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64)) == (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64))
+	is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
+    else
+	is_really_zip64 = is_zip64;
+    
     if ((flags & ZIP_FL_LOCAL) == 0)
-	_zip_write2(de->version_madeby, fp);
-    _zip_write2(de->version_needed, fp);    /* XXX: at least 4.5 if zip64 */
-    _zip_write2(de->bitflags, fp);
+	_zip_write2(is_really_zip64 ? 45 : de->version_madeby, fp);
+    _zip_write2(is_really_zip64 ? 45 : de->version_needed, fp);
+    _zip_write2(de->bitflags&0xfff9, fp); /* clear compression method specific flags */
     _zip_write2(de->comp_method, fp);
 
     _zip_u2d_time(de->last_mod, &dostime, &dosdate);

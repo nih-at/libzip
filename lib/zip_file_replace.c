@@ -67,11 +67,16 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
 
     za_nentry_prev = za->nentry;
     if (idx == ZIP_UINT64_MAX) {
-	zip_int64_t i;
+	zip_int64_t i = -1;
 	
-	/* create and use new entry, used by zip_add */
-	if ((i=_zip_add_entry(za)) < 0)
-	    return -1;
+	if (flags & ZIP_FL_OVERWRITE)
+	    i = zip_name_locate(za, name, flags);
+
+	if (i == -1) {
+	    /* create and use new entry, used by zip_add */
+	    if ((i=_zip_add_entry(za)) < 0)
+		return -1;
+	}
 	idx = i;
     }
     
@@ -87,6 +92,14 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
      * needed for a double add of the same file name */
     _zip_unchange_data(za->entry+idx);
 
+    if (za->entry[idx].orig != NULL && (za->entry[idx].changes == NULL || (za->entry[idx].changes->changed & ZIP_DIRENT_COMP_METHOD) == 0)) {
+	if (za->entry[idx].changes == NULL)
+	    za->entry[idx].changes = _zip_dirent_clone(za->entry[idx].orig);
+
+	za->entry[idx].changes->comp_method = ZIP_CM_REPLACED_DEFAULT;
+	za->entry[idx].changes->changed |= ZIP_DIRENT_COMP_METHOD;
+    }
+	
     za->entry[idx].source = source;
 
     return idx;

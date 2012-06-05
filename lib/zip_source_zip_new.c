@@ -91,7 +91,7 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
 	    _zip_error_set(&za->error, ZIP_ER_NOPASSWD, 0);
 	    return NULL;
 	}
-	if ((enc_impl=zip_get_encryption_implementation(st.encryption_method)) == NULL) {
+	if ((enc_impl=_zip_get_encryption_implementation(st.encryption_method)) == NULL) {
 	    _zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	    return NULL;
 	}
@@ -100,7 +100,7 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
     comp_impl = NULL;
     if ((flags & ZIP_FL_COMPRESSED) == 0) {
 	if (st.comp_method != ZIP_CM_STORE) {
-	    if ((comp_impl=zip_get_compression_implementation(st.comp_method)) == NULL) {
+	    if ((comp_impl=_zip_get_compression_implementation(st.comp_method)) == NULL) {
 		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 		return NULL;
 	    }

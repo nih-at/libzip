@@ -118,6 +118,10 @@ int _zip_mkstemp(char *);
 #define CDBUFSIZE       (MAXCOMLEN+EOCDLEN+EOCD64LOCLEN)
 #define BUFSIZE		8192
 
+#define ZIP_CM_REPLACED_DEFAULT (-2)
+
+#define ZIP_CM_IS_DEFAULT(x)	((x) == ZIP_CM_DEFAULT || (x) == ZIP_CM_REPLACED_DEFAULT)
+
 #define ZIP_EF_UTF_8_COMMENT	0x6375
 #define ZIP_EF_UTF_8_NAME	0x7075
 #define ZIP_EF_ZIP64		0x0001
@@ -135,8 +139,8 @@ typedef struct zip_source *(*zip_encryption_implementation)(struct zip *,
 						    zip_uint16_t, int,
 						    const char *);
 
-zip_compression_implementation zip_get_compression_implementation(zip_int32_t);
-zip_encryption_implementation zip_get_encryption_implementation(zip_uint16_t);
+zip_compression_implementation _zip_get_compression_implementation(zip_int32_t);
+zip_encryption_implementation _zip_get_encryption_implementation(zip_uint16_t);
 
 
 

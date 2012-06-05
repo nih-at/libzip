@@ -60,19 +60,21 @@ zip_set_file_compression(struct zip *za, zip_uint64_t idx,
 
     e = za->entry+idx;
     
-    if (method != (e->orig ? e->orig->comp_method : ZIP_CM_DEFAULT)) {
+    if (method == ZIP_CM_DEFAULT && e->orig == NULL) {
+	if (e->changes) {
+	    e->changes->changed &= ~ZIP_DIRENT_COMP_METHOD;
+	    if (e->changes->changed == 0) {
+		_zip_dirent_free(e->changes);
+		e->changes = NULL;
+	    }
+	}
+    }
+    else {
 	if (e->changes == NULL)
 	    e->changes = _zip_dirent_clone(e->orig);
 
 	e->changes->comp_method = method;
 	e->changes->changed |= ZIP_DIRENT_COMP_METHOD;
-    }
-    else if (e->changes) {
-	e->changes->changed &= ~ZIP_DIRENT_COMP_METHOD;
-	if (e->changes->changed == 0) {
-	    _zip_dirent_free(e->changes);
-	    e->changes = NULL;
-	}
     }
     
     return 0;

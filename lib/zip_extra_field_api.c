@@ -40,8 +40,13 @@
 ZIP_EXTERN int
 zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags)
 {
-    /* XXX */
-    return -1;
+    struct zip_dirent *de;
+    
+    if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
+	return -1;
+
+    de->extra_fields = _zip_ef_delete_by_id(de->extra_fields, ZIP_EXTRA_FIELD_ALL, ef_idx, flags);
+    return 0;
 }
 
 
@@ -49,8 +54,13 @@ zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id
 ZIP_EXTERN int
 zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags)
 {
-    /* XXX */
-    return -1;
+    struct zip_dirent *de;
+    
+    if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
+	return -1;
+
+    de->extra_fields = _zip_ef_delete_by_id(de->extra_fields, ef_id, ef_idx, flags);
+    return 0;
 }
 
 
@@ -177,9 +187,73 @@ zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
 ZIP_EXTERN int
 zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags)
 {
-    /* XXX: ZIP_ER_INVAL if ef_id == ZIP_EF_ZIP64 */
-    /* XXX: size of ef + new <= ZIP_UINT16_MAX */
+    struct zip_dirent *de;
+    zip_uint16_t ls, cs;
+    struct zip_extra_field *ef, *ef_prev, *ef_new;
+    int i, found;
 
-    /* XXX */
-    return -1;
+    if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
+	return -1;
+
+    if (ef_id == ZIP_EF_ZIP64 || ef_id == ZIP_EF_UTF_8_NAME || ef_id == ZIP_EF_UTF_8_COMMENT) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
+    if (flags & ZIP_EF_LOCAL)
+	ls = _zip_ef_size(de->extra_fields, ZIP_EF_LOCAL);
+    else
+	ls = 0;
+    if (flags & ZIP_EF_CENTRAL)
+	cs = _zip_ef_size(de->extra_fields, ZIP_EF_CENTRAL);
+    else
+	cs = 0;
+
+    if (((zip_uint32_t)(ls > cs ? ls : cs)) + len + 4 > ZIP_UINT16_MAX) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
+    ef = de->extra_fields;
+    ef_prev = NULL;
+    found = 0;
+
+    for (; ef; ef=ef->next) {
+	if (ef->id == ef_id && (ef->flags & ZIP_EF_BOTH) == (flags & ZIP_EF_BOTH)) {
+	    if (i == ef_idx) {
+		found = 1;
+		break;
+	    }
+	    i++;
+	}
+	ef_prev = ef;
+    }
+
+    if (i < ef_idx && ef_idx != ZIP_EXTRA_FIELD_NEW) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
+    if ((ef_new=_zip_ef_new(ef_id, len, data, flags)) == NULL) {
+	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return -1;
+    }
+
+    if (found) {
+	ef_new->next = ef->next;
+	ef->next = NULL;
+	_zip_ef_free(ef);
+	if (ef_prev)
+	    ef_prev->next = ef_new;
+	else
+	    de->extra_fields = ef_new;
+    }
+    else if (ef) {
+	ef_new->next = ef->next;
+	ef->next = ef_new;
+    }
+    else
+	de->extra_fields = ef_new;
+    
+    return 0;
 }

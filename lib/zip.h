@@ -80,6 +80,7 @@ extern "C" {
 /*                           1024    reserved for internal use */
 #define ZIP_FL_ENC_UTF_8     2048 /* string is UTF-8 encoded */
 #define ZIP_FL_ENC_CP437     4096 /* string is CP437 encoded */
+#define ZIP_FL_OVERWRITE     8192 /* zip_file_add: if file with name exists, overwrite (replace) it */
 
 /* archive global flags flags */
 

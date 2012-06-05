@@ -282,7 +282,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	st.comp_method = ZIP_CM_STORE;
     }
 
-    if (de->comp_method == ZIP_CM_DEFAULT && st.comp_method != ZIP_CM_STORE)
+    if (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method != ZIP_CM_STORE)
 	de->comp_method = st.comp_method;
     else if (de->comp_method == ZIP_CM_STORE && (st.valid & ZIP_STAT_SIZE)) {
 	st.valid |= ZIP_STAT_COMP_SIZE;
@@ -302,8 +302,8 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	de->uncomp_size = st.size;
 	
 	if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
-	    if ((((de->comp_method == ZIP_CM_DEFLATE || de->comp_method == ZIP_CM_DEFAULT) && st.size > MAX_DEFLATE_SIZE_32)
-		 || de->comp_method != ZIP_CM_STORE && de->comp_method != ZIP_CM_DEFLATE && de->comp_method != ZIP_CM_DEFAULT))
+	    if ((((de->comp_method == ZIP_CM_DEFLATE || ZIP_CM_IS_DEFAULT(de->comp_method)) && st.size > MAX_DEFLATE_SIZE_32)
+		 || de->comp_method != ZIP_CM_STORE && de->comp_method != ZIP_CM_DEFLATE && !ZIP_CM_IS_DEFAULT(de->comp_method)))
 		flags |= ZIP_FL_FORCE_ZIP64;
 	}
 	else
@@ -317,12 +317,12 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	return -1;
 
 
-    if (st.comp_method == ZIP_CM_STORE || (de->comp_method != ZIP_CM_DEFAULT && st.comp_method != de->comp_method)) {
+    if (st.comp_method == ZIP_CM_STORE || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method != de->comp_method)) {
 	struct zip_source *s_store, *s_crc;
 	zip_compression_implementation comp_impl;
 	
 	if (st.comp_method != ZIP_CM_STORE) {
-	    if ((comp_impl=zip_get_compression_implementation(st.comp_method)) == NULL) {
+	    if ((comp_impl=_zip_get_compression_implementation(st.comp_method)) == NULL) {
 		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 		return -1;
 	    }
@@ -342,7 +342,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 
 	/* XXX: deflate 0-byte files for torrentzip? */
 	if (de->comp_method != ZIP_CM_STORE && ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
-	    if ((comp_impl=zip_get_compression_implementation(de->comp_method)) == NULL) {
+	    if ((comp_impl=_zip_get_compression_implementation(de->comp_method)) == NULL) {
 		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 		zip_source_pop(s_crc);
 		if (s_store != src)

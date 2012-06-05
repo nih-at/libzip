@@ -67,7 +67,7 @@ zip_source_deflate(struct zip *za, struct zip_source *src,
     struct deflate *ctx;
     struct zip_source *s2;
 
-    if (src == NULL || (cm != ZIP_CM_DEFLATE && cm != ZIP_CM_DEFAULT)) {
+    if (src == NULL || (cm != ZIP_CM_DEFLATE && !ZIP_CM_IS_DEFAULT(cm))) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
