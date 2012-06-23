@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ADD 3 "February 18, 2012" NiH
+.TH ZIP_ADD 3 "June 23, 2012" NiH
 .SH "NAME"
 zip_add , \- .Nm zip_replace
 add file to zip archive or replace file in zip archive
@@ -48,81 +48,26 @@ zip_replace(struct zip *archive, zip_uint64_t index); \
 .SH "DESCRIPTION"
 The function
 zip_add
-adds a file to a zip archive, while
-zip_replace
-replaces an existing file in a zip archive.
-The argument
-\fBarchive\fR
-specifies the zip archive to which the file should be added.
-\fBname\fR
-is the file's name in the zip archive (for
-zip_add ),
-while
-\fBindex\fR
-specifies which file should be replaced (for
-zip_replace ).
-The data is obtained from the
-\fBsource\fR
+is the obsolete version of
+zip_file_add(3).
+It is the same as calling
+zip_file_add(3)
+with an empty
+\fBflags\fR
 argument.
-See the
-zip_source_*
-functions cited in
-SEE ALSO.
-.SH "RETURN VALUES"
-Upon successful completion,
-zip_add
-returns the index of the new file in the archive, and
-zip_replace
-returns 0.
-Otherwise, \-1 is returned and the error code in
-\fBarchive\fR
-is set to indicate the error.
-.SH "EXAMPLES"
-.Bd \-literal \-offset indent
-struct zip_source *s;
-
-if ((s=zip_source_buffer(archive, buffer, len)) == NULL ||
-    zip_add(archive, name, s) \*[Lt] 0) {
-    zip_source_free(s);
-    printf("error adding file: %s\n", zip_strerror(archive));
-}
-.Ed
-.SH "ERRORS"
-zip_add
-and
-zip_replace
-fail if:
-.RS
-.TP 4
-[ZIP_ER_EXISTS]
-There is already a file called
-\fBname\fR
-in the archive.
-(Only applies to
-zip_add ).
-.TP 4
-[ZIP_ER_INVAL]
-\fBsource\fR
-or
-\fBname\fR
-are
-\fBNULL,\fR
-or
-\fBindex\fR
-is invalid.
-This error is also returned when
-\fBname\fR
-is not a valid UTF-8 encoded string.
-.TP 4
-[ZIP_ER_MEMORY]
-Required memory could not be allocated.
-.RE
+Similarly, the
+zip_file_replace
+function is the obsolete version of
+zip_file_replace(3).
+It is the same as calling
+zip_file_replace(3)
+with an empty
+\fBflags\fR
+argument.
 .SH "SEE ALSO"
 libzip(3),
-zip_source_file(3),
-zip_source_filep(3),
-zip_source_function(3),
-zip_source_zip(3)
+zip_file_add(3),
+zip_file_replace(3)
 .SH "AUTHORS"
 
 Dieter Baron <dillo@giga.or.at>
