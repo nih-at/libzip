@@ -1,5 +1,5 @@
 .\" zip_add_dir.mdoc \-- add directory to zip archive
-.\" Copyright (C) 2006-2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ADD_DIR 3 "March 10, 2009" NiH
+.TH ZIP_ADD_DIR 3 "June 23, 2012" NiH
 .SH "NAME"
 zip_add_dir \- add directory to zip archive
 .SH "LIBRARY"
@@ -42,41 +42,14 @@ zip_add_dir(struct zip *archive, const char *name);
 .SH "DESCRIPTION"
 The function
 zip_add_dir
-adds a directory to a zip archive.
-The argument
-\fBarchive\fR
-specifies the zip archive to which the directory should be added.
-\fBname\fR
-is the directory's name in the zip archive.
-.SH "RETURN VALUES"
-Upon successful completion, the index of the new entry in the archive
-is returned.
-Otherwise, \-1 is returned and the error code in
-\fBarchive\fR
-is set to indicate the error.
-.SH "ERRORS"
-zip_add_dir
-fails if:
-.RS
-.TP 4
-[ZIP_ER_EXISTS]
-There is already an entry called
-\fBname\fR
-in the archive.
-.TP 4
-[ZIP_ER_INVAL]
-\fBarchive\fR
-or
-\fBname\fR
-are
-\fBNULL.\fR
-.TP 4
-[ZIP_ER_MEMORY]
-Required memory could not be allocated.
-.RE
+is the obsolete version of
+zip_dir_add(3).
+It is the same as calling
+zip_dir_add(3)
+with an empty flags argument.
 .SH "SEE ALSO"
 libzip(3),
-zip_add(3)
+zip_dir_add(3)
 .SH "AUTHORS"
 
 Dieter Baron <dillo@giga.or.at>
