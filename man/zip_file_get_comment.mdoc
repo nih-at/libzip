@@ -1,4 +1,4 @@
-.\" zip_get_file_comment.mdoc -- get comment for file in zip
+.\" zip_file_get_comment.mdoc -- get comment for file in zip
 .\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
@@ -30,30 +30,81 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd June 23, 2012
-.Dt ZIP_GET_FILE_COMMENT 3
+.Dt ZIP_FILE_GET_COMMENT 3
 .Os
 .Sh NAME
-.Nm zip_get_file_comment
+.Nm zip_file_get_comment
 .Nd get comment for file in zip
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft const char *
-.Fn zip_get_file_comment "struct zip *archive" "zip_uint64_t index" "int *lenp" "int flags"
+.Fn zip_file_get_comment "struct zip *archive" "zip_uint64_t index" "zip_uint32_t *lenp" \
+"zip_flags_t flags"
 .Sh DESCRIPTION
 The
-.Fn zip_get_file_comment
-function is the obsolete version of
-.Xr zip_file_get_comment 3 .
-The only differences are the types of the
+.Fn zip_file_get_comment
+function returns the comment for the file at position
+.Ar index
+in the zip archive.
+The name is in UTF-8 encoding unless
+.Dv ZIP_FL_NAME_RAW
+was specified (see below).
+This pointer should not be modified or
+.Xr free 3 Ap d ,
+and becomes invalid when
+.Ar archive
+is closed.
+If
 .Ar lenp
-and
+is not
+.Dv NULL ,
+the integer to which it points will be set to the length of the
+comment.
+If
 .Ar flags
-arguments.
+is set to
+.Dv ZIP_FL_UNCHANGED ,
+the original unchanged comment is returned.
+.Pp
+Additionally, the following flags are supported:
+.Bl -tag -width ZIP_FL_NAME_STRICTXX -offset indent
+.It Dv ZIP_FL_NAME_RAW
+Return the unmodified comment as it is in the ZIP archive.
+.It Dv ZIP_FL_NAME_GUESS
+(Default.)
+Guess the encoding of the comment in the ZIP archive and convert it
+to UTF-8, if necessary.
+.It Dv ZIP_FL_NAME_STRICT
+Follow the ZIP specification for file names and extend it to file comments,
+expecting them to be encoded in CP-437 in the ZIP archive.
+(ASCII is a subset of CP-437.)
+Convert it to UTF-8.
+.El
+.Sh RETURN VALUES
+Upon successful completion, a pointer to the comment is returned,
+or
+.Dv NULL
+if there is no comment.
+In case of an error,
+.Dv NULL
+is returned and the error code in
+.Ar archive
+is set to indicate the error.
+.Sh ERRORS
+.Fn zip_get_file_comment
+fails if:
+.Bl -tag -width Er
+.It Bq Er ZIP_ER_INVAL
+.Ar index
+is not a valid file index in
+.Ar archive .
+.El
 .Sh SEE ALSO
 .Xr libzip 3 ,
-.Xr zip_file_get_comment 3
+.Xr zip_file_set_comment 3 ,
+.Xr zip_get_archive_comment 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq dillo@giga.or.at
