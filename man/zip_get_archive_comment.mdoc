@@ -46,7 +46,7 @@ The
 .Fn zip_get_archive_comment
 function returns the comment for the entire zip archive.
 The name is in UTF-8 encoding unless
-.Dv ZIP_FL_NAME_RAW
+.Dv ZIP_FL_ENC_RAW
 was specified (see below).
 This pointer should not be modified or
 .Xr free 3 Ap d ,
@@ -66,19 +66,20 @@ is set to
 the original unchanged comment is returned.
 .Pp
 Additionally, the following flags are supported:
-.Bl -tag -width ZIP_FL_NAME_STRICTXX -offset indent
-.It Dv ZIP_FL_NAME_RAW
+.Bl -tag -width ZIP_FL_ENC_STRICTXX -offset indent
+.It Dv ZIP_FL_ENC_RAW
 Return the unmodified archive comment as it is in the ZIP archive.
-.It Dv ZIP_FL_NAME_GUESS
+.It Dv ZIP_FL_ENC_GUESS
 (Default.)
 Guess the encoding of the archive comment in the ZIP archive and convert it
 to UTF-8, if necessary.
-.It Dv ZIP_FL_NAME_STRICT
-Follow the ZIP specification for file names and extend it to the archive comment,
-thus also expecting it in CP-437 encoding.
-(ASCII is a subset of CP-437.)
+.It Dv ZIP_FL_ENC_STRICT
+Follow the ZIP specification for file names and extend it to the
+archive comment, thus also expecting it in CP-437 encoding.
 Convert it to UTF-8.
 .El
+.Em Note:
+ASCII is a subset of both CP-437 and UTF-8.
 .Sh RETURN VALUES
 Upon successful completion, a pointer to the comment is returned,
 or

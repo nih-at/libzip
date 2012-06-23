@@ -49,9 +49,8 @@ function returns the name of the file at position
 in
 .Ar archive .
 The name is in UTF-8 encoding unless
-.Dv ZIP_FL_NAME_RAW
+.Dv ZIP_FL_ENC_RAW
 was specified (see below).
-(ASCII is a subset of UTF-8.)
 .Pp
 If
 .Ar flags
@@ -63,19 +62,20 @@ The returned string must not be modified or freed, and becomes invalid when
 is closed.
 .Pp
 Additionally, the following flags are supported:
-.Bl -tag -width ZIP_FL_NAME_STRICTXX -offset indent
-.It Dv ZIP_FL_NAME_RAW
+.Bl -tag -width ZIP_FL_ENC_STRICTXX -offset indent
+.It Dv ZIP_FL_ENC_RAW
 Return the unmodified names as it is in the ZIP archive.
-.It Dv ZIP_FL_NAME_GUESS
+.It Dv ZIP_FL_ENC_GUESS
 (Default.)
 Guess the encoding of the name in the ZIP archive and convert it
 to UTF-8, if necessary.
-.It Dv ZIP_FL_NAME_STRICT
+.It Dv ZIP_FL_ENC_STRICT
 Follow the ZIP specification and expect CP-437 encoded names in
-the ZIP archive.
-(ASCII is a subset of CP-437.)
+the ZIP archive (except if they are explicitly marked as UTF-8).
 Convert it to UTF-8.
 .El
+.Em Note:
+ASCII is a subset of both CP-437 and UTF-8.
 .Sh RETURN VALUES
 Upon successful completion, a pointer to the name is returned.
 Otherwise,
