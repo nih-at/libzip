@@ -36,7 +36,6 @@ const char * const _zip_err_str[] = {
     "Read-only archive", 
     "No password provided",
     "Wrong password provided",
-    "Encoding of name and comment do not match",
 };
 
 const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0]);
@@ -72,7 +71,6 @@ const int _zip_err_type[] = {
     N,
     N,
     N, 
-    N,
     N,
     N,
 };
