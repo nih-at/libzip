@@ -58,7 +58,7 @@ and
 is 0, the file comment will be removed.
 The
 \fBflags\fR
-argument can be a combination of:
+argument can be any of:
 .RS
 .TP 22
 \fBZIP_FL_ENC_GUESS\fR

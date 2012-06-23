@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_NAME_LOCATE 3 "February 15, 2012" NiH
+.TH ZIP_NAME_LOCATE 3 "June 23, 2012" NiH
 .SH "NAME"
 zip_name_locate \- get index of file by name
 .SH "LIBRARY"
@@ -63,21 +63,21 @@ Ignore case distinctions.
 \fBZIP_FL_NODIR\fR
 Ignore directory part of file name in archive.
 .TP 15
-\fBZIP_FL_NAME_RAW\fR
+\fBZIP_FL_ENC_RAW\fR
 Compare against the unmodified names as it is in the ZIP archive.
 .TP 15
-\fBZIP_FL_NAME_GUESS\fR
+\fBZIP_FL_ENC_GUESS\fR
 (Default.)
 Guess the encoding of the name in the ZIP archive and convert it
 to UTF-8, if necessary, before comparing.
 .TP 15
-\fBZIP_FL_NAME_STRICT\fR
+\fBZIP_FL_ENC_STRICT\fR
 Follow the ZIP specification and expect CP-437 encoded names in
-the ZIP archive.
-(ASCII is a subset of CP-437.)
+the ZIP archive (except if they are explicitly marked as UTF-8).
 Convert it to UTF-8 before comparing.
 .RE
-.RE
+.I Note:
+ASCII is a subset of both CP-437 and UTF-8.
 .SH "RETURN VALUES"
 zip_name_locate
 returns the index of the file named

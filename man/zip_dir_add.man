@@ -51,7 +51,7 @@ specifies the zip archive to which the directory should be added.
 is the directory's name in the zip archive.
 The
 \fBflags\fR
-argument can be a combination of:
+argument can be any of:
 .RS
 .TP 22
 \fBZIP_FL_ENC_GUESS\fR
