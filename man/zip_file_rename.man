@@ -1,4 +1,4 @@
-.\" zip_rename.mdoc \-- rename file in zip archive
+.\" zip_file_rename.mdoc \-- rename file in zip archive
 .\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -29,26 +29,75 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_RENAME 3 "June 23, 2012" NiH
+.TH ZIP_FILE_RENAME 3 "June 23, 2012" NiH
 .SH "NAME"
-zip_rename \- rename file in zip archive
+zip_file_rename \- rename file in zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
 #include <zip.h>
 .PP
 int
-zip_rename(struct zip *archive, zip_uint64_t index, const char *name);
+zip_file_rename(struct zip *archive, zip_uint64_t index, const char *name); \
+"zip_flags_t flags"
 .SH "DESCRIPTION"
+The file at position
+\fBindex\fR
+in the zip archive
+\fBarchive\fR
+is renamed to
+\fBname.\fR
+The
+\fBflags\fR
+argument can be a combination of:
+.RS
+.TP 22
+\fBZIP_FL_ENC_GUESS\fR
+Guess encoding of
+\fBname\fR
+(default).
+.TP 22
+\fBZIP_FL_ENC_UTF_8\fR
+Interpret
+\fBname\fR
+as UTF-8.
+.TP 22
+\fBZIP_FL_ENC_CP437\fR
+Interpret
+\fBname\fR
+as code page 437 (CP-437).
+.RE
+.SH "RETURN VALUES"
+Upon successful completion 0 is returned.
+Otherwise, \-1 is returned and the error code in
+\fBarchive\fR
+is set to indicate the error.
+.SH "ERRORS"
 zip_rename
-is the obsolete version of
-zip_file_rename(3).
-It is the same as calling
-zip_file_rename(3)
-with an empty flags argument.
+fails if:
+.RS
+.TP 4
+[ZIP_ER_DELETED]
+The file to be renamed has been deleted from the archive.
+.TP 4
+[ZIP_ER_EXISTS]
+There is already a file called
+\fBname\fR
+in the archive.
+.TP 4
+[ZIP_ER_INVAL]
+\fBindex\fR
+is not a valid file index in
+\fBarchive,\fR
+\fBname is\fR
+\fBNULL,\fR
+the empty string, or not a valid UTF-8 encoded string.
+Also a file cannot be renamed to a directory or vice versa.
+Directories are denoted by a trailing slash.
+.RE
 .SH "SEE ALSO"
 libzip(3),
-zip_file_rename(3)
+zip_unchange(3)
 .SH "AUTHORS"
 
 Dieter Baron <dillo@giga.or.at>
