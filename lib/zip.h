@@ -129,7 +129,6 @@ extern "C" {
 #define ZIP_ER_RDONLY        25  /* N Read-only archive */ 
 #define ZIP_ER_NOPASSWD      26  /* N No password provided */
 #define ZIP_ER_WRONGPASSWD   27  /* N Wrong password provided */
-#define ZIP_ER_ENCMISMATCH   28  /* N Encoding of name and comment do not match */
 
 /* type of system error value */
 
