@@ -1,4 +1,4 @@
-.\" zip_set_file_comment.mdoc \-- set comment for file in zip
+.\" zip_file_set_comment.mdoc \-- set comment for file in zip
 .\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
@@ -29,9 +29,9 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_SET_FILE_COMMENT 3 "June 23, 2012" NiH
+.TH ZIP_FILE_SET_COMMENT 3 "June 23, 2012" NiH
 .SH "NAME"
-zip_set_file_comment \- set comment for file in zip
+zip_file_set_comment \- set comment for file in zip
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
@@ -39,26 +39,72 @@ libzip (-lzip)
 .PP
 int
 zip_set_file_comment(struct zip *archive, zip_uint64_t index); \
-"const char *comment" "int len"
+"const char *comment" "zip_uint16_t len" "zip_flags_t flags"
 .SH "DESCRIPTION"
 The
-zip_set_file_comment
-function is the obsolete version of
-zip_file_set_comment(3).
-The only differences are the type of the
+zip_file_set_comment
+function sets the comment for the file at position
+\fBindex\fR
+in the zip archive to
+\fBcomment\fR
+of length
+\fBlen.\fR
+If
+\fBcomment\fR
+is
+\fBNULL\fR
+and
 \fBlen\fR
-argument and the additional
+is 0, the file comment will be removed.
+The
 \fBflags\fR
-argument.
-zip_set_file_comment
-is the same as calling
-zip_file_set_comment(3)
-with an empty
-\fBflags\fR
-argument.
+argument can be a combination of:
+.RS
+.TP 22
+\fBZIP_FL_ENC_GUESS\fR
+Guess encoding of
+\fBcomment\fR
+(default).
+.TP 22
+\fBZIP_FL_ENC_UTF_8\fR
+Interpret
+\fBcomment\fR
+as UTF-8.
+.TP 22
+\fBZIP_FL_ENC_CP437\fR
+Interpret
+\fBcomment\fR
+as code page 437 (CP-437).
+.RE
+.SH "RETURN VALUES"
+Upon successful completion 0 is returned.
+Otherwise, \-1 is returned and the error information in
+\fBarchive\fR
+is set to indicate the error.
+.SH "ERRORS"
+zip_file_set_comment
+fails if:
+.RS
+.TP 4
+[ZIP_ER_INVAL]
+\fBindex\fR
+is not a valid file index in
+\fBarchive,\fR
+or
+\fBlen\fR
+is less than 0 or longer than the maximum comment length in a zip file
+(65535), or
+\fBcomment\fR
+is not a valid UTF-8 encoded string.
+.TP 4
+[ZIP_ER_MEMORY]
+Required memory could not be allocated.
+.RE
 .SH "SEE ALSO"
 libzip(3),
-zip_file_set_comment(3)
+zip_get_archive_comment(3),
+zip_file_get_comment(3),
+zip_set_archive_comment(3)
 .SH "AUTHORS"
 
 Dieter Baron <dillo@giga.or.at>
