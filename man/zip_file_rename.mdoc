@@ -1,4 +1,4 @@
-.\" zip_rename.mdoc -- rename file in zip archive
+.\" zip_file_rename.mdoc -- rename file in zip archive
 .\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -30,27 +30,70 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd June 23, 2012
-.Dt ZIP_RENAME 3
+.Dt ZIP_FILE_RENAME 3
 .Os
 .Sh NAME
-.Nm zip_rename
+.Nm zip_file_rename
 .Nd rename file in zip archive
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_rename "struct zip *archive" "zip_uint64_t index" "const char *name"
+.Fn zip_file_rename "struct zip *archive" "zip_uint64_t index" "const char *name" \
+"zip_flags_t flags"
 .Sh DESCRIPTION
+The file at position
+.Ar index
+in the zip archive
+.Ar archive
+is renamed to
+.Ar name .
+The
+.Ar flags
+argument can be a combination of:
+.Bl -tag -width XZIPXFLXENCXSTRICTXX
+.It Dv ZIP_FL_ENC_GUESS
+Guess encoding of
+.Ar name
+(default).
+.It Dv ZIP_FL_ENC_UTF_8
+Interpret
+.Ar name
+as UTF-8.
+.It Dv ZIP_FL_ENC_CP437
+Interpret
+.Ar name
+as code page 437 (CP-437).
+.El
+.Sh RETURN VALUES
+Upon successful completion 0 is returned.
+Otherwise, \-1 is returned and the error code in
+.Ar archive
+is set to indicate the error.
+.Sh ERRORS
 .Fn zip_rename
-is the obsolete version of
-.Xr zip_file_rename 3 .
-It is the same as calling
-.Xr zip_file_rename 3
-with an empty flags argument.
+fails if:
+.Bl -tag -width Er
+.It Bq Er ZIP_ER_DELETED
+The file to be renamed has been deleted from the archive.
+.It Bq Er ZIP_ER_EXISTS
+There is already a file called
+.Ar name
+in the archive.
+.It Bq Er ZIP_ER_INVAL
+.Ar index
+is not a valid file index in
+.Ar archive ,
+.Ar name is
+.Dv NULL ,
+the empty string, or not a valid UTF-8 encoded string.
+Also a file cannot be renamed to a directory or vice versa.
+Directories are denoted by a trailing slash.
+.El
 .Sh SEE ALSO
 .Xr libzip 3 ,
-.Xr zip_file_rename 3
+.Xr zip_unchange 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq dillo@giga.or.at

@@ -20,6 +20,7 @@ MAN3=	libzip.mdoc \
 	zip_fclose.mdoc \
 	zip_fdopen.mdoc \
 	zip_file_add.mdoc \
+	zip_file_rename.mdoc \
 	zip_file_strerror.mdoc \
 	zip_fopen.mdoc \
 	zip_fopen_encrypted.mdoc \
