@@ -11,6 +11,7 @@ MAN3=	libzip.mdoc \
 	zip_add_dir.mdoc \
 	zip_close.mdoc \
 	zip_delete.mdoc \
+	zip_dir_add.mdoc \
 	zip_discard.mdoc \
 	zip_error_clear.mdoc \
 	zip_error_get.mdoc \

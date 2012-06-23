@@ -1,4 +1,4 @@
-.\" zip_add_dir.mdoc -- add directory to zip archive
+.\" zip_dir_add.mdoc -- add directory to zip archive
 .\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -30,28 +30,71 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd June 23, 2012
-.Dt ZIP_ADD_DIR 3
+.Dt ZIP_DIR_ADD 3
 .Os
 .Sh NAME
-.Nm zip_add_dir
+.Nm zip_dir_add
 .Nd add directory to zip archive
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_int64_t
-.Fn zip_add_dir "struct zip *archive" "const char *name"
+.Fn zip_add_dir "struct zip *archive" "const char *name" \
+"zip_flags_t flags"
 .Sh DESCRIPTION
 The function
+.Fn zip_dir_add
+adds a directory to a zip archive.
+The argument
+.Ar archive
+specifies the zip archive to which the directory should be added.
+.Ar name
+is the directory's name in the zip archive.
+The
+.Ar flags
+argument can be a combination of:
+.Bl -tag -width XZIPXFLXENCXSTRICTXX
+.It Dv ZIP_FL_ENC_GUESS
+Guess encoding of
+.Ar name
+(default).
+.It Dv ZIP_FL_ENC_UTF_8
+Interpret
+.Ar name
+as UTF-8.
+.It Dv ZIP_FL_ENC_CP437
+Interpret
+.Ar name
+as code page 437 (CP-437).
+.El
+.Sh RETURN VALUES
+Upon successful completion, the index of the new entry in the archive
+is returned.
+Otherwise, \-1 is returned and the error code in
+.Ar archive
+is set to indicate the error.
+.Sh ERRORS
 .Fn zip_add_dir
-is the obsolete version of
-.Xr zip_dir_add 3 .
-It is the same as calling
-.Xr zip_dir_add 3
-with an empty flags argument.
+fails if:
+.Bl -tag -width Er
+.It Bq Er ZIP_ER_EXISTS
+There is already an entry called
+.Ar name
+in the archive.
+.It Bq Er ZIP_ER_INVAL
+.Ar archive
+or
+.Ar name
+are
+.Dv NULL ,
+or invalid UTF-8 encoded file names.
+.It Bq Er ZIP_ER_MEMORY
+Required memory could not be allocated.
+.El
 .Sh SEE ALSO
 .Xr libzip 3 ,
-.Xr zip_dir_add 3
+.Xr zip_add 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq dillo@giga.or.at
