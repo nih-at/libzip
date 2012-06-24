@@ -4,6 +4,7 @@ SET(MDOC3_PAGES
   zip_add_dir.mdoc
   zip_close.mdoc
   zip_delete.mdoc
+  zip_dir_add.mdoc
   zip_discard.mdoc
   zip_error_clear.mdoc
   zip_error_get.mdoc
@@ -12,6 +13,13 @@ SET(MDOC3_PAGES
   zip_errors.mdoc
   zip_fclose.mdoc
   zip_fdopen.mdoc
+  zip_file_add.mdoc
+  zip_file_extra_field_delete.mdoc
+  zip_file_extra_field_get.mdoc
+  zip_file_extra_field_set.mdoc
+  zip_file_get_comment.mdoc
+  zip_file_rename.mdoc
+  zip_file_set_comment.mdoc
   zip_file_strerror.mdoc
   zip_fopen.mdoc
   zip_fopen_encrypted.mdoc
@@ -75,6 +83,10 @@ INSTALL(FILES zip_error_clear.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_error_clear.3)
 INSTALL(FILES zip_error_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_error_get.3)
+INSTALL(FILES zip_extra_field_delete.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_extra_field_delete_by_id.3)
+INSTALL(FILES zip_extra_field_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_extra_field_get_by_id.3)
 INSTALL(FILES zip_fopen.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_fopen_index.3)
 INSTALL(FILES zip_fopen_encrypted.${MANFMT} DESTINATION ${MAN_PATH}/man3
