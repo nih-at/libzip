@@ -84,6 +84,8 @@ INSTALL(FILES zip_error_clear.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_error_clear.3)
 INSTALL(FILES zip_error_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_error_get.3)
+INSTALL(FILES zip_file_add.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_file_replace.3)
 INSTALL(FILES zip_file_extra_field_delete.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_extra_field_delete_by_id.3)
 INSTALL(FILES zip_file_extra_field_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
