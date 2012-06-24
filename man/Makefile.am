@@ -21,6 +21,7 @@ MAN3=	libzip.mdoc \
 	zip_fclose.mdoc \
 	zip_fdopen.mdoc \
 	zip_file_add.mdoc \
+	zip_file_extra_field_delete.mdoc \
 	zip_file_extra_field_get.mdoc \
 	zip_file_extra_field_set.mdoc \
 	zip_file_get_comment.mdoc \
@@ -67,6 +68,8 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_file_error_get.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_add.3 \
 		${DESTDIR}${man3dir}/zip_file_replace.3
+	${LN} ${DESTDIR}${man3dir}/zip_file_extra_field_delete.3 \
+		${DESTDIR}${man3dir}/zip_file_extra_field_delete_by_id.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_extra_field_get.3 \
 		${DESTDIR}${man3dir}/zip_file_extra_field_get_by_id.3
 	${LN} ${DESTDIR}${man3dir}/zip_fopen.3 \
@@ -83,6 +86,7 @@ link-man3: install-man3 uninstall-hook
 uninstall-hook:
 	-rm -f ${DESTDIR}${man3dir}/zip_file_error_clear.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_error_get.3
+	-rm -f ${DESTDIR}${man3dir}/zip_file_extra_field_delete_by_id.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_extra_field_get_by_id.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_replace.3
 	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index.3
@@ -94,6 +98,7 @@ uninstall-hook:
 link-html: ${HTML}
 	-rm -f zip_file_error_clear.html \
 		zip_file_error_get.html \
+		zip_file_extra_field_delete_by_id.html \
 		zip_file_extra_field_get_by_id.html \
 		zip_file_replace.html \
 		zip_fopen_index.html \
@@ -103,6 +108,7 @@ link-html: ${HTML}
 		zip_strerror.html
 	${LN} zip_error_clear.html zip_file_error_clear.html
 	${LN} zip_error_get.html zip_file_error_get.html
+	${LN} zip_file_extra_field_delete.html zip_file_extra_field_delete_by_id.html
 	${LN} zip_file_extra_field_get.html zip_file_extra_field_get_by_id.html
 	${LN} zip_file_add.html zip_file_replace.html
 	${LN} zip_fopen.html zip_fopen_index.html
