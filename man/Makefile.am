@@ -24,6 +24,7 @@ MAN3=	libzip.mdoc \
 	zip_file_extra_field_delete.mdoc \
 	zip_file_extra_field_get.mdoc \
 	zip_file_extra_field_set.mdoc \
+	zip_file_extra_fields_count.mdoc \
 	zip_file_get_comment.mdoc \
 	zip_file_rename.mdoc \
 	zip_file_set_comment.mdoc \
@@ -72,6 +73,8 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_file_extra_field_delete_by_id.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_extra_field_get.3 \
 		${DESTDIR}${man3dir}/zip_file_extra_field_get_by_id.3
+	${LN} ${DESTDIR}${man3dir}/zip_file_extra_fields_count.3 \
+		${DESTDIR}${man3dir}/zip_file_extra_fields_count_by_id.3
 	${LN} ${DESTDIR}${man3dir}/zip_fopen.3 \
 		${DESTDIR}${man3dir}/zip_fopen_index.3
 	${LN} ${DESTDIR}${man3dir}/zip_fopen_encrypted.3 \
@@ -88,6 +91,7 @@ uninstall-hook:
 	-rm -f ${DESTDIR}${man3dir}/zip_file_error_get.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_extra_field_delete_by_id.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_extra_field_get_by_id.3
+	-rm -f ${DESTDIR}${man3dir}/zip_file_extra_fields_count_by_id.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_replace.3
 	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index.3
 	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index_encrypted.3
@@ -100,6 +104,7 @@ link-html: ${HTML}
 		zip_file_error_get.html \
 		zip_file_extra_field_delete_by_id.html \
 		zip_file_extra_field_get_by_id.html \
+		zip_file_extra_fields_count_by_id.html \
 		zip_file_replace.html \
 		zip_fopen_index.html \
 		zip_fopen_index_encrypted \
@@ -110,6 +115,7 @@ link-html: ${HTML}
 	${LN} zip_error_get.html zip_file_error_get.html
 	${LN} zip_file_extra_field_delete.html zip_file_extra_field_delete_by_id.html
 	${LN} zip_file_extra_field_get.html zip_file_extra_field_get_by_id.html
+	${LN} zip_file_extra_fields_count.html zip_file_extra_fields_count_by_id.html
 	${LN} zip_file_add.html zip_file_replace.html
 	${LN} zip_fopen.html zip_fopen_index.html
 	${LN} zip_fopen_encrypted.html zip_fopen_index_encrypted.html

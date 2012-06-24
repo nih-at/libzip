@@ -17,6 +17,7 @@ SET(MDOC3_PAGES
   zip_file_extra_field_delete.mdoc
   zip_file_extra_field_get.mdoc
   zip_file_extra_field_set.mdoc
+  zip_file_extra_fields_count.mdoc
   zip_file_get_comment.mdoc
   zip_file_rename.mdoc
   zip_file_set_comment.mdoc
@@ -87,6 +88,8 @@ INSTALL(FILES zip_extra_field_delete.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_extra_field_delete_by_id.3)
 INSTALL(FILES zip_extra_field_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_extra_field_get_by_id.3)
+INSTALL(FILES zip_extra_fields_count.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_extra_fields_count_by_id.3)
 INSTALL(FILES zip_fopen.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_fopen_index.3)
 INSTALL(FILES zip_fopen_encrypted.${MANFMT} DESTINATION ${MAN_PATH}/man3
