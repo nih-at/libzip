@@ -53,6 +53,7 @@ Features
 Bugs
 ====
 ! check inconsistent file test case result
+! decide if open_filename_duplicate.test is ok or should report an error
 * split zip archive torrentzip state from user requested torrentzip state
 * check for limits imposed by format (central dir size, file size, extra fields, ...)
 * _zip_u2d_time: handle localtime(3) failure
