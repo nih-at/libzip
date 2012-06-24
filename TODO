@@ -70,6 +70,7 @@ Cleanup
 * get rid of zip_get_{compression,encryption}_implementation
 * use zip_*int*_t internally
 * completely get rid of off_t
+* clean up lint(1) warnings?
 
 
 Test Case Issues
@@ -79,6 +80,11 @@ Test Case Issues
 * run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)
 * fix comment test to be newline insensitive
+* zip64 test case ideas (but how to provide comparison and input files?)
+  Create files with:
+  * compressed < 4GB, uncompressed > 4GB
+  * compressed > 4GB
+  * offset of file or central directory > 4GB
 
 * (add, replace)
 	add to empty zip
