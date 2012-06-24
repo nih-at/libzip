@@ -20,6 +20,7 @@ EXTRA_DIST= \
 	bigzero-zip.zip \
 	broken.zip \
 	encrypt.zip \
+	filename_empty.zip \
 	fileorder.zip \
 	firstsecond.zip \
 	firstsecond-split-deflated.zip \
@@ -86,6 +87,7 @@ TESTS= \
 	open_empty.test \
 	open_empty_2.test \
 	open_extrabytes.test \
+	open_filename_empty.test \
 	open_many_ok.test \
 	open_new_but_exists.test \
 	open_new_ok.test \
