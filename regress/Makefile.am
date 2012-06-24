@@ -20,6 +20,7 @@ EXTRA_DIST= \
 	bigzero-zip.zip \
 	broken.zip \
 	encrypt.zip \
+	filename_duplicate.zip \
 	filename_empty.zip \
 	fileorder.zip \
 	firstsecond.zip \
@@ -130,6 +131,7 @@ DISABLED_TESTS= \
 	encoding-cp437.test \
 	encoding-cp437-all.test \
 	encoding-utf-8.test \
+	open_filename_duplicate.test \
 	open_incons.test \
 	torrent-new.test
 
