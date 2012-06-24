@@ -22,6 +22,7 @@ MAN3=	libzip.mdoc \
 	zip_fdopen.mdoc \
 	zip_file_add.mdoc \
 	zip_file_extra_field_get.mdoc \
+	zip_file_extra_field_set.mdoc \
 	zip_file_get_comment.mdoc \
 	zip_file_rename.mdoc \
 	zip_file_set_comment.mdoc \
