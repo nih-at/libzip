@@ -135,6 +135,9 @@ SUFFIXES=.man .mdoc .html
 mkman: ${MAN}
 mkhtml: ${HTML} link-html
 
+mkdocset: ${HTML}
+	perl mkdocset.pl ${HTML}
+
 update-errors:
 	sh $(srcdir)/make_zip_errors.sh $(srcdir)/../lib/zip.h zip_errors.mdoc
 
