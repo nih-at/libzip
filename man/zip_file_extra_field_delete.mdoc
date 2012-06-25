@@ -55,6 +55,12 @@ for the file at position
 .Ar index
 in the zip archive.
 .Pp
+If
+.Ar index
+is
+.Dv ZIP_EXTRA_FIELD_ALL ,
+then all extra fields will be deleted.
+.Pp
 The following flags are supported:
 .Bl -tag -width ZIP_FL_CENTRALXX -offset indent
 .It Dv ZIP_FL_CENTRAL
@@ -74,7 +80,9 @@ and index
 extra field with ID
 .Ar extra_field_id )
 The other arguments are the same as for
-.Fn zip_file_extra_field_delete .
+.Fn zip_file_extra_field_delete
+.Dv ( ZIP_EXTRA_FIELD_ALL
+will delete all extra fields the specified ID).
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error code in
