@@ -1,16 +1,18 @@
 div.lit {
     font-family: monospace;
 }
-div.sec-head {
+div.sec-head, div.ssec-head {
     padding: 4pt;
     border: solid;
     border-width: 1px;
     border-color: #555555;
     background: #aaaaaa;
-    font-size: large;
     font-weight: bold;
 }
-div.sec-body {
+div.sec-head {
+    font-size: large;
+}
+div.sec-body, div.ssec-body {
     margin-top: 1em;
 }
 span.arg {
