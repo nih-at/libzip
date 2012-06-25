@@ -92,6 +92,9 @@ Return only extra fields from the archive's central directory.
 .TP 18
 \fBZIP_FL_LOCAL\fR
 Return only extra fields from the local file headers.
+.TP 18
+\fBZIP_FL_UNCHANGED\fR
+Return only the original unchanged extra fields.
 .RE
 .PP
 The
