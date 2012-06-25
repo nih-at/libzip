@@ -64,7 +64,10 @@ specifies which file should be replaced (for
 .Fn zip_file_replace ) .
 The
 .Ar flags
-argument can be any of:
+argument can be any combination of
+.Dv ZIP_FL_OVERWRITE
+with one of
+.Dv ZIP_FL_ENC_* :
 .Bl -tag -width XZIPXFLXENCXSTRICTXX
 .It Dv ZIP_FL_OVERWRITE
 Overwrite any existing file of the same name.
