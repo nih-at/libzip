@@ -52,6 +52,7 @@ Features
 
 Bugs
 ====
+! zip_file_extra_field_delete*: use dirent changes (create if neccessary)
 ! check inconsistent file test case result
 ! decide if open_filename_duplicate.test is ok or should report an error
 * split zip archive torrentzip state from user requested torrentzip state
