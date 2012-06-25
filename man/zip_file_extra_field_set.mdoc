@@ -64,12 +64,10 @@ to
 .Dv ZIP_EXTRA_FIELD_NEW .
 .Pp
 The following flags are supported:
-.Bl -tag -width ZIP_EF_CENTRALXX -offset indent
-.It Dv ZIP_EF_BOTH
-Sets both central directory and local file header extra field.
-.It Dv ZIP_EF_CENTRAL
+.Bl -tag -width ZIP_FL_CENTRALXX -offset indent
+.It Dv ZIP_FL_CENTRAL
 Only sets extra field in the archive's central directory.
-.It Dv ZIP_EF_LOCAL
+.It Dv ZIP_FL_LOCAL
 Only sets extra field in the local file headers.
 .El
 .Pp
