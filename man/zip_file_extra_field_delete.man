@@ -57,13 +57,10 @@ in the zip archive.
 The following flags are supported:
 .RS
 .TP 18
-\fBZIP_EF_BOTH\fR
-Delete extra fields independent on where they are stored in the zip file.
-.TP 18
-\fBZIP_EF_CENTRAL\fR
+\fBZIP_FL_CENTRAL\fR
 Delete only extra fields from the archive's central directory.
 .TP 18
-\fBZIP_EF_LOCAL\fR
+\fBZIP_FL_LOCAL\fR
 Delete only extra fields from the local file headers.
 .RE
 .PP
