@@ -60,6 +60,9 @@ Count only extra fields from the archive's central directory.
 .TP 18
 \fBZIP_FL_LOCAL\fR
 Count only extra fields from the local file headers.
+.TP 18
+\fBZIP_FL_UNCHANGED\fR
+Only look at the original unchanged extra fields.
 .RE
 .PP
 The
