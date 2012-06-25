@@ -43,10 +43,7 @@ for (@sh_nodes) {
     $tl_nodes{$_} = 1;
 }
 
-my @tokens = ({ type => '//apple_ref/c/func',
-		path => 'libzip.html',
-		description => 'C library for reading, creating, and modifying zip archives',
-		id => 1 });
+my @tokens = ();
 
 print N <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
@@ -120,8 +117,13 @@ close N;
 link('nih-man.css', "$docset/Contents/Resources/Documents/nih-man.css") or die "can't link css file: $!";
 copy_html('libzip.html', "$docset/Contents/Resources/Documents/libzip.html");
 
+write_tokens();
+
 system('docsetutil', 'index', $docset) == 0 or die "can't index docset: $!";
-system('docsetutil', 'validate', $docset) == 0 or die "can't verify docset: $!";
+system('docsetutil', 'validate', $docset) == 0 or die "can't validate docset: $!";
+
+unlink("$docset/Contents/Resources/Nodes.xml");
+unlink("$docset/Contents/Resources/Tokens.xml");
 
 
 
