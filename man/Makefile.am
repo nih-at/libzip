@@ -135,7 +135,7 @@ SUFFIXES=.man .mdoc .html
 mkman: ${MAN}
 mkhtml: ${HTML} link-html
 
-mkdocset: ${HTML}
+mkdocset: mkdocset.pl ${HTML}
 	perl mkdocset.pl ${HTML}
 
 update-errors:

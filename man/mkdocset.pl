@@ -49,10 +49,13 @@ print N <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
 <DocSetNodes version="1.0">
   <TOC>
-    <Node id="1" type="folder">
-      <Name>libzip</Name>
-      <Path>libzip.html</Path>
-      <SubNodes>
+    <Node noindex="1">
+      <Name>libzip package</Name>
+      <Subnodes>
+        <Node noindex="1">
+          <Name>Library</Name>
+          <Path>libzip.html</Path>
+          <Subnodes>
 EOF
 
     
@@ -61,56 +64,32 @@ my $id = 1001;
 for my $html (@files) {
     my $name = $html;
     $name =~ s/.html//;
-    my $mdoc = "$name.mdoc";
 
     if ($tl_nodes{$name}) {
 	next;
     }
 
-    my $description;
-    my @names = ();
-
-    open MD, "< $mdoc" or die "can't open $mdoc: $!";
-
-    while (my $line = <MD>) {
-	if ($line =~ m/^.Nm (.*?)( ,)?$/) {
-	    push @names, $1;
-	}
-	elsif ($line =~ m/^.Nd (.*)/) {
-	    $description = $1;
-	}
-	elsif ($line =~ m/^.Sh SYNOPSIS/) {
-	    last;
-	}
-    }
-
-    close MD;
-
-    print N "        <Node id=\"$id\">\n";
-    print N "          <Name>$name</Name>\n";
-    print N "          <Path>$html</Path>\n";
-    print N "        </Node>\n";
-
-    for my $name (@names) {
-	push @tokens, { type => '//apple_ref/c/func',
-			path => $html,
-			name => $name,
-			description => $description,
-			id => $id };
-    }
-    
-    copy_html($html, "$docset/Contents/Resources/Documents/$html");
-
-    $id++;
+    process_file($html, 'c', $id++);
 }
 
-print N "      </SubNodes>\n";
-print N "    </Node>\n";
+print N "          </Subnodes>\n";
+print N "        </Node>\n";
+print N "        <Node noindex=\"1\">\n";
+print N "          <Name>Commands</Name>\n";
+print N "          <Subnodes>\n";
 
-print N <<EOF;
-  </TOC>
-</DocSetNodes>
-EOF
+$id = 2;
+
+for my $name (@sh_nodes) {
+    process_file("$name.html", 'c', $id++);
+}
+
+print N "          </Subnodes>\n";
+print N "        </Node>\n";
+print N "      </Subnodes>\n";
+print N "    </Node>\n";
+print N "  </TOC>\n";
+print N "</DocSetNodes>\n";
 
 close N;
 
@@ -141,6 +120,48 @@ sub copy_html {
     open X, "> $dst" or die "can't create $dst: $!";
     print X $content;
     close X;
+}
+
+sub process_file {
+    my ($html, $lang, $id) = @_;
+
+    my $name = $html;
+    $name =~ s/.html//;
+    my $mdoc = "$name.mdoc";
+
+    my $description;
+    my @names = ();
+
+    open MD, "< $mdoc" or die "can't open $mdoc: $!";
+
+    while (my $line = <MD>) {
+	if ($line =~ m/^.Nm (.*?)( ,)?$/) {
+	    push @names, $1;
+	}
+	elsif ($line =~ m/^.Nd (.*)/) {
+	    $description = $1;
+	}
+	elsif ($line =~ m/^.Sh SYNOPSIS/) {
+	    last;
+	}
+    }
+
+    close MD;
+
+    print N "            <Node id=\"$id\">\n";
+    print N "              <Name>$name</Name>\n";
+    print N "              <Path>$html</Path>\n";
+    print N "            </Node>\n";
+
+    for my $name (@names) {
+	push @tokens, { type => "//apple_ref/$lang/func",
+			path => $html,
+			name => $name,
+			description => $description,
+			id => $id };
+    }
+    
+    copy_html($html, "$docset/Contents/Resources/Documents/$html");
 }
 
 sub write_token {
