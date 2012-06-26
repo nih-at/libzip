@@ -14,6 +14,9 @@ mkdir("$docset/Contents") or die "can't create docset directory: $!";
 mkdir("$docset/Contents/Resources") or die "can't create docset directory: $!";
 mkdir("$docset/Contents/Resources/Documents") or die "can't create docset directory: $!";
 
+my $version = `sed -n 's/#define PACKAGE_VERSION "\\(.*\\)"/\\1/p' ../config.h`;
+chomp $version;
+
 open I, "> $docset/Contents/Info.plist" or die "can't create Info.plist: $!";
 print I <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
@@ -30,6 +33,8 @@ print I <<EOF;
 	<string>NiH</string>
         <key>NSHumanReadableCopyright</key>
         <string>Copyright © 2012 Dieter Baron and Thomas Klausner</string>
+	<key>CFBundleVersion</key>
+	<string>$version</string>
 </dict>
 </plist>
 EOF
@@ -49,10 +54,10 @@ print N <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
 <DocSetNodes version="1.0">
   <TOC>
-    <Node noindex="1">
+    <Node noindex="1" type="folder">
       <Name>libzip package</Name>
       <Subnodes>
-        <Node noindex="1">
+        <Node noindex="1" type="folder">
           <Name>Library</Name>
           <Path>libzip.html</Path>
           <Subnodes>
@@ -74,7 +79,7 @@ for my $html (@files) {
 
 print N "          </Subnodes>\n";
 print N "        </Node>\n";
-print N "        <Node noindex=\"1\">\n";
+print N "        <Node noindex=\"1\" type=\"folder\">\n";
 print N "          <Name>Commands</Name>\n";
 print N "          <Subnodes>\n";
 
