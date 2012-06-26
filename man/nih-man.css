@@ -1,7 +1,7 @@
 div.lit {
     font-family: monospace;
 }
-div.sec-head, div.ssec-head {
+div.sec-head, div.ssec-head, h1, h2 {
     padding: 4pt;
     border: solid;
     border-width: 1px;
@@ -9,8 +9,11 @@ div.sec-head, div.ssec-head {
     background: #aaaaaa;
     font-weight: bold;
 }
-div.sec-head {
+div.sec-head, h1 {
     font-size: large;
+}
+h2 {
+    font-size: medium;
 }
 div.sec-body, div.ssec-body {
     margin-top: 1em;

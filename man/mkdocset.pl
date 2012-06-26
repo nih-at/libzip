@@ -113,9 +113,11 @@ sub copy_html {
     $content =~ s,</head>,<meta name="viewport" content="width=device-width"></head>,;
     $content =~ s,../nih-man.css,nih-man.css,;
 
+    # remove header and footer
+    $content =~ s,<table[^>]*class="(heade?r?|foote?r?)".*?</table>,,sg;
+
     $content =~ s,(<div class="sec-body") style="margin-left: 5.00ex;",$1,g;
     $content =~ s,(<div class="ssec-head") style="margin-left: -2.00ex;",$1,g;
-    $content =~ s,<table class="(header|footer)".*?</table>,,sg;
 
     open X, "> $dst" or die "can't create $dst: $!";
     print X $content;
