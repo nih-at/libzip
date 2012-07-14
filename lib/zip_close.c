@@ -152,7 +152,9 @@ zip_close(struct zip *za)
 	/* create new local directory entry */
 	if (entry->changes == NULL) {
 	    if ((entry->changes=_zip_dirent_clone(entry->orig)) == NULL) {
-		/* XXX: error */
+                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                error = 1;
+                break;
 	    }
 	}
 	de = entry->changes;

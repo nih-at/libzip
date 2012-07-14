@@ -216,6 +216,7 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
 
     ef = de->extra_fields;
     ef_prev = NULL;
+    i = 0;
     found = 0;
 
     for (; ef; ef=ef->next) {

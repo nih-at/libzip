@@ -495,8 +495,6 @@ static struct zip_string *
 _zip_dirent_process_ef_utf_8(struct zip_dirent *de, zip_uint16_t id, struct zip_string *str)
 {
     zip_uint16_t ef_len;
-    zip_uint8_t string;
-    zip_uint32_t string_len;
     zip_uint32_t ef_crc;
 
     const zip_uint8_t *ef = _zip_ef_get_by_id(de->extra_fields, &ef_len, id, 0, ZIP_EF_BOTH, NULL);
