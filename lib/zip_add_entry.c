@@ -62,5 +62,5 @@ _zip_add_entry(struct zip *za)
 
     _zip_entry_init(za->entry+idx);
 
-    return idx;
+    return (zip_int64_t)idx;
 }
