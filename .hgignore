@@ -43,3 +43,5 @@
 ^src/zipcmp$
 ^src/zipmerge$
 ^src/ziptorrent$
+^xcode/libzip\.xcodeproj/xcuserdata/
+^xcode/libzip\.xcodeproj/project\.xcworkspace/xcuserdata
