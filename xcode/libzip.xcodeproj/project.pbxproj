@@ -487,9 +487,9 @@
 				4BDC729E15B1B4E900236D3C /* zipconf.h */,
 				4BDC729815B1B2A600236D3C /* zip.h */,
 				4BDC729915B1B2A600236D3C /* zipint.h */,
+				4BDC71F315B1B25E00236D3C /* zip_add.c */,
 				4BDC71F115B1B25E00236D3C /* zip_add_dir.c */,
 				4BDC71F215B1B25E00236D3C /* zip_add_entry.c */,
-				4BDC71F315B1B25E00236D3C /* zip_add.c */,
 				4BDC71F415B1B25E00236D3C /* zip_close.c */,
 				4BDC71F515B1B25E00236D3C /* zip_delete.c */,
 				4BDC71F615B1B25E00236D3C /* zip_dir_add.c */,
@@ -571,7 +571,7 @@
 				4BDC724215B1B25E00236D3C /* zip_unchange.c */,
 				4BDC724315B1B25E00236D3C /* zip_utf-8.c */,
 			);
-			path = .;
+			name = libzip;
 			sourceTree = "<group>";
 		};
 		4BDC71E415B182B200236D3C /* Supporting Files */ = {
@@ -1307,6 +1307,7 @@
 				4B01D69D15B2F3F1002D5007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B01D70415B2F4B1002D5007 /* Build configuration list for PBXNativeTarget "zipmerge" */ = {
 			isa = XCConfigurationList;
@@ -1315,6 +1316,7 @@
 				4B01D70615B2F4B1002D5007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B01D71015B2F4EB002D5007 /* Build configuration list for PBXNativeTarget "zipcmp" */ = {
 			isa = XCConfigurationList;
@@ -1323,6 +1325,7 @@
 				4B01D71215B2F4EB002D5007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B01D71B15B2F4F7002D5007 /* Build configuration list for PBXNativeTarget "ziptorrent" */ = {
 			isa = XCConfigurationList;
@@ -1331,6 +1334,7 @@
 				4B01D71D15B2F4F7002D5007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4B01D72915B2F5A2002D5007 /* Build configuration list for PBXAggregateTarget "command line tools" */ = {
 			isa = XCConfigurationList;
@@ -1339,6 +1343,7 @@
 				4B01D72B15B2F5A2002D5007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BDC71C215B181DA00236D3C /* Build configuration list for PBXProject "libzip" */ = {
 			isa = XCConfigurationList;
