@@ -77,7 +77,7 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
 	    if ((i=_zip_add_entry(za)) < 0)
 		return -1;
 	}
-	idx = i;
+	idx = (zip_uint64_t)i;
     }
     
     if (name && _zip_set_name(za, idx, name, flags) != 0) {
@@ -102,5 +102,5 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
 	
     za->entry[idx].source = source;
 
-    return idx;
+    return (zip_int64_t)idx;
 }

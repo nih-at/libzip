@@ -33,6 +33,7 @@
 
 
 
+#define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
 
@@ -43,9 +44,9 @@ zip_get_file_comment(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
     zip_uint32_t len;
     const char *s;
 
-    if ((s=zip_file_get_comment(za, idx, &len, flags)) != NULL) {
+    if ((s=zip_file_get_comment(za, idx, &len, (zip_flags_t)flags)) != NULL) {
 	if (lenp)
-	    *lenp = len;
+	    *lenp = (int)len;
     }
 
     return s;

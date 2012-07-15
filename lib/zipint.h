@@ -42,7 +42,9 @@
 #include <io.h>
 #endif
 
+#ifndef _ZIP_COMPILING_DEPRECATED
 #define ZIP_DISABLE_DEPRECATED
+#endif
 
 #include "zip.h"
 #include "config.h"

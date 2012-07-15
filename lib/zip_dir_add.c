@@ -78,7 +78,7 @@ zip_dir_add(struct zip *za, const char *name, zip_flags_t flags)
 	return -1;
     }
 	
-    ret = _zip_file_replace(za, -1, s ? s : name, source, flags);
+    ret = _zip_file_replace(za, ZIP_UINT64_MAX, s ? s : name, source, flags);
 
     free(s);
     if (ret < 0)
