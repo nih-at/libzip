@@ -43,7 +43,7 @@
 #include "zipint.h"
 
 static time_t _zip_d2u_time(int, int);
-static struct zip_string *_zip_read_string(const unsigned char **, FILE *, int, int, struct zip_error *);
+static struct zip_string *_zip_read_string(const unsigned char **, FILE *, zip_uint16_t, int, struct zip_error *);
 static struct zip_string *_zip_dirent_process_ef_utf_8(struct zip_dirent *, zip_uint16_t, struct zip_string *);
 static struct zip_extra_field *_zip_ef_utf8(zip_uint16_t, struct zip_string *, struct zip_error *);
 
@@ -907,14 +907,17 @@ _zip_read_data(const unsigned char **buf, FILE *fp, int len, int nulp, struct zi
 
 
 static struct zip_string *
-_zip_read_string(const unsigned char **buf, FILE *fp, int len, int nulp, struct zip_error *error)
+_zip_read_string(const unsigned char **buf, FILE *fp, zip_uint16_t len, int nulp, struct zip_error *error)
 {
     zip_uint8_t *raw;
+    struct zip_string *s;
 
     if ((raw=_zip_read_data(buf, fp, len, nulp, error)) == NULL)
 	return NULL;
 
-    return _zip_string_new(raw, len, ZIP_FL_ENC_GUESS, error);
+    s = _zip_string_new(raw, len, ZIP_FL_ENC_GUESS, error);
+    free(raw);
+    return s;
 }
 
 
