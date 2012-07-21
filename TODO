@@ -17,12 +17,7 @@ API Issues
 Features
 ========
 ! Document API changes
-  . _set_name allows NULL (document)
-  . old extra fields API removed
-  . change in return value of get_comment: NULL if error, else pointer to empty array and len=0
-  . document ZIP_DISABLE_DEPRECATED (libzip man page)
-  . renames of zip_add, zip_rename, zip_replace, zip_add_dir, zip_{set,get}_file_comment
-  . NULL is now allowed for file names (zip_add, zip_add_dir, zip_rename)
+! Compare headers from last release and next for API changes
 * do not compress if storing is smaller
 
 ! test extra fields api

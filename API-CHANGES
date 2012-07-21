@@ -1,0 +1,22 @@
+0.11
+
+* new type zip_flags_t
+
+All old flags fit; you need to adapt if you were saving flags in a
+local variable. Use zip_flags_t for such a variable.
+
+* integer type size changes
+
+Some return values were not the right size or sign.
+
+** zip_name_locate()
+Return value was int, which can be too small. Now returns zip_int64_t.
+
+
+TO DOCUMENT:
+  . _set_name allows NULL (document)
+  . old extra fields API removed
+  . change in return value of get_comment: NULL if error, else pointer to empty array and len=0
+  . document ZIP_DISABLE_DEPRECATED (libzip man page)
+  . renames of zip_add, zip_rename, zip_replace, zip_add_dir, zip_{set,get}_file_comment
+  . NULL is now allowed for file names (zip_add, zip_add_dir, zip_rename)
