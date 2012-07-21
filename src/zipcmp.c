@@ -233,6 +233,10 @@ compare_zip(char * const zn[])
 
 	if (paranoid)
 	    archive_comment[i] = zip_get_archive_comment(za, &archive_comment_len[i], 0);
+        else {
+            archive_comment[i] = NULL;
+            archive_comment_len[i] = 0;
+        }
     }
 
     header_done = 0;
@@ -341,7 +345,6 @@ ef_read(struct zip *za, int idx, struct entry *e)
 {
     int n_local, n_central;
     int i;
-    zip_uint16_t len;
 
     n_local = zip_file_extra_fields_count(za, idx, ZIP_FL_LOCAL);
     n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL);
@@ -412,7 +415,7 @@ ef_print(const void *p)
     int i;
 
     printf("                    %s  ", ef->name);
-    printf("%04x %c <", ef->id, ef->flags == ZIP_FL_LOCAL ? 'l' : 'c', ef->data);
+    printf("%04x %c <", ef->id, ef->flags == ZIP_FL_LOCAL ? 'l' : 'c');
     for (i=0; i<ef->size; i++)
 	printf("%s%02x", i ? " " : "", ef->data[i]);
     printf(">\n");

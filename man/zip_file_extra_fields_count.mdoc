@@ -54,13 +54,13 @@ function counts the extra fields for the file at position
 in the zip archive.
 .Pp
 The following flags are supported:
-.Bl -tag -width ZIP_EF_CENTRALXX -offset indent
-.It Dv ZIP_EF_BOTH
-Count extra fields independent on where they are stored in the zip file.
-.It Dv ZIP_EF_CENTRAL
+.Bl -tag -width ZIP_FL_CENTRALXX -offset indent
+.It Dv ZIP_FL_CENTRAL
 Count only extra fields from the archive's central directory.
-.It Dv ZIP_EF_LOCAL
+.It Dv ZIP_FL_LOCAL
 Count only extra fields from the local file headers.
+.It Dv ZIP_FL_UNCHANGED
+Count the original unchanged extra fields, ignoring any changes made.
 .El
 .Pp
 The
@@ -93,6 +93,6 @@ is not a valid file index in
 .Xr zip_file_extra_field_set 3
 .Sh AUTHORS
 .An -nosplit
-.An Dieter Baron Aq dillo@giga.or.at
+.An Dieter Baron Aq dillo@nih.at
 and
 .An Thomas Klausner Aq tk@giga.or.at

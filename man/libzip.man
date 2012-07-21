@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH LIBZIP 3 "February 13, 2012" NiH
+.TH LIBZIP 3 "June 23, 2012" NiH
 .SH "NAME"
 libzip \- library for manipulating zip archives
 .SH "LIBRARY"
@@ -60,9 +60,9 @@ zip_close(3)
 zip_discard(3)
 .SS "miscellaneous"
 zip_stat(3)
+zip_file_get_comment(3)
 zip_get_archive_comment(3)
 zip_get_archive_flag(3)
-zip_get_file_comment(3)
 zip_get_name(3)
 zip_get_num_entries(3)
 zip_set_default_password(3)
@@ -70,10 +70,10 @@ zip_set_default_password(3)
 .SS "create/open archive"
 zip_open(3)
 .SS "add/change files and directories"
-zip_add(3)
-zip_add_dir(3)
-zip_replace(3)
-zip_set_file_comment(3)
+zip_dir_add(3)
+zip_file_add(3)
+zip_file_replace(3)
+zip_file_set_comment(3)
 zip_set_file_compression(3)
 zip_source_buffer(3)
 zip_source_file(3)
@@ -89,9 +89,14 @@ zip_delete(3)
 zip_unchange(3)
 zip_unchange_all(3)
 zip_unchange_archive(3)
-.SS "modify extra fields"
-zip_get_file_extra(3)
-zip_set_file_extra(3)
+.SS "read/modify extra fields"
+zip_file_extra_field_by_id(3)
+zip_file_extra_field_delete(3)
+zip_file_extra_field_delete_by_id(3)
+zip_file_extra_field_get(3)
+zip_file_extra_field_set(3)
+zip_file_extra_fields_count(3)
+zip_file_extra_fields_count_by_id(3)
 .SS "close archive"
 zip_close(3)
 .SS "miscellaneous"

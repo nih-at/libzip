@@ -85,13 +85,13 @@ and
 arguments are not provided).
 .Pp
 The following flags are supported:
-.Bl -tag -width ZIP_EF_CENTRALXX -offset indent
-.It Dv ZIP_EF_BOTH
-Return extra fields independent on where they are stored in the zip file.
-.It Dv ZIP_EF_CENTRAL
+.Bl -tag -width ZIP_FL_CENTRALXX -offset indent
+.It Dv ZIP_FL_CENTRAL
 Return only extra fields from the archive's central directory.
-.It Dv ZIP_EF_LOCAL
+.It Dv ZIP_FL_LOCAL
 Return only extra fields from the local file headers.
+.It Dv ZIP_FL_UNCHANGED
+Return the original unchanged extra fields, ignoring any changes made.
 .El
 .Pp
 The
@@ -141,6 +141,6 @@ is not a valid extra file index (for ID
 .Xr zip_file_extra_fields_count 3
 .Sh AUTHORS
 .An -nosplit
-.An Dieter Baron Aq dillo@giga.or.at
+.An Dieter Baron Aq dillo@nih.at
 and
 .An Thomas Klausner Aq tk@giga.or.at

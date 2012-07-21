@@ -54,16 +54,19 @@ for the file at position
 \fBindex\fR
 in the zip archive.
 .PP
+If
+\fBindex\fR
+is
+\fBZIP_EXTRA_FIELD_ALL,\fR
+then all extra fields will be deleted.
+.PP
 The following flags are supported:
 .RS
 .TP 18
-\fBZIP_EF_BOTH\fR
-Delete extra fields independent on where they are stored in the zip file.
-.TP 18
-\fBZIP_EF_CENTRAL\fR
+\fBZIP_FL_CENTRAL\fR
 Delete only extra fields from the archive's central directory.
 .TP 18
-\fBZIP_EF_LOCAL\fR
+\fBZIP_FL_LOCAL\fR
 Delete only extra fields from the local file headers.
 .RE
 .PP
@@ -78,7 +81,9 @@ and index
 extra field with ID
 \fBextra_field_id )\fR
 The other arguments are the same as for
-zip_file_extra_field_delete.
+zip_file_extra_field_delete
+\fB( ZIP_EXTRA_FIELD_ALL\fR
+will delete all extra fields the specified ID).
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error code in

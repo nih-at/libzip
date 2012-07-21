@@ -64,13 +64,10 @@ to
 The following flags are supported:
 .RS
 .TP 18
-\fBZIP_EF_BOTH\fR
-Sets both central directory and local file header extra field.
-.TP 18
-\fBZIP_EF_CENTRAL\fR
+\fBZIP_FL_CENTRAL\fR
 Only sets extra field in the archive's central directory.
 .TP 18
-\fBZIP_EF_LOCAL\fR
+\fBZIP_FL_LOCAL\fR
 Only sets extra field in the local file headers.
 .RE
 .PP

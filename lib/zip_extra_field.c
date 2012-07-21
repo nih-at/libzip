@@ -191,12 +191,10 @@ struct zip_extra_field *
 _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, struct zip_error *error)
 {
     struct zip_extra_field *ef, *ef2, *ef_head;
-    int i;
     const zip_uint8_t *p;
     zip_uint16_t fid, flen;
 
     ef_head = NULL;
-    i = 0;
     for (p=data; p<data+len; p+=flen+4) {
 	if (p+4 > data+len) {
 	    _zip_error_set(error, ZIP_ER_INCONS, 0);

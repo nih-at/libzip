@@ -122,8 +122,7 @@ _zip_guess_encoding(struct zip_string *str, enum zip_encoding_type expected_enco
 {
     enum zip_encoding_type enc;
     const zip_uint8_t *name;
-    zip_uint32_t i;
-    int j, ulen;
+    zip_uint32_t i, j, ulen;
 
     if (str == NULL)
 	return ZIP_ENCODING_ASCII;

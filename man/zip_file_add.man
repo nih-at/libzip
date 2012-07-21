@@ -63,7 +63,10 @@ specifies which file should be replaced (for
 zip_file_replace ).
 The
 \fBflags\fR
-argument can be any of:
+argument can be any combination of
+\fBZIP_FL_OVERWRITE\fR
+with one of
+\fBZIP_FL_ENC_* :\fR
 .RS
 .TP 22
 \fBZIP_FL_OVERWRITE\fR

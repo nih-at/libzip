@@ -87,14 +87,14 @@ arguments are not provided).
 The following flags are supported:
 .RS
 .TP 18
-\fBZIP_EF_BOTH\fR
-Return extra fields independent on where they are stored in the zip file.
-.TP 18
-\fBZIP_EF_CENTRAL\fR
+\fBZIP_FL_CENTRAL\fR
 Return only extra fields from the archive's central directory.
 .TP 18
-\fBZIP_EF_LOCAL\fR
+\fBZIP_FL_LOCAL\fR
 Return only extra fields from the local file headers.
+.TP 18
+\fBZIP_FL_UNCHANGED\fR
+Return only the original unchanged extra fields.
 .RE
 .PP
 The

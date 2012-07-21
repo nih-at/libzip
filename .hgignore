@@ -1,4 +1,5 @@
 ~$
+\.DS_Store$
 \.o$
 \.lo$
 \.la$
@@ -17,6 +18,7 @@
 ^lib/zip_err_str\.c$
 ^lib/zipconf\.h$
 ^man/.*\.html$
+^man/at\.nih\.libzip\.docset/
 ^regress/add_dir$
 ^regress/add_from_buffer$
 ^regress/add_from_file$
@@ -41,3 +43,5 @@
 ^src/zipcmp$
 ^src/zipmerge$
 ^src/ziptorrent$
+^xcode/libzip\.xcodeproj/xcuserdata/
+^xcode/libzip\.xcodeproj/project\.xcworkspace/xcuserdata

@@ -43,6 +43,10 @@ zip_source_error(struct zip_source *src, int *ze, int *se)
     int e[2];
 
     if (src->src == NULL) {
+        if (src->cb.f(src->ud, e, sizeof(e), ZIP_SOURCE_ERROR) < 0) {
+            e[0] = ZIP_ER_INTERNAL;
+            e[1] = 0;
+        }
     }
     else {
 	switch (src->error_source) {

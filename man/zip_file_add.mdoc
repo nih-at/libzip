@@ -64,7 +64,10 @@ specifies which file should be replaced (for
 .Fn zip_file_replace ) .
 The
 .Ar flags
-argument can be any of:
+argument can be any combination of
+.Dv ZIP_FL_OVERWRITE
+with one of
+.Dv ZIP_FL_ENC_* :
 .Bl -tag -width XZIPXFLXENCXSTRICTXX
 .It Dv ZIP_FL_OVERWRITE
 Overwrite any existing file of the same name.
@@ -147,6 +150,6 @@ Archive was opened in read-only mode.
 .Xr zip_source_zip 3
 .Sh AUTHORS
 .An -nosplit
-.An Dieter Baron Aq dillo@giga.or.at
+.An Dieter Baron Aq dillo@nih.at
 and
 .An Thomas Klausner Aq tk@giga.or.at
