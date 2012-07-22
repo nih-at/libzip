@@ -1,5 +1,5 @@
 .\" zip_fopen_encrypted.mdoc \-- open encrypted file in zip archive for reading
-.\" Copyright (C) 2011 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2011-2012 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FOPEN_ENCRYPTED 3 "February 14, 2011" NiH
+.TH ZIP_FOPEN_ENCRYPTED 3 "July 22, 2012" NiH
 .SH "NAME"
 zip_fopen_encrypted , \- .Nm zip_fopen_index_encrypted
 open encrypted file in zip archive for reading
@@ -39,10 +39,10 @@ libzip (-lzip)
 #include <zip.h>
 .PP
 struct zip_file *
-zip_fopen_encrypted(struct zip *archive, const char *fname, int flags, const char *password);
+zip_fopen_encrypted(struct zip *archive, const char *fname, zip_flags_t flags, const char *password);
 .PP
 struct zip_file *
-zip_fopen_index_encrypted(struct zip *archive, zip_uint64_t index, int flags, const char *password);
+zip_fopen_index_encrypted(struct zip *archive, zip_uint64_t index, zip_flags_t flags, const char *password);
 .SH "DESCRIPTION"
 The
 zip_fopen_encrypted
@@ -109,6 +109,6 @@ zip_get_num_entries(3),
 zip_name_locate(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

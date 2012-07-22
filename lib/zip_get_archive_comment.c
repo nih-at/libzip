@@ -40,7 +40,7 @@
 
 
 ZIP_EXTERN const char *
-zip_get_archive_comment(struct zip *za, int *lenp, int flags)
+zip_get_archive_comment(struct zip *za, int *lenp, zip_flags_t flags)
 {
     struct zip_string *comment;
     zip_uint32_t len;
@@ -55,7 +55,7 @@ zip_get_archive_comment(struct zip *za, int *lenp, int flags)
 	return NULL;
 
     if (lenp)
-	*lenp = len;
+	*lenp = (int)len;
 
     return (const char *)str;
 }

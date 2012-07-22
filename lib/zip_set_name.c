@@ -46,7 +46,7 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t fl
     struct zip_entry *e;
     struct zip_string *str;
     int changed;
-    int i;
+    zip_int64_t i;
 
     if (idx >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -59,7 +59,8 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t fl
     }
 
     if (name && strlen(name) > 0) {
-	if ((str=_zip_string_new((const zip_uint8_t *)name, strlen(name), flags, &za->error)) == NULL)
+        /* XXX: check for string too long */
+	if ((str=_zip_string_new((const zip_uint8_t *)name, (zip_uint16_t)strlen(name), flags, &za->error)) == NULL)
 	    return -1;
 	if ((flags & ZIP_FL_ENCODING_ALL) == ZIP_FL_ENC_GUESS && _zip_guess_encoding(str, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_UTF8_GUESSED)
 	    str->encoding = ZIP_ENCODING_UTF8_KNOWN;
@@ -68,14 +69,14 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t fl
 	str = NULL;
 
     /* XXX: encoding flags needed for CP437? */
-    if ((i=_zip_name_locate(za, name, 0, NULL)) != -1 && i != idx) {
+    if ((i=_zip_name_locate(za, name, 0, NULL)) >= 0 && (zip_uint64_t)i != idx) {
 	_zip_string_free(str);
 	_zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
 	return -1;
     }
 
     /* no effective name change */
-    if (i == idx) {
+    if (i>=0 && (zip_uint64_t)i == idx) {
 	_zip_string_free(str);
 	return 0;
     }

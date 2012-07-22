@@ -75,6 +75,6 @@ zip_error_get_sys_type(3),
 zip_error_to_str(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

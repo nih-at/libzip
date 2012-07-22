@@ -42,7 +42,8 @@
 ZIP_EXTERN int
 zip_unchange_all(struct zip *za)
 {
-    int ret, i;
+    int ret;
+    zip_uint64_t i;
 
     ret = 0;
     for (i=0; i<za->nentry; i++)

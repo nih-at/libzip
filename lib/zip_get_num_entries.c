@@ -37,8 +37,8 @@
 
 
 
-ZIP_EXTERN zip_uint64_t
-zip_get_num_entries(struct zip *za, int flags)
+ZIP_EXTERN zip_int64_t
+zip_get_num_entries(struct zip *za, zip_flags_t flags)
 {
     zip_uint64_t n;
 
@@ -49,7 +49,7 @@ zip_get_num_entries(struct zip *za, int flags)
 	n = za->nentry;
 	while (n>0 && za->entry[n-1].orig == NULL)
 	    --n;
-	return n;
+	return (zip_int64_t)n;
     }
-    return za->nentry;
+    return (zip_int64_t)za->nentry;
 }

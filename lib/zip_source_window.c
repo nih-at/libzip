@@ -79,18 +79,19 @@ window_read(struct zip_source *src, void *_ctx, void *data,
 	    zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct window *ctx;
-    zip_int64_t i, n;
+    zip_int64_t ret;
+    zip_uint64_t n, i;
     char b[8192];
 
     ctx = (struct window *)_ctx;
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
-	for (n=0; n<ctx->skip; n+=i) {
+	for (n=0; n<ctx->skip; n+=(zip_uint64_t)ret) {
 	    i = (ctx->skip-n > sizeof(b) ? sizeof(b) : ctx->skip-n);
-	    if ((i=zip_source_read(src, b, i)) < 0)
+	    if ((ret=zip_source_read(src, b, i)) < 0)
 		return ZIP_SOURCE_ERR_LOWER;
-	    if (i==0) {
+	    if (ret==0) {
 		ctx->e[0] = ZIP_ER_EOF;
 		ctx->e[1] = 0;
 		return -1;
@@ -105,19 +106,19 @@ window_read(struct zip_source *src, void *_ctx, void *data,
 	if (len <= 0)
 	    return 0;
 
-	if ((n=zip_source_read(src, data, len)) < 0)
+	if ((ret=zip_source_read(src, data, len)) < 0)
 	    return ZIP_SOURCE_ERR_LOWER;
 
-	ctx->left -= n;
+	ctx->left -= (zip_uint64_t)ret;
 
-	if (n == 0) {
+        if (ret == 0) {
 	    if (ctx->left > 0) {
 		ctx->e[0] = ZIP_ER_EOF;
 		ctx->e[1] = 0;
 		return -1;
 	    }
 	}
-	return n;
+	return ret;
 
     case ZIP_SOURCE_CLOSE:
 	return 0;

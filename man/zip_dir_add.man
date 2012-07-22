@@ -38,7 +38,7 @@ libzip (-lzip)
 #include <zip.h>
 .PP
 zip_int64_t
-zip_add_dir(struct zip *archive, const char *name); \
+zip_dir_add(struct zip *archive, const char *name); \
 "zip_flags_t flags"
 .SH "DESCRIPTION"
 The function
@@ -76,7 +76,7 @@ Otherwise, \-1 is returned and the error code in
 \fBarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-zip_add_dir
+zip_dir_add
 fails if:
 .RS
 .TP 4
@@ -101,6 +101,6 @@ libzip(3),
 zip_add(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

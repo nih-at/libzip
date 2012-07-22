@@ -56,13 +56,13 @@ _zip_filerange_crc(FILE *fp, off_t start, off_t len, uLong *crcp,
     }
     
     while (len > 0) {
-	n = len > BUFSIZE ? BUFSIZE : len;
+	n = len > BUFSIZE ? BUFSIZE : (size_t)len;
 	if ((n=fread(buf, 1, n, fp)) <= 0) {
 	    _zip_error_set(errp, ZIP_ER_READ, errno);
 	    return -1;
 	}
 
-	*crcp = crc32(*crcp, buf, n);
+	*crcp = crc32(*crcp, buf, (uInt)n);
 
 	len-= n;
     }

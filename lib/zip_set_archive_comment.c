@@ -40,7 +40,7 @@
 
 
 ZIP_EXTERN int
-zip_set_archive_comment(struct zip *za, const char *comment, int len)
+zip_set_archive_comment(struct zip *za, const char *comment, zip_uint16_t len)
 {
     struct zip_string *cstr;
 

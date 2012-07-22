@@ -111,7 +111,7 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 
 	if (!update_only) {
 	    /* decrypt next byte */
-	    tmp = ctx->key[2] | 2;
+	    tmp = (zip_uint16_t)(ctx->key[2] | 2);
 	    tmp = (tmp * (tmp ^ 1)) >> 8;
 	    b ^= tmp;
 	}
@@ -121,10 +121,10 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 	    out[i] = b;
 
 	/* update keys */
-	ctx->key[0] = crc32(ctx->key[0] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
+	ctx->key[0] = (zip_uint32_t)crc32(ctx->key[0] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
 	ctx->key[1] = (ctx->key[1] + (ctx->key[0] & 0xff)) * 134775813 + 1;
 	b = ctx->key[1] >> 24;
-	ctx->key[2] = crc32(ctx->key[2] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
+	ctx->key[2] = (zip_uint32_t)crc32(ctx->key[2] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
     }
 }
 

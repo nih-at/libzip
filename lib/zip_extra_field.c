@@ -195,23 +195,23 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, stru
     zip_uint16_t fid, flen;
 
     ef_head = NULL;
-    for (p=data; p<data+len; p+=flen+4) {
+    for (p=data; p<data+len; p+=flen) {
 	if (p+4 > data+len) {
 	    _zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_ef_free(ef_head);
 	    return NULL;
 	}
 
-	fid = p[0]+(p[1]<<8);
-	flen = p[2]+(p[3]<<8);
+	fid = _zip_read2(&p);
+	flen = _zip_read2(&p);
 
-	if (p+flen+4 > data+len) {
+	if (p+flen > data+len) {
 	    _zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_ef_free(ef_head);
 	    return NULL;
 	}
 
-	if ((ef2=_zip_ef_new(fid, flen, p+4, flags)) == NULL) {
+	if ((ef2=_zip_ef_new(fid, flen, p, flags)) == NULL) {
 	    _zip_error_set(error, ZIP_ER_MEMORY, 0);
 	    _zip_ef_free(ef_head);
 	    return NULL;
@@ -262,7 +262,7 @@ _zip_ef_write(struct zip_extra_field *ef, zip_flags_t flags, FILE *f)
 
 
 int
-_zip_read_local_ef(struct zip *za, int idx)
+_zip_read_local_ef(struct zip *za, zip_uint64_t idx)
 {
     struct zip_entry *e;
     unsigned char b[4];
@@ -281,8 +281,9 @@ _zip_read_local_ef(struct zip *za, int idx)
     if (e->orig == NULL || e->orig->local_extra_fields_read)
 	return 0;
 
-    
-    if (fseek(za->zp, e->orig->offset + 26, SEEK_SET) < 0) {
+
+    /* XXX: check for off_t overflow */
+    if (fseeko(za->zp, (off_t)(e->orig->offset + 26), SEEK_SET) < 0) {
 	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
     }

@@ -40,8 +40,8 @@
 
 
 struct zip_source *
-_zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int flags,
-		    zip_uint64_t start, zip_int64_t len, const char *password)
+_zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, zip_flags_t flags,
+		    zip_uint64_t start, zip_uint64_t len, const char *password)
 {
     zip_compression_implementation comp_impl;
     zip_encryption_implementation enc_impl;
@@ -52,7 +52,7 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
     if (za == NULL)
 	return NULL;
 
-    if (srcza == NULL || len < -1 || srcidx >= srcza->nentry) {
+    if (srcza == NULL ||  srcidx >= srcza->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
@@ -75,9 +75,6 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
-
-    if (len == -1)
-	len = 0;
 
     /* overflow or past end of file */
     if ((start > 0 || len > 0) && (start+len < start || start+len > st.size)) {
@@ -124,12 +121,13 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, int 
 	    st2.mtime = st.mtime;
 	    st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
 
-	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset+start, st2.size, 0, &st2)) == NULL)
+            /* XXX: check for overflow of st2.size */
+	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset+start, (zip_int64_t)st2.size, 0, &st2)) == NULL)
 		return NULL;
 	}
 	else {
-	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset, st.comp_size,
-					   0, &st)) == NULL)
+            /* XXX: check for overflow of st.comp_size */
+	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset, (zip_int64_t)st.comp_size, 0, &st)) == NULL)
 		return NULL;
 	}
 	

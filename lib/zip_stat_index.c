@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
+zip_stat_index(struct zip *za, zip_uint64_t index, zip_flags_t flags,
 	       struct zip_stat *st)
 {
     const char *name;
@@ -65,7 +65,7 @@ zip_stat_index(struct zip *za, zip_uint64_t index, int flags,
 	st->size = de->uncomp_size;
 	st->mtime = de->last_mod;
 	st->comp_size = de->comp_size;
-	st->comp_method = de->comp_method;
+	st->comp_method = (zip_uint16_t)de->comp_method;
 	if (de->bitflags & ZIP_GPBF_ENCRYPTED) {
 	    if (de->bitflags & ZIP_GPBF_STRONG_ENCRYPTION) {
 		/* XXX */

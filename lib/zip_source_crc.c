@@ -85,7 +85,7 @@ crc_read(struct zip_source *src, void *_ctx, void *data,
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
 	ctx->eof = 0;
-	ctx->crc = crc32(0, NULL, 0);
+	ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
 	ctx->size = 0;
 
 	return 0;
@@ -120,8 +120,8 @@ crc_read(struct zip_source *src, void *_ctx, void *data,
 	    }
 	}
 	else {
-	    ctx->size += n;
-	    ctx->crc = crc32(ctx->crc, data, n);
+	    ctx->size += (zip_uint64_t)n;
+	    ctx->crc = (zip_uint32_t)crc32(ctx->crc, data, (uInt)n); /* XXX: check for overflow, use multiple crc calls if needed */
 	}
 	return n;
 

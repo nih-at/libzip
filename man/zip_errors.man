@@ -129,6 +129,6 @@ Wrong password provided.
 .RE
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

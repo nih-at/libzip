@@ -52,7 +52,7 @@ static struct zip_extra_field *_zip_ef_utf8(zip_uint16_t, struct zip_string *, s
 void
 _zip_cdir_free(struct zip_cdir *cd)
 {
-    int i;
+    zip_uint64_t i;
 
     if (!cd)
 	return;
@@ -67,10 +67,10 @@ _zip_cdir_free(struct zip_cdir *cd)
 
 
 int
-_zip_cdir_grow(struct zip_cdir *cd, int nentry, struct zip_error *error)
+_zip_cdir_grow(struct zip_cdir *cd, zip_uint64_t nentry, struct zip_error *error)
 {
     struct zip_entry *entry;
-    int i;
+    zip_uint64_t i;
 
     if (nentry < cd->nentry_alloc) {
 	_zip_error_set(error, ZIP_ER_INTERNAL, 0);
@@ -98,10 +98,10 @@ _zip_cdir_grow(struct zip_cdir *cd, int nentry, struct zip_error *error)
 
 
 struct zip_cdir *
-_zip_cdir_new(int nentry, struct zip_error *error)
+_zip_cdir_new(zip_uint64_t nentry, struct zip_error *error)
 {
     struct zip_cdir *cd;
-    int i;
+    zip_uint64_t i;
     
     if ((cd=(struct zip_cdir *)malloc(sizeof(*cd))) == NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -129,15 +129,20 @@ _zip_cdir_new(int nentry, struct zip_error *error)
 
 
 zip_int64_t
-_zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, int survivors, FILE *fp)
+_zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t survivors, FILE *fp)
 {
+    off_t off;
     zip_uint64_t offset, size;
     struct zip_string *comment;
-    int i;
+    zip_uint64_t i;
     int is_zip64;
     int ret;
 
-    offset = ftello(fp);
+    if ((off=ftello(fp)) < 0) {
+        _zip_error_set(&za->error, ZIP_ER_READ, errno);
+        return -1;
+    }
+    offset = (zip_uint64_t)off;
 
     is_zip64 = 0;
 
@@ -150,7 +155,11 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, int survivo
 	    is_zip64 = 1;
     }
 
-    size = ftello(fp) - offset;
+    if ((off=ftello(fp)) < 0) {
+        _zip_error_set(&za->error, ZIP_ER_READ, errno);
+        return -1;
+    }
+    size = (zip_uint64_t)off - offset;
 
     if (offset > ZIP_UINT32_MAX || survivors > ZIP_UINT16_MAX)
 	is_zip64 = 1;
@@ -177,10 +186,10 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, int survivo
     /* clearerr(fp); */
     fwrite(EOCD_MAGIC, 1, 4, fp);
     _zip_write4(0, fp);
-    _zip_write2(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors, fp);
-    _zip_write2(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors, fp);
-    _zip_write4(size >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : size, fp);
-    _zip_write4(offset >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : offset, fp);
+    _zip_write2(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : (zip_uint16_t)survivors, fp);
+    _zip_write2(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : (zip_uint16_t)survivors, fp);
+    _zip_write4(size >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)size, fp);
+    _zip_write4(offset >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)offset, fp);
 
     comment = za->comment_changed ? za->comment_changes : za->comment_orig;
 
@@ -193,7 +202,7 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, int survivo
 	return -1;
     }
 
-    return size;
+    return (zip_int64_t)size;
 }
 
 
@@ -321,7 +330,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     const unsigned char *cur;
     unsigned short dostime, dosdate;
     zip_uint32_t size;
-    zip_uint32_t filename_len, ef_len, comment_len;
+    zip_uint16_t filename_len, comment_len, ef_len;
 
     if (local)
 	size = LENTRYSIZE;
@@ -447,9 +456,9 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     /* Zip64 */
 
     if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
-	zip_uint16_t ef_len, needed_len;
-	const zip_uint8_t *ef = _zip_ef_get_by_id(zde->extra_fields, &ef_len, ZIP_EF_ZIP64, 0, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error);
-	/* XXX: if ef_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
+	zip_uint16_t got_len, needed_len;
+	const zip_uint8_t *ef = _zip_ef_get_by_id(zde->extra_fields, &got_len, ZIP_EF_ZIP64, 0, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error);
+	/* XXX: if got_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
 	if (ef == NULL)
 	    return -1;
 
@@ -460,7 +469,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 	    needed_len = ((zde->uncomp_size == ZIP_UINT32_MAX) + (zde->comp_size == ZIP_UINT32_MAX) + (zde->offset == ZIP_UINT32_MAX)) * 8
 		+ (zde->disk_number == ZIP_UINT16_MAX) * 4;
 
-	if (ef_len != needed_len) {
+	if (got_len != needed_len) {
 	    _zip_error_set(error, ZIP_ER_INCONS, 0);
 	    return -1;
 	}
@@ -617,10 +626,9 @@ _zip_dirent_torrent_normalize(struct zip_dirent *de)
 */
 
 int
-_zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *error)
+_zip_dirent_write(struct zip_dirent *de, FILE *fp, zip_flags_t flags, struct zip_error *error)
 {
     unsigned short dostime, dosdate;
-    zip_uint16_t zip64_ef_size;
     enum zip_encoding_type com_enc, name_enc;
     struct zip_extra_field *ef;
     zip_uint8_t ef_zip64[24], *ef_zip64_p;
@@ -677,7 +685,7 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *
     }
 
     if (ef_zip64_p != ef_zip64) {
-	struct zip_extra_field *ef64 = _zip_ef_new(ZIP_EF_ZIP64, ef_zip64_p-ef_zip64, ef_zip64, ZIP_EF_BOTH);
+	struct zip_extra_field *ef64 = _zip_ef_new(ZIP_EF_ZIP64, (zip_uint16_t)(ef_zip64_p-ef_zip64), ef_zip64, ZIP_EF_BOTH);
 	ef64->next = ef;
 	ef = ef64;
 	is_zip64 = 1;
@@ -692,7 +700,7 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *
 	_zip_write2(is_really_zip64 ? 45 : de->version_madeby, fp);
     _zip_write2(is_really_zip64 ? 45 : de->version_needed, fp);
     _zip_write2(de->bitflags&0xfff9, fp); /* clear compression method specific flags */
-    _zip_write2(de->comp_method, fp);
+    _zip_write2((zip_uint16_t)de->comp_method, fp); /* XXX: can it be ZIP_CM_DEFAULT? */
 
     _zip_u2d_time(de->last_mod, &dostime, &dosdate);
     _zip_write2(dostime, fp);
@@ -700,11 +708,11 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *
 
     _zip_write4(de->crc, fp);
     if (de->comp_size < ZIP_UINT32_MAX)
-	_zip_write4(de->comp_size, fp);
+	_zip_write4((zip_uint32_t)de->comp_size, fp);
     else
 	_zip_write4(ZIP_UINT32_MAX, fp);
     if (de->uncomp_size < ZIP_UINT32_MAX)
-	_zip_write4(de->uncomp_size, fp);
+	_zip_write4((zip_uint32_t)de->uncomp_size, fp);
     else
 	_zip_write4(ZIP_UINT32_MAX, fp);
 
@@ -713,11 +721,11 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, int flags, struct zip_error *
     
     if ((flags & ZIP_FL_LOCAL) == 0) {
 	_zip_write2(_zip_string_length(de->comment), fp);
-	_zip_write2(de->disk_number, fp);
+	_zip_write2((zip_uint16_t)de->disk_number, fp);
 	_zip_write2(de->int_attrib, fp);
 	_zip_write4(de->ext_attrib, fp);
 	if (de->offset < ZIP_UINT32_MAX)
-	    _zip_write4(de->offset, fp);
+	    _zip_write4((zip_uint32_t)de->offset, fp);
 	else
 	    _zip_write4(ZIP_UINT32_MAX, fp);
     }
@@ -780,6 +788,10 @@ _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
 
     raw = _zip_string_get(str, &len, ZIP_FL_ENC_RAW, NULL);
 
+    if (len+5 > ZIP_UINT16_MAX) {
+        /* XXX: error */
+    }
+    
     if ((data=malloc(len+5)) == NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
@@ -791,7 +803,7 @@ _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
     memcpy(p, raw, len);
     p += len;
 
-    ef = _zip_ef_new(id, p-data, data, ZIP_EF_BOTH);
+    ef = _zip_ef_new(id, (zip_uint16_t)(p-data), data, ZIP_EF_BOTH);
     free(data);
     return ef;
 }
@@ -799,7 +811,7 @@ _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
 
 
 struct zip_dirent *
-_zip_get_dirent(struct zip *za, zip_uint64_t idx, int flags, struct zip_error *error)
+_zip_get_dirent(struct zip *za, zip_uint64_t idx, zip_flags_t flags, struct zip_error *error)
 {
     if (error == NULL)
 	error = &za->error;
@@ -827,11 +839,11 @@ _zip_get_dirent(struct zip *za, zip_uint64_t idx, int flags, struct zip_error *e
 
 
 zip_uint16_t
-_zip_read2(const unsigned char **a)
+_zip_read2(const zip_uint8_t **a)
 {
     zip_uint16_t ret;
 
-    ret = (*a)[0]+((*a)[1]<<8);
+    ret = (zip_uint16_t)((*a)[0]+((*a)[1]<<8));
     *a += 2;
 
     return ret;
@@ -840,11 +852,11 @@ _zip_read2(const unsigned char **a)
 
 
 zip_uint32_t
-_zip_read4(const unsigned char **a)
+_zip_read4(const zip_uint8_t **a)
 {
     zip_uint32_t ret;
 
-    ret = ((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
+    ret = ((((((zip_uint32_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
     *a += 4;
 
     return ret;
@@ -853,13 +865,13 @@ _zip_read4(const unsigned char **a)
 
 
 zip_uint64_t
-_zip_read8(const unsigned char **a)
+_zip_read8(const zip_uint8_t **a)
 {
     zip_uint64_t x, y;
 
     x = ((((((zip_uint64_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
     *a += 4;
-    y = (((((((*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0]);
+    y = ((((((zip_uint64_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
     *a += 4;
 
     return x+(y<<32);
@@ -868,7 +880,7 @@ _zip_read8(const unsigned char **a)
 
 
 zip_uint8_t *
-_zip_read_data(const unsigned char **buf, FILE *fp, int len, int nulp, struct zip_error *error)
+_zip_read_data(const zip_uint8_t **buf, FILE *fp, size_t len, int nulp, struct zip_error *error)
 {
     zip_uint8_t *r, *o;
 
@@ -907,7 +919,7 @@ _zip_read_data(const unsigned char **buf, FILE *fp, int len, int nulp, struct zi
 
 
 static struct zip_string *
-_zip_read_string(const unsigned char **buf, FILE *fp, zip_uint16_t len, int nulp, struct zip_error *error)
+_zip_read_string(const zip_uint8_t **buf, FILE *fp, zip_uint16_t len, int nulp, struct zip_error *error)
 {
     zip_uint8_t *raw;
     struct zip_string *s;
@@ -990,15 +1002,13 @@ _zip_write8(zip_uint64_t i, FILE *fp)
 
 
 void
-_zip_u2d_time(time_t time, unsigned short *dtime, unsigned short *ddate)
+_zip_u2d_time(time_t time, zip_uint16_t *dtime, zip_uint16_t *ddate)
 {
     struct tm *tm;
 
     tm = localtime(&time);
-    *ddate = ((tm->tm_year+1900-1980)<<9) + ((tm->tm_mon+1)<<5)
-	+ tm->tm_mday;
-    *dtime = ((tm->tm_hour)<<11) + ((tm->tm_min)<<5)
-	+ ((tm->tm_sec)>>1);
+    *ddate = (zip_uint16_t)(((tm->tm_year+1900-1980)<<9) + ((tm->tm_mon+1)<<5) + tm->tm_mday);
+    *dtime = (zip_uint16_t)(((tm->tm_hour)<<11) + ((tm->tm_min)<<5) + ((tm->tm_sec)>>1));
 
     return;
 }

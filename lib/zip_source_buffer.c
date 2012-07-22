@@ -98,9 +98,7 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return 0;
 	
     case ZIP_SOURCE_READ:
-	/* XXX: return error if (len > ZIP_INT64_MAX) */
-
-	n = z->end - z->buf;
+	n = (zip_uint64_t)(z->end - z->buf);
 	if (n > len)
 	    n = len;
 
@@ -109,7 +107,7 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    z->buf += n;
 	}
 
-	return n;
+	return (zip_int64_t)n;
 	
     case ZIP_SOURCE_CLOSE:
 	return 0;
@@ -125,7 +123,7 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 
 	    zip_stat_init(st);
 	    st->mtime = z->mtime;
-	    st->size = z->end - z->data;
+	    st->size = (zip_uint64_t)(z->end - z->data);
 	    st->comp_size = st->size;
 	    st->comp_method = ZIP_CM_STORE;
 	    st->encryption_method = ZIP_EM_NONE;

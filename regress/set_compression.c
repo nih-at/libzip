@@ -50,7 +50,6 @@ main(int argc, char *argv[])
     struct zip *za;
     char buf[100];
     int err;
-    int i;
     int idx;
 
     prg = argv[0];

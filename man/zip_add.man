@@ -70,6 +70,6 @@ zip_file_add(3),
 zip_file_replace(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

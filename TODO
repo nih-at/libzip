@@ -9,6 +9,7 @@ Encryption
 
 API Issues
 ==========
+! zip_get_archive_comment has int *lenp argument.  Cleaner would be zip_uint32_t *.
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
 * check arguments for every entry point into libzip
@@ -47,6 +48,7 @@ Features
 
 Bugs
 ====
+! update man pages for API type cleanup
 ! zip_file_extra_field_{delete,set}*: use dirent changes (create if neccessary)
 ! check inconsistent file test case result
 ! decide if open_filename_duplicate.test is ok or should report an error

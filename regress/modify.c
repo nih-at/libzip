@@ -37,6 +37,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef HAVE_GETOPT
+#include "getopt.h"
+#endif
+
 #include "zip.h"
 
 const char *prg;

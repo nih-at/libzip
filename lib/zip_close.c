@@ -55,9 +55,9 @@
 #define MAX_DEFLATE_SIZE_32	4293656963
 
 static int add_data(struct zip *, struct zip_source *, struct zip_dirent *, FILE *);
-static int copy_data(FILE *, off_t, FILE *, struct zip_error *);
+static int copy_data(FILE *, zip_uint64_t, FILE *, struct zip_error *);
 static int copy_source(struct zip *, struct zip_source *, FILE *);
-static int write_cdir(struct zip *, const struct zip_filelist *, int, FILE *);
+static int write_cdir(struct zip *, const struct zip_filelist *, zip_uint64_t, FILE *);
 static char *_zip_create_temp_output(struct zip *, FILE **);
 static int _zip_torrentzip_cmp(const void *, const void *);
 
@@ -66,8 +66,8 @@ static int _zip_torrentzip_cmp(const void *, const void *);
 ZIP_EXTERN int
 zip_close(struct zip *za)
 {
-    int survivors;
-    int i, j, error;
+    zip_uint64_t i, j, survivors;
+    int error;
     char *temp;
     FILE *out;
 #ifndef _WIN32
@@ -168,14 +168,14 @@ zip_close(struct zip *za)
 	    _zip_dirent_torrent_normalize(entry->changes);
 
 
-	de->offset = ftello(out);
+	de->offset = (zip_uint64_t)ftello(out); /* XXX: check for errors */
 
 	if (new_data) {
 	    struct zip_source *zs;
 
 	    zs = NULL;
 	    if (!ZIP_ENTRY_DATA_CHANGED(entry)) {
-		if ((zs=_zip_source_zip_new(za, za, i, ZIP_FL_UNCHANGED, 0, -1, NULL)) == NULL) {
+		if ((zs=_zip_source_zip_new(za, za, i, ZIP_FL_UNCHANGED, 0, 0, NULL)) == NULL) {
 		    error = 1;
 		    break;
 		}
@@ -427,24 +427,26 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 
 
 static int
-copy_data(FILE *fs, off_t len, FILE *ft, struct zip_error *error)
+copy_data(FILE *fs, zip_uint64_t len, FILE *ft, struct zip_error *error)
 {
     char buf[BUFSIZE];
-    int n, nn;
+    size_t n, nn;
 
     if (len == 0)
 	return 0;
 
     while (len > 0) {
 	nn = len > sizeof(buf) ? sizeof(buf) : len;
-	if ((n=fread(buf, 1, nn, fs)) < 0) {
-	    _zip_error_set(error, ZIP_ER_READ, errno);
-	    return -1;
-	}
-	else if (n == 0) {
-	    _zip_error_set(error, ZIP_ER_EOF, 0);
-	    return -1;
-	}
+	if ((n=fread(buf, 1, nn, fs)) == 0) {
+            if (ferror(fs)) {
+                _zip_error_set(error, ZIP_ER_READ, errno);
+                return -1;
+            }
+            else {
+                _zip_error_set(error, ZIP_ER_EOF, 0);
+                return -1;
+            }
+        }
 
 	if (fwrite(buf, 1, n, ft) != (size_t)n) {
 	    _zip_error_set(error, ZIP_ER_WRITE, errno);
@@ -473,7 +475,7 @@ copy_source(struct zip *za, struct zip_source *src, FILE *ft)
 
     ret = 0;
     while ((n=zip_source_read(src, buf, sizeof(buf))) > 0) {
-	if (fwrite(buf, 1, n, ft) != (size_t)n) {
+	if (fwrite(buf, 1, (size_t)n, ft) != (size_t)n) {
 	    _zip_error_set(&za->error, ZIP_ER_WRITE, errno);
 	    ret = -1;
 	    break;
@@ -494,7 +496,7 @@ copy_source(struct zip *za, struct zip_source *src, FILE *ft)
 
 
 static int
-write_cdir(struct zip *za, const struct zip_filelist *filelist, int survivors, FILE *out)
+write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t survivors, FILE *out)
 {
     off_t cd_start, end;
     zip_int64_t size;
@@ -535,11 +537,13 @@ write_cdir(struct zip *za, const struct zip_filelist *filelist, int survivors, F
 
 
 int
-_zip_changed(struct zip *za, int *survivorsp)
+_zip_changed(struct zip *za, zip_uint64_t *survivorsp)
 {
-    int changed, i, survivors;
+    int changed;
+    zip_uint64_t i, survivors;
 
-    changed = survivors = 0;
+    changed = 0;
+    survivors = 0;
 
     if (za->comment_changed || za->ch_flags != za->flags)
 	changed = 1;

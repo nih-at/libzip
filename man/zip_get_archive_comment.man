@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_GET_ARCHIVE_COMMENT 3 "February 20, 2012" NiH
+.TH ZIP_GET_ARCHIVE_COMMENT 3 "July 22, 2012" NiH
 .SH "NAME"
 zip_get_archive_comment \- get zip archive comment
 .SH "LIBRARY"
@@ -38,7 +38,7 @@ libzip (-lzip)
 #include <zip.h>
 .PP
 const char *
-zip_get_archive_comment(struct zip *archive, int *lenp, int flags);
+zip_get_archive_comment(struct zip *archive, int *lenp, zip_flags_t flags);
 .SH "DESCRIPTION"
 The
 zip_get_archive_comment
@@ -97,6 +97,6 @@ libzip(3),
 zip_get_file_comment(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

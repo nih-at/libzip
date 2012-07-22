@@ -152,7 +152,7 @@ zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
 	if (ef->flags & flags & ZIP_EF_BOTH)
 	    n++;
 
-    return n;
+    return (zip_int16_t)n;
 }
 
 
@@ -179,7 +179,7 @@ zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
 	if (ef->id == ef_id && (ef->flags & flags & ZIP_EF_BOTH))
 	    n++;
 
-    return n;
+    return (zip_int16_t)n;
 }
 
 

@@ -125,7 +125,7 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct read_file *z;
     char *buf;
-    int i, n;
+    size_t i, n;
 
     z = (struct read_file *)state;
     buf = (char *)data;
@@ -153,30 +153,31 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
     case ZIP_SOURCE_READ:
 	/* XXX: return INVAL if len > size_t max */
 	if (z->remain != -1)
-	    n = len > z->remain ? z->remain : len;
+	    n = len > (zip_uint64_t)z->remain ? (zip_uint64_t)z->remain : len;
 	else
 	    n = len;
 
 	if (!z->closep) {
 	    /* we might share this file with others, so let's be safe */
-	    if (fseeko(z->f, (off_t)(z->off + z->len-z->remain),
-		       SEEK_SET) < 0) {
+	    if (fseeko(z->f, (off_t)(z->off + (zip_uint64_t)(z->len-z->remain)), SEEK_SET) < 0) {
 		z->e[0] = ZIP_ER_SEEK;
 		z->e[1] = errno;
 		return -1;
 	    }
 	}
 
-	if ((i=fread(buf, 1, n, z->f)) < 0) {
-	    z->e[0] = ZIP_ER_READ;
-	    z->e[1] = errno;
-	    return -1;
+	if ((i=fread(buf, 1, n, z->f)) == 0) {
+            if (ferror(z->f)) {
+                z->e[0] = ZIP_ER_READ;
+                z->e[1] = errno;
+                return -1;
+            }
 	}
 
 	if (z->remain != -1)
 	    z->remain -= i;
 
-	return i;
+	return (zip_int64_t)i;
 	
     case ZIP_SOURCE_CLOSE:
 	if (z->fname) {
@@ -214,11 +215,11 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 		st->mtime = fst.st_mtime;
 		st->valid |= ZIP_STAT_MTIME;
 		if (z->len != -1) {
-		    st->size = z->len;
+		    st->size = (zip_uint64_t)z->len;
 		    st->valid |= ZIP_STAT_SIZE;
 		}
 		else if ((fst.st_mode&S_IFMT) == S_IFREG) {
-		    st->size = fst.st_size;
+		    st->size = (zip_uint64_t)fst.st_size;
 		    st->valid |= ZIP_STAT_SIZE;
 		}
 	    }

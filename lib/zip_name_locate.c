@@ -39,17 +39,16 @@
 
 
 
-ZIP_EXTERN int
-zip_name_locate(struct zip *za, const char *fname, int flags)
+ZIP_EXTERN zip_int64_t
+zip_name_locate(struct zip *za, const char *fname, zip_flags_t flags)
 {
     return _zip_name_locate(za, fname, flags, &za->error);
 }
 
 
 
-int
-_zip_name_locate(struct zip *za, const char *fname, int flags,
-		 struct zip_error *error)
+zip_int64_t
+_zip_name_locate(struct zip *za, const char *fname, zip_flags_t flags, struct zip_error *error)
 {
     int (*cmp)(const char *, const char *);
     const char *fn, *p;
@@ -80,7 +79,7 @@ _zip_name_locate(struct zip *za, const char *fname, int flags,
 
 	if (cmp(fname, fn) == 0) {
 	    _zip_error_clear(error);
-	    return i;
+	    return (zip_int64_t)i;
 	}
     }
 

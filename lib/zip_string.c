@@ -45,10 +45,10 @@ _zip_string_crc32(const struct zip_string *s)
 {
     zip_uint32_t crc;
     
-    crc = crc32(0L, Z_NULL, 0);
+    crc = (zip_uint32_t)crc32(0L, Z_NULL, 0);
 
     if (s != NULL)    
-	crc = crc32(crc, s->raw, s->length);
+	crc = (zip_uint32_t)crc32(crc, s->raw, s->length);
 
     return crc;
 }

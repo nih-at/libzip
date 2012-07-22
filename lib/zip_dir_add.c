@@ -45,7 +45,7 @@
 ZIP_EXTERN zip_int64_t
 zip_dir_add(struct zip *za, const char *name, zip_flags_t flags)
 {
-    int len;
+    size_t len;
     zip_int64_t ret;
     char *s;
     struct zip_source *source;

@@ -62,7 +62,7 @@ Count only extra fields from the archive's central directory.
 Count only extra fields from the local file headers.
 .TP 18
 \fBZIP_FL_UNCHANGED\fR
-Only look at the original unchanged extra fields.
+Count the original unchanged extra fields, ignoring any changes made.
 .RE
 .PP
 The
@@ -96,6 +96,6 @@ zip_file_extra_field_get(3),
 zip_file_extra_field_set(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

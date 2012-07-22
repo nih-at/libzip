@@ -108,6 +108,6 @@ zip_file_extra_field_set(3),
 zip_file_extra_fields_count(3)
 .SH "AUTHORS"
 
-Dieter Baron <dillo@giga.or.at>
+Dieter Baron <dillo@nih.at>
 and
 Thomas Klausner <tk@giga.or.at>

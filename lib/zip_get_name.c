@@ -40,7 +40,7 @@
 
 
 ZIP_EXTERN const char *
-zip_get_name(struct zip *za, zip_uint64_t idx, int flags)
+zip_get_name(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
 {
     return _zip_get_name(za, idx, flags, &za->error);
 }
@@ -48,8 +48,7 @@ zip_get_name(struct zip *za, zip_uint64_t idx, int flags)
 
 
 const char *
-_zip_get_name(struct zip *za, zip_uint64_t idx, int flags,
-	      struct zip_error *error)
+_zip_get_name(struct zip *za, zip_uint64_t idx, zip_flags_t flags, struct zip_error *error)
 {
     struct zip_dirent *de;
     const zip_uint8_t *str;
