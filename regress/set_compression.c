@@ -50,7 +50,7 @@ main(int argc, char *argv[])
     struct zip *za;
     char buf[100];
     int err;
-    int idx;
+    zip_int64_t idx;
 
     prg = argv[0];
 
@@ -75,7 +75,7 @@ main(int argc, char *argv[])
 	return 1;
     }
     if (zip_set_file_compression(za, idx, method, /* XXX: add flags * when supported */ 0) < 0) {
-	fprintf(stderr, "zip_set_file_compression with method `%d' on file %d failed: %s\n",
+	fprintf(stderr, "zip_set_file_compression with method `%d' on file %" PRId64 " failed: %s\n",
 		method, idx, zip_strerror(za));
 	return 1;
     }

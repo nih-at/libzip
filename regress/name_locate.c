@@ -105,7 +105,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 {
     int ze, se;
     char expected[80];
-    int idx;
+    zip_int64_t idx;
 
     if ((idx=zip_name_locate(z, name, flags)) < 0) {
 	zip_error_get(z, &ze, &se);
@@ -119,7 +119,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 	return 0;
     }
 
-    printf("unexpected success while looking for `%s' with flags %x: index %d\n", name, flags, idx);
+    printf("unexpected success while looking for `%s' with flags %x: index %" PRId64 "\n", name, flags, idx);
     return 1;
 }
 

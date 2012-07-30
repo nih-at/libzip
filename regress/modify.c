@@ -72,8 +72,8 @@ main(int argc, char *argv[])
     char buf[100], c;
     int arg, err, flags, idx;
 
-    arg = flags = 0;
-    prg = argv[arg++];
+    flags = 0;
+    prg = argv[0];
 
     if (argc < 2) {
 	fprintf(stderr, usage, prg);
@@ -100,6 +100,8 @@ main(int argc, char *argv[])
 	    return 1;
 	}
     }
+    
+    arg = optind;
 
     archive = argv[arg++];
 

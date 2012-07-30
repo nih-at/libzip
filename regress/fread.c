@@ -128,9 +128,9 @@ do_read(struct zip *z, const char *name, int flags,
 {
     struct zip_file *zf;
     enum when when_got;
-    int ze_got, se_got;
+    int err, ze_got, se_got;
     char b[8192];
-    int n;
+    zip_int64_t n;
     char expected[80];
     char got[80];
 
@@ -148,10 +148,10 @@ do_read(struct zip *z, const char *name, int flags,
 	    when_got = WHEN_READ;
 	    zip_file_error_get(zf, &ze_got, &se_got);
 	}
-	n = zip_fclose(zf);
-	if (when_got == WHEN_NEVER && n != 0) {
+	err = zip_fclose(zf);
+	if (when_got == WHEN_NEVER && err != 0) {
 	    when_got = WHEN_CLOSE;
-	    ze_got = n;
+	    ze_got = err;
 	    se_got = 0;
 	}
     }
