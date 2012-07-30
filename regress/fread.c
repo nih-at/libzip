@@ -37,6 +37,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifndef HAVE_GETOPT
+#include "getopt.h"
+#endif
+
 #include "zip.h"
 
 enum when {
@@ -50,28 +54,45 @@ const char *when_name[] = {
 int do_read(struct zip *, const char *, int, enum when, int, int);
 
 
+int verbose;
 
 const char *prg;
+const char * const usage = "usage: %s [-v] archive\n";
 
 int
 main(int argc, char *argv[])
 {
     int fail, ze;
+    int c;
     struct zip *z;
     struct zip_source *zs;
     char *archive;
     char errstr[1024];
 
+    verbose = 0;
     fail = 0;
 
     prg = argv[0];
 
-    if (argc != 2) {
-        fprintf(stderr, "usage: %s archive\n", prg);
+    while ((c=getopt(argc, argv, "v")) != -1) {
+	switch (c) {
+            case 'v':
+                verbose = 1;
+                break;
+
+            default:
+                fprintf(stderr, usage, prg);
+                return 1;
+	}
+    }
+
+    
+    if (argc-optind != 1) {
+        fprintf(stderr, usage, prg);
         return 1;
     }
 
-    archive = argv[1];
+    archive = argv[optind];
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), ze, errno);
@@ -165,7 +186,7 @@ do_read(struct zip *z, const char *name, int flags,
 	       when_name[when_ex], expected);
 	return 1;
     }
-    else if (getenv("VERBOSE"))
+    else if (verbose)
 	printf("%s: %s: passed\n", prg, name);
 
     return 0;

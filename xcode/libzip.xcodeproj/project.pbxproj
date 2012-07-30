@@ -1612,7 +1612,7 @@
 		4BDC71BF15B181DA00236D3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Spider Lab";
 			};
 			buildConfigurationList = 4BDC71C215B181DA00236D3C /* Build configuration list for PBXProject "libzip" */;
@@ -2166,6 +2166,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2199,6 +2200,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2886,6 +2888,7 @@
 				4BACD59215BC2CEA00920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD5A115BC2D4C00920691 /* Build configuration list for PBXNativeTarget "add_from_buffer" */ = {
 			isa = XCConfigurationList;
@@ -2894,6 +2897,7 @@
 				4BACD5A315BC2D4C00920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD5AE15BC2D8200920691 /* Build configuration list for PBXAggregateTarget "test programs" */ = {
 			isa = XCConfigurationList;
@@ -2911,6 +2915,7 @@
 				4BACD5C015BC2DC900920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD5CD15BC2DF200920691 /* Build configuration list for PBXNativeTarget "fopen_unchanged" */ = {
 			isa = XCConfigurationList;
@@ -2919,6 +2924,7 @@
 				4BACD5CF15BC2DF200920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD5DC15BC2F3700920691 /* Build configuration list for PBXNativeTarget "fread" */ = {
 			isa = XCConfigurationList;
@@ -2927,6 +2933,7 @@
 				4BACD5DE15BC2F3700920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD5EB15BC2F6600920691 /* Build configuration list for PBXNativeTarget "name_locate" */ = {
 			isa = XCConfigurationList;
@@ -2935,6 +2942,7 @@
 				4BACD5ED15BC2F6600920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD5FA15BC2F9500920691 /* Build configuration list for PBXNativeTarget "set_comment_all" */ = {
 			isa = XCConfigurationList;
@@ -2943,6 +2951,7 @@
 				4BACD5FC15BC2F9500920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD60715BC2FA300920691 /* Build configuration list for PBXNativeTarget "set_comment_localonly" */ = {
 			isa = XCConfigurationList;
@@ -2951,6 +2960,7 @@
 				4BACD60915BC2FA300920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD61415BC2FA900920691 /* Build configuration list for PBXNativeTarget "set_comment_removeglobal" */ = {
 			isa = XCConfigurationList;
@@ -2959,6 +2969,7 @@
 				4BACD61615BC2FA900920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD62115BC2FAC00920691 /* Build configuration list for PBXNativeTarget "set_comment_revert" */ = {
 			isa = XCConfigurationList;
@@ -2967,6 +2978,7 @@
 				4BACD62315BC2FAC00920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD62E15BC2FAE00920691 /* Build configuration list for PBXNativeTarget "set_compression" */ = {
 			isa = XCConfigurationList;
@@ -2975,6 +2987,7 @@
 				4BACD63015BC2FAE00920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD63F15BC2FEF00920691 /* Build configuration list for PBXNativeTarget "stat_index" */ = {
 			isa = XCConfigurationList;
@@ -2983,6 +2996,7 @@
 				4BACD64115BC2FEF00920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD64D15BC301300920691 /* Build configuration list for PBXNativeTarget "tryopen" */ = {
 			isa = XCConfigurationList;
@@ -2991,6 +3005,7 @@
 				4BACD64F15BC301300920691 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BDC71C215B181DA00236D3C /* Build configuration list for PBXProject "libzip" */ = {
 			isa = XCConfigurationList;
