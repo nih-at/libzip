@@ -48,7 +48,6 @@ Features
 
 Bugs
 ====
-! update man pages for API type cleanup
 ! zip_file_extra_field_{delete,set}*: use dirent changes (create if neccessary)
 ! check inconsistent file test case result
 ! decide if open_filename_duplicate.test is ok or should report an error
