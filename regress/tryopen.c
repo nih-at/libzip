@@ -85,7 +85,7 @@ main(int argc, char *argv[])
 
 	if ((z=zip_open(fname, flags, &ze)) != NULL) {
 	    count = zip_get_num_entries(z, 0);
-	    printf("opening `%s' succeeded, %lld entries\n", fname, count);
+	    printf("opening `%s' succeeded, %"PRIu64" entries\n", fname, count);
 	    zip_close(z);
 	    continue;
 	}

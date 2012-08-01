@@ -209,8 +209,8 @@ confirm_replace(struct zip *za, const char *tname, int it,
 	    return 0;
     }
 
-    printf("replace `%s' (%llu / %08x) in `%s'\n"
-	   "   with `%s' (%llu / %08x) from `%s'? ",
+    printf("replace `%s' (%"PRIu64" / %08x) in `%s'\n"
+	   "   with `%s' (%"PRIu64" / %08x) from `%s'? ",
 	   st.name, st.size, st.crc, tname,
 	   ss.name, ss.size, ss.crc, sname);
     fflush(stdout);

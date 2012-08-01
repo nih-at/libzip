@@ -107,11 +107,11 @@ main(int argc, char *argv[])
 	if (sb.valid & ZIP_STAT_NAME)
 	    printf("name: `%s'\n", sb.name);
 	if (sb.valid & ZIP_STAT_INDEX)
-	    printf("index: `%lld'\n", sb.index);
+	    printf("index: `%"PRIu64"'\n", sb.index);
 	if (sb.valid & ZIP_STAT_SIZE)
-	    printf("size: `%lld'\n", sb.size);
+	    printf("size: `%"PRIu64"'\n", sb.size);
 	if (sb.valid & ZIP_STAT_COMP_SIZE)
-	    printf("compressed size: `%lld'\n", sb.comp_size);
+	    printf("compressed size: `%"PRIu64"'\n", sb.comp_size);
 	if (sb.valid & ZIP_STAT_MTIME) {
 	    char buf[50];
 	    struct tm *tpm;
