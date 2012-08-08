@@ -102,6 +102,11 @@ zip_close(struct zip *za)
 	return 0;
     }
 
+    if (survivors > za->nentry) {
+        _zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+        return -1;
+    }
+    
     if ((filelist=(struct zip_filelist *)malloc(sizeof(filelist[0])*survivors))
 	== NULL)
 	return -1;
@@ -130,6 +135,11 @@ zip_close(struct zip *za)
 	filelist[j].idx = i;
 	filelist[j].name = zip_get_name(za, i, 0);
 	j++;
+    }
+    if (j < survivors) {
+        free(filelist);
+        _zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+        return -1;
     }
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	qsort(filelist, survivors, sizeof(filelist[0]),

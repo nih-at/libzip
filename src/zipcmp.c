@@ -279,6 +279,9 @@ comment_compare(const char *c1, int l1, const char *c2, int l2) {
     if (l1 == 0)
 	return 0;
 
+    if (c1 == NULL || c2 == NULL)
+        return c1 == c2;
+    
     return memcmp(c1, c2, l2);
 }
 
@@ -434,8 +437,12 @@ entry_cmp(const void *p1, const void *p2)
 
     if ((c=(ignore_case ? strcasecmp : strcmp)(e1->name, e2->name)) != 0)
 	return c;
-    if (e1->size != e2->size)
-	return e1->size - e2->size;
+    if (e1->size != e2->size) {
+        if (e1->size > e2->size)
+            return 1;
+        else
+            return -1;
+    }
     if (e1->crc != e2->crc)
 	return e1->crc - e2->crc;
 
@@ -508,8 +515,8 @@ test_file(struct zip *za, int idx, off_t size, unsigned int crc)
 {
     struct zip_file *zf;
     char buf[8192];
-    int n, nsize;
-    unsigned int ncrc;
+    zip_int64_t n, nsize;
+    zip_uint32_t ncrc;
     
     if ((zf=zip_fopen_index(za, idx, 0)) == NULL) {
 	fprintf(stderr, "%s: cannot open file %d in archive: %s\n",
@@ -517,12 +524,12 @@ test_file(struct zip *za, int idx, off_t size, unsigned int crc)
 	return -1;
     }
 
-    ncrc = crc32(0, NULL, 0);
+    ncrc = (zip_uint32_t)crc32(0, NULL, 0);
     nsize = 0;
     
     while ((n=zip_fread(zf, buf, sizeof(buf))) > 0) {
 	nsize += n;
-	ncrc = crc32(ncrc, (const Bytef *)buf, n);
+	ncrc = (zip_uint32_t)crc32(ncrc, (const Bytef *)buf, (unsigned int)n);
     }
 
     if (n < 0) {

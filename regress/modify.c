@@ -222,7 +222,7 @@ main(int argc, char *argv[])
 	} else if (strcmp(argv[arg], "set_file_comment") == 0 && arg+2 < argc) {
 	    /* set file comment */
 	    idx = atoi(argv[arg+1]);
-	    if (zip_set_file_comment(za, idx, argv[arg+2], strlen(argv[arg+2])) < 0) {
+	    if (zip_file_set_comment(za, idx, argv[arg+2], strlen(argv[arg+2]), 0) < 0) {
 		fprintf(stderr, "can't set file comment at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
 		err = 1;
 		break;

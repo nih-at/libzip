@@ -20,6 +20,18 @@
 			name = "command line tools";
 			productName = "command line tools";
 		};
+		4B54447915C977A20067BA33 /* all */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 4B54447C15C977A20067BA33 /* Build configuration list for PBXAggregateTarget "all" */;
+			buildPhases = (
+			);
+			dependencies = (
+				4B54447F15C977AF0067BA33 /* PBXTargetDependency */,
+				4B54448115C977B10067BA33 /* PBXTargetDependency */,
+			);
+			name = all;
+			productName = all;
+		};
 		4BACD5A715BC2D8200920691 /* test programs */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 4BACD5AE15BC2D8200920691 /* Build configuration list for PBXAggregateTarget "test programs" */;
@@ -321,6 +333,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4B01D68A15B2F3F1002D5007;
 			remoteInfo = "libzip Mac";
+		};
+		4B54447E15C977AF0067BA33 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B01D72815B2F5A2002D5007;
+			remoteInfo = "command line tools";
+		};
+		4B54448015C977B10067BA33 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4BACD5A715BC2D8200920691;
+			remoteInfo = "test programs";
 		};
 		4BACD59615BC2D3800920691 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1627,6 +1653,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				4B54447915C977A20067BA33 /* all */,
 				4BDC71DF15B182B200236D3C /* libzip */,
 				4BDC72A115B1B6EA00236D3C /* Build iOS Framework */,
 				4B01D68A15B2F3F1002D5007 /* libzip Mac */,
@@ -2027,6 +2054,16 @@
 			target = 4B01D68A15B2F3F1002D5007 /* libzip Mac */;
 			targetProxy = 4B01D73915B2F649002D5007 /* PBXContainerItemProxy */;
 		};
+		4B54447F15C977AF0067BA33 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B01D72815B2F5A2002D5007 /* command line tools */;
+			targetProxy = 4B54447E15C977AF0067BA33 /* PBXContainerItemProxy */;
+		};
+		4B54448115C977B10067BA33 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4BACD5A715BC2D8200920691 /* test programs */;
+			targetProxy = 4B54448015C977B10067BA33 /* PBXContainerItemProxy */;
+		};
 		4BACD59715BC2D3800920691 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4B01D68A15B2F3F1002D5007 /* libzip Mac */;
@@ -2336,6 +2373,20 @@
 			name = Debug;
 		};
 		4B01D72B15B2F5A2002D5007 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4B54447A15C977A20067BA33 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B54447B15C977A20067BA33 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2880,6 +2931,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		4B54447C15C977A20067BA33 /* Build configuration list for PBXAggregateTarget "all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B54447A15C977A20067BA33 /* Debug */,
+				4B54447B15C977A20067BA33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		4BACD59015BC2CEA00920691 /* Build configuration list for PBXNativeTarget "modify" */ = {
 			isa = XCConfigurationList;

@@ -323,7 +323,7 @@ _zip_dirent_new(void)
 
 int
 _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
-		 const unsigned char **bufp, zip_uint32_t *leftp, int local,
+		 const unsigned char **bufp, zip_uint64_t *leftp, int local,
 		 struct zip_error *error)
 {
     unsigned char buf[CDENTRYSIZE];

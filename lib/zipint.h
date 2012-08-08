@@ -302,7 +302,7 @@ struct zip_cdir {
     zip_uint64_t nentry_alloc;			/* number of entries allocated */
 
     zip_uint64_t size;		 		/* size of central directory */
-    zip_uint64_t offset;	 		/* offset of central directory in file */
+    off_t offset;		 		/* offset of central directory in file */
     struct zip_string *comment;			/* zip archive comment */
 };
 
@@ -388,7 +388,7 @@ void _zip_dirent_init(struct zip_dirent *);
 int _zip_dirent_needs_zip64(const struct zip_dirent *, zip_flags_t);
 struct zip_dirent *_zip_dirent_new(void);
 int _zip_dirent_read(struct zip_dirent *, FILE *, const unsigned char **,
-		     zip_uint32_t *, int, struct zip_error *);
+		     zip_uint64_t *, int, struct zip_error *);
 zip_int32_t _zip_dirent_size(FILE *, zip_uint16_t, struct zip_error *);
 void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, zip_flags_t, struct zip_error *);
@@ -427,7 +427,7 @@ enum zip_encoding_type _zip_guess_encoding(struct zip_string *, enum zip_encodin
 zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t,
 				zip_uint32_t *, struct zip_error *error);
 
-struct zip *_zip_open(const char *, FILE *, int, int, int *);
+struct zip *_zip_open(const char *, FILE *, unsigned int, int, int *);
 
 int _zip_read_local_ef(struct zip *, zip_uint64_t);
 

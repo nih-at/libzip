@@ -85,11 +85,11 @@ Copyright (C) 2008 Dieter Baron and Thomas Klausner\n\
 #define CONFIRM_SAME_NO		0x020
 
 int confirm;
-int name_flags;
+zip_flags_t name_flags;
 
-static int confirm_replace(struct zip *, const char *, int,
-			   struct zip *, const char *, int);
-static int merge_zip(struct zip *za, const char *, const char *, struct zip **);
+static int confirm_replace(struct zip *, const char *, zip_uint64_t,
+			   struct zip *, const char *, zip_uint64_t);
+static struct zip *merge_zip(struct zip *, const char *, const char *);
 
 
 
@@ -98,7 +98,8 @@ main(int argc, char *argv[])
 {
     struct zip *za;
     struct zip **zs;
-    int c, err, i;
+    int c, err;
+    unsigned int i, n;
     char errstr[1024], *tname;
 
     prg = argv[0];
@@ -147,8 +148,10 @@ main(int argc, char *argv[])
     }
 
     tname = argv[optind++];
+    argv += optind;
 
-    if ((zs=malloc(sizeof(zs[0])*(argc-optind))) == NULL) {
+    n = (unsigned int)(argc-optind);
+    if ((zs=malloc(sizeof(zs[0])*n)) == NULL) {
 	fprintf(stderr, "%s: out of memory\n", prg);
 	exit(1);
     }
@@ -160,8 +163,8 @@ main(int argc, char *argv[])
 	exit(1);
     }
 
-    for (i=0; i<argc-optind; i++) {
-	if (merge_zip(za, tname, argv[optind+i], zs+i) < 0)
+    for (i=0; i<n; i++) {
+	if ((zs[i]=merge_zip(za, tname, argv[i])) == NULL)
 	    exit(1);
     }
 
@@ -171,7 +174,7 @@ main(int argc, char *argv[])
 	exit(1);
     }
 
-    for (i=0; i<argc-optind; i++)
+    for (i=0; i<n; i++)
 	zip_close(zs[i]);
 
     exit(0);
@@ -180,8 +183,8 @@ main(int argc, char *argv[])
 
 
 static int
-confirm_replace(struct zip *za, const char *tname, int it,
-		struct zip *zs, const char *sname, int is)
+confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
+		struct zip *zs, const char *sname, zip_uint64_t is)
 {
     char line[1024];
     struct zip_stat st, ss;
@@ -192,12 +195,12 @@ confirm_replace(struct zip *za, const char *tname, int it,
 	return 0;
 
     if (zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st) < 0) {
-	fprintf(stderr, "%s: cannot stat file %d in `%s': %s\n",
+	fprintf(stderr, "%s: cannot stat file %"PRIu64" in `%s': %s\n",
 		prg, it, tname, zip_strerror(za));
 	return -1;
     }
     if (zip_stat_index(zs, is, 0, &ss) < 0) {
-	fprintf(stderr, "%s: cannot stat file %d in `%s': %s\n",
+	fprintf(stderr, "%s: cannot stat file %"PRIu64" in `%s': %s\n",
 		prg, is, sname, zip_strerror(zs));
 	return -1;
     }
@@ -229,13 +232,14 @@ confirm_replace(struct zip *za, const char *tname, int it,
 
 
 
-static int
-merge_zip(struct zip *za, const char *tname, const char *sname,
-	  struct zip **zsp)
+static struct zip *
+merge_zip(struct zip *za, const char *tname, const char *sname)
 {
     struct zip *zs;
     struct zip_source *source;
-    int i, idx, err;
+    zip_int64_t ret, idx;
+    zip_uint64_t i;
+    int err;
     char errstr[1024];
     const char *fname;
     
@@ -243,38 +247,43 @@ merge_zip(struct zip *za, const char *tname, const char *sname,
 	zip_error_to_str(errstr, sizeof(errstr), err, errno);
 	fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
 		prg, sname, errstr);
-	return -1;
+	return NULL;
     }
 
-    for (i=0; i<zip_get_num_files(zs); i++) {
+    ret = zip_get_num_entries(zs, 0);
+    if (ret < 0) {
+        fprintf(stderr, "%s: cannot get number of entries for `%s': %s\n", prg, sname, zip_strerror(za));
+        return NULL;
+    }
+    for (i=0; i<(zip_uint64_t)ret; i++) {
 	fname = zip_get_name(zs, i, 0);
 
-	if ((idx=zip_name_locate(za, fname, name_flags)) != -1) {
-	    switch (confirm_replace(za, tname, idx, zs, sname, i)) {
+	if ((idx=zip_name_locate(za, fname, name_flags)) >= 0) {
+	    switch (confirm_replace(za, tname, (zip_uint64_t)idx, zs, sname, i)) {
 	    case 0:
 		break;
 		
 	    case 1:
 		if ((source=zip_source_zip(za, zs, i, 0, 0, 0)) == NULL
-		    || zip_replace(za, idx, source) < 0) {
+		    || zip_replace(za, (zip_uint64_t)idx, source) < 0) {
 		    zip_source_free(source);
 		    fprintf(stderr,
 			    "%s: cannot replace `%s' in `%s': %s\n",
 			    prg, fname, tname, zip_strerror(za));
-		    return -1;
+		    return NULL;
 		}
 		break;
 
 	    case -1:
 		zip_close(zs);
-		return -1;
+		return NULL;
 		
 	    default:
 		fprintf(stderr,	"%s: internal error: "
 			"unexpected return code from confirm (%d)\n",
 			prg, err);
 		zip_close(zs);
-		return -1;
+		return NULL;
 	    }
 	}
 	else {
@@ -285,11 +294,10 @@ merge_zip(struct zip *za, const char *tname, const char *sname,
 			"%s: cannot add `%s' to `%s': %s\n",
 			prg, fname, tname, zip_strerror(za));
 		zip_close(zs);
-		return -1;
+		return NULL;
 	    }
 	}
     }
 
-    *zsp = zs;
-    return 0;
+    return zs;
 }
