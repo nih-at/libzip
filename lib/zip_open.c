@@ -621,6 +621,7 @@ _zip_read_eocd(const unsigned char *eocd, unsigned char *buf, off_t buf_offset, 
 	return NULL;
 
     cd->size = size;
+    /* XXX: check for off_t overflow */
     cd->offset = (off_t)offset;
     
     return cd;
