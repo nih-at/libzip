@@ -68,6 +68,7 @@ AC_CHECK_SIZEOF([short])
 AC_CHECK_SIZEOF([int])
 AC_CHECK_SIZEOF([long])
 AC_CHECK_SIZEOF([long long])
+AC_CHECK_SIZEOF([off_t])
 
 AC_PATH_PROG([TOUCH], [touch])
 AC_PATH_PROG([UNZIP], [unzip])
