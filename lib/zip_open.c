@@ -235,12 +235,6 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     }
 
     if (comment_len) {
-        if (comment_len > ZIP_UINT16_MAX) {
-            _zip_error_set(error, ZIP_ER_INCONS, 0); /* XXX: correct error value for archive comment too long? */
-            _zip_cdir_free(cd);
-            return NULL;
-        }
-            
 	if ((cd->comment=_zip_string_new(eocd+EOCDLEN, (zip_uint16_t)comment_len, ZIP_FL_ENC_GUESS, error)) == NULL) {
 	    _zip_cdir_free(cd);
 	    return NULL;

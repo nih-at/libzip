@@ -48,6 +48,7 @@ Features
 
 Bugs
 ====
+! check for off_t overflow
 ! fix OpenSUSE i686 regression failures
 ! readd zip_get_num_files man page
 ! rename remaining zip_XXX_{file,archive}_* to zip_{file,archive}_XXX_*?
@@ -69,7 +70,6 @@ Cleanup
 =======
 * get rid of zip_get_{compression,encryption}_implementation
 * use zip_*int*_t internally
-* completely get rid of off_t
 * clean up lint(1) warnings?
 
 
