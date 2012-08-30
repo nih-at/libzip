@@ -92,7 +92,7 @@ typedef int ssize_t
 typedef long ssize_t
 #  elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
 typedef long long ssize_t
-#  elif
+#  else
 #error no suitable type for ssize_t found
 #  endif
 #endif
