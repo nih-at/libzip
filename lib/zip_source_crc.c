@@ -51,7 +51,7 @@ static zip_int64_t crc_read(struct zip_source *, void *, void *
 
 
 
-ZIP_EXTERN struct zip_source *
+struct zip_source *
 zip_source_crc(struct zip *za, struct zip_source *src, int validate)
 {
     struct crc *ctx;

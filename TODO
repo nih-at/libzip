@@ -66,6 +66,10 @@ Bugs
 * cdr == NULL -> ER_NOENT vs. idx > cdir->nentry -> ER_INVAL inconsistent (still there?)
 * torrentzip broken on NetBSD/amd64 6.99
 
+Windows
+=======
+! add getopt.c to tryopen, stat_index, modify, fread (if !HAVE_GETOPT)
+! provide definitions for PRI{d,u}64 (_WIN32 variant: I64{d,u}) if missing
 
 Cleanup
 =======

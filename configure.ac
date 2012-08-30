@@ -63,12 +63,14 @@ AC_CHECK_TYPES([uint8_t])
 AC_CHECK_TYPES([uint16_t])
 AC_CHECK_TYPES([uint32_t])
 AC_CHECK_TYPES([uint64_t])
+AC_CHECK_TYPES([ssize_t])
 
 AC_CHECK_SIZEOF([short])
 AC_CHECK_SIZEOF([int])
 AC_CHECK_SIZEOF([long])
 AC_CHECK_SIZEOF([long long])
 AC_CHECK_SIZEOF([off_t])
+AC_CHECK_SIZEOF([size_t])
 
 AC_PATH_PROG([TOUCH], [touch])
 AC_PATH_PROG([UNZIP], [unzip])
@@ -81,6 +83,20 @@ in
     *) MANFMT=man;;
 esac
 AC_SUBST([MANFMT])
+
+AH_BOTTOM([
+#ifndef HAVE_SSIZE_T
+#  if SIZEOF_SIZE_T == SIZEOF_INT
+typedef int ssize_t
+#  elif SIZEOF_SIZE_T == SIZEOF_LONG
+typedef long ssize_t
+#  elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
+typedef long long ssize_t
+#  elif
+#error no suitable type for ssize_t found
+#  endif
+#endif
+])
 
 AC_CONFIG_FILES([Makefile
 		 libzip.pc

@@ -37,7 +37,7 @@
 
 
 
-ZIP_EXTERN void
+void
 zip_source_error(struct zip_source *src, int *ze, int *se)
 {
     int e[2];

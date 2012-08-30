@@ -60,7 +60,7 @@ static void deflate_free(struct deflate *);
 
 
 
-ZIP_EXTERN struct zip_source *
+struct zip_source *
 zip_source_deflate(struct zip *za, struct zip_source *src,
 		   zip_int32_t cm, int flags)
 {

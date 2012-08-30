@@ -50,6 +50,9 @@
 /* Define to 1 if you have the `snprintf' function. */
 #define HAVE_SNPRINTF 1
 
+/* Define to 1 if the system has the type `ssize_t'. */
+#define HAVE_SSIZE_T 1
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
 
@@ -152,8 +155,14 @@
 /* The size of `long long', as computed by sizeof. */
 #define SIZEOF_LONG_LONG 8
 
+/* The size of `off_t', as computed by sizeof. */
+#define SIZEOF_OFF_T 8
+
 /* The size of `short', as computed by sizeof. */
 #define SIZEOF_SHORT 2
+
+/* The size of `size_t', as computed by sizeof. */
+#define SIZEOF_SIZE_T 8
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -163,3 +172,17 @@
 
 /* Version number of package */
 #define VERSION "0.10b"
+
+
+#ifndef HAVE_SSIZE_T
+#  if SIZEOF_SIZE_T == SIZEOF_INT
+typedef int ssize_t
+#  elif SIZEOF_SIZE_T == SIZEOF_LONG
+typedef long ssize_t
+#  elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
+typedef long long ssize_t
+#  elif
+#error no suitable type for ssize_t found
+#  endif
+#endif
+

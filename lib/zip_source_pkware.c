@@ -60,7 +60,7 @@ static void pkware_free(struct trad_pkware *);
 
 
 
-ZIP_EXTERN struct zip_source *
+struct zip_source *
 zip_source_pkware(struct zip *za, struct zip_source *src,
 		  zip_uint16_t em, int flags, const char *password)
 {

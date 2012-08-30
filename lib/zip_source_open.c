@@ -37,7 +37,7 @@
 
 
 
-ZIP_EXTERN int
+int
 zip_source_open(struct zip_source *src)
 {
     zip_int64_t ret;

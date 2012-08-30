@@ -50,7 +50,7 @@ static zip_int64_t window_read(struct zip_source *, void *, void *,
 
 
 
-ZIP_EXTERN struct zip_source *
+struct zip_source *
 zip_source_window(struct zip *za, struct zip_source *src, zip_uint64_t start, zip_uint64_t len)
 {
     struct window *ctx;
