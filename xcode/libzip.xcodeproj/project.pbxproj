@@ -749,6 +749,7 @@
 		4B28AA2515BAD4E200D0C17D /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../README; sourceTree = "<group>"; };
 		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = THANKS; path = ../THANKS; sourceTree = "<group>"; };
 		4B28AA2715BAD4E200D0C17D /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO; path = ../TODO; sourceTree = "<group>"; };
+		4B6B06E115F119AE008C2CBE /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = compat.h; path = ../src/compat.h; sourceTree = "<group>"; };
 		4BACD57615BC2AEF00920691 /* add_from_buffer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = add_from_buffer.c; path = ../regress/add_from_buffer.c; sourceTree = "<group>"; };
 		4BACD57715BC2AEF00920691 /* add_from_filep.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = add_from_filep.c; path = ../regress/add_from_filep.c; sourceTree = "<group>"; };
 		4BACD57A15BC2AEF00920691 /* fopen_unchanged.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fopen_unchanged.c; path = ../regress/fopen_unchanged.c; sourceTree = "<group>"; };
@@ -1031,6 +1032,7 @@
 		4B01D72015B2F54C002D5007 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4B6B06E115F119AE008C2CBE /* compat.h */,
 				4B01D72115B2F572002D5007 /* zipcmp.c */,
 				4B01D72215B2F572002D5007 /* zipmerge.c */,
 				4B01D72315B2F572002D5007 /* ziptorrent.c */,
@@ -2939,6 +2941,7 @@
 				4B54447B15C977A20067BA33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BACD59015BC2CEA00920691 /* Build configuration list for PBXNativeTarget "modify" */ = {
 			isa = XCConfigurationList;

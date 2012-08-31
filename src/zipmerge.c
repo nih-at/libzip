@@ -50,7 +50,7 @@
 #endif
 
 #include "zip.h"
-
+#include "compat.h"
 
 
 char *prg;

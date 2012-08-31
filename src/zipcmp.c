@@ -53,6 +53,7 @@
 
 #include "zip.h"
 #include "zipint.h"
+#include "compat.h"
 
 struct ef {
     const char *name;

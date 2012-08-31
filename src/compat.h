@@ -1,5 +1,8 @@
+#ifndef HAD_COMPAT_H
+#define HAD_COMPAT_H
+
 /*
-  set_compression.c -- set compression method for file in archive
+  compat.h -- compatibility defines
   Copyright (C) 2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -31,60 +34,24 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+#ifndef _HAD_ZIP_H
+#error zip.h has to be included first
+#endif
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef PRId64
+#ifdef _MSC_VER
+#define PRId64 "I64d"
+#else
+#define PRId64 "lld"
+#endif
+#endif
 
-#include "zipint.h"
+#ifndef PRIu64
+#ifdef _MSC_VER
+#define PRIu64 "I64u"
+#else
+#define PRIu64 "llu"
+#endif
+#endif
 
-#include "compat.h"
-
-const char *prg;
-
-int
-main(int argc, char *argv[])
-{
-    const char *archive, *name;
-    int method;
-    struct zip *za;
-    char buf[100];
-    int err;
-    zip_int64_t idx;
-
-    prg = argv[0];
-
-    if (argc != 4) {
-	fprintf(stderr, "usage: %s archive file method\n", prg);
-	return 1;
-    }
-
-    archive = argv[1];
-    name = argv[2];
-    method = atoi(argv[3]);
-    
-    if ((za=zip_open(archive, 0, &err)) == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive `%s': %s\n", prg,
-		archive, buf);
-	return 1;
-    }
-    if ((idx=zip_name_locate(za, name, 0)) < 0) {
-	printf("%s: unexpected error while looking for `%s': %s\n",
-	       prg, name, zip_strerror(za));
-	return 1;
-    }
-    if (zip_set_file_compression(za, idx, method, /* XXX: add flags * when supported */ 0) < 0) {
-	fprintf(stderr, "zip_set_file_compression with method `%d' on file %" PRId64 " failed: %s\n",
-		method, idx, zip_strerror(za));
-	return 1;
-    }
-    if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg, archive, zip_strerror(za));
-	return 1;
-    }
-
-    return 0;
-}
+#endif

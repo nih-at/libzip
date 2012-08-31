@@ -39,6 +39,8 @@
 
 #include "zip.h"
 
+#include "compat.h"
+
 int find_fail(struct zip *, const char *, int, int);
 int find_success(struct zip *, const char *, int);
 

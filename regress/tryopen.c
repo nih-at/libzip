@@ -32,15 +32,21 @@
 */
 
 
+#include "config.h"
 
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #ifndef HAVE_GETOPT
 #include "getopt.h"
 #endif
 
 #include "zip.h"
+#include "compat.h"
 
 const char *usage = "usage: %s [-cent] file\n";
 
