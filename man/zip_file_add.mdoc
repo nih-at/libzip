@@ -110,7 +110,7 @@ struct zip_source *s;
 if ((s=zip_source_buffer(archive, buffer, len)) == NULL ||
     zip_file_add(archive, name, s, ZIP_FL_ENC_UTF_8) \*[Lt] 0) {
     zip_source_free(s);
-    printf("error adding file: %s\n", zip_strerror(archive));
+    printf("error adding file: %s\en", zip_strerror(archive));
 }
 .Ed
 .Sh ERRORS
