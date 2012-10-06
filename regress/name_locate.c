@@ -54,6 +54,8 @@ main(int argc, char *argv[])
     int fail, ze;
     struct zip *z;
     const char *archive;
+    struct zip_source *s;
+    const char buf[] = "teststring";
 
     fail = 0;
     prg = argv[0];
@@ -75,6 +77,7 @@ main(int argc, char *argv[])
 
     fail += find_fail(z, "nosuchfile", 0, ZIP_ER_NOENT);
     fail += find_success(z, "test", 0);
+    fail += find_fail(z, "", 0, ZIP_ER_NOENT);
     fail += find_fail(z, "TeSt", 0, ZIP_ER_NOENT);
     fail += find_success(z, "TeSt", ZIP_FL_NOCASE);
     fail += find_success(z, "testdir/test2", 0);
@@ -88,6 +91,12 @@ main(int argc, char *argv[])
     zip_delete(z, 0);
     fail += find_fail(z, "test", 0, ZIP_ER_NOENT);
     fail += find_success(z, "test", ZIP_FL_UNCHANGED);
+    if ((s=zip_source_buffer(z, buf, sizeof(buf), 0)) == NULL ||
+	zip_file_add(z, "new", s, 0) < 0) {
+	zip_source_free(s);
+	printf("error adding file: %s\n", zip_strerror(z));
+    }
+    fail += find_success(z, "new", 0);
     zip_unchange_all(z);
     fail += find_success(z, "test", 0);
 
