@@ -132,6 +132,7 @@ DISABLED_TESTS= \
 	encoding-cp437-all.test \
 	encoding-utf-8.test \
 	open_filename_duplicate.test \
+	open_filename_duplicate_consistency.test \
 	open_incons.test \
 	torrent-new.test
 
