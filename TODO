@@ -20,8 +20,6 @@ API Issues
 Features
 ========
 * function to copy file from one archive to another
-! W Document API changes
-	Compare headers from last release and next for API changes
 * do not compress if storing is smaller
 
 ! W test extra fields api
