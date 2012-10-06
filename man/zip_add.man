@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_ADD 3 "June 23, 2012" NiH
+.TH ZIP_ADD 3 "October 6, 2012" NiH
 .SH "NAME"
 zip_add , \- .Nm zip_replace
 add file to zip archive or replace file in zip archive
@@ -56,7 +56,7 @@ with an empty
 \fBflags\fR
 argument.
 Similarly, the
-zip_file_replace
+zip_replace
 function is the obsolete version of
 zip_file_replace(3).
 It is the same as calling
