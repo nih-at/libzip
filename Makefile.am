@@ -8,7 +8,8 @@ SUBDIRS=lib src man regress
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libzip.pc
 
-EXTRA_DIST=	LICENSE \
+EXTRA_DIST=	API-CHANGES \
+		LICENSE \
 		CMakeLists.txt \
 		cmake-config.h.in \
 		cmake-zipconf.h.in \
