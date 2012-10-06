@@ -80,6 +80,7 @@ TESTS= \
 	delete_renamed_rename.test \
 	encrypt.test \
 	extra_count.test \
+	extra_count_by_id.test \
 	extra_get.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \

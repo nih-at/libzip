@@ -61,6 +61,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tadd_file name file_to_add offset len\n"
     "\tadd_from_zip name archivename index offset len\n"
     "\tcount_extra index flags\n"
+    "\tcount_extra_by_id index id flags\n"
     "\tdelete index\n"
     "\tget_archive_comment\n"
     "\tget_extra index extra_index flags\n"
@@ -227,6 +228,21 @@ main(int argc, char *argv[])
 		printf("Extra field count: %d\n", count);
 	    }
 	    arg += 3;
+	} else if (strcmp(argv[arg], "count_extra_by_id") == 0 && arg+3 < argc) {
+	    zip_int16_t count, eid;
+	    zip_flags_t ceflags = 0;
+	    /* get extra field data */
+	    idx = atoi(argv[arg+1]);
+	    eid = atoi(argv[arg+2]);
+	    ceflags = get_flags(argv[arg+3]);
+	    if ((count=zip_file_extra_fields_count_by_id(za, idx, eid, ceflags)) < 0) {
+		fprintf(stderr, "can't get extra field count for file at index `%d' and for id `%d': %s\n", idx, eid, zip_strerror(za));
+		err = 1;
+		break;
+	    } else {
+		printf("Extra field count: %d\n", count);
+	    }
+	    arg += 4;
 	} else if (strcmp(argv[arg], "delete") == 0 && arg+1 < argc) {
 	    /* delete */
 	    idx = atoi(argv[arg+1]);
