@@ -8,6 +8,10 @@ pages.
 can start with libzip(3), which lists all others.  Example source code
 is in the src/ subdirectory.
 
+  If you have developed an application using libzip, you can find out
+about API changes and how to adapt your code for them in the included
+file API-CHANGES.
+
   For generic installation instructions, see file `INSTALL'.
 Additionally, you'll need zlib (at least version 1.1.2). It comes
 with most operating systems nowadays, or you can get it at
