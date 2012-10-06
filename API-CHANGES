@@ -1,27 +1,118 @@
-0.11
+* libzip API changes
 
-* new type zip_flags_t
+This file describes changes in the libzip API and how to adapt your
+code for them.
 
-All old flags fit; you need to adapt if you were saving flags in a
+You can define ZIP_DISABLE_DEPRECATED before including <zip.h> to hide
+prototypes for deprecated functions, to find out about functions that
+might be removed at some point.
+
+* 0.11
+
+** new type zip_flags_t
+
+The functions which have flags now use the zip_flags_t type for this.
+All old flags fit; you need code only to adapt if you were saving flags in a
 local variable. Use zip_flags_t for such a variable.
+This affects:
+zip_fopen()
+zip_fopen_encrypted()
+zip_fopen_index()
+zip_fopen_index_encrypted()
+zip_get_archive_comment()
+zip_get_archive_flag()
+zip_get_num_entries()
+zip_get_name()
+zip_name_locate()
+zip_set_archive_flag()
+zip_source_zip()
+zip_stat()
+zip_stat_index()
 
-** ZIP_FL_*, ZIP_AFL_* are now unsigned constants
+*** ZIP_FL_*, ZIP_AFL_*, ZIP_STAT_* are now unsigned constants
 
-* integer type size changes
+To match the new zip_flags_t type.
 
-Some return values were not the right size or sign.
+*** zip_add(), zip_add_dir()
 
-** zip_name_locate()
-Return value was int, which can be too small. Now returns zip_int64_t.
+These functions were replaced with zip_file_add() and zip_dir_add(), respectively,
+to add a flags argument.
 
-** zip_get_archive_flag(), zip_set_archive_flag()
-flag argument now unsigned int
+*** zip_rename(), zip_replace()
 
-TO DOCUMENT:
-  . _set_name allows NULL (document)
-  . old extra fields API removed
-  . change in return value of get_comment: NULL if error, else pointer to empty array and len=0
-  . document ZIP_DISABLE_DEPRECATED (libzip man page)
-  . renames of zip_add, zip_rename, zip_replace, zip_add_dir, zip_{set,get}_file_comment
-  . NULL is now allowed for file names (zip_add, zip_add_dir, zip_rename)
+These functions were replaced with zip_file_rename() and zip_file_replace(),
+respectively, to add a flags argument.
+
+*** zip_get_file_comment()
+
+This function was replaced with zip_file_get_comment(); one argument was promoted from
+int to zip_uint32_t, the other is now a zip_flags_t.
+
+*** zip_set_file_comment()
+
+This function was replaced with zip_file_set_comment(); an argument was promoted from
+int to zip_uint16_t, and a zip_flags_t argument was added.
+
+** integer type size changes
+
+Some argument and return values were not the right size or sign.
+
+*** zip_name_locate()
+
+The return value was int, which can be too small. The function now returns zip_int64_t.
+
+
+*** zip_get_num_entries()
+
+The return type is now signed, to allow signaling errors.
+
+*** zip_set_archive_comment()
+
+The last argument changed from int to zip_uint16_t.
+
+** extra field handling rewritten
+
+The zip_get_file_extra() and zip_set_file_extra() functions were removed.
+They only worked on the whole extra field set.
+
+Instead, you can now set, get, count, and delete each extra field separately,
+using the functions:
+zip_file_extra_field_delete()
+zip_file_extra_field_delete_by_id()
+zip_file_extra_field_get()
+zip_file_extra_field_get_by_id()
+zip_file_extra_fields_count()
+zip_file_extra_fields_count_by_id()
+zip_file_extra_field_set()
+Please read the corresponding man pages for details.
+
+** new functions
+
+*** zip_discard()
+
+The new zip_discard() function closes an archive without committing the
+scheduled changes.
+
+*** zip_set_file_compression()
+
+The new zip_set_file_compression() function allows setting compression
+levels for files.
+
+** argument changes
+
+*** file names
+
+File names arguments are now allowed to be NULL to have an empty file name.
+This mostly affects zip_file_add(), zip_dir_add(), and zip_file_rename().
+
+For zip_get_name(), zip_file_get_comment(), and zip_get_archive_comment(), if
+the file name or comment is empty, a string of length 0 is returned.
+NULL is returned for errors only.
+
+Previously, NULL was returned for empty/unset file names and comments and
+errors, leaving no way to differentiate between the two.
+
+/* Local Variables:  */
+/* mode: org         */
+/* End:              */
 
