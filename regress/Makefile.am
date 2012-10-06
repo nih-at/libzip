@@ -79,6 +79,8 @@ TESTS= \
 	delete_multiple_partial.test \
 	delete_renamed_rename.test \
 	encrypt.test \
+	extra_count.test \
+	extra_get.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \
@@ -125,6 +127,9 @@ TESTS= \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
 	torrent-already.test
+
+DISABLED_TESTS_FIX_BEFORE_RELEASE= \
+	extra_count_ignore_zip64.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \

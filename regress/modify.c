@@ -1,5 +1,5 @@
 /*
-  modify.c -- test case for modifying zip archive in multiple ways
+  modify.c -- test tool for modifying zip archive in multiple ways
   Copyright (C) 2012 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -60,12 +60,43 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tadd_dir name\n"
     "\tadd_file name file_to_add offset len\n"
     "\tadd_from_zip name archivename index offset len\n"
+    "\tcount_extra index flags\n"
     "\tdelete index\n"
     "\tget_archive_comment\n"
+    "\tget_extra index extra_index flags\n"
     "\tget_file_comment index\n"
     "\trename index name\n"
     "\tset_file_comment index comment\n"
     "\nThe index is zero-based.\n";
+
+zip_flags_t
+get_flags(const char *arg)
+{
+    zip_flags_t flags = 0;
+    if (strchr(arg, 'c') != NULL)
+	flags |= ZIP_FL_CENTRAL;
+    if (strchr(arg, 'l') != NULL)
+	flags |= ZIP_FL_LOCAL;
+    if (strchr(arg, 'u') != NULL)
+	flags |= ZIP_FL_UNCHANGED;
+    return flags;
+}
+
+void
+hexdump(const zip_uint8_t *data, zip_uint16_t len)
+{
+    zip_uint16_t i;
+
+    if (len <= 0)
+	return;
+
+    printf("0x");
+	
+    for (i=0; i<len; i++)
+	printf("%02x", data[i]);
+
+    return;    
+}
 
 int
 main(int argc, char *argv[])
@@ -182,6 +213,20 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 6;
+	} else if (strcmp(argv[arg], "count_extra") == 0 && arg+2 < argc) {
+	    zip_int16_t count;
+	    zip_flags_t ceflags = 0;
+	    /* get extra field data */
+	    idx = atoi(argv[arg+1]);
+	    ceflags = get_flags(argv[arg+2]);
+	    if ((count=zip_file_extra_fields_count(za, idx, ceflags)) < 0) {
+		fprintf(stderr, "can't get extra field count for file at index `%d': %s\n", idx, zip_strerror(za));
+		err = 1;
+		break;
+	    } else {
+		printf("Extra field count: %d\n", count);
+	    }
+	    arg += 3;
 	} else if (strcmp(argv[arg], "delete") == 0 && arg+1 < argc) {
 	    /* delete */
 	    idx = atoi(argv[arg+1]);
@@ -200,6 +245,24 @@ main(int argc, char *argv[])
 	    else
 		printf("Archive comment: %.*s\n", len, comment);
 	    arg += 1;
+	} else if (strcmp(argv[arg], "get_extra") == 0 && arg+3 < argc) {
+	    zip_flags_t geflags;
+	    zip_uint16_t id, eid, eflen;
+	    const zip_uint8_t *efdata;
+	    /* get extra field data */
+	    idx = atoi(argv[arg+1]);
+	    eid = atoi(argv[arg+2]);
+	    geflags = get_flags(argv[arg+3]);
+	    if ((efdata=zip_file_extra_field_get(za, idx, eid, &id, &eflen, geflags)) == NULL) {
+		fprintf(stderr, "can't get extra field data for file at index `%d', extra field `%d': %s\n", idx, eid, zip_strerror(za));
+		err = 1;
+		break;
+	    } else {
+		printf("Extra field `0x%04x': len %d, data `", id, eflen);
+		hexdump(efdata, eflen);
+		printf("'\n");
+	    }
+	    arg += 4;
 	} else if (strcmp(argv[arg], "get_file_comment") == 0 && arg+1 < argc) {
 	    const char *comment;
 	    int len;
