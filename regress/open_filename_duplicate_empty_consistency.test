@@ -1,0 +1,6 @@
+# zip_open: file opens fine even though same file name (empty file name) appears twice
+program tryopen
+args -c filename_duplicate_empty.zip
+return 1
+file filename_duplicate_empty.zip filename_duplicate_empty.zip filename_duplicate_empty.zip
+stdout some error about duplicate file names

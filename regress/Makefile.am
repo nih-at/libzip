@@ -139,6 +139,8 @@ DISABLED_TESTS= \
 	encoding-utf-8.test \
 	open_filename_duplicate.test \
 	open_filename_duplicate_consistency.test \
+	open_filename_duplicate_empty.test \
+	open_filename_duplicate_empty_consistency.test \
 	open_incons.test \
 	torrent-new.test
 
