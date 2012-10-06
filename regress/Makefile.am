@@ -82,6 +82,7 @@ TESTS= \
 	extra_count.test \
 	extra_count_by_id.test \
 	extra_get.test \
+	extra_get_by_id.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \

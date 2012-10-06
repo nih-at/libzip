@@ -61,10 +61,11 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tadd_file name file_to_add offset len\n"
     "\tadd_from_zip name archivename index offset len\n"
     "\tcount_extra index flags\n"
-    "\tcount_extra_by_id index id flags\n"
+    "\tcount_extra_by_id index extra_id flags\n"
     "\tdelete index\n"
     "\tget_archive_comment\n"
     "\tget_extra index extra_index flags\n"
+    "\tget_extra_by_id index extra_id extra_index flags\n"
     "\tget_file_comment index\n"
     "\trename index name\n"
     "\tset_file_comment index comment\n"
@@ -263,14 +264,14 @@ main(int argc, char *argv[])
 	    arg += 1;
 	} else if (strcmp(argv[arg], "get_extra") == 0 && arg+3 < argc) {
 	    zip_flags_t geflags;
-	    zip_uint16_t id, eid, eflen;
+	    zip_uint16_t id, eidx, eflen;
 	    const zip_uint8_t *efdata;
 	    /* get extra field data */
 	    idx = atoi(argv[arg+1]);
-	    eid = atoi(argv[arg+2]);
+	    eidx = atoi(argv[arg+2]);
 	    geflags = get_flags(argv[arg+3]);
-	    if ((efdata=zip_file_extra_field_get(za, idx, eid, &id, &eflen, geflags)) == NULL) {
-		fprintf(stderr, "can't get extra field data for file at index `%d', extra field `%d': %s\n", idx, eid, zip_strerror(za));
+	    if ((efdata=zip_file_extra_field_get(za, idx, eidx, &id, &eflen, geflags)) == NULL) {
+		fprintf(stderr, "can't get extra field data for file at index `%d', extra field `%d': %s\n", idx, eidx, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
@@ -279,6 +280,25 @@ main(int argc, char *argv[])
 		printf("'\n");
 	    }
 	    arg += 4;
+	} else if (strcmp(argv[arg], "get_extra_by_id") == 0 && arg+4 < argc) {
+	    zip_flags_t geflags;
+	    zip_uint16_t eid, eidx, eflen;
+	    const zip_uint8_t *efdata;
+	    /* get extra field data */
+	    idx = atoi(argv[arg+1]);
+	    eid = atoi(argv[arg+2]);
+	    eidx = atoi(argv[arg+3]);
+	    geflags = get_flags(argv[arg+4]);
+	    if ((efdata=zip_file_extra_field_get_by_id(za, idx, eid, eidx, &eflen, geflags)) == NULL) {
+		fprintf(stderr, "can't get extra field data for file at index `%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+		err = 1;
+		break;
+	    } else {
+		printf("Extra field `0x%04x': len %d, data `", eid, eflen);
+		hexdump(efdata, eflen);
+		printf("'\n");
+	    }
+	    arg += 5;
 	} else if (strcmp(argv[arg], "get_file_comment") == 0 && arg+1 < argc) {
 	    const char *comment;
 	    int len;
