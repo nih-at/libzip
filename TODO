@@ -9,7 +9,9 @@ Encryption
 
 API Issues
 ==========
-! zip_get_archive_comment has int *lenp argument.  Cleaner would be zip_uint32_t *.
+! D zip_get_archive_comment has int *lenp argument.  Cleaner would be zip_uint32_t *.
+	rename and fix.  which other functions for naming consistency?
+! D rename remaining zip_XXX_{file,archive}_* to zip_{file,archive}_XXX_*?
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la ZIP_ER_ZLIB (no detailed info passing)
 * check arguments for every entry point into libzip
@@ -17,10 +19,12 @@ API Issues
 
 Features
 ========
-! function to copy file from one archive to another
+* function to copy file from one archive to another
+! W Document API changes
+	Compare headers from last release and next for API changes
 * do not compress if storing is smaller
 
-! test extra fields api
+! W test extra fields api
 * I/O methods
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
@@ -47,13 +51,12 @@ Features
 
 Bugs
 ====
-! check for off_t overflow
-! fix OpenSUSE i686 regression failures
-! readd zip_get_num_files man page
-! rename remaining zip_XXX_{file,archive}_* to zip_{file,archive}_XXX_*?
-! zip_file_extra_field_{delete,set}*: use dirent changes (create if neccessary)
-! check inconsistent file test case result
-! decide if open_filename_duplicate.test is ok or should report an error
+! D check for off_t overflow
+! D fix OpenSUSE i686 regression failures
+! D readd zip_get_num_files man page
+! D zip_file_extra_field_{delete,set}*: use dirent changes (create if necessary)
+! WD check inconsistent file test case result
+! WD decide if open_filename_duplicate.test is ok or should report an error
 * split zip archive torrentzip state from user requested torrentzip state
 * check for limits imposed by format (central dir size, file size, extra fields, ...)
 * _zip_u2d_time: handle localtime(3) failure
@@ -64,10 +67,6 @@ Bugs
 * cdr == NULL -> ER_NOENT vs. idx > cdir->nentry -> ER_INVAL inconsistent (still there?)
 * torrentzip broken on NetBSD/amd64 6.99
 
-Windows
-=======
-! add getopt.c to tryopen, stat_index, modify, fread (if !HAVE_GETOPT)
-! provide definitions for PRI{d,u}64 (_WIN32 variant: I64{d,u}) if missing
 
 Cleanup
 =======
@@ -78,7 +77,7 @@ Cleanup
 
 Test Case Issues
 ================
-! test reading of Unicode Extra Fields
+! W test reading of Unicode Extra Fields
 * test calls against old API
 * run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)
