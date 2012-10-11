@@ -52,6 +52,8 @@ Features
 
 Bugs
 ====
+! D name_locate("") fails
+! D zip64 extra field not removed from local extra fields (extra_count_ignore_zip64.test)
 ! D check for off_t overflow
 ! D fix OpenSUSE i686 regression failures
 ! D readd zip_get_num_files man page
