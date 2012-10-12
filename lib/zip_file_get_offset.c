@@ -68,5 +68,10 @@ _zip_file_get_offset(struct zip *za, zip_uint64_t idx, struct zip_error *error)
     if ((size=_zip_dirent_size(za->zp, ZIP_EF_LOCAL, error)) < 0)
 	return 0;
 
+    if (offset+(zip_uint32_t)size > ZIP_OFF_MAX) {
+        _zip_error_set(error, ZIP_ER_SEEK, EFBIG);
+        return 0;
+    }
+    
     return offset + (zip_uint32_t)size;
 }

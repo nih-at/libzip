@@ -224,7 +224,7 @@ zip_close(struct zip *za)
 		error = 1;
 		break;
 	    }
-	    if ((fseek(za->zp, offset, SEEK_SET) < 0)) {
+	    if ((fseek(za->zp, (off_t)offset, SEEK_SET) < 0)) {
 		_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 		error = 1;
 		break;
@@ -326,8 +326,8 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	de->uncomp_size = st.size;
 	
 	if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
-	    if ((((de->comp_method == ZIP_CM_DEFLATE || ZIP_CM_IS_DEFAULT(de->comp_method)) && st.size > MAX_DEFLATE_SIZE_32)
-		 || de->comp_method != ZIP_CM_STORE && de->comp_method != ZIP_CM_DEFLATE && !ZIP_CM_IS_DEFAULT(de->comp_method)))
+	    if (( ((de->comp_method == ZIP_CM_DEFLATE || ZIP_CM_IS_DEFAULT(de->comp_method)) && st.size > MAX_DEFLATE_SIZE_32)
+		 || (de->comp_method != ZIP_CM_STORE && de->comp_method != ZIP_CM_DEFLATE && !ZIP_CM_IS_DEFAULT(de->comp_method))))
 		flags |= ZIP_FL_FORCE_ZIP64;
 	}
 	else
@@ -423,7 +423,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
     de->comp_method = st.comp_method;
     de->crc = st.crc;
     de->uncomp_size = st.size;
-    de->comp_size = offend - offdata;
+    de->comp_size = (zip_uint64_t)(offend - offdata);
 
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	_zip_dirent_torrent_normalize(de);
