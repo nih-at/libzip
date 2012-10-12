@@ -406,7 +406,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     size += filename_len+ef_len+comment_len;
 
     if (leftp && (*leftp < size)) {
-	_zip_error_set(error, ZIP_ER_NOZIP, 0);
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
 	return -1;
     }
 
@@ -900,7 +900,10 @@ _zip_read_data(const zip_uint8_t **buf, FILE *fp, size_t len, int nulp, struct z
     else {
 	if (fread(r, 1, len, fp)<len) {
 	    free(r);
-	    _zip_error_set(error, ZIP_ER_READ, errno);
+            if (ferror(fp))
+                _zip_error_set(error, ZIP_ER_READ, errno);
+            else
+                _zip_error_set(error, ZIP_ER_INCONS, 0);
 	    return NULL;
 	}
     }

@@ -223,12 +223,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	return NULL;
     }
 
-    if (tail_len < comment_len) {
-	_zip_error_set(error, ZIP_ER_NOZIP, 0);
-	_zip_cdir_free(cd);
-	return NULL;
-    }
-    if ((flags & ZIP_CHECKCONS) && tail_len != comment_len) {
+    if (tail_len < comment_len || ((flags & ZIP_CHECKCONS) && tail_len != comment_len)) {
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
 	_zip_cdir_free(cd);
 	return NULL;
@@ -273,17 +268,12 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	    return NULL;
 	}
 	i++;
-	
-	if (i == cd->nentry && left > 0) {
-	    /* Infozip extension for more than 64k entries:
-	       nentries wraps around, size indicates correct EOCD */
-	    if (_zip_cdir_grow(cd, cd->nentry+ZIP_UINT16_MAX, error) < 0) {
-		_zip_cdir_free(cd);
-		return NULL;
-	    }
-	}
     }
-    cd->nentry = i;
+    if (i != cd->nentry || ((flags & ZIP_CHECKCONS) && left != 0)) {
+        _zip_error_set(error, ZIP_ER_INCONS, 0);
+        _zip_cdir_free(cd);
+        return NULL;
+    }
     
     return cd;
 }
