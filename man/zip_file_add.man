@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FILE_ADD 3 "June 23, 2012" NiH
+.TH ZIP_FILE_ADD 3 "October 6, 2012" NiH
 .SH "NAME"
 zip_file_add , \- .Nm zip_file_replace
 add file to zip archive or replace file in zip archive
@@ -109,11 +109,12 @@ is set to indicate the error.
 .SH "EXAMPLES"
 .Bd \-literal \-offset indent
 struct zip_source *s;
+const char buf="teststring";
 
-if ((s=zip_source_buffer(archive, buffer, len)) == NULL ||
+if ((s=zip_source_buffer(archive, buffer, sizeof(buf), 0)) == NULL ||
     zip_file_add(archive, name, s, ZIP_FL_ENC_UTF_8) \*[Lt] 0) {
     zip_source_free(s);
-    printf("error adding file: %s\n", zip_strerror(archive));
+    printf("error adding file: %s\en", zip_strerror(archive));
 }
 .Ed
 .SH "ERRORS"
