@@ -124,17 +124,18 @@ zip_close(struct zip *za)
     }
     /* XXX: if no longer torrentzip and archive comment not changed by user, delete it */
 
-    if ((temp=_zip_create_temp_output(za, &out)) == NULL) {
-	free(filelist);
-	return -1;
-    }
-
 
     /* create list of files with index into original archive  */
     for (i=j=0; i<za->nentry; i++) {
 	if (za->entry[i].deleted)
 	    continue;
 
+        if (j >= survivors) {
+            free(filelist);
+            _zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+            return -1;
+        }
+        
 	filelist[j].idx = i;
 	filelist[j].name = zip_get_name(za, i, 0);
 	j++;
@@ -144,6 +145,14 @@ zip_close(struct zip *za)
         _zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
         return -1;
     }
+
+
+    if ((temp=_zip_create_temp_output(za, &out)) == NULL) {
+	free(filelist);
+	return -1;
+    }
+    
+    
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	qsort(filelist, survivors, sizeof(filelist[0]),
 	      _zip_torrentzip_cmp);
