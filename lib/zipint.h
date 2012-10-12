@@ -104,6 +104,7 @@ int _zip_mkstemp(char *);
 #else
 #error size of off_t unknown
 #endif
+#endif
 
 #if SIZEOF_OFF_T == 8
 #define ZIP_OFF_MAX ZIP_INT64_MAX
