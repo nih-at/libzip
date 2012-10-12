@@ -41,7 +41,6 @@ Features
 * zipcmp: add option for file content comparison
 * zipcmp: compare bit flags if paranoid
 * consistency
-  . compare number of entries with cdir value
   . for stored files, test compressed = uncompressed
   . data descriptor
   . local headers come before central dir

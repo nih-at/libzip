@@ -26,6 +26,40 @@ EXTRA_DIST= \
 	firstsecond.zip \
 	firstsecond-split-deflated.zip \
 	firstsecond-split-stored.zip \
+	incons-archive-comment-longer.zip \
+	incons-archive-comment-shorter.zip \
+	incons-cdoffset.zip \
+	incons-central-compression-method.zip \
+	incons-central-compsize-larger-toolarge.zip \
+	incons-central-compsize-larger.zip \
+	incons-central-compsize-smaller.zip \
+	incons-central-crc.zip \
+	incons-central-date.zip \
+	incons-central-file-comment-longer.zip \
+	incons-central-file-comment-shorter.zip \
+	incons-central-magic-bad.zip \
+	incons-central-magic-bad2.zip \
+	incons-central-size-larger.zip \
+	incons-data.zip \
+	incons-ef-local-id-size.zip \
+	incons-ef-local-id.zip \
+	incons-ef-local-incomplete1.zip \
+	incons-ef-local-incomplete2.zip \
+	incons-ef-local-incomplete3.zip \
+	incons-ef-local-incomplete4.zip \
+	incons-ef-local-size.zip \
+	incons-eocd-magic-bad.zip \
+	incons-file-count.zip \
+	incons-local-compression-method.zip \
+	incons-local-compsize-larger.zip \
+	incons-local-compsize-smaller.zip \
+	incons-local-crc.zip \
+	incons-local-filename-long.zip \
+	incons-local-filename-missing.zip \
+	incons-local-filename-short.zip \
+	incons-local-filename.zip \
+	incons-local-magic-bad.zip \
+	incons-local-size-larger.zip \
 	manyfiles-zip.zip \
 	rename_ok.zip \
 	streamed.zip \
@@ -93,6 +127,7 @@ TESTS= \
 	open_empty_2.test \
 	open_extrabytes.test \
 	open_filename_empty.test \
+	open_incons.test \
 	open_many_ok.test \
 	open_new_but_exists.test \
 	open_new_ok.test \
@@ -142,7 +177,6 @@ DISABLED_TESTS= \
 	open_filename_duplicate_consistency.test \
 	open_filename_duplicate_empty.test \
 	open_filename_duplicate_empty_consistency.test \
-	open_incons.test \
 	torrent-new.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src

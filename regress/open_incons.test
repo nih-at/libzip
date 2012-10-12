@@ -5,6 +5,7 @@ file incons-archive-comment-shorter.zzip incons-archive-comment-shorter.zip inco
 file incons-cdoffset.zzip incons-cdoffset.zip incons-cdoffset.zip
 file incons-central-compression-method.zzip incons-central-compression-method.zip incons-central-compression-method.zip
 file incons-central-compsize-larger.zzip incons-central-compsize-larger.zip incons-central-compsize-larger.zip
+file incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger-toolarge.zip incons-central-compsize-larger-toolarge.zip
 file incons-central-compsize-smaller.zzip incons-central-compsize-smaller.zip incons-central-compsize-smaller.zip
 file incons-central-crc.zzip incons-central-crc.zip incons-central-crc.zip
 file incons-central-date.zzip incons-central-date.zip incons-central-date.zip
@@ -39,8 +40,8 @@ stdout opening `incons-archive-comment-longer.zzip' returned error 21
 stdout opening `incons-archive-comment-shorter.zzip' returned error 21
 stdout opening `incons-cdoffset.zzip' returned error 21
 stdout opening `incons-central-compression-method.zzip' returned error 21
-# XXX: analyze
-stdout opening `incons-central-compsize-larger.zzip' returned error 19
+stdout opening `incons-central-compsize-larger-toolarge.zzip' returned error 19
+stdout opening `incons-central-compsize-larger.zzip' returned error 21
 stdout opening `incons-central-compsize-smaller.zzip' returned error 21
 stdout opening `incons-central-crc.zzip' returned error 21
 stdout opening `incons-central-date.zzip' returned error 21
@@ -72,4 +73,4 @@ stdout opening `incons-local-filename-short.zzip' returned error 21
 stdout opening `incons-local-filename.zzip' returned error 21
 stdout opening `incons-local-magic-bad.zzip' returned error 19
 stdout opening `incons-local-size-larger.zzip' returned error 21
-stderr 30 errors
+stderr 31 errors
