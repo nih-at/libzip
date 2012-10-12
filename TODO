@@ -53,6 +53,8 @@ Features
 Bugs
 ====
 ! D zip64 extra field not removed from local extra fields (extra_count_ignore_zip64.test)
+    create function to filter internal efs, use in _zip_dirent_read and _zip_read_local_ef
+    define macro ZIP_EF_IS_INTERNAL, use in zip_file_extra_field_set and filter function
 ! D check for off_t overflow
 ! D fix OpenSUSE i686 regression failures
 ! D readd zip_get_num_files man page

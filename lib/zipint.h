@@ -98,6 +98,13 @@ int _zip_mkstemp(char *);
 #endif
 #endif
 
+#ifndef SIZEOF_OFF_T
+#ifdef OFF_T_LIBZIP
+#define SIZEOF_OFF_T OFF_T_LIBZIP
+#else
+#error size of off_t unknown
+#endif
+
 #if SIZEOF_OFF_T == 8
 #define ZIP_OFF_MAX ZIP_INT64_MAX
 #elif SIZEOF_OFF_T == 4
