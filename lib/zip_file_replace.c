@@ -93,11 +93,15 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
     _zip_unchange_data(za->entry+idx);
 
     if (za->entry[idx].orig != NULL && (za->entry[idx].changes == NULL || (za->entry[idx].changes->changed & ZIP_DIRENT_COMP_METHOD) == 0)) {
-	if (za->entry[idx].changes == NULL)
-	    za->entry[idx].changes = _zip_dirent_clone(za->entry[idx].orig);
+        if (za->entry[idx].changes == NULL) {
+            if ((za->entry[idx].changes=_zip_dirent_clone(za->entry[idx].orig)) == NULL) {
+                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                return -1;
+            }
+        }
 
-	za->entry[idx].changes->comp_method = ZIP_CM_REPLACED_DEFAULT;
-	za->entry[idx].changes->changed |= ZIP_DIRENT_COMP_METHOD;
+        za->entry[idx].changes->comp_method = ZIP_CM_REPLACED_DEFAULT;
+        za->entry[idx].changes->changed |= ZIP_DIRENT_COMP_METHOD;
     }
 	
     za->entry[idx].source = source;

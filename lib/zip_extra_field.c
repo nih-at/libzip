@@ -42,6 +42,31 @@
 
 
 struct zip_extra_field *
+_zip_ef_clone(struct zip_extra_field *ef, struct zip_error *error)
+{
+    struct zip_extra_field *head, *prev, *def;
+    
+    head = prev = NULL;
+    
+    while (ef) {
+        if ((def=_zip_ef_new(ef->id, ef->size, ef->data, ef->flags)) == NULL) {
+            _zip_error_set(error, ZIP_ER_MEMORY, 0);
+            _zip_ef_free(head);
+            return NULL;
+        }
+        
+        if (head == NULL)
+            head = def;
+        if (prev)
+            prev->next = def;
+        prev = def;
+    }
+    
+    return head;
+}
+
+
+struct zip_extra_field *
 _zip_ef_delete_by_id(struct zip_extra_field *ef, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags)
 {
     struct zip_extra_field *head, *prev;
@@ -314,6 +339,7 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
 	}
 	free(ef_raw);
 	
+        /* XXX: remove fields handled internally (Zip64, UTF-8) */
 	e->orig->extra_fields = _zip_ef_merge(e->orig->extra_fields, ef);
     }
 

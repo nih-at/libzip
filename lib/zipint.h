@@ -393,6 +393,7 @@ zip_int32_t _zip_dirent_size(FILE *, zip_uint16_t, struct zip_error *);
 void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, zip_flags_t, struct zip_error *);
 
+struct zip_extra_field *_zip_ef_clone(struct zip_extra_field *, struct zip_error *);
 struct zip_extra_field *_zip_ef_delete_by_id(struct zip_extra_field *, zip_uint16_t, zip_uint16_t, zip_flags_t);
 void _zip_ef_free(struct zip_extra_field *);
 const zip_uint8_t *_zip_ef_get_by_id(struct zip_extra_field *, zip_uint16_t *, zip_uint16_t, zip_uint16_t, zip_flags_t, struct zip_error *);
@@ -416,6 +417,7 @@ const char *_zip_error_strerror(struct zip_error *);
 
 const zip_uint8_t *_zip_extract_extra_field_by_id(struct zip_error *, zip_uint16_t, int, const zip_uint8_t *, zip_uint16_t, zip_uint16_t *);
 
+int _zip_file_extra_field_prepare_for_change(struct zip *, zip_uint64_t);
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
 zip_uint64_t _zip_file_get_offset(struct zip *, zip_uint64_t, struct zip_error *);
 

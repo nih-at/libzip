@@ -85,10 +85,14 @@ zip_file_set_comment(struct zip *za, zip_uint64_t idx,
 	changed = (cstr != NULL);
 	
     if (changed) {
-	if (e->changes == NULL)
-	    e->changes = _zip_dirent_clone(e->orig);
-	e->changes->comment = cstr;
-	e->changes->changed |= ZIP_DIRENT_COMMENT;
+        if (e->changes == NULL) {
+            if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
+                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                return -1;
+            }
+        }
+        e->changes->comment = cstr;
+        e->changes->changed |= ZIP_DIRENT_COMMENT;
     }
     else {
 	_zip_string_free(cstr);

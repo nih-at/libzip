@@ -70,11 +70,15 @@ zip_set_file_compression(struct zip *za, zip_uint64_t idx,
 	}
     }
     else {
-	if (e->changes == NULL)
-	    e->changes = _zip_dirent_clone(e->orig);
+        if (e->changes == NULL) {
+            if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
+                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                return -1;
+            }
 
-	e->changes->comp_method = method;
-	e->changes->changed |= ZIP_DIRENT_COMP_METHOD;
+            e->changes->comp_method = method;
+            e->changes->changed |= ZIP_DIRENT_COMP_METHOD;
+        }
     }
     
     return 0;

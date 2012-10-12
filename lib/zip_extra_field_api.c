@@ -42,9 +42,19 @@ zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id
 {
     struct zip_dirent *de;
     
-    if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
+    if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
+    
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
 
+    if (_zip_file_extra_field_prepare_for_change(za, idx) < 0)
+        return -1;
+    
+    de = za->entry[idx].changes;
+    
     de->extra_fields = _zip_ef_delete_by_id(de->extra_fields, ZIP_EXTRA_FIELD_ALL, ef_idx, flags);
     return 0;
 }
@@ -56,8 +66,18 @@ zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
 {
     struct zip_dirent *de;
     
-    if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
+    if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
+
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
+    
+    if (_zip_file_extra_field_prepare_for_change(za, idx) < 0)
+        return -1;
+    
+    de = za->entry[idx].changes;
 
     de->extra_fields = _zip_ef_delete_by_id(de->extra_fields, ef_id, ef_idx, flags);
     return 0;
@@ -192,13 +212,23 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
     struct zip_extra_field *ef, *ef_prev, *ef_new;
     int i, found;
 
-    if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
+    if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
-
+    
+    if (ZIP_IS_RDONLY(za)) {
+	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	return -1;
+    }
+    
     if (ef_id == ZIP_EF_ZIP64 || ef_id == ZIP_EF_UTF_8_NAME || ef_id == ZIP_EF_UTF_8_COMMENT) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
+
+    if (_zip_file_extra_field_prepare_for_change(za, idx) < 0)
+        return -1;
+    
+    de = za->entry[idx].changes;
 
     if (flags & ZIP_EF_LOCAL)
 	ls = _zip_ef_size(de->extra_fields, ZIP_EF_LOCAL);
@@ -258,3 +288,38 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
     
     return 0;
 }
+
+
+
+int
+_zip_file_extra_field_prepare_for_change(struct zip *za, zip_uint64_t idx)
+{
+    struct zip_entry *e;
+    
+    if (idx >= za->nentry) {
+        _zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+        return -1;
+    }
+    
+    e = za->entry+idx;
+    
+    if (e->changes && (e->changes->changed & ZIP_DIRENT_EXTRA_FIELD))
+        return 0;
+    
+    if (_zip_read_local_ef(za, idx) < 0)
+        return -1;
+    
+    if (e->changes == NULL) {
+        if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
+            _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            return -1;
+        }
+    }
+    
+    if ((e->changes->extra_fields=_zip_ef_clone(e->changes->extra_fields, &za->error)) == 0)
+        return -1;
+    e->changes->changed |= ZIP_DIRENT_EXTRA_FIELD;
+    
+    return 0;
+}
+
