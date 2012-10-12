@@ -270,6 +270,7 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
 		    fprintf(stderr,
 			    "%s: cannot replace `%s' in `%s': %s\n",
 			    prg, fname, tname, zip_strerror(za));
+                    zip_close(zs);
 		    return NULL;
 		}
 		break;
