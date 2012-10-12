@@ -27,7 +27,6 @@
 #cmakedefine INT_LIBZIP ${INT_LIBZIP}
 #cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
 #cmakedefine LONGLONG_LIBZIP ${LONGLONG_LIBZIP}
-#cmakedefine OFF_T_LIBZIP ${OFF_T_LIBZIP}
 
 #if defined(HAVE_STDINT_H_LIBZIP)
 #include <stdint.h>
