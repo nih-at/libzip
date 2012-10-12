@@ -89,10 +89,10 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t fl
 	e->changes->changed &= ~ZIP_DIRENT_FILENAME;
     }
 
-    if (e->orig && e->orig->filename)
+    if (e->orig)
 	changed = !_zip_string_equal(e->orig->filename, str);
     else
-	changed = (str != NULL);
+	changed = 1;
 	
     if (changed) {
         if (e->changes == NULL) {

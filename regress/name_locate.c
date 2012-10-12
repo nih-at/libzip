@@ -91,14 +91,20 @@ main(int argc, char *argv[])
     zip_delete(z, 0);
     fail += find_fail(z, "test", 0, ZIP_ER_NOENT);
     fail += find_success(z, "test", ZIP_FL_UNCHANGED);
-    if ((s=zip_source_buffer(z, buf, sizeof(buf), 0)) == NULL ||
-	zip_file_add(z, "new", s, 0) < 0) {
+    if ((s=zip_source_buffer(z, buf, sizeof(buf), 0)) == NULL || zip_file_add(z, "new", s, 0) < 0) {
 	zip_source_free(s);
 	printf("error adding file: %s\n", zip_strerror(z));
     }
     fail += find_success(z, "new", 0);
+    fail += find_fail(z, "new", ZIP_FL_UNCHANGED, ZIP_ER_NOENT);
+    if ((s=zip_source_buffer(z, buf, sizeof(buf), 0)) == NULL || zip_file_add(z, "", s, 0) < 0) {
+	zip_source_free(s);
+	printf("error adding file: %s\n", zip_strerror(z));
+    }
+    fail += find_success(z, "", 0);
     zip_unchange_all(z);
     fail += find_success(z, "test", 0);
+    fail += find_fail(z, "new", 0, ZIP_ER_NOENT);
 
     if (zip_close(z) == -1) {
 	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg,
