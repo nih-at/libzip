@@ -216,7 +216,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
     cdp = eocd + 20;
     comment_len = _zip_read2(&cdp);
 
-    if (((zip_uint64_t)cd->offset)+cd->size > (zip_uint64_t)(buf_offset + (eocd-buf))) {
+    if ((zip_uint64_t)cd->offset+(zip_uint64_t)cd->size > (zip_uint64_t)buf_offset + (zip_uint64_t)(eocd-buf)) {
 	/* cdir spans past EOCD record */
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
 	_zip_cdir_free(cd);
@@ -259,7 +259,7 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, unsigned char *eoc
 	}
     }
 
-    left = cd->size;
+    left = (zip_uint64_t)cd->size;
     i=0;
     while (i<cd->nentry && left > 0) {
 	if ((cd->entry[i].orig=_zip_dirent_new()) == NULL
@@ -317,7 +317,6 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
 	    return -1;
 	}
 	
-        /* XXX: check for off_t overflow */
 	if (fseeko(fp, (off_t)cd->entry[i].orig->offset, SEEK_SET) != 0) {
 	    _zip_error_set(error, ZIP_ER_SEEK, errno);
 	    return -1;
@@ -368,8 +367,7 @@ _zip_check_torrentzip(struct zip *za, const struct zip_cdir *cdir)
     if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
 	return;
 
-    /* XXX: check off_t overflow */
-    if (_zip_filerange_crc(za->zp, cdir->offset, (off_t)cdir->size, &crc_got, NULL) < 0)
+    if (_zip_filerange_crc(za->zp, cdir->offset, cdir->size, &crc_got, NULL) < 0)
 	return;
 
     if (crc_got == crc_should)
@@ -594,6 +592,11 @@ _zip_read_eocd(const unsigned char *eocd, unsigned char *buf, off_t buf_offset, 
     size = _zip_read4(&cdp);
     offset = _zip_read4(&cdp);
 
+    if (size > ZIP_OFF_MAX || offset > ZIP_OFF_MAX || offset+size > ZIP_OFF_MAX) {
+        _zip_error_set(error, ZIP_ER_SEEK, EFBIG);
+        return NULL;
+    }
+    
     if (offset+size > (zip_uint64_t)(buf_offset + (eocd-buf))) {
 	/* cdir spans past EOCD record */
 	_zip_error_set(error, ZIP_ER_INCONS, 0);
@@ -603,8 +606,7 @@ _zip_read_eocd(const unsigned char *eocd, unsigned char *buf, off_t buf_offset, 
     if ((cd=_zip_cdir_new(nentry, error)) == NULL)
 	return NULL;
 
-    cd->size = size;
-    /* XXX: check for off_t overflow */
+    cd->size = (off_t)size;
     cd->offset = (off_t)offset;
     
     return cd;
@@ -687,7 +689,7 @@ _zip_read_eocd64(FILE *f, const zip_uint8_t *eocd64loc, zip_uint8_t *buf,
     size = _zip_read8(&cdp);
     offset = _zip_read8(&cdp);
 
-    if (size > ZIP_OFF_MAX || offset > ZIP_OFF_MAX) {
+    if (size > ZIP_OFF_MAX || offset > ZIP_OFF_MAX || offset+size > ZIP_OFF_MAX) {
         _zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return NULL;
     }
@@ -700,7 +702,7 @@ _zip_read_eocd64(FILE *f, const zip_uint8_t *eocd64loc, zip_uint8_t *buf,
 	return NULL;
 
     
-    cd->size = size;
+    cd->size = (off_t)size;
     cd->offset = (off_t)offset;
 
     return cd;

@@ -58,7 +58,6 @@ _zip_file_get_offset(struct zip *za, zip_uint64_t idx, struct zip_error *error)
 
     offset = za->entry[idx].orig->offset;
 
-    /* XXX: check for off_t overflow */
     if (fseeko(za->zp, (off_t)offset, SEEK_SET) != 0) {
 	_zip_error_set(error, ZIP_ER_SEEK, errno);
 	return 0;

@@ -488,6 +488,13 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 	}
     }
     
+    if (!local) {
+        if (zde->offset > ZIP_OFF_MAX) {
+            _zip_error_set(error, ZIP_ER_SEEK, EFBIG);
+            return -1;
+        }
+    }
+    
     zde->extra_fields = _zip_ef_remove_internal(zde->extra_fields);
 
     if (bufp)

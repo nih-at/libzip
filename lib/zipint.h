@@ -310,7 +310,7 @@ struct zip_cdir {
     zip_uint64_t nentry;			/* number of entries */
     zip_uint64_t nentry_alloc;			/* number of entries allocated */
 
-    zip_uint64_t size;		 		/* size of central directory */
+    off_t size;                                 /* size of central directory */
     off_t offset;		 		/* offset of central directory in file */
     struct zip_string *comment;			/* zip archive comment */
 };

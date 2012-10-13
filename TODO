@@ -51,7 +51,6 @@ Features
 
 Bugs
 ====
-! D check for off_t overflow
 ! D fix OpenSUSE i686 regression failures
 * fix open_filename_duplicate_consistency.test to fail
 * split zip archive torrentzip state from user requested torrentzip state

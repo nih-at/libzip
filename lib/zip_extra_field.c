@@ -262,6 +262,7 @@ _zip_ef_remove_internal(struct zip_extra_field *ef)
     struct zip_extra_field *prev, *next;
     
     ef_head = prev = ef;
+    prev = NULL;
     
     while (ef) {
         if (ZIP_EF_IS_INTERNAL(ef->id)) {
@@ -336,7 +337,6 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
 	return 0;
 
 
-    /* XXX: check for off_t overflow */
     if (fseeko(za->zp, (off_t)(e->orig->offset + 26), SEEK_SET) < 0) {
 	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	return -1;
