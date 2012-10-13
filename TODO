@@ -73,7 +73,6 @@ Cleanup
 
 Test Case Issues
 ================
-! W extra_count_ignore_zip64.test: lc count is 3, not 4 (Info-ZIP UNIX merged?)
 * test calls against old API
 * run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)

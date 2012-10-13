@@ -115,6 +115,7 @@ TESTS= \
 	encrypt.test \
 	extra_count.test \
 	extra_count_by_id.test \
+	extra_count_ignore_zip64.test \
 	extra_get.test \
 	extra_get_by_id.test \
 	file_comment_encmismatch.test \
@@ -164,9 +165,6 @@ TESTS= \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
 	torrent-already.test
-
-DISABLED_TESTS_FIX_BEFORE_RELEASE= \
-	extra_count_ignore_zip64.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \
