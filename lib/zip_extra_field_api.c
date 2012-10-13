@@ -220,7 +220,7 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
 	return -1;
     }
     
-    if (ef_id == ZIP_EF_ZIP64 || ef_id == ZIP_EF_UTF_8_NAME || ef_id == ZIP_EF_UTF_8_COMMENT) {
+    if (ZIP_EF_IS_INTERNAL(ef_id)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }

@@ -486,9 +486,9 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 	    if (zde->disk_number == ZIP_UINT16_MAX)
 		zde->disk_number = _zip_read4(&ef);
 	}
-
-	zde->extra_fields = _zip_ef_delete_by_id(zde->extra_fields, ZIP_EF_ZIP64, ZIP_EXTRA_FIELD_ALL, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL);
     }
+    
+    zde->extra_fields = _zip_ef_remove_internal(zde->extra_fields);
 
     if (bufp)
       *bufp = cur;
@@ -523,8 +523,6 @@ _zip_dirent_process_ef_utf_8(struct zip_dirent *de, zip_uint16_t id, struct zip_
 	}
     }
     
-    de->extra_fields = _zip_ef_delete_by_id(de->extra_fields, id, ZIP_EXTRA_FIELD_ALL, ZIP_EF_BOTH);
-
     return str;
 }
 

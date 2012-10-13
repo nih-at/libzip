@@ -136,6 +136,7 @@ int _zip_mkstemp(char *);
 #define ZIP_EF_UTF_8_NAME	0x7075
 #define ZIP_EF_ZIP64		0x0001
 
+#define ZIP_EF_IS_INTERNAL(id)	((id) == ZIP_EF_UTF_8_COMMENT || (id) == ZIP_EF_UTF_8_NAME || (id) == ZIP_EF_ZIP64)
 
 
 /* This section contains API that won't materialize like this.  It's
@@ -408,6 +409,7 @@ const zip_uint8_t *_zip_ef_get_by_id(struct zip_extra_field *, zip_uint16_t *, z
 struct zip_extra_field *_zip_ef_merge(struct zip_extra_field *, struct zip_extra_field *);
 struct zip_extra_field *_zip_ef_new(zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_flags_t);
 struct zip_extra_field *_zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_flags_t, struct zip_error *);
+struct zip_extra_field *_zip_ef_remove_internal(struct zip_extra_field *);
 zip_uint16_t _zip_ef_size(struct zip_extra_field *, zip_flags_t);
 void _zip_ef_write(struct zip_extra_field *, zip_flags_t, FILE *);
 

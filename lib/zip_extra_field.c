@@ -255,6 +255,35 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, stru
 
 
 
+struct zip_extra_field *
+_zip_ef_remove_internal(struct zip_extra_field *ef)
+{
+    struct zip_extra_field *ef_head;
+    struct zip_extra_field *prev, *next;
+    
+    ef_head = prev = ef;
+    
+    while (ef) {
+        if (ZIP_EF_IS_INTERNAL(ef->id)) {
+            next = ef->next;
+            if (ef_head == ef)
+                ef_head = next;
+            ef->next = NULL;
+            _zip_ef_free(ef);
+            if (prev)
+                prev->next = next;
+            ef = next;
+        }
+        else {
+            prev = ef;
+            ef = ef->next;
+        }
+    }
+    
+    return ef_head;
+}
+
+
 zip_uint16_t
 _zip_ef_size(struct zip_extra_field *ef, zip_flags_t flags)
 {
@@ -339,7 +368,7 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
 	}
 	free(ef_raw);
 	
-        /* XXX: remove fields handled internally (Zip64, UTF-8) */
+        ef = _zip_ef_remove_internal(ef);
 	e->orig->extra_fields = _zip_ef_merge(e->orig->extra_fields, ef);
     }
 
