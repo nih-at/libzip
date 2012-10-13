@@ -53,7 +53,6 @@ Bugs
 ====
 ! D check for off_t overflow
 ! D fix OpenSUSE i686 regression failures
-! D readd zip_get_num_files man page
 * fix open_filename_duplicate_consistency.test to fail
 * split zip archive torrentzip state from user requested torrentzip state
 * check for limits imposed by format (central dir size, file size, extra fields, ...)
