@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FILE_EXTRA_FIELDS_COUNT 3 "June 23, 2012" NiH
+.TH ZIP_FILE_EXTRA_FIELDS_COUNT 3 "October 14, 2012" NiH
 .SH "NAME"
 zip_file_extra_fields_count , \- .Nm zip_file_extra_fields_count_by_id
 count extra fields for file in zip
@@ -71,6 +71,11 @@ function counts the extra fields with ID (two-byte signature)
 \fBextra_field_id\fR
 The other arguments are the same as for
 zip_file_extra_fields_count.
+.PP
+Please note that the counts for local header and central directory
+extra fields do not need to sum up to the same value as when given
+\fBZIP_FL_CENTRAL|ZIP_FL_LOCAL\fR
+at once.
 .SH "RETURN VALUES"
 Upon successful completion, the requested number of extra fields is returned.
 Otherwise, \-1 is returned and the error code in
