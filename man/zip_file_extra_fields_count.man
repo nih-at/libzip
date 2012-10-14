@@ -56,10 +56,10 @@ The following flags are supported:
 .RS
 .TP 18
 \fBZIP_FL_CENTRAL\fR
-Count only extra fields from the archive's central directory.
+Count extra fields from the archive's central directory.
 .TP 18
 \fBZIP_FL_LOCAL\fR
-Count only extra fields from the local file headers.
+Count extra fields from the local file headers.
 .TP 18
 \fBZIP_FL_UNCHANGED\fR
 Count the original unchanged extra fields, ignoring any changes made.
@@ -68,14 +68,19 @@ Count the original unchanged extra fields, ignoring any changes made.
 The
 zip_file_extra_fields_count_by_id
 function counts the extra fields with ID (two-byte signature)
-\fBextra_field_id\fR
+\fBextra_field_id.\fR
 The other arguments are the same as for
 zip_file_extra_fields_count.
 .PP
-Please note that the counts for local header and central directory
-extra fields do not need to sum up to the same value as when given
+Extra fields that are the same in the central directory and the local file
+header are merged into one.
+Therefore, the counts with
+\fBZIP_FL_CENTRAL\fR
+and
+\fBZIP_FL_LOCAL\fR
+do not need to add up to the same value as when given
 \fBZIP_FL_CENTRAL|ZIP_FL_LOCAL\fR
-at once.
+at the same time.
 .SH "RETURN VALUES"
 Upon successful completion, the requested number of extra fields is returned.
 Otherwise, \-1 is returned and the error code in
