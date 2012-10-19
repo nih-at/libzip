@@ -71,13 +71,14 @@ The other arguments are the same as for
 .Fn zip_file_extra_fields_count .
 .Pp
 Extra fields that are the same in the central directory and the local file
-header are merged into one.  Therefore, the counts with
-.Dv  ZIP_FL_CENTRAL
+header are merged into one.
+Therefore, the counts with
+.Dv ZIP_FL_CENTRAL
 and
 .Dv ZIP_FL_LOCAL
 do not need to add up to the same value as when given
 .Dv ZIP_FL_CENTRAL|ZIP_FL_LOCAL
-at once.
+at the same time.
 .Sh RETURN VALUES
 Upon successful completion, the requested number of extra fields is returned.
 Otherwise, \-1 is returned and the error code in
