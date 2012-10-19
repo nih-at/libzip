@@ -683,8 +683,8 @@
 		4B01D68B15B2F3F1002D5007 /* libzip Mac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "libzip Mac.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D6FD15B2F4B1002D5007 /* zipmerge */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipmerge; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D70815B2F4CF002D5007 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
-		4B01D71315B2F4EB002D5007 /* zipmerge copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "zipmerge copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B01D71E15B2F4F7002D5007 /* zipcmp copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "zipcmp copy"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B01D71315B2F4EB002D5007 /* zipcmp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipcmp; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B01D71E15B2F4F7002D5007 /* ziptorrent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptorrent; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D72115B2F572002D5007 /* zipcmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = zipcmp.c; path = ../src/zipcmp.c; sourceTree = "<group>"; };
 		4B01D72215B2F572002D5007 /* zipmerge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = zipmerge.c; path = ../src/zipmerge.c; sourceTree = "<group>"; };
 		4B01D72315B2F572002D5007 /* ziptorrent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ziptorrent.c; path = ../src/ziptorrent.c; sourceTree = "<group>"; };
@@ -764,18 +764,18 @@
 		4BACD58315BC2AEF00920691 /* stat_index.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = stat_index.c; path = ../regress/stat_index.c; sourceTree = "<group>"; };
 		4BACD58415BC2AEF00920691 /* tryopen.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = tryopen.c; path = ../regress/tryopen.c; sourceTree = "<group>"; };
 		4BACD58915BC2CEA00920691 /* modify */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = modify; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD5A415BC2D4C00920691 /* modify copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "modify copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD5C115BC2DC900920691 /* add_from_buffer copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "add_from_buffer copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD5D015BC2DF200920691 /* add_from_filep copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "add_from_filep copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD5DF15BC2F3700920691 /* modify copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "modify copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD5EE15BC2F6600920691 /* modify copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "modify copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD5FD15BC2F9500920691 /* name_locate copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "name_locate copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD60A15BC2FA300920691 /* set_comment_ copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set_comment_ copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD61715BC2FA900920691 /* set_comment_ copy 2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set_comment_ copy 2"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD62415BC2FAC00920691 /* set_comment_ copy 3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set_comment_ copy 3"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD63115BC2FAE00920691 /* set_comment_ copy 4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set_comment_ copy 4"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD64215BC2FEF00920691 /* set_comment_ copy 4 copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set_comment_ copy 4 copy"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BACD65015BC301300920691 /* set_comment_ copy 4 copy copy */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set_comment_ copy 4 copy copy"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD5A415BC2D4C00920691 /* add_from_buffer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = add_from_buffer; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD5C115BC2DC900920691 /* add_from_filep */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = add_from_filep; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD5D015BC2DF200920691 /* fopen_unchanged */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fopen_unchanged; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD5DF15BC2F3700920691 /* fread */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fread; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD5EE15BC2F6600920691 /* name_locate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = name_locate; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD5FD15BC2F9500920691 /* set_comment_all */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_comment_all; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD60A15BC2FA300920691 /* set_comment_localonly */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_comment_localonly; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD61715BC2FA900920691 /* set_comment_removeglobal */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_comment_removeglobal; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD62415BC2FAC00920691 /* set_comment_revert */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_comment_revert; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD63115BC2FAE00920691 /* set_compression */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_compression; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD64215BC2FEF00920691 /* stat_index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stat_index; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD65015BC301300920691 /* tryopen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tryopen; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDC71E015B182B200236D3C /* libzip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libzip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDC71F115B1B25E00236D3C /* zip_add_dir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_add_dir.c; path = ../lib/zip_add_dir.c; sourceTree = "<group>"; };
 		4BDC71F215B1B25E00236D3C /* zip_add_entry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_add_entry.c; path = ../lib/zip_add_entry.c; sourceTree = "<group>"; };
@@ -1155,21 +1155,21 @@
 				4BDC71E015B182B200236D3C /* libzip.framework */,
 				4B01D68B15B2F3F1002D5007 /* libzip Mac.framework */,
 				4B01D6FD15B2F4B1002D5007 /* zipmerge */,
-				4B01D71315B2F4EB002D5007 /* zipmerge copy */,
-				4B01D71E15B2F4F7002D5007 /* zipcmp copy */,
+				4B01D71315B2F4EB002D5007 /* zipcmp */,
+				4B01D71E15B2F4F7002D5007 /* ziptorrent */,
 				4BACD58915BC2CEA00920691 /* modify */,
-				4BACD5A415BC2D4C00920691 /* modify copy */,
-				4BACD5C115BC2DC900920691 /* add_from_buffer copy */,
-				4BACD5D015BC2DF200920691 /* add_from_filep copy */,
-				4BACD5DF15BC2F3700920691 /* modify copy */,
-				4BACD5EE15BC2F6600920691 /* modify copy */,
-				4BACD5FD15BC2F9500920691 /* name_locate copy */,
-				4BACD60A15BC2FA300920691 /* set_comment_ copy */,
-				4BACD61715BC2FA900920691 /* set_comment_ copy 2 */,
-				4BACD62415BC2FAC00920691 /* set_comment_ copy 3 */,
-				4BACD63115BC2FAE00920691 /* set_comment_ copy 4 */,
-				4BACD64215BC2FEF00920691 /* set_comment_ copy 4 copy */,
-				4BACD65015BC301300920691 /* set_comment_ copy 4 copy copy */,
+				4BACD5A415BC2D4C00920691 /* add_from_buffer */,
+				4BACD5C115BC2DC900920691 /* add_from_filep */,
+				4BACD5D015BC2DF200920691 /* fopen_unchanged */,
+				4BACD5DF15BC2F3700920691 /* fread */,
+				4BACD5EE15BC2F6600920691 /* name_locate */,
+				4BACD5FD15BC2F9500920691 /* set_comment_all */,
+				4BACD60A15BC2FA300920691 /* set_comment_localonly */,
+				4BACD61715BC2FA900920691 /* set_comment_removeglobal */,
+				4BACD62415BC2FAC00920691 /* set_comment_revert */,
+				4BACD63115BC2FAE00920691 /* set_compression */,
+				4BACD64215BC2FEF00920691 /* stat_index */,
+				4BACD65015BC301300920691 /* tryopen */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1361,7 +1361,7 @@
 			);
 			name = zipcmp;
 			productName = zipmerge;
-			productReference = 4B01D71315B2F4EB002D5007 /* zipmerge copy */;
+			productReference = 4B01D71315B2F4EB002D5007 /* zipcmp */;
 			productType = "com.apple.product-type.tool";
 		};
 		4B01D71515B2F4F7002D5007 /* ziptorrent */ = {
@@ -1379,7 +1379,7 @@
 			);
 			name = ziptorrent;
 			productName = zipmerge;
-			productReference = 4B01D71E15B2F4F7002D5007 /* zipcmp copy */;
+			productReference = 4B01D71E15B2F4F7002D5007 /* ziptorrent */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD58815BC2CEA00920691 /* modify */ = {
@@ -1415,7 +1415,7 @@
 			);
 			name = add_from_buffer;
 			productName = modify;
-			productReference = 4BACD5A415BC2D4C00920691 /* modify copy */;
+			productReference = 4BACD5A415BC2D4C00920691 /* add_from_buffer */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5B515BC2DC900920691 /* add_from_filep */ = {
@@ -1433,7 +1433,7 @@
 			);
 			name = add_from_filep;
 			productName = modify;
-			productReference = 4BACD5C115BC2DC900920691 /* add_from_buffer copy */;
+			productReference = 4BACD5C115BC2DC900920691 /* add_from_filep */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5C415BC2DF200920691 /* fopen_unchanged */ = {
@@ -1451,7 +1451,7 @@
 			);
 			name = fopen_unchanged;
 			productName = modify;
-			productReference = 4BACD5D015BC2DF200920691 /* add_from_filep copy */;
+			productReference = 4BACD5D015BC2DF200920691 /* fopen_unchanged */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5D315BC2F3700920691 /* fread */ = {
@@ -1469,7 +1469,7 @@
 			);
 			name = fread;
 			productName = modify;
-			productReference = 4BACD5DF15BC2F3700920691 /* modify copy */;
+			productReference = 4BACD5DF15BC2F3700920691 /* fread */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5E215BC2F6600920691 /* name_locate */ = {
@@ -1487,7 +1487,7 @@
 			);
 			name = name_locate;
 			productName = modify;
-			productReference = 4BACD5EE15BC2F6600920691 /* modify copy */;
+			productReference = 4BACD5EE15BC2F6600920691 /* name_locate */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5F115BC2F9500920691 /* set_comment_all */ = {
@@ -1505,7 +1505,7 @@
 			);
 			name = set_comment_all;
 			productName = modify;
-			productReference = 4BACD5FD15BC2F9500920691 /* name_locate copy */;
+			productReference = 4BACD5FD15BC2F9500920691 /* set_comment_all */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5FF15BC2FA300920691 /* set_comment_localonly */ = {
@@ -1523,7 +1523,7 @@
 			);
 			name = set_comment_localonly;
 			productName = modify;
-			productReference = 4BACD60A15BC2FA300920691 /* set_comment_ copy */;
+			productReference = 4BACD60A15BC2FA300920691 /* set_comment_localonly */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD60C15BC2FA900920691 /* set_comment_removeglobal */ = {
@@ -1541,7 +1541,7 @@
 			);
 			name = set_comment_removeglobal;
 			productName = modify;
-			productReference = 4BACD61715BC2FA900920691 /* set_comment_ copy 2 */;
+			productReference = 4BACD61715BC2FA900920691 /* set_comment_removeglobal */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD61915BC2FAC00920691 /* set_comment_revert */ = {
@@ -1559,7 +1559,7 @@
 			);
 			name = set_comment_revert;
 			productName = modify;
-			productReference = 4BACD62415BC2FAC00920691 /* set_comment_ copy 3 */;
+			productReference = 4BACD62415BC2FAC00920691 /* set_comment_revert */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD62615BC2FAE00920691 /* set_compression */ = {
@@ -1577,7 +1577,7 @@
 			);
 			name = set_compression;
 			productName = modify;
-			productReference = 4BACD63115BC2FAE00920691 /* set_comment_ copy 4 */;
+			productReference = 4BACD63115BC2FAE00920691 /* set_compression */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD63715BC2FEF00920691 /* stat_index */ = {
@@ -1595,7 +1595,7 @@
 			);
 			name = stat_index;
 			productName = modify;
-			productReference = 4BACD64215BC2FEF00920691 /* set_comment_ copy 4 copy */;
+			productReference = 4BACD64215BC2FEF00920691 /* stat_index */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD64515BC301300920691 /* tryopen */ = {
@@ -1613,7 +1613,7 @@
 			);
 			name = tryopen;
 			productName = modify;
-			productReference = 4BACD65015BC301300920691 /* set_comment_ copy 4 copy copy */;
+			productReference = 4BACD65015BC301300920691 /* tryopen */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BDC71DF15B182B200236D3C /* libzip */ = {
@@ -2202,7 +2202,6 @@
 		4B01D69C15B2F3F1002D5007 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2223,10 +2222,8 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				INFOPLIST_FILE = Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				VERSION_INFO_BUILDER = "";
 				VERSION_INFO_FILE = "";
 				WRAPPER_EXTENSION = framework;
@@ -2236,7 +2233,6 @@
 		4B01D69D15B2F3F1002D5007 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2258,9 +2254,8 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				INFOPLIST_FILE = Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				VERSION_INFO_BUILDER = "";
 				VERSION_INFO_FILE = "";
 				WRAPPER_EXTENSION = framework;
@@ -2271,7 +2266,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -2282,10 +2276,8 @@
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2293,7 +2285,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2305,9 +2296,8 @@
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -2315,13 +2305,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "zipmerge copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = zipcmp;
 			};
 			name = Debug;
 		};
@@ -2329,13 +2316,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "zipmerge copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = zipcmp;
 			};
 			name = Release;
 		};
@@ -2343,13 +2328,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "zipcmp copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = ziptorrent;
 			};
 			name = Debug;
 		};
@@ -2357,13 +2339,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "zipcmp copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = ziptorrent;
 			};
 			name = Release;
 		};
@@ -2399,13 +2379,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2413,13 +2390,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -2427,13 +2402,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "modify copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = add_from_buffer;
 			};
 			name = Debug;
 		};
@@ -2441,13 +2413,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "modify copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = add_from_buffer;
 			};
 			name = Release;
 		};
@@ -2469,13 +2439,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "add_from_buffer copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = add_from_filep;
 			};
 			name = Debug;
 		};
@@ -2483,13 +2450,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "add_from_buffer copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = add_from_filep;
 			};
 			name = Release;
 		};
@@ -2497,13 +2462,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "add_from_filep copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = fopen_unchanged;
 			};
 			name = Debug;
 		};
@@ -2511,13 +2473,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "add_from_filep copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = fopen_unchanged;
 			};
 			name = Release;
 		};
@@ -2525,13 +2485,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "modify copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = fread;
 			};
 			name = Debug;
 		};
@@ -2539,13 +2496,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "modify copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = fread;
 			};
 			name = Release;
 		};
@@ -2553,13 +2508,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "modify copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = name_locate;
 			};
 			name = Debug;
 		};
@@ -2567,13 +2519,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "modify copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = name_locate;
 			};
 			name = Release;
 		};
@@ -2581,13 +2531,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "name_locate copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_all;
 			};
 			name = Debug;
 		};
@@ -2595,13 +2542,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "name_locate copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_all;
 			};
 			name = Release;
 		};
@@ -2609,13 +2554,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "set_comment_ copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_localonly;
 			};
 			name = Debug;
 		};
@@ -2623,13 +2565,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "set_comment_ copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_localonly;
 			};
 			name = Release;
 		};
@@ -2637,13 +2577,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "set_comment_ copy 2";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_removeglobal;
 			};
 			name = Debug;
 		};
@@ -2651,13 +2588,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "set_comment_ copy 2";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_removeglobal;
 			};
 			name = Release;
 		};
@@ -2665,13 +2600,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "set_comment_ copy 3";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_revert;
 			};
 			name = Debug;
 		};
@@ -2679,13 +2611,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "set_comment_ copy 3";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_comment_revert;
 			};
 			name = Release;
 		};
@@ -2693,13 +2623,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "set_comment_ copy 4";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_compression;
 			};
 			name = Debug;
 		};
@@ -2707,13 +2634,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "set_comment_ copy 4";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = set_compression;
 			};
 			name = Release;
 		};
@@ -2721,13 +2646,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "set_comment_ copy 4 copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = stat_index;
 			};
 			name = Debug;
 		};
@@ -2735,13 +2657,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "set_comment_ copy 4 copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = stat_index;
 			};
 			name = Release;
 		};
@@ -2749,13 +2669,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "set_comment_ copy 4 copy copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = tryopen;
 			};
 			name = Debug;
 		};
@@ -2763,13 +2680,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "set_comment_ copy 4 copy copy";
-				SDKROOT = macosx;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
+				PRODUCT_NAME = tryopen;
 			};
 			name = Release;
 		};
@@ -2777,7 +2692,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2793,7 +2708,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				SDKROOT = iphoneos;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2801,7 +2718,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2835,8 +2752,6 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
@@ -2864,7 +2779,6 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
