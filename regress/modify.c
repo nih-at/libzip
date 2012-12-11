@@ -68,6 +68,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tget_extra_by_id index extra_id extra_index flags\n"
     "\tget_file_comment index\n"
     "\trename index name\n"
+    "\tset_extra index extra_id extra_index flags value\n"
     "\tset_file_comment index comment\n"
     "\nThe index is zero-based.\n";
 
@@ -218,7 +219,6 @@ main(int argc, char *argv[])
 	} else if (strcmp(argv[arg], "count_extra") == 0 && arg+2 < argc) {
 	    zip_int16_t count;
 	    zip_flags_t ceflags = 0;
-	    /* get extra field data */
 	    idx = atoi(argv[arg+1]);
 	    ceflags = get_flags(argv[arg+2]);
 	    if ((count=zip_file_extra_fields_count(za, idx, ceflags)) < 0) {
@@ -232,7 +232,6 @@ main(int argc, char *argv[])
 	} else if (strcmp(argv[arg], "count_extra_by_id") == 0 && arg+3 < argc) {
 	    zip_int16_t count, eid;
 	    zip_flags_t ceflags = 0;
-	    /* get extra field data */
 	    idx = atoi(argv[arg+1]);
 	    eid = atoi(argv[arg+2]);
 	    ceflags = get_flags(argv[arg+3]);
@@ -284,7 +283,6 @@ main(int argc, char *argv[])
 	    zip_flags_t geflags;
 	    zip_uint16_t eid, eidx, eflen;
 	    const zip_uint8_t *efdata;
-	    /* get extra field data */
 	    idx = atoi(argv[arg+1]);
 	    eid = atoi(argv[arg+2]);
 	    eidx = atoi(argv[arg+3]);
@@ -322,6 +320,21 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 3;
+	} else if (strcmp(argv[arg], "set_extra") == 0 && arg+5 < argc) {
+	    zip_flags_t geflags;
+	    zip_uint16_t eid, eidx, eflen;
+	    const zip_uint8_t *efdata;
+	    idx = atoi(argv[arg+1]);
+	    eid = atoi(argv[arg+2]);
+	    eidx = atoi(argv[arg+3]);
+	    geflags = get_flags(argv[arg+4]);
+	    efdata = argv[arg+5];
+	    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, strlen(efdata), geflags)) < 0) {
+		fprintf(stderr, "can't set extra field data for file at index `%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+		err = 1;
+		break;
+	    }
+	    arg += 6;
 	} else if (strcmp(argv[arg], "set_file_comment") == 0 && arg+2 < argc) {
 	    /* set file comment */
 	    idx = atoi(argv[arg+1]);
