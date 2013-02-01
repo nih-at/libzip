@@ -630,6 +630,13 @@ _zip_create_temp_output(struct zip *za, FILE **outp)
 static int
 _zip_torrentzip_cmp(const void *a, const void *b)
 {
-    return strcasecmp(((const struct zip_filelist *)a)->name,
-		      ((const struct zip_filelist *)b)->name);
+    const char *aname = ((const struct zip_filelist *)a)->name;
+    const char *bname = ((const struct zip_filelist *)b)->name;
+
+    if (aname == NULL)
+	return (bname != NULL) * -1;
+    else if (bname == NULL)
+	return 1;
+
+    return strcasecmp(aname, bname);
 }
