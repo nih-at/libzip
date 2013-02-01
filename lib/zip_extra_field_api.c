@@ -1,6 +1,6 @@
 /*
   zip_extra_field_api.c -- public extra fields API functions
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012, 2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -212,6 +212,11 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
     struct zip_extra_field *ef, *ef_prev, *ef_new;
     int i, found;
 
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
     
@@ -305,9 +310,11 @@ _zip_file_extra_field_prepare_for_change(struct zip *za, zip_uint64_t idx)
     
     if (e->changes && (e->changes->changed & ZIP_DIRENT_EXTRA_FIELD))
         return 0;
-    
-    if (_zip_read_local_ef(za, idx) < 0)
-        return -1;
+
+    if (e->orig) {
+	if (_zip_read_local_ef(za, idx) < 0)
+	    return -1;
+    }
     
     if (e->changes == NULL) {
         if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
@@ -316,8 +323,10 @@ _zip_file_extra_field_prepare_for_change(struct zip *za, zip_uint64_t idx)
         }
     }
     
-    if ((e->changes->extra_fields=_zip_ef_clone(e->changes->extra_fields, &za->error)) == 0)
-        return -1;
+    if (e->orig && e->orig->extra_fields) {
+	if ((e->changes->extra_fields=_zip_ef_clone(e->orig->extra_fields, &za->error)) == 0)
+	    return -1;
+    }
     e->changes->changed |= ZIP_DIRENT_EXTRA_FIELD;
     
     return 0;
