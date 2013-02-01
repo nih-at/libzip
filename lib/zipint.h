@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -85,9 +85,7 @@ int _zip_mkstemp(char *);
 #endif
 
 #if !defined(HAVE_STRCASECMP)
-#if defined(HAVE__STRCMPI)
-#define strcasecmp	_strcmpi
-#elif defined(HAVE__STRICMP)
+#if defined(HAVE__STRICMP)
 #define strcasecmp	_stricmp
 #endif
 #endif
