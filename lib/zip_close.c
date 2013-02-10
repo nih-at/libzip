@@ -592,12 +592,20 @@ _zip_create_temp_output(struct zip *za, FILE **outp)
     int tfd;
     FILE *tfp;
     
-    if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	return NULL;
+    if (za->tempdir) {
+        if ((temp=(char *)malloc(strlen(za->tempdir)+13)) == NULL) {
+            _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            return NULL;
+        }
+        sprintf(temp, "%s/.zip.XXXXXX", za->tempdir);
     }
-
-    sprintf(temp, "%s.XXXXXX", za->zn);
+    else {
+        if ((temp=(char *)malloc(strlen(za->zn)+8)) == NULL) {
+            _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            return NULL;
+        }
+        sprintf(temp, "%s.XXXXXX", za->zn);
+    }
 
     if ((tfd=mkstemp(temp)) == -1) {
 	_zip_error_set(&za->error, ZIP_ER_TMPOPEN, errno);

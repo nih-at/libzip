@@ -261,6 +261,8 @@ struct zip {
     unsigned int nfile;			/* number of opened files within archive */
     unsigned int nfile_alloc;		/* number of files allocated */
     struct zip_file **file;		/* opened files within archive */
+    
+    char *tempdir;                      /* custom temp dir (needed e.g. for OS X sanboxing) */
 };
 
 /* file in zip archive, part of API */

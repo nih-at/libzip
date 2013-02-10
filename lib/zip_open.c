@@ -100,6 +100,26 @@ zip_open(const char *fn, int _flags, int *zep)
     return _zip_open(fn, fp, flags, 0, zep);
 }
 
+
+ZIP_EXTERN int
+zip_archive_set_tempdir(struct zip *za, const char *tempdir)
+{
+    char *new_tempdir;
+    
+    if (tempdir) {
+        if ((new_tempdir = strdup(tempdir)) == NULL) {
+            _zip_error_set(&za->error, ZIP_ER_MEMORY, errno);
+            return -1;
+        }
+    }
+    else
+        new_tempdir = NULL;
+    
+    free(za->tempdir);
+    za->tempdir = new_tempdir;
+    
+    return 0;
+}
 
 
 struct zip *

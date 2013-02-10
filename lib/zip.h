@@ -234,6 +234,7 @@ ZIP_EXTERN int zip_replace(struct zip *, zip_uint64_t, struct zip_source *); /* 
 ZIP_EXTERN int zip_set_file_comment(struct zip *, zip_uint64_t, const char *, int); /* use zip_file_set_comment */
 #endif
 
+ZIP_EXTERN int zip_archive_set_tempdir(struct zip *, const char *);
 ZIP_EXTERN zip_int64_t zip_file_add(struct zip *, const char *, struct zip_source *, zip_flags_t);
 ZIP_EXTERN zip_int64_t zip_dir_add(struct zip *, const char *, zip_flags_t);
 ZIP_EXTERN int zip_close(struct zip *);
