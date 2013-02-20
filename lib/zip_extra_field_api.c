@@ -41,6 +41,11 @@ ZIP_EXTERN int
 zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags)
 {
     struct zip_dirent *de;
+
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
     
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
@@ -65,6 +70,11 @@ ZIP_EXTERN int
 zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags)
 {
     struct zip_dirent *de;
+
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
     
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
@@ -94,11 +104,13 @@ zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, 
     struct zip_extra_field *ef;
     int i;
 
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
     if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
 	return NULL;
-
-    if ((flags & ZIP_EF_BOTH) == 0)
-	flags = ZIP_EF_BOTH;
 
     if (flags & ZIP_FL_LOCAL)
 	if (_zip_read_local_ef(za, idx) < 0)
@@ -135,11 +147,13 @@ zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef
 {
     struct zip_dirent *de;
 
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
     if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
 	return NULL;
-
-    if ((flags & ZIP_EF_BOTH) == 0)
-	flags = ZIP_EF_BOTH;
 
     if (flags & ZIP_FL_LOCAL)
 	if (_zip_read_local_ef(za, idx) < 0)
@@ -157,11 +171,13 @@ zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
     struct zip_extra_field *ef;
     zip_uint16_t n;
 
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
     if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
 	return -1;
-
-    if ((flags & ZIP_EF_BOTH) == 0)
-	flags = ZIP_EF_BOTH;
 
     if (flags & ZIP_FL_LOCAL)
 	if (_zip_read_local_ef(za, idx) < 0)
@@ -184,11 +200,13 @@ zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
     struct zip_extra_field *ef;
     zip_uint16_t n;
 
+    if ((flags & ZIP_EF_BOTH) == 0) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+
     if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
 	return -1;
-
-    if ((flags & ZIP_EF_BOTH) == 0)
-	flags = ZIP_EF_BOTH;
 
     if (flags & ZIP_FL_LOCAL)
 	if (_zip_read_local_ef(za, idx) < 0)
