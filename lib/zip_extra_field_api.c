@@ -106,7 +106,7 @@ zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, 
 
     if ((flags & ZIP_EF_BOTH) == 0) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+	return NULL;
     }
 
     if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
@@ -149,7 +149,7 @@ zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef
 
     if ((flags & ZIP_EF_BOTH) == 0) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+	return NULL;
     }
 
     if ((de=_zip_get_dirent(za, idx, flags, &za->error)) == NULL)
