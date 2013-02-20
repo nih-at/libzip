@@ -15,6 +15,7 @@
 ^configure$
 ^libtool$
 ^stamp-h1$
+^test-driver$
 ^lib/zip_err_str\.c$
 ^lib/zipconf\.h$
 ^man/.*\.html$
