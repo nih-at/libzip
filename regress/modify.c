@@ -270,7 +270,7 @@ main(int argc, char *argv[])
 	    eidx = atoi(argv[arg+2]);
 	    geflags = get_flags(argv[arg+3]);
 	    if ((efdata=zip_file_extra_field_get(za, idx, eidx, &id, &eflen, geflags)) == NULL) {
-		fprintf(stderr, "can't get extra field data for file at index `%d', extra field `%d': %s\n", idx, eidx, zip_strerror(za));
+		fprintf(stderr, "can't get extra field data for file at index `%d', extra field `%d', flags %d: `%s'\n", idx, eidx, geflags, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
@@ -288,7 +288,7 @@ main(int argc, char *argv[])
 	    eidx = atoi(argv[arg+3]);
 	    geflags = get_flags(argv[arg+4]);
 	    if ((efdata=zip_file_extra_field_get_by_id(za, idx, eid, eidx, &eflen, geflags)) == NULL) {
-		fprintf(stderr, "can't get extra field data for file at index `%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+		fprintf(stderr, "can't get extra field data for file at index `%d', extra field id `%d', ef index `%d', flags `%d': %s\n", idx, eid, eidx, geflags, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
