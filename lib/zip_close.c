@@ -110,8 +110,7 @@ zip_close(struct zip *za)
         return -1;
     }
     
-    if ((filelist=(struct zip_filelist *)malloc(sizeof(filelist[0])*survivors))
-	== NULL)
+    if ((filelist=(struct zip_filelist *)malloc(sizeof(filelist[0])*survivors)) == NULL)
 	return -1;
 
     /* archive comment is special for torrentzip */
@@ -215,7 +214,9 @@ zip_close(struct zip *za)
 	}
 	else {
 	    zip_uint64_t offset;
-	    
+
+	    /* when copying data, all sizes are known -> no data descriptor needed */
+	    de->bitflags &= ~ZIP_GPBF_DATA_DESCRIPTOR;
 	    if (_zip_dirent_write(de, out, ZIP_FL_LOCAL, &za->error) < 0) {
 		error = 1;
 		break;
@@ -337,6 +338,8 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 
     offstart = ftello(ft);
 
+    /* as long as we don't support non-seekable output, clear data descriptor bit */
+    de->bitflags &= ~ZIP_GPBF_DATA_DESCRIPTOR;
     if ((is_zip64=_zip_dirent_write(de, ft, flags, &za->error)) < 0)
 	return -1;
 
