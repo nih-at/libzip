@@ -284,9 +284,9 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
 	else
 	    de->extra_fields = ef_new;
     }
-    else if (ef) {
-	ef_new->next = ef->next;
-	ef->next = ef_new;
+    else if (ef_prev) {
+	ef_new->next = ef_prev->next;
+	ef_prev->next = ef_new;
     }
     else
 	de->extra_fields = ef_new;
@@ -324,7 +324,7 @@ _zip_file_extra_field_prepare_for_change(struct zip *za, zip_uint64_t idx)
     }
     
     if (e->orig && e->orig->extra_fields) {
-	if ((e->changes->extra_fields=_zip_ef_clone(e->orig->extra_fields, &za->error)) == 0)
+	if ((e->changes->extra_fields=_zip_ef_clone(e->orig->extra_fields, &za->error)) == NULL)
 	    return -1;
     }
     e->changes->changed |= ZIP_DIRENT_EXTRA_FIELD;

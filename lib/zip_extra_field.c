@@ -60,6 +60,8 @@ _zip_ef_clone(struct zip_extra_field *ef, struct zip_error *error)
         if (prev)
             prev->next = def;
         prev = def;
+
+	ef = ef->next;
     }
     
     return head;
