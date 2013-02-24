@@ -1,6 +1,6 @@
 /*
   modify.c -- test tool for modifying zip archive in multiple ways
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -63,6 +63,8 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tcount_extra index flags\n"
     "\tcount_extra_by_id index extra_id flags\n"
     "\tdelete index\n"
+    "\tdelete_extra index extra_idx flags\n"
+    "\tdelete_extra_by_id index extra_id extra_index flags\n"
     "\tget_archive_comment\n"
     "\tget_extra index extra_index flags\n"
     "\tget_extra_by_id index extra_id extra_index flags\n"
