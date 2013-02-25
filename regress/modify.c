@@ -74,7 +74,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tset_file_comment index comment\n"
     "\nThe index is zero-based.\n";
 
-zip_flags_t
+static zip_flags_t
 get_flags(const char *arg)
 {
     zip_flags_t flags = 0;
@@ -87,7 +87,7 @@ get_flags(const char *arg)
     return flags;
 }
 
-void
+static void
 hexdump(const zip_uint8_t *data, zip_uint16_t len)
 {
     zip_uint16_t i;
@@ -196,7 +196,6 @@ main(int argc, char *argv[])
 	    arg += 5;
 	} else if (strcmp(argv[arg], "add_from_zip") == 0 && arg+5 < argc) {
 	    /* add from another zip file */
-	    int idx;
 	    idx = atoi(argv[arg+3]);
 	    if ((z_in=zip_open(argv[arg+2], ZIP_CHECKCONS, &err)) == NULL) {
 		zip_error_to_str(buf, sizeof(buf), err, errno);
