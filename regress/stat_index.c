@@ -118,7 +118,6 @@ main(int argc, char *argv[])
 	if (sb.valid & ZIP_STAT_COMP_SIZE)
 	    printf("compressed size: `%"PRIu64"'\n", sb.comp_size);
 	if (sb.valid & ZIP_STAT_MTIME) {
-	    char buf[50];
 	    struct tm *tpm;
 	    tpm = gmtime(&sb.mtime);
 	    strftime(buf, sizeof(buf), "%a %b %d %T %Y", tpm);
