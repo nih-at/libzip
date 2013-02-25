@@ -41,8 +41,8 @@
 
 #include "compat.h"
 
-int find_fail(struct zip *, const char *, int, int);
-int find_success(struct zip *, const char *, int);
+static int find_fail(struct zip *, const char *, int, int);
+static int find_success(struct zip *, const char *, int);
 
 const char *prg;
 
@@ -68,10 +68,10 @@ main(int argc, char *argv[])
     archive = argv[1];
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
-        char buf[100];
-        zip_error_to_str(buf, sizeof(buf), ze, errno);
+        char buf2[100];
+        zip_error_to_str(buf2, sizeof(buf2), ze, errno);
 	printf("%s: can't open zip archive `%s': %s\n", prg,
-	       archive, buf);
+	       archive, buf2);
 	return 1;
     }
 
@@ -117,7 +117,7 @@ main(int argc, char *argv[])
 
 
 
-int
+static int
 find_fail(struct zip *z, const char *name, int flags, int zerr)
 {
     int ze, se;
@@ -142,7 +142,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 
 
 
-int
+static int
 find_success(struct zip *z, const char *name, int flags)
 {
 
