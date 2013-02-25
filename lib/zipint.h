@@ -439,7 +439,7 @@ enum zip_encoding_type _zip_guess_encoding(struct zip_string *, enum zip_encodin
 zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t,
 				zip_uint32_t *, struct zip_error *error);
 
-struct zip *_zip_open(const char *, FILE *, unsigned int, int, int *);
+struct zip *_zip_open(const char *, FILE *, unsigned int, int *);
 
 int _zip_read_local_ef(struct zip *, zip_uint64_t);
 

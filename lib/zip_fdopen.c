@@ -71,5 +71,5 @@ zip_fdopen(int fd_orig, int _flags, int *zep)
     }
 
     close(fd_orig);
-    return _zip_open(NULL, fp, flags, ZIP_AFL_RDONLY, zep);
+    return _zip_open(NULL, fp, flags, zep);
 }
