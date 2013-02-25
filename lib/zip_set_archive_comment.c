@@ -49,8 +49,7 @@ zip_set_archive_comment(struct zip *za, const char *comment, zip_uint16_t len)
 	return -1;
     }
 
-    if (len < 0 || len > MAXCOMLEN
-	|| (len > 0 && comment == NULL)) {
+    if (len > MAXCOMLEN || (len > 0 && comment == NULL)) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
