@@ -228,7 +228,7 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
     struct zip_dirent *de;
     zip_uint16_t ls, cs;
     struct zip_extra_field *ef, *ef_prev, *ef_new;
-    int i, found;
+    int i, found, new_len;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -253,27 +253,13 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
     
     de = za->entry[idx].changes;
 
-    if (flags & ZIP_EF_LOCAL)
-	ls = _zip_ef_size(de->extra_fields, ZIP_EF_LOCAL);
-    else
-	ls = 0;
-    if (flags & ZIP_EF_CENTRAL)
-	cs = _zip_ef_size(de->extra_fields, ZIP_EF_CENTRAL);
-    else
-	cs = 0;
-
-    if (((zip_uint32_t)(ls > cs ? ls : cs)) + len + 4 > ZIP_UINT16_MAX) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
     ef = de->extra_fields;
     ef_prev = NULL;
     i = 0;
     found = 0;
 
     for (; ef; ef=ef->next) {
-	if (ef->id == ef_id && (ef->flags & ZIP_EF_BOTH) == (flags & ZIP_EF_BOTH)) {
+	if (ef->id == ef_id && (ef->flags & flags & ZIP_EF_BOTH)) {
 	    if (i == ef_idx) {
 		found = 1;
 		break;
@@ -288,19 +274,45 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
 	return -1;
     }
 
+    if (flags & ZIP_EF_LOCAL)
+	ls = _zip_ef_size(de->extra_fields, ZIP_EF_LOCAL);
+    else
+	ls = 0;
+    if (flags & ZIP_EF_CENTRAL)
+	cs = _zip_ef_size(de->extra_fields, ZIP_EF_CENTRAL);
+    else
+	cs = 0;
+
+    new_len = ls > cs ? ls : cs;
+    if (found)
+	new_len -= ef->size + 4;
+    new_len += len + 4;
+
+    if (new_len > ZIP_UINT16_MAX) {
+	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	return -1;
+    }
+    
     if ((ef_new=_zip_ef_new(ef_id, len, data, flags)) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
 
     if (found) {
-	ef_new->next = ef->next;
-	ef->next = NULL;
-	_zip_ef_free(ef);
-	if (ef_prev)
-	    ef_prev->next = ef_new;
-	else
-	    de->extra_fields = ef_new;
+	if ((ef->flags & ZIP_EF_BOTH) == (flags & ZIP_EF_BOTH)) {
+	    ef_new->next = ef->next;
+	    ef->next = NULL;
+	    _zip_ef_free(ef);
+	    if (ef_prev)
+		ef_prev->next = ef_new;
+	    else
+		de->extra_fields = ef_new;
+	}
+	else {
+	    ef->flags &= ~(flags & ZIP_EF_BOTH);
+	    ef_new->next = ef->next;
+	    ef->next = ef_new;
+	}	    
     }
     else if (ef_prev) {
 	ef_new->next = ef_prev->next;

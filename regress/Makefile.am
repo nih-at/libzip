@@ -87,6 +87,7 @@ EXTRA_DIST= \
 	testfile.txt \
 	testfile.zip \
 	testfile-cp437.zip \
+	testfile-plus-extra.zip \
 	testfile-UTF8.zip \
 	testnottorrent.zip \
 	teststdin.zip \
@@ -121,6 +122,7 @@ TESTS= \
 	delete_renamed_rename.test \
 	encrypt.test \
 	extra_add.test \
+	extra_add_multiple.test \
 	extra_count.test \
 	extra_count_by_id.test \
 	extra_count_ignore_zip64.test \

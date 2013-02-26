@@ -298,7 +298,6 @@ main(int argc, char *argv[])
 	    if ((efdata=zip_file_extra_field_get(za, idx, eidx, &id, &eflen, geflags)) == NULL) {
 		fprintf(stderr, "can't get extra field data for file at index %d, extra field %d, flags %u: %s\n", idx, eidx, geflags, zip_strerror(za));
 		err = 1;
-		break;
 	    } else {
 		printf("Extra field 0x%04x: len %d", id, eflen);
 		if (eflen > 0) {
@@ -319,7 +318,6 @@ main(int argc, char *argv[])
 	    if ((efdata=zip_file_extra_field_get_by_id(za, idx, eid, eidx, &eflen, geflags)) == NULL) {
 		fprintf(stderr, "can't get extra field data for file at index %d, extra field id %d, ef index %d, flags %u: %s\n", idx, eid, eidx, geflags, zip_strerror(za));
 		err = 1;
-		break;
 	    } else {
 		printf("Extra field 0x%04x: len %d", eid, eflen);
 		if (eflen > 0) {
