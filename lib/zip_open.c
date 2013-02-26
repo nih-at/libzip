@@ -97,7 +97,7 @@ zip_open(const char *fn, int _flags, int *zep)
 	return NULL;
     }
 
-    return _zip_open(fn, fp, flags, 0, zep);
+    return _zip_open(fn, fp, flags, zep);
 }
 
 
@@ -123,7 +123,7 @@ zip_archive_set_tempdir(struct zip *za, const char *tempdir)
 
 
 struct zip *
-_zip_open(const char *fn, FILE *fp, unsigned int flags, int aflags, int *zep)
+_zip_open(const char *fn, FILE *fp, unsigned int flags, int *zep)
 {
     struct zip *za;
     struct zip_cdir *cdir;

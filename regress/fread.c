@@ -55,7 +55,7 @@ const char *when_name[] = {
     "no", "zip_fopen", "zip_fread", "zip_fclose"
 };
 
-int do_read(struct zip *, const char *, int, enum when, int, int);
+static int do_read(struct zip *, const char *, int, enum when, int, int);
 
 
 int verbose;
@@ -147,7 +147,7 @@ main(int argc, char *argv[])
 
 
 
-int
+static int
 do_read(struct zip *z, const char *name, int flags,
 	enum when when_ex, int ze_ex, int se_ex)
 {

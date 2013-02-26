@@ -1,6 +1,6 @@
 /*
   modify.c -- test tool for modifying zip archive in multiple ways
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -63,6 +63,8 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tcount_extra index flags\n"
     "\tcount_extra_by_id index extra_id flags\n"
     "\tdelete index\n"
+    "\tdelete_extra index extra_idx flags\n"
+    "\tdelete_extra_by_id index extra_id extra_index flags\n"
     "\tget_archive_comment\n"
     "\tget_extra index extra_index flags\n"
     "\tget_extra_by_id index extra_id extra_index flags\n"
@@ -72,7 +74,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tset_file_comment index comment\n"
     "\nThe index is zero-based.\n";
 
-zip_flags_t
+static zip_flags_t
 get_flags(const char *arg)
 {
     zip_flags_t flags = 0;
@@ -85,7 +87,7 @@ get_flags(const char *arg)
     return flags;
 }
 
-void
+static void
 hexdump(const zip_uint8_t *data, zip_uint16_t len)
 {
     zip_uint16_t i;
@@ -194,7 +196,6 @@ main(int argc, char *argv[])
 	    arg += 5;
 	} else if (strcmp(argv[arg], "add_from_zip") == 0 && arg+5 < argc) {
 	    /* add from another zip file */
-	    int idx;
 	    idx = atoi(argv[arg+3]);
 	    if ((z_in=zip_open(argv[arg+2], ZIP_CHECKCONS, &err)) == NULL) {
 		zip_error_to_str(buf, sizeof(buf), err, errno);
@@ -252,6 +253,31 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 2;
+	} else if (strcmp(argv[arg], "delete_extra") == 0 && arg+1 < argc) {
+	    zip_flags_t geflags;
+	    zip_uint16_t eid;
+	    idx = atoi(argv[arg+1]);
+	    eid = atoi(argv[arg+2]);
+	    geflags = get_flags(argv[arg+3]);
+	    if ((zip_file_extra_field_delete(za, idx, eid, geflags)) < 0) {
+		fprintf(stderr, "can't delete extra field data for file at index `%d', extra field id `%d': %s\n", idx, eid, zip_strerror(za));
+		err = 1;
+		break;
+	    }
+	    arg += 4;
+	} else if (strcmp(argv[arg], "delete_extra_by_id") == 0 && arg+1 < argc) {
+	    zip_flags_t geflags;
+	    zip_uint16_t eid, eidx;
+	    idx = atoi(argv[arg+1]);
+	    eid = atoi(argv[arg+2]);
+	    eidx = atoi(argv[arg+3]);
+	    geflags = get_flags(argv[arg+4]);
+	    if ((zip_file_extra_field_delete_by_id(za, idx, eid, eidx, geflags)) < 0) {
+		fprintf(stderr, "can't delete extra field data for file at index `%d', extra field id `%d', extra field idx `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+		err = 1;
+		break;
+	    }
+	    arg += 5;
 	} else if (strcmp(argv[arg], "get_archive_comment") == 0) {
 	    const char *comment;
 	    int len;
@@ -322,14 +348,14 @@ main(int argc, char *argv[])
 	    arg += 3;
 	} else if (strcmp(argv[arg], "set_extra") == 0 && arg+5 < argc) {
 	    zip_flags_t geflags;
-	    zip_uint16_t eid, eidx, eflen;
+	    zip_uint16_t eid, eidx;
 	    const zip_uint8_t *efdata;
 	    idx = atoi(argv[arg+1]);
 	    eid = atoi(argv[arg+2]);
 	    eidx = atoi(argv[arg+3]);
 	    geflags = get_flags(argv[arg+4]);
-	    efdata = argv[arg+5];
-	    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, strlen(efdata), geflags)) < 0) {
+	    efdata = (zip_uint8_t *)argv[arg+5];
+	    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, strlen((const char *)efdata), geflags)) < 0) {
 		fprintf(stderr, "can't set extra field data for file at index `%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
 		err = 1;
 		break;

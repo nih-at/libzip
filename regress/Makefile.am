@@ -1,3 +1,5 @@
+AUTOMAKE_OPTIONS=	parallel-tests
+
 noinst_PROGRAMS= \
 	add_from_buffer \
 	add_from_filep \
@@ -92,7 +94,12 @@ EXTRA_DIST= \
 	testtorrent.tzip \
 	zip64.zip
 
-TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp ${srcdir}/runtest
+TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
+# ${srcdir}/runtest
+#LOG_COMPILER=  ${srcdir}/runtest
+TEST_EXTENSIONS= .test
+TEST_LOG_COMPILER= ${srcdir}/runtest
+#AM_TEST_LOG_FLAGS = -s
 
 TESTS= \
 	add_dir.test \
@@ -113,6 +120,7 @@ TESTS= \
 	delete_multiple_partial.test \
 	delete_renamed_rename.test \
 	encrypt.test \
+	extra_add.test \
 	extra_count.test \
 	extra_count_by_id.test \
 	extra_count_ignore_zip64.test \
