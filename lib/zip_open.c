@@ -623,6 +623,11 @@ _zip_read_eocd(const unsigned char *eocd, unsigned char *buf, off_t buf_offset, 
 	return NULL;
     }
 
+    if ((flags & ZIP_CHECKCONS) && offset+size != (zip_uint64_t)(buf_offset + (eocd-buf))) {
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
     if ((cd=_zip_cdir_new(nentry, error)) == NULL)
 	return NULL;
 
@@ -647,8 +652,6 @@ _zip_read_eocd64(FILE *f, const zip_uint8_t *eocd64loc, zip_uint8_t *buf,
 
     cdp = eocd64loc+8;
     eocd_offset = _zip_read8(&cdp);
-    
-    if (eocd64loc < buf)
     
     if (eocd_offset > ZIP_OFF_MAX || eocd_offset + EOCD64LEN > ZIP_OFF_MAX) {
         _zip_error_set(error, ZIP_ER_SEEK, EFBIG);
