@@ -109,8 +109,8 @@ main(int argc, char *argv[])
     const char *archive;
     struct zip *za, *z_in;
     struct zip_source *zs;
-    char buf[100], c;
-    int arg, err, flags, idx;
+    char buf[100];
+    int c, arg, err, flags, idx;
 
     flags = 0;
     prg = argv[0];
@@ -296,13 +296,16 @@ main(int argc, char *argv[])
 	    eidx = atoi(argv[arg+2]);
 	    geflags = get_flags(argv[arg+3]);
 	    if ((efdata=zip_file_extra_field_get(za, idx, eidx, &id, &eflen, geflags)) == NULL) {
-		fprintf(stderr, "can't get extra field data for file at index `%d', extra field `%d', flags %d: `%s'\n", idx, eidx, geflags, zip_strerror(za));
+		fprintf(stderr, "can't get extra field data for file at index %d, extra field %d, flags %u: %s\n", idx, eidx, geflags, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
-		printf("Extra field `0x%04x': len %d, data `", id, eflen);
-		hexdump(efdata, eflen);
-		printf("'\n");
+		printf("Extra field 0x%04x: len %d", id, eflen);
+		if (eflen > 0) {
+		    printf(", data ");
+		    hexdump(efdata, eflen);
+		}
+		printf("\n");
 	    }
 	    arg += 4;
 	} else if (strcmp(argv[arg], "get_extra_by_id") == 0 && arg+4 < argc) {
@@ -314,13 +317,16 @@ main(int argc, char *argv[])
 	    eidx = atoi(argv[arg+3]);
 	    geflags = get_flags(argv[arg+4]);
 	    if ((efdata=zip_file_extra_field_get_by_id(za, idx, eid, eidx, &eflen, geflags)) == NULL) {
-		fprintf(stderr, "can't get extra field data for file at index `%d', extra field id `%d', ef index `%d', flags `%d': %s\n", idx, eid, eidx, geflags, zip_strerror(za));
+		fprintf(stderr, "can't get extra field data for file at index %d, extra field id %d, ef index %d, flags %u: %s\n", idx, eid, eidx, geflags, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
-		printf("Extra field `0x%04x': len %d, data `", eid, eflen);
-		hexdump(efdata, eflen);
-		printf("'\n");
+		printf("Extra field 0x%04x: len %d", eid, eflen);
+		if (eflen > 0) {
+		    printf(", data ");
+		    hexdump(efdata, eflen);
+		}
+		printf("\n");
 	    }
 	    arg += 5;
 	} else if (strcmp(argv[arg], "get_file_comment") == 0 && arg+1 < argc) {

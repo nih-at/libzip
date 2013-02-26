@@ -475,9 +475,9 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 		header_done = 1;
 	    }
 	    printf("---                     %s  ", e1->name);
-	    printf("method %d\n", e1->comp_method);
+	    printf("method %u\n", e1->comp_method);
 	    printf("+++                     %s  ", e1->name);
-	    printf("method %d\n", e2->comp_method);
+	    printf("method %u\n", e2->comp_method);
 	}
 	ret =  1;
     }

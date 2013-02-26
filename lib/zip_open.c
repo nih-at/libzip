@@ -596,7 +596,12 @@ _zip_read_eocd(const unsigned char *eocd, unsigned char *buf, off_t buf_offset, 
     struct zip_cdir *cd;
     const unsigned char *cdp;
     zip_uint64_t i, nentry, size, offset;
-    
+
+    if (eocd+EOCDLEN > buf+buflen) {
+	_zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
     cdp = eocd + 8;
 
     /* number of cdir-entries on this disk */
