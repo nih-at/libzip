@@ -46,10 +46,9 @@ zip_file_set_comment(struct zip *za, zip_uint64_t idx,
 {
     struct zip_entry *e;
     struct zip_string *cstr;
-    struct zip_dirent *de;
     int changed;
 
-    if ((de=_zip_get_dirent(za, idx, 0, NULL)) == NULL)
+    if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
 	return -1;
 
     if (ZIP_IS_RDONLY(za)) {
