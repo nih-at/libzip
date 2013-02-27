@@ -62,6 +62,7 @@ Bugs
 * fix inconsistent usage of valid flags (not checked in many places)
 * cdr == NULL -> ER_NOENT vs. idx > cdir->nentry -> ER_INVAL inconsistent (still there?)
 * torrentzip broken on NetBSD/amd64 6.99
+* torrentzip: check behaviour of files with empty name (size 0; file size > 0)
 
 
 Cleanup
