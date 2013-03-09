@@ -43,6 +43,7 @@ EXTRA_DIST= \
 	incons-central-magic-bad2.zip \
 	incons-central-size-larger.zip \
 	incons-data.zip \
+	incons-ef-central-size-wrong.zip \
 	incons-ef-local-id-size.zip \
 	incons-ef-local-id.zip \
 	incons-ef-local-incomplete1.zip \
