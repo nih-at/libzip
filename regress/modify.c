@@ -359,7 +359,7 @@ main(int argc, char *argv[])
 	    eidx = atoi(argv[arg+3]);
 	    geflags = get_flags(argv[arg+4]);
 	    efdata = (zip_uint8_t *)argv[arg+5];
-	    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, strlen((const char *)efdata), geflags)) < 0) {
+	    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, (zip_uint16_t)strlen((const char *)efdata), geflags)) < 0) {
 		fprintf(stderr, "can't set extra field data for file at index `%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
 		err = 1;
 		break;
@@ -368,7 +368,7 @@ main(int argc, char *argv[])
 	} else if (strcmp(argv[arg], "set_file_comment") == 0 && arg+2 < argc) {
 	    /* set file comment */
 	    idx = atoi(argv[arg+1]);
-	    if (zip_file_set_comment(za, idx, argv[arg+2], strlen(argv[arg+2]), 0) < 0) {
+	    if (zip_file_set_comment(za, idx, argv[arg+2], (zip_uint16_t)strlen(argv[arg+2]), 0) < 0) {
 		fprintf(stderr, "can't set file comment at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
 		err = 1;
 		break;

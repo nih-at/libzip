@@ -71,7 +71,7 @@ main(int argc, char *argv[])
     }
 
     if (zip_set_archive_comment(za, new_archive_comment,
-				strlen(new_archive_comment)) < 0) {
+				(zip_uint16_t)strlen(new_archive_comment)) < 0) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
 	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n",
 		prg, buf);
@@ -79,7 +79,7 @@ main(int argc, char *argv[])
 
     for (i=0; i<zip_get_num_entries(za, 0); i++) {
 	snprintf(buf, sizeof(buf), "File comment no %d", i);
-	if (zip_file_set_comment(za, i, buf, strlen(buf), 0) < 0) {
+	if (zip_file_set_comment(za, i, buf, (zip_uint16_t)strlen(buf), 0) < 0) {
 	    zip_error_to_str(buf, sizeof(buf), err, errno);
 	    fprintf(stderr, "%s: zip_set_file_comment on file %d failed: %s\n",
 		    prg, i, buf);
