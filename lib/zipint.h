@@ -433,7 +433,7 @@ const zip_uint8_t *_zip_extract_extra_field_by_id(struct zip_error *, zip_uint16
 
 int _zip_file_extra_field_prepare_for_change(struct zip *, zip_uint64_t);
 int _zip_file_fillbuf(void *, size_t, struct zip_file *);
-zip_uint64_t _zip_file_get_offset(struct zip *, zip_uint64_t, struct zip_error *);
+zip_uint64_t _zip_file_get_offset(const struct zip *, zip_uint64_t, struct zip_error *);
 
 int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 
@@ -462,7 +462,7 @@ zip_uint16_t _zip_string_length(const struct zip_string *);
 struct zip_string *_zip_string_new(const zip_uint8_t *, zip_uint16_t, zip_flags_t, struct zip_error *);
 void _zip_string_write(const struct zip_string *, FILE *);
 
-int _zip_changed(struct zip *, zip_uint64_t *);
+int _zip_changed(const struct zip *, zip_uint64_t *);
 const char *_zip_get_name(struct zip *, zip_uint64_t, zip_flags_t, struct zip_error *);
 int _zip_local_header_read(struct zip *, int);
 void *_zip_memdup(const void *, size_t, struct zip_error *);

@@ -562,7 +562,7 @@ write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t sur
 
 
 int
-_zip_changed(struct zip *za, zip_uint64_t *survivorsp)
+_zip_changed(const struct zip *za, zip_uint64_t *survivorsp)
 {
     int changed;
     zip_uint64_t i, survivors;

@@ -44,7 +44,7 @@
 
 static time_t _zip_d2u_time(zip_uint16_t, zip_uint16_t);
 static struct zip_string *_zip_read_string(const unsigned char **, FILE *, zip_uint16_t, int, struct zip_error *);
-static struct zip_string *_zip_dirent_process_ef_utf_8(struct zip_dirent *, zip_uint16_t, struct zip_string *);
+static struct zip_string *_zip_dirent_process_ef_utf_8(const struct zip_dirent *, zip_uint16_t, struct zip_string *);
 static struct zip_extra_field *_zip_ef_utf8(zip_uint16_t, struct zip_string *, struct zip_error *);
 
 
@@ -508,7 +508,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
 
 
 static struct zip_string *
-_zip_dirent_process_ef_utf_8(struct zip_dirent *de, zip_uint16_t id, struct zip_string *str)
+_zip_dirent_process_ef_utf_8(const struct zip_dirent *de, zip_uint16_t id, struct zip_string *str)
 {
     zip_uint16_t ef_len;
     zip_uint32_t ef_crc;
