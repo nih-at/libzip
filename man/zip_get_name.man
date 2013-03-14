@@ -1,5 +1,5 @@
 .\" zip_get_name.mdoc \-- get name of file by index
-.\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2013 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_GET_NAME 3 "July 21, 2012" NiH
+.TH ZIP_GET_NAME 3 "February 20, 2013" NiH
 .SH "NAME"
 zip_get_name \- get name of file by index
 .SH "LIBRARY"
@@ -59,7 +59,9 @@ The returned string must not be modified or freed, and becomes invalid when
 \fBarchive\fR
 is closed.
 .PP
-Additionally, the following flags are supported:
+Additionally, the following
+\fBflags\fR
+are supported:
 .RS
 .TP 21
 \fBZIP_FL_ENC_RAW\fR

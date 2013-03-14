@@ -1,5 +1,5 @@
 .\" zip_file_extra_field_set.mdoc \-- set extra field for file in zip
-.\" Copyright (C) 2012 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2012-2013 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FILE_EXTRA_FIELD_SET 3 "June 23, 2012" NiH
+.TH ZIP_FILE_EXTRA_FIELD_SET 3 "February 20, 2013" NiH
 .SH "NAME"
 zip_file_extra_field_set \- set extra field for file in zip
 .SH "LIBRARY"
@@ -61,14 +61,16 @@ If a new entry shall be appended, set
 to
 \fBZIP_EXTRA_FIELD_NEW.\fR
 .PP
-The following flags are supported:
+At least one of the following
+\fBflags\fR
+must be set:
 .RS
 .TP 18
 \fBZIP_FL_CENTRAL\fR
-Only sets extra field in the archive's central directory.
+Set extra field in the archive's central directory.
 .TP 18
 \fBZIP_FL_LOCAL\fR
-Only sets extra field in the local file headers.
+Set extra field in the local file headers.
 .RE
 .PP
 Please note that the extra field IDs 0x0001 (ZIP64 extension),
