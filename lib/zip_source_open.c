@@ -60,7 +60,7 @@ zip_source_open(struct zip_source *src)
 	ret = src->cb.l(src->src, src->ud, NULL, 0, ZIP_SOURCE_OPEN);
 	
 	if (ret < 0) {
-	    (void)zip_source_close(src->src);
+	    zip_source_close(src->src);
 	    
 	    if (ret == ZIP_SOURCE_ERR_LOWER)
 		src->error_source = ZIP_LES_LOWER;

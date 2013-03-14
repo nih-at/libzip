@@ -103,7 +103,7 @@ window_read(struct zip_source *src, void *_ctx, void *data,
 	if (len > ctx->left)
 	    len = ctx->left;
 	
-	if (len <= 0)
+	if (len == 0)
 	    return 0;
 
 	if ((ret=zip_source_read(src, data, len)) < 0)

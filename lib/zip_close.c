@@ -55,7 +55,7 @@
 
 
 /* max deflate size increase: size + ceil(size/16k)*5+6 */
-#define MAX_DEFLATE_SIZE_32	4293656963
+#define MAX_DEFLATE_SIZE_32	4293656963u
 
 static int add_data(struct zip *, struct zip_source *, struct zip_dirent *, FILE *);
 static int copy_data(FILE *, zip_uint64_t, FILE *, struct zip_error *);

@@ -44,13 +44,13 @@ static struct zip_file *_zip_file_new(struct zip *za);
 
 
 ZIP_EXTERN struct zip_file *
-zip_fopen_index_encrypted(struct zip *za, zip_uint64_t fileno, zip_flags_t flags,
+zip_fopen_index_encrypted(struct zip *za, zip_uint64_t index, zip_flags_t flags,
 			  const char *password)
 {
     struct zip_file *zf;
     struct zip_source *src;
 
-    if ((src=_zip_source_zip_new(za, za, fileno, flags, 0, 0, password)) == NULL)
+    if ((src=_zip_source_zip_new(za, za, index, flags, 0, 0, password)) == NULL)
 	return NULL;
 
     if (zip_source_open(src) < 0) {

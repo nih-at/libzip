@@ -406,24 +406,24 @@ zip_int32_t _zip_dirent_size(FILE *, zip_uint16_t, struct zip_error *);
 void _zip_dirent_torrent_normalize(struct zip_dirent *);
 int _zip_dirent_write(struct zip_dirent *, FILE *, zip_flags_t, struct zip_error *);
 
-struct zip_extra_field *_zip_ef_clone(struct zip_extra_field *, struct zip_error *);
+struct zip_extra_field *_zip_ef_clone(const struct zip_extra_field *, struct zip_error *);
 struct zip_extra_field *_zip_ef_delete_by_id(struct zip_extra_field *, zip_uint16_t, zip_uint16_t, zip_flags_t);
 void _zip_ef_free(struct zip_extra_field *);
-const zip_uint8_t *_zip_ef_get_by_id(struct zip_extra_field *, zip_uint16_t *, zip_uint16_t, zip_uint16_t, zip_flags_t, struct zip_error *);
+const zip_uint8_t *_zip_ef_get_by_id(const struct zip_extra_field *, zip_uint16_t *, zip_uint16_t, zip_uint16_t, zip_flags_t, struct zip_error *);
 struct zip_extra_field *_zip_ef_merge(struct zip_extra_field *, struct zip_extra_field *);
 struct zip_extra_field *_zip_ef_new(zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_flags_t);
 struct zip_extra_field *_zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_flags_t, struct zip_error *);
 struct zip_extra_field *_zip_ef_remove_internal(struct zip_extra_field *);
-zip_uint16_t _zip_ef_size(struct zip_extra_field *, zip_flags_t);
-void _zip_ef_write(struct zip_extra_field *, zip_flags_t, FILE *);
+zip_uint16_t _zip_ef_size(const struct zip_extra_field *, zip_flags_t);
+void _zip_ef_write(const struct zip_extra_field *, zip_flags_t, FILE *);
 
 void _zip_entry_finalize(struct zip_entry *);
 void _zip_entry_init(struct zip_entry *);
 
 void _zip_error_clear(struct zip_error *);
-void _zip_error_copy(struct zip_error *, struct zip_error *);
+void _zip_error_copy(struct zip_error *, const struct zip_error *);
 void _zip_error_fini(struct zip_error *);
-void _zip_error_get(struct zip_error *, int *, int *);
+void _zip_error_get(const struct zip_error *, int *, int *);
 void _zip_error_init(struct zip_error *);
 void _zip_error_set(struct zip_error *, int, int);
 void _zip_error_set_from_source(struct zip_error *, struct zip_source *);

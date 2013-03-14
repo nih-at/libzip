@@ -98,7 +98,7 @@ zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
 ZIP_EXTERN const zip_uint8_t *
 zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags)
 {
-    static const zip_uint8_t empty[1];
+    static const zip_uint8_t empty[1] = { '\0' };
 
     struct zip_dirent *de;
     struct zip_extra_field *ef;
