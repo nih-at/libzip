@@ -49,9 +49,27 @@
 #include "zip.h"
 #include "config.h"
 
-/* crashes reported when using fdopen instead of _fdopen on Windows/Visual Studio 10/Win64 */
 #ifdef _WIN32
-#define fdopen	_fdopen
+#if defined(HAVE__CLOSE)
+#define close		_close
+#endif
+#if defined(HAVE__DUP)
+#define dup		_dup
+#endif
+/* crashes reported when using fdopen instead of _fdopen on Windows/Visual Studio 10/Win64 */
+#if defined(HAVE__FDOPEN)
+#define fdopen		_fdopen
+#endif
+/* Windows' open() doesn't understand Unix permissions */
+#if defined(HAVE__OPEN)
+#define open(a, b, c)	_open((a), (b))
+#endif
+#if defined(HAVE__SNPRINTF)
+#define snprintf	_snprintf
+#endif
+#if defined(HAVE__STRDUP)
+#define strdup		_strdup
+#endif
 #endif
 
 #ifndef HAVE_FSEEKO
@@ -76,28 +94,9 @@ int _zip_mkstemp(char *);
 #define _zip_rename	rename
 #endif
 
-/* Windows' open() doesn't understand Unix permissions */
-#if !defined(HAVE_OPEN)
-#if defined(HAVE__OPEN)
-#define open(a, b, c)	_open((a), (b))
-#endif
-#endif
-
-#if !defined(HAVE_SNPRINTF)
-#if defined(HAVE__SNPRINTF)
-#define snprintf	_snprintf
-#endif
-#endif
-
 #if !defined(HAVE_STRCASECMP)
 #if defined(HAVE__STRICMP)
 #define strcasecmp	_stricmp
-#endif
-#endif
-
-#if !defined(HAVE_STRDUP)
-#if defined(HAVE__STRDUP)
-#define strdup		_strdup
 #endif
 #endif
 
