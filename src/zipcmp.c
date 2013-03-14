@@ -118,7 +118,7 @@ static int compare_list(char * const name[],
 			int (*checks)(char *const name[2], const void *, const void *),
 			void (*print)(const void *));
 static int compare_zip(char * const zn[]);
-static int test_file(struct zip *za, int idx, off_t size, unsigned int crc);
+static int test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc);
 
 int ignore_case, test_files, paranoid, verbose;
 int header_done;
@@ -515,7 +515,7 @@ entry_print(const void *p)
 
 
 static int
-test_file(struct zip *za, int idx, off_t size, unsigned int crc)
+test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc)
 {
     struct zip_file *zf;
     char buf[8192];
@@ -546,9 +546,8 @@ test_file(struct zip *za, int idx, off_t size, unsigned int crc)
     zip_fclose(zf);
 
     if (nsize != size) {
-	/* XXX: proper printf identifier */
-	fprintf(stderr, "%s: file %d: unexpected length %ld (should be %ld)\n",
-		prg, idx, (long)nsize, (long)size);
+	fprintf(stderr, "%s: file %d: unexpected length %" PRId64 " (should be %" PRId64 ")\n",
+		prg, idx, nsize, size);
 	return -2;
     }
     if (ncrc != crc) {
