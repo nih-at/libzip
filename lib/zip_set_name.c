@@ -98,6 +98,7 @@ _zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t fl
         if (e->changes == NULL) {
             if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
                 _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+		_zip_string_free(str);
                 return -1;
             }
         }

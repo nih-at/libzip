@@ -87,6 +87,7 @@ zip_file_set_comment(struct zip *za, zip_uint64_t idx,
         if (e->changes == NULL) {
             if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
                 _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+		_zip_string_free(cstr);
                 return -1;
             }
         }
