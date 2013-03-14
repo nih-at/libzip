@@ -26,7 +26,7 @@
 #cmakedefine SHORT_LIBZIP ${SHORT_LIBZIP}
 #cmakedefine INT_LIBZIP ${INT_LIBZIP}
 #cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
-#cmakedefine LONGLONG_LIBZIP ${LONGLONG_LIBZIP}
+#cmakedefine LONG_LONG_LIBZIP ${LONG_LONG_LIBZIP}
 
 #if defined(HAVE_STDINT_H_LIBZIP)
 #include <stdint.h>
@@ -88,16 +88,16 @@ typedef int64_t zip_int64_t;
 typedef __int64 zip_int64_t;
 #elif defined(LONG_LIBZIP) && LONG_LIBZIP == 8
 typedef signed long zip_int64_t;
-#elif defined(LONGLONG_LIBZIP) && LONGLONG_LIBZIP == 8
+#elif defined(LONG_LONG_LIBZIP) && LONG_LONG_LIBZIP == 8
 typedef signed long long zip_int64_t;
 #endif
 #if defined(HAVE_UINT64_T_LIBZIP)
 typedef uint64_t zip_uint64_t;
 #elif defined(HAVE___INT64_LIBZIP)
 typedef unsigned __int64 zip_uint64_t;
-#elif defined(LONG_LIBZIP) && LONGLONG_LIBZIP == 8
+#elif defined(LONG_LIBZIP) && LONG_LONG_LIBZIP == 8
 typedef unsigned long zip_uint64_t;
-#elif defined(LONGLONG_LIBZIP) && LONGLONG_LIBZIP == 8
+#elif defined(LONG_LONG_LIBZIP) && LONG_LONG_LIBZIP == 8
 typedef unsigned long long zip_uint64_t;
 #endif
 
