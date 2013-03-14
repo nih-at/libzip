@@ -133,7 +133,8 @@ main(int argc, char *argv[])
     fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
     fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
     zs = zip_source_buffer(z, "asdf", 4, 0);
-    zip_add(z, "new_file", zs);
+    if (zip_file_add(z, "new_file", zs, 0) < 0)
+        fprintf(stderr, "%s: can't add file to zip archive '%s': %s\n", prg, archive, zip_strerror(z));
     fail += do_read(z, "new_file", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
     zip_unchange_all(z);
 
