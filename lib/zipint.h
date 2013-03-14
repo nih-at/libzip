@@ -49,6 +49,11 @@
 #include "zip.h"
 #include "config.h"
 
+/* crashes reported when using fdopen instead of _fdopen on Windows/Visual Studio 10/Win64 */
+#ifdef _WIN32
+#define fdopen	_fdopen
+#endif
+
 #ifndef HAVE_FSEEKO
 #define fseeko(s, o, w)	(fseek((s), (long int)(o), (w)))
 #endif
