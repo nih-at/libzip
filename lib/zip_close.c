@@ -246,14 +246,14 @@ zip_close(struct zip *za)
 
     if (error) {
 	fclose(out);
-	remove(temp);
+	(void)remove(temp);
 	free(temp);
 	return -1;
     }
 
     if (fclose(out) != 0) {
 	_zip_error_set(&za->error, ZIP_ER_CLOSE, errno);
-	remove(temp);
+	(void)remove(temp);
 	free(temp);
 	return -1;
     }
@@ -265,7 +265,7 @@ zip_close(struct zip *za)
     }
     if (_zip_rename(temp, za->zn) != 0) {
 	_zip_error_set(&za->error, ZIP_ER_RENAME, errno);
-	remove(temp);
+	(void)remove(temp);
 	free(temp);
 	if (reopen_on_error) {
 	    /* ignore errors, since we're already in an error case */
