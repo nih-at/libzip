@@ -1,6 +1,6 @@
 /*
   zipcmp.c -- compare zip files
-  Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -51,8 +51,9 @@
 #include "getopt.h"
 #endif
 
-#include "zip.h"
+/* include zipint.h for Windows compatibility */
 #include "zipint.h"
+#include "zip.h"
 #include "compat.h"
 
 struct ef {
@@ -71,7 +72,7 @@ struct entry {
     struct ef *extra_fields;
     int n_extra_fields;
     const char *comment;
-    int comment_length;
+    zip_uint32_t comment_length;
 };
 
 
@@ -97,7 +98,7 @@ char help[] = "\n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2012 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2013 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVipqtv"
@@ -204,7 +205,7 @@ compare_zip(char * const zn[])
 	}
 
 	z[i] = za;
-	n[i] = zip_get_num_files(za);
+	n[i] = zip_get_num_entries(za, 0);
 
 	if (n[i] == 0)
 	    e[i] = NULL;
@@ -224,7 +225,7 @@ compare_zip(char * const zn[])
 		if (paranoid) {
 		    e[i][j].comp_method = st.comp_method;
 		    ef_read(za, j, e[i]+j);
-		    e[i][j].comment = zip_get_file_comment(za, j, &e[i][j].comment_length, 0);
+		    e[i][j].comment = zip_file_get_comment(za, j, &e[i][j].comment_length, 0);
 		    
 		}
 		else {
