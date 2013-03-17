@@ -1,12 +1,21 @@
 #ifndef HAD_CONFIG_H
 #define HAD_CONFIG_H
+#cmakedefine HAVE__CLOSE
+#cmakedefine HAVE__DUP
+#cmakedefine HAVE__FDOPEN
+#cmakedefine HAVE__OPEN
+#cmakedefine HAVE__SNPRINTF
+#cmakedefine HAVE__STRCMPI
+#cmakedefine HAVE__STRDUP
+#cmakedefine HAVE__STRICMP
 #cmakedefine HAVE_FSEEKO
+#cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_MOVEFILEEXA
-#cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE_SNPRINTF
-#cmakedefine HAVE__STRCMPI
-#cmakedefine HAVE__STRICMP
+#cmakedefine HAVE_STRCASECMP
+#cmakedefine HAVE_STRINGS_H
+#cmakedefine HAVE_STRUCT_TM_TM_ZONE
 #cmakedefine HAVE_UNISTD_H
 #define PACKAGE "@PACKAGE@"
 #define VERSION "@VERSION@"
