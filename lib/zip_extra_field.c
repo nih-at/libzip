@@ -193,7 +193,7 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_fla
 {
     struct zip_extra_field *ef;
 
-    if ((ef=malloc(sizeof(*ef))) == NULL)
+    if ((ef=(struct zip_extra_field *)malloc(sizeof(*ef))) == NULL)
 	return NULL;
 
     ef->next = NULL;
@@ -201,7 +201,7 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_fla
     ef->id = id;
     ef->size = size;
     if (size > 0) {
-	if ((ef->data=_zip_memdup(data, size, NULL)) == NULL) {
+	if ((ef->data=(zip_uint8_t *)_zip_memdup(data, size, NULL)) == NULL) {
 	    free(ef);
 	    return NULL;
 	}

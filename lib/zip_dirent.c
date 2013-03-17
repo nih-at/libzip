@@ -212,7 +212,7 @@ _zip_dirent_clone(const struct zip_dirent *sde)
 {
     struct zip_dirent *tde;
 
-    if ((tde=malloc(sizeof(*tde))) == NULL)
+    if ((tde=(struct zip_dirent *)malloc(sizeof(*tde))) == NULL)
 	return NULL;
 
     if (sde)
@@ -294,7 +294,7 @@ _zip_dirent_new(void)
 {
     struct zip_dirent *de;
 
-    if ((de=malloc(sizeof(*de))) == NULL)
+    if ((de=(struct zip_dirent *)malloc(sizeof(*de))) == NULL)
 	return NULL;
 
     _zip_dirent_init(de);
@@ -797,7 +797,7 @@ _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
         /* XXX: error */
     }
     
-    if ((data=malloc(len+5)) == NULL) {
+    if ((data=(zip_uint8_t *)malloc(len+5)) == NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }

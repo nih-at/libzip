@@ -189,7 +189,7 @@ pkware_decrypt(struct zip_source *src, void *ud, void *data,
 	if ((n=zip_source_read(src, data, len)) < 0)
 	    return ZIP_SOURCE_ERR_LOWER;
 
-	decrypt(ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n,
+	decrypt((struct trad_pkware *)ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n,
 		0);
 	return n;
 
