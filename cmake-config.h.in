@@ -21,13 +21,25 @@
 #define VERSION "@VERSION@"
 
 #cmakedefine HAVE_SSIZE_T
-#cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
-#cmakedefine INT_LIBZIP ${INT_LIBZIP}
-#cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
-#cmakedefine LONG_LONG_LIBZIP ${LONG_LONG_LIBZIP}
-#cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
 
 #ifndef HAVE_SSIZE_T
+
+#ifndef SIZE_T_LIBZIP
+#cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
+#endif
+#ifndef INT_LIBZIP
+#cmakedefine INT_LIBZIP ${INT_LIBZIP}
+#endif
+#ifndef LONG_LIBZIP
+#cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
+#endif
+#ifndef LONG_LONG_LIBZIP
+#cmakedefine LONG_LONG_LIBZIP ${LONG_LONG_LIBZIP}
+#endif
+#ifndef SIZEOF_OFF_T
+#cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
+#endif
+
 #  if SIZE_T_LIBZIP == INT_LIBZIP
 typedef int ssize_t;
 #  elif SIZE_T_LIBZIP == LONG_LIBZIP
