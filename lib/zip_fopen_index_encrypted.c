@@ -75,7 +75,6 @@ static struct zip_file *
 _zip_file_new(struct zip *za)
 {
     struct zip_file *zf, **file;
-    unsigned int n;
 
     if ((zf=(struct zip_file *)malloc(sizeof(struct zip_file))) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
@@ -83,6 +82,7 @@ _zip_file_new(struct zip *za)
     }
     
     if (za->nfile+1 >= za->nfile_alloc) {
+	unsigned int n;
 	n = za->nfile_alloc + 10;
 	file = (struct zip_file **)realloc(za->file,
 					   n*sizeof(struct zip_file *));

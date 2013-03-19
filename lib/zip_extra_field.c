@@ -325,8 +325,6 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
     unsigned char b[4];
     const unsigned char *p;
     zip_uint16_t fname_len, ef_len;
-    zip_uint8_t *ef_raw;
-    struct zip_extra_field *ef;
 
     if (idx >= za->nentry) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -354,6 +352,9 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
     ef_len = _zip_read2(&p);
 
     if (ef_len > 0) {
+	struct zip_extra_field *ef;
+	zip_uint8_t *ef_raw;
+
 	if (fseek(za->zp, fname_len, SEEK_CUR) < 0) {
 	    _zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	    return -1;
