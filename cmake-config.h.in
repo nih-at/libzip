@@ -3,6 +3,7 @@
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
 #cmakedefine HAVE__FDOPEN
+#cmakedefine HAVE__FILENO
 #cmakedefine HAVE__OPEN
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__STRCMPI
