@@ -49,6 +49,15 @@
 #include "zip.h"
 #include "config.h"
 
+#ifdef HAVE_MOVEFILEEXA
+#include <windows.h>
+#define _zip_rename(s, t)						\
+	(!MoveFileExA((s), (t),						\
+		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
+#else
+#define _zip_rename	rename
+#endif
+
 #ifdef _WIN32
 #if defined(HAVE__CLOSE)
 #define close		_close
@@ -83,15 +92,6 @@
 #ifndef HAVE_MKSTEMP
 int _zip_mkstemp(char *);
 #define mkstemp _zip_mkstemp
-#endif
-
-#ifdef HAVE_MOVEFILEEXA
-#include <windows.h>
-#define _zip_rename(s, t)						\
-	(!MoveFileExA((s), (t),						\
-		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
-#else
-#define _zip_rename	rename
 #endif
 
 #if !defined(HAVE_STRCASECMP)
