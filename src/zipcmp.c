@@ -81,7 +81,7 @@ const char *prg;
 
 #define PROGRAM	"zipcmp"
 
-char *usage = "usage: %s [-hipqtVv] zip1 zip2\n";
+const char *usage = "usage: %s [-hipqtVv] zip1 zip2\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -210,7 +210,7 @@ compare_zip(char * const zn[])
 	if (n[i] == 0)
 	    e[i] = NULL;
         else {
-	    if ((e[i]=malloc(sizeof(*e[i]) * n[i])) == NULL) {
+	    if ((e[i]=(struct entry *)malloc(sizeof(*e[i]) * n[i])) == NULL) {
 	        fprintf(stderr, "%s: malloc failure\n", prg);
 	        exit(1);
 	    }
@@ -246,7 +246,7 @@ compare_zip(char * const zn[])
 
     header_done = 0;
 
-    res = compare_list(zn, (void *)e, n, sizeof(e[i][0]),
+    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]),
 		       entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print);
 
     if (paranoid) {
@@ -358,7 +358,7 @@ ef_read(struct zip *za, int idx, struct entry *e)
     n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL);
     e->n_extra_fields = n_local + n_central;
     
-    if ((e->extra_fields=malloc(sizeof(e->extra_fields[0])*e->n_extra_fields)) == NULL)
+    if ((e->extra_fields=(struct ef *)malloc(sizeof(e->extra_fields[0])*e->n_extra_fields)) == NULL)
 	return -1;
 
     for (i=0; i<n_local; i++) {
@@ -392,7 +392,7 @@ ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2)
     n[0] = e1->n_extra_fields;
     n[1] = e2->n_extra_fields;
 
-    return compare_list(name, (void *)ef, n, sizeof(struct ef), ef_order, NULL, ef_print);
+    return compare_list(name, (const void **)ef, n, sizeof(struct ef), ef_order, NULL, ef_print);
 }
 
 
@@ -402,8 +402,8 @@ static int
 ef_order(const void *ap, const void *bp) {
     const struct ef *a, *b;
 
-    a = ap;
-    b = bp;
+    a = (struct ef *)ap;
+    b = (struct ef *)bp;
 
     if (a->flags != b->flags)
 	return a->flags - b->flags;
@@ -419,7 +419,7 @@ ef_order(const void *ap, const void *bp) {
 static void
 ef_print(const void *p)
 {
-    const struct ef *ef = p;
+    const struct ef *ef = (struct ef *)p;
     int i;
 
     printf("                    %s  ", ef->name);
@@ -437,8 +437,8 @@ entry_cmp(const void *p1, const void *p2)
     const struct entry *e1, *e2;
     int c;
 
-    e1 = p1;
-    e2 = p2;
+    e1 = (struct entry *)p1;
+    e2 = (struct entry *)p2;
 
     if ((c=(ignore_case ? strcasecmp : strcmp)(e1->name, e2->name)) != 0)
 	return c;
@@ -461,8 +461,8 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
     const struct entry *e1, *e2;
     int ret;
 
-    e1 = p1;
-    e2 = p2;
+    e1 = (struct entry *)p1;
+    e2 = (struct entry *)p2;
 
     ret = 0;
 
@@ -507,7 +507,7 @@ entry_print(const void *p)
 {
     const struct entry *e;
 
-    e = p;
+    e = (struct entry *)p;
 
     /* XXX PRId64 */
     printf("%10lu %08x %s\n", (unsigned long)e->size, e->crc, e->name);

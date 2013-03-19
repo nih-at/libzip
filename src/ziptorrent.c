@@ -59,7 +59,7 @@ const char *prg;
 
 #define PROGRAM	"ziptorrent"
 
-char *usage = "usage: %s [-hnVv] zip [...]\n";
+const char *usage = "usage: %s [-hnVv] zip [...]\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";

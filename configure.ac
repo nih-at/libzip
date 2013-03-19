@@ -32,7 +32,7 @@ fi
 
 AC_CHECK_LIB(z, main)
 AC_CACHE_CHECK(new ZLIB version, id_cv_lib_zlib_ok, 
-	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <zlib.h>]], [[extern ZEXPORT unzOpen (const char *path);]])],[id_cv_lib_zlib_ok=yes],[id_cv_lib_zlib_ok=no]))
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <zlib.h>]], [[extern ZEXPORT int unzOpen (const char *path);]])],[id_cv_lib_zlib_ok=yes],[id_cv_lib_zlib_ok=no]))
 if test "$id_cv_lib_zlib_ok" = "no"
 then
     AC_MSG_ERROR([ZLIB version too old, please install at least v1.1.2])
