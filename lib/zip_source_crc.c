@@ -38,7 +38,7 @@
 
 #include "zipint.h"
 
-struct crc {
+struct crc_context {
     int eof;
     int validate;
     int e[2];
@@ -54,14 +54,14 @@ static zip_int64_t crc_read(struct zip_source *, void *, void *
 struct zip_source *
 zip_source_crc(struct zip *za, struct zip_source *src, int validate)
 {
-    struct crc *ctx;
+    struct crc_context *ctx;
 
     if (src == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
 
-    if ((ctx=(struct crc *)malloc(sizeof(*ctx))) == NULL) {
+    if ((ctx=(struct crc_context *)malloc(sizeof(*ctx))) == NULL) {
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
@@ -77,10 +77,10 @@ static zip_int64_t
 crc_read(struct zip_source *src, void *_ctx, void *data,
 	 zip_uint64_t len, enum zip_source_cmd cmd)
 {
-    struct crc *ctx;
+    struct crc_context *ctx;
     zip_int64_t n;
 
-    ctx = (struct crc *)_ctx;
+    ctx = (struct crc_context *)_ctx;
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
@@ -121,7 +121,7 @@ crc_read(struct zip_source *src, void *_ctx, void *data,
 	}
 	else {
 	    ctx->size += (zip_uint64_t)n;
-	    ctx->crc = (zip_uint32_t)crc32(ctx->crc, data, (uInt)n); /* XXX: check for overflow, use multiple crc calls if needed */
+	    ctx->crc = (zip_uint32_t)crc32(ctx->crc, (const Bytef *)data, (uInt)n); /* XXX: check for overflow, use multiple crc calls if needed */
 	}
 	return n;
 
