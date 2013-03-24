@@ -1,4 +1,4 @@
-0.xx [20xx/xx/xx]
+0.11 [2013/03/23]
 
 * Added Zip64 support (large file support)
 * Added UTF-8 support for file names, file comments, and archive comments
