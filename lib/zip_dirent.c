@@ -887,7 +887,7 @@ _zip_read8(const zip_uint8_t **a)
 zip_uint8_t *
 _zip_read_data(const zip_uint8_t **buf, FILE *fp, size_t len, int nulp, struct zip_error *error)
 {
-    zip_uint8_t *r, *o;
+    zip_uint8_t *r;
 
     if (len == 0 && nulp == 0)
 	return NULL;
@@ -914,6 +914,7 @@ _zip_read_data(const zip_uint8_t **buf, FILE *fp, size_t len, int nulp, struct z
     }
 
     if (nulp) {
+	zip_uint8_t *o;
 	/* replace any in-string NUL characters with spaces */
 	r[len] = 0;
 	for (o=r; o<r+len; o++)

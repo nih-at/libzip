@@ -57,7 +57,7 @@ char *prg;
 
 #define PROGRAM	"zipmerge"
 
-char *usage = "usage: %s [-DhIiSsV] target-zip zip...\n";
+const char *usage = "usage: %s [-DhIiSsV] target-zip zip...\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -151,7 +151,7 @@ main(int argc, char *argv[])
     argv += optind;
 
     n = (unsigned int)(argc-optind);
-    if ((zs=malloc(sizeof(zs[0])*n)) == NULL) {
+    if ((zs=(struct zip **)malloc(sizeof(zs[0])*n)) == NULL) {
 	fprintf(stderr, "%s: out of memory\n", prg);
 	exit(1);
     }

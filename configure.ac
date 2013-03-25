@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT([libzip],[0.10b],[libzip@nih.at])
+AC_INIT([libzip],[0.11],[libzip@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -32,7 +32,7 @@ fi
 
 AC_CHECK_LIB(z, main)
 AC_CACHE_CHECK(new ZLIB version, id_cv_lib_zlib_ok, 
-	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <zlib.h>]], [[extern ZEXPORT unzOpen (const char *path);]])],[id_cv_lib_zlib_ok=yes],[id_cv_lib_zlib_ok=no]))
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <zlib.h>]], [[extern ZEXPORT int unzOpen (const char *path);]])],[id_cv_lib_zlib_ok=yes],[id_cv_lib_zlib_ok=no]))
 if test "$id_cv_lib_zlib_ok" = "no"
 then
     AC_MSG_ERROR([ZLIB version too old, please install at least v1.1.2])
@@ -42,7 +42,7 @@ AC_EXEEXT
 
 AM_PROG_LIBTOOL
 
-AC_CHECK_FUNCS([_close _dup _fdopen _open _snprintf _strdup _stricmp fseeko ftello getopt open snprintf strcasecmp strdup])
+AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _snprintf _strdup _stricmp fseeko ftello getopt open snprintf strcasecmp strdup])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 AC_MSG_CHECKING([MoveFileExA])

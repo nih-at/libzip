@@ -34,6 +34,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* to have *_MAX definitions for all types when compiling with g++ */
+#define __STDC_LIMIT_MACROS
+
 #include <zlib.h>
 
 #ifdef _WIN32
@@ -49,6 +52,15 @@
 #include "zip.h"
 #include "config.h"
 
+#ifdef HAVE_MOVEFILEEXA
+#include <windows.h>
+#define _zip_rename(s, t)						\
+	(!MoveFileExA((s), (t),						\
+		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
+#else
+#define _zip_rename	rename
+#endif
+
 #ifdef _WIN32
 #if defined(HAVE__CLOSE)
 #define close		_close
@@ -59,6 +71,9 @@
 /* crashes reported when using fdopen instead of _fdopen on Windows/Visual Studio 10/Win64 */
 #if defined(HAVE__FDOPEN)
 #define fdopen		_fdopen
+#endif
+#if defined(HAVE__FILENO)
+#define fileno		_fileno
 #endif
 /* Windows' open() doesn't understand Unix permissions */
 #if defined(HAVE__OPEN)
@@ -83,15 +98,6 @@
 #ifndef HAVE_MKSTEMP
 int _zip_mkstemp(char *);
 #define mkstemp _zip_mkstemp
-#endif
-
-#ifdef HAVE_MOVEFILEEXA
-#include <windows.h>
-#define _zip_rename(s, t)						\
-	(!MoveFileExA((s), (t),						\
-		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
-#else
-#define _zip_rename	rename
 #endif
 
 #if !defined(HAVE_STRCASECMP)

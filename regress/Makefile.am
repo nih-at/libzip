@@ -22,6 +22,7 @@ EXTRA_DIST= \
 	bigzero-zip.zip \
 	broken.zip \
 	encrypt.zip \
+	encrypt_plus_extra.zip \
 	filename_duplicate.zip \
 	filename_empty.zip \
 	fileorder.zip \
