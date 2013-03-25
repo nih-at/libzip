@@ -680,6 +680,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3D77B86517009AA1000A5794 /* extract-version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "extract-version.sh"; sourceTree = SOURCE_ROOT; };
 		4B01D68B15B2F3F1002D5007 /* libzip Mac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "libzip Mac.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D6FD15B2F4B1002D5007 /* zipmerge */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipmerge; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D70815B2F4CF002D5007 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
@@ -1279,6 +1280,7 @@
 		4BDC71E415B182B200236D3C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3D77B86517009AA1000A5794 /* extract-version.sh */,
 				4B01D73D15B2FB6B002D5007 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -1318,6 +1320,7 @@
 				4B01D68715B2F3F1002D5007 /* Frameworks */,
 				4B01D68815B2F3F1002D5007 /* Headers */,
 				4B01D68915B2F3F1002D5007 /* Resources */,
+				3D77B86617009AC5000A5794 /* Copy Version Info from config.h */,
 			);
 			buildRules = (
 			);
@@ -1699,6 +1702,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3D77B86617009AC5000A5794 /* Copy Version Info from config.h */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Version Info from config.h";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./extract-version.sh \"config.h\" \"Info.plist\" ";
+		};
 		4BDC72A515B1B71500236D3C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
