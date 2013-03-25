@@ -8,9 +8,9 @@
    based on ../config.h.
  */
 
-#define LIBZIP_VERSION "0.10b"
+#define LIBZIP_VERSION "0.11"
 #define LIBZIP_VERSION_MAJOR 0
-#define LIBZIP_VERSION_MINOR 10
+#define LIBZIP_VERSION_MINOR 11
 #define LIBZIP_VERSION_MICRO 0
 
 #include <inttypes.h>

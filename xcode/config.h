@@ -103,14 +103,23 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
+/* Define to 1 if you have the `_close' function. */
+/* #undef HAVE__CLOSE */
+
+/* Define to 1 if you have the `_dup' function. */
+/* #undef HAVE__DUP */
+
+/* Define to 1 if you have the `_fdopen' function. */
+/* #undef HAVE__FDOPEN */
+
+/* Define to 1 if you have the `_fileno' function. */
+/* #undef HAVE__FILENO */
+
 /* Define to 1 if you have the `_open' function. */
 /* #undef HAVE__OPEN */
 
 /* Define to 1 if you have the `_snprintf' function. */
 /* #undef HAVE__SNPRINTF */
-
-/* Define to 1 if you have the `_strcmpi' function. */
-/* #undef HAVE__STRCMPI */
 
 /* Define to 1 if you have the `_strdup' function. */
 /* #undef HAVE__STRDUP */
@@ -135,7 +144,7 @@
 #define PACKAGE_NAME "libzip"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libzip 0.10b"
+#define PACKAGE_STRING "libzip 0.11"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libzip"
@@ -144,7 +153,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.10b"
+#define PACKAGE_VERSION "0.11"
 
 /* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
@@ -171,17 +180,17 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "0.10b"
+#define VERSION "0.11"
 
 
 #ifndef HAVE_SSIZE_T
 #  if SIZEOF_SIZE_T == SIZEOF_INT
-typedef int ssize_t
+typedef int ssize_t;
 #  elif SIZEOF_SIZE_T == SIZEOF_LONG
-typedef long ssize_t
+typedef long ssize_t;
 #  elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
-typedef long long ssize_t
-#  elif
+typedef long long ssize_t;
+#  else
 #error no suitable type for ssize_t found
 #  endif
 #endif
