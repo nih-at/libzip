@@ -60,6 +60,7 @@ zip_int64_t
 _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip_source *source, zip_flags_t flags)
 {
     zip_uint64_t za_nentry_prev;
+    
     if (ZIP_IS_RDONLY(za)) {
 	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
@@ -70,7 +71,7 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
 	zip_int64_t i = -1;
 	
 	if (flags & ZIP_FL_OVERWRITE)
-	    i = zip_name_locate(za, name, flags);
+	    i = _zip_name_locate(za, name, flags, NULL);
 
 	if (i == -1) {
 	    /* create and use new entry, used by zip_add */
