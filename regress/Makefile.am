@@ -29,6 +29,7 @@ EXTRA_DIST= \
 	firstsecond.zip \
 	firstsecond-split-deflated.zip \
 	firstsecond-split-stored.zip \
+	foo-stored.zip \
 	incons-archive-comment-longer.zip \
 	incons-archive-comment-shorter.zip \
 	incons-cdoffset.zip \
@@ -177,6 +178,9 @@ TESTS= \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
 	torrent-already.test
+
+BROKEN_TEST= \
+	add_stored.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \

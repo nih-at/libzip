@@ -87,6 +87,18 @@ get_flags(const char *arg)
     return flags;
 }
 
+static zip_int32_t
+get_compression_method(const char *arg)
+{
+    if (strcmp(arg, "default") == 0)
+        return ZIP_CM_DEFAULT;
+    else if (strcmp(arg, "store") == 0)
+        return ZIP_CM_STORE;
+    else if (strcmp(arg, "deflate") ==0)
+        return ZIP_CM_DEFLATE;
+    return 0; /* XXX: error handling */
+}
+
 static void
 hexdump(const zip_uint8_t *data, zip_uint16_t len)
 {
@@ -374,6 +386,19 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 3;
+        } else if (strcmp(argv[arg], "set_file_compression") == 0 && arg+3 < argc) {
+            /* set file compression */
+            zip_int32_t method;
+            zip_uint32_t flags;
+            idx = atoi(argv[arg+1]);
+            method = get_compression_method(argv[arg+2]);
+            flags = atoi(argv[arg+3]);
+            if (zip_set_file_compression(za, idx, method, flags) < 0) {
+		fprintf(stderr, "can't set file compression method at index `%d' to `%s', flags `%d': %s\n", idx, argv[arg+2], flags, zip_strerror(za));
+		err = 1;
+		break;
+            }
+            arg += 4;
 	} else {
 	    fprintf(stderr, "unrecognized command `%s', or not enough arguments\n", argv[arg]);
 	    err = 1;
