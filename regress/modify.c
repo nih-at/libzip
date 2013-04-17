@@ -72,6 +72,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\trename index name\n"
     "\tset_extra index extra_id extra_index flags value\n"
     "\tset_file_comment index comment\n"
+    "\tset_file_compression index method flags\n"
     "\nThe index is zero-based.\n";
 
 static zip_flags_t
