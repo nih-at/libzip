@@ -2,6 +2,11 @@
 
 use strict;
 
+my $DOCSETUTIL = '/Applications/Xcode.app/Contents/Developer/usr/bin/docsetutil';
+
+my $BASE_URL = 'http://nih.at/libzip';
+my $BUNDLE_ID = 'at.nih.libzip';
+
 my @files = @ARGV;
 
 my $docset = 'at.nih.libzip.docset';
@@ -17,6 +22,13 @@ mkdir("$docset/Contents/Resources/Documents") or die "can't create docset direct
 my $version = `sed -n 's/#define PACKAGE_VERSION "\\(.*\\)"/\\1/p' ../config.h`;
 chomp $version;
 
+my $suffix = '';
+$suffix = '-hg' if ($version =~ /[a-z]$/);
+
+my $package_file = "$BUNDLE_ID-$version.xar";
+my $download_url = "$BASE_URL/$package_file";
+my $feed_url = "$BASE_URL/at.nih.libzip$suffix.atom";
+
 open I, "> $docset/Contents/Info.plist" or die "can't create Info.plist: $!";
 print I <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
@@ -24,7 +36,7 @@ print I <<EOF;
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>at.nih.libzip.docset</string>
+	<string>$BUNDLE_ID.docset</string>
 	<key>CFBundleName</key>
 	<string>libzip</string>
 	<key>DocSetPublisherIdentifier</key>
@@ -35,6 +47,10 @@ print I <<EOF;
         <string>Copyright © 2012 Dieter Baron and Thomas Klausner</string>
 	<key>CFBundleVersion</key>
 	<string>$version</string>
+	<key>DocSetFeedURL</key>
+	<string>$feed_url</string>
+	<key>DocSetFeedName</key>
+	<string>libzip</string>
 </dict>
 </plist>
 EOF
@@ -103,11 +119,14 @@ copy_html('libzip.html', "$docset/Contents/Resources/Documents/libzip.html");
 
 write_tokens();
 
-system('docsetutil', 'index', $docset) == 0 or die "can't index docset: $!";
-system('docsetutil', 'validate', $docset) == 0 or die "can't validate docset: $!";
+system($DOCSETUTIL, 'index', $docset) == 0 or die "can't index docset: $!";
+system($DOCSETUTIL, 'validate', $docset) == 0 or die "can't validate docset: $!";
 
 unlink("$docset/Contents/Resources/Nodes.xml");
 unlink("$docset/Contents/Resources/Tokens.xml");
+
+system($DOCSETUTIL, 'package', '-output', "at.nih.libzip-$version.xar", '-atom', "at.nih.libzip$suffix.atom", '-download-url', "$BASE_URL/at.nih.libzip-$version.xar", $docset);
+
 
 
 
