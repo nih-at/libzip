@@ -117,6 +117,7 @@ TESTS= \
 	add_from_zip_partial_deflated.test \
 	add_from_zip_partial_stored.test \
 	add_from_zip_stored.test \
+	add_stored.test \
 	delete_add_same.test \
 	delete_invalid.test \
 	delete_last.test \
@@ -178,9 +179,6 @@ TESTS= \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
 	torrent-already.test
-
-BROKEN_TEST= \
-	add_stored.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \
