@@ -66,8 +66,12 @@ zip_source_crc(struct zip *za, struct zip_source *src, int validate)
 	return NULL;
     }
 
+    ctx->eof = 0;
     ctx->validate = validate;
-
+    ctx->e[0] = ctx->e[1] = 0;
+    ctx->size = 0;
+    ctx->crc = 0;
+    
     return zip_source_layered(za, src, crc_read, ctx);
 }
 
