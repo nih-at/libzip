@@ -221,6 +221,7 @@ _zip_dirent_clone(const struct zip_dirent *sde)
 	_zip_dirent_init(tde);
     
     tde->changed = 0;
+    tde->cloned = 1;
 
     return tde;
 }
@@ -230,11 +231,11 @@ _zip_dirent_clone(const struct zip_dirent *sde)
 void
 _zip_dirent_finalize(struct zip_dirent *zde)
 {
-    if (zde->changed & ZIP_DIRENT_FILENAME)
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_FILENAME)
 	_zip_string_free(zde->filename);
-    if (zde->changed & ZIP_DIRENT_EXTRA_FIELD)
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_EXTRA_FIELD)
 	_zip_ef_free(zde->extra_fields);
-    if (zde->changed & ZIP_DIRENT_COMMENT)
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_COMMENT)
 	_zip_string_free(zde->comment);
 }
 
@@ -257,6 +258,7 @@ _zip_dirent_init(struct zip_dirent *de)
 {
     de->changed = 0;
     de->local_extra_fields_read = 0;
+    de->cloned = 0;
 
     de->version_madeby = 20;
     de->version_needed = 20; /* 2.0 */
