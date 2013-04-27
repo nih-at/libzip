@@ -1,6 +1,7 @@
 0.11.1 [2013/--/--]
 
 * Fix bugs in zip_set_file_compression().
+* Include Xcode build infrastructure.
 
 0.11 [2013/03/23]
 

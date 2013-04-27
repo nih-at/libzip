@@ -16,3 +16,14 @@ EXTRA_DIST=	API-CHANGES \
 		libzip.pc.in \
 		libzip-uninstalled.pc.in \
 		m4
+
+dist-hook:
+	mkdir $(distdir)/xcode
+	mkdir $(distdir)/xcode/libzip.xcodeproj
+	mkdir $(distdir)/xcode/libzip.xcodeproj/project.xcworkspace
+	cp -p $(srcdir)/xcode/Info.plist \
+		  $(srcdir)/xcode/extract-version.sh \
+		  $(srcdir)/xcode/zipconf.h $(distdir)/xcode
+	cp -p $(srcdir)/xcode/libzip.xcodeproj/project.pbxproj $(distdir)/xcode/libzip.xcodeproj
+	cp -p $(srcdir)/xcode/libzip.xcodeproj/project.xcworkspace/contents.xcworkspacedata \
+		$(distdir)/xcode/libzip.xcodeproj/project.xcworkspace
