@@ -22,6 +22,7 @@ dist-hook:
 	mkdir $(distdir)/xcode/libzip.xcodeproj
 	mkdir $(distdir)/xcode/libzip.xcodeproj/project.xcworkspace
 	cp -p $(srcdir)/xcode/Info.plist \
+		  $(srcdir)/xcode/config.h \
 		  $(srcdir)/xcode/extract-version.sh \
 		  $(srcdir)/xcode/zipconf.h $(distdir)/xcode
 	cp -p $(srcdir)/xcode/libzip.xcodeproj/project.pbxproj $(distdir)/xcode/libzip.xcodeproj
