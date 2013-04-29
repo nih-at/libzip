@@ -35,7 +35,7 @@ definition fo the Torrentzip normal form.
 
   The archive comment contains a signature and a crc32 checksum of the
 central directory (as specified by size/offset in EOCD record).  This
-is used to detect wether a torrentziped archive was modified by a
+is used to detect whether a torrentziped archive was modified by a
 non-torrentzip aware program.
 
   TORRENTZIPPED-XXXXXXXX where XXXXXXX is the crc32 checksum of
