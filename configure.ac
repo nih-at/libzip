@@ -1,4 +1,4 @@
-AC_PREREQ(2.57)
+AC_PREREQ([2.60])
 AC_INIT([libzip],[0.11.1a],[libzip@nih.at])
 AC_CONFIG_SRCDIR([lib/zip_add.c])
 AC_CONFIG_HEADERS([config.h])
@@ -40,7 +40,7 @@ fi
 
 AC_EXEEXT
 
-AM_PROG_LIBTOOL
+LT_INIT
 
 AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _snprintf _strdup _stricmp fseeko ftello getopt open snprintf strcasecmp strdup])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
