@@ -3,7 +3,7 @@ libincludedir = ${libdir}/@PACKAGE@/include
 lib_LTLIBRARIES = libzip.la
 noinst_HEADERS = zipint.h
 include_HEADERS = zip.h
-libinclude_HEADERS = zipconf.h
+nodist_libinclude_HEADERS = zipconf.h
 
 # also update CMakeLists.txt when changing version
 libzip_la_LDFLAGS=-no-undefined -version-info 3:0:1
