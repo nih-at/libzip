@@ -14,7 +14,7 @@
 ^autom4te\.cache/
 ^build
 ^compile$
-^config\.(h|status|log|h\.in)$
+^config\.(guess|h|h\.in|log|status|sub)$
 ^configure$
 ^depcomp$
 ^install-sh$
