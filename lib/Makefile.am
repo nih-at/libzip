@@ -1,3 +1,4 @@
+AM_CFLAGS=	@CFLAG_VISIBILITY@
 libincludedir = ${libdir}/@PACKAGE@/include
 
 lib_LTLIBRARIES = libzip.la

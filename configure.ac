@@ -99,6 +99,8 @@ typedef long long ssize_t;
 #endif
 ])
 
+gl_VISIBILITY
+
 AC_CONFIG_FILES([Makefile
 		 libzip.pc
 		 libzip-uninstalled.pc
