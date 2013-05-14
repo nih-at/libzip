@@ -124,7 +124,7 @@ int _zip_mkstemp(char *);
 #elif SIZEOF_SIZE_T == 2
 #define SIZE_MAX ZIP_INT16_MAX
 #else
-#error unsupported size of off_t
+#error unsupported size of size_t
 #endif
 #endif
 
