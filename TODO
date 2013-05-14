@@ -52,6 +52,7 @@ Features
 
 Bugs
 ====
+! ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
 ! D fix OpenSUSE i686 regression failures
 * fix open_filename_duplicate_consistency.test to fail
 * split zip archive torrentzip state from user requested torrentzip state

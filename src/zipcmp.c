@@ -114,7 +114,7 @@ static int entry_paranoia_checks(char *const name[2], const void *p1, const void
 static void entry_print(const void *p);
 static int comment_compare(const char *c1, int l1, const char *c2, int l2);
 static int compare_list(char * const name[],
-			const void *l[], const int n[], int size,
+			const void *l[], const zip_uint64_t n[], int size,
 			int (*cmp)(const void *, const void *),
 			int (*checks)(char *const name[2], const void *, const void *),
 			void (*print)(const void *));
@@ -187,7 +187,7 @@ compare_zip(char * const zn[])
     struct zip *za, *z[2];
     struct zip_stat st;
     struct entry *e[2];
-    int n[2];
+    zip_uint64_t n[2];
     int i, j;
     int err;
     char errstr[1024];
@@ -294,7 +294,7 @@ comment_compare(const char *c1, int l1, const char *c2, int l2) {
 
 static int
 compare_list(char * const name[2],
-	     const void *l[2], const int n[2], int size,
+	     const void *l[2], const zip_uint64_t n[2], int size,
 	     int (*cmp)(const void *, const void *),
 	     int (*check)(char *const name[2], const void *, const void *),
 	     void (*print)(const void *))
@@ -385,7 +385,7 @@ static int
 ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2)
 {
     struct ef *ef[2];
-    int n[2];
+    zip_uint64_t n[2];
 
     ef[0] = e1->extra_fields;
     ef[1] = e2->extra_fields;

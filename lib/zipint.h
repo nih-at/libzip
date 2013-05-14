@@ -116,6 +116,18 @@ int _zip_mkstemp(char *);
 #error unsupported size of off_t
 #endif
 
+#ifndef SIZE_MAX
+#if SIZEOF_SIZE_T == 8
+#define SIZE_MAX ZIP_INT64_MAX
+#elif SIZEOF_SIZE_T == 4
+#define SIZE_MAX ZIP_INT32_MAX
+#elif SIZEOF_SIZE_T == 2
+#define SIZE_MAX ZIP_INT16_MAX
+#else
+#error unsupported size of off_t
+#endif
+#endif
+
 #define CENTRAL_MAGIC "PK\1\2"
 #define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"

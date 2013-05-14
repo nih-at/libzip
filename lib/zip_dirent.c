@@ -81,7 +81,7 @@ _zip_cdir_grow(struct zip_cdir *cd, zip_uint64_t nentry, struct zip_error *error
 	return 0;
 
     if ((entry=((struct zip_entry *)
-		realloc(cd->entry, sizeof(*(cd->entry))*nentry))) == NULL) {
+		realloc(cd->entry, sizeof(*(cd->entry))*(size_t)nentry))) == NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
@@ -110,7 +110,7 @@ _zip_cdir_new(zip_uint64_t nentry, struct zip_error *error)
 
     if (nentry == 0)
 	cd->entry = NULL;
-    else if ((cd->entry=(struct zip_entry *)malloc(sizeof(*(cd->entry))*nentry)) == NULL) {
+    else if ((cd->entry=(struct zip_entry *)malloc(sizeof(*(cd->entry))*(size_t)nentry)) == NULL) {
 	_zip_error_set(error, ZIP_ER_MEMORY, 0);
 	free(cd);
 	return NULL;

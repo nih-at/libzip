@@ -110,7 +110,7 @@ zip_close(struct zip *za)
         return -1;
     }
     
-    if ((filelist=(struct zip_filelist *)malloc(sizeof(filelist[0])*survivors)) == NULL)
+    if ((filelist=(struct zip_filelist *)malloc(sizeof(filelist[0])*(size_t)survivors)) == NULL)
 	return -1;
 
     /* archive comment is special for torrentzip */
@@ -153,7 +153,7 @@ zip_close(struct zip *za)
     
     
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
-	qsort(filelist, survivors, sizeof(filelist[0]),
+	qsort(filelist, (size_t)survivors, sizeof(filelist[0]),
 	      _zip_torrentzip_cmp);
 
     new_torrentzip = (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0) == 1
@@ -225,7 +225,7 @@ zip_close(struct zip *za)
 		error = 1;
 		break;
 	    }
-	    if ((fseek(za->zp, (off_t)offset, SEEK_SET) < 0)) {
+	    if ((fseeko(za->zp, (off_t)offset, SEEK_SET) < 0)) {
 		_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 		error = 1;
 		break;
@@ -461,7 +461,7 @@ copy_data(FILE *fs, zip_uint64_t len, FILE *ft, struct zip_error *error)
 	return 0;
 
     while (len > 0) {
-	nn = len > sizeof(buf) ? sizeof(buf) : len;
+	nn = len > sizeof(buf) ? sizeof(buf) : len > SIZE_MAX ? SIZE_MAX : len;
 	if ((n=fread(buf, 1, nn, fs)) == 0) {
             if (ferror(fs)) {
                 _zip_error_set(error, ZIP_ER_READ, errno);
