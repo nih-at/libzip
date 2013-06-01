@@ -21,7 +21,6 @@ int zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags
 * define operating systems
 #define ZIP_OPSYS_DOS 0u
 ...
-* put example code how to convert permissions to Unix/DOS permissions in man page
 
 API Issues
 ==========
