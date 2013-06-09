@@ -103,6 +103,10 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
+/* Define to 1 or 0, depending whether the compiler supports simple visibility
+   declarations. */
+#define HAVE_VISIBILITY 1
+
 /* Define to 1 if you have the `_close' function. */
 /* #undef HAVE__CLOSE */
 
@@ -144,7 +148,7 @@
 #define PACKAGE_NAME "libzip"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libzip 0.11"
+#define PACKAGE_STRING "libzip 0.11.1a"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libzip"
@@ -153,13 +157,17 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.11"
+#define PACKAGE_VERSION "0.11.1a"
 
 /* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
 
 /* The size of `long', as computed by sizeof. */
-#define SIZEOF_LONG 8
+#ifndef __LP64__
+# define SIZEOF_LONG 4
+#else
+# define SIZEOF_LONG 8
+#endif
 
 /* The size of `long long', as computed by sizeof. */
 #define SIZEOF_LONG_LONG 8
@@ -171,7 +179,11 @@
 #define SIZEOF_SHORT 2
 
 /* The size of `size_t', as computed by sizeof. */
-#define SIZEOF_SIZE_T 8
+#ifndef __LP64__
+# define SIZEOF_SIZE_T 4
+#else
+# define SIZEOF_SIZE_T 8
+#endif
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -180,7 +192,18 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "0.11"
+#define VERSION "0.11.1a"
+
+/* Enable large inode numbers on Mac OS X 10.5.  */
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+/* #undef _FILE_OFFSET_BITS */
+
+/* Define for large files, on AIX-style hosts. */
+/* #undef _LARGE_FILES */
 
 
 #ifndef HAVE_SSIZE_T
