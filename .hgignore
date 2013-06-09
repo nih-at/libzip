@@ -29,6 +29,8 @@
 ^m4/lt~obsolete.m4$
 ^man/.*\.html$
 ^man/at\.nih\.libzip\.docset/
+^man/at.nih.libzip-.*\.xar$
+^man/at.nih.libzip.*\.atom$
 ^missing$
 ^regress/.*log$
 ^regress/.*trs$
