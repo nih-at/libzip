@@ -164,10 +164,10 @@
 
 /* The size of `long', as computed by sizeof. */
 #ifndef __LP64__
-# define SIZEOF_LONG 4
-#else
-# define SIZEOF_LONG 8
-#endif
+#define SIZEOF_LONG 4
+#else /* __LP64__ */
+#define SIZEOF_LONG 8
+#endif /* __LP64__ */
 
 /* The size of `long long', as computed by sizeof. */
 #define SIZEOF_LONG_LONG 8
@@ -180,10 +180,10 @@
 
 /* The size of `size_t', as computed by sizeof. */
 #ifndef __LP64__
-# define SIZEOF_SIZE_T 4
-#else
-# define SIZEOF_SIZE_T 8
-#endif
+#define SIZEOF_SIZE_T 4
+#else /* __LP64__ */
+#define SIZEOF_SIZE_T 8
+#endif /* __LP64__ */
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
