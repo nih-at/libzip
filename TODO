@@ -7,6 +7,21 @@ Encryption
 * int zip_set_encryption(struct zip *archive, zip_uint64_t idx, zip_uint16_t method, const char *password);
 * void zip_set_archive_encryption(struct zip *archive, zip_uint16_t method, const char *password);
 
+Prefixes
+--------
+For example for adding extractors for self-extracting zip archives.
+* zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t length);
+* const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
+
+External Attributes
+-------------------
+int zip_file_get_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t *opsys, zip_uint32_t *attributes);
+int zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes);
+* clean up setting version-made-by
+* define operating systems
+#define ZIP_OPSYS_DOS 0u
+...
+
 API Issues
 ==========
 ! D zip_get_archive_comment has int *lenp argument.  Cleaner would be zip_uint32_t *.
@@ -32,9 +47,6 @@ Features
 * add functions to:
   . set last modification time for entry
   . read/set ASCII file flag? (wiz: more general options?)
-  . get/set "version made by" and "external file attributes"
-    (can be used to decide if an entry is a directory, if the
-     archive was created on DOS)
 * zip_commit (to finish changes without closing archive)
 * add custom compression function support
 * zip_source_zip: allow rewinding
@@ -52,6 +64,7 @@ Features
 
 Bugs
 ====
+* embed stripped down old zlib for torrentzip
 ! ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
 * Xcode 32bit build uses 64bit config.h
 * fix OpenSUSE i686 regression failures

@@ -461,7 +461,7 @@ copy_data(FILE *fs, zip_uint64_t len, FILE *ft, struct zip_error *error)
 	return 0;
 
     while (len > 0) {
-	nn = len > sizeof(buf) ? sizeof(buf) : len > SIZE_MAX ? SIZE_MAX : len;
+	nn = len > sizeof(buf) ? sizeof(buf) : len > SIZE_MAX ? SIZE_MAX : (size_t)len;
 	if ((n=fread(buf, 1, nn, fs)) == 0) {
             if (ferror(fs)) {
                 _zip_error_set(error, ZIP_ER_READ, errno);
