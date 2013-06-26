@@ -106,7 +106,8 @@ A file read error occurred.
 .It Bq Er ZIP_ER_SEEK
 A file seek error occurred.
 .It Bq Er ZIP_ER_WRONGPASSWD
-The provided password does not match the password used for encryption.  Note that not all incorrect passwords are recognized by the check done by
+The provided password does not match the password used for encryption.
+Note that some incorrect passwords are not detected by the check done by
 .Fn .
 .It Bq Er ZIP_ER_ZLIB
 Initializing the zlib stream failed.
