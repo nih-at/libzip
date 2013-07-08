@@ -168,7 +168,7 @@ ZIP_SOURCE_ROLLBACK_WRITE
         delete the temporary file.)
 
 ZIP_SOURCE_SEEK
-        Set postion for next read or write, a la fseek(3).
+        Set position for next read or write, a la fseek(3).
 
 ZIP_SOURCE_SUPPORTS
         Query which commands are supported for this stream.  If a
