@@ -105,9 +105,9 @@ cat <<EOF >> "$2.$$" || exit 1
 .El
 .Sh AUTHORS
 .An -nosplit
-.An Dieter Baron Aq dillo@giga.or.at
+.An Dieter Baron Aq Mt dillo@giga.or.at
 and
-.An Thomas Klausner Aq tk@giga.or.at
+.An Thomas Klausner Aq Mt tk@giga.or.at
 EOF
 
 mv "$2.$$" "$2" || exit 1
