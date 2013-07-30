@@ -40,8 +40,6 @@ Features
 
 ! W test extra fields api
   . set
-  . delete
-  . delete_by_id
 * I/O methods
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
