@@ -130,6 +130,7 @@ TESTS= \
 	extra_count.test \
 	extra_count_by_id.test \
 	extra_count_ignore_zip64.test \
+	extra_delete.test \
 	extra_delete_by_id.test \
 	extra_get.test \
 	extra_get_by_id.test \
@@ -186,7 +187,6 @@ DISABLED_TESTS= \
 	encoding-cp437.test \
 	encoding-cp437-all.test \
 	encoding-utf-8.test \
-	extra_delete.test \
 	open_filename_duplicate.test \
 	open_filename_duplicate_consistency.test \
 	open_filename_duplicate_empty.test \
