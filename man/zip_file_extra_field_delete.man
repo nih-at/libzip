@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_FILE_EXTRA_FIELD_DELETE 3 "February 20, 2013" NiH
+.TH ZIP_FILE_EXTRA_FIELD_DELETE 3 "July 31, 2013" NiH
 .SH "NAME"
 zip_file_extra_field_delete , \- .Nm zip_file_extra_field_delete_by_id
 delete extra field for file in zip
@@ -55,7 +55,7 @@ for the file at position
 in the zip archive.
 .PP
 If
-\fBindex\fR
+\fBextra_field_index\fR
 is
 \fBZIP_EXTRA_FIELD_ALL,\fR
 then all extra fields will be deleted.
@@ -85,7 +85,21 @@ extra field with ID
 The other arguments are the same as for
 zip_file_extra_field_delete
 \fB( ZIP_EXTRA_FIELD_ALL\fR
-will delete all extra fields the specified ID).
+will delete all extra fields of the specified ID).
+.PP
+Please note that due to the library design, the index of an extra
+field may be different between central directory and local file
+headers.
+For this reason, it is not allowed to specify both
+\fBZIP_FL_CENTRAL\fR
+and
+\fBZIP_FL_LOCAL\fR
+in
+\fBflags,\fR
+except when deleting all extra fields (i.e.,
+\fBextra_field_index\fR
+being
+\fBZIP_EXTRA_FIELD_ALL ).\fR
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error code in
