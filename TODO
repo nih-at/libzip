@@ -34,6 +34,7 @@ API Issues
 
 Features
 ========
+* progress callback for zip_close (called after each file written completely)
 * function to copy file from one archive to another
 * do not compress if storing is smaller
 * set O_CLOEXEC flag after fopen and mkstemp
@@ -81,6 +82,7 @@ Bugs
 
 Cleanup
 =======
+* move compat refs from zipint.h to own file, and include that in zipint.h and src
 * get rid of zip_get_{compression,encryption}_implementation
 * use zip_*int*_t internally
 * clean up lint(1) warnings?
