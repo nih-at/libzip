@@ -26,8 +26,10 @@ MAN3=	libzip.mdoc \
 	zip_file_extra_field_set.mdoc \
 	zip_file_extra_fields_count.mdoc \
 	zip_file_get_comment.mdoc \
+	zip_file_get_external_attributes.mdoc \
 	zip_file_rename.mdoc \
 	zip_file_set_comment.mdoc \
+	zip_file_set_external_attributes.mdoc \
 	zip_file_strerror.mdoc \
 	zip_fopen.mdoc \
 	zip_fopen_encrypted.mdoc \

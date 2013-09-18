@@ -1,6 +1,6 @@
 /*
-  zip_dir_add.c -- add directory
-  Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
+  zip_file_set_external_attributes.c -- set external attributes for entry
+  Copyright (C) 2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,65 +31,53 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-
-#include <stdlib.h>
-#include <string.h>
-
 #include "zipint.h"
 
-
-
-/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
-
-ZIP_EXTERN zip_int64_t
-zip_dir_add(struct zip *za, const char *name, zip_flags_t flags)
+int
+zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes)
 {
-    size_t len;
-    zip_int64_t idx;
-    char *s;
-    struct zip_source *source;
+    struct zip_entry *e;
+    int changed;
+    zip_uint8_t unchanged_opsys;
+    zip_uint32_t unchanged_attributes;
+
+    if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
+	return -1;
 
     if (ZIP_IS_RDONLY(za)) {
 	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
     }
 
-    if (name == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+    e = za->entry+idx;
+
+    unchanged_opsys = e->orig ? e->orig->version_madeby>>8 : ZIP_OPSYS_DEFAULT;
+    unchanged_attributes = e->orig ? e->orig->ext_attrib : ZIP_EXT_ATTRIB_DEFAULT;
+
+    changed = (opsys != unchanged_opsys || attributes != unchanged_attributes);
+
+    if (changed) {
+        if (e->changes == NULL) {
+            if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
+                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                return -1;
+            }
+        }
+        e->changes->version_madeby = (opsys << 8) | (e->changes->version_madeby & 0xff);
+	e->changes->ext_attrib = attributes;
+        e->changes->changed |= ZIP_DIRENT_ATTRIBUTES;
     }
-
-    s = NULL;
-    len = strlen(name);
-
-    if (name[len-1] != '/') {
-	if ((s=(char *)malloc(len+2)) == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    return -1;
+    else if (e->changes) {
+	e->changes->changed &= ~ZIP_DIRENT_ATTRIBUTES;
+	if (e->changes->changed == 0) {
+	    _zip_dirent_free(e->changes);
+	    e->changes = NULL;
 	}
-	strcpy(s, name);
-	s[len] = '/';
-	s[len+1] = '\0';
-    }
-
-    if ((source=zip_source_buffer(za, NULL, 0, 0)) == NULL) {
-	free(s);
-	return -1;
-    }
-	
-    idx = _zip_file_replace(za, ZIP_UINT64_MAX, s ? s : name, source, flags);
-
-    free(s);
-
-    if (idx < 0)
-	zip_source_free(source);
-    else {
-	if (zip_file_set_external_attributes(za, (zip_uint64_t)idx, 0, ZIP_OPSYS_DEFAULT, ZIP_EXT_ATTRIB_DEFAULT_DIR) < 0) {
-	    zip_delete(za, (zip_uint64_t)idx);
-	    return -1;
+	else {
+	    e->changes->version_madeby = (unchanged_opsys << 8) | (e->changes->version_madeby & 0xff);
+	    e->changes->ext_attrib = unchanged_attributes;
 	}
     }
 
-    return idx;
+    return 0;
 }
