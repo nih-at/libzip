@@ -1,5 +1,5 @@
 .\" zip_stat_init.mdoc \-- init zip_stat structure
-.\" Copyright (C) 2006-2008 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2013 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH ZIP_STAT_INIT 3 "November 10, 2008" NiH
+.TH ZIP_STAT_INIT 3 "September 22, 2013" NiH
 .SH "NAME"
 zip_stat_init \- initialize zip_stat structure
 .SH "LIBRARY"
@@ -51,6 +51,12 @@ The structure pointed to by
 \fBsb\fR
 must be allocated before calling
 zip_stat_init.
+.PP
+This function should be used by functions provided to
+zip_source_function(3)
+when returning
+\fBZIP_SOURCE_STAT\fR
+information to make sure all fields are initialized.
 .SH "RETURN VALUES"
 If
 \fBsb\fR
