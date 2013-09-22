@@ -54,9 +54,7 @@
 
 #ifdef HAVE_MOVEFILEEXA
 #include <windows.h>
-#define _zip_rename(s, t)						\
-	(!MoveFileExA((s), (t),						\
-		     MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
+#define _zip_rename(s, t)	(!MoveFileExA((s), (t), MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
 #else
 #define _zip_rename	rename
 #endif
@@ -82,7 +80,7 @@
 #if defined(HAVE__SNPRINTF)
 #define snprintf	_snprintf
 #endif
-#if defined(HAVE__STRDUP)
+#if defined(HAVE__STRDUP) && !defined(HAVE_STRDUP)
 #define strdup		_strdup
 #endif
 #endif
