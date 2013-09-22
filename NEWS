@@ -1,3 +1,9 @@
+0.xx [XXXX/XX/XX]
+
+* Support querying/setting operating system and external attributes.
+* For newly added files, set operating system to UNIX, permissions
+  to 0666 (0777 for directories).
+
 0.11.1 [2013/04/27]
 
 * Fix bugs in zip_set_file_compression().

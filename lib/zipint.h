@@ -157,7 +157,12 @@ int _zip_mkstemp(char *);
 #define ZIP_EF_ZIP64		0x0001
 
 #define ZIP_EF_IS_INTERNAL(id)	((id) == ZIP_EF_UTF_8_COMMENT || (id) == ZIP_EF_UTF_8_NAME || (id) == ZIP_EF_ZIP64)
-
+
+/* according to unzip-6.0's zipinfo.c, this corresponds to a regular file with rw permissions for everyone */
+#define ZIP_EXT_ATTRIB_DEFAULT		0100666
+/* according to unzip-6.0's zipinfo.c, this corresponds to a directory with rwx permissions for everyone */
+#define ZIP_EXT_ATTRIB_DEFAULT_DIR	0040777
+
 
 /* This section contains API that won't materialize like this.  It's
    placed in the internal section, pending cleanup. */
@@ -302,6 +307,7 @@ struct zip_file {
 #define ZIP_DIRENT_FILENAME	0x0002u
 #define ZIP_DIRENT_COMMENT	0x0004u
 #define ZIP_DIRENT_EXTRA_FIELD	0x0008u
+#define ZIP_DIRENT_ATTRIBUTES	0x0010u
 #define ZIP_DIRENT_ALL		0xffffu
 
 struct zip_dirent {

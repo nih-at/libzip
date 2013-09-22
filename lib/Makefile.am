@@ -35,10 +35,12 @@ libzip_la_SOURCES=\
 	zip_file_error_clear.c \
 	zip_file_error_get.c \
 	zip_file_get_comment.c \
+	zip_file_get_external_attributes.c \
 	zip_file_get_offset.c \
 	zip_file_rename.c \
 	zip_file_replace.c \
 	zip_file_set_comment.c \
+	zip_file_set_external_attributes.c \
 	zip_file_strerror.c \
 	zip_filerange_crc.c \
 	zip_fopen.c \

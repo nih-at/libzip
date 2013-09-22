@@ -1,6 +1,6 @@
 /*
-  zip_dir_add.c -- add directory
-  Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
+  zip_file_get_external_attributes.c -- get opsys/external attributes
+  Copyright (C) 2013 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,65 +31,23 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-
-#include <stdlib.h>
-#include <string.h>
-
 #include "zipint.h"
 
-
-
-/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
-
-ZIP_EXTERN zip_int64_t
-zip_dir_add(struct zip *za, const char *name, zip_flags_t flags)
+int
+zip_file_get_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t *opsys, zip_uint32_t *attributes)
 {
-    size_t len;
-    zip_int64_t idx;
-    char *s;
-    struct zip_source *source;
+    struct zip_dirent *de;
+    zip_uint32_t len;
+    const zip_uint8_t *str;
 
-    if (ZIP_IS_RDONLY(za)) {
-	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+    if ((de=_zip_get_dirent(za, idx, flags, NULL)) == NULL)
 	return -1;
-    }
 
-    if (name == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
+    if (opsys)
+	*opsys = (de->version_madeby >> 8) & 0xff;
 
-    s = NULL;
-    len = strlen(name);
+    if (attributes)
+	*attributes = de->ext_attrib;
 
-    if (name[len-1] != '/') {
-	if ((s=(char *)malloc(len+2)) == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    return -1;
-	}
-	strcpy(s, name);
-	s[len] = '/';
-	s[len+1] = '\0';
-    }
-
-    if ((source=zip_source_buffer(za, NULL, 0, 0)) == NULL) {
-	free(s);
-	return -1;
-    }
-	
-    idx = _zip_file_replace(za, ZIP_UINT64_MAX, s ? s : name, source, flags);
-
-    free(s);
-
-    if (idx < 0)
-	zip_source_free(source);
-    else {
-	if (zip_file_set_external_attributes(za, (zip_uint64_t)idx, 0, ZIP_OPSYS_DEFAULT, ZIP_EXT_ATTRIB_DEFAULT_DIR) < 0) {
-	    zip_delete(za, (zip_uint64_t)idx);
-	    return -1;
-	}
-    }
-
-    return idx;
+    return 0;
 }
