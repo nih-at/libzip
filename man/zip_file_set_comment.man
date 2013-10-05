@@ -1,112 +1,84 @@
-.\" zip_file_set_comment.mdoc \-- set comment for file in zip
-.\" Copyright (C) 2006-2012 Dieter Baron and Thomas Klausner
-.\"
-.\" This file is part of libzip, a library to manipulate ZIP files.
-.\" The authors can be contacted at <libzip@nih.at>
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer.
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in
-.\"    the documentation and/or other materials provided with the
-.\"    distribution.
-.\" 3. The names of the authors may not be used to endorse or promote
-.\"    products derived from this software without specific prior
-.\"    written permission.
-.\"
-.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
-.\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-.\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
-.\" DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-.\" GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-.\" INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-.\" IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-.\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-.\"
-.TH ZIP_FILE_SET_COMMENT 3 "June 23, 2012" NiH
+.TH "ZIP_FILE_SET_COMMENT" "3" "September 19, 2013" "NiH" "Library Functions Manual"
+.nh
+.if n .ad l
 .SH "NAME"
-zip_file_set_comment \- set comment for file in zip
+\fBzip_file_set_comment\fR
+\- set comment for file in zip
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-#include <zip.h>
-.PP
-int
-zip_set_file_comment(struct zip *archive, zip_uint64_t index); \
-"const char *comment" "zip_uint16_t len" "zip_flags_t flags"
+\fB#include <zip.h>\fR
+.sp
+\fIint\fR
+.br
+\fBzip_set_file_comment\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIconst char *comment\fR,\ \fIzip_uint16_t len\fR,\ \fIzip_flags_t flags\fR);
 .SH "DESCRIPTION"
 The
-zip_file_set_comment
+\fBzip_file_set_comment\fR()
 function sets the comment for the file at position
-\fBindex\fR
+\fIindex\fR
 in the zip archive to
-\fBcomment\fR
+\fIcomment\fR
 of length
-\fBlen.\fR
+\fIlen\fR.
 If
-\fBcomment\fR
+\fIcomment\fR
 is
-\fBNULL\fR
+\fRNULL\fR
 and
-\fBlen\fR
+\fIlen\fR
 is 0, the file comment will be removed.
 The
-\fBflags\fR
+\fIflags\fR
 argument can be any of:
-.RS
-.TP 22
-\fBZIP_FL_ENC_GUESS\fR
+.TP 22n
+\fRZIP_FL_ENC_GUESS\fR
 Guess encoding of
-\fBcomment\fR
+\fIcomment\fR
 (default).
-.TP 22
-\fBZIP_FL_ENC_UTF_8\fR
+.TP 22n
+\fRZIP_FL_ENC_UTF_8\fR
 Interpret
-\fBcomment\fR
+\fIcomment\fR
 as UTF-8.
-.TP 22
-\fBZIP_FL_ENC_CP437\fR
+.TP 22n
+\fRZIP_FL_ENC_CP437\fR
 Interpret
-\fBcomment\fR
+\fIcomment\fR
 as code page 437 (CP-437).
-.RE
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-\fBarchive\fR
+\fIarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-zip_file_set_comment
+\fBzip_file_set_comment\fR()
 fails if:
-.RS
-.TP 4
-[ZIP_ER_INVAL]
-\fBindex\fR
+.TP 19n
+[\fRZIP_ER_INVAL\fR]
+\fIindex\fR
 is not a valid file index in
-\fBarchive,\fR
+\fIarchive\fR,
 or
-\fBlen\fR
+\fIlen\fR
 is less than 0 or longer than the maximum comment length in a zip file
 (65535), or
-\fBcomment\fR
+\fIcomment\fR
 is not a valid UTF-8 encoded string.
-.TP 4
-[ZIP_ER_MEMORY]
+.TP 19n
+[\fRZIP_ER_MEMORY\fR]
 Required memory could not be allocated.
-.RE
+.TP 19n
+[\fRZIP_ER_RDONLY\fR]
+The
+\fIarchive\fR
+was opened in read-only mode.
 .SH "SEE ALSO"
 libzip(3),
 zip_get_archive_comment(3),
 zip_file_get_comment(3),
 zip_set_archive_comment(3)
 .SH "AUTHORS"
-
-Dieter Baron <dillo@nih.at>
+Dieter Baron <\fIdillo@nih.at\fR>
 and
-Thomas Klausner <tk@giga.or.at>
+Thomas Klausner <\fItk@giga.or.at\fR>

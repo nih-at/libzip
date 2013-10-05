@@ -1,107 +1,83 @@
-.\" zip_source_function.mdoc \-- create data source from function
-.\" Copyright (C) 2004-2013 Dieter Baron and Thomas Klausner
-.\"
-.\" This file is part of libzip, a library to manipulate ZIP archives.
-.\" The authors can be contacted at <libzip@nih.at>
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer.
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in
-.\"    the documentation and/or other materials provided with the
-.\"    distribution.
-.\" 3. The names of the authors may not be used to endorse or promote
-.\"    products derived from this software without specific prior
-.\"    written permission.
-.\"
-.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
-.\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-.\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
-.\" DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-.\" GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-.\" INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-.\" IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-.\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-.\"
-.TH ZIP_SOURCE_FUNCTION 3 "September 22, 2013" NiH
+.TH "ZIP_SOURCE_FUNCTION" "3" "September 22, 2013" "NiH" "Library Functions Manual"
+.nh
+.if n .ad l
 .SH "NAME"
-zip_source_function \- create data source from function
+\fBzip_source_function\fR
+\- create data source from function
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-#include <zip.h>
-.PP
-struct zip_source *
-zip_source_function(struct zip *archive, zip_source_callback fn, void *userdata);
+\fB#include <zip.h>\fR
+.sp
+\fIstruct\ zip_source\ *\fR
+.br
+\fBzip_source_function\fR(\fIstruct zip *archive\fR,\ \fIzip_source_callback fn\fR,\ \fIvoid *userdata\fR);
 .SH "DESCRIPTION"
 The function
-zip_source_function
+\fBzip_source_function\fR()
 creates a zip source from the user-provided function
-\fBfn,\fR
+\fIfn\fR,
 which must be of the following type:
-.Bd \-literal
+.nf
+.sp
+.RS 0n
 typedef zip_int64_t (*zip_source_callback)(void *state,
     void *data, zip_uint64_t len, enum zip_source_cmd cmd);
-.Ed
+.RE
+.fi
 .PP
 When called by the library, the first argument is the
-\fBuserdata\fR
+\fIuserdata\fR
 argument supplied to
-zip_source_function.
+\fBzip_source_function\fR().
 The next two arguments are a buffer
-\fBdata\fR
+\fIdata\fR
 of size
-\fBlen\fR
+\fIlen\fR
 when data is expected to be returned, or else
-\fBNULL\fR
+\fRNULL\fR
 and 0.
 The last argument,
-\fBcmd,\fR
+\fIcmd\fR,
 specifies which action the function should perform:
-.RS
-.TP 21
-\fBZIP_SOURCE_OPEN\fR
+.RS 6n
+.TP 21n
+\fRZIP_SOURCE_OPEN\fR
 Prepare for reading.
 Return 0 on success, \-1 on error.
-.TP 21
-\fBZIP_SOURCE_READ\fR
+.TP 21n
+\fRZIP_SOURCE_READ\fR
 Read data into the buffer
-\fBdata\fR
+\fIdata\fR
 of size
-\fBlen.\fR
+\fIlen\fR.
 Return the number of bytes placed into
-\fBdata\fR
+\fIdata\fR
 on success, \-1 on error.
-.TP 21
-\fBZIP_SOURCE_CLOSE\fR
+.TP 21n
+\fRZIP_SOURCE_CLOSE\fR
 Reading is done.
 Return 0.
-.TP 21
-\fBZIP_SOURCE_STAT\fR
+.TP 21n
+\fRZIP_SOURCE_STAT\fR
 Get meta information for the input data.
-\fBdata\fR
+\fIdata\fR
 points to an allocated
-.Vt struct zip_stat,
+\fIstruct zip_stat\fR,
 which should be initialized using
 zip_stat_init(3)
 and then filled in.
 Information only available after the source has been read (e.g. size)
 can be omitted in an earlier call.
 Return sizeof(struct zip_stat) on success, \-1 on error.
-.I NOTE :
-zip_source_function
+\fINOTE\fR:
+\fBzip_source_function\fR()
 may be called with this argument even after being called with
-\fBZIP_SOURCE_CLOSE.\fR
-.TP 21
-\fBZIP_SOURCE_ERROR\fR
+\fRZIP_SOURCE_CLOSE\fR.
+.TP 21n
+\fRZIP_SOURCE_ERROR\fR
 Get error information.
-\fBdata\fR
+\fIdata\fR
 points to an array of two ints, which should be filled with the libzip
 error code and the corresponding system error code for the error that
 occurred.
@@ -109,52 +85,50 @@ See
 zip_errors(3)
 for details on the error codes.
 Return return(2 * sizeof(int)).
-.TP 21
-\fBZIP_SOURCE_FREE\fR
+.TP 21n
+\fRZIP_SOURCE_FREE\fR
 Clean up and free all resources.
 Return 0.
 .RE
 .PP
 The library will always issue
-\fBZIP_SOURCE_OPEN\fR
+\fRZIP_SOURCE_OPEN\fR
 before issuing
-\fBZIP_SOURCE_READ.\fR
+\fRZIP_SOURCE_READ\fR.
 When it no longer wishes to read from this source, it will issue
-\fBZIP_SOURCE_CLOSE.\fR
+\fRZIP_SOURCE_CLOSE\fR.
 If the library wishes to read the data again, it will issue
-\fBZIP_SOURCE_OPEN\fR
+\fRZIP_SOURCE_OPEN\fR
 a second time.
 If the function is unable to provide the data again, it should
 return \-1.
 .PP
-\fBZIP_SOURCE_STAT\fR
+\fRZIP_SOURCE_STAT\fR
 can be issued at any time.
-\fBZIP_SOURCE_ERROR\fR
+\fRZIP_SOURCE_ERROR\fR
 will only be issued in response to the function
 returning \-1.
-\fBZIP_SOURCE_FREE\fR
+\fRZIP_SOURCE_FREE\fR
 will be the last command issued;
 if
-\fBZIP_SOURCE_OPEN\fR
+\fRZIP_SOURCE_OPEN\fR
 was called and succeeded,
-\fBZIP_SOURCE_CLOSE\fR
+\fRZIP_SOURCE_CLOSE\fR
 will be called before
-\fBZIP_SOURCE_FREE.\fR
+\fRZIP_SOURCE_FREE\fR.
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
-\fBNULL\fR
+\fRNULL\fR
 is returned and the error code in
-\fBarchive\fR
+\fIarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-zip_source_function
+\fBzip_source_function\fR()
 fails if:
-.RS
-.TP 4
-[ZIP_ER_MEMORY]
+.TP 19n
+[\fRZIP_ER_MEMORY\fR]
 Required memory could not be allocated.
-.RE
 .SH "SEE ALSO"
 libzip(3),
 zip_add(3),
@@ -166,7 +140,6 @@ zip_source_free(3),
 zip_source_zip(3),
 zip_stat_init(3)
 .SH "AUTHORS"
-
-Dieter Baron <dillo@nih.at>
+Dieter Baron <\fIdillo@nih.at\fR>
 and
-Thomas Klausner <tk@giga.or.at>
+Thomas Klausner <\fItk@giga.or.at\fR>

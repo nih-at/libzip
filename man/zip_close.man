@@ -1,59 +1,32 @@
-.\" zip_close.mdoc \-- close zip archive
-.\" Copyright (C) 2003-2012 Dieter Baron and Thomas Klausner
-.\"
-.\" This file is part of libzip, a library to manipulate ZIP archives.
-.\" The authors can be contacted at <libzip@nih.at>
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer.
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in
-.\"    the documentation and/or other materials provided with the
-.\"    distribution.
-.\" 3. The names of the authors may not be used to endorse or promote
-.\"    products derived from this software without specific prior
-.\"    written permission.
-.\"
-.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
-.\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-.\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
-.\" DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-.\" GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-.\" INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-.\" IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-.\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-.\"
-.TH ZIP_CLOSE 3 "February 13, 2012" NiH
+.TH "ZIP_CLOSE" "3" "February 13, 2012" "NiH" "Library Functions Manual"
+.nh
+.if n .ad l
 .SH "NAME"
-zip_close \- close zip archive
+\fBzip_close\fR
+\- close zip archive
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-#include <zip.h>
-.PP
-int
-zip_close(struct zip *archive);
+\fB#include <zip.h>\fR
+.sp
+\fIint\fR
+.br
+\fBzip_close\fR(\fIstruct zip *archive\fR);
 .SH "DESCRIPTION"
 The
-zip_close
+\fBzip_close\fR()
 function closes
-\fBarchive\fR
+\fIarchive\fR
 and frees the memory allocated for it.
 If any files within were changed, those changes are written to disk
 first.
 If writing changes fails,
-zip_close
+\fBzip_close\fR()
 fails and
-\fBarchive\fR
+\fIarchive\fR
 is left unchanged.
 If
-\fBarchive\fR
+\fIarchive\fR
 contains no files, the file is completely removed (no empty archive is
 written).
 .PP
@@ -62,53 +35,54 @@ zip_discard(3).
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error code in
-\fBarchive\fR
+\fIarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-zip_close
+\fBzip_close\fR()
 will fail if:
-.RS
-.TP 4
-[ZIP_ER_EOF]
+.TP 19n
+[\fRZIP_ER_EOF\fR]
 Unexpected end-of-file found while reading from a file.
-.TP 4
-[ZIP_ER_INTERNAL]
+.TP 19n
+[\fRZIP_ER_INTERNAL\fR]
 The callback function of an added or replaced file returned an
 error but failed to report which.
-.TP 4
-[ZIP_ER_INVAL]
+.TP 19n
+[\fRZIP_ER_INVAL\fR]
 The
-\fBpath\fR
+\fIpath\fR
 argument is
-\fBNULL.\fR
-.TP 4
-[ZIP_ER_MEMORY]
+\fRNULL\fR.
+.TP 19n
+[\fRZIP_ER_MEMORY\fR]
 Required memory could not be allocated.
-.TP 4
-[ZIP_ER_NOZIP]
+.TP 19n
+[\fRZIP_ER_NOZIP\fR]
 File is not a zip archive.
-.TP 4
-[ZIP_ER_READ]
+.TP 19n
+[\fRZIP_ER_READ\fR]
 A file read failed.
-.TP 4
-[ZIP_ER_RENAME]
+.TP 19n
+[\fRZIP_ER_RENAME\fR]
 A temporary file could not be renamed to its final name.
-.TP 4
-[ZIP_ER_SEEK]
+.TP 19n
+[\fRZIP_ER_SEEK\fR]
 A file seek failed.
-.TP 4
-[ZIP_ER_TMPOPEN]
+.TP 19n
+[\fRZIP_ER_TMPOPEN\fR]
 A temporary file could not be created.
-.TP 4
-[ZIP_ER_WRITE]
+.TP 19n
+[\fRZIP_ER_WRITE\fR]
 A file write failed.
-.TP 4
-[ZIP_ER_ZLIB]
+.TP 19n
+[\fRZIP_ER_ZLIB\fR]
 An error occurred while (de)compressing a stream with
 zlib(3).
-.RE
+.PD 0
+.PP
 Additionally, any errors returned by the callback function
 for added or replaced files will be passed back.
+.PD
 .SH "SEE ALSO"
 libzip(3),
 zip_discard(3),
@@ -117,7 +91,6 @@ zip_fdopen(3),
 zip_open(3),
 zip_strerror(3)
 .SH "AUTHORS"
-
-Dieter Baron <dillo@nih.at>
+Dieter Baron <\fIdillo@nih.at\fR>
 and
-Thomas Klausner <tk@giga.or.at>
+Thomas Klausner <\fItk@giga.or.at\fR>
