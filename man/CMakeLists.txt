@@ -108,14 +108,14 @@ INSTALL(FILES zip_file_strerror.${MANFMT} DESTINATION ${MAN_PATH}/man3
 #FOREACH(MAN ${MAN_PAGES})
 #  ADD_CUSTOM_TARGET(${MAN}.man
 #    DEPENDS ${MAN}.mdoc
-#    COMMAND mdoc2man ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc > ${MAN}.new
+#    COMMAND mandoc -T man ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc | sed '/TH/s,"NetBSD [^"]*","NiH",' > ${MAN}.new
 #    COMMAND diff -I NiH ${MAN}.new ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.man || mv ${MAN}.new ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.man
 #    COMMAND rm -f ${MAN}.new
 #    COMMENT Updating man page ${MAN}.man
 #    )
 #  ADD_CUSTOM_TARGET(${MAN}.html
 #    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc
-#    COMMAND nroff -mdoc2html ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc | sed -e "s,../html[0-9]/,," > ${MAN}.html
+#    COMMAND mandoc -Thtml -Oman="%N.html",style=../nih-man.css ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc > ${MAN}.html
 #    COMMENT Updating HTML page ${MAN}.html
 #    )
 #ENDFOREACH(MAN)

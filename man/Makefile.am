@@ -129,7 +129,6 @@ MANDOC=${MAN1} ${MAN3}
 HTML=${MANDOC:.mdoc=.html}
 MAN=${MANDOC:.mdoc=.man}
 
-MDOC2MAN=mdoc2man
 SUFFIXES=.man .mdoc .html
 
 .PHONY: mkman update-errors
@@ -144,7 +143,7 @@ update-errors:
 	sh $(srcdir)/make_zip_errors.sh $(srcdir)/../lib/zip.h zip_errors.mdoc
 
 .mdoc.man:
-	${MDOC2MAN} $< > $@.$$$$ && mv $@.$$$$ $@
+	mandoc -T man $< | sed '/TH/s,"NetBSD [^"]*","NiH",' > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
 	mandoc -Thtml -Oman="%N.html",style=../nih-man.css $< > $@.$$$$ && mv $@.$$$$ $@
