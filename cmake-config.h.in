@@ -21,10 +21,6 @@
 #define PACKAGE "@PACKAGE@"
 #define VERSION "@VERSION@"
 
-#cmakedefine HAVE_SSIZE_T
-
-#ifndef HAVE_SSIZE_T
-
 #ifndef SIZE_T_LIBZIP
 #cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
 #endif
@@ -41,6 +37,8 @@
 #cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
 #endif
 
+#cmakedefine HAVE_SSIZE_T_LIBZIP
+#ifndef HAVE_SSIZE_T_LIBZIP
 #  if SIZE_T_LIBZIP == INT_LIBZIP
 typedef int ssize_t;
 #  elif SIZE_T_LIBZIP == LONG_LIBZIP
