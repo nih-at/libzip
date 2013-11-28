@@ -676,8 +676,8 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, zip_flags_t flags, struct zip
     ef_zip64_p = ef_zip64;
     if (flags & ZIP_FL_LOCAL) {
 	if ((flags & ZIP_FL_FORCE_ZIP64) || de->comp_size > ZIP_UINT32_MAX || de->uncomp_size > ZIP_UINT32_MAX) {
-	    _zip_poke8(de->comp_size, &ef_zip64_p);
 	    _zip_poke8(de->uncomp_size, &ef_zip64_p);
+	    _zip_poke8(de->comp_size, &ef_zip64_p);
 	}
     }
     else {
