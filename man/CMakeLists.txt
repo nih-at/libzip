@@ -79,7 +79,7 @@ FOREACH(MAN_PAGE ${MAN3_PAGES})
   INSTALL(FILES ${MAN_PAGE}.${MANFMT} DESTINATION ${MAN_PATH}/man3
     RENAME ${MAN_PAGE}.3)
 ENDFOREACH(MAN_PAGE ${PROGRAMS})
-# XXX: usually symlinks, but I only know how to do this way
+# TODO: usually symlinks, but I only know how to do this way
 INSTALL(FILES zip_error_clear.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_file_error_clear.3)
 INSTALL(FILES zip_error_get.${MANFMT} DESTINATION ${MAN_PATH}/man3
@@ -128,11 +128,11 @@ INSTALL(FILES zip_file_strerror.${MANFMT} DESTINATION ${MAN_PATH}/man3
 #ADD_CUSTOM_TARGET(update-html
 #  DEPENDS ${HTMLDEPEND})
 
-# XXX: strange error:
+# TODO: strange error:
 #[ 94%] zipcmp.html
 #[ 97%] Built target zipcmp.html
 #[ 97%] zipmerge.html
 #[100%] Built target zipmerge.html
 #make: don't know how to make zipcmp.html. Stop
 
-# XXX: why are all the man pages rebuilt on a second 'make update-html'?
+# TODO: why are all the man pages rebuilt on a second 'make update-html'?

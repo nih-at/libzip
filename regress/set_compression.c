@@ -76,7 +76,7 @@ main(int argc, char *argv[])
 	       prg, name, zip_strerror(za));
 	return 1;
     }
-    if (zip_set_file_compression(za, idx, method, /* XXX: add flags * when supported */ 0) < 0) {
+    if (zip_set_file_compression(za, idx, method, /* TODO: add flags * when supported */ 0) < 0) {
 	fprintf(stderr, "zip_set_file_compression with method `%d' on file %" PRId64 " failed: %s\n",
 		method, idx, zip_strerror(za));
 	return 1;

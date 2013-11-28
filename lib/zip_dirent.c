@@ -320,7 +320,7 @@ _zip_dirent_new(void)
    Returns 0 if successful. On error, error is filled in and -1 is
    returned.
 
-   XXX: leftp and file position undefined on error.
+   TODO: leftp and file position undefined on error.
 */
 
 int
@@ -460,7 +460,7 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
 	zip_uint16_t got_len, needed_len;
 	const zip_uint8_t *ef = _zip_ef_get_by_id(zde->extra_fields, &got_len, ZIP_EF_ZIP64, 0, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error);
-	/* XXX: if got_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
+	/* TODO: if got_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
 	if (ef == NULL)
 	    return -1;
 
@@ -707,7 +707,7 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, zip_flags_t flags, struct zip
 	_zip_write2(is_really_zip64 ? 45 : de->version_madeby, fp);
     _zip_write2(is_really_zip64 ? 45 : de->version_needed, fp);
     _zip_write2(de->bitflags&0xfff9, fp); /* clear compression method specific flags */
-    _zip_write2((zip_uint16_t)de->comp_method, fp); /* XXX: can it be ZIP_CM_DEFAULT? */
+    _zip_write2((zip_uint16_t)de->comp_method, fp); /* TODO: can it be ZIP_CM_DEFAULT? */
 
     _zip_u2d_time(de->last_mod, &dostime, &dosdate);
     _zip_write2(dostime, fp);
@@ -796,7 +796,7 @@ _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
     raw = _zip_string_get(str, &len, ZIP_FL_ENC_RAW, NULL);
 
     if (len+5 > ZIP_UINT16_MAX) {
-        /* XXX: error */
+        /* TODO: error */
     }
     
     if ((data=(zip_uint8_t *)malloc(len+5)) == NULL) {

@@ -97,7 +97,7 @@ get_compression_method(const char *arg)
         return ZIP_CM_STORE;
     else if (strcmp(arg, "deflate") ==0)
         return ZIP_CM_DEFLATE;
-    return 0; /* XXX: error handling */
+    return 0; /* TODO: error handling */
 }
 
 static void

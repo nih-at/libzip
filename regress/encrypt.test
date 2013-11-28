@@ -1,5 +1,5 @@
 # test encryption support
-# XXX: only checks recognition of encrypted entries for now.
+# TODO: only checks recognition of encrypted entries for now.
 program stat_index
 return 0
 args encrypt.zzip 0 1

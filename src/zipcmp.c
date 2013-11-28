@@ -509,7 +509,7 @@ entry_print(const void *p)
 
     e = (struct entry *)p;
 
-    /* XXX PRId64 */
+    /* TODO PRId64 */
     printf("%10lu %08x %s\n", (unsigned long)e->size, e->crc, e->name);
 }
 

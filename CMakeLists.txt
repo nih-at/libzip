@@ -1,4 +1,4 @@
-# XXX: TODO
+# TODO:
 # 1. pkgconfig file not yet built.
 # 2. installation not tested.
 # 3. Problems generating html pages.
@@ -93,11 +93,11 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(regress)
 
 
-# XXX: pkgconfig file
+# TODO: pkgconfig file
 
 # installation
 
-# XXX: pkgconfig file
+# TODO: pkgconfig file
 
 # packaging
 

@@ -115,13 +115,13 @@ zip_close(struct zip *za)
 
     /* archive comment is special for torrentzip */
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0)) {
-	/* XXX: use internal function when zip_set_archive_comment clears TORRENT flag */
+	/* TODO: use internal function when zip_set_archive_comment clears TORRENT flag */
 	if (zip_set_archive_comment(za, TORRENT_SIG "XXXXXXXX", TORRENT_SIG_LEN + TORRENT_CRC_LEN) < 0) {
 	    free(filelist);
 	    return -1;
 	}
     }
-    /* XXX: if no longer torrentzip and archive comment not changed by user, delete it */
+    /* TODO: if no longer torrentzip and archive comment not changed by user, delete it */
 
 
     /* create list of files with index into original archive  */
@@ -189,7 +189,7 @@ zip_close(struct zip *za)
 	    _zip_dirent_torrent_normalize(entry->changes);
 
 
-	de->offset = (zip_uint64_t)ftello(out); /* XXX: check for errors */
+	de->offset = (zip_uint64_t)ftello(out); /* TODO: check for errors */
 
 	if (new_data) {
 	    struct zip_source *zs;
@@ -367,7 +367,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	    return -1;
 	}
 
-	/* XXX: deflate 0-byte files for torrentzip? */
+	/* TODO: deflate 0-byte files for torrentzip? */
 	if (de->comp_method != ZIP_CM_STORE && ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
 	    if ((comp_impl=_zip_get_compression_implementation(de->comp_method)) == NULL) {
 		_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
@@ -398,7 +398,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
     
     while (s2 != src) {
 	if ((s2=zip_source_pop(s2)) == NULL) {
-	    /* XXX: set erorr */
+	    /* TODO: set erorr */
 	    ret = -1;
 	    break;
 	}

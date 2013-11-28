@@ -236,7 +236,7 @@ if [ -z "${srcdir}" ]
 then
     srcdir=..
 else
-    # XXX: fix for absolute srcdir?
+    # TODO: fix for absolute srcdir?
     srcdir=../${srcdir}
 fi
 
@@ -260,7 +260,7 @@ else
 fi
 ZIPCMP_FLAGS="$ZIPCMP_FLAGS -p -t"
 
-# XXX: set up trap to cleanup
+# TODO: set up trap to cleanup
 
 mkdir ${DIR} || ( die "cannot create test directory ${DIR}" )
 cd ${DIR} || ( die "cannot cd to test directory ${DIR}" )
