@@ -1,43 +1,47 @@
 #ifndef HAD_CONFIG_H
 #define HAD_CONFIG_H
+#ifndef _HAD_ZIPCONF_H
+#include "zipconf.h"
+#endif
+/* BEGIN DEFINES */
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
 #cmakedefine HAVE__FDOPEN
 #cmakedefine HAVE__FILENO
 #cmakedefine HAVE__OPEN
 #cmakedefine HAVE__SNPRINTF
-#cmakedefine HAVE__STRCMPI
 #cmakedefine HAVE__STRDUP
 #cmakedefine HAVE__STRICMP
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
+#cmakedefine HAVE_OPEN
 #cmakedefine HAVE_MKSTEMP
-#cmakedefine HAVE_MOVEFILEEXA
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_STRCASECMP
-#cmakedefine HAVE_STRINGS_H
+#cmakedefine HAVE_STRDUP
 #cmakedefine HAVE_STRUCT_TM_TM_ZONE
+#cmakedefine HAVE_MOVEFILEEXA
+#cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
+#cmakedefine __INT8_LIBZIP ${__INT8_LIBZIP}
+#cmakedefine INT8_T_LIBZIP ${INT8_T_LIBZIP}
+#cmakedefine UINT8_T_LIBZIP ${UINT8_T_LIBZIP}
+#cmakedefine __INT16_LIBZIP ${__INT16_LIBZIP}
+#cmakedefine INT16_T_LIBZIP ${INT16_T_LIBZIP}
+#cmakedefine UINT16_T_LIBZIP ${UINT16_T_LIBZIP}
+#cmakedefine __INT32_LIBZIP ${__INT32_LIBZIP}
+#cmakedefine INT32_T_LIBZIP ${INT32_T_LIBZIP}
+#cmakedefine UINT32_T_LIBZIP ${UINT32_T_LIBZIP}
+#cmakedefine __INT64_LIBZIP ${__INT64_LIBZIP}
+#cmakedefine INT64_T_LIBZIP ${INT64_T_LIBZIP}
+#cmakedefine UINT64_T_LIBZIP ${UINT64_T_LIBZIP}
+#cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
+#cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
+#cmakedefine SSIZE_T_LIBZIP ${SSIZE_T_LIBZIP}
+/* END DEFINES */
 #define PACKAGE "@PACKAGE@"
 #define VERSION "@VERSION@"
 
-#ifndef SIZE_T_LIBZIP
-#cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
-#endif
-#ifndef INT_LIBZIP
-#cmakedefine INT_LIBZIP ${INT_LIBZIP}
-#endif
-#ifndef LONG_LIBZIP
-#cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
-#endif
-#ifndef LONG_LONG_LIBZIP
-#cmakedefine LONG_LONG_LIBZIP ${LONG_LONG_LIBZIP}
-#endif
-#ifndef SIZEOF_OFF_T
-#cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
-#endif
-
-#cmakedefine HAVE_SSIZE_T_LIBZIP
 #ifndef HAVE_SSIZE_T_LIBZIP
 #  if SIZE_T_LIBZIP == INT_LIBZIP
 typedef int ssize_t;
