@@ -3,4 +3,4 @@ program tryopen
 file testextrabytes.zzip testextrabytes.zip testextrabytes.zip
 args testextrabytes.zzip
 return 0
-stdout opening `testextrabytes.zzip' succeeded, 1 entries
+stdout opening 'testextrabytes.zzip' succeeded, 1 entries

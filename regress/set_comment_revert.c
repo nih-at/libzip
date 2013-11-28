@@ -65,7 +65,7 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(archive, 0, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive `%s': %s\n", prg,
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
 		archive, buf);
 	return 1;
     }
@@ -87,13 +87,13 @@ main(int argc, char *argv[])
     }
 
     if (zip_unchange_all(za) == -1) {
-	fprintf(stderr, "%s: can't revert changes to archive `%s'\n",
+	fprintf(stderr, "%s: can't revert changes to archive '%s'\n",
 		prg, archive);
 	return 1;
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg, archive, zip_strerror(za));
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(za));
 	return 1;
     }
 

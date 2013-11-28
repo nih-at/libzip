@@ -250,6 +250,7 @@ else
     fi
 fi
 
+VERBOSE=1
 if [ -z "${VERBOSE}" ]
 then
     DIFF_FLAGS=''

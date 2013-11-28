@@ -3,4 +3,4 @@ program tryopen
 file testempty.zip testempty.zip testempty.zip
 args testempty.zip
 return 0
-stdout opening `testempty.zip' succeeded, 0 entries
+stdout opening 'testempty.zip' succeeded, 0 entries

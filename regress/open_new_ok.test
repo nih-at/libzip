@@ -2,4 +2,4 @@
 program tryopen
 args -n new.zip
 return 0
-stdout opening `new.zip' succeeded, 0 entries
+stdout opening 'new.zip' succeeded, 0 entries

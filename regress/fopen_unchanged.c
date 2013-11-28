@@ -61,7 +61,7 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "can't open zip archive `%s': %s\n", archive, buf);
+	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, buf);
 	return 1;
     }
 
@@ -72,17 +72,17 @@ main(int argc, char *argv[])
 
     if (zip_add(za, file, zs) == -1) {
 	zip_source_free(zs);
-	fprintf(stderr, "can't add file `%s': %s\n", file, zip_strerror(za));
+	fprintf(stderr, "can't add file '%s': %s\n", file, zip_strerror(za));
 	return 1;
     }
 
     if (zip_fopen(za, file, ZIP_FL_UNCHANGED) == NULL) {
-	fprintf(stderr, "can't zip_fopen file `%s': %s\n", file, zip_strerror(za));
+	fprintf(stderr, "can't zip_fopen file '%s': %s\n", file, zip_strerror(za));
 	return 1;
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "can't close zip archive `%s': %s\n", archive, zip_strerror(za));
+	fprintf(stderr, "can't close zip archive '%s': %s\n", archive, zip_strerror(za));
 	return 1;
     }
 

@@ -3,4 +3,4 @@ program tryopen
 args -t test.zip
 return 0
 file-del test.zip test.zip
-stdout opening `test.zip' succeeded, 0 entries
+stdout opening 'test.zip' succeeded, 0 entries

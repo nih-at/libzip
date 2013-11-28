@@ -95,7 +95,7 @@ main(int argc, char *argv[])
 
     if ((z=zip_open(fname, flags, &ze)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), ze, errno);
-	fprintf(stderr, "%s: can't open zip archive `%s': %s\n", prg,
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
 		fname, buf);
 	return 1;
     }
@@ -104,38 +104,38 @@ main(int argc, char *argv[])
         index = atoi(argv[optind++]);
 
 	if (zip_stat_index(z, index, flags, &sb) < 0) {
-	    fprintf(stderr, "%s: zip_stat_index failed on `%d' failed: %s\n",
+	    fprintf(stderr, "%s: zip_stat_index failed on '%d' failed: %s\n",
 		    prg, index, zip_strerror(z));
 	    return 1;
 	}
 
 	if (sb.valid & ZIP_STAT_NAME)
-	    printf("name: `%s'\n", sb.name);
+	    printf("name: '%s'\n", sb.name);
 	if (sb.valid & ZIP_STAT_INDEX)
-	    printf("index: `%"PRIu64"'\n", sb.index);
+	    printf("index: '%"PRIu64"'\n", sb.index);
 	if (sb.valid & ZIP_STAT_SIZE)
-	    printf("size: `%"PRIu64"'\n", sb.size);
+	    printf("size: '%"PRIu64"'\n", sb.size);
 	if (sb.valid & ZIP_STAT_COMP_SIZE)
-	    printf("compressed size: `%"PRIu64"'\n", sb.comp_size);
+	    printf("compressed size: '%"PRIu64"'\n", sb.comp_size);
 	if (sb.valid & ZIP_STAT_MTIME) {
 	    struct tm *tpm;
 	    tpm = localtime(&sb.mtime);
 	    strftime(buf, sizeof(buf), "%a %b %d %Y %T", tpm);
-	    printf("mtime: `%s'\n", buf);
+	    printf("mtime: '%s'\n", buf);
 	}
 	if (sb.valid & ZIP_STAT_CRC)
-	    printf("crc: `%0x'\n", sb.crc);
+	    printf("crc: '%0x'\n", sb.crc);
 	if (sb.valid & ZIP_STAT_COMP_METHOD)
-	    printf("compression method: `%d'\n", sb.comp_method);
+	    printf("compression method: '%d'\n", sb.comp_method);
 	if (sb.valid & ZIP_STAT_ENCRYPTION_METHOD)
-	    printf("encryption method: `%d'\n", sb.encryption_method);
+	    printf("encryption method: '%d'\n", sb.encryption_method);
 	if (sb.valid & ZIP_STAT_FLAGS)
-	    printf("flags: `%ld'\n", (long)sb.flags);
+	    printf("flags: '%ld'\n", (long)sb.flags);
 	printf("\n");
     }
 
     if (zip_close(z) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg, fname, zip_strerror(z));
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, fname, zip_strerror(z));
 	return 1;
     }
 

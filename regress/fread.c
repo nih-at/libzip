@@ -100,7 +100,7 @@ main(int argc, char *argv[])
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), ze, errno);
-	printf("%s: can't open zip archive `%s': %s\n",
+	printf("%s: can't open zip archive '%s': %s\n",
 	       prg, archive, errstr);
 	return 1;
     }
@@ -139,7 +139,7 @@ main(int argc, char *argv[])
     zip_unchange_all(z);
 
     if (zip_close(z) == -1) {
-        fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg, archive, zip_strerror(z));
+        fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(z));
         return 1;
     }
 

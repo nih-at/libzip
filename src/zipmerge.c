@@ -158,7 +158,7 @@ main(int argc, char *argv[])
 
     if ((za=zip_open(tname, ZIP_CREATE, &err)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
+	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
 		prg, tname, errstr);
 	exit(1);
     }
@@ -169,7 +169,7 @@ main(int argc, char *argv[])
     }
 
     if (zip_close(za) < 0) {
-	fprintf(stderr, "%s: cannot write zip archive `%s': %s\n",
+	fprintf(stderr, "%s: cannot write zip archive '%s': %s\n",
 		prg, tname, zip_strerror(za));
 	exit(1);
     }
@@ -195,12 +195,12 @@ confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
 	return 0;
 
     if (zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st) < 0) {
-	fprintf(stderr, "%s: cannot stat file %"PRIu64" in `%s': %s\n",
+	fprintf(stderr, "%s: cannot stat file %"PRIu64" in '%s': %s\n",
 		prg, it, tname, zip_strerror(za));
 	return -1;
     }
     if (zip_stat_index(zs, is, 0, &ss) < 0) {
-	fprintf(stderr, "%s: cannot stat file %"PRIu64" in `%s': %s\n",
+	fprintf(stderr, "%s: cannot stat file %"PRIu64" in '%s': %s\n",
 		prg, is, sname, zip_strerror(zs));
 	return -1;
     }
@@ -212,8 +212,8 @@ confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
 	    return 0;
     }
 
-    printf("replace `%s' (%"PRIu64" / %08x) in `%s'\n"
-	   "   with `%s' (%"PRIu64" / %08x) from `%s'? ",
+    printf("replace '%s' (%"PRIu64" / %08x) in `%s'\n"
+	   "   with '%s' (%"PRIu64" / %08x) from `%s'? ",
 	   st.name, st.size, st.crc, tname,
 	   ss.name, ss.size, ss.crc, sname);
     fflush(stdout);
@@ -245,14 +245,14 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
     
     if ((zs=zip_open(sname, 0, &err)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
+	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
 		prg, sname, errstr);
 	return NULL;
     }
 
     ret = zip_get_num_entries(zs, 0);
     if (ret < 0) {
-        fprintf(stderr, "%s: cannot get number of entries for `%s': %s\n", prg, sname, zip_strerror(za));
+        fprintf(stderr, "%s: cannot get number of entries for '%s': %s\n", prg, sname, zip_strerror(za));
         return NULL;
     }
     for (i=0; i<(zip_uint64_t)ret; i++) {
@@ -268,7 +268,7 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
 		    || zip_replace(za, (zip_uint64_t)idx, source) < 0) {
 		    zip_source_free(source);
 		    fprintf(stderr,
-			    "%s: cannot replace `%s' in `%s': %s\n",
+			    "%s: cannot replace '%s' in `%s': %s\n",
 			    prg, fname, tname, zip_strerror(za));
                     zip_close(zs);
 		    return NULL;
@@ -292,7 +292,7 @@ merge_zip(struct zip *za, const char *tname, const char *sname)
 		|| zip_add(za, fname, source) < 0) {
 		zip_source_free(source);
 		fprintf(stderr,
-			"%s: cannot add `%s' to `%s': %s\n",
+			"%s: cannot add '%s' to `%s': %s\n",
 			prg, fname, tname, zip_strerror(za));
 		zip_close(zs);
 		return NULL;

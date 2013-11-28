@@ -163,7 +163,7 @@ main(int argc, char *argv[])
 
     if ((za=zip_open(archive, flags, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "can't open zip archive `%s': %s\n", archive, buf);
+	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, buf);
 	return 1;
     }
 
@@ -179,7 +179,7 @@ main(int argc, char *argv[])
 
 	    if (zip_add(za, argv[arg+1], zs) == -1) {
 		zip_source_free(zs);
-		fprintf(stderr, "can't add file `%s': %s\n", argv[arg+1], zip_strerror(za));
+		fprintf(stderr, "can't add file '%s': %s\n", argv[arg+1], zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -187,7 +187,7 @@ main(int argc, char *argv[])
 	} else if (strcmp(argv[arg], "add_dir") == 0 && arg+1 < argc) {
 	    /* add directory */
 	    if (zip_add_dir(za, argv[arg+1]) < 0) {
-		fprintf(stderr, "can't add directory `%s': %s\n", argv[arg+1], zip_strerror(za));
+		fprintf(stderr, "can't add directory '%s': %s\n", argv[arg+1], zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -202,7 +202,7 @@ main(int argc, char *argv[])
 
 	    if (zip_add(za, argv[arg+1], zs) == -1) {
 		zip_source_free(zs);
-		fprintf(stderr, "can't add file `%s': %s\n", argv[arg+1], zip_strerror(za));
+		fprintf(stderr, "can't add file '%s': %s\n", argv[arg+1], zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -212,18 +212,18 @@ main(int argc, char *argv[])
 	    idx = atoi(argv[arg+3]);
 	    if ((z_in=zip_open(argv[arg+2], ZIP_CHECKCONS, &err)) == NULL) {
 		zip_error_to_str(buf, sizeof(buf), err, errno);
-		fprintf(stderr, "can't open source zip archive `%s': %s\n", argv[arg+2], buf);
+		fprintf(stderr, "can't open source zip archive '%s': %s\n", argv[arg+2], buf);
 		err = 1;
 		break;
 	    }
 	    if ((zs=zip_source_zip(za, z_in, idx, 0, atoi(argv[arg+4]), atoi(argv[arg+5]))) == NULL) {
-		fprintf(stderr, "error creating file source from `%s' index '%d': %s\n", argv[arg+2], idx, zip_strerror(za));
+		fprintf(stderr, "error creating file source from '%s' index '%d': %s\n", argv[arg+2], idx, zip_strerror(za));
 		zip_close(z_in);
 		err = 1;
 		break;
 	    }
 	    if (zip_add(za, argv[arg+1], zs) == -1) {
-		fprintf(stderr, "can't add file `%s': %s\n", argv[arg+1], zip_strerror(za));
+		fprintf(stderr, "can't add file '%s': %s\n", argv[arg+1], zip_strerror(za));
 		zip_source_free(zs);
 		zip_close(z_in);
 		err = 1;
@@ -236,7 +236,7 @@ main(int argc, char *argv[])
 	    idx = atoi(argv[arg+1]);
 	    ceflags = get_flags(argv[arg+2]);
 	    if ((count=zip_file_extra_fields_count(za, idx, ceflags)) < 0) {
-		fprintf(stderr, "can't get extra field count for file at index `%d': %s\n", idx, zip_strerror(za));
+		fprintf(stderr, "can't get extra field count for file at index '%d': %s\n", idx, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
@@ -250,7 +250,7 @@ main(int argc, char *argv[])
 	    eid = atoi(argv[arg+2]);
 	    ceflags = get_flags(argv[arg+3]);
 	    if ((count=zip_file_extra_fields_count_by_id(za, idx, eid, ceflags)) < 0) {
-		fprintf(stderr, "can't get extra field count for file at index `%d' and for id `%d': %s\n", idx, eid, zip_strerror(za));
+		fprintf(stderr, "can't get extra field count for file at index '%d' and for id `%d': %s\n", idx, eid, zip_strerror(za));
 		err = 1;
 		break;
 	    } else {
@@ -261,7 +261,7 @@ main(int argc, char *argv[])
 	    /* delete */
 	    idx = atoi(argv[arg+1]);
 	    if (zip_delete(za, idx) < 0) {
-		fprintf(stderr, "can't delete file at index `%d': %s\n", idx, zip_strerror(za));
+		fprintf(stderr, "can't delete file at index '%d': %s\n", idx, zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -273,7 +273,7 @@ main(int argc, char *argv[])
 	    eid = atoi(argv[arg+2]);
 	    geflags = get_flags(argv[arg+3]);
 	    if ((zip_file_extra_field_delete(za, idx, eid, geflags)) < 0) {
-		fprintf(stderr, "can't delete extra field data for file at index `%d', extra field id `%d': %s\n", idx, eid, zip_strerror(za));
+		fprintf(stderr, "can't delete extra field data for file at index '%d', extra field id `%d': %s\n", idx, eid, zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -286,7 +286,7 @@ main(int argc, char *argv[])
 	    eidx = atoi(argv[arg+3]);
 	    geflags = get_flags(argv[arg+4]);
 	    if ((zip_file_extra_field_delete_by_id(za, idx, eid, eidx, geflags)) < 0) {
-		fprintf(stderr, "can't delete extra field data for file at index `%d', extra field id `%d', extra field idx `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+		fprintf(stderr, "can't delete extra field data for file at index '%d', extra field id `%d', extra field idx `%d': %s\n", idx, eid, eidx, zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -346,19 +346,19 @@ main(int argc, char *argv[])
 	    /* get file comment */
 	    idx = atoi(argv[arg+1]);
 	    if ((comment=zip_get_file_comment(za, idx, &len, 0)) == NULL) {
-		fprintf(stderr, "can't get comment for `%s': %s\n", zip_get_name(za, idx, 0), zip_strerror(za));
+		fprintf(stderr, "can't get comment for '%s': %s\n", zip_get_name(za, idx, 0), zip_strerror(za));
 		err = 1;
 		break;
 	    } else if (len == 0)
-		printf("No comment for `%s'\n", zip_get_name(za, idx, 0));
+		printf("No comment for '%s'\n", zip_get_name(za, idx, 0));
 	    else
-		printf("File comment for `%s': %.*s\n", zip_get_name(za, idx, 0), len, comment);
+		printf("File comment for '%s': %.*s\n", zip_get_name(za, idx, 0), len, comment);
 	    arg += 2;
 	} else if (strcmp(argv[arg], "rename") == 0 && arg+2 < argc) {
 	    /* rename */
 	    idx = atoi(argv[arg+1]);
 	    if (zip_rename(za, idx, argv[arg+2]) < 0) {
-		fprintf(stderr, "can't rename file at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
+		fprintf(stderr, "can't rename file at index '%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -373,7 +373,7 @@ main(int argc, char *argv[])
 	    geflags = get_flags(argv[arg+4]);
 	    efdata = (zip_uint8_t *)argv[arg+5];
 	    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, (zip_uint16_t)strlen((const char *)efdata), geflags)) < 0) {
-		fprintf(stderr, "can't set extra field data for file at index `%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+		fprintf(stderr, "can't set extra field data for file at index '%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -382,7 +382,7 @@ main(int argc, char *argv[])
 	    /* set file comment */
 	    idx = atoi(argv[arg+1]);
 	    if (zip_file_set_comment(za, idx, argv[arg+2], (zip_uint16_t)strlen(argv[arg+2]), 0) < 0) {
-		fprintf(stderr, "can't set file comment at index `%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
+		fprintf(stderr, "can't set file comment at index '%d' to `%s': %s\n", idx, argv[arg+2], zip_strerror(za));
 		err = 1;
 		break;
 	    }
@@ -395,20 +395,20 @@ main(int argc, char *argv[])
             method = get_compression_method(argv[arg+2]);
             flags = atoi(argv[arg+3]);
             if (zip_set_file_compression(za, idx, method, flags) < 0) {
-		fprintf(stderr, "can't set file compression method at index `%d' to `%s', flags `%d': %s\n", idx, argv[arg+2], flags, zip_strerror(za));
+		fprintf(stderr, "can't set file compression method at index '%d' to `%s', flags `%d': %s\n", idx, argv[arg+2], flags, zip_strerror(za));
 		err = 1;
 		break;
             }
             arg += 4;
 	} else {
-	    fprintf(stderr, "unrecognized command `%s', or not enough arguments\n", argv[arg]);
+	    fprintf(stderr, "unrecognized command '%s', or not enough arguments\n", argv[arg]);
 	    err = 1;
 	    break;
 	}
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "can't close zip archive `%s': %s\n", archive, zip_strerror(za));
+	fprintf(stderr, "can't close zip archive '%s': %s\n", archive, zip_strerror(za));
 	return 1;
     }
 

@@ -70,7 +70,7 @@ main(int argc, char *argv[])
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
         char buf2[100];
         zip_error_to_str(buf2, sizeof(buf2), ze, errno);
-	printf("%s: can't open zip archive `%s': %s\n", prg,
+	printf("%s: can't open zip archive '%s': %s\n", prg,
 	       archive, buf2);
 	return 1;
     }
@@ -107,7 +107,7 @@ main(int argc, char *argv[])
     fail += find_fail(z, "new", 0, ZIP_ER_NOENT);
 
     if (zip_close(z) == -1) {
-	fprintf(stderr, "%s: can't close zip archive `%s': %s\n", prg,
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg,
 		archive, zip_strerror(z));
 	return 1;
     }
@@ -128,7 +128,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 	zip_error_get(z, &ze, &se);
 	if (ze != zerr) {
 	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
-	    printf("unexpected error while looking for `%s' with flags %x: got `%s', expected `%s'\n",
+	    printf("unexpected error while looking for '%s' with flags %x: got `%s', expected `%s'\n",
 		   name, flags, zip_strerror(z), expected);
 	    return 1;
 	}
@@ -136,7 +136,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 	return 0;
     }
 
-    printf("unexpected success while looking for `%s' with flags %x: index %" PRId64 "\n", name, flags, idx);
+    printf("unexpected success while looking for '%s' with flags %x: index %" PRId64 "\n", name, flags, idx);
     return 1;
 }
 
@@ -147,7 +147,7 @@ find_success(struct zip *z, const char *name, int flags)
 {
 
     if (zip_name_locate(z, name, flags) < 0) {
-	printf("unexpected error while looking for `%s' with flags %x: %s\n",
+	printf("unexpected error while looking for '%s' with flags %x: %s\n",
 	       name, flags, zip_strerror(z));
 	return 1;
     }

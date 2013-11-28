@@ -199,7 +199,7 @@ compare_zip(char * const zn[])
     for (i=0; i<2; i++) {
 	if ((za=zip_open(zn[i], paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
 	    zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	    fprintf(stderr, "%s: cannot open zip archive `%s': %s\n",
+	    fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
 		    prg, zn[i], errstr);
 	    return -1;
 	}

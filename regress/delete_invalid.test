@@ -3,4 +3,4 @@ program modify
 return 1
 args testfile.zzip delete 5
 file testfile.zzip testfile.zip testfile.zip
-stderr can't delete file at index `5': Invalid argument
+stderr can't delete file at index '5': Invalid argument

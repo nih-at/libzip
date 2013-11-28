@@ -95,12 +95,12 @@ main(int argc, char *argv[])
 
 	if ((z=zip_open(fname, flags, &ze)) != NULL) {
 	    count = zip_get_num_entries(z, 0);
-	    printf("opening `%s' succeeded, %"PRIu64" entries\n", fname, count);
+	    printf("opening '%s' succeeded, %"PRIu64" entries\n", fname, count);
 	    zip_close(z);
 	    continue;
 	}
 	
-	printf("opening `%s' returned error %d", fname, ze);
+	printf("opening '%s' returned error %d", fname, ze);
 	if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
 	    printf("/%d", errno);
 	printf("\n");

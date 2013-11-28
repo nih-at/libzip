@@ -3,5 +3,5 @@ program tryopen
 file Makefile.am Makefile.am Makefile.am
 args Makefile.am
 return 1
-stdout opening `Makefile.am' returned error 19
+stdout opening 'Makefile.am' returned error 19
 stderr 1 errors
