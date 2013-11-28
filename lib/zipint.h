@@ -157,9 +157,9 @@ int _zip_mkstemp(char *);
 #define ZIP_EF_IS_INTERNAL(id)	((id) == ZIP_EF_UTF_8_COMMENT || (id) == ZIP_EF_UTF_8_NAME || (id) == ZIP_EF_ZIP64)
 
 /* according to unzip-6.0's zipinfo.c, this corresponds to a regular file with rw permissions for everyone */
-#define ZIP_EXT_ATTRIB_DEFAULT		0100666
+#define ZIP_EXT_ATTRIB_DEFAULT		(0100666<<16)
 /* according to unzip-6.0's zipinfo.c, this corresponds to a directory with rwx permissions for everyone */
-#define ZIP_EXT_ATTRIB_DEFAULT_DIR	0040777
+#define ZIP_EXT_ATTRIB_DEFAULT_DIR	(0040777<<16)
 
 
 /* This section contains API that won't materialize like this.  It's
