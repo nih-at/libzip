@@ -1,4 +1,4 @@
-.TH "ZIP_FOPEN" "3" "June 26, 2013" "NiH" "Library Functions Manual"
+.TH "ZIP_FOPEN" "3" "October 23, 2013" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -90,7 +90,7 @@ A file seek error occurred.
 [\fRZIP_ER_WRONGPASSWD\fR]
 The provided password does not match the password used for encryption.
 Note that some incorrect passwords are not detected by the check done by
-\&.
+\fBzip_fopen\fR().
 .TP 19n
 [\fRZIP_ER_ZLIB\fR]
 Initializing the zlib stream failed.
