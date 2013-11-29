@@ -3,6 +3,7 @@
 * Support querying/setting operating system and external attributes.
 * For newly added files, set operating system to UNIX, permissions
   to 0666 (0777 for directories).
+* Fix bug when writing zip archives containing files bigger than 4GB.
 
 0.11.1 [2013/04/27]
 
