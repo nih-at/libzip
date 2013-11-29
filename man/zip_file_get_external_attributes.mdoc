@@ -67,46 +67,52 @@ they are not filled in.
 The following operating systems are defined by the zip specification:
 .Bl -item -compact -offset indent
 .It
-ZIP_OPSYS_ACORN_RISC
+.Dv ZIP_OPSYS_ACORN_RISC
 .It
-ZIP_OPSYS_ALTERNATE_MVS
+.Dv ZIP_OPSYS_ALTERNATE_MVS
 .It
-ZIP_OPSYS_AMIGA
+.Dv ZIP_OPSYS_AMIGA
 .It
-ZIP_OPSYS_ATARI_ST
+.Dv ZIP_OPSYS_ATARI_ST
 .It
-ZIP_OPSYS_BEOS
+.Dv ZIP_OPSYS_BEOS
 .It
-ZIP_OPSYS_CPM
+.Dv ZIP_OPSYS_CPM
 .It
-ZIP_OPSYS_DOS
+.Dv ZIP_OPSYS_DOS
 .It
-ZIP_OPSYS_MACINTOSH
+.Dv ZIP_OPSYS_MACINTOSH
 .It
-ZIP_OPSYS_MVS
+.Dv ZIP_OPSYS_MVS
 .It
-ZIP_OPSYS_OPENVMS
+.Dv ZIP_OPSYS_OPENVMS
 .It
-ZIP_OPSYS_OS_2
+.Dv ZIP_OPSYS_OS_2
 .It
-ZIP_OPSYS_OS_400
+.Dv ZIP_OPSYS_OS_400
 .It
-ZIP_OPSYS_OS_X
+.Dv ZIP_OPSYS_OS_X
 .It
-ZIP_OPSYS_TANDEM
+.Dv ZIP_OPSYS_TANDEM
 .It
-ZIP_OPSYS_UNIX
+.Dv ZIP_OPSYS_UNIX
 .It
-ZIP_OPSYS_VFAT
+.Dv ZIP_OPSYS_VFAT
 .It
-ZIP_OPSYS_VM_CMS
+.Dv ZIP_OPSYS_VM_CMS
 .It
-ZIP_OPSYS_VSE
+.Dv ZIP_OPSYS_VSE
 .It
-ZIP_OPSYS_WINDOWS_NTFS
+.Dv ZIP_OPSYS_WINDOWS_NTFS
+(uncommon, use
+.Dv ZIP_OPSYS_DOS
+instead)
 .It
-ZIP_OPSYS_Z_SYSTEM
+.Dv ZIP_OPSYS_Z_SYSTEM
 .El
+.Pp
+The defines above follow the PKWARE Inc. Appnote; please note that
+the InfoZIP Appnote has a slightly different mapping.
 .Sh RETURN VALUES
 Upon successful completion, 0 is returned.
 In case of an error,
