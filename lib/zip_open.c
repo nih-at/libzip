@@ -498,6 +498,11 @@ _zip_find_central_dir(FILE *fp, unsigned int flags, int *zep, off_t len)
     zip_int64_t best;
     struct zip_error zerr;
 
+    if (len < (off_t)EOCDLEN) {
+        _zip_error_set(zep, ZIP_ER_NOZIP, 0);
+        return NULL;
+    }
+    
     i = fseeko(fp, -(len < CDBUFSIZE ? len : CDBUFSIZE), SEEK_END);
     if (i == -1 && errno != EFBIG) {
 	/* seek before start of file on my machine */

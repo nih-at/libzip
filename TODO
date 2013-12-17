@@ -82,6 +82,7 @@ Cleanup
 
 Test Case Issues
 ================
+* zip_open file less than EOCDLEN bytes long
 * test calls against old API
 * run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)
