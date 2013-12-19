@@ -151,6 +151,7 @@ TESTS= \
 	open_nonarchive.test \
 	open_nosuchfile.test \
 	open_ok.test \
+	open_too_short.test \
 	open_truncate.test \
 	open_zip64_ok.test \
 	rename_ascii.test \
