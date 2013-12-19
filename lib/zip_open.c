@@ -499,7 +499,7 @@ _zip_find_central_dir(FILE *fp, unsigned int flags, int *zep, off_t len)
     struct zip_error zerr;
 
     if (len < (off_t)EOCDLEN) {
-        _zip_error_set(zep, ZIP_ER_NOZIP, 0);
+        set_error(zep, NULL, ZIP_ER_NOZIP);
         return NULL;
     }
     
