@@ -1,6 +1,6 @@
 /*
   zipcmp.c -- compare zip files
-  Copyright (C) 2003-2013 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -35,7 +35,9 @@
 
 #include "config.h"
 
+#include <sys/stat.h>
 #include <errno.h>
+#include <fts.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -55,6 +57,15 @@
 #include "zipint.h"
 #include "zip.h"
 #include "compat.h"
+
+struct archive {
+    const char *name;
+    struct zip *za;
+    zip_uint64_t nentry;
+    struct entry *entry;
+    const char *comment;
+    int comment_length;
+};
 
 struct ef {
     const char *name;
@@ -81,37 +92,32 @@ const char *prg;
 
 #define PROGRAM	"zipcmp"
 
-const char *usage = "usage: %s [-hipqtVv] zip1 zip2\n";
+const char *usage = "usage: %s [-hipqtVv] archive1 archive2\n";
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
 
 char help[] = "\n\
   -h       display this help message\n\
-  -V       display version number\n\
   -i       compare names ignoring case distinctions\n\
   -p       compare as many details as possible\n\
   -q       be quiet\n\
   -t       test zip files\n\
+  -V       display version number\n\
   -v       be verbose (print differences, default)\n\
 \n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2013 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2014 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVipqtv"
 
 
 
-static int ef_read(struct zip *za, int idx, struct entry *e);
-static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
-static int ef_order(const void *a, const void *b);
-static void ef_print(const void *p);
-static int entry_cmp(const void *p1, const void *p2);
-static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
-static void entry_print(const void *p);
+#define BOTH_ARE_ZIPS(a)	(a[0].za && a[1].za)
+
 static int comment_compare(const char *c1, int l1, const char *c2, int l2);
 static int compare_list(char * const name[],
 			const void *l[], const zip_uint64_t n[], int size,
@@ -119,6 +125,16 @@ static int compare_list(char * const name[],
 			int (*checks)(char *const name[2], const void *, const void *),
 			void (*print)(const void *));
 static int compare_zip(char * const zn[]);
+static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
+static int ef_order(const void *a, const void *b);
+static void ef_print(const void *p);
+static int ef_read(struct zip *za, int idx, struct entry *e);
+static int entry_cmp(const void *p1, const void *p2);
+static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
+static void entry_print(const void *p);
+static int is_directory(const char *name);
+static int list_directory(const char *name, struct archive *a);
+static int list_zip(const char *name, struct archive *a);
 static int test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc);
 
 int ignore_case, test_files, paranoid, verbose;
@@ -184,83 +200,53 @@ main(int argc, char * const argv[])
 static int
 compare_zip(char * const zn[])
 {
-    struct zip *za, *z[2];
-    struct zip_stat st;
+    struct archive a[2];
     struct entry *e[2];
     zip_uint64_t n[2];
-    int i, j;
-    int err;
-    char errstr[1024];
+    int i;
     int res;
 
-    const char *archive_comment[2];
-    int archive_comment_len[2];
-
     for (i=0; i<2; i++) {
-	if ((za=zip_open(zn[i], paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
-	    zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	    fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
-		    prg, zn[i], errstr);
-	    return -1;
+	a[i].name = zn[i];
+	a[i].entry = NULL;
+	a[i].nentry = 0;
+	a[i].za = NULL;
+	a[i].comment = NULL;
+	a[i].comment_length =0;
+
+	if (is_directory(zn[i])) {
+	    if (list_directory(zn[i], a+i) < 0)
+		exit(2);
+	    paranoid = 0; /* paranoid checks make no sense for directories, since they compare zip metadata */
 	}
-
-	z[i] = za;
-	n[i] = zip_get_num_entries(za, 0);
-
-	if (n[i] == 0)
-	    e[i] = NULL;
-        else {
-	    if ((e[i]=(struct entry *)malloc(sizeof(*e[i]) * n[i])) == NULL) {
-	        fprintf(stderr, "%s: malloc failure\n", prg);
-	        exit(1);
-	    }
-
-	    for (j=0; j<n[i]; j++) {
-	        zip_stat_index(za, j, 0, &st);
-	        e[i][j].name = strdup(st.name);
-	        e[i][j].size = st.size;
-	        e[i][j].crc = st.crc;
-	        if (test_files)
-		    test_file(za, j, st.size, st.crc);
-		if (paranoid) {
-		    e[i][j].comp_method = st.comp_method;
-		    ef_read(za, j, e[i]+j);
-		    e[i][j].comment = zip_file_get_comment(za, j, &e[i][j].comment_length, 0);
-		    
-		}
-		else {
-		    e[i][j].comp_method = 0;
-		    e[i][j].n_extra_fields = 0;
-		}
-	    }
-	    qsort(e[i], n[i], sizeof(e[i][0]), entry_cmp);
-        }
-
-	if (paranoid)
-	    archive_comment[i] = zip_get_archive_comment(za, &archive_comment_len[i], 0);
-        else {
-            archive_comment[i] = NULL;
-            archive_comment_len[i] = 0;
-        }
+	else {
+	    if (list_zip(zn[i], a+i) < 0)
+		exit(2);
+	}
+	qsort(a[i].entry, a[i].nentry, sizeof(a[i].entry[0]), entry_cmp);
     }
 
     header_done = 0;
 
-    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]),
-		       entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print);
+    e[0] = a[0].entry;
+    e[1] = a[1].entry;
+    n[0] = a[0].nentry;
+    n[1] = a[1].nentry;
+    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]), entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print);
 
     if (paranoid) {
-	if (comment_compare(archive_comment[0], archive_comment_len[0], archive_comment[1], archive_comment_len[1]) != 0) {
+	if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
 	    if (verbose) {
-		printf("--- archive comment (%d)\n", archive_comment_len[0]);
-		printf("+++ archive comment (%d)\n", archive_comment_len[1]);
+		printf("--- archive comment (%d)\n", a[0].comment_length);
+		printf("+++ archive comment (%d)\n", a[1].comment_length);
 	    }
 	    res = 1;
 	}
     }
 
     for (i=0; i<2; i++)
-	zip_close(z[i]);
+	if (a[i].za)
+	    zip_close(a[i].za);
 
     switch (res) {
     case 0:
@@ -274,7 +260,173 @@ compare_zip(char * const zn[])
     }
 }
 
-
+
+static zip_int64_t
+compute_crc(const char *fname)
+{
+    FILE *f;
+    zip_uint32_t crc = crc32(0L, Z_NULL, 0);
+    size_t n;
+    Bytef buffer[8192];
+
+
+    if ((f=fopen(fname, "r")) == NULL) {
+	fprintf(stderr, "%s: can't open %s: %s", prg, fname, strerror(errno));
+	return -1;
+    }
+
+    while ((n=fread(buffer, 1, sizeof(buffer), f)) > 0) {
+	crc = crc32(crc, buffer, n);
+    }
+
+    if (ferror(f)) {
+	fprintf(stderr, "%s: read error on %s: %s", prg, fname, strerror(errno));
+	fclose(f);
+	return -1;
+    }
+
+    fclose(f);
+
+    return crc;
+}
+
+
+static int
+is_directory(const char *name)
+{
+    struct stat st;
+
+    if (stat(name, &st) < 0)
+	return 0;
+
+    return S_ISDIR(st.st_mode);
+}
+
+
+static int
+list_directory(const char *name, struct archive *a)
+{
+    FTS *ftsp;
+    FTSENT *ent;
+    zip_uint64_t nalloc;
+    zip_int64_t crc;
+    char * const names[2] = { (char *)name, NULL };
+
+
+    if ((ftsp = fts_open(names, FTS_LOGICAL|FTS_NOCHDIR, NULL)) == NULL) {
+	/* TODO: error */
+	return -1;
+    }
+
+    nalloc = 0;
+    while ((ent=fts_read(ftsp)) != NULL) {
+	switch (ent->fts_info) {
+            case FTS_D:
+            case FTS_DP:
+                break;
+                
+            case FTS_NS:
+            case FTS_DC:
+            case FTS_DNR:
+            case FTS_ERR:
+            case FTS_SLNONE:
+		fprintf(stderr, "%s: fts_read error (%s): %s", prg, ent->fts_path, strerror(errno));
+		fts_close(ftsp);
+		return -1;
+
+            case FTS_F:
+		if (a->nentry >= nalloc) {
+		    nalloc += 16;
+		    a->entry = realloc(a->entry, sizeof(a->entry[0])*nalloc);
+		    if (a->entry == NULL) {
+			fprintf(stderr, "%s: malloc failure", prg);
+			exit(1);
+		    }
+		}
+
+		a->entry[a->nentry].name = strdup(ent->fts_path+strlen(a->name)+1);
+                a->entry[a->nentry].size = ent->fts_statp->st_size;
+		if ((crc = compute_crc(ent->fts_path)) < 0) {
+		    fts_close(ftsp);
+		    return -1;
+		}
+
+		a->entry[a->nentry].crc = (zip_uint32_t)crc;
+		a->nentry++;
+                break;
+
+            case FTS_DEFAULT:
+            case FTS_NSOK:
+            case FTS_SL:
+            case FTS_DOT:
+                /* TODO shouldn't happen */
+                break;
+	}
+    }
+
+    if (fts_close(ftsp) < 0) {
+	fprintf(stderr, "%s: cannot fts_close '%s': %s", prg, a->name, strerror(errno));
+	return -1;
+    }
+
+    return 0;
+}
+
+
+static int
+list_zip(const char *name, struct archive *a)
+{
+    struct zip *za;
+    int err, i;
+    char errstr[1024];
+    struct zip_stat st;
+
+    if ((za=zip_open(name, paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
+	zip_error_to_str(errstr, sizeof(errstr), err, errno);
+	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", prg, name, errstr);
+	return -1;
+    }
+
+    a->za = za;
+    a->nentry = zip_get_num_entries(za, 0);
+
+    if (a->nentry == 0)
+	a->entry = NULL;
+    else {
+	if ((a->entry=(struct entry *)malloc(sizeof(a->entry[0]) * a->nentry)) == NULL) {
+	    fprintf(stderr, "%s: malloc failure\n", prg);
+	    exit(1);
+	}
+
+	for (i=0; i<a->nentry; i++) {
+	    zip_stat_index(za, i, 0, &st);
+	    a->entry[i].name = strdup(st.name);
+	    a->entry[i].size = st.size;
+	    a->entry[i].crc = st.crc;
+	    if (test_files)
+		test_file(za, i, st.size, st.crc);
+	    if (paranoid) {
+		a->entry[i].comp_method = st.comp_method;
+		ef_read(za, i, a->entry+i);
+		a->entry[i].comment = zip_file_get_comment(za, i, &a->entry[i].comment_length, 0);
+	    }
+	    else {
+		a->entry[i].comp_method = 0;
+		a->entry[i].n_extra_fields = 0;
+	    }
+        }
+
+	if (paranoid)
+	    a->comment = zip_get_archive_comment(za, &a->comment_length, 0);
+        else {
+            a->comment = NULL;
+            a->comment_length = 0;
+        }
+    }
+
+    return 0;
+}
+
 
 static int
 comment_compare(const char *c1, int l1, const char *c2, int l2) {

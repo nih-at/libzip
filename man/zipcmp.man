@@ -1,4 +1,4 @@
-.TH "ZIPCMP" "1" "June 4, 2008" "NiH" "General Commands Manual"
+.TH "ZIPCMP" "1" "January 29, 2014" "NiH" "General Commands Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -7,14 +7,14 @@
 .SH "SYNOPSIS"
 .HP 7n
 \fBzipcmp\fR
-[\fB\-hiqVv\fR]
-\fIzip1\ zip2\fR
+[\fB\-hipqtVv\fR]
+\fIarchive1\ archive2\fR
 .SH "DESCRIPTION"
 \fBzipcmp\fR
-compares the zip archives
-\fIzip1\fR
+compares the zip archives or directories
+\fIarchive1\fR
 and
-\fIzip2\fR
+\fIarchive2\fR
 and checks if they contain the same files, comparing their names,
 uncompressed sizes, and CRCs.
 File order and compressed size differences are ignored.
@@ -27,21 +27,29 @@ Display a short help message and exit.
 \fB\-i\fR
 Compare names ignoring case distinctions.
 .TP 5n
+\fB\-p\fR
+Enable paranoid checks.
+Compares extra fields and other meta data.
+(Automatically disabled if one of the archives is a directory.)
+.TP 5n
 \fB\-q\fR
 Quiet mode.
 Compare
 \fB\-v\fR.
 .TP 5n
+\fB\-t\fR
+Test zip files by comparing the contents to their checksums.
+.TP 5n
+\fB\-V\fR
+Display version information and exit.
+.TP 5n
 \fB\-v\fR
 Verbose mode.
 Print details about differences to stdout.
 (This is the default.)
-.TP 5n
-\fB\-V\fR
-Display version information and exit.
 .SH "EXIT STATUS"
 \fBzipcmp\fR
-exits 0 if the two zip archives contain the same files, 1 if they differ,
+exits 0 if the two archives contain the same files, 1 if they differ,
 and >1 if an error occurred.
 .SH "SEE ALSO"
 zipmerge(1),
