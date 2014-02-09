@@ -56,6 +56,7 @@ Features
 Bugs
 ====
 ! add autoconf tests for fts (zipcmp)
+! (some?) Linux doesn't like fts + -D_FILE_OFFSET_BITS==64
 * embed stripped down old zlib for torrentzip
 ! ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
 * Xcode 32bit build uses 64bit config.h
