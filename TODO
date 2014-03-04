@@ -55,6 +55,7 @@ Features
 
 Bugs
 ====
+! invalidate zip_source_zip when source archive is closed
 ! add autoconf tests for fts (zipcmp)
 ! (some?) Linux doesn't like fts + -D_FILE_OFFSET_BITS==64
 * embed stripped down old zlib for torrentzip
