@@ -5,7 +5,16 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
-dnl AC_CANONICAL_HOST
+AC_CANONICAL_HOST
+dnl Add rpath flags to installed pkg-config (.pc) file on systems that prefer it this way.
+case $host_os in
+    *bsd*)
+        PKG_CONFIG_RPATH=-Wl,-R\${libdir};;
+    *)
+        PKG_CONFIG_RPATH=;;
+esac
+AC_SUBST(PKG_CONFIG_RPATH)
+
 
 AC_PROG_CC
 AC_SYS_LARGEFILE
