@@ -37,7 +37,6 @@
 
 #include <sys/stat.h>
 #include <errno.h>
-#include <fts.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,6 +56,8 @@
 #include "zipint.h"
 #include "zip.h"
 #include "compat.h"
+
+#include "dir.h"
 
 struct archive {
     const char *name;
@@ -306,66 +307,56 @@ is_directory(const char *name)
 static int
 list_directory(const char *name, struct archive *a)
 {
-    FTS *ftsp;
-    FTSENT *ent;
+    char namebuf[8192];
+    dir_t *dir;
+    dir_status_t status;
     zip_uint64_t nalloc;
-    zip_int64_t crc;
-    char * const names[2] = { (char *)name, NULL };
 
-
-    if ((ftsp = fts_open(names, FTS_LOGICAL|FTS_NOCHDIR, NULL)) == NULL) {
-	/* TODO: error */
+    if ((dir=dir_open(name, DIR_RECURSE)) == NULL) {
+	fprintf(stderr, "%s: can't open directory '%s': %s", prg, name, strerror(errno));
 	return -1;
     }
 
     nalloc = 0;
-    while ((ent=fts_read(ftsp)) != NULL) {
-	switch (ent->fts_info) {
-            case FTS_D:
-            case FTS_DP:
-                break;
-                
-            case FTS_NS:
-            case FTS_DC:
-            case FTS_DNR:
-            case FTS_ERR:
-            case FTS_SLNONE:
-		fprintf(stderr, "%s: fts_read error (%s): %s", prg, ent->fts_path, strerror(errno));
-		fts_close(ftsp);
+    while ((status=dir_next(dir, namebuf, sizeof(namebuf))) == DIR_OK) {
+	struct stat sb;
+	zip_int64_t crc;
+
+	if (stat(namebuf, &sb) < 0) {
+	    fprintf(stderr, "%s: can't stat '%s': %s", prg, namebuf, strerror(errno));
+	    dir_close(dir);
+	    return -1;
+	}
+
+	if (S_ISREG(sb.st_mode)) {
+	    if (a->nentry >= nalloc) {
+		nalloc += 16;
+		a->entry = realloc(a->entry, sizeof(a->entry[0])*nalloc);
+		if (a->entry == NULL) {
+		    fprintf(stderr, "%s: malloc failure", prg);
+		    exit(1);
+		}
+	    }
+
+	    a->entry[a->nentry].name = strdup(namebuf+strlen(a->name)+1);
+	    a->entry[a->nentry].size = sb.st_size;
+	    if ((crc = compute_crc(namebuf)) < 0) {
+		dir_close(dir);
 		return -1;
+	    }
 
-            case FTS_F:
-		if (a->nentry >= nalloc) {
-		    nalloc += 16;
-		    a->entry = realloc(a->entry, sizeof(a->entry[0])*nalloc);
-		    if (a->entry == NULL) {
-			fprintf(stderr, "%s: malloc failure", prg);
-			exit(1);
-		    }
-		}
-
-		a->entry[a->nentry].name = strdup(ent->fts_path+strlen(a->name)+1);
-                a->entry[a->nentry].size = ent->fts_statp->st_size;
-		if ((crc = compute_crc(ent->fts_path)) < 0) {
-		    fts_close(ftsp);
-		    return -1;
-		}
-
-		a->entry[a->nentry].crc = (zip_uint32_t)crc;
-		a->nentry++;
-                break;
-
-            case FTS_DEFAULT:
-            case FTS_NSOK:
-            case FTS_SL:
-            case FTS_DOT:
-                /* TODO shouldn't happen */
-                break;
+	    a->entry[a->nentry].crc = (zip_uint32_t)crc;
+	    a->nentry++;
 	}
     }
 
-    if (fts_close(ftsp) < 0) {
-	fprintf(stderr, "%s: cannot fts_close '%s': %s", prg, a->name, strerror(errno));
+    if (status != DIR_EOD) {
+	fprintf(stderr, "%s: error reading directory '%s': %s", prg, a->name, strerror(errno));
+	dir_close(dir);
+	return -1;
+    }
+    if (dir_close(dir) < 0) {
+	fprintf(stderr, "%s: error closing directory '%s': %s", prg, a->name, strerror(errno));
 	return -1;
     }
 
