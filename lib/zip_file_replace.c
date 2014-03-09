@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN int
 zip_file_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source, zip_flags_t flags)
@@ -52,7 +50,6 @@ zip_file_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source, zi
 }
 
 
-
 
 /* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
 

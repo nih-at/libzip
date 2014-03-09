@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
@@ -43,7 +42,6 @@ _zip_entry_finalize(struct zip_entry *e)
     _zip_dirent_free(e->changes);
 }
 
-
 
 void
 _zip_entry_init(struct zip_entry *e)

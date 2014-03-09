@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <errno.h>
 #include <stdio.h>
@@ -39,7 +38,6 @@
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN struct zip_file *
 zip_fopen_index(struct zip *za, zip_uint64_t index, zip_flags_t flags)

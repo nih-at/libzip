@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <sys/stat.h>
 #include <errno.h>
@@ -56,7 +55,6 @@ struct read_file {
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len,
 		     enum zip_source_cmd cmd);
 
-
 
 ZIP_EXTERN struct zip_source *
 zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start,
@@ -73,7 +71,6 @@ zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start,
     return _zip_source_file_or_p(za, NULL, file, start, len, 1, NULL);
 }
 
-
 
 struct zip_source *
 _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
@@ -118,7 +115,6 @@ _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
     return zs;
 }
 
-
 
 static zip_int64_t
 read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)

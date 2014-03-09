@@ -31,13 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN int
 zip_fclose(struct zip_file *zf)

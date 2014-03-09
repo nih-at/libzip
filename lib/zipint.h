@@ -177,7 +177,6 @@ zip_compression_implementation _zip_get_compression_implementation(zip_int32_t);
 zip_encryption_implementation _zip_get_encryption_implementation(zip_uint16_t);
 
 
-
 
 /* This API is not final yet, but we need it internally, so it's private for now. */
 
@@ -220,7 +219,6 @@ struct zip_source *zip_source_window(struct zip *, struct zip_source *,
 
 struct zip_source *zip_source_pop(struct zip_source *);
 
-
 
 /* error source for layered sources */
 
@@ -350,7 +348,6 @@ struct zip_extra_field {
     zip_uint8_t *data;
 };
 
-
 
 struct zip_source {
     struct zip_source *src;
@@ -372,7 +369,6 @@ struct zip_entry {
     int deleted;
 };
 
-
 
 /* file or archive comment, or filename */
 
@@ -384,7 +380,6 @@ struct zip_string {
     zip_uint32_t converted_length;	/* length of converted */
 };
 
-
 
 /* which files to write, and in which order (name is for torrentzip sorting) */
 
@@ -393,13 +388,11 @@ struct zip_filelist {
     const char *name;
 };
 
-
 
 extern const char * const _zip_err_str[];
 extern const int _zip_nerr_str;
 extern const int _zip_err_type[];
 
-
 
 #define ZIP_ENTRY_CHANGED(e, f)	((e)->changes && ((e)->changes->changed & (f)))
 
@@ -407,7 +400,6 @@ extern const int _zip_err_type[];
 
 #define ZIP_IS_RDONLY(za)	((za)->ch_flags & ZIP_AFL_RDONLY)
 
-
 
 zip_int64_t _zip_add_entry(struct zip *);
 

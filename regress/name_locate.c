@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <errno.h>
 #include <stdio.h>
@@ -46,7 +45,6 @@ static int find_success(struct zip *, const char *, int);
 
 const char *prg;
 
-
 
 int
 main(int argc, char *argv[])
@@ -115,7 +113,6 @@ main(int argc, char *argv[])
     exit(fail ? 1 : 0);
 }
 
-
 
 static int
 find_fail(struct zip *z, const char *name, int flags, int zerr)
@@ -140,7 +137,6 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
     return 1;
 }
 
-
 
 static int
 find_success(struct zip *z, const char *name, int flags)

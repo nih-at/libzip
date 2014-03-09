@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,7 +46,6 @@ static struct zip_string *_zip_read_string(const unsigned char **, FILE *, zip_u
 static struct zip_string *_zip_dirent_process_ef_utf_8(const struct zip_dirent *, zip_uint16_t, struct zip_string *);
 static struct zip_extra_field *_zip_ef_utf8(zip_uint16_t, struct zip_string *, struct zip_error *);
 
-
 
 void
 _zip_cdir_free(struct zip_cdir *cd)
@@ -64,7 +62,6 @@ _zip_cdir_free(struct zip_cdir *cd)
     free(cd);
 }
 
-
 
 int
 _zip_cdir_grow(struct zip_cdir *cd, zip_uint64_t nentry, struct zip_error *error)
@@ -95,7 +92,6 @@ _zip_cdir_grow(struct zip_cdir *cd, zip_uint64_t nentry, struct zip_error *error
     return 0;
 }
 
-
 
 struct zip_cdir *
 _zip_cdir_new(zip_uint64_t nentry, struct zip_error *error)
@@ -126,7 +122,6 @@ _zip_cdir_new(zip_uint64_t nentry, struct zip_error *error)
     return cd;
 }
 
-
 
 zip_int64_t
 _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t survivors, FILE *fp)
@@ -205,7 +200,6 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, zip_uint64_
     return (zip_int64_t)size;
 }
 
-
 
 struct zip_dirent *
 _zip_dirent_clone(const struct zip_dirent *sde)
@@ -226,7 +220,6 @@ _zip_dirent_clone(const struct zip_dirent *sde)
     return tde;
 }
 
-
 
 void
 _zip_dirent_finalize(struct zip_dirent *zde)
@@ -239,7 +232,6 @@ _zip_dirent_finalize(struct zip_dirent *zde)
 	_zip_string_free(zde->comment);
 }
 
-
 
 void
 _zip_dirent_free(struct zip_dirent *zde)
@@ -251,7 +243,6 @@ _zip_dirent_free(struct zip_dirent *zde)
     free(zde);
 }
 
-
 
 void
 _zip_dirent_init(struct zip_dirent *de)
@@ -277,7 +268,6 @@ _zip_dirent_init(struct zip_dirent *de)
     de->offset = 0;
 }
 
-
 
 int
 _zip_dirent_needs_zip64(const struct zip_dirent *de, zip_flags_t flags)
@@ -289,7 +279,6 @@ _zip_dirent_needs_zip64(const struct zip_dirent *de, zip_flags_t flags)
     return 0;
 }
 
-
 
 struct zip_dirent *
 _zip_dirent_new(void)
@@ -303,7 +292,6 @@ _zip_dirent_new(void)
     return de;
 }
 
-
 
 /* _zip_dirent_read(zde, fp, bufp, left, localp, error):
    Fills the zip directory entry zde.
@@ -507,7 +495,6 @@ _zip_dirent_read(struct zip_dirent *zde, FILE *fp,
     return 0;
 }
 
-
 
 static struct zip_string *
 _zip_dirent_process_ef_utf_8(const struct zip_dirent *de, zip_uint16_t id, struct zip_string *str)
@@ -535,7 +522,6 @@ _zip_dirent_process_ef_utf_8(const struct zip_dirent *de, zip_uint16_t id, struc
     return str;
 }
 
-
 
 zip_int32_t
 _zip_dirent_size(FILE *f, zip_uint16_t flags, struct zip_error *error)
@@ -566,7 +552,6 @@ _zip_dirent_size(FILE *f, zip_uint16_t flags, struct zip_error *error)
     return size;
 }
 
-
 
 /* _zip_dirent_torrent_normalize(de);
    Set values suitable for torrentzip.
@@ -620,7 +605,6 @@ _zip_dirent_torrent_normalize(struct zip_dirent *de)
     de->comment = NULL;
 }
 
-
 
 /* _zip_dirent_write(zde, fp, flags, error):
    Writes zip directory entry zde to file fp.
@@ -760,7 +744,6 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, zip_flags_t flags, struct zip
     return is_zip64;
 }
 
-
 
 static time_t
 _zip_d2u_time(zip_uint16_t dtime, zip_uint16_t ddate)
@@ -783,7 +766,6 @@ _zip_d2u_time(zip_uint16_t dtime, zip_uint16_t ddate)
     return mktime(&tm);
 }
 
-
 
 static struct zip_extra_field *
 _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
@@ -815,7 +797,6 @@ _zip_ef_utf8(zip_uint16_t id, struct zip_string *str, struct zip_error *error)
     return ef;
 }
 
-
 
 struct zip_dirent *
 _zip_get_dirent(struct zip *za, zip_uint64_t idx, zip_flags_t flags, struct zip_error *error)
@@ -843,7 +824,6 @@ _zip_get_dirent(struct zip *za, zip_uint64_t idx, zip_flags_t flags, struct zip_
 	return za->entry[idx].changes;
 }
 
-
 
 zip_uint16_t
 _zip_read2(const zip_uint8_t **a)
@@ -856,7 +836,6 @@ _zip_read2(const zip_uint8_t **a)
     return ret;
 }
 
-
 
 zip_uint32_t
 _zip_read4(const zip_uint8_t **a)
@@ -869,7 +848,6 @@ _zip_read4(const zip_uint8_t **a)
     return ret;
 }
 
-
 
 zip_uint64_t
 _zip_read8(const zip_uint8_t **a)
@@ -884,7 +862,6 @@ _zip_read8(const zip_uint8_t **a)
     return x+(y<<32);
 }
 
-
 
 zip_uint8_t *
 _zip_read_data(const zip_uint8_t **buf, FILE *fp, size_t len, int nulp, struct zip_error *error)
@@ -927,7 +904,6 @@ _zip_read_data(const zip_uint8_t **buf, FILE *fp, size_t len, int nulp, struct z
     return r;
 }
 
-
 
 static struct zip_string *
 _zip_read_string(const zip_uint8_t **buf, FILE *fp, zip_uint16_t len, int nulp, struct zip_error *error)
@@ -943,7 +919,6 @@ _zip_read_string(const zip_uint8_t **buf, FILE *fp, zip_uint16_t len, int nulp, 
     return s;
 }
 
-
 
 void
 _zip_poke4(zip_uint32_t i, zip_uint8_t **p)
@@ -954,7 +929,6 @@ _zip_poke4(zip_uint32_t i, zip_uint8_t **p)
     *((*p)++) = (i>>24)&0xff;
 }
 
-
 
 void
 _zip_poke8(zip_uint64_t i, zip_uint8_t **p)
@@ -969,7 +943,6 @@ _zip_poke8(zip_uint64_t i, zip_uint8_t **p)
     *((*p)++) = (i>>56)&0xff;
 }
 
-
 
 void
 _zip_write2(zip_uint16_t i, FILE *fp)
@@ -980,7 +953,6 @@ _zip_write2(zip_uint16_t i, FILE *fp)
     return;
 }
 
-
 
 void
 _zip_write4(zip_uint32_t i, FILE *fp)
@@ -993,7 +965,6 @@ _zip_write4(zip_uint32_t i, FILE *fp)
     return;
 }
 
-
 
 void
 _zip_write8(zip_uint64_t i, FILE *fp)
@@ -1010,7 +981,6 @@ _zip_write8(zip_uint64_t i, FILE *fp)
     return;
 }
 
-
 
 void
 _zip_u2d_time(time_t time, zip_uint16_t *dtime, zip_uint16_t *ddate)

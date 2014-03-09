@@ -31,13 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 
 #include "zipint.h"
 
-
 
 /* _zip_new:
    creates a new zipfile struct, and sets the contents to zero; returns

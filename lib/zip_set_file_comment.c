@@ -31,14 +31,12 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
-
 
 ZIP_EXTERN int
 zip_set_file_comment(struct zip *za, zip_uint64_t idx, const char *comment, int len)

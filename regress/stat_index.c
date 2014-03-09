@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include "config.h"
 
 #include <errno.h>
@@ -53,7 +52,6 @@ const char *prg;
 
 const char *usage = "usage: %s [-grs] file index [index ...]\n";
 
-
 
 int
 main(int argc, char *argv[])

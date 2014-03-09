@@ -31,13 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 
 #include "zipint.h"
 
-
 
 /* zip_discard:
    frees the space allocated to a zipfile struct, and closes the

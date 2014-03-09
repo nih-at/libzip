@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN int
 zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags)
@@ -69,7 +67,6 @@ zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id
     return 0;
 }
 
-
 
 ZIP_EXTERN int
 zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags)
@@ -103,7 +100,6 @@ zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
     return 0;
 }
 
-
 
 ZIP_EXTERN const zip_uint8_t *
 zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags)
@@ -150,7 +146,6 @@ zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, 
 
 }
 
-
 
 ZIP_EXTERN const zip_uint8_t *
 zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp, zip_flags_t flags)
@@ -172,7 +167,6 @@ zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef
     return _zip_ef_get_by_id(de->extra_fields, lenp, ef_id, ef_idx, flags, &za->error);
 }
 
-
 
 ZIP_EXTERN zip_int16_t
 zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
@@ -201,7 +195,6 @@ zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
     return (zip_int16_t)n;
 }
 
-
 
 ZIP_EXTERN zip_int16_t
 zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_flags_t flags)
@@ -230,7 +223,6 @@ zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
     return (zip_int16_t)n;
 }
 
-
 
 ZIP_EXTERN int
 zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags)

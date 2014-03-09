@@ -31,13 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
 #include <stdlib.h>
 
-
 
 static const zip_uint16_t _cp437_to_unicode[256] = {
     /* 0x00 - 0x0F */
@@ -114,7 +112,6 @@ static const zip_uint16_t _cp437_to_unicode[256] = {
 #define UTF_8_CONTINUE_MASK  0xc0
 #define UTF_8_CONTINUE_MATCH 0x80
 
-
 
 enum zip_encoding_type
 _zip_guess_encoding(struct zip_string *str, enum zip_encoding_type expected_encoding)
@@ -177,7 +174,6 @@ done:
     return enc;
 }
 
-
 
 static zip_uint32_t
 _zip_unicode_to_utf8_len(zip_uint32_t codepoint)
@@ -191,7 +187,6 @@ _zip_unicode_to_utf8_len(zip_uint32_t codepoint)
     return 4;
 }
 
-
 
 static zip_uint32_t
 _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
@@ -218,7 +213,6 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
     return 4;
 }
 
-
 
 zip_uint8_t *
 _zip_cp437_to_utf8(const zip_uint8_t * const _cp437buf, zip_uint32_t len,

@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
@@ -39,7 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 
 struct zip_extra_field *
 _zip_ef_clone(const struct zip_extra_field *ef, struct zip_error *error)
@@ -105,7 +103,6 @@ _zip_ef_delete_by_id(struct zip_extra_field *ef, zip_uint16_t id, zip_uint16_t i
 }
 
 
-
 
 void
 _zip_ef_free(struct zip_extra_field *ef)
@@ -120,7 +117,6 @@ _zip_ef_free(struct zip_extra_field *ef)
     }
 }
 
-
 
 const zip_uint8_t *
 _zip_ef_get_by_id(const struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags, struct zip_error *error)
@@ -150,7 +146,6 @@ _zip_ef_get_by_id(const struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint
     return NULL;
 }
 
-
 
 struct zip_extra_field *
 _zip_ef_merge(struct zip_extra_field *to, struct zip_extra_field *from)
@@ -186,7 +181,6 @@ _zip_ef_merge(struct zip_extra_field *to, struct zip_extra_field *from)
     return to;
 }
 
-
 
 struct zip_extra_field *
 _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_flags_t flags)
@@ -212,7 +206,6 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_fla
     return ef;
 }
 
-
 
 struct zip_extra_field *
 _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, struct zip_error *error)
@@ -255,7 +248,6 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, stru
     return ef_head;
 }
 
-
 
 struct zip_extra_field *
 _zip_ef_remove_internal(struct zip_extra_field *ef)
@@ -301,7 +293,6 @@ _zip_ef_size(const struct zip_extra_field *ef, zip_flags_t flags)
     return size;
 }
 
-
 
 void
 _zip_ef_write(const struct zip_extra_field *ef, zip_flags_t flags, FILE *f)
@@ -316,7 +307,6 @@ _zip_ef_write(const struct zip_extra_field *ef, zip_flags_t flags, FILE *f)
     }
 }
 
-
 
 int
 _zip_read_local_ef(struct zip *za, zip_uint64_t idx)

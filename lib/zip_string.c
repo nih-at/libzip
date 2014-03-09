@@ -31,14 +31,12 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "zipint.h"
 
-
 
 zip_uint32_t
 _zip_string_crc32(const struct zip_string *s)
@@ -53,7 +51,6 @@ _zip_string_crc32(const struct zip_string *s)
     return crc;
 }
 
-
 
 int
 _zip_string_equal(const struct zip_string *a, const struct zip_string *b)
@@ -69,7 +66,6 @@ _zip_string_equal(const struct zip_string *a, const struct zip_string *b)
     return (memcmp(a->raw, b->raw, a->length) == 0);
 }
 
-
 
 void
 _zip_string_free(struct zip_string *s)
@@ -82,7 +78,6 @@ _zip_string_free(struct zip_string *s)
     free(s);
 }
 
-
 
 const zip_uint8_t *
 _zip_string_get(struct zip_string *string, zip_uint32_t *lenp, zip_flags_t flags, struct zip_error *error)
@@ -119,7 +114,6 @@ _zip_string_get(struct zip_string *string, zip_uint32_t *lenp, zip_flags_t flags
     return string->raw;
 }
 
-
 
 zip_uint16_t
 _zip_string_length(const struct zip_string *s)
@@ -130,7 +124,6 @@ _zip_string_length(const struct zip_string *s)
     return s->length;
 }
 
-
 
 struct zip_string *
 _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, struct zip_error *error)
@@ -184,7 +177,6 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
     return s;
 }
 
-
 
 void
 _zip_string_write(const struct zip_string *s, FILE *f)

@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 
 zip_encryption_implementation
 _zip_get_encryption_implementation(zip_uint16_t em)

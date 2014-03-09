@@ -34,7 +34,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #ifndef ZIP_EXTERN
 #ifdef _WIN32
@@ -200,7 +199,6 @@ extern "C" {
 
 #define ZIP_OPSYS_DEFAULT	ZIP_OPSYS_UNIX
 
-
 
 enum zip_source_cmd {
     ZIP_SOURCE_OPEN,	/* prepare for reading */
@@ -245,7 +243,6 @@ typedef zip_uint32_t zip_flags_t;
 typedef zip_int64_t (*zip_source_callback)(void *, void *, zip_uint64_t,
 					   enum zip_source_cmd);
 
-
 
 #ifndef ZIP_DISABLE_DEPRECATED
 ZIP_EXTERN zip_int64_t zip_add(struct zip *, const char *, struct zip_source *); /* use zip_file_add */

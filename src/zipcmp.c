@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "config.h"
 
@@ -87,7 +86,6 @@ struct entry {
     zip_uint32_t comment_length;
 };
 
-
 
 const char *prg;
 
@@ -115,7 +113,6 @@ Copyright (C) 2014 Dieter Baron and Thomas Klausner\n\
 
 #define OPTIONS "hVipqtv"
 
-
 
 #define BOTH_ARE_ZIPS(a)	(a[0].za && a[1].za)
 
@@ -141,7 +138,6 @@ static int test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc
 int ignore_case, test_files, paranoid, verbose;
 int header_done;
 
-
 
 int
 main(int argc, char * const argv[])
@@ -196,7 +192,6 @@ main(int argc, char * const argv[])
     exit((compare_zip(argv+optind) == 0) ? 0 : 1);
 }
 
-
 
 static int
 compare_zip(char * const zn[])
@@ -433,7 +428,6 @@ comment_compare(const char *c1, int l1, const char *c2, int l2) {
     return memcmp(c1, c2, l2);
 }
 
-
 
 static int
 compare_list(char * const name[2],
@@ -489,7 +483,6 @@ compare_list(char * const name[2],
     return diff;
 }
 
-
 
 static int
 ef_read(struct zip *za, int idx, struct entry *e)
@@ -522,7 +515,6 @@ ef_read(struct zip *za, int idx, struct entry *e)
     return 0;
 }
 
-
 
 static int
 ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2)
@@ -539,7 +531,6 @@ ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2)
 }
 
 
-
 
 static int
 ef_order(const void *ap, const void *bp) {
@@ -557,7 +548,6 @@ ef_order(const void *ap, const void *bp) {
     return memcmp(a->data, b->data, a->size);
 }
 
-
 
 static void
 ef_print(const void *p)
@@ -572,7 +562,6 @@ ef_print(const void *p)
     printf(">\n");
 }
 
-
 
 static int
 entry_cmp(const void *p1, const void *p2)
@@ -597,7 +586,6 @@ entry_cmp(const void *p1, const void *p2)
     return 0;
 }
 
-
 
 static int
 entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
@@ -643,7 +631,6 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 }
 
 
-
 
 static void
 entry_print(const void *p)
@@ -656,7 +643,6 @@ entry_print(const void *p)
     printf("%10lu %08x %s\n", (unsigned long)e->size, e->crc, e->name);
 }
 
-
 
 static int
 test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc)

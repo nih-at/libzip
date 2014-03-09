@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
@@ -52,7 +51,6 @@
 #include <fcntl.h>
 #endif
 
-
 
 /* max deflate size increase: size + ceil(size/16k)*5+6 */
 #define MAX_DEFLATE_SIZE_32	4293656963u
@@ -64,7 +62,6 @@ static int write_cdir(struct zip *, const struct zip_filelist *, zip_uint64_t, F
 static char *_zip_create_temp_output(struct zip *, FILE **);
 static int _zip_torrentzip_cmp(const void *, const void *);
 
-
 
 ZIP_EXTERN int
 zip_close(struct zip *za)
@@ -285,7 +282,6 @@ zip_close(struct zip *za)
     return 0;
 }
 
-
 
 static int
 add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft)
@@ -449,7 +445,6 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
     return 0;
 }
 
-
 
 static int
 copy_data(FILE *fs, zip_uint64_t len, FILE *ft, struct zip_error *error)
@@ -484,7 +479,6 @@ copy_data(FILE *fs, zip_uint64_t len, FILE *ft, struct zip_error *error)
     return 0;
 }
 
-
 
 static int
 copy_source(struct zip *za, struct zip_source *src, FILE *ft)
@@ -518,7 +512,6 @@ copy_source(struct zip *za, struct zip_source *src, FILE *ft)
     return ret;
 }
 
-
 
 static int
 write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t survivors, FILE *out)
@@ -559,7 +552,6 @@ write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t sur
     return 0;
 }
 
-
 
 int
 _zip_changed(const struct zip *za, zip_uint64_t *survivorsp)
@@ -586,7 +578,6 @@ _zip_changed(const struct zip *za, zip_uint64_t *survivorsp)
     return changed;
 }
 
-
 
 static char *
 _zip_create_temp_output(struct zip *za, FILE **outp)
@@ -636,7 +627,6 @@ _zip_create_temp_output(struct zip *za, FILE **outp)
     return temp;
 }
 
-
 
 static int
 _zip_torrentzip_cmp(const void *a, const void *b)

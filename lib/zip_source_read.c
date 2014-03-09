@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 
 zip_int64_t
 zip_source_read(struct zip_source *src, void *data, zip_uint64_t len)

@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 #include <string.h>
@@ -49,7 +48,6 @@ struct trad_pkware {
 #define KEY1		591751049
 #define KEY2		878082192
 
-
 
 static void decrypt(struct trad_pkware *, zip_uint8_t *,
 		    const zip_uint8_t *, zip_uint64_t, int);
@@ -58,7 +56,6 @@ static zip_int64_t pkware_decrypt(struct zip_source *, void *, void *,
 				  zip_uint64_t, enum zip_source_cmd);
 static void pkware_free(struct trad_pkware *);
 
-
 
 struct zip_source *
 zip_source_pkware(struct zip *za, struct zip_source *src,
@@ -96,7 +93,6 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
     return s2;
 }
 
-
 
 static void
 decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
@@ -128,7 +124,6 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
     }
 }
 
-
 
 static int
 decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
@@ -168,7 +163,6 @@ decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
     return 0;
 }
 
-
 
 static zip_int64_t
 pkware_decrypt(struct zip_source *src, void *ud, void *data,
@@ -225,7 +219,6 @@ pkware_decrypt(struct zip_source *src, void *ud, void *data,
     }
 }
 
-
 
 static void
 pkware_free(struct trad_pkware *ctx)

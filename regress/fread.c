@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include "config.h"
 
 #include <errno.h>
@@ -57,7 +56,6 @@ const char *when_name[] = {
 
 static int do_read(struct zip *, const char *, int, enum when, int, int);
 
-
 int verbose;
 
 const char *prg;
@@ -146,7 +144,6 @@ main(int argc, char *argv[])
     exit(fail ? 1 : 0);
 }
 
-
 
 static int
 do_read(struct zip *z, const char *name, int flags,

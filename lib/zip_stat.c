@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN int
 zip_stat(struct zip *za, const char *fname, zip_flags_t flags, struct zip_stat *st)

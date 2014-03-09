@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 /* lenp is 32 bit because converted comment can be longer than ZIP_UINT16_MAX */
 
 ZIP_EXTERN const char *

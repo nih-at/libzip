@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <ctype.h>
 #include <errno.h>
@@ -51,7 +50,6 @@
 
 #include "zip.h"
 #include "compat.h"
-
 
 char *prg;
 
@@ -91,7 +89,6 @@ static int confirm_replace(struct zip *, const char *, zip_uint64_t,
 			   struct zip *, const char *, zip_uint64_t);
 static struct zip *merge_zip(struct zip *, const char *, const char *);
 
-
 
 int
 main(int argc, char *argv[])
@@ -180,7 +177,6 @@ main(int argc, char *argv[])
     exit(0);
 }
 
-
 
 static int
 confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
@@ -230,7 +226,6 @@ confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
     return 0;
 }
 
-
 
 static struct zip *
 merge_zip(struct zip *za, const char *tname, const char *sname)

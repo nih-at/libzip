@@ -31,10 +31,8 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
-
 
 /*
   NOTE: Return type is signed so we can return -1 on error.

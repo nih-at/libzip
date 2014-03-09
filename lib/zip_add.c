@@ -31,12 +31,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
-
 
 /*
   NOTE: Return type is signed so we can return -1 on error.

@@ -31,13 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 
 #include "zipint.h"
 
-
 
 struct zip_source *
 _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, zip_flags_t flags,

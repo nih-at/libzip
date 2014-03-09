@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "config.h"
 
@@ -50,7 +49,6 @@
 
 #include "zip.h"
 
-
 
 #define FLAG_DRYRUN	1
 #define FLAG_VERBOSE	2
@@ -80,7 +78,6 @@ Copyright (C) 2010 Dieter Baron and Thomas Klausner\n\
 
 static int torrentzip(const char *, int);
 
-
 
 int
 main(int argc, char * const argv[])
@@ -128,7 +125,6 @@ main(int argc, char * const argv[])
     return (err ? 1 : 0);
 }
 
-
 
 static int
 torrentzip(const char *fname, int flags)

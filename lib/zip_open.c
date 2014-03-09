@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <sys/stat.h>
 #include <errno.h>
@@ -58,7 +57,6 @@ static struct zip_cdir *_zip_read_eocd(const unsigned char *, const unsigned cha
 static struct zip_cdir *_zip_read_eocd64(FILE *, const unsigned char *, const unsigned char *,
 					 off_t, size_t, unsigned int, struct zip_error *);
 
-
 
 ZIP_EXTERN struct zip *
 zip_open(const char *fn, int _flags, int *zep)
@@ -120,7 +118,6 @@ zip_archive_set_tempdir(struct zip *za, const char *tempdir)
     
     return 0;
 }
-
 
 struct zip *
 _zip_open(const char *fn, FILE *fp, unsigned int flags, int *zep)
@@ -172,7 +169,6 @@ _zip_open(const char *fn, FILE *fp, unsigned int flags, int *zep)
     return za;
 }
 
-
 
 static void
 set_error(int *zep, const struct zip_error *err, int ze)
@@ -189,7 +185,6 @@ set_error(int *zep, const struct zip_error *err, int ze)
 	*zep = ze;
 }
 
-
 
 /* _zip_readcdir:
    tries to find a valid end-of-central-directory at the beginning of
@@ -298,7 +293,6 @@ _zip_readcdir(FILE *fp, off_t buf_offset, unsigned char *buf, const unsigned cha
     return cd;
 }
 
-
 
 /* _zip_checkcons:
    Checks the consistency of the central directory by comparing central
@@ -361,7 +355,6 @@ _zip_checkcons(FILE *fp, struct zip_cdir *cd, struct zip_error *error)
     return (max-min) < ZIP_INT64_MAX ? (zip_int64_t)(max-min) : ZIP_INT64_MAX;
 }
 
-
 
 /* _zip_check_torrentzip:
    check whether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
@@ -395,7 +388,6 @@ _zip_check_torrentzip(struct zip *za, const struct zip_cdir *cdir)
 }
 
 
-
 
 /* _zip_headercomp:
    compares a central directory entry and a local file header
@@ -428,7 +420,6 @@ _zip_headercomp(const struct zip_dirent *central, const struct zip_dirent *local
     return 0;
 }
 
-
 
 static struct zip *
 _zip_allocate_new(const char *fn, unsigned int flags, int *zep)
@@ -455,7 +446,6 @@ _zip_allocate_new(const char *fn, unsigned int flags, int *zep)
     return za;
 }
 
-
 
 static int
 _zip_file_exists(const char *fn, unsigned int flags, int *zep)
@@ -485,7 +475,6 @@ _zip_file_exists(const char *fn, unsigned int flags, int *zep)
     return 1;
 }
 
-
 
 static struct zip_cdir *
 _zip_find_central_dir(FILE *fp, unsigned int flags, int *zep, off_t len)
@@ -573,7 +562,6 @@ _zip_find_central_dir(FILE *fp, unsigned int flags, int *zep, off_t len)
     return cdir;
 }
 
-
 
 static unsigned char *
 _zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little, size_t littlelen)
@@ -592,7 +580,6 @@ _zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little
     return NULL;
 }
 
-
 
 static struct zip_cdir *
 _zip_read_eocd(const unsigned char *eocd, const unsigned char *buf, off_t buf_offset, size_t buflen,
@@ -647,7 +634,6 @@ _zip_read_eocd(const unsigned char *eocd, const unsigned char *buf, off_t buf_of
     return cd;
 }
 
-
 
 static struct zip_cdir *
 _zip_read_eocd64(FILE *f, const zip_uint8_t *eocd64loc, const zip_uint8_t *buf,

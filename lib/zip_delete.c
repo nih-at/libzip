@@ -31,11 +31,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN int
 zip_delete(struct zip *za, zip_uint64_t idx)
@@ -60,4 +58,3 @@ zip_delete(struct zip *za, zip_uint64_t idx)
     return 0;
 }
 
-

@@ -31,12 +31,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
-
 
 /* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
 

@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 #include <string.h>
@@ -48,7 +47,6 @@ struct window {
 static zip_int64_t window_read(struct zip_source *, void *, void *,
 			       zip_uint64_t, enum zip_source_cmd);
 
-
 
 struct zip_source *
 zip_source_window(struct zip *za, struct zip_source *src, zip_uint64_t start, zip_uint64_t len)
@@ -72,7 +70,6 @@ zip_source_window(struct zip *za, struct zip_source *src, zip_uint64_t start, zi
     return zip_source_layered(za, src, window_read, ctx);
 }
 
-
 
 static zip_int64_t
 window_read(struct zip_source *src, void *_ctx, void *data,

@@ -31,14 +31,12 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "zipint.h"
 
-
 
 ZIP_EXTERN struct zip_source *
 zip_source_zip(struct zip *za, struct zip *srcza, zip_uint64_t srcidx,

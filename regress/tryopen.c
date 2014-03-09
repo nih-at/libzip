@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include "config.h"
 
 #include <errno.h>
@@ -54,7 +53,6 @@ const char *usage = "usage: %s [-cent] file\n\n"
     "\t-n\tcreate new file\n"
     "\t-t\ttruncate file to size 0\n";
 
-
 
 int
 main(int argc, char *argv[])
