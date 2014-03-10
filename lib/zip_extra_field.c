@@ -214,7 +214,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, stru
     const zip_uint8_t *p;
     zip_uint16_t fid, flen;
 
-    ef_head = NULL;
+    ef_head = ef = NULL;
     for (p=data; p<data+len; p+=flen) {
 	if (p+4 > data+len) {
 	    _zip_error_set(error, ZIP_ER_INCONS, 0);
