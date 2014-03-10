@@ -57,7 +57,7 @@ const char *prg;
 
 #define PROGRAM	"ziptorrent"
 
-const char *usage = "usage: %s [-hnVv] zip [...]\n";
+#define USAGE "usage: %s [-hnVv] zip [...]\n"
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -93,7 +93,7 @@ main(int argc, char * const argv[])
 	switch (c) {
 	case 'h':
 	    fputs(help_head, stdout);
-	    printf(usage, prg);
+	    printf(USAGE, prg);
 	    fputs(help, stdout);
 	    exit(0);
 	case 'n':
@@ -107,13 +107,13 @@ main(int argc, char * const argv[])
 	    break;
 
 	default:
-	    fprintf(stderr, usage, prg);
+	    fprintf(stderr, USAGE, prg);
 	    exit(2);
 	}
     }
 
     if (argc == optind) {
-	fprintf(stderr, usage, prg);
+	fprintf(stderr, USAGE, prg);
 	exit(2);
     }
 

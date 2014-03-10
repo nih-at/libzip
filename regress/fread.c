@@ -59,7 +59,7 @@ static int do_read(struct zip *, const char *, int, enum when, int, int);
 int verbose;
 
 const char *prg;
-const char * const usage = "usage: %s [-v] archive\n";
+#define USAGE "usage: %s [-v] archive\n"
 
 int
 main(int argc, char *argv[])
@@ -83,14 +83,14 @@ main(int argc, char *argv[])
                 break;
 
             default:
-                fprintf(stderr, usage, prg);
+                fprintf(stderr, USAGE, prg);
                 return 1;
 	}
     }
 
     
     if (argc-optind != 1) {
-        fprintf(stderr, usage, prg);
+        fprintf(stderr, USAGE, prg);
         return 1;
     }
 

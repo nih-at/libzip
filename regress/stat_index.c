@@ -50,7 +50,7 @@
 
 const char *prg;
 
-const char *usage = "usage: %s [-grs] file index [index ...]\n";
+#define USAGE "usage: %s [-grs] file index [index ...]\n"
 
 
 int
@@ -79,12 +79,12 @@ main(int argc, char *argv[])
 	    break;
 
 	default:
-	    fprintf(stderr, usage, prg);
+	    fprintf(stderr, USAGE, prg);
 	    return 1;
 	}
     }
     if (argc < optind+2) {
-	fprintf(stderr, usage, prg);
+	fprintf(stderr, USAGE, prg);
 	return 1;
     }
 

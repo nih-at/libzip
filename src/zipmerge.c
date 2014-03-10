@@ -55,7 +55,7 @@ char *prg;
 
 #define PROGRAM	"zipmerge"
 
-const char *usage = "usage: %s [-DhIiSsV] target-zip zip...\n";
+#define USAGE "usage: %s [-DhIiSsV] target-zip zip...\n"
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -126,7 +126,7 @@ main(int argc, char *argv[])
 
 	case 'h':
 	    fputs(help_head, stdout);
-	    printf(usage, prg);
+	    printf(USAGE, prg);
 	    fputs(help, stdout);
 	    exit(0);
 	case 'V':
@@ -134,13 +134,13 @@ main(int argc, char *argv[])
 	    exit(0);
 
 	default:
-	    fprintf(stderr, usage, prg);
+	    fprintf(stderr, USAGE, prg);
 	    exit(2);
 	}
     }
 
     if (argc < optind+2) {
-	fprintf(stderr, usage, prg);
+	fprintf(stderr, USAGE, prg);
 	exit(2);
     }
 
