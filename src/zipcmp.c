@@ -91,7 +91,7 @@ const char *prg;
 
 #define PROGRAM	"zipcmp"
 
-const char *usage = "usage: %s [-hipqtVv] archive1 archive2\n";
+#define USAGE "usage: %s [-hipqtVv] archive1 archive2\n"
 
 char help_head[] =
     PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
@@ -171,7 +171,7 @@ main(int argc, char * const argv[])
 
 	case 'h':
 	    fputs(help_head, stdout);
-	    printf(usage, prg);
+	    printf(USAGE, prg);
 	    fputs(help, stdout);
 	    exit(0);
 	case 'V':
@@ -179,13 +179,13 @@ main(int argc, char * const argv[])
 	    exit(0);
 
 	default:
-	    fprintf(stderr, usage, prg);
+	    fprintf(stderr, USAGE, prg);
 	    exit(2);
 	}
     }
 
     if (argc != optind+2) {
-	fprintf(stderr, usage, prg);
+	fprintf(stderr, USAGE, prg);
 	exit(2);
     }
 
@@ -363,9 +363,10 @@ static int
 list_zip(const char *name, struct archive *a)
 {
     struct zip *za;
-    int err, i;
+    int err;
     char errstr[1024];
     struct zip_stat st;
+    unsigned int i;
 
     if ((za=zip_open(name, paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), err, errno);
@@ -436,7 +437,8 @@ compare_list(char * const name[2],
 	     int (*check)(char *const name[2], const void *, const void *),
 	     void (*print)(const void *))
 {
-    int i[2], j, c;
+    unsigned int i[2];
+    int j, c;
     int diff;
 
 #define INC(k)	(i[k]++, l[k]=((const char *)l[k])+size)
