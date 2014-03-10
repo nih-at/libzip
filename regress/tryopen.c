@@ -60,7 +60,7 @@ main(int argc, char *argv[])
     const char *fname;
     struct zip *z;
     int c, flags, ze;
-    zip_uint64_t count;
+    zip_int64_t count;
     int error;
 
     flags = 0;
