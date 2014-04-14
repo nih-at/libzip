@@ -118,7 +118,7 @@ main(int argc, char *argv[])
 	if (sb.valid & ZIP_STAT_MTIME) {
 	    struct tm *tpm;
 	    tpm = localtime(&sb.mtime);
-	    strftime(buf, sizeof(buf), "%a %b %d %Y %T", tpm);
+	    strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
 	    printf("mtime: '%s'\n", buf);
 	}
 	if (sb.valid & ZIP_STAT_CRC)
