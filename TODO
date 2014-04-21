@@ -25,6 +25,7 @@ API Issues
 
 Features
 ========
+! test and if necessary fix zipcmp on Windows
 * progress callback for zip_close (called after each file written completely)
 * function to copy file from one archive to another
 * do not compress if storing is smaller
