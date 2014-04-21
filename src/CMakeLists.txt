@@ -6,7 +6,7 @@ IF(NOT HAVE_GETOPT)
   SET(SRC_EXTRA_FILES getopt.c)
 ENDIF(NOT HAVE_GETOPT)
 
-ADD_EXECUTABLE(zipcmp zipcmp.c ${SRC_EXTRA_FILES})
+ADD_EXECUTABLE(zipcmp zipcmp.c dir.c parray.c parray_push.c parray_pop.c ${SRC_EXTRA_FILES})
 TARGET_LINK_LIBRARIES(zipcmp zip)
 INSTALL(TARGETS zipcmp RUNTIME DESTINATION bin)
 

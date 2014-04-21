@@ -23,6 +23,7 @@
 #cmakedefine HAVE___INT64_LIBZIP
 #cmakedefine HAVE_INT64_T_LIBZIP
 #cmakedefine HAVE_UINT64_T_LIBZIP
+#cmakedefine HAVE_SSIZE_T_LIBZIP
 #cmakedefine SHORT_LIBZIP ${SHORT_LIBZIP}
 #cmakedefine INT_LIBZIP ${INT_LIBZIP}
 #cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
