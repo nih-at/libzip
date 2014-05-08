@@ -25,7 +25,6 @@ API Issues
 
 Features
 ========
-! test and if necessary fix zipcmp on Windows
 * progress callback for zip_close (called after each file written completely)
 * function to copy file from one archive to another
 * do not compress if storing is smaller
@@ -56,7 +55,6 @@ Features
 
 Bugs
 ====
-! invalidate zip_source_zip when source archive is closed
 * embed stripped down old zlib for torrentzip
 ! ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
 * Xcode 32bit build uses 64bit config.h

@@ -65,15 +65,12 @@ zip_discard(struct zip *za)
 	free(za->entry);
     }
 
-    for (i=0; i<za->nfile; i++) {
-	if (za->file[i]->error.zip_err == ZIP_ER_OK) {
-	    _zip_error_set(&za->file[i]->error, ZIP_ER_ZIPCLOSED, 0);
-	    za->file[i]->za = NULL;
-	}
+    for (i=0; i<za->nsource; i++) {
+	_zip_source_filep_invalidate(za->source[i]);
     }
 
     _zip_error_fini(&za->error);
-    free(za->file);
+    free(za->source);
     
     free(za);
 

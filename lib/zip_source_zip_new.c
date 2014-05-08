@@ -129,6 +129,11 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, zip_
 		return NULL;
 	}
 	
+	if (_zip_source_filep_set_source_archive(src, srcza) < 0) {
+	    zip_source_free(src);
+	    return NULL;
+	}
+	
 	if (enc_impl) {
 	    if ((s2=enc_impl(za, src, st.encryption_method, 0, password)) == NULL) {
 		zip_source_free(src);

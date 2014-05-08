@@ -62,8 +62,8 @@ _zip_new(struct zip_error *error)
     za->comment_changed = 0;
     za->nentry = za->nentry_alloc = 0;
     za->entry = NULL;
-    za->nfile = za->nfile_alloc = 0;
-    za->file = NULL;
+    za->nsource = za->nsource_alloc = 0;
+    za->source = NULL;
     za->tempdir = NULL;
     
     return za;
