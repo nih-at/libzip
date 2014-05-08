@@ -88,8 +88,16 @@ zip_close(struct zip *za)
     /* don't create zip files with no entries */
     if (survivors == 0) {
 	if (za->zn && ((za->open_flags & ZIP_TRUNCATE) || (changed && za->zp))) {
+	    int reopen = 0;
+	    if (za->zp) {
+		reopen = 1;
+		fclose(za->zp);
+		za->zp = NULL;
+	    }
 	    if (remove(za->zn) != 0) {
 		_zip_error_set(&za->error, ZIP_ER_REMOVE, errno);
+		if (reopen)
+		    za->zp = fopen(za->zn, "rb");
 		return -1;
 	    }
 	}
