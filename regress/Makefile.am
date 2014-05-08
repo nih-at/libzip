@@ -20,6 +20,7 @@ EXTRA_DIST= \
 	runtest \
 	${TESTS} \
 	bigzero-zip.zip \
+	bogus.zip \
 	broken.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
