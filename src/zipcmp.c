@@ -45,6 +45,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_FTS_H
+#include <fts.h>
+#endif
 #include <zlib.h>
 
 #ifndef HAVE_GETOPT
@@ -55,8 +58,6 @@
 #include "zipint.h"
 #include "zip.h"
 #include "compat.h"
-
-#include "dir.h"
 
 struct archive {
     const char *name;
@@ -131,7 +132,9 @@ static int entry_cmp(const void *p1, const void *p2);
 static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
 static void entry_print(const void *p);
 static int is_directory(const char *name);
+#ifdef HAVE_FTS_H
 static int list_directory(const char *name, struct archive *a);
+#endif
 static int list_zip(const char *name, struct archive *a);
 static int test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc);
 
@@ -211,9 +214,14 @@ compare_zip(char * const zn[])
 	a[i].comment_length =0;
 
 	if (is_directory(zn[i])) {
+#ifndef HAVE_FTS_H
+	    fprintf(stderr, "%s: reading directories not supported\n", prg);
+	    exit(2);
+#else
 	    if (list_directory(zn[i], a+i) < 0)
 		exit(2);
 	    paranoid = 0; /* paranoid checks make no sense for directories, since they compare zip metadata */
+#endif
 	}
 	else {
 	    if (list_zip(zn[i], a+i) < 0)
@@ -267,7 +275,7 @@ compute_crc(const char *fname)
 
 
     if ((f=fopen(fname, "r")) == NULL) {
-	fprintf(stderr, "%s: can't open %s: %s", prg, fname, strerror(errno));
+	fprintf(stderr, "%s: can't open %s: %s\n", prg, fname, strerror(errno));
 	return -1;
     }
 
@@ -276,7 +284,7 @@ compute_crc(const char *fname)
     }
 
     if (ferror(f)) {
-	fprintf(stderr, "%s: read error on %s: %s", prg, fname, strerror(errno));
+	fprintf(stderr, "%s: read error on %s: %s\n", prg, fname, strerror(errno));
 	fclose(f);
 	return -1;
     }
@@ -299,64 +307,77 @@ is_directory(const char *name)
 }
 
 
+#ifdef HAVE_FTS_H
 static int
 list_directory(const char *name, struct archive *a)
 {
-    char namebuf[8192];
-    dir_t *dir;
-    dir_status_t status;
+    FTS *fts;
+    FTSENT *ent;
     zip_uint64_t nalloc;
 
-    if ((dir=dir_open(name, DIR_RECURSE)) == NULL) {
-	fprintf(stderr, "%s: can't open directory '%s': %s", prg, name, strerror(errno));
+    char * const names[2] = { (char *)name, NULL };
+
+
+    if ((fts = fts_open(names, FTS_NOCHDIR|FTS_LOGICAL, NULL)) == NULL) {
+	fprintf(stderr, "%s: can't open directory '%s': %s\n", prg, name, strerror(errno));
 	return -1;
     }
+    size_t prefix_length = strlen(name)+1;
 
     nalloc = 0;
-    while ((status=dir_next(dir, namebuf, sizeof(namebuf))) == DIR_OK) {
-	struct stat sb;
+
+    while ((ent = fts_read(fts))) {
 	zip_int64_t crc;
 
-	if (stat(namebuf, &sb) < 0) {
-	    fprintf(stderr, "%s: can't stat '%s': %s", prg, namebuf, strerror(errno));
-	    dir_close(dir);
-	    return -1;
-	}
+	switch (ent->fts_info) {
+	case FTS_D:
+	case FTS_DOT:
+	case FTS_DP:
+	case FTS_DEFAULT:
+	case FTS_SL:
+	case FTS_NSOK:
+	    break;
 
-	if (S_ISREG(sb.st_mode)) {
+	case FTS_DC:
+	case FTS_DNR:
+	case FTS_ERR:
+	case FTS_NS:
+	case FTS_SLNONE:
+	    /* TODO: error */
+	    fts_close(fts);
+	    return -1;
+
+	case FTS_F:
 	    if (a->nentry >= nalloc) {
 		nalloc += 16;
 		a->entry = realloc(a->entry, sizeof(a->entry[0])*nalloc);
 		if (a->entry == NULL) {
-		    fprintf(stderr, "%s: malloc failure", prg);
+		    fprintf(stderr, "%s: malloc failure\n", prg);
 		    exit(1);
 		}
 	    }
-
-	    a->entry[a->nentry].name = strdup(namebuf+strlen(a->name)+1);
-	    a->entry[a->nentry].size = sb.st_size;
-	    if ((crc = compute_crc(namebuf)) < 0) {
-		dir_close(dir);
+	    
+	    a->entry[a->nentry].name = strdup(ent->fts_path+prefix_length);
+	    a->entry[a->nentry].size = ent->fts_statp->st_size;
+	    if ((crc = compute_crc(ent->fts_accpath)) < 0) {
+		fts_close(fts);
 		return -1;
 	    }
-
+	    
 	    a->entry[a->nentry].crc = (zip_uint32_t)crc;
 	    a->nentry++;
+	    break;
 	}
     }
 
-    if (status != DIR_EOD) {
-	fprintf(stderr, "%s: error reading directory '%s': %s", prg, a->name, strerror(errno));
-	dir_close(dir);
-	return -1;
-    }
-    if (dir_close(dir) < 0) {
-	fprintf(stderr, "%s: error closing directory '%s': %s", prg, a->name, strerror(errno));
+    if (fts_close(fts)) {
+	fprintf(stderr, "%s: error closing directory '%s': %s\n", prg, a->name, strerror(errno));
 	return -1;
     }
 
     return 0;
 }
+#endif
 
 
 static int

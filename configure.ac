@@ -63,8 +63,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
 			[Define to 1 if you have the `MoveFileExA' function.])],
 	       [AC_MSG_RESULT([no])])
 
-AC_CHECK_HEADERS([unistd.h strings.h])
-AC_HEADER_DIRENT
+AC_CHECK_HEADERS([fts.h strings.h unistd.h])
 
 AC_CHECK_TYPES([int8_t])
 AC_CHECK_TYPES([int16_t])
