@@ -194,10 +194,18 @@ main(int argc, char *argv[])
 	    arg += 2;
 	} else if (strcmp(argv[arg], "add_file") == 0 && arg+4 < argc) {
 	    /* add */
-    	    if ((zs=zip_source_file(za, argv[arg+2], atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
-		fprintf(stderr, "can't create zip_source from file: %s\n", zip_strerror(za));
-		err = 1;
-		break;
+	    if (strcmp(argv[arg+2], "/dev/stdin") == 0) {
+		if ((zs=zip_source_filep(za, stdin, atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
+		    fprintf(stderr, "can't create zip_source from stdin: %s\n", zip_strerror(za));
+		    err = 1;
+		    break;
+		}
+	    } else {
+		if ((zs=zip_source_file(za, argv[arg+2], atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
+		    fprintf(stderr, "can't create zip_source from file: %s\n", zip_strerror(za));
+		    err = 1;
+		    break;
+		}
 	    }
 
 	    if (zip_add(za, argv[arg+1], zs) == -1) {
