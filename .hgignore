@@ -48,6 +48,7 @@
 ^regress/modify$
 ^regress/name_locate$
 ^regress/rename$
+^regress/runtest$
 ^regress/set_comment_all$
 ^regress/set_comment_localonly$
 ^regress/set_comment_removeglobal$
