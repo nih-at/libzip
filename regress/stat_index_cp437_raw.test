@@ -49,7 +49,7 @@ stdout crc: '0'
 stdout compression method: '0'
 stdout encryption method: '0'
 stdout 
-stdout name: 'QRSTUVWXYZ[\\]^_`'
+stdout name: 'QRSTUVWXYZ[\]^_`'
 stdout index: '5'
 stdout size: '0'
 stdout compressed size: '0'

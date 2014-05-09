@@ -1,5 +1,7 @@
 AUTOMAKE_OPTIONS=	parallel-tests
 
+noinst_SCRIPTS=		runtest
+
 noinst_PROGRAMS= \
 	add_from_buffer \
 	add_from_filep \
@@ -17,7 +19,8 @@ noinst_PROGRAMS= \
 
 EXTRA_DIST= \
 	CMakeLists.txt \
-	runtest \
+	NiHTest.pm \
+	runtest.in \
 	${TESTS} \
 	bigzero-zip.zip \
 	bogus.zip \
@@ -103,7 +106,7 @@ TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
 # ${srcdir}/runtest
 #LOG_COMPILER=  ${srcdir}/runtest
 TEST_EXTENSIONS= .test
-TEST_LOG_COMPILER= ${srcdir}/runtest
+TEST_LOG_COMPILER= ${builddir}/runtest
 #AM_TEST_LOG_FLAGS = -s
 
 TESTS= \
@@ -199,7 +202,7 @@ DISABLED_TESTS= \
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
 
-check-am: bigzero.zip manyfiles.zip
+check-am: bigzero.zip manyfiles.zip runtest
 
 bigzero.zip: bigzero-zip.zip
 	${UNZIP} -o ${srcdir}/bigzero-zip.zip
@@ -209,4 +212,11 @@ manyfiles.zip: manyfiles-zip.zip
 	${UNZIP} -o ${srcdir}/manyfiles-zip.zip
 	${TOUCH} ${builddir}/manyfiles.zip
 
-CLEANFILES=bigzero.zip manyfiles.zip
+runtest: runtest.in
+	sed -e 's!@[s]rcdir@!${srcdir}!g' -e 's!@[a]bs_srcdir@!${abs_srcdir}!g' ${srcdir}/runtest.in > runtest
+	chmod +x runtest
+
+cleanup:
+	rm -rf ${builddir}/sandbox-*.d[0-9]*/
+
+CLEANFILES=bigzero.zip manyfiles.zip runtest

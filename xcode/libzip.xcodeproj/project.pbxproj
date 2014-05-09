@@ -782,6 +782,8 @@
 		4BACD63115BC2FAE00920691 /* set_compression */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_compression; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD64215BC2FEF00920691 /* stat_index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stat_index; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD65015BC301300920691 /* tryopen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tryopen; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BD155CE191CD28D0046F012 /* NiHTest.pm */ = {isa = PBXFileReference; indentWidth = 8; lastKnownFileType = text.script.perl; path = NiHTest.pm; sourceTree = "<group>"; };
+		4BD155CF191CD28D0046F012 /* runtest.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = runtest.in; sourceTree = "<group>"; };
 		4BDC71E015B182B200236D3C /* libzip_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libzip_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BDC71F115B1B25E00236D3C /* zip_add_dir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_add_dir.c; path = ../lib/zip_add_dir.c; sourceTree = "<group>"; };
 		4BDC71F215B1B25E00236D3C /* zip_add_entry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_add_entry.c; path = ../lib/zip_add_entry.c; sourceTree = "<group>"; };
@@ -1123,6 +1125,8 @@
 		4BACD57415BC2AA100920691 /* regress */ = {
 			isa = PBXGroup;
 			children = (
+				4BD155CE191CD28D0046F012 /* NiHTest.pm */,
+				4BD155CF191CD28D0046F012 /* runtest.in */,
 				4BACD57615BC2AEF00920691 /* add_from_buffer.c */,
 				4BACD57715BC2AEF00920691 /* add_from_filep.c */,
 				4BACD57A15BC2AEF00920691 /* fopen_unchanged.c */,
@@ -1138,6 +1142,7 @@
 				4BACD58415BC2AEF00920691 /* tryopen.c */,
 			);
 			name = regress;
+			path = ../regress;
 			sourceTree = "<group>";
 		};
 		4BDC71BD15B181DA00236D3C = {

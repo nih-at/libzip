@@ -29,7 +29,6 @@ Features
 * function to copy file from one archive to another
 * do not compress if storing is smaller
 * set O_CLOEXEC flag after fopen and mkstemp
-* switch to new perl test framework
 
 ! W test extra fields api
   . set
