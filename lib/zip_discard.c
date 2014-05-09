@@ -1,6 +1,6 @@
 /*
   zip_discard.c -- discard and free struct zip
-  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -65,15 +65,12 @@ zip_discard(struct zip *za)
 	free(za->entry);
     }
 
-    for (i=0; i<za->nfile; i++) {
-	if (za->file[i]->error.zip_err == ZIP_ER_OK) {
-	    _zip_error_set(&za->file[i]->error, ZIP_ER_ZIPCLOSED, 0);
-	    za->file[i]->za = NULL;
-	}
+    for (i=0; i<za->nsource; i++) {
+	_zip_source_filep_invalidate(za->source[i]);
     }
 
     _zip_error_fini(&za->error);
-    free(za->file);
+    free(za->source);
     
     free(za);
 

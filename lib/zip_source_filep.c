@@ -1,6 +1,6 @@
 /*
   zip_source_filep.c -- create data source from FILE *
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -50,10 +50,13 @@ struct read_file {
     zip_int64_t len;	/* length of data to copy */
     zip_int64_t remain;	/* bytes remaining to be copied */
     int e[2];		/* error codes */
+    int source_closed;  /* set if source archive is closed */
+    struct zip *source_archive;  /* zip archive we're reading from, NULL if not from archive */
 };
 
-static zip_int64_t read_file(void *state, void *data, zip_uint64_t len,
-		     enum zip_source_cmd cmd);
+static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd);
+static void _zip_deregister_source(struct zip *za, void *ud);
+static int _zip_register_source(struct zip *za, struct zip_source *src);
 
 
 ZIP_EXTERN struct zip_source *
@@ -102,6 +105,8 @@ _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
     f->off = start;
     f->len = (len ? len : -1);
     f->closep = f->fname ? 1 : closep;
+    f->source_closed = 0;
+    f->source_archive = NULL;
     if (st)
 	memcpy(&f->st, st, sizeof(f->st));
     else
@@ -113,6 +118,31 @@ _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
     }
 
     return zs;
+}
+
+
+int
+_zip_source_filep_set_source_archive(struct zip_source *src, struct zip *za)
+{
+    struct read_file *z = (struct read_file *)src->ud;
+
+    z->source_archive = za;
+    return _zip_register_source(za, src);
+}
+
+
+/* called by zip_discard to avoid operating on file from closed archive */
+void
+_zip_source_filep_invalidate(struct zip_source *src)
+{
+    struct read_file *z = (struct read_file *)src->ud;
+
+    z->source_closed = 1;
+    z->f = NULL;
+    if (z->e[0] == ZIP_ER_OK) {
+	z->e[0] = ZIP_ER_ZIPCLOSED;
+	z->e[1] = 0;
+    }
 }
 
 
@@ -129,6 +159,9 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
+	if (z->source_closed)
+	    return -1;
+
 	if (z->fname) {
 	    if ((z->f=fopen(z->fname, "rb")) == NULL) {
 		z->e[0] = ZIP_ER_OPEN;
@@ -148,6 +181,9 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return 0;
 	
     case ZIP_SOURCE_READ:
+	if (z->source_closed)
+	    return -1;
+
 	if (z->remain != -1)
 	    n = len > (zip_uint64_t)z->remain ? (zip_uint64_t)z->remain : len;
 	else
@@ -179,6 +215,9 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return (zip_int64_t)i;
 	
     case ZIP_SOURCE_CLOSE:
+	if (z->source_closed)
+	    return -1;
+
 	if (z->fname) {
 	    fclose(z->f);
 	    z->f = NULL;
@@ -186,6 +225,9 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return 0;
 
     case ZIP_SOURCE_STAT:
+	if (z->source_closed)
+	    return -1;
+
         {
 	    if (len < sizeof(z->st))
 		return -1;
@@ -233,6 +275,9 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	return sizeof(int)*2;
 
     case ZIP_SOURCE_FREE:
+	if (z->source_archive && !z->source_closed) {
+	    _zip_deregister_source(z->source_archive, state);
+	}
 	free(z->fname);
 	if (z->closep && z->f)
 	    fclose(z->f);
@@ -244,4 +289,42 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
     }
 
     return -1;
+}
+
+
+static void
+_zip_deregister_source(struct zip *za, void *ud)
+{
+    int i;
+
+    for (i=0; i<za->nsource; i++) {
+	if (za->source[i]->ud == ud) {
+	    za->source[i] = za->source[za->nsource-1];
+	    za->nsource--;
+	    break;
+	}
+    }
+}
+
+
+static int
+_zip_register_source(struct zip *za, struct zip_source *src)
+{
+    struct zip_source **source;
+
+    if (za->nsource+1 >= za->nsource_alloc) {
+	unsigned int n;
+	n = za->nsource_alloc + 10;
+	source = (struct zip_source **)realloc(za->source, n*sizeof(struct zip_source *));
+	if (source == NULL) {
+	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	    return -1;
+	}
+	za->nsource_alloc = n;
+	za->source = source;
+    }
+
+    za->source[za->nsource++] = src;
+
+    return 0;
 }

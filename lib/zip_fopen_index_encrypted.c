@@ -1,6 +1,6 @@
 /*
   zip_fopen_index_encrypted.c -- open file for reading by index w/ password
-  Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -77,22 +77,6 @@ _zip_file_new(struct zip *za)
 	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
-    
-    if (za->nfile+1 >= za->nfile_alloc) {
-	unsigned int n;
-	n = za->nfile_alloc + 10;
-	file = (struct zip_file **)realloc(za->file,
-					   n*sizeof(struct zip_file *));
-	if (file == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    free(zf);
-	    return NULL;
-	}
-	za->nfile_alloc = n;
-	za->file = file;
-    }
-
-    za->file[za->nfile++] = zf;
 
     zf->za = za;
     _zip_error_init(&zf->error);

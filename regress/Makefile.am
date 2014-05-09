@@ -20,6 +20,7 @@ EXTRA_DIST= \
 	runtest \
 	${TESTS} \
 	bigzero-zip.zip \
+	bogus.zip \
 	broken.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
@@ -113,6 +114,7 @@ TESTS= \
 	add_from_file_twice_duplicate.test \
 	add_from_filep.test \
 	add_from_stdin.test \
+	add_from_zip_closed.test \
 	add_from_zip_deflated.test \
 	add_from_zip_partial_deflated.test \
 	add_from_zip_partial_stored.test \

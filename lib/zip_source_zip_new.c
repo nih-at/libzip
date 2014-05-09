@@ -1,6 +1,6 @@
 /*
   zip_source_zip_new.c -- prepare data structures for zip_fopen/zip_source_zip
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -127,6 +127,11 @@ _zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, zip_
             /* TODO: check for overflow of st.comp_size */
 	    if ((src=_zip_source_file_or_p(za, NULL, srcza->zp, offset, (zip_int64_t)st.comp_size, 0, &st)) == NULL)
 		return NULL;
+	}
+	
+	if (_zip_source_filep_set_source_archive(src, srcza) < 0) {
+	    zip_source_free(src);
+	    return NULL;
 	}
 	
 	if (enc_impl) {

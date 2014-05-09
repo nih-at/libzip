@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -284,9 +284,9 @@ struct zip {
     zip_uint64_t nentry_alloc;		/* number of entries allocated */
     struct zip_entry *entry;		/* entries */
 
-    unsigned int nfile;			/* number of opened files within archive */
-    unsigned int nfile_alloc;		/* number of files allocated */
-    struct zip_file **file;		/* opened files within archive */
+    unsigned int nsource;		/* number of open sources using archive */
+    unsigned int nsource_alloc;		/* number of sources allocated */
+    struct zip_source **source;		/* open sources using archive */
     
     char *tempdir;                      /* custom temp dir (needed e.g. for OS X sandboxing) */
 };
@@ -458,19 +458,17 @@ int _zip_filerange_crc(FILE *, off_t, off_t, uLong *, struct zip_error *);
 struct zip_dirent *_zip_get_dirent(struct zip *, zip_uint64_t, zip_flags_t, struct zip_error *);
 
 enum zip_encoding_type _zip_guess_encoding(struct zip_string *, enum zip_encoding_type);
-zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t,
-				zip_uint32_t *, struct zip_error *error);
+zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t, zip_uint32_t *, struct zip_error *);
 
 struct zip *_zip_open(const char *, FILE *, unsigned int, int *);
 
 int _zip_read_local_ef(struct zip *, zip_uint64_t);
 
-struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *,
-					 zip_uint64_t, zip_int64_t, int,
-					 const struct zip_stat *);
+struct zip_source *_zip_source_file_or_p(struct zip *, const char *, FILE *, zip_uint64_t, zip_int64_t, int, const struct zip_stat *);
+void _zip_source_filep_invalidate(struct zip_source *);
+int _zip_source_filep_set_source_archive(struct zip_source *, struct zip *);
 struct zip_source *_zip_source_new(struct zip *);
-struct zip_source *_zip_source_zip_new(struct zip *, struct zip *, zip_uint64_t, zip_flags_t,
-				       zip_uint64_t, zip_uint64_t, const char *);
+struct zip_source *_zip_source_zip_new(struct zip *, struct zip *, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_uint64_t, const char *);
 
 int _zip_string_equal(const struct zip_string *, const struct zip_string *);
 void _zip_string_free(struct zip_string *);

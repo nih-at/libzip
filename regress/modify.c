@@ -72,6 +72,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tset_extra index extra_id extra_index flags value\n"
     "\tset_file_comment index comment\n"
     "\tset_file_compression index method flags\n"
+    "\tzin_close\n"
     "\nThe index is zero-based.\n";
 
 static zip_flags_t
@@ -193,10 +194,18 @@ main(int argc, char *argv[])
 	    arg += 2;
 	} else if (strcmp(argv[arg], "add_file") == 0 && arg+4 < argc) {
 	    /* add */
-    	    if ((zs=zip_source_file(za, argv[arg+2], atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
-		fprintf(stderr, "can't create zip_source from file: %s\n", zip_strerror(za));
-		err = 1;
-		break;
+	    if (strcmp(argv[arg+2], "/dev/stdin") == 0) {
+		if ((zs=zip_source_filep(za, stdin, atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
+		    fprintf(stderr, "can't create zip_source from stdin: %s\n", zip_strerror(za));
+		    err = 1;
+		    break;
+		}
+	    } else {
+		if ((zs=zip_source_file(za, argv[arg+2], atoi(argv[arg+3]), atoi(argv[arg+4]))) == NULL) {
+		    fprintf(stderr, "can't create zip_source from file: %s\n", zip_strerror(za));
+		    err = 1;
+		    break;
+		}
 	    }
 
 	    if (zip_add(za, argv[arg+1], zs) == -1) {
@@ -399,6 +408,13 @@ main(int argc, char *argv[])
 		break;
             }
             arg += 4;
+        } else if (strcmp(argv[arg], "zin_close") == 0) {
+	    if (zip_close(z_in) < 0) {
+		fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in));
+		err = 1;
+		break;
+	    }
+	    arg += 1;
 	} else {
 	    fprintf(stderr, "unrecognized command '%s', or not enough arguments\n", argv[arg]);
 	    err = 1;
