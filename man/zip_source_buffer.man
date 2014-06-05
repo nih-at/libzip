@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_DATA" "3" "August 1, 2008" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_DATA" "3" "April 27, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -9,9 +9,11 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct\ zip_source\ *\fR
-.br
-\fBzip_source_buffer\fR(\fIstruct zip *archive\fR,\ \fIconst void *data\fR,\ \fIzip_uint64_t len\fR,\ \fIint freep\fR);
+\fIstruct zip_source *\fR
+.PD 0
+.HP 4n
+\fBzip_source_buffer\fR(\fIstruct\ zip\ *archive\fR, \fIconst\ void\ *data\fR, \fIzip_uint64_t\ len\fR, \fIint\ freep\fR);
+.PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_buffer\fR()
@@ -22,6 +24,8 @@ of size
 If
 \fIfreep\fR
 is non-zero, the buffer will be freed when it is no longer needed.
+\fIdata\fR
+must remain valid for the lifetime of the created source.
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
