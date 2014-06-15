@@ -17,6 +17,9 @@ Additionally, you'll need zlib (at least version 1.1.2). It comes
 with most operating systems nowadays, or you can get it at
 	http://www.gzip.org/zlib/
 
+  When using a static Windows library, you need to define ZIP_STATIC
+when compiling packages using libzip.
+
   If you make a binary distribution, please include a pointer to the
 distribution site:
 	http://www.nih.at/libzip/
