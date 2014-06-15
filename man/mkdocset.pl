@@ -128,8 +128,6 @@ unlink("$docset/Contents/Resources/Tokens.xml");
 system($DOCSETUTIL, 'package', '-output', "at.nih.libzip-$version.xar", '-atom', "at.nih.libzip$suffix.atom", '-download-url', "$BASE_URL/at.nih.libzip-$version.xar", $docset);
 
 
-
-
 sub copy_html {
     my ($src, $dst) = @_;
 
