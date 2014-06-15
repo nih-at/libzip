@@ -82,7 +82,7 @@
 #endif
 #if defined(HAVE__STRDUP)
 #if !defined(HAVE_STRDUP) || defined(_WIN32)
-#undefine strdup
+#undef strdup
 #define strdup		_strdup
 #endif
 #endif
