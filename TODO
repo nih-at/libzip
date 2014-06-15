@@ -29,6 +29,7 @@ Features
 * function to copy file from one archive to another
 * do not compress if storing is smaller
 * set O_CLOEXEC flag after fopen and mkstemp
+* check for Text::Diff in configure script
 
 ! W test extra fields api
   . set
