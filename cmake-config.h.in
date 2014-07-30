@@ -48,11 +48,11 @@
 #define VERSION "@VERSION@"
 
 #ifndef HAVE_SSIZE_T_LIBZIP
-#  if SSIZE_T_LIBZIP == INT_LIBZIP
+#  if SIZE_T_LIBZIP == INT_LIBZIP
 typedef int ssize_t;
-#  elif SSIZE_T_LIBZIP == LONG_LIBZIP
+#  elif SIZE_T_LIBZIP == LONG_LIBZIP
 typedef long ssize_t;
-#  elif SSIZE_T_LIBZIP == LONG_LONG_LIBZIP
+#  elif SIZE_T_LIBZIP == LONG_LONG_LIBZIP
 typedef long long ssize_t;
 #  else
 #error no suitable type for ssize_t found
