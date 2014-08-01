@@ -69,6 +69,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tget_extra_by_id index extra_id extra_index flags\n"
     "\tget_file_comment index\n"
     "\trename index name\n"
+    "\treplace_file_contents idx data\n"
     "\tset_extra index extra_id extra_index flags value\n"
     "\tset_file_comment index comment\n"
     "\tset_file_compression index method flags\n"
@@ -371,6 +372,20 @@ main(int argc, char *argv[])
 		break;
 	    }
 	    arg += 3;
+        } else if (strcmp(argv[arg], "replace_file_contents") == 0 && arg+2 < argc) {
+            /* replace file contents with data from command line */
+	    const char *content;
+	    struct zip_source *s;
+            idx = atoi(argv[arg+1]);
+            content = argv[arg+2];
+	    if ((s=zip_source_buffer(za, content, strlen(content), 0)) == NULL ||
+		zip_file_replace(za, idx, s, 0) < 0) {
+		zip_source_free(s);
+		fprintf(stderr, "error replacing file data: %s\n", zip_strerror(za));
+		err = 1;
+		break;
+	    }
+            arg += 3;
 	} else if (strcmp(argv[arg], "set_extra") == 0 && arg+5 < argc) {
 	    zip_flags_t geflags;
 	    zip_uint16_t eid, eidx;
