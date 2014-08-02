@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_FILE" "3" "August 1, 2008" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FILE" "3" "August 2, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -7,9 +7,11 @@
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-\fIstruct\ zip_source\ *\fR
-.br
-\fBzip_source_file\fR(\fIstruct zip *archive\fR,\ \fIconst char *fname\fR,\ \fIzip_uint64_t start\fR,\ \fIzip_int64_t len\fR);
+\fIstruct zip_source *\fR
+.PD 0
+.HP 4n
+\fBzip_source_file\fR(\fIstruct\ zip\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
+.PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_file\fR()
@@ -59,11 +61,7 @@ failed.
 libzip(3),
 zip_add(3),
 zip_replace(3),
-zip_source_buffer(3),
-zip_source_filep(3),
-zip_source_free(3),
-zip_source_function(3),
-zip_source_zip(3)
+zip_source(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_DATA" "3" "April 27, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_BUFFER" "3" "August 2, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -50,11 +50,7 @@ Required memory could not be allocated.
 libzip(3),
 zip_add(3),
 zip_replace(3),
-zip_source_file(3),
-zip_source_filep(3),
-zip_source_free(3),
-zip_source_function(3),
-zip_source_zip(3)
+zip_source(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

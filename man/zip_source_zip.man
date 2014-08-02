@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_ZIP" "3" "July 22, 2012" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_ZIP" "3" "August 2, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -9,9 +9,11 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct\ zip_source\ *\fR
-.br
-\fBzip_source_zip\fR(\fIstruct zip *archive\fR,\ \fIstruct zip *srcarchive\fR,\ \fIzip_uint64_t srcidx\fR,\ \fIzip_flags_t flags\fR,\ \fIzip_uint64_t start\fR,\ \fIzip_int64_t len\fR);
+\fIstruct zip_source *\fR
+.PD 0
+.HP 4n
+\fBzip_source_zip\fR(\fIstruct\ zip\ *archive\fR, \fIstruct\ zip\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
+.PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_zip\fR()
@@ -84,11 +86,7 @@ and
 libzip(3),
 zip_add(3),
 zip_replace(3),
-zip_source_buffer(3),
-zip_source_file(3),
-zip_source_filep(3),
-zip_source_free(3),
-zip_source_function(3)
+zip_source(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

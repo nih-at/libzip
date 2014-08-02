@@ -1,4 +1,4 @@
-.TH "LIBZIP" "3" "June 23, 2012" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "August 2, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -50,9 +50,9 @@ zip_set_file_compression(3)
 zip_source_buffer(3)
 zip_source_file(3)
 zip_source_filep(3)
+zip_source_free(3)
 zip_source_function(3)
 zip_source_zip(3)
-zip_source_free(3)
 .SS "rename files"
 zip_rename(3)
 .SS "delete files"
@@ -74,6 +74,7 @@ zip_close(3)
 .SS "miscellaneous"
 zip_set_archive_comment(3)
 zip_set_archive_flag(3)
+zip_source(3)
 .SH "ERROR HANDLING"
 zip_error_to_str(3)
 zip_strerror(3)

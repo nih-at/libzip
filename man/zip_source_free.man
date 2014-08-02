@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_FREE" "3" "April 23, 2006" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FREE" "3" "August 2, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
-.br
-\fBzip_source_free\fR(\fIstruct zip_source *source\fR);
+.PD 0
+.HP 4n
+\fBzip_source_free\fR(\fIstruct\ zip_source\ *source\fR);
+.PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_free\fR()
@@ -33,11 +35,7 @@ zip_replace(3)
 call.
 .SH "SEE ALSO"
 libzip(3),
-zip_source_buffer(3),
-zip_source_file(3),
-zip_source_filep(3),
-zip_source_function(3),
-zip_source_zip(3)
+zip_source(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

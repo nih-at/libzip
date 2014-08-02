@@ -11,12 +11,16 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
-.br
-\fBzip_add\fR(\fIstruct zip *archive\fR,\ \fIconst char *name\fR,\ \fIstruct zip_source *source\fR);
-.sp
+.PD 0
+.HP 4n
+\fBzip_add\fR(\fIstruct\ zip\ *archive\fR, \fIconst\ char\ *name\fR, \fIstruct\ zip_source\ *source\fR);
+.PD
+.PP
 \fIint\fR
-.br
-\fBzip_replace\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIstruct zip_source *source\fR);
+.PD 0
+.HP 4n
+\fBzip_replace\fR(\fIstruct\ zip\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIstruct\ zip_source\ *source\fR);
+.PD
 .SH "DESCRIPTION"
 The function
 \fBzip_add\fR()
