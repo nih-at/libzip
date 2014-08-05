@@ -187,7 +187,8 @@ TESTS= \
 	stat_index_utf8_strict.test \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
-	torrent-already.test
+	torrent-already.test \
+	utf-8-standardization.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \
