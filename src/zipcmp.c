@@ -102,7 +102,7 @@ char help[] = "\n\
   -i       compare names ignoring case distinctions\n\
   -p       compare as many details as possible\n\
   -q       be quiet\n\
-  -t       test zip files\n\
+  -t       test zip files (compare file contents to checksum)\n\
   -V       display version number\n\
   -v       be verbose (print differences, default)\n\
 \n\
