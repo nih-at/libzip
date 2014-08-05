@@ -1,5 +1,5 @@
 # replace file contents and make UTF-8 name
 program modify
 return 0
-args testfile.zip replace_file_contents 0 "Some new content for the file."
-file testfile.zip utf-8-standardization-input.zip utf-8-standardization-output.zip
+args testfile replace_file_contents 0 "Some new content for the file." set_mtime 0 1406885162
+file testfile utf-8-standardization-input.zip utf-8-standardization-output.zip
