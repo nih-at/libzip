@@ -511,7 +511,7 @@ _zip_dirent_process_ef_utf_8(const struct zip_dirent *de, zip_uint16_t id, struc
     ef_crc = _zip_read4(&ef);
 
     if (_zip_string_crc32(str) == ef_crc) {
-	struct zip_string *ef_str = _zip_string_new(ef, ef_len-5, ZIP_ENCODING_UTF8_KNOWN, NULL);
+	struct zip_string *ef_str = _zip_string_new(ef, ef_len-5, ZIP_FL_ENC_UTF_8, NULL);
 
 	if (ef_str != NULL) {
 	    _zip_string_free(str);
