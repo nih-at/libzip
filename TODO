@@ -36,7 +36,6 @@ Features
 * I/O methods
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
-  . set last modification time for entry
   . read/set ASCII file flag? (wiz: more general options?)
 * zip_commit (to finish changes without closing archive)
 * add custom compression function support

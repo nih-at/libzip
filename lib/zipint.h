@@ -307,6 +307,7 @@ struct zip_file {
 #define ZIP_DIRENT_COMMENT	0x0004u
 #define ZIP_DIRENT_EXTRA_FIELD	0x0008u
 #define ZIP_DIRENT_ATTRIBUTES	0x0010u
+#define ZIP_DIRENT_LAST_MOD	0x0020u
 #define ZIP_DIRENT_ALL		0xffffu
 
 struct zip_dirent {

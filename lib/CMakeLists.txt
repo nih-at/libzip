@@ -83,6 +83,7 @@ SET(LIBZIP_SOURCES
   zip_file_replace.c
   zip_file_set_comment.c
   zip_file_set_external_attributes.c
+  zip_file_set_mtime.c
   zip_file_strerror.c
   zip_filerange_crc.c
   zip_fopen.c

@@ -285,6 +285,7 @@ ZIP_EXTERN int zip_file_rename(struct zip *, zip_uint64_t, const char *, zip_fla
 ZIP_EXTERN int zip_file_replace(struct zip *, zip_uint64_t, struct zip_source *, zip_flags_t);
 ZIP_EXTERN int zip_file_set_comment(struct zip *, zip_uint64_t, const char *, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_set_external_attributes(struct zip *, zip_uint64_t, zip_flags_t, zip_uint8_t, zip_uint32_t);
+ZIP_EXTERN int zip_file_set_mtime(struct zip *, zip_uint64_t, time_t, zip_flags_t);
 ZIP_EXTERN const char *zip_file_strerror(struct zip_file *);
 ZIP_EXTERN struct zip_file *zip_fopen(struct zip *, const char *, zip_flags_t);
 ZIP_EXTERN struct zip_file *zip_fopen_encrypted(struct zip *, const char *, zip_flags_t, const char *);

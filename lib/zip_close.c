@@ -423,10 +423,12 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de, FILE *ft
 	return -1;
     }
 
-    if (st.valid & ZIP_STAT_MTIME)
-	de->last_mod = st.mtime;
-    else
-	time(&de->last_mod);
+    if ((de->changed & ZIP_DIRENT_LAST_MOD) == 0) {
+        if (st.valid & ZIP_STAT_MTIME)
+            de->last_mod = st.mtime;
+        else
+            time(&de->last_mod);
+    }
     de->comp_method = st.comp_method;
     de->crc = st.crc;
     de->uncomp_size = st.size;

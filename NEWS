@@ -1,3 +1,7 @@
+X.XX.X [XXXX/XX/XX]
+
+* Support setting last modification time for file.
+
 0.11.2 [2013/12/19]
 
 * Support querying/setting operating system and external attributes.

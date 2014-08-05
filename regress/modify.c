@@ -73,6 +73,7 @@ const char * const usage = "usage: %s [-cent] archive command1 [args] [command2 
     "\tset_extra index extra_id extra_index flags value\n"
     "\tset_file_comment index comment\n"
     "\tset_file_compression index method flags\n"
+    "\tset_file_mtime index timestamp\n"
     "\tzin_close\n"
     "\nThe index is zero-based.\n";
 
@@ -423,6 +424,18 @@ main(int argc, char *argv[])
 		break;
             }
             arg += 4;
+	} else if (strcmp(argv[arg], "set_mtime") == 0 && arg+2 < argc) {
+	    /* set file last modification time (mtime) */
+	    time_t mtime;
+	    idx = atoi(argv[arg+1]);
+	    /* TODO: add configure check for strtoll or similar, and use it */
+	    mtime = atoi(argv[arg+2]);
+	    if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
+		fprintf(stderr, "can't set file mtime at index '%d' to `%ld': %s\n", idx, mtime, zip_strerror(za));
+		err = 1;
+		break;
+	    }
+	    arg += 3;
         } else if (strcmp(argv[arg], "zin_close") == 0) {
 	    if (zip_close(z_in) < 0) {
 		fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in));

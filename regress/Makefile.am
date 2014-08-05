@@ -96,6 +96,7 @@ EXTRA_DIST= \
 	testfile-cp437.zip \
 	testfile-plus-extra.zip \
 	testfile-UTF8.zip \
+	testfile2014.zip \
 	testnottorrent.zip \
 	teststdin.zip \
 	teststored.zip \
