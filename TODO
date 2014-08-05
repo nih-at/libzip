@@ -44,6 +44,7 @@ Features
 * zipcmp: add option for file content comparison
 * zipcmp: compare bit flags if paranoid
 * zipcmp: compare external attributes/opsys if paranoid
+* zipcmp: compare last_mod if paranoid (or with separate flag?)
 * consistency
   . for stored files, test compressed = uncompressed
   . data descriptor
@@ -81,6 +82,7 @@ Cleanup
 
 Test Case Issues
 ================
+* use zipcmp -p?
 * zip_open file less than EOCDLEN bytes long
 * test calls against old API
 * run regression tests also from CMake framework
