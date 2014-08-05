@@ -482,7 +482,7 @@ sub compare_files() {
 	@files_got = sort @files_got;
 	my @files_should = ();
 	
-	for my $file (sort keys $self->{files}) {
+        for my $file (sort keys %{$self->{files}}) {
 		push @files_should, $file if ($self->{files}->{$file}->{result} || $self->{files}->{$file}->{ignore});
 	}
 
