@@ -64,6 +64,8 @@ SET(EXTRA_TESTS
 	extra_get.test
 	extra_get_by_id.test
 	extra_set.test
+	extra_set_modify_c.test
+	extra_set_modify_l.test
 	file_comment_encmismatch.test
 	fopen_unchanged.test
 	fread.test

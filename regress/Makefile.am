@@ -27,6 +27,8 @@ EXTRA_DIST= \
 	broken.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
+	encrypt_plus_extra_modified_c.zip \
+	encrypt_plus_extra_modified_l.zip \
 	filename_duplicate.zip \
 	filename_empty.zip \
 	fileorder.zip \
@@ -141,6 +143,8 @@ TESTS= \
 	extra_get.test \
 	extra_get_by_id.test \
 	extra_set.test \
+	extra_set_modify_c.test \
+	extra_set_modify_l.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \
