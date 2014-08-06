@@ -140,6 +140,7 @@ TESTS= \
 	extra_delete_by_id.test \
 	extra_get.test \
 	extra_get_by_id.test \
+	extra_set.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \
