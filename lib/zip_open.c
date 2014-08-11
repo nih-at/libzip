@@ -64,38 +64,42 @@ zip_open(const char *fn, int _flags, int *zep)
     FILE *fp;
     unsigned int flags;
     
-    if (_flags < 0) {
+    if (_flags < 0 || fn == NULL) {
         if (zep)
             *zep = ZIP_ER_INVAL;
         return NULL;
     }
     flags = (unsigned int)_flags;
-        
+
     switch (_zip_file_exists(fn, flags, zep)) {
     case -1:
 	return NULL;
+
     case 0:
+	if ((flags & ZIP_CREATE) == 0) {
+	    set_error(zep, NULL, ZIP_ER_NOENT);
+	    return NULL;
+	}
 	return _zip_allocate_new(fn, flags, zep);
+
     default:
+	if (flags & ZIP_EXCL) {
+	    set_error(zep, NULL, ZIP_ER_EXISTS);
+	    return NULL;
+	}
+
+	if ((fp = fopen(fn, "rb")) == NULL) {
+	    set_error(zep, NULL, ZIP_ER_OPEN);
+	    return NULL;
+	}
 	if (flags & ZIP_TRUNCATE) {
-	    FILE *f;
-	    
-	    if ((f = fopen(fn, "rb")) == NULL) {
-		set_error(zep, NULL, ZIP_ER_OPEN);
-		return NULL;
-	    }
-	    fclose(f);
+	    fclose(fp);
 	    return _zip_allocate_new(fn, flags, zep);
 	}
-	break;
+	/* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
+	   just like open() */
+	return _zip_open(fn, fp, flags, zep);
     }
-
-    if ((fp=fopen(fn, "rb")) == NULL) {
-	set_error(zep, NULL, ZIP_ER_OPEN);
-	return NULL;
-    }
-
-    return _zip_open(fn, fp, flags, zep);
 }
 
 
@@ -447,6 +451,12 @@ _zip_allocate_new(const char *fn, unsigned int flags, int *zep)
 }
 
 
+/*
+ * tests for file existence
+ * 1: file exists and is stat()able
+ * 0: file does not exist
+ * -1: error
+ */
 static int
 _zip_file_exists(const char *fn, unsigned int flags, int *zep)
 {
@@ -458,19 +468,12 @@ _zip_file_exists(const char *fn, unsigned int flags, int *zep)
     }
     
     if (stat(fn, &st) != 0) {
-	if (flags & ZIP_CREATE)
+	if (errno == ENOENT) {
 	    return 0;
-	else {
-	    set_error(zep, NULL, ZIP_ER_OPEN);
-	    return -1;
 	}
-    }
-    else if ((flags & ZIP_EXCL)) {
-	set_error(zep, NULL, ZIP_ER_EXISTS);
+	set_error(zep, NULL, ZIP_ER_OPEN);
 	return -1;
     }
-    /* ZIP_CREATE gets ignored if file exists and not ZIP_EXCL,
-       just like open() */
 
     return 1;
 }
