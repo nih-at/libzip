@@ -295,7 +295,7 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 static void
 _zip_deregister_source(struct zip *za, void *ud)
 {
-    int i;
+    unsigned int i;
 
     for (i=0; i<za->nsource; i++) {
 	if (za->source[i]->ud == ud) {

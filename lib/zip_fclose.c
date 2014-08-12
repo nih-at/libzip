@@ -41,7 +41,6 @@ ZIP_EXTERN int
 zip_fclose(struct zip_file *zf)
 {
     int ret;
-    unsigned int i;
     
     if (zf->src)
 	zip_source_free(zf->src);
