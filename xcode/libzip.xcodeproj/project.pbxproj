@@ -164,6 +164,8 @@
 		4B01D73215B2F5EE002D5007 /* zipconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC729E15B1B4E900236D3C /* zipconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B01D73415B2F5F4002D5007 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC72A015B1B56400236D3C /* config.h */; };
 		4B01D73C15B2F6AF002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
+		4B82CED419915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
+		4B82CED519915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B97204F188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
 		4B972050188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
 		4B972051188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */; };
@@ -754,6 +756,7 @@
 		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = THANKS; path = ../THANKS; sourceTree = "<group>"; };
 		4B28AA2715BAD4E200D0C17D /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO; path = ../TODO; sourceTree = "<group>"; };
 		4B6B06E115F119AE008C2CBE /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = compat.h; path = ../src/compat.h; sourceTree = "<group>"; };
+		4B82CED319915F360097BC18 /* zip_file_set_mtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_mtime.c; sourceTree = "<group>"; };
 		4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_get_external_attributes.c; sourceTree = "<group>"; };
 		4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_external_attributes.c; sourceTree = "<group>"; };
 		4BACD57615BC2AEF00920691 /* add_from_buffer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = add_from_buffer.c; path = ../regress/add_from_buffer.c; sourceTree = "<group>"; };
@@ -1230,6 +1233,7 @@
 				4BDC720A15B1B25E00236D3C /* zip_file_rename.c */,
 				4BDC720B15B1B25E00236D3C /* zip_file_replace.c */,
 				4BDC720C15B1B25E00236D3C /* zip_file_set_comment.c */,
+				4B82CED319915F360097BC18 /* zip_file_set_mtime.c */,
 				4BDC720D15B1B25E00236D3C /* zip_file_strerror.c */,
 				4BDC720E15B1B25E00236D3C /* zip_filerange_crc.c */,
 				4BDC720F15B1B25E00236D3C /* zip_fopen_encrypted.c */,
@@ -1656,7 +1660,7 @@
 		4BDC71BF15B181DA00236D3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = NiH;
 			};
 			buildConfigurationList = 4BDC71C215B181DA00236D3C /* Build configuration list for PBXProject "libzip" */;
@@ -1840,6 +1844,7 @@
 				4B01D6EE15B2F46B002D5007 /* zip_source_zip.c in Sources */,
 				4B01D6EF15B2F46B002D5007 /* zip_stat_index.c in Sources */,
 				4B01D6F015B2F46B002D5007 /* zip_stat_init.c in Sources */,
+				4B82CED519915F360097BC18 /* zip_file_set_mtime.c in Sources */,
 				4B01D6F115B2F46B002D5007 /* zip_stat.c in Sources */,
 				4B01D6F215B2F46B002D5007 /* zip_strerror.c in Sources */,
 				4B01D6F315B2F46B002D5007 /* zip_string.c in Sources */,
@@ -2060,6 +2065,7 @@
 				4BDC728C15B1B25E00236D3C /* zip_source_zip.c in Sources */,
 				4BDC728D15B1B25E00236D3C /* zip_stat_index.c in Sources */,
 				4BDC728E15B1B25E00236D3C /* zip_stat_init.c in Sources */,
+				4B82CED419915F360097BC18 /* zip_file_set_mtime.c in Sources */,
 				4BDC728F15B1B25E00236D3C /* zip_stat.c in Sources */,
 				4BDC729015B1B25E00236D3C /* zip_strerror.c in Sources */,
 				4BDC729115B1B25E00236D3C /* zip_string.c in Sources */,
@@ -2751,9 +2757,12 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2765,6 +2774,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -2785,13 +2795,17 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
