@@ -666,10 +666,10 @@ _zip_dirent_write(struct zip_dirent *de, FILE *fp, zip_flags_t flags, struct zip
     }
     else {
 	if ((flags & ZIP_FL_FORCE_ZIP64) || de->comp_size > ZIP_UINT32_MAX || de->uncomp_size > ZIP_UINT32_MAX || de->offset > ZIP_UINT32_MAX) {
-	    if (de->comp_size >= ZIP_UINT32_MAX)
-		_zip_poke8(de->comp_size, &ef_zip64_p);
 	    if (de->uncomp_size >= ZIP_UINT32_MAX)
 		_zip_poke8(de->uncomp_size, &ef_zip64_p);
+	    if (de->comp_size >= ZIP_UINT32_MAX)
+		_zip_poke8(de->comp_size, &ef_zip64_p);
 	    if (de->offset >= ZIP_UINT32_MAX)
 		_zip_poke8(de->offset, &ef_zip64_p);
 	}
