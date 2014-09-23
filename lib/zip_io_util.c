@@ -156,32 +156,32 @@ _zip_read_string(const zip_uint8_t **buf, struct zip_source *src, zip_uint16_t l
 void
 _zip_put_16(zip_uint8_t **p, zip_uint16_t i)
 {
-    *((*p)++) = i&0xff;
-    *((*p)++) = (i>>8)&0xff;
+    *((*p)++) = (zip_uint8_t)(i&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>8)&0xff);
 }
 
 
 void
 _zip_put_32(zip_uint8_t **p, zip_uint32_t i)
 {
-    *((*p)++) = i&0xff;
-    *((*p)++) = (i>>8)&0xff;
-    *((*p)++) = (i>>16)&0xff;
-    *((*p)++) = (i>>24)&0xff;
+    *((*p)++) = (zip_uint8_t)(i&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>8)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>16)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>24)&0xff);
 }
 
 
 void
 _zip_put_64(zip_uint8_t **p, zip_uint64_t i)
 {
-    *((*p)++) = i&0xff;
-    *((*p)++) = (i>>8)&0xff;
-    *((*p)++) = (i>>16)&0xff;
-    *((*p)++) = (i>>24)&0xff;
-    *((*p)++) = (i>>32)&0xff;
-    *((*p)++) = (i>>40)&0xff;
-    *((*p)++) = (i>>48)&0xff;
-    *((*p)++) = (i>>56)&0xff;
+    *((*p)++) = (zip_uint8_t)(i&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>8)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>16)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>24)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>32)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>40)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>48)&0xff);
+    *((*p)++) = (zip_uint8_t)((i>>56)&0xff);
 }
 
 

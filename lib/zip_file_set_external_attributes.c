@@ -51,7 +51,7 @@ zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t f
 
     e = za->entry+idx;
 
-    unchanged_opsys = e->orig ? e->orig->version_madeby>>8 : ZIP_OPSYS_DEFAULT;
+    unchanged_opsys = e->orig ? (zip_uint8_t)(e->orig->version_madeby>>8) : ZIP_OPSYS_DEFAULT;
     unchanged_attributes = e->orig ? e->orig->ext_attrib : ZIP_EXT_ATTRIB_DEFAULT;
 
     changed = (opsys != unchanged_opsys || attributes != unchanged_attributes);
@@ -63,7 +63,7 @@ zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t f
                 return -1;
             }
         }
-        e->changes->version_madeby = (zip_uint16_t)(opsys << 8) | (e->changes->version_madeby & 0xff);
+        e->changes->version_madeby = (zip_uint16_t)((opsys << 8) | (e->changes->version_madeby & 0xff));
 	e->changes->ext_attrib = attributes;
         e->changes->changed |= ZIP_DIRENT_ATTRIBUTES;
     }
@@ -74,7 +74,8 @@ zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t f
 	    e->changes = NULL;
 	}
 	else {
-	    e->changes->version_madeby = (zip_uint16_t)(unchanged_opsys << 8) | (e->changes->version_madeby & 0xff);
+	    e->changes->version_madeby = (zip_uint16_t)((unchanged_opsys << 8) | (e->changes->version_madeby & 0xff))
+;
 	    e->changes->ext_attrib = unchanged_attributes;
 	}
     }

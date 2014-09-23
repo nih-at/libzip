@@ -154,7 +154,7 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
 	return NULL;
     }
 
-    if ((s->raw=(zip_uint8_t *)malloc(length+1)) == NULL) {
+    if ((s->raw=(zip_uint8_t *)malloc((size_t)(length+1))) == NULL) {
 	free(s);
 	return NULL;
     }

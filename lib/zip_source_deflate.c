@@ -192,7 +192,7 @@ decompress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uin
 	return 0;
 
     out_offset = 0;
-    out_len = ZIP_MIN(UINT_MAX, len);
+    out_len = (uInt)ZIP_MIN(UINT_MAX, len);
     ctx->zstr.next_out = (Bytef *)data;
     ctx->zstr.avail_out = out_len;
 

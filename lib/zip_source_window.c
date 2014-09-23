@@ -77,7 +77,7 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t lengt
     zip_stat_init(&ctx->stat);
     zip_error_init(&ctx->error);
     ctx->supports = (zip_source_supports(src) & zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, -1)) | (zip_source_make_command_bitmap(ZIP_SOURCE_TELL, -1));
-    ctx->needs_seek = ctx->supports & zip_source_make_command_bitmap(ZIP_SOURCE_SEEK, -1);
+    ctx->needs_seek = (zip_int16_t)(ctx->supports & zip_source_make_command_bitmap(ZIP_SOURCE_SEEK, -1));
     
     if (st) {
         if (_zip_stat_merge(&ctx->stat, st, error) < 0) {

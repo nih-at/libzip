@@ -55,7 +55,6 @@ typedef struct dispatch_table_s {
     int (*function)(int argc, char *argv[]);
 } dispatch_table_t;
 
-const char *prg;
 static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
@@ -133,7 +132,7 @@ add_from_zip(int argc, char *argv[]) {
 	return -1;
     }
     if ((zs=zip_source_zip(za, z_in, idx, 0, start, len)) == NULL) {
-	fprintf(stderr, "error creating file source from '%s' index '%d': %s\n", argv[1], idx, zip_strerror(za));
+	fprintf(stderr, "error creating file source from '%s' index '%" PRIu64 "': %s\n", argv[1], idx, zip_strerror(za));
 	zip_close(z_in);
 	return -1;
     }
@@ -154,7 +153,7 @@ count_extra(int argc, char *argv[]) {
     idx = strtoull(argv[0], NULL, 10);
     ceflags = get_flags(argv[1]);
     if ((count=zip_file_extra_fields_count(za, idx, ceflags)) < 0) {
-	fprintf(stderr, "can't get extra field count for file at index '%d': %s\n", idx, zip_strerror(za));
+	fprintf(stderr, "can't get extra field count for file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
 	return -1;
     } else {
 	printf("Extra field count: %d\n", count);
@@ -164,14 +163,15 @@ count_extra(int argc, char *argv[]) {
 
 static int
 count_extra_by_id(int argc, char *argv[]) {
-    zip_int16_t count, eid;
+    zip_int16_t count;
+    zip_uint16_t eid;
     zip_flags_t ceflags = 0;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    eid = strtoull(argv[1], NULL, 10);
+    eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     ceflags = get_flags(argv[2]);
     if ((count=zip_file_extra_fields_count_by_id(za, idx, eid, ceflags)) < 0) {
-	fprintf(stderr, "can't get extra field count for file at index '%d' and for id `%d': %s\n", idx, eid, zip_strerror(za));
+	fprintf(stderr, "can't get extra field count for file at index '%" PRIu64 "' and for id `%d': %s\n", idx, eid, zip_strerror(za));
 	return -1;
     } else {
 	printf("Extra field count: %d\n", count);
@@ -184,7 +184,7 @@ delete(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     if (zip_delete(za, idx) < 0) {
-	fprintf(stderr, "can't delete file at index '%d': %s\n", idx, zip_strerror(za));
+	fprintf(stderr, "can't delete file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -196,10 +196,10 @@ delete_extra(int argc, char *argv[]) {
     zip_uint16_t eid;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    eid = strtoull(argv[1], NULL, 10);
+    eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     geflags = get_flags(argv[2]);
     if ((zip_file_extra_field_delete(za, idx, eid, geflags)) < 0) {
-	fprintf(stderr, "can't delete extra field data for file at index '%d', extra field id `%d': %s\n", idx, eid, zip_strerror(za));
+	fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id `%d': %s\n", idx, eid, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -211,11 +211,11 @@ delete_extra_by_id(int argc, char *argv[]) {
     zip_uint16_t eid, eidx;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    eid = strtoull(argv[1], NULL, 10);
-    eidx = strtoull(argv[2], NULL, 10);
+    eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
+    eidx = (zip_uint16_t)strtoull(argv[2], NULL, 10);
     geflags = get_flags(argv[3]);
     if ((zip_file_extra_field_delete_by_id(za, idx, eid, eidx, geflags)) < 0) {
-	fprintf(stderr, "can't delete extra field data for file at index '%d', extra field id `%d', extra field idx `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+	fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id `%d', extra field idx `%d': %s\n", idx, eid, eidx, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -241,10 +241,10 @@ get_extra(int argc, char *argv[]) {
     zip_uint64_t idx;
     /* get extra field data */
     idx = strtoull(argv[0], NULL, 10);
-    eidx = strtoull(argv[1], NULL, 10);
+    eidx = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     geflags = get_flags(argv[2]);
     if ((efdata=zip_file_extra_field_get(za, idx, eidx, &id, &eflen, geflags)) == NULL) {
-	fprintf(stderr, "can't get extra field data for file at index %d, extra field %d, flags %u: %s\n", idx, eidx, geflags, zip_strerror(za));
+	fprintf(stderr, "can't get extra field data for file at index %" PRIu64 ", extra field %d, flags %u: %s\n", idx, eidx, geflags, zip_strerror(za));
 	return -1;
     }
     printf("Extra field 0x%04x: len %d", id, eflen);
@@ -263,11 +263,11 @@ get_extra_by_id(int argc, char *argv[]) {
     const zip_uint8_t *efdata;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    eid = strtoull(argv[1], NULL, 10);
-    eidx = strtoull(argv[2], NULL, 10);
+    eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
+    eidx = (zip_uint16_t)strtoull(argv[2], NULL, 10);
     geflags = get_flags(argv[3]);
     if ((efdata=zip_file_extra_field_get_by_id(za, idx, eid, eidx, &eflen, geflags)) == NULL) {
-	fprintf(stderr, "can't get extra field data for file at index %d, extra field id %d, ef index %d, flags %u: %s\n", idx, eid, eidx, geflags, zip_strerror(za));
+	fprintf(stderr, "can't get extra field data for file at index %" PRIu64 ", extra field id %d, ef index %d, flags %u: %s\n", idx, eid, eidx, geflags, zip_strerror(za));
 	return -1;
     }
     printf("Extra field 0x%04x: len %d", eid, eflen);
@@ -301,7 +301,7 @@ zrename(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     if (zip_rename(za, idx, argv[1]) < 0) {
-	fprintf(stderr, "can't rename file at index '%d' to `%s': %s\n", idx, argv[1], zip_strerror(za));
+	fprintf(stderr, "can't rename file at index '%" PRIu64 "' to `%s': %s\n", idx, argv[1], zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -331,12 +331,12 @@ set_extra(int argc, char *argv[]) {
     const zip_uint8_t *efdata;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    eid = strtoull(argv[1], NULL, 10);
-    eidx = strtoull(argv[2], NULL, 10);
+    eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
+    eidx = (zip_uint16_t)strtoull(argv[2], NULL, 10);
     geflags = get_flags(argv[3]);
     efdata = (zip_uint8_t *)argv[4];
     if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, (zip_uint16_t)strlen((const char *)efdata), geflags)) < 0) {
-	fprintf(stderr, "can't set extra field data for file at index '%d', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+	fprintf(stderr, "can't set extra field data for file at index '%" PRIu64 "', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -347,7 +347,7 @@ set_file_comment(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     if (zip_file_set_comment(za, idx, argv[1], (zip_uint16_t)strlen(argv[1]), 0) < 0) {
-	fprintf(stderr, "can't set file comment at index '%d' to `%s': %s\n", idx, argv[1], zip_strerror(za));
+	fprintf(stderr, "can't set file comment at index '%" PRIu64 "' to `%s': %s\n", idx, argv[1], zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -360,9 +360,9 @@ set_file_compression(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     method = get_compression_method(argv[1]);
-    flags = strtoull(argv[2], NULL, 10);
+    flags = (zip_uint32_t)strtoull(argv[2], NULL, 10);
     if (zip_set_file_compression(za, idx, method, flags) < 0) {
-	fprintf(stderr, "can't set file compression method at index '%d' to `%s', flags `%d': %s\n", idx, argv[1], flags, zip_strerror(za));
+	fprintf(stderr, "can't set file compression method at index '%" PRIu64 "' to `%s', flags `%d': %s\n", idx, argv[1], flags, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -374,9 +374,9 @@ set_file_mtime(int argc, char *argv[]) {
     time_t mtime;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    mtime = strtoull(argv[1], NULL, 10);
+    mtime = (time_t)strtoull(argv[1], NULL, 10);
     if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
-	fprintf(stderr, "can't set file mtime at index '%d' to `%ld': %s\n", idx, mtime, zip_strerror(za));
+	fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to `%ld': %s\n", idx, mtime, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -384,7 +384,7 @@ set_file_mtime(int argc, char *argv[]) {
 
 static int
 zstat(int argc, char *argv[]) {
-    int index;
+    zip_uint64_t index;
     char buf[100];
     struct zip_stat sb;
     index = strtoull(argv[0], NULL, 10);
@@ -476,7 +476,7 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 {
     struct stat st;
     zip_source_t *src;
-    zip_t *za;
+    zip_t *zb;
     zip_error_t error;
 
     if (stat(archive, &st) < 0) {
@@ -491,7 +491,7 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
     else {
 	char *buf;
 	FILE *fp;
-	if ((buf=malloc(st.st_size)) == NULL) {
+	if ((buf=malloc((size_t)st.st_size)) == NULL) {
 	    *err = ZIP_ER_MEMORY;
 	    return NULL;
 	}
@@ -500,13 +500,13 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 	    *err = ZIP_ER_READ;
 	    return NULL;
 	}
-	if (fread(buf, st.st_size, 1, fp) < 1) {
+	if (fread(buf, (size_t)st.st_size, 1, fp) < 1) {
 	    free(buf);
 	    *err = ZIP_ER_READ;
 	    return NULL;
 	}
 	fclose(fp);
-	src = zip_source_buffer_create(buf, st.st_size, 1, &error);
+	src = zip_source_buffer_create(buf, (zip_uint64_t)st.st_size, 1, &error);
 	if (src == NULL) {
 	    free(buf);
 	}
@@ -516,8 +516,8 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 	errno = zip_error_code_system(&error);
 	return NULL;
     }
-    za = zip_open_from_source(src, flags, &error);
-    if (za == NULL) {
+    zb = zip_open_from_source(src, flags, &error);
+    if (zb == NULL) {
 	*err = zip_error_code_zip(&error);
 	errno = zip_error_code_system(&error);
 	zip_source_free(src);
@@ -525,7 +525,7 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
     }
     zip_source_keep(src);
     *srcp = src;
-    return za;
+    return zb;
 }
 
 static int
@@ -555,7 +555,7 @@ write_memory_src_to_file(const char *archive, zip_source_t *src)
 	zip_source_close(src);
 	return -1;
     }
-    if (zip_source_read(src, buf, zst.size) < zst.size) {
+    if (zip_source_read(src, buf, zst.size) < (zip_int64_t)zst.size) {
 	fprintf(stderr, "zip_source_read on buffer failed: %s\n", zip_error_strerror(zip_source_error(src)));
 	zip_source_close(src);
 	free(buf);
@@ -607,7 +607,7 @@ dispatch_table_t dispatch_table[] = {
 int
 dispatch(int argc, char *argv[])
 {
-    int i;
+    unsigned int i;
     for (i=0; i<sizeof(dispatch_table)/sizeof(dispatch_table_t); i++) {
 	if (strcmp(dispatch_table[i].cmdline_name, argv[0]) == 0) {
 	    argc--;
@@ -629,9 +629,9 @@ dispatch(int argc, char *argv[])
 
 
 void
-usage(const char *prg)
+usage(const char *progname)
 {
-    int i;
+    unsigned int i;
     fprintf(stderr, "usage: %s [-cemnt] archive command1 [args] [command2 [args] ...]\n\n"
 	    "Supported options are:\n"
 	    "\t-c\tcheck consistency\n"
@@ -641,7 +641,7 @@ usage(const char *prg)
 	    "\t-n\tcreate archive if it doesn't exist (default)\n"
 	    "\t-r\tprint raw file name encoding without translation (for stat)\n"
 	    "\t-s\tfollow file name convention strictly (for stat)\n"
-	    "\t-t\tdisregard current archive contents, if any\n", prg);
+	    "\t-t\tdisregard current archive contents, if any\n", progname);
     fprintf(stderr, "\nSupported commands and arguments are:\n");
     for (i=0; i<sizeof(dispatch_table)/sizeof(dispatch_table_t); i++) {
 	fprintf(stderr, "\t%s %s -- %s\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
@@ -654,9 +654,10 @@ int
 main(int argc, char *argv[])
 {
     const char *archive;
-    struct zip_source *zs, *memory_src;
+    struct zip_source *memory_src;
     char buf[100];
-    int c, arg, err, flags, idx, in_memory;
+    int c, arg, err, flags, in_memory;
+    const char *prg;
 
     flags = 0;
     in_memory = 0;

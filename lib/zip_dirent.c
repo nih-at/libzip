@@ -42,7 +42,7 @@
 #include "zipint.h"
 
 static time_t _zip_d2u_time(zip_uint16_t, zip_uint16_t);
-static struct zip_string *_zip_dirent_process_ef_utf_8(const struct zip_dirent *, zip_uint16_t, struct zip_string *);
+static struct zip_string *_zip_dirent_process_ef_utf_8(const struct zip_dirent *de, zip_uint16_t id, struct zip_string *str);
 static struct zip_extra_field *_zip_ef_utf8(zip_uint16_t, struct zip_string *, struct zip_error *);
 
 
@@ -399,7 +399,7 @@ _zip_dirent_read(struct zip_dirent *zde, struct zip_source *src,
     zde->extra_fields = NULL;
     zde->comment = NULL;
 
-    size += filename_len+ef_len+comment_len;
+    size += (zip_uint32_t)filename_len+ef_len+comment_len;
 
     if (leftp && (*leftp < size)) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
@@ -456,7 +456,8 @@ _zip_dirent_read(struct zip_dirent *zde, struct zip_source *src,
     /* Zip64 */
 
     if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
-	zip_uint16_t got_len, needed_len;
+	zip_uint32_t needed_len;
+	zip_uint16_t got_len;
 	const zip_uint8_t *ef = _zip_ef_get_by_id(zde->extra_fields, &got_len, ZIP_EF_ZIP64, 0, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error);
 	/* TODO: if got_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
 	if (ef == NULL)
@@ -465,9 +466,17 @@ _zip_dirent_read(struct zip_dirent *zde, struct zip_source *src,
 
 	if (local)
 	    needed_len = 16;
-	else
-	    needed_len = ((zde->uncomp_size == ZIP_UINT32_MAX) + (zde->comp_size == ZIP_UINT32_MAX) + (zde->offset == ZIP_UINT32_MAX)) * 8
-		+ (zde->disk_number == ZIP_UINT16_MAX) * 4;
+	else {
+	    needed_len = 0;
+	    if (zde->uncomp_size == ZIP_UINT32_MAX)
+		needed_len += 8;
+	    if (zde->comp_size == ZIP_UINT32_MAX)
+		needed_len += 8;
+	    if (zde->offset == ZIP_UINT32_MAX)
+		needed_len += 8;
+	    if (zde->disk_number == ZIP_UINT16_MAX)
+		needed_len += 4;
+	}
 
 	if (got_len != needed_len) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
@@ -520,7 +529,7 @@ _zip_dirent_process_ef_utf_8(const struct zip_dirent *de, zip_uint16_t id, struc
     ef_crc = _zip_get_32(&ef);
 
     if (_zip_string_crc32(str) == ef_crc) {
-	struct zip_string *ef_str = _zip_string_new(ef, ef_len-5, ZIP_FL_ENC_UTF_8, NULL);
+	struct zip_string *ef_str = _zip_string_new(ef, (zip_uint16_t)(ef_len-5), ZIP_FL_ENC_UTF_8, NULL);
 
 	if (ef_str != NULL) {
 	    _zip_string_free(str);
@@ -651,7 +660,7 @@ _zip_dirent_write(struct zip *za, struct zip_dirent *de, zip_flags_t flags)
 	(name_enc == ZIP_ENCODING_UTF8_KNOWN  && com_enc == ZIP_ENCODING_UTF8_KNOWN))
 	de->bitflags |= ZIP_GPBF_ENCODING_UTF_8;
     else {
-	de->bitflags &= ~ZIP_GPBF_ENCODING_UTF_8;
+	de->bitflags &= (zip_uint16_t)~ZIP_GPBF_ENCODING_UTF_8;
 	if (name_enc == ZIP_ENCODING_UTF8_KNOWN) {
 	    ef = _zip_ef_utf8(ZIP_EF_UTF_8_NAME, de->filename, &za->error);
 	    if (ef == NULL)
@@ -719,7 +728,7 @@ _zip_dirent_write(struct zip *za, struct zip_dirent *de, zip_flags_t flags)
 	_zip_put_32(&p, ZIP_UINT32_MAX);
 
     _zip_put_16(&p, _zip_string_length(de->filename));
-    _zip_put_16(&p, _zip_ef_size(de->extra_fields, flags) + _zip_ef_size(ef, ZIP_EF_BOTH));
+    _zip_put_16(&p, (zip_uint16_t)(_zip_ef_size(de->extra_fields, flags) + _zip_ef_size(ef, ZIP_EF_BOTH)));
     
     if ((flags & ZIP_FL_LOCAL) == 0) {
 	_zip_put_16(&p, _zip_string_length(de->comment));

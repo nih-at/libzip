@@ -236,6 +236,7 @@ struct zip_source_args_seek {
     zip_int64_t offset;
     int whence;
 };
+
 typedef struct zip_source_args_seek zip_source_args_seek_t;
 #define ZIP_SOURCE_GET_ARGS(type, data, len, error) ((len) < sizeof(type) ? zip_error_set((error), ZIP_ER_INVAL, 0), NULL : (type *)(data))
 

@@ -287,7 +287,7 @@ _zip_ef_size(const struct zip_extra_field *ef, zip_flags_t flags)
     size = 0;
     for (; ef; ef=ef->next) {
 	if (ef->flags & flags & ZIP_EF_BOTH)
-	    size += 4+ef->size;
+	    size = (zip_uint16_t)(size+4+ef->size);
     }
 
     return size;

@@ -207,7 +207,7 @@ zip_close(struct zip *za)
 	    zip_uint64_t offset;
 
 	    /* when copying data, all sizes are known -> no data descriptor needed */
-	    de->bitflags &= ~ZIP_GPBF_DATA_DESCRIPTOR;
+	    de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
 	    if (_zip_dirent_write(za, de, ZIP_FL_LOCAL) < 0) {
 		error = 1;
 		break;
@@ -306,7 +306,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
     }
 
     /* as long as we don't support non-seekable output, clear data descriptor bit */
-    de->bitflags &= ~ZIP_GPBF_DATA_DESCRIPTOR;
+    de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
     if ((is_zip64=_zip_dirent_write(za, de, flags)) < 0)
 	return -1;
 

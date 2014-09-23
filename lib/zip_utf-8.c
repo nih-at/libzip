@@ -196,20 +196,20 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 	return 1;
     }
     if (codepoint < 0x0800) {
-	buf[0] = UTF_8_LEN_2_MATCH | ((codepoint >> 6) & 0x1f);
-	buf[1] = UTF_8_CONTINUE_MATCH | (codepoint & 0x3f);
+	buf[0] = (zip_uint8_t)(UTF_8_LEN_2_MATCH | ((codepoint >> 6) & 0x1f));
+	buf[1] = (zip_uint8_t)(UTF_8_CONTINUE_MATCH | (codepoint & 0x3f));
 	return 2;
     }
     if (codepoint < 0x10000) {
-	buf[0] = UTF_8_LEN_3_MATCH | ((codepoint >> 12) & 0x0f);
-	buf[1] = UTF_8_CONTINUE_MATCH | ((codepoint >> 6) & 0x3f);
-	buf[2] = UTF_8_CONTINUE_MATCH | (codepoint & 0x3f);
+	buf[0] = (zip_uint8_t)(UTF_8_LEN_3_MATCH | ((codepoint >> 12) & 0x0f));
+	buf[1] = (zip_uint8_t)(UTF_8_CONTINUE_MATCH | ((codepoint >> 6) & 0x3f));
+	buf[2] = (zip_uint8_t)(UTF_8_CONTINUE_MATCH | (codepoint & 0x3f));
 	return 3;
     }
-    buf[0] = UTF_8_LEN_4_MATCH | ((codepoint >> 18) & 0x07);
-    buf[1] = UTF_8_CONTINUE_MATCH | ((codepoint >> 12) & 0x3f);
-    buf[2] = UTF_8_CONTINUE_MATCH | ((codepoint >> 6) & 0x3f);
-    buf[3] = UTF_8_CONTINUE_MATCH | (codepoint & 0x3f);
+    buf[0] = (zip_uint8_t)(UTF_8_LEN_4_MATCH | ((codepoint >> 18) & 0x07));
+    buf[1] = (zip_uint8_t)(UTF_8_CONTINUE_MATCH | ((codepoint >> 12) & 0x3f));
+    buf[2] = (zip_uint8_t)(UTF_8_CONTINUE_MATCH | ((codepoint >> 6) & 0x3f));
+    buf[3] = (zip_uint8_t)(UTF_8_CONTINUE_MATCH | (codepoint & 0x3f));
     return 4;
 }
 

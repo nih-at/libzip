@@ -31,7 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -122,8 +122,6 @@ static zip_int64_t
 read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 {
     struct read_data *ctx = (struct read_data *)state;
-    char *buf;
-    zip_uint64_t n;
 
     switch (cmd) {
         case ZIP_SOURCE_BEGIN_WRITE:
@@ -156,6 +154,10 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
             return 0;
 	
         case ZIP_SOURCE_READ:
+	    if (len > ZIP_INT64_MAX) {
+		zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+		return -1;
+	    }
             return buffer_read(ctx->in, data, len);
 	
         case ZIP_SOURCE_REMOVE:
@@ -208,12 +210,25 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 	    return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, -1);
             
         case ZIP_SOURCE_TELL:
-            return ctx->in->offset;
+            if (ctx->in->offset > ZIP_INT64_MAX) {
+		zip_error_set(&ctx->error, ZIP_ER_TELL, EOVERFLOW);
+		return -1;
+	    }
+	    return (zip_int64_t)ctx->in->offset;
+		
             
         case ZIP_SOURCE_TELL_WRITE:
-            return ctx->out->offset;
+            if (ctx->out->offset > ZIP_INT64_MAX) {
+		zip_error_set(&ctx->error, ZIP_ER_TELL, EOVERFLOW);
+		return -1;
+	    }
+	    return (zip_int64_t)ctx->out->offset;
 
         case ZIP_SOURCE_WRITE:
+	    if (len > ZIP_INT64_MAX) {
+		zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+		return -1;
+	    }
 	    return buffer_write(ctx->out, data, len, &ctx->error);
 
         default:
@@ -321,6 +336,9 @@ buffer_read(buffer_t *buffer, void *data, zip_uint64_t length)
     if (length == 0) {
 	return 0;
     }
+    if (length > ZIP_INT64_MAX) {
+	return -1;
+    }
 
     i = buffer->offset / buffer->fragment_size;
     fragment_offset = buffer->offset % buffer->fragment_size;
@@ -336,30 +354,30 @@ buffer_read(buffer_t *buffer, void *data, zip_uint64_t length)
     }
 
     buffer->offset += n;
-    return n;
+    return (zip_int64_t)n;
 }
 
 
 static int
 buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error)
 {
-    zip_uint64_t offset;
+    zip_int64_t offset;
     zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, error);
 
     if (args == NULL)
 	return -1;
-            
+
     switch (args->whence) {
     case SEEK_CUR:
-	offset = buffer->offset + args->offset;
+	offset = (zip_int64_t)buffer->offset + args->offset;
 	break;
                     
     case SEEK_END:
-	offset = buffer->size + args->offset;
+	offset = (zip_int64_t)buffer->size + args->offset;
 	break;
 
     case SEEK_SET:
-	offset = args->offset;
+	offset = (zip_int64_t)args->offset;
 	break;
     }
 
@@ -368,7 +386,7 @@ buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error)
 	return -1;
     }
 
-    buffer->offset = offset;
+    buffer->offset = (zip_uint64_t)offset;
     return 0;
 }
 
@@ -432,5 +450,5 @@ buffer_write(buffer_t *buffer, const void *data, zip_uint64_t length, zip_error_
 	buffer->size = buffer->offset;
     }
 
-    return n;
+    return (zip_int64_t)n;
 }

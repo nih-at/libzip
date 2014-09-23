@@ -359,7 +359,7 @@ list_directory(const char *name, struct archive *a)
 	    }
 	    
 	    a->entry[a->nentry].name = strdup(ent->fts_path+prefix_length);
-	    a->entry[a->nentry].size = ent->fts_statp->st_size;
+	    a->entry[a->nentry].size = (zip_uint64_t)ent->fts_statp->st_size;
 	    if ((crc = compute_crc(ent->fts_accpath)) < 0) {
 		fts_close(fts);
 		return -1;
@@ -515,27 +515,29 @@ static int
 ef_read(struct zip *za, zip_uint64_t idx, struct entry *e)
 {
     zip_int16_t n_local, n_central;
-    int i;
+    zip_uint16_t i;
 
     if ((n_local = zip_file_extra_fields_count(za, idx, ZIP_FL_LOCAL)) < 0
         || (n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL)) < 0) {
         return -1;
     }
     
-    e->n_extra_fields = (zip_uint16_t)n_local + (zip_uint16_t)n_central;
+    e->n_extra_fields = (zip_uint16_t)(n_local + n_central);
     
     if ((e->extra_fields=(struct ef *)malloc(sizeof(e->extra_fields[0])*e->n_extra_fields)) == NULL)
 	return -1;
 
     for (i=0; i<n_local; i++) {
 	e->extra_fields[i].name = e->name;
-	if ((e->extra_fields[i].data=zip_file_extra_field_get(za, idx, i, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_LOCAL)) == NULL)
+	e->extra_fields[i].data = zip_file_extra_field_get(za, idx, i, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_LOCAL);
+	if (e->extra_fields[i].data == NULL)
 	    return -1;
 	e->extra_fields[i].flags = ZIP_FL_LOCAL;
     }
     for (; i<e->n_extra_fields; i++) {
 	e->extra_fields[i].name = e->name;
-	if ((e->extra_fields[i].data=zip_file_extra_field_get(za, idx, i-n_local, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_CENTRAL)) == NULL)
+	e->extra_fields[i].data=zip_file_extra_field_get(za, idx, (zip_uint16_t)(i-n_local), &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_CENTRAL);
+	if (e->extra_fields[i].data == NULL)
 	    return -1;
 	e->extra_fields[i].flags = ZIP_FL_CENTRAL;
     }

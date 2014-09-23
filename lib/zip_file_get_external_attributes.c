@@ -42,7 +42,7 @@ zip_file_get_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t f
 	return -1;
 
     if (opsys)
-	*opsys = (de->version_madeby >> 8) & 0xff;
+	*opsys = (zip_uint8_t)((de->version_madeby >> 8) & 0xff);
 
     if (attributes)
 	*attributes = de->ext_attrib;

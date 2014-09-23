@@ -122,8 +122,8 @@ crc_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, enum 
             else {
 		zip_uint64_t i, nn;
 
-		for (i=0; i < n; i += nn) {
-		    nn = ZIP_MIN(UINT_MAX, n-i);
+		for (i=0; i < (zip_uint64_t)n; i += nn) {
+		    nn = ZIP_MIN(UINT_MAX, (zip_uint64_t)n-i);
 
 		    ctx->crc = (zip_uint32_t)crc32(ctx->crc, (const Bytef *)data+i, (uInt)nn);
 		}
