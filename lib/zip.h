@@ -148,7 +148,7 @@ extern "C" {
 
 /* compression methods */
 
-#define ZIP_CM_DEFAULT	      -1  /* better of deflate or store */
+#define ZIP_CM_DEFAULT	   65535  /* better of deflate or store */
 #define ZIP_CM_STORE	       0  /* stored (uncompressed) */
 #define ZIP_CM_SHRINK	       1  /* shrunk */
 #define ZIP_CM_REDUCE_1	       2  /* reduced with factor 1 */
