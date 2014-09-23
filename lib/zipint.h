@@ -457,7 +457,7 @@ void _zip_error_clear(struct zip_error *);
 void _zip_error_get(const struct zip_error *, int *, int *);
 
 void _zip_error_copy(zip_error_t *dst, const struct zip_error *src);
-void _zip_error_set_from_source(zip_error_t *, zip_source_t *);
+void __zip_error_set_from_source(zip_error_t *, zip_source_t *);
 
 const zip_uint8_t *_zip_extract_extra_field_by_id(struct zip_error *, zip_uint16_t, int, const zip_uint8_t *, zip_uint16_t, zip_uint16_t *);
 

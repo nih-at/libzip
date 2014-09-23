@@ -136,7 +136,7 @@ window_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, en
                 for (n=0; n<ctx->start; n+=(zip_uint64_t)ret) {
                     i = (ctx->start-n > sizeof(b) ? sizeof(b) : ctx->start-n);
                     if ((ret=zip_source_read(src, b, i)) < 0) {
-                        zip_error_set_from_source(&ctx->error, src);
+                        _zip_error_set_from_source(&ctx->error, src);
                         return -1;
                     }
                     if (ret==0) {
@@ -158,7 +158,7 @@ window_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, en
             
             if (ctx->needs_seek) {
                 if (zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET) < 0) {
-                    zip_error_set_from_source(&ctx->error, src);
+                    _zip_error_set_from_source(&ctx->error, src);
                     return -1;
                 }
             }

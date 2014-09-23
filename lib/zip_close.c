@@ -81,7 +81,7 @@ zip_close(struct zip *za)
     if (survivors == 0) {
 	if ((za->open_flags & ZIP_TRUNCATE) || changed) {
 	    if (zip_source_remove(za->src) < 0) {
-		zip_error_set_from_source(&za->error, za->src);
+		_zip_error_set_from_source(&za->error, za->src);
 		return -1;
 	    }
 	}
@@ -135,7 +135,7 @@ zip_close(struct zip *za)
     }
 
     if (zip_source_begin_write(za->src) < 0) {
-	zip_error_set_from_source(&za->error, za->src);
+	_zip_error_set_from_source(&za->error, za->src);
 	free(filelist);
 	return -1;
     }
@@ -217,7 +217,7 @@ zip_close(struct zip *za)
 		break;
 	    }
 	    if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
-		zip_error_set_from_source(&za->error, za->src);
+		_zip_error_set_from_source(&za->error, za->src);
 		error = 1;
 		break;
 	    }
@@ -237,7 +237,7 @@ zip_close(struct zip *za)
 
     if (!error) {
 	if (zip_source_commit_write(za->src) != 0) {
-	    zip_error_set_from_source(&za->error, za->src);
+	    _zip_error_set_from_source(&za->error, za->src);
 	    error = 1;
 	}
     }
@@ -264,7 +264,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
     zip_flags_t flags;
     
     if (zip_source_stat(src, &st) < 0) {
-	zip_error_set_from_source(&za->error, src);
+	_zip_error_set_from_source(&za->error, src);
 	return -1;
     }
 
@@ -369,7 +369,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
 	zip_source_t *tmp = zip_source_pop(s2);
 
 	if (tmp == NULL) {
-	    zip_error_set_from_source(&za->error, s2);
+	    _zip_error_set_from_source(&za->error, s2);
 	    ret = -1;
 	    break;
 	}
@@ -384,7 +384,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
     }
 
     if (zip_source_seek_write(za->src, offstart, SEEK_SET) < 0) {
-	zip_error_set_from_source(&za->error, za->src);
+	_zip_error_set_from_source(&za->error, za->src);
 	return -1;
     }
 
@@ -418,7 +418,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
 
    
     if (zip_source_seek_write(za->src, offend, SEEK_SET) < 0) {
-	zip_error_set_from_source(&za->error, za->src);
+	_zip_error_set_from_source(&za->error, za->src);
 	return -1;
     }
 
@@ -457,7 +457,7 @@ copy_source(struct zip *za, struct zip_source *src)
     int ret;
 
     if (zip_source_open(src) < 0) {
-	zip_error_set_from_source(&za->error, src);
+	_zip_error_set_from_source(&za->error, src);
 	return -1;
     }
 
@@ -470,7 +470,7 @@ copy_source(struct zip *za, struct zip_source *src)
     }
     
     if (n < 0) {
-	zip_error_set_from_source(&za->error, src);
+	_zip_error_set_from_source(&za->error, src);
 	ret = -1;
     }
 
@@ -509,7 +509,7 @@ write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t sur
     snprintf((char *)buf, sizeof(buf), "%08lX", (long)crc);
 
     if (zip_source_seek_write(za->src, end-TORRENT_CRC_LEN, SEEK_SET) < 0) {
-	zip_error_set_from_source(&za->error, za->src);
+	_zip_error_set_from_source(&za->error, za->src);
 	return -1;
     }
 

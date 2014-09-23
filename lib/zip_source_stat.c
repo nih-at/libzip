@@ -50,7 +50,7 @@ zip_source_stat(struct zip_source *src, struct zip_stat *st)
     
     if (ZIP_SOURCE_IS_LAYERED(src)) {
         if (zip_source_stat(src->src, st) < 0) {
-            zip_error_set_from_source(&src->error, src->src);
+            _zip_error_set_from_source(&src->error, src->src);
             return -1;
         }
     }

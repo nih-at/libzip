@@ -342,7 +342,7 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
     }	
 
     if (zip_source_seek(za->src, (zip_int64_t)(e->orig->offset + 26), SEEK_SET) < 0) {
-	zip_error_set_from_source(&za->error, za->src);
+	_zip_error_set_from_source(&za->error, za->src);
 	return -1;
     }
 

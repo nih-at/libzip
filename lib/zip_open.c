@@ -140,7 +140,7 @@ zip_open_from_source(struct zip_source *src, int _flags, struct zip_error *error
 	    return NULL;
 	}
 	if (zip_source_open(src) < 0) {
-	    zip_error_set_from_source(error, src);
+	    _zip_error_set_from_source(error, src);
 	    return NULL;
 	}
 
@@ -191,7 +191,7 @@ _zip_open(struct zip_source *src, unsigned int flags, struct zip_error *error)
 
     zip_stat_init(&st);
     if (zip_source_stat(src, &st) < 0) {
-	zip_error_set_from_source(error, src);
+	_zip_error_set_from_source(error, src);
 	return NULL;
     }
     if ((st.valid & ZIP_STAT_SIZE) == 0) {
@@ -323,7 +323,7 @@ _zip_read_cdir(zip_t *za, zip_uint64_t buf_offset, zip_uint8_t *buf, const zip_u
 	bufp = NULL;
         
         if (zip_source_seek(za->src, (zip_int64_t)cd->offset, SEEK_SET) < 0) {
-            zip_error_set_from_source(error, za->src);
+            _zip_error_set_from_source(error, za->src);
             _zip_cdir_free(cd);
             return NULL;
         }
@@ -394,7 +394,7 @@ _zip_checkcons(struct zip *za, struct zip_cdir *cd, struct zip_error *error)
 	}
 	
         if (zip_source_seek(za->src, (zip_int64_t)cd->entry[i].orig->offset, SEEK_SET) < 0) {
-            zip_error_set_from_source(error, za->src);
+            _zip_error_set_from_source(error, za->src);
             return -1;
 	}
 	
@@ -550,7 +550,7 @@ _zip_find_central_dir(struct zip *za, zip_uint64_t len)
 	}
     }
     if ((buf_offset = zip_source_tell(za->src)) < 0) {
-        zip_error_set_from_source(&za->error, za->src);
+        _zip_error_set_from_source(&za->error, za->src);
         return NULL;
     }
     
@@ -713,12 +713,12 @@ _zip_read_eocd64(struct zip_source *src, const zip_uint8_t *eocd64loc, const zip
 	zip_int64_t n;
 
 	if (zip_source_seek(src, (zip_int64_t)eocd_offset, SEEK_SET) < 0) {
-	    zip_error_set_from_source(error, src);
+	    _zip_error_set_from_source(error, src);
 	    return NULL;
 	}
 
 	if ((n = zip_source_read(src, eocd, EOCD64LEN)) < 0) {
-	    zip_error_set_from_source(error, src);
+	    _zip_error_set_from_source(error, src);
 	    return NULL;
 	}
 	if (n < EOCD64LEN) {

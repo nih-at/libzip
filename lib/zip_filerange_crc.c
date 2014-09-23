@@ -53,14 +53,14 @@ _zip_filerange_crc(zip_source_t *src, zip_uint64_t start, zip_uint64_t len, uLon
     }
 
     if (zip_source_seek(src, (zip_int64_t)start, SEEK_SET) != 0) {
-	zip_error_set_from_source(error, src);
+	_zip_error_set_from_source(error, src);
 	return -1;
     }
     
     while (len > 0) {
 	n = (zip_int64_t)(len > BUFSIZE ? BUFSIZE : len);
 	if ((n = zip_source_read(src, buf, (zip_uint64_t)n)) < 0) {
-	    zip_error_set_from_source(error, src);
+	    _zip_error_set_from_source(error, src);
 	    return -1;
 	}
 	if (n == 0) {

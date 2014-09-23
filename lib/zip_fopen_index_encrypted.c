@@ -52,7 +52,7 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t index, zip_flags_t flags,
 	return NULL;
 
     if (zip_source_open(src) < 0) {
-	zip_error_set_from_source(&za->error, src);
+	_zip_error_set_from_source(&za->error, src);
 	zip_source_free(src);
 	return NULL;
     }

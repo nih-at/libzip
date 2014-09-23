@@ -55,7 +55,7 @@ zip_fread(struct zip_file *zf, void *outbuf, zip_uint64_t toread)
 	return 0;
 
     if ((n=zip_source_read(zf->src, outbuf, toread)) < 0) {
-	zip_error_set_from_source(&zf->error, zf->src);
+	_zip_error_set_from_source(&zf->error, zf->src);
 	return -1;
     }
 

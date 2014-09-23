@@ -119,7 +119,7 @@ zip_error_set(zip_error_t *err, int ze, int se)
 
 
 void
-zip_error_set_from_source(zip_error_t *err, struct zip_source *src)
+_zip_error_set_from_source(zip_error_t *err, struct zip_source *src)
 {
     _zip_error_copy(err, zip_source_error(src));
 }

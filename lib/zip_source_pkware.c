@@ -133,7 +133,7 @@ decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
     unsigned short dostime, dosdate;
 
     if ((n=zip_source_read(src, header, HEADERLEN)) < 0) {
-        zip_error_set_from_source(&ctx->error, src);
+        _zip_error_set_from_source(&ctx->error, src);
 	return -1;
     }
     
@@ -177,7 +177,7 @@ pkware_decrypt(struct zip_source *src, void *ud, void *data,
 
         case ZIP_SOURCE_READ:
             if ((n=zip_source_read(src, data, len)) < 0) {
-                zip_error_set_from_source(&ctx->error, src);
+                _zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
 

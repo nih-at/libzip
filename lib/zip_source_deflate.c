@@ -143,7 +143,7 @@ compress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uint6
 		}
 
 		if ((n=zip_source_read(src, ctx->buffer, sizeof(ctx->buffer))) < 0) {
-                    zip_error_set_from_source(&ctx->error, src);
+                    _zip_error_set_from_source(&ctx->error, src);
 		    end = 1;
 		    break;
 		}
@@ -228,7 +228,7 @@ decompress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uin
 		}
 
 		if ((n=zip_source_read(src, ctx->buffer, sizeof(ctx->buffer))) < 0) {
-                    zip_error_set_from_source(&ctx->error, src);
+                    _zip_error_set_from_source(&ctx->error, src);
 		    end = 1;
 		    break;
 		}
@@ -335,7 +335,7 @@ deflate_decompress(struct zip_source *src, void *ud, void *data,
     switch (cmd) {
         case ZIP_SOURCE_OPEN:
             if ((n=zip_source_read(src, ctx->buffer, sizeof(ctx->buffer))) < 0) {
-                zip_error_set_from_source(&ctx->error, src);
+                _zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
 

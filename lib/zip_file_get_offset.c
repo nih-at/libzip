@@ -57,7 +57,7 @@ _zip_file_get_offset(const struct zip *za, zip_uint64_t idx, struct zip_error *e
     offset = za->entry[idx].orig->offset;
 
     if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
-	zip_error_set_from_source(error, za->src);
+	_zip_error_set_from_source(error, za->src);
 	return 0;
     }
 

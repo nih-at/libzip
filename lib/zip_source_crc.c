@@ -95,7 +95,7 @@ crc_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, enum 
                 return 0;
             
             if ((n=zip_source_read(src, data, len)) < 0) {
-                zip_error_set_from_source(&ctx->error, src);
+                _zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
             
@@ -105,7 +105,7 @@ crc_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, enum 
                     struct zip_stat st;
                     
                     if (zip_source_stat(src, &st) < 0) {
-                        zip_error_set_from_source(&ctx->error, src);
+                        _zip_error_set_from_source(&ctx->error, src);
                         return -1;
                     }
                     

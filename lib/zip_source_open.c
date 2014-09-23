@@ -56,7 +56,7 @@ zip_source_open(struct zip_source *src)
         }
         else {
             if (zip_source_open(src->src) < 0) {
-                zip_error_set_from_source(&src->error, src->src);
+                _zip_error_set_from_source(&src->error, src->src);
                 return -1;
             }
         }
