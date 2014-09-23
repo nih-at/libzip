@@ -51,7 +51,7 @@ zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t f
 
     e = za->entry+idx;
 
-    unchanged_opsys = e->orig ? (zip_uint8_t)(e->orig->version_madeby>>8) : ZIP_OPSYS_DEFAULT;
+    unchanged_opsys = (e->orig ? (zip_uint8_t)(e->orig->version_madeby>>8) : (zip_uint8_t)ZIP_OPSYS_DEFAULT);
     unchanged_attributes = e->orig ? e->orig->ext_attrib : ZIP_EXT_ATTRIB_DEFAULT;
 
     changed = (opsys != unchanged_opsys || attributes != unchanged_attributes);

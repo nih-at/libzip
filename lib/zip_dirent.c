@@ -179,14 +179,14 @@ _zip_cdir_write(struct zip *za, const struct zip_filelist *filelist, zip_uint64_
     
     _zip_put_data(&p, EOCD_MAGIC, 4);
     _zip_put_32(&p, 0);
-    _zip_put_16(&p, survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : (zip_uint16_t)survivors);
-    _zip_put_16(&p, survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : (zip_uint16_t)survivors);
+    _zip_put_16(&p, (zip_uint16_t)(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors));
+    _zip_put_16(&p, (zip_uint16_t)(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors));
     _zip_put_32(&p, size >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)size);
     _zip_put_32(&p, offset >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)offset);
 
     comment = za->comment_changed ? za->comment_changes : za->comment_orig;
 
-    _zip_put_16(&p, comment ? comment->length : 0);
+    _zip_put_16(&p, (zip_uint16_t)(comment ? comment->length : 0));
 
     if (_zip_write(za, buf, (zip_uint64_t)(p-buf)) < 0) {
 	return -1;
@@ -708,8 +708,8 @@ _zip_dirent_write(struct zip *za, struct zip_dirent *de, zip_flags_t flags)
 	is_really_zip64 = is_zip64;
     
     if ((flags & ZIP_FL_LOCAL) == 0)
-	_zip_put_16(&p, is_really_zip64 ? 45 : de->version_madeby);
-    _zip_put_16(&p, is_really_zip64 ? 45 : de->version_needed);
+	_zip_put_16(&p, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_madeby));
+    _zip_put_16(&p, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_needed));
     _zip_put_16(&p, de->bitflags&0xfff9); /* clear compression method specific flags */
     _zip_put_16(&p, (zip_uint16_t)de->comp_method);
 

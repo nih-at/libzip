@@ -384,13 +384,13 @@ set_file_mtime(int argc, char *argv[]) {
 
 static int
 zstat(int argc, char *argv[]) {
-    zip_uint64_t index;
+    zip_uint64_t idx;
     char buf[100];
     struct zip_stat sb;
-    index = strtoull(argv[0], NULL, 10);
+    idx = strtoull(argv[0], NULL, 10);
 
-    if (zip_stat_index(za, index, stat_flags, &sb) < 0) {
-	fprintf(stderr, "zip_stat_index failed on '%" PRIu64 "' failed: %s\n", index, zip_strerror(za));
+    if (zip_stat_index(za, idx, stat_flags, &sb) < 0) {
+	fprintf(stderr, "zip_stat_index failed on '%" PRIu64 "' failed: %s\n", idx, zip_strerror(za));
 	return -1;
     }
 
