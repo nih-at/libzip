@@ -1,6 +1,6 @@
 /*
   zip_extra_field.c -- manipulate extra fields
-  Copyright (C) 2012-2013 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -48,7 +48,7 @@ _zip_ef_clone(const struct zip_extra_field *ef, struct zip_error *error)
     
     while (ef) {
         if ((def=_zip_ef_new(ef->id, ef->size, ef->data, ef->flags)) == NULL) {
-            _zip_error_set(error, ZIP_ER_MEMORY, 0);
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
             _zip_ef_free(head);
             return NULL;
         }
@@ -142,7 +142,7 @@ _zip_ef_get_by_id(const struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint
 	}
     }
 
-    _zip_error_set(error, ZIP_ER_NOENT, 0);
+    zip_error_set(error, ZIP_ER_NOENT, 0);
     return NULL;
 }
 
@@ -217,22 +217,22 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, stru
     ef_head = ef = NULL;
     for (p=data; p<data+len; p+=flen) {
 	if (p+4 > data+len) {
-	    _zip_error_set(error, ZIP_ER_INCONS, 0);
+	    zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_ef_free(ef_head);
 	    return NULL;
 	}
 
-	fid = _zip_read2(&p);
-	flen = _zip_read2(&p);
+	fid = _zip_get_16(&p);
+	flen = _zip_get_16(&p);
 
 	if (p+flen > data+len) {
-	    _zip_error_set(error, ZIP_ER_INCONS, 0);
+	    zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_ef_free(ef_head);
 	    return NULL;
 	}
 
 	if ((ef2=_zip_ef_new(fid, flen, p, flags)) == NULL) {
-	    _zip_error_set(error, ZIP_ER_MEMORY, 0);
+	    zip_error_set(error, ZIP_ER_MEMORY, 0);
 	    _zip_ef_free(ef_head);
 	    return NULL;
 	}
@@ -294,17 +294,27 @@ _zip_ef_size(const struct zip_extra_field *ef, zip_flags_t flags)
 }
 
 
-void
-_zip_ef_write(const struct zip_extra_field *ef, zip_flags_t flags, FILE *f)
+int
+_zip_ef_write(struct zip *za, const struct zip_extra_field *ef, zip_flags_t flags)
 {
+    zip_uint8_t b[4], *p;
+
     for (; ef; ef=ef->next) {
 	if (ef->flags & flags & ZIP_EF_BOTH) {
-	    _zip_write2(ef->id, f);
-	    _zip_write2(ef->size, f);
-	    if (ef->size > 0)
-		fwrite(ef->data, ef->size, 1, f);
+	    p = b;
+	    _zip_put_16(&p, ef->id);
+	    _zip_put_16(&p, ef->size);
+	    if (_zip_write(za, b, 4) < 0) {
+		return -1;
+	    }
+	    if (ef->size > 0) {
+		if (_zip_write(za, ef->data, ef->size) < 0) {
+		    return -1;
+		}
+	    }
 	}
     }
+    return 0;
 }
 
 
@@ -317,7 +327,7 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
     zip_uint16_t fname_len, ef_len;
 
     if (idx >= za->nentry) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
@@ -326,31 +336,34 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
     if (e->orig == NULL || e->orig->local_extra_fields_read)
 	return 0;
 
+    if (e->orig->offset + 26 > ZIP_INT64_MAX) {
+	zip_error_set(&za->error, ZIP_ER_SEEK, EFBIG);
+	return -1;
+    }	
 
-    if (fseeko(za->zp, (off_t)(e->orig->offset + 26), SEEK_SET) < 0) {
-	_zip_error_set(&za->error, ZIP_ER_SEEK, errno);
+    if (zip_source_seek(za->src, (zip_int64_t)(e->orig->offset + 26), SEEK_SET) < 0) {
+	zip_error_set_from_source(&za->error, za->src);
 	return -1;
     }
 
-    if (fread(b, sizeof(b), 1, za->zp) != 1) {
-	_zip_error_set(&za->error, ZIP_ER_READ, errno);
+    if (_zip_read(za->src, b, sizeof(b), &za->error) < 0) {
 	return -1;
     }
 
     p = b;
-    fname_len = _zip_read2(&p);
-    ef_len = _zip_read2(&p);
+    fname_len = _zip_get_16(&p);
+    ef_len = _zip_get_16(&p);
 
     if (ef_len > 0) {
 	struct zip_extra_field *ef;
 	zip_uint8_t *ef_raw;
 
-	if (fseek(za->zp, fname_len, SEEK_CUR) < 0) {
-	    _zip_error_set(&za->error, ZIP_ER_SEEK, errno);
+	if (zip_source_seek(za->src, fname_len, SEEK_CUR) < 0) {
+	    zip_error_set(&za->error, ZIP_ER_SEEK, errno);
 	    return -1;
 	}
 
-	ef_raw = _zip_read_data(NULL, za->zp, ef_len, 0, &za->error);
+	ef_raw = _zip_read_data(NULL, za->src, ef_len, 0, &za->error);
 
 	if (ef_raw == NULL)
 	    return -1;

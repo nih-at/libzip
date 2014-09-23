@@ -1,6 +1,6 @@
 /*
   name_locate.c -- test cases for finding files in zip archives
-  Copyright (C) 2005-2006 Dieter Baron and Thomas Klausner
+  Copyright (C) 2005-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -40,8 +40,8 @@
 
 #include "compat.h"
 
-static int find_fail(struct zip *, const char *, int, int);
-static int find_success(struct zip *, const char *, int);
+static int find_fail(struct zip *z, const char *name, zip_flags_t flags, int zerr);
+static int find_success(struct zip *z, const char *name, zip_flags_t flags);
 
 const char *prg;
 
@@ -115,7 +115,7 @@ main(int argc, char *argv[])
 
 
 static int
-find_fail(struct zip *z, const char *name, int flags, int zerr)
+find_fail(struct zip *z, const char *name, zip_flags_t flags, int zerr)
 {
     int ze, se;
     char expected[80];
@@ -139,7 +139,7 @@ find_fail(struct zip *z, const char *name, int flags, int zerr)
 
 
 static int
-find_success(struct zip *z, const char *name, int flags)
+find_success(struct zip *z, const char *name, zip_flags_t flags)
 {
 
     if (zip_name_locate(z, name, flags) < 0) {

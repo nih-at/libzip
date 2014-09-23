@@ -49,7 +49,7 @@ zip_fclose(struct zip_file *zf)
     if (zf->error.zip_err)
 	ret = zf->error.zip_err;
 
-    _zip_error_fini(&zf->error);
+    zip_error_fini(&zf->error);
     free(zf);
     return ret;
 }

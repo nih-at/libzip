@@ -65,7 +65,7 @@ struct archive {
     zip_uint64_t nentry;
     struct entry *entry;
     const char *comment;
-    int comment_length;
+    size_t comment_length;
 };
 
 struct ef {
@@ -82,7 +82,7 @@ struct entry {
     zip_uint32_t crc;
     zip_uint32_t comp_method;
     struct ef *extra_fields;
-    int n_extra_fields;
+    zip_uint16_t n_extra_fields;
     const char *comment;
     zip_uint32_t comment_length;
 };
@@ -109,7 +109,7 @@ char help[] = "\n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2014 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2003-2014 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVipqtv"
@@ -117,7 +117,7 @@ Copyright (C) 2014 Dieter Baron and Thomas Klausner\n\
 
 #define BOTH_ARE_ZIPS(a)	(a[0].za && a[1].za)
 
-static int comment_compare(const char *c1, int l1, const char *c2, int l2);
+static int comment_compare(const char *c1, size_t l1, const char *c2, size_t l2);
 static int compare_list(char * const name[],
 			const void *l[], const zip_uint64_t n[], int size,
 			int (*cmp)(const void *, const void *),
@@ -127,7 +127,7 @@ static int compare_zip(char * const zn[]);
 static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
 static int ef_order(const void *a, const void *b);
 static void ef_print(const void *p);
-static int ef_read(struct zip *za, int idx, struct entry *e);
+static int ef_read(struct zip *za, zip_uint64_t idx, struct entry *e);
 static int entry_cmp(const void *p1, const void *p2);
 static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
 static void entry_print(const void *p);
@@ -136,7 +136,7 @@ static int is_directory(const char *name);
 static int list_directory(const char *name, struct archive *a);
 #endif
 static int list_zip(const char *name, struct archive *a);
-static int test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc);
+static int test_file(struct zip *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc);
 
 int ignore_case, test_files, paranoid, verbose;
 int header_done;
@@ -241,8 +241,8 @@ compare_zip(char * const zn[])
     if (paranoid) {
 	if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
 	    if (verbose) {
-		printf("--- archive comment (%d)\n", a[0].comment_length);
-		printf("+++ archive comment (%d)\n", a[1].comment_length);
+		printf("--- archive comment (%zd)\n", a[0].comment_length);
+		printf("+++ archive comment (%zd)\n", a[1].comment_length);
 	    }
 	    res = 1;
 	}
@@ -264,12 +264,12 @@ compare_zip(char * const zn[])
     }
 }
 
-
+#ifdef HAVE_FTS_H
 static zip_int64_t
 compute_crc(const char *fname)
 {
     FILE *f;
-    zip_uint32_t crc = crc32(0L, Z_NULL, 0);
+    uLong crc = crc32(0L, Z_NULL, 0);
     size_t n;
     Bytef buffer[8192];
 
@@ -280,7 +280,7 @@ compute_crc(const char *fname)
     }
 
     while ((n=fread(buffer, 1, sizeof(buffer), f)) > 0) {
-	crc = crc32(crc, buffer, n);
+	crc = crc32(crc, buffer, (unsigned int)n);
     }
 
     if (ferror(f)) {
@@ -291,8 +291,9 @@ compute_crc(const char *fname)
 
     fclose(f);
 
-    return crc;
+    return (zip_int64_t)crc;
 }
+#endif
 
 
 static int
@@ -396,7 +397,7 @@ list_zip(const char *name, struct archive *a)
     }
 
     a->za = za;
-    a->nentry = zip_get_num_entries(za, 0);
+    a->nentry = (zip_uint64_t)zip_get_num_entries(za, 0);
 
     if (a->nentry == 0)
 	a->entry = NULL;
@@ -424,8 +425,11 @@ list_zip(const char *name, struct archive *a)
 	    }
         }
 
-	if (paranoid)
-	    a->comment = zip_get_archive_comment(za, &a->comment_length, 0);
+        if (paranoid) {
+            int length;
+	    a->comment = zip_get_archive_comment(za, &length, 0);
+            a->comment_length = (size_t)length;
+        }
         else {
             a->comment = NULL;
             a->comment_length = 0;
@@ -437,7 +441,7 @@ list_zip(const char *name, struct archive *a)
 
 
 static int
-comment_compare(const char *c1, int l1, const char *c2, int l2) {
+comment_compare(const char *c1, size_t l1, const char *c2, size_t l2) {
     if (l1 != l2)
 	return 1;
 
@@ -447,7 +451,7 @@ comment_compare(const char *c1, int l1, const char *c2, int l2) {
     if (c1 == NULL || c2 == NULL)
         return c1 == c2;
     
-    return memcmp(c1, c2, l2);
+    return memcmp(c1, c2, (size_t)l2);
 }
 
 
@@ -508,14 +512,17 @@ compare_list(char * const name[2],
 
 
 static int
-ef_read(struct zip *za, int idx, struct entry *e)
+ef_read(struct zip *za, zip_uint64_t idx, struct entry *e)
 {
-    int n_local, n_central;
+    zip_int16_t n_local, n_central;
     int i;
 
-    n_local = zip_file_extra_fields_count(za, idx, ZIP_FL_LOCAL);
-    n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL);
-    e->n_extra_fields = n_local + n_central;
+    if ((n_local = zip_file_extra_fields_count(za, idx, ZIP_FL_LOCAL)) < 0
+        || (n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL)) < 0) {
+        return -1;
+    }
+    
+    e->n_extra_fields = (zip_uint16_t)n_local + (zip_uint16_t)n_central;
     
     if ((e->extra_fields=(struct ef *)malloc(sizeof(e->extra_fields[0])*e->n_extra_fields)) == NULL)
 	return -1;
@@ -604,7 +611,7 @@ entry_cmp(const void *p1, const void *p2)
             return -1;
     }
     if (e1->crc != e2->crc)
-	return e1->crc - e2->crc;
+	return (int)e1->crc - (int)e2->crc;
 
     return 0;
 }
@@ -668,16 +675,16 @@ entry_print(const void *p)
 
 
 static int
-test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc)
+test_file(struct zip *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc)
 {
     struct zip_file *zf;
     char buf[8192];
-    zip_int64_t n, nsize;
+    zip_uint64_t nsize;
+    zip_int64_t n;
     zip_uint32_t ncrc;
     
     if ((zf=zip_fopen_index(za, idx, 0)) == NULL) {
-	fprintf(stderr, "%s: cannot open file %d in archive: %s\n",
-		prg, idx, zip_strerror(za));
+	fprintf(stderr, "%s: cannot open file %" PRIu64 " in archive: %s\n", prg, idx, zip_strerror(za));
 	return -1;
     }
 
@@ -685,13 +692,12 @@ test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc)
     nsize = 0;
     
     while ((n=zip_fread(zf, buf, sizeof(buf))) > 0) {
-	nsize += n;
+	nsize += (zip_uint64_t)n;
 	ncrc = (zip_uint32_t)crc32(ncrc, (const Bytef *)buf, (unsigned int)n);
     }
 
     if (n < 0) {
-	fprintf(stderr, "%s: error reading file %d in archive: %s\n",
-		prg, idx, zip_file_strerror(zf));
+	fprintf(stderr, "%s: error reading file %" PRIu64 " in archive: %s\n",	prg, idx, zip_file_strerror(zf));
 	zip_fclose(zf);
 	return -1;
     }
@@ -699,13 +705,11 @@ test_file(struct zip *za, int idx, zip_int64_t size, unsigned int crc)
     zip_fclose(zf);
 
     if (nsize != size) {
-	fprintf(stderr, "%s: file %d: unexpected length %" PRId64 " (should be %" PRId64 ")\n",
-		prg, idx, nsize, size);
+	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %" PRId64 " (should be %" PRId64 ")\n", prg, idx, nsize, size);
 	return -2;
     }
     if (ncrc != crc) {
-	fprintf(stderr, "%s: file %d: unexpected length %x (should be %x)\n",
-		prg, idx, ncrc, crc);
+	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %x (should be %x)\n", prg, idx, ncrc, crc);
 	return -2;
     }
 

@@ -49,11 +49,10 @@ zip_discard(struct zip *za)
     if (za == NULL)
 	return;
 
-    if (za->zn)
-	free(za->zn);
-
-    if (za->zp)
-	fclose(za->zp);
+    if (za->src) {
+	zip_source_close(za->src);
+	zip_source_free(za->src);
+    }
 
     free(za->default_password);
     _zip_string_free(za->comment_orig);
@@ -65,12 +64,12 @@ zip_discard(struct zip *za)
 	free(za->entry);
     }
 
-    for (i=0; i<za->nsource; i++) {
-	_zip_source_filep_invalidate(za->source[i]);
+    for (i=0; i<za->nopen_source; i++) {
+	_zip_source_invalidate(za->open_source[i]);
     }
+    free(za->open_source);
 
-    _zip_error_fini(&za->error);
-    free(za->source);
+    zip_error_fini(&za->error);
     
     free(za);
 

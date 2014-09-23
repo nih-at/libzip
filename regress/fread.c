@@ -1,6 +1,6 @@
 /*
   fread.c -- test cases for reading from zip archives
-  Copyright (C) 2004-2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -54,7 +54,7 @@ const char *when_name[] = {
     "no", "zip_fopen", "zip_fread", "zip_fclose"
 };
 
-static int do_read(struct zip *, const char *, int, enum when, int, int);
+static int do_read(struct zip *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex);
 
 int verbose;
 
@@ -70,6 +70,7 @@ main(int argc, char *argv[])
     struct zip_source *zs;
     char *archive;
     char errstr[1024];
+    zip_int64_t idx;
 
     verbose = 0;
     fail = 0;
@@ -98,8 +99,7 @@ main(int argc, char *argv[])
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_to_str(errstr, sizeof(errstr), ze, errno);
-	printf("%s: can't open zip archive '%s': %s\n",
-	       prg, archive, errstr);
+	printf("%s: can't open zip archive '%s': %s\n", prg, archive, errstr);
 	return 1;
     }
 
@@ -112,8 +112,7 @@ main(int argc, char *argv[])
     fail += do_read(z, "nosuchfile", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
     fail += do_read(z, "deflatezliberror", ZIP_FL_COMPRESSED, WHEN_NEVER, 0,0);
     fail += do_read(z, "deflatecrcerror", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
-    fail += do_read(z, "storedcrcerror", ZIP_FL_COMPRESSED,
-		    WHEN_READ, ZIP_ER_CRC, 0);
+    fail += do_read(z, "storedcrcerror", ZIP_FL_COMPRESSED, WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "storedok", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
 
     fail += do_read(z, "cryptok", 0, WHEN_OPEN, ZIP_ER_NOPASSWD, 0);
@@ -124,18 +123,44 @@ main(int argc, char *argv[])
     zip_set_default_password(z, NULL);
 
     zs = zip_source_buffer(z, "asdf", 4, 0);
-    zip_replace(z, zip_name_locate(z, "storedok", 0), zs);
-    fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
-    fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
-    zip_delete(z, zip_name_locate(z, "storedok", 0));
-    fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
-    fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
+    if ((idx = zip_name_locate(z, "storedok", 0)) < 0) {
+        fprintf(stderr, "%s: can't locate 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+        fail++;
+    }
+    else {
+        if (zip_replace(z, (zip_uint64_t)idx, zs) < 0) {
+            fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+            fail++;
+        }
+        else {
+            fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
+            fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
+        }
+    }
+    if ((idx = zip_name_locate(z, "storedok", 0)) < 0) {
+        fprintf(stderr, "%s: can't locate 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+        fail++;
+    }
+    else {
+        if (zip_delete(z, (zip_uint64_t)idx) < 0) {
+            fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+            fail++;
+        }
+        else {
+            fail += do_read(z, "storedok", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
+            fail += do_read(z, "storedok", ZIP_FL_UNCHANGED, WHEN_NEVER, 0, 0);
+        }
+    }
     zs = zip_source_buffer(z, "asdf", 4, 0);
-    if (zip_file_add(z, "new_file", zs, 0) < 0)
+    if (zip_file_add(z, "new_file", zs, 0) < 0) {
         fprintf(stderr, "%s: can't add file to zip archive '%s': %s\n", prg, archive, zip_strerror(z));
-    fail += do_read(z, "new_file", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
+        fail++;
+    }
+    else {
+        fail += do_read(z, "new_file", 0, WHEN_OPEN, ZIP_ER_CHANGED, 0);
+    }
+    
     zip_unchange_all(z);
-
     if (zip_close(z) == -1) {
         fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(z));
         return 1;
@@ -146,8 +171,7 @@ main(int argc, char *argv[])
 
 
 static int
-do_read(struct zip *z, const char *name, int flags,
-	enum when when_ex, int ze_ex, int se_ex)
+do_read(struct zip *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex)
 {
     struct zip_file *zf;
     enum when when_got;

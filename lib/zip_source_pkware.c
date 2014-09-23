@@ -1,6 +1,6 @@
 /*
   zip_source_pkware.c -- Traditional PKWARE de/encryption routines
-  Copyright (C) 2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 2009-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -38,8 +38,7 @@
 #include "zipint.h"
 
 struct trad_pkware {
-    int e[2];
-
+    zip_error_t error;
     zip_uint32_t key[3];
 };
 
@@ -65,20 +64,20 @@ zip_source_pkware(struct zip *za, struct zip_source *src,
     struct zip_source *s2;
 
     if (password == NULL || src == NULL || em != ZIP_EM_TRAD_PKWARE) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
     if (flags & ZIP_CODEC_ENCODE) {
-	_zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
+	zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	return NULL;
     }
 
     if ((ctx=(struct trad_pkware *)malloc(sizeof(*ctx))) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
-    ctx->e[0] = ctx->e[1] = 0;
+    zip_error_init(&ctx->error);
 
     ctx->key[0] = KEY0;
     ctx->key[1] = KEY1;
@@ -134,13 +133,12 @@ decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
     unsigned short dostime, dosdate;
 
     if ((n=zip_source_read(src, header, HEADERLEN)) < 0) {
-	zip_source_error(src, ctx->e, ctx->e+1);
+        zip_error_set_from_source(&ctx->error, src);
 	return -1;
     }
     
     if (n != HEADERLEN) {
-	ctx->e[0] = ZIP_ER_EOF;
-	ctx->e[1] = 0;
+        zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
 	return -1;
     }
 
@@ -153,10 +151,8 @@ decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
 
     _zip_u2d_time(st.mtime, &dostime, &dosdate);
 
-    if (header[HEADERLEN-1] != st.crc>>24
-	&& header[HEADERLEN-1] != dostime>>8) {
-	ctx->e[0] = ZIP_ER_WRONGPASSWD;
-	ctx->e[1] = 0;
+    if (header[HEADERLEN-1] != st.crc>>24 && header[HEADERLEN-1] != dostime>>8) {
+        zip_error_set(&ctx->error, ZIP_ER_WRONGPASSWD, 0);
 	return -1;
     }
 
@@ -174,24 +170,25 @@ pkware_decrypt(struct zip_source *src, void *ud, void *data,
     ctx = (struct trad_pkware *)ud;
 
     switch (cmd) {
-    case ZIP_SOURCE_OPEN:
-	if (decrypt_header(src, ctx) < 0)
-	    return -1;
-	return 0;
+        case ZIP_SOURCE_OPEN:
+            if (decrypt_header(src, ctx) < 0)
+                return -1;
+            return 0;
 
-    case ZIP_SOURCE_READ:
-	if ((n=zip_source_read(src, data, len)) < 0)
-	    return ZIP_SOURCE_ERR_LOWER;
+        case ZIP_SOURCE_READ:
+            if ((n=zip_source_read(src, data, len)) < 0) {
+                zip_error_set_from_source(&ctx->error, src);
+                return -1;
+            }
 
-	decrypt((struct trad_pkware *)ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n,
-		0);
-	return n;
+            decrypt((struct trad_pkware *)ud, (zip_uint8_t *)data, (zip_uint8_t *)data, (zip_uint64_t)n, 0);
+            return n;
 
-    case ZIP_SOURCE_CLOSE:
-	return 0;
+        case ZIP_SOURCE_CLOSE:
+            return 0;
 
-    case ZIP_SOURCE_STAT:
-	{
+        case ZIP_SOURCE_STAT:
+        {
 	    struct zip_stat *st;
 
 	    st = (struct zip_stat *)data;
@@ -201,21 +198,23 @@ pkware_decrypt(struct zip_source *src, void *ud, void *data,
 	    /* TODO: deduce HEADERLEN from size for uncompressed */
 	    if (st->valid & ZIP_STAT_COMP_SIZE)
 		st->comp_size -= HEADERLEN;
-	}
-	return 0;
+	
+            return 0;
+        }
+            
+        case ZIP_SOURCE_SUPPORTS:
+            return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, -1);
 
-    case ZIP_SOURCE_ERROR:
-	memcpy(data, ctx->e, sizeof(int)*2);
-	return sizeof(int)*2;
+        case ZIP_SOURCE_ERROR:
+            return zip_error_to_data(&ctx->error, data, len);
 
-    case ZIP_SOURCE_FREE:
-	pkware_free(ctx);
-	return 0;
+        case ZIP_SOURCE_FREE:
+            pkware_free(ctx);
+            return 0;
 
-    default:
-	ctx->e[0] = ZIP_ER_INVAL;
-	ctx->e[1] = 0;
-	return -1;
+        default:
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            return -1;
     }
 }
 

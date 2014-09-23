@@ -1,6 +1,6 @@
 /*
   zip_set_file_compression.c -- set compression for file in archive
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -43,17 +43,17 @@ zip_set_file_compression(struct zip *za, zip_uint64_t idx,
     zip_int32_t old_method;
 
     if (idx >= za->nentry) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
     if (ZIP_IS_RDONLY(za)) {
-	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
     }
 
     if (method != ZIP_CM_DEFAULT && method != ZIP_CM_STORE && method != ZIP_CM_DEFLATE) {
-	_zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 	return -1;
     }
 
@@ -75,7 +75,7 @@ zip_set_file_compression(struct zip *za, zip_uint64_t idx,
     else {
         if (e->changes == NULL) {
             if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
-                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
                 return -1;
             }
         }

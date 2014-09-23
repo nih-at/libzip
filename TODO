@@ -48,7 +48,6 @@ Features
   . local headers come before central dir
 
 - support for old compression methods?????
-- append to files (for self-extracting files)
 
 
 Bugs
@@ -124,6 +123,10 @@ Test Case Issues
 * (strerror)
 * (unchange)
 * (unchange_all)
+* open(ZIP_RDONLY)
+* I/O abstraction layer
+    zip_open_from_source
+* read two zip entries interleaved
 
 
 I/O Methods
@@ -155,13 +158,22 @@ ZIP_SOURCE_COMMIT_WRITE
         Used after all data has been written successfully. (On
         POSIX systems, this will replace the original file with
         the temporary file, adapting permissions etc.)
+
+ZIP_SOURCE_REMOVE
+	Zip archive is empty. Is responsible for removing file, if
+	appropriate.
+
 ZIP_SOURCE_ROLLBACK_WRITE
+        Used to reset the zip archive to the previous state (e.g.
         because writing failed) to restore original data if possible;
-        return an errohis will
+        return an error otherwise.  (On POSIX systems, this will
         delete the temporary file.)
 
 ZIP_SOURCE_SEEK
         Set position for next read or write, a la fseek(3).
+
+ZIP_SOURCE_TELL
+        Report current position, a la ftell(3).
 
 ZIP_SOURCE_SUPPORTS
         Query which commands are supported for this stream.  If a
@@ -179,3 +191,64 @@ port-specific default implementation (POSIX vs. Windows vs. ...).
 
   Once the details are finalized, we'll ask for volunteers for writing
 a Windows specific implementation.
+
+zip_source_XXX -> [I]
+[I] -> OPEN -> [R]
+[R] -> (SEEK|TELL|READ|STAT)* -> [R]
+[R] -> CLOSE -> [I]
+[I] -> BEGIN_WRITE -> [W]
+[W] -> (SEEK|TELL|WRITE)* -> [W]
+[W] -> (COMMIT_WRITE|ROLLBACK_WRITE) -> [I]
+[IR] -> REMOVE -> [X]
+[I] -> STAT -> [I]
+
+(no state change in case of error)
+
+always:
+* -> ERROR -> \1
+* -> SUPPORTS -> \1
+* -> FREE
+
+
+[-,-]
+[R,-]
+[-,W]
+[R,W]
+
+zip_source_XXX -> [-,-]
+[-,y] -> OPEN -> [R,y]
+[R,y] -> (SEEK|TELL|READ|STAT)* -> [R,y]
+[R,y] -> CLOSE -> [-,y]
+[x,-] -> BEGIN_WRITE -> [x,W]
+[x,W] -> (SEEK_WRITE|TELL_WRITE|WRITE)* -> [x,W]
+[x,W] -> (COMMIT_WRITE|ROLLBACK_WRITE) -> [x,-]
+[x,y] -> REMOVE -> [-,-]
+[x,y] -> STAT -> [x,y]
+[x,y] -> ERROR -> [x,y]
+[x,y] -> SUPPORTS -> [x,y]
+[x,y] -> FREE
+
+- document: zip_source_write: length can't be > ZIP_INT64_MAX
+- document: ZIP_SOURCE_CLOSE implementation can't return error
+
+
+- check for INT_MAX, UINT_MAX
+
+plan for merge:
+
+after merge:
+- direct reference to source and from upper layer are equivalent: only close/free if all are gone.
+- only allow multiple upper layers for sources that support seek
+- cache supported state in struct zip_source and check in _zip_source_call before calling
+- style cleanup (xxx_t instead of struct xxx)
+- adapt man pages
+  - zip_source_is_deleted
+  - zip_source_stat
+  - zip_source_open
+  - zip_source_close
+  - zip_source_read
+  - zip_source_make_command_bitmap
+  - zip_error_set
+  - zip_error_to_data
+- ask on libzip-discuss whether Windows backend will use stdio, make plan for avoiding code duplication with Unix backend
+- re-implement fix for OS X sandboxing (zip_archive_set_tempdir).

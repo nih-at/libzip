@@ -1,6 +1,6 @@
 /*
   zip_file_rename.c -- rename file in zip archive
-  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -44,12 +44,12 @@ zip_file_rename(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t 
     int old_is_dir, new_is_dir;
     
     if (idx >= za->nentry || (name != NULL && strlen(name) > ZIP_UINT16_MAX)) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
     if (ZIP_IS_RDONLY(za)) {
-	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
     }
 
@@ -60,7 +60,7 @@ zip_file_rename(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t 
     old_is_dir = (old_name[strlen(old_name)-1] == '/');
 
     if (new_is_dir != old_is_dir) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 

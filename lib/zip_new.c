@@ -48,22 +48,21 @@ _zip_new(struct zip_error *error)
 
     za = (struct zip *)malloc(sizeof(struct zip));
     if (!za) {
-	_zip_error_set(error, ZIP_ER_MEMORY, 0);
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
-    za->zn = NULL;
-    za->zp = NULL;
+    za->src = NULL;
     za->open_flags = 0;
-    _zip_error_init(&za->error);
+    zip_error_init(&za->error);
     za->flags = za->ch_flags = 0;
     za->default_password = NULL;
     za->comment_orig = za->comment_changes = NULL;
     za->comment_changed = 0;
     za->nentry = za->nentry_alloc = 0;
     za->entry = NULL;
-    za->nsource = za->nsource_alloc = 0;
-    za->source = NULL;
+    za->nopen_source = za->nopen_source_alloc = 0;
+    za->open_source = NULL;
     za->tempdir = NULL;
     
     return za;

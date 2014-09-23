@@ -1,6 +1,6 @@
 # guess UTF-8 file names
-program stat_index
-args test-utf8.zip 0
+program modify
+args test-utf8.zip stat 0
 return 0
 file test-utf8.zip test-utf8.zip test-utf8.zip
 stdout name: 'ÄÖÜäöüßćçĉéèêëē'

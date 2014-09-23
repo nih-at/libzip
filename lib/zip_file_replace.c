@@ -1,6 +1,6 @@
 /*
   zip_file_replace.c -- replace file via callback function
-  Copyright (C) 1999-2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -39,7 +39,7 @@ ZIP_EXTERN int
 zip_file_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source, zip_flags_t flags)
 {
     if (idx >= za->nentry || source == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
@@ -59,7 +59,7 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
     zip_uint64_t za_nentry_prev;
     
     if (ZIP_IS_RDONLY(za)) {
-	_zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+	zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
 	return -1;
     }
 
@@ -93,7 +93,7 @@ _zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip
     if (za->entry[idx].orig != NULL && (za->entry[idx].changes == NULL || (za->entry[idx].changes->changed & ZIP_DIRENT_COMP_METHOD) == 0)) {
         if (za->entry[idx].changes == NULL) {
             if ((za->entry[idx].changes=_zip_dirent_clone(za->entry[idx].orig)) == NULL) {
-                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
                 return -1;
             }
         }

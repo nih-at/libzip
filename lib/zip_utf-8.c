@@ -1,6 +1,6 @@
 /*
   zip_utf-8.c -- UTF-8 support functions for libzip
-  Copyright (C) 2011-2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2011-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -233,7 +233,7 @@ _zip_cp437_to_utf8(const zip_uint8_t * const _cp437buf, zip_uint32_t len,
 	buflen += _zip_unicode_to_utf8_len(_cp437_to_unicode[cp437buf[i]]);
 
     if ((utf8buf=(zip_uint8_t*)malloc(buflen)) == NULL) {
-	_zip_error_set(error, ZIP_ER_MEMORY, 0);
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 

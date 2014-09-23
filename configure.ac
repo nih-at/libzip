@@ -115,6 +115,7 @@ AX_PERL_MODULE_VERSION([Text::Diff 1.41], , AC_MSG_ERROR([The Text::Diff perl mo
 AC_CONFIG_FILES([Makefile
 		 libzip.pc
 		 libzip-uninstalled.pc
+		 examples/Makefile
 		 man/Makefile
 		 lib/Makefile
 		 regress/Makefile

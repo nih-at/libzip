@@ -1,6 +1,6 @@
 /*
   set_comment_all.c -- set global and file comments
-  Copyright (C) 2006-2013 Dieter Baron and Thomas Klausner
+  Copyright (C) 2006-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -37,7 +37,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zipint.h"
+#include "zip.h"
+#include "compat.h"
 
 const char *prg;
 const char *new_archive_comment="This is the new,\r\n"
@@ -51,7 +52,7 @@ main(int argc, char *argv[])
     struct zip *za;
     char buf[100];
     int err;
-    int i;
+    zip_int64_t i;
 
     prg = argv[0];
 
@@ -64,24 +65,20 @@ main(int argc, char *argv[])
     
     if ((za=zip_open(archive, 0, &err)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
-		archive, buf);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, buf);
 	return 1;
     }
 
-    if (zip_set_archive_comment(za, new_archive_comment,
-				(zip_uint16_t)strlen(new_archive_comment)) < 0) {
+    if (zip_set_archive_comment(za, new_archive_comment, (zip_uint16_t)strlen(new_archive_comment)) < 0) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n",
-		prg, buf);
+	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n", prg, buf);
     }
 
     for (i=0; i<zip_get_num_entries(za, 0); i++) {
-	snprintf(buf, sizeof(buf), "File comment no %d", i);
-	if (zip_file_set_comment(za, i, buf, (zip_uint16_t)strlen(buf), 0) < 0) {
+	snprintf(buf, sizeof(buf), "File comment no %" PRId64, i);
+	if (zip_file_set_comment(za, (zip_uint64_t)i, buf, (zip_uint16_t)strlen(buf), 0) < 0) {
 	    zip_error_to_str(buf, sizeof(buf), err, errno);
-	    fprintf(stderr, "%s: zip_set_file_comment on file %d failed: %s\n",
-		    prg, i, buf);
+	    fprintf(stderr, "%s: zip_set_file_comment on file %" PRId64 " failed: %s\n", prg, i, buf);
 	}
     }
 

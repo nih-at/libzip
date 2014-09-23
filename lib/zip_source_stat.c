@@ -1,6 +1,6 @@
 /*
   zip_source_stat.c -- get meta information from zip_source
-  Copyright (C) 2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 2009-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -38,33 +38,30 @@
 int
 zip_source_stat(struct zip_source *src, struct zip_stat *st)
 {
-    zip_int64_t ret;
-
+    if (src->source_closed) {
+        return -1;
+    }
     if (st == NULL) {
-	src->error_source = ZIP_LES_INVAL;
+        zip_error_set(&src->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
-    if (src->src == NULL) {
-	if (src->cb.f(src->ud, st, sizeof(*st), ZIP_SOURCE_STAT) < 0)
-	    return -1;
-	return 0;
-    }
-
-    if (zip_source_stat(src->src, st) < 0) {
-	src->error_source = ZIP_LES_LOWER;
-	return -1;
-    }
-
-    ret = src->cb.l(src->src, src->ud, st, sizeof(*st), ZIP_SOURCE_STAT);
-
-    if (ret < 0) {
-	if (ret == ZIP_SOURCE_ERR_LOWER)
-	    src->error_source = ZIP_LES_LOWER;
-	else
-	    src->error_source = ZIP_LES_UPPER;
-	return -1;
-    }
+    zip_stat_init(st);
     
+    if (ZIP_SOURCE_IS_LAYERED(src)) {
+        if (zip_source_stat(src->src, st) < 0) {
+            zip_error_set_from_source(&src->error, src->src);
+            return -1;
+        }
+    }
+
+    if (_zip_source_call(src, st, sizeof(*st), ZIP_SOURCE_STAT) < 0) {
+	return -1;
+    }
+
+    if ((st->valid & ZIP_STAT_COMP_METHOD) && ZIP_CM_IS_DEFAULT(st->comp_method)) {
+	st->valid &= ~ZIP_STAT_COMP_METHOD;
+    }
+
     return 0;
 }

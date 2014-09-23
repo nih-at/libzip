@@ -41,79 +41,105 @@
 #include "zipint.h"
 
 struct read_file {
-    char *fname;	/* name of file to copy from */
-    FILE *f;		/* file to copy from */
-    int closep;		/* close f */
-    struct zip_stat st;	/* stat information passed in */
+    zip_error_t error;      /* last error information */
+    zip_int64_t supports;
 
-    zip_uint64_t off;	/* start offset of */
-    zip_int64_t len;	/* length of data to copy */
-    zip_int64_t remain;	/* bytes remaining to be copied */
-    int e[2];		/* error codes */
-    int source_closed;  /* set if source archive is closed */
-    struct zip *source_archive;  /* zip archive we're reading from, NULL if not from archive */
+    /* reading */
+    char *fname;            /* name of file to read from */
+    FILE *f;                /* file to read from */
+    int closep;             /* whether to close f on ZIP_CMD_FREE */
+    struct zip_stat st;     /* stat information passed in */
+    zip_uint64_t start;     /* start offset of data to read */
+    zip_uint64_t end;       /* end offset of data to read, 0 for up to EOF */
+    zip_uint64_t current;   /* current offset */
+    
+    /* writing */
+    char *tmpname;
+    FILE *fout;
 };
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd);
-static void _zip_deregister_source(struct zip *za, void *ud);
-static int _zip_register_source(struct zip *za, struct zip_source *src);
+static int create_temp_output(struct read_file *ctx);
 
 
 ZIP_EXTERN struct zip_source *
-zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start,
-		 zip_int64_t len)
+zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start, zip_int64_t len)
 {
     if (za == NULL)
 	return NULL;
+    
+    return zip_source_filep_create(file, start, len, &za->error);
+}
 
-    if (file == NULL || len < -1) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+
+ZIP_EXTERN zip_source_t *
+zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_error_t *error)
+{
+    if (file == NULL || length < -1) {
+	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
 
-    return _zip_source_file_or_p(za, NULL, file, start, len, 1, NULL);
+    return _zip_source_file_or_p(NULL, file, start, length, 1, NULL, error);
 }
 
 
 struct zip_source *
-_zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
-		      zip_uint64_t start, zip_int64_t len, int closep,
-		      const struct zip_stat *st)
+_zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, zip_error_t *error)
 {
-    struct read_file *f;
+    struct read_file *ctx;
     struct zip_source *zs;
-
+    
     if (file == NULL && fname == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+	zip_error_set(error, ZIP_ER_INVAL, 0);
+	return NULL;
+    }
+    
+    if ((ctx=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
-    if ((f=(struct read_file *)malloc(sizeof(struct read_file))) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	return NULL;
-    }
-
-    f->fname = NULL;
+    ctx->fname = NULL;
     if (fname) {
-	if ((f->fname=strdup(fname)) == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    free(f);
+	if ((ctx->fname=strdup(fname)) == NULL) {
+	    zip_error_set(error, ZIP_ER_MEMORY, 0);
+	    free(ctx);
 	    return NULL;
 	}
     }
-    f->f = file;
-    f->off = start;
-    f->len = (len ? len : -1);
-    f->closep = f->fname ? 1 : closep;
-    f->source_closed = 0;
-    f->source_archive = NULL;
-    if (st)
-	memcpy(&f->st, st, sizeof(f->st));
-    else
-	zip_stat_init(&f->st);
+    ctx->f = file;
+    ctx->start = start;
+    ctx->end = (len < 0 ? 0 : start+(zip_uint64_t)len);
+    ctx->closep = ctx->fname ? 1 : closep;
+    if (st) {
+	memcpy(&ctx->st, st, sizeof(ctx->st));
+        ctx->st.name = NULL;
+        ctx->st.valid &= ~ZIP_STAT_NAME;
+    }
+    else {
+	zip_stat_init(&ctx->st);
+    }
+    
+    ctx->tmpname = NULL;
+    ctx->fout = NULL;
+   
+    zip_error_init(&ctx->error);
 
-    if ((zs=zip_source_function(za, read_file, f)) == NULL) {
-	free(f);
+    ctx->supports = zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_TELL, -1);
+    if (ctx->fname) {
+	struct stat sb;
+
+	if (stat(ctx->fname, &sb) < 0 || S_ISREG(sb.st_mode)) {
+	    ctx->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, -1);
+	}
+    }
+    else if (fseek(ctx->f, 0, SEEK_CUR) == 0) {
+	ctx->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_SEEK, -1);
+    }
+
+    if ((zs=zip_source_function_create(read_file, ctx, error)) == NULL) {
+	free(ctx);
 	return NULL;
     }
 
@@ -121,132 +147,257 @@ _zip_source_file_or_p(struct zip *za, const char *fname, FILE *file,
 }
 
 
-int
-_zip_source_filep_set_source_archive(struct zip_source *src, struct zip *za)
+static int
+create_temp_output(struct read_file *ctx)
 {
-    struct read_file *z = (struct read_file *)src->ud;
-
-    z->source_archive = za;
-    return _zip_register_source(za, src);
-}
-
-
-/* called by zip_discard to avoid operating on file from closed archive */
-void
-_zip_source_filep_invalidate(struct zip_source *src)
-{
-    struct read_file *z = (struct read_file *)src->ud;
-
-    z->source_closed = 1;
-    z->f = NULL;
-    if (z->e[0] == ZIP_ER_OK) {
-	z->e[0] = ZIP_ER_ZIPCLOSED;
-	z->e[1] = 0;
+    char *temp;
+    int tfd;
+    FILE *tfp;
+    
+    if ((temp=(char *)malloc(strlen(ctx->fname)+8)) == NULL) {
+	zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
+	return -1;
     }
+    sprintf(temp, "%s.XXXXXX", ctx->fname);
+    
+    if ((tfd=mkstemp(temp)) == -1) {
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        free(temp);
+        return -1;
+    }
+    
+    if ((tfp=fdopen(tfd, "r+b")) == NULL) {
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        close(tfd);
+        (void)remove(temp);
+        free(temp);
+        return -1;
+    }
+    
+#ifdef _WIN32
+    /*
+     According to Pierre Joye, Windows in some environments per
+     default creates text files, so force binary mode.
+     */
+    _setmode(_fileno(tfp), _O_BINARY );
+#endif
+    
+    ctx->fout = tfp;
+    ctx->tmpname = temp;
+    
+    return 0;
 }
 
 
 static zip_int64_t
-read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
-    struct read_file *z;
+    struct read_file *ctx;
     char *buf;
     zip_uint64_t n;
     size_t i;
 
-    z = (struct read_file *)state;
+    ctx = (struct read_file *)state;
     buf = (char *)data;
 
     switch (cmd) {
-    case ZIP_SOURCE_OPEN:
-	if (z->source_closed)
-	    return -1;
-
-	if (z->fname) {
-	    if ((z->f=fopen(z->fname, "rb")) == NULL) {
-		z->e[0] = ZIP_ER_OPEN;
-		z->e[1] = errno;
-		return -1;
-	    }
-	}
-
-	if (z->closep && z->off > 0) {
-	    if (fseeko(z->f, (off_t)z->off, SEEK_SET) < 0) {
-		z->e[0] = ZIP_ER_SEEK;
-		z->e[1] = errno;
-		return -1;
-	    }
-	}
-	z->remain = z->len;
-	return 0;
-	
-    case ZIP_SOURCE_READ:
-	if (z->source_closed)
-	    return -1;
-
-	if (z->remain != -1)
-	    n = len > (zip_uint64_t)z->remain ? (zip_uint64_t)z->remain : len;
-	else
-	    n = len;
-            
-        if (n > SIZE_MAX)
-            n = SIZE_MAX;
-
-	if (!z->closep) {
-	    /* we might share this file with others, so let's be safe */
-	    if (fseeko(z->f, (off_t)(z->off + (zip_uint64_t)(z->len-z->remain)), SEEK_SET) < 0) {
-		z->e[0] = ZIP_ER_SEEK;
-		z->e[1] = errno;
-		return -1;
-	    }
-	}
-
-	if ((i=fread(buf, 1, (size_t)n, z->f)) == 0) {
-            if (ferror(z->f)) {
-                z->e[0] = ZIP_ER_READ;
-                z->e[1] = errno;
+        case ZIP_SOURCE_BEGIN_WRITE:
+            if (ctx->fname == NULL) {
+                zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
                 return -1;
             }
+            return create_temp_output(ctx);
+            
+        case ZIP_SOURCE_COMMIT_WRITE: {
+	    mode_t mask;
+
+            if (fclose(ctx->fout) < 0) {
+                ctx->fout = NULL;
+                zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
+            }
+            ctx->fout = NULL;
+            if (rename(ctx->tmpname, ctx->fname) < 0) {
+                zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+                return -1;
+            }
+	    mask = umask(022);
+	    umask(mask);
+	    chmod(ctx->fname, 0666&~mask);
+            return 0;
 	}
+            
+        case ZIP_SOURCE_CLOSE:
+            if (ctx->fname) {
+                fclose(ctx->f);
+                ctx->f = NULL;
+            }
+            return 0;
+            
+        case ZIP_SOURCE_ERROR:
+            return zip_error_to_data(&ctx->error, data, len);
+            
+        case ZIP_SOURCE_FREE:
+            free(ctx->fname);
+            if (ctx->closep && ctx->f)
+                fclose(ctx->f);
+            free(ctx);
+            return 0;
+            
+        case ZIP_SOURCE_OPEN:
+            if (ctx->fname) {
+                if ((ctx->f=fopen(ctx->fname, "rb")) == NULL) {
+                    zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
+                    return -1;
+                }
+            }
+            
+            if (ctx->closep && ctx->start > 0) {
+                if (fseeko(ctx->f, (off_t)ctx->start, SEEK_SET) < 0) {
+                    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                    return -1;
+                }
+            }
+            ctx->current = ctx->start;
+            return 0;
+            
+        case ZIP_SOURCE_READ:
+            if (ctx->end > 0) {
+                n = ctx->end-ctx->current;
+                if (n > len) {
+                    n = len;
+                }
+            }
+            else {
+                n = len;
+            }
+            
+            if (n > SIZE_MAX)
+                n = SIZE_MAX;
 
-	if (z->remain != -1)
-	    z->remain -= i;
+            if (!ctx->closep) {
+                if (fseeko(ctx->f, (off_t)ctx->current, SEEK_SET) < 0) {
+                    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                    return -1;
+                }
+            }
 
-	return (zip_int64_t)i;
+            if ((i=fread(buf, 1, (size_t)n, ctx->f)) == 0) {
+                if (ferror(ctx->f)) {
+                    zip_error_set(&ctx->error, ZIP_ER_READ, errno);
+                    return -1;
+                }
+            }
+            ctx->current += i;
+
+            return (zip_int64_t)i;
+            
+        case ZIP_SOURCE_REMOVE:
+            if (remove(ctx->fname) < 0) {
+                zip_error_set(&ctx->error, ZIP_ER_REMOVE, errno);
+                return -1;
+            }
+            return 0;
+            
+        case ZIP_SOURCE_ROLLBACK_WRITE:
+            if (ctx->fout) {
+                fclose(ctx->fout);
+                ctx->fout = NULL;
+            }
+            remove(ctx->tmpname);
+            ctx->tmpname = NULL;
+            return 0;
 	
-    case ZIP_SOURCE_CLOSE:
-	if (z->source_closed)
-	    return -1;
+        case ZIP_SOURCE_SEEK: {
+            zip_int64_t new_current;
+            int need_seek;
+	    zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
 
-	if (z->fname) {
-	    fclose(z->f);
-	    z->f = NULL;
-	}
-	return 0;
+	    if (args == NULL)
+		return -1;
+            
+            need_seek = ctx->closep;
+            
+            switch (args->whence) {
+                case SEEK_SET:
+                    new_current = args->offset;
+                    break;
+                    
+                case SEEK_END:
+                    if (ctx->end == 0) {
+                        if (fseeko(ctx->f, args->offset, SEEK_END) < 0) {
+                            zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                            return -1;
+                        }
+                        if ((new_current = ftello(ctx->f)) < 0) {
+                            zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                            return -1;
+                        }
+                        need_seek = 0;
+                    }
+                    else {
+                        new_current = (zip_int64_t)ctx->end + args->offset;
+                    }
+                    break;
+                case SEEK_CUR:
+                    new_current = (zip_int64_t)ctx->current + args->offset;
+                    break;
 
-    case ZIP_SOURCE_STAT:
-	if (z->source_closed)
-	    return -1;
+                default:
+                    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                    return -1;
+            }
 
-        {
-	    if (len < sizeof(z->st))
+            if (new_current < 0 || (zip_uint64_t)new_current < ctx->start || (ctx->end != 0 && (zip_uint64_t)new_current > ctx->end)) {
+                zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                return -1;
+            }
+            
+            ctx->current = (zip_uint64_t)new_current;
+
+            if (need_seek) {
+                if (fseeko(ctx->f, (off_t)ctx->current, SEEK_SET) < 0) {
+                    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                    return -1;
+                }
+            }
+            return 0;
+        }
+            
+        case ZIP_SOURCE_SEEK_WRITE: {
+            zip_int64_t offset, whence;
+            
+            if (len < sizeof(zip_int64_t)*2) {
+                zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                return -1;
+            }
+            offset = ((zip_int64_t *)data)[0];
+            whence = ((zip_int64_t *)data)[1];
+
+            if (fseeko(ctx->fout, offset, (int)whence) < 0) {
+                zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                return -1;
+            }
+            return 0;
+        }
+
+        case ZIP_SOURCE_STAT: {
+	    if (len < sizeof(ctx->st))
 		return -1;
 
-	    if (z->st.valid != 0)
-		memcpy(data, &z->st, sizeof(z->st));
+	    if (ctx->st.valid != 0)
+		memcpy(data, &ctx->st, sizeof(ctx->st));
 	    else {
 		struct zip_stat *st;
 		struct stat fst;
 		int err;
 	    
-		if (z->f)
-		    err = fstat(fileno(z->f), &fst);
+		if (ctx->f)
+		    err = fstat(fileno(ctx->f), &fst);
 		else
-		    err = stat(z->fname, &fst);
+		    err = stat(ctx->fname, &fst);
 
 		if (err != 0) {
-		    z->e[0] = ZIP_ER_READ; /* best match */
-		    z->e[1] = errno;
+                    zip_error_set(&ctx->error, ZIP_ER_READ, errno);
 		    return -1;
 		}
 
@@ -255,8 +406,8 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 		zip_stat_init(st);
 		st->mtime = fst.st_mtime;
 		st->valid |= ZIP_STAT_MTIME;
-		if (z->len != -1) {
-		    st->size = (zip_uint64_t)z->len;
+		if (ctx->end != 0) {
+                    st->size = ctx->end - ctx->start;
 		    st->valid |= ZIP_STAT_SIZE;
 		}
 		else if ((fst.st_mode&S_IFMT) == S_IFREG) {
@@ -264,67 +415,42 @@ read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
 		    st->valid |= ZIP_STAT_SIZE;
 		}
 	    }
-	    return sizeof(z->st);
+	    return sizeof(ctx->st);
 	}
 
-    case ZIP_SOURCE_ERROR:
-	if (len < sizeof(int)*2)
-	    return -1;
+        case ZIP_SOURCE_SUPPORTS:
+	    return ctx->supports;
+            
+        case ZIP_SOURCE_TELL:
+            return (zip_int64_t)ctx->current;
+            
+        case ZIP_SOURCE_TELL_WRITE:
+        {
+            off_t ret = ftello(ctx->fout);
+            
+            if (ret < 0) {
+                zip_error_set(&ctx->error, ZIP_ER_TELL, errno);
+                return -1;
+            }
+            return ret;
+        }
+            
+        case ZIP_SOURCE_WRITE:
+        {
+            size_t ret;
+            
+	    clearerr(ctx->fout);
+            ret = fwrite(data, 1, len, ctx->fout);
+            if (ret != len || ferror(ctx->fout)) {
+                zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
+                return -1;
+            }
+            
+            return (zip_int64_t)ret;
+        }
 
-	memcpy(data, z->e, sizeof(int)*2);
-	return sizeof(int)*2;
-
-    case ZIP_SOURCE_FREE:
-	if (z->source_archive && !z->source_closed) {
-	    _zip_deregister_source(z->source_archive, state);
-	}
-	free(z->fname);
-	if (z->closep && z->f)
-	    fclose(z->f);
-	free(z);
-	return 0;
-
-    default:
-	;
+        default:
+            zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
+            return -1;
     }
-
-    return -1;
-}
-
-
-static void
-_zip_deregister_source(struct zip *za, void *ud)
-{
-    unsigned int i;
-
-    for (i=0; i<za->nsource; i++) {
-	if (za->source[i]->ud == ud) {
-	    za->source[i] = za->source[za->nsource-1];
-	    za->nsource--;
-	    break;
-	}
-    }
-}
-
-
-static int
-_zip_register_source(struct zip *za, struct zip_source *src)
-{
-    struct zip_source **source;
-
-    if (za->nsource+1 >= za->nsource_alloc) {
-	unsigned int n;
-	n = za->nsource_alloc + 10;
-	source = (struct zip_source **)realloc(za->source, n*sizeof(struct zip_source *));
-	if (source == NULL) {
-	    _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	    return -1;
-	}
-	za->nsource_alloc = n;
-	za->source = source;
-    }
-
-    za->source[za->nsource++] = src;
-
-    return 0;
 }

@@ -1,6 +1,6 @@
 /*
   zip_error_get.c -- get zip error
-  Copyright (C) 1999-2007 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -32,6 +32,7 @@
 */
 
 
+#define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
 

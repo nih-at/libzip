@@ -14,7 +14,6 @@ noinst_PROGRAMS= \
 	set_comment_removeglobal \
 	set_comment_revert \
 	set_compression \
-	stat_index \
 	tryopen
 
 EXTRA_DIST= \
@@ -126,6 +125,7 @@ TESTS= \
 	add_from_zip_partial_stored.test \
 	add_from_zip_stored.test \
 	add_stored.test \
+	add_stored_in_memory.test \
 	delete_add_same.test \
 	delete_invalid.test \
 	delete_last.test \

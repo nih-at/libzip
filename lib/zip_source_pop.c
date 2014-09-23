@@ -1,6 +1,6 @@
 /*
   zip_source_pop.c -- pop top layer from zip data source
-  Copyright (C) 2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 2009-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -47,15 +47,7 @@ zip_source_pop(struct zip_source *src)
 
     lower = src->src;
 
-    if (lower == NULL)
-	zip_source_free(src);
-    else {
-	if (src->is_open)
-	    (void)src->cb.l(src, src->ud, NULL, 0, ZIP_SOURCE_CLOSE);
-	(void)src->cb.l(src, src->ud, NULL, 0, ZIP_SOURCE_FREE);
-	
-	free(src);
-    }
+    _zip_source_free_or_pop(src, 0);
 
     return lower;
 }

@@ -1,6 +1,6 @@
 /*
   zip_string.c -- string handling (with encoding)
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -145,12 +145,12 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
 	expected_encoding = ZIP_ENCODING_CP437;
 	break;
     default:
-	_zip_error_set(error, ZIP_ER_INVAL, 0);
+	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
 	
     if ((s=(struct zip_string *)malloc(sizeof(*s))) == NULL) {
-	_zip_error_set(error, ZIP_ER_MEMORY, 0);
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
@@ -169,7 +169,7 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
     if (expected_encoding != ZIP_ENCODING_UNKNOWN) {
 	if (_zip_guess_encoding(s, expected_encoding) == ZIP_ENCODING_ERROR) {
 	    _zip_string_free(s);
-	    _zip_error_set(error, ZIP_ER_INVAL, 0);
+	    zip_error_set(error, ZIP_ER_INVAL, 0);
 	    return NULL;
 	}
     }
@@ -178,11 +178,11 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
 }
 
 
-void
-_zip_string_write(const struct zip_string *s, FILE *f)
+int
+_zip_string_write(zip_t *za, const zip_string_t *s)
 {
     if (s == NULL)
-	return;
+	return 0;
     
-    fwrite(s->raw, s->length, 1, f);
+    return _zip_write(za, s->raw, s->length);
 }

@@ -1,6 +1,6 @@
 /*
   set_compression.c -- set compression method for file in archive
-  Copyright (C) 2012 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -75,9 +75,8 @@ main(int argc, char *argv[])
 	       prg, name, zip_strerror(za));
 	return 1;
     }
-    if (zip_set_file_compression(za, idx, method, /* TODO: add flags * when supported */ 0) < 0) {
-	fprintf(stderr, "zip_set_file_compression with method '%d' on file %" PRId64 " failed: %s\n",
-		method, idx, zip_strerror(za));
+    if (zip_set_file_compression(za, (zip_uint64_t)idx, method, /* TODO: add flags * when supported */ 0) < 0) {
+	fprintf(stderr, "zip_set_file_compression with method '%d' on file %" PRId64 " failed: %s\n", method, idx, zip_strerror(za));
 	return 1;
     }
     if (zip_close(za) == -1) {

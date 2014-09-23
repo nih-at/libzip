@@ -52,7 +52,7 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t index, zip_flags_t flags,
 	return NULL;
 
     if (zip_source_open(src) < 0) {
-	_zip_error_set_from_source(&za->error, src);
+	zip_error_set_from_source(&za->error, src);
 	zip_source_free(src);
 	return NULL;
     }
@@ -74,12 +74,12 @@ _zip_file_new(struct zip *za)
     struct zip_file *zf;
 
     if ((zf=(struct zip_file *)malloc(sizeof(struct zip_file))) == NULL) {
-	_zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
     zf->za = za;
-    _zip_error_init(&zf->error);
+    zip_error_init(&zf->error);
     zf->eof = 0;
     zf->src = NULL;
 

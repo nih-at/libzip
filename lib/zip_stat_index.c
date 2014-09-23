@@ -1,6 +1,6 @@
 /*
   zip_stat_index.c -- get information about file by index
-  Copyright (C) 1999-2009 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -52,7 +52,7 @@ zip_stat_index(struct zip *za, zip_uint64_t index, zip_flags_t flags,
     if ((flags & ZIP_FL_UNCHANGED) == 0
 	&& ZIP_ENTRY_DATA_CHANGED(za->entry+index)) {
 	if (zip_source_stat(za->entry[index].source, st) < 0) {
-	    _zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
+	    zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
 	    return -1;
 	}
     }

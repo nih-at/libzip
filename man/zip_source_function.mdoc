@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd August 2, 2014
+.Dd August 11, 2014
 .Dt ZIP_SOURCE_FUNCTION 3
 .Os
 .Sh NAME
@@ -51,6 +51,10 @@ which must be of the following type:
 typedef zip_int64_t (*zip_source_callback)(void *state,
     void *data, zip_uint64_t len, enum zip_source_cmd cmd);
 .Ed
+.Pp
+.Ar archive
+is used for reporting errors and can be
+.Dv NULL .
 .Pp
 When called by the library, the first argument is the
 .Ar userdata
@@ -142,7 +146,10 @@ Otherwise,
 .Dv NULL
 is returned and the error code in
 .Ar archive
-is set to indicate the error.
+is set to indicate the error (unless
+.Ar archive
+is
+.Dv NULL ) .
 .Sh ERRORS
 .Fn zip_source_function
 fails if:

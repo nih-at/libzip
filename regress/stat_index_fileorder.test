@@ -1,6 +1,6 @@
 # zip_open: entries ordered by central directory order
-program stat_index
-args fileorder.zzip 0 1
+program modify
+args fileorder.zzip stat 0 stat 1
 return 0
 file fileorder.zzip fileorder.zip fileorder.zip
 stdout name: 'file1'

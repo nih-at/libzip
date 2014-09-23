@@ -1,6 +1,6 @@
 /*
   zip_name_locate.c -- get index by name
-  Copyright (C) 1999-2011 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -58,7 +58,7 @@ _zip_name_locate(struct zip *za, const char *fname, zip_flags_t flags, struct zi
 	return -1;
 
     if (fname == NULL) {
-	_zip_error_set(error, ZIP_ER_INVAL, 0);
+	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return -1;
     }
 
@@ -83,6 +83,6 @@ _zip_name_locate(struct zip *za, const char *fname, zip_flags_t flags, struct zi
 	}
     }
 
-    _zip_error_set(error, ZIP_ER_NOENT, 0);
+    zip_error_set(error, ZIP_ER_NOENT, 0);
     return -1;
 }

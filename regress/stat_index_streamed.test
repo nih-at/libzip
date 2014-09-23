@@ -1,6 +1,6 @@
 # stat file in streamed zip file
-program stat_index
-args streamed 0
+program modify
+args streamed stat 0
 file streamed streamed.zip streamed.zip
 return 0
 stdout name: '-'

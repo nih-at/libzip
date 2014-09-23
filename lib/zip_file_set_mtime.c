@@ -42,7 +42,7 @@ ZIP_EXTERN int zip_file_set_mtime(struct zip *za, zip_uint64_t idx, time_t mtime
         return -1;
     
     if (ZIP_IS_RDONLY(za)) {
-        _zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+        zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
         return -1;
     }
     
@@ -53,7 +53,7 @@ ZIP_EXTERN int zip_file_set_mtime(struct zip *za, zip_uint64_t idx, time_t mtime
     if (changed) {
         if (e->changes == NULL) {
             if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
-                _zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+                zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
                 return -1;
             }
         }
