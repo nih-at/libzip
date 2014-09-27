@@ -379,6 +379,10 @@ buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error)
     case SEEK_SET:
 	offset = (zip_int64_t)args->offset;
 	break;
+
+    default:
+	zip_error_set(error, ZIP_ER_INVAL, 0);
+	return -1;
     }
 
     if (offset < 0 || (zip_uint64_t)offset > buffer->size) {

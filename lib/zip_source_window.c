@@ -198,6 +198,10 @@ window_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, en
                 case SEEK_SET:
                     new_offset = (zip_int64_t)ctx->start + args->offset;
                     break;
+
+		default:
+                    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                    return -1;
             }
             
             if (new_offset < (zip_int64_t)ctx->start || (zip_uint64_t)new_offset > ctx->end) {
