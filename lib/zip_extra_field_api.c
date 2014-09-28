@@ -36,9 +36,9 @@
 
 
 ZIP_EXTERN int
-zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags)
+zip_file_extra_field_delete(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags)
 {
-    struct zip_dirent *de;
+    zip_dirent_t *de;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -69,9 +69,9 @@ zip_file_extra_field_delete(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id
 
 
 ZIP_EXTERN int
-zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags)
+zip_file_extra_field_delete_by_id(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags)
 {
-    struct zip_dirent *de;
+    zip_dirent_t *de;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -102,12 +102,12 @@ zip_file_extra_field_delete_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
 
 
 ZIP_EXTERN const zip_uint8_t *
-zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags)
+zip_file_extra_field_get(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags)
 {
     static const zip_uint8_t empty[1] = { '\0' };
 
-    struct zip_dirent *de;
-    struct zip_extra_field *ef;
+    zip_dirent_t *de;
+    zip_extra_field_t *ef;
     int i;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
@@ -148,9 +148,9 @@ zip_file_extra_field_get(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_idx, 
 
 
 ZIP_EXTERN const zip_uint8_t *
-zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp, zip_flags_t flags)
+zip_file_extra_field_get_by_id(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp, zip_flags_t flags)
 {
-    struct zip_dirent *de;
+    zip_dirent_t *de;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -169,10 +169,10 @@ zip_file_extra_field_get_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef
 
 
 ZIP_EXTERN zip_int16_t
-zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
+zip_file_extra_fields_count(zip_t *za, zip_uint64_t idx, zip_flags_t flags)
 {
-    struct zip_dirent *de;
-    struct zip_extra_field *ef;
+    zip_dirent_t *de;
+    zip_extra_field_t *ef;
     zip_uint16_t n;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
@@ -197,10 +197,10 @@ zip_file_extra_fields_count(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
 
 
 ZIP_EXTERN zip_int16_t
-zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_flags_t flags)
+zip_file_extra_fields_count_by_id(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_flags_t flags)
 {
-    struct zip_dirent *de;
-    struct zip_extra_field *ef;
+    zip_dirent_t *de;
+    zip_extra_field_t *ef;
     zip_uint16_t n;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
@@ -225,11 +225,11 @@ zip_file_extra_fields_count_by_id(struct zip *za, zip_uint64_t idx, zip_uint16_t
 
 
 ZIP_EXTERN int
-zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags)
+zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags)
 {
-    struct zip_dirent *de;
+    zip_dirent_t *de;
     zip_uint16_t ls, cs;
-    struct zip_extra_field *ef, *ef_prev, *ef_new;
+    zip_extra_field_t *ef, *ef_prev, *ef_new;
     int i, found, new_len;
 
     if ((flags & ZIP_EF_BOTH) == 0) {
@@ -329,9 +329,9 @@ zip_file_extra_field_set(struct zip *za, zip_uint64_t idx, zip_uint16_t ef_id, z
 
 
 int
-_zip_file_extra_field_prepare_for_change(struct zip *za, zip_uint64_t idx)
+_zip_file_extra_field_prepare_for_change(zip_t *za, zip_uint64_t idx)
 {
-    struct zip_entry *e;
+    zip_entry_t *e;
     
     if (idx >= za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);

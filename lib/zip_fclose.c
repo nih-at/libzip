@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_fclose(struct zip_file *zf)
+zip_fclose(zip_file_t *zf)
 {
     int ret;
     

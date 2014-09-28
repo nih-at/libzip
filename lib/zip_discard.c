@@ -42,7 +42,7 @@
    corresponding file. */
 
 void
-zip_discard(struct zip *za)
+zip_discard(zip_t *za)
 {
     zip_uint64_t i;
 

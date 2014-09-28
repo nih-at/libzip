@@ -41,11 +41,11 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_int64_t
-.Fn zip_add "struct zip *archive" "const char *name" \
-"struct zip_source *source"
+.Fn zip_add "zip_t *archive" "const char *name" \
+"zip_source_t *source"
 .Ft int
-.Fn zip_replace "struct zip *archive" "zip_uint64_t index" \
-"struct zip_source *source"
+.Fn zip_replace "zip_t *archive" "zip_uint64_t index" \
+"zip_source_t *source"
 .Sh DESCRIPTION
 The function
 .Fn zip_add

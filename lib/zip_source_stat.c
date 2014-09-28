@@ -36,7 +36,7 @@
 
 
 int
-zip_source_stat(struct zip_source *src, struct zip_stat *st)
+zip_source_stat(zip_source_t *src, zip_stat_t *st)
 {
     if (src->source_closed) {
         return -1;

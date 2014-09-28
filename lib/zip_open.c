@@ -47,26 +47,26 @@ typedef enum {
     EXISTS_EMPTY,
     EXISTS_NONEMPTY,
 } exists_t;
-static struct zip *_zip_allocate_new(struct zip_source *src, unsigned int flags, struct zip_error *error);
-static zip_int64_t _zip_checkcons(struct zip *za, struct zip_cdir *cdir, struct zip_error *error);
-static void _zip_check_torrentzip(struct zip *za, const struct zip_cdir *cdir);
-static struct zip_cdir *_zip_find_central_dir(struct zip *za, zip_uint64_t len);
-static exists_t _zip_file_exists(struct zip_source *src, struct zip_error *error);
-static int _zip_headercomp(const struct zip_dirent *, const struct zip_dirent *);
+static zip_t *_zip_allocate_new(zip_source_t *src, unsigned int flags, zip_error_t *error);
+static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cdir, zip_error_t *error);
+static void _zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir);
+static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len);
+static exists_t _zip_file_exists(zip_source_t *src, zip_error_t *error);
+static int _zip_headercomp(const zip_dirent_t *, const zip_dirent_t *);
 static unsigned char *_zip_memmem(const unsigned char *, size_t,
 				  const unsigned char *, size_t);
-static struct zip_cdir *_zip_read_cdir(zip_t *za, zip_uint64_t buf_offset, zip_uint8_t *buf, const zip_uint8_t *eocd, size_t buflen, struct zip_error *error);
-static struct zip_cdir *_zip_read_eocd(const unsigned char *, const unsigned char *, zip_uint64_t,
-				       size_t, unsigned int, struct zip_error *);
-static struct zip_cdir *_zip_read_eocd64(struct zip_source *, const zip_uint8_t *, const zip_uint8_t *,
-                                         zip_uint64_t, size_t, unsigned int, struct zip_error *);
+static zip_cdir_t *_zip_read_cdir(zip_t *za, zip_uint64_t buf_offset, zip_uint8_t *buf, const zip_uint8_t *eocd, size_t buflen, zip_error_t *error);
+static zip_cdir_t *_zip_read_eocd(const unsigned char *, const unsigned char *, zip_uint64_t,
+				       size_t, unsigned int, zip_error_t *);
+static zip_cdir_t *_zip_read_eocd64(zip_source_t *, const zip_uint8_t *, const zip_uint8_t *,
+                                         zip_uint64_t, size_t, unsigned int, zip_error_t *);
 
 
-ZIP_EXTERN struct zip *
+ZIP_EXTERN zip_t *
 zip_open(const char *fn, int _flags, int *zep)
 {
-    struct zip *za;
-    struct zip_source *src;
+    zip_t *za;
+    zip_source_t *src;
     struct zip_error error;
 
     zip_error_init(&error);
@@ -87,8 +87,8 @@ zip_open(const char *fn, int _flags, int *zep)
 }
 
 
-ZIP_EXTERN struct zip *
-zip_open_from_source(struct zip_source *src, int _flags, struct zip_error *error)
+ZIP_EXTERN zip_t *
+zip_open_from_source(zip_source_t *src, int _flags, zip_error_t *error)
 {
     static zip_int64_t needed_support_read = -1;
     static zip_int64_t needed_support_write = -1;
@@ -162,7 +162,7 @@ zip_open_from_source(struct zip_source *src, int _flags, struct zip_error *error
 }
 
 ZIP_EXTERN int
-zip_archive_set_tempdir(struct zip *za, const char *tempdir)
+zip_archive_set_tempdir(zip_t *za, const char *tempdir)
 {
     char *new_tempdir;
     
@@ -181,11 +181,11 @@ zip_archive_set_tempdir(struct zip *za, const char *tempdir)
     return 0;
 }
 
-struct zip *
-_zip_open(struct zip_source *src, unsigned int flags, struct zip_error *error)
+zip_t *
+_zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error)
 {
-    struct zip *za;
-    struct zip_cdir *cdir;
+    zip_t *za;
+    zip_cdir_t *cdir;
     struct zip_stat st;
     zip_uint64_t len;
 
@@ -235,7 +235,7 @@ _zip_open(struct zip_source *src, unsigned int flags, struct zip_error *error)
 
 
 void
-_zip_set_open_error(int *zep, const struct zip_error *err, int ze)
+_zip_set_open_error(int *zep, const zip_error_t *err, int ze)
 {
     if (err) {
 	ze = zip_error_code_zip(err);
@@ -255,10 +255,10 @@ _zip_set_open_error(int *zep, const struct zip_error *err, int ze)
    Returns a struct zip_cdir which contains the central directory 
    entries, or NULL if unsuccessful. */
 
-static struct zip_cdir *
-_zip_read_cdir(zip_t *za, zip_uint64_t buf_offset, zip_uint8_t *buf, const zip_uint8_t *eocd, size_t buflen, struct zip_error *error)
+static zip_cdir_t *
+_zip_read_cdir(zip_t *za, zip_uint64_t buf_offset, zip_uint8_t *buf, const zip_uint8_t *eocd, size_t buflen, zip_error_t *error)
 {
-    struct zip_cdir *cd;
+    zip_cdir_t *cd;
     const unsigned char *cdp;
     const unsigned char **bufp;
     zip_int64_t tail_len, comment_len;
@@ -363,7 +363,7 @@ _zip_read_cdir(zip_t *za, zip_uint64_t buf_offset, zip_uint8_t *buf, const zip_u
    difference between the lowest and the highest fileposition reached */
 
 static zip_int64_t
-_zip_checkcons(struct zip *za, struct zip_cdir *cd, struct zip_error *error)
+_zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
 {
     zip_uint64_t i;
     zip_uint64_t min, max, j;
@@ -422,7 +422,7 @@ _zip_checkcons(struct zip *za, struct zip_cdir *cd, struct zip_error *error)
    check whether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
 
 static void
-_zip_check_torrentzip(struct zip *za, const struct zip_cdir *cdir)
+_zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir)
 {
     uLong crc_got, crc_should;
     char buf[8+1];
@@ -456,7 +456,7 @@ _zip_check_torrentzip(struct zip *za, const struct zip_cdir *cdir)
    Return 0 if they are consistent, -1 if not. */
 
 static int
-_zip_headercomp(const struct zip_dirent *central, const struct zip_dirent *local)
+_zip_headercomp(const zip_dirent_t *central, const zip_dirent_t *local)
 {
     if ((central->version_needed != local->version_needed)
 #if 0
@@ -483,10 +483,10 @@ _zip_headercomp(const struct zip_dirent *central, const struct zip_dirent *local
 }
 
 
-static struct zip *
-_zip_allocate_new(struct zip_source *src, unsigned int flags, struct zip_error *error)
+static zip_t *
+_zip_allocate_new(zip_source_t *src, unsigned int flags, zip_error_t *error)
 {
-    struct zip *za;
+    zip_t *za;
 
     if ((za = _zip_new(error)) == NULL) {
 	return NULL;
@@ -506,7 +506,7 @@ _zip_allocate_new(struct zip_source *src, unsigned int flags, struct zip_error *
  * tests for file existence
  */
 static exists_t
-_zip_file_exists(struct zip_source *src, struct zip_error *error)
+_zip_file_exists(zip_source_t *src, zip_error_t *error)
 {
     struct zip_stat st;
 
@@ -524,10 +524,10 @@ _zip_file_exists(struct zip_source *src, struct zip_error *error)
 }
 
 
-static struct zip_cdir *
-_zip_find_central_dir(struct zip *za, zip_uint64_t len)
+static zip_cdir_t *
+_zip_find_central_dir(zip_t *za, zip_uint64_t len)
 {
-    struct zip_cdir *cdir, *cdirnew;
+    zip_cdir_t *cdir, *cdirnew;
     unsigned char *buf, *match;
     zip_int64_t buf_offset;
     zip_uint64_t buflen;
@@ -542,7 +542,7 @@ _zip_find_central_dir(struct zip *za, zip_uint64_t len)
 
     buflen = (len < CDBUFSIZE ? len : CDBUFSIZE);
     if (zip_source_seek(za->src, -(zip_int64_t)buflen, SEEK_END) < 0) {
-	struct zip_error *src_error = zip_source_error(za->src);
+	zip_error_t *src_error = zip_source_error(za->src);
 	if (zip_error_code_zip(src_error) != ZIP_ER_SEEK || zip_error_code_system(src_error) != EFBIG) {
 	    /* seek before start of file on my machine */
 	    _zip_error_copy(&za->error, src_error);
@@ -629,11 +629,11 @@ _zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little
 }
 
 
-static struct zip_cdir *
+static zip_cdir_t *
 _zip_read_eocd(const unsigned char *eocd, const unsigned char *buf, zip_uint64_t buf_offset, size_t buflen,
-	       unsigned int flags, struct zip_error *error)
+	       unsigned int flags, zip_error_t *error)
 {
-    struct zip_cdir *cd;
+    zip_cdir_t *cd;
     const unsigned char *cdp;
     zip_uint64_t i, nentry, size, offset;
 
@@ -683,11 +683,11 @@ _zip_read_eocd(const unsigned char *eocd, const unsigned char *buf, zip_uint64_t
 }
 
 
-static struct zip_cdir *
-_zip_read_eocd64(struct zip_source *src, const zip_uint8_t *eocd64loc, const zip_uint8_t *buf,
-		 zip_uint64_t buf_offset, size_t buflen, unsigned int flags, struct zip_error *error)
+static zip_cdir_t *
+_zip_read_eocd64(zip_source_t *src, const zip_uint8_t *eocd64loc, const zip_uint8_t *buf,
+		 zip_uint64_t buf_offset, size_t buflen, unsigned int flags, zip_error_t *error)
 {
-    struct zip_cdir *cd;
+    zip_cdir_t *cd;
     zip_uint64_t offset;
     const zip_uint8_t *cdp;
     zip_uint8_t eocd[EOCD64LEN];

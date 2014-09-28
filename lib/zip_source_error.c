@@ -35,8 +35,8 @@
 #include "zipint.h"
 
 
-struct zip_error *
-zip_source_error(struct zip_source *src)
+zip_error_t *
+zip_source_error(zip_source_t *src)
 {
     return &src->error;
 }

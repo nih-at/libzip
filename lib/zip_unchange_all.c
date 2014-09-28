@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_unchange_all(struct zip *za)
+zip_unchange_all(zip_t *za)
 {
     int ret;
     zip_uint64_t i;

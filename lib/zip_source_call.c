@@ -36,7 +36,7 @@
 
 
 zip_int64_t
-_zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, enum zip_source_cmd command)
+_zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command)
 {
     zip_int64_t ret;
 

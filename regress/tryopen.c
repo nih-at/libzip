@@ -58,7 +58,7 @@ int
 main(int argc, char *argv[])
 {
     const char *fname;
-    struct zip *z;
+    zip_t *z;
     int c, flags, ze;
     zip_int64_t count;
     int error;

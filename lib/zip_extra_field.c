@@ -39,10 +39,10 @@
 #include <string.h>
 
 
-struct zip_extra_field *
-_zip_ef_clone(const struct zip_extra_field *ef, struct zip_error *error)
+zip_extra_field_t *
+_zip_ef_clone(const zip_extra_field_t *ef, zip_error_t *error)
 {
-    struct zip_extra_field *head, *prev, *def;
+    zip_extra_field_t *head, *prev, *def;
     
     head = prev = NULL;
     
@@ -66,10 +66,10 @@ _zip_ef_clone(const struct zip_extra_field *ef, struct zip_error *error)
 }
 
 
-struct zip_extra_field *
-_zip_ef_delete_by_id(struct zip_extra_field *ef, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags)
+zip_extra_field_t *
+_zip_ef_delete_by_id(zip_extra_field_t *ef, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags)
 {
-    struct zip_extra_field *head, *prev;
+    zip_extra_field_t *head, *prev;
     int i;
 
     i = 0;
@@ -105,9 +105,9 @@ _zip_ef_delete_by_id(struct zip_extra_field *ef, zip_uint16_t id, zip_uint16_t i
 
 
 void
-_zip_ef_free(struct zip_extra_field *ef)
+_zip_ef_free(zip_extra_field_t *ef)
 {
-    struct zip_extra_field *ef2;
+    zip_extra_field_t *ef2;
 
     while (ef) {
 	ef2 = ef->next;
@@ -119,7 +119,7 @@ _zip_ef_free(struct zip_extra_field *ef)
 
 
 const zip_uint8_t *
-_zip_ef_get_by_id(const struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags, struct zip_error *error)
+_zip_ef_get_by_id(const zip_extra_field_t *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags, zip_error_t *error)
 {
     static const zip_uint8_t empty[1] = { '\0' };
     
@@ -147,10 +147,10 @@ _zip_ef_get_by_id(const struct zip_extra_field *ef, zip_uint16_t *lenp, zip_uint
 }
 
 
-struct zip_extra_field *
-_zip_ef_merge(struct zip_extra_field *to, struct zip_extra_field *from)
+zip_extra_field_t *
+_zip_ef_merge(zip_extra_field_t *to, zip_extra_field_t *from)
 {
-    struct zip_extra_field *ef2, *tt, *tail;
+    zip_extra_field_t *ef2, *tt, *tail;
     int duplicate;
 
     if (to == NULL)
@@ -182,12 +182,12 @@ _zip_ef_merge(struct zip_extra_field *to, struct zip_extra_field *from)
 }
 
 
-struct zip_extra_field *
+zip_extra_field_t *
 _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_flags_t flags)
 {
-    struct zip_extra_field *ef;
+    zip_extra_field_t *ef;
 
-    if ((ef=(struct zip_extra_field *)malloc(sizeof(*ef))) == NULL)
+    if ((ef=(zip_extra_field_t *)malloc(sizeof(*ef))) == NULL)
 	return NULL;
 
     ef->next = NULL;
@@ -207,10 +207,10 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_fla
 }
 
 
-struct zip_extra_field *
-_zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, struct zip_error *error)
+zip_extra_field_t *
+_zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_error_t *error)
 {
-    struct zip_extra_field *ef, *ef2, *ef_head;
+    zip_extra_field_t *ef, *ef2, *ef_head;
     const zip_uint8_t *p;
     zip_uint16_t fid, flen;
 
@@ -249,11 +249,11 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, stru
 }
 
 
-struct zip_extra_field *
-_zip_ef_remove_internal(struct zip_extra_field *ef)
+zip_extra_field_t *
+_zip_ef_remove_internal(zip_extra_field_t *ef)
 {
-    struct zip_extra_field *ef_head;
-    struct zip_extra_field *prev, *next;
+    zip_extra_field_t *ef_head;
+    zip_extra_field_t *prev, *next;
     
     ef_head = ef;
     prev = NULL;
@@ -280,7 +280,7 @@ _zip_ef_remove_internal(struct zip_extra_field *ef)
 
 
 zip_uint16_t
-_zip_ef_size(const struct zip_extra_field *ef, zip_flags_t flags)
+_zip_ef_size(const zip_extra_field_t *ef, zip_flags_t flags)
 {
     zip_uint16_t size;
 
@@ -295,7 +295,7 @@ _zip_ef_size(const struct zip_extra_field *ef, zip_flags_t flags)
 
 
 int
-_zip_ef_write(struct zip *za, const struct zip_extra_field *ef, zip_flags_t flags)
+_zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags)
 {
     zip_uint8_t b[4], *p;
 
@@ -319,9 +319,9 @@ _zip_ef_write(struct zip *za, const struct zip_extra_field *ef, zip_flags_t flag
 
 
 int
-_zip_read_local_ef(struct zip *za, zip_uint64_t idx)
+_zip_read_local_ef(zip_t *za, zip_uint64_t idx)
 {
-    struct zip_entry *e;
+    zip_entry_t *e;
     unsigned char b[4];
     const unsigned char *p;
     zip_uint16_t fname_len, ef_len;
@@ -355,7 +355,7 @@ _zip_read_local_ef(struct zip *za, zip_uint64_t idx)
     ef_len = _zip_get_16(&p);
 
     if (ef_len > 0) {
-	struct zip_extra_field *ef;
+	zip_extra_field_t *ef;
 	zip_uint8_t *ef_raw;
 
 	if (zip_source_seek(za->src, fname_len, SEEK_CUR) < 0) {

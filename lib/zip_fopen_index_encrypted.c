@@ -38,15 +38,15 @@
 
 #include "zipint.h"
 
-static struct zip_file *_zip_file_new(struct zip *za);
+static zip_file_t *_zip_file_new(zip_t *za);
 
 
-ZIP_EXTERN struct zip_file *
-zip_fopen_index_encrypted(struct zip *za, zip_uint64_t index, zip_flags_t flags,
+ZIP_EXTERN zip_file_t *
+zip_fopen_index_encrypted(zip_t *za, zip_uint64_t index, zip_flags_t flags,
 			  const char *password)
 {
-    struct zip_file *zf;
-    struct zip_source *src;
+    zip_file_t *zf;
+    zip_source_t *src;
 
     if ((src=_zip_source_zip_new(za, za, index, flags, 0, 0, password)) == NULL)
 	return NULL;
@@ -68,12 +68,12 @@ zip_fopen_index_encrypted(struct zip *za, zip_uint64_t index, zip_flags_t flags,
 }
 
 
-static struct zip_file *
-_zip_file_new(struct zip *za)
+static zip_file_t *
+_zip_file_new(zip_t *za)
 {
-    struct zip_file *zf;
+    zip_file_t *zf;
 
-    if ((zf=(struct zip_file *)malloc(sizeof(struct zip_file))) == NULL) {
+    if ((zf=(zip_file_t *)malloc(sizeof(struct zip_file))) == NULL) {
 	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }

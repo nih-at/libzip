@@ -38,7 +38,7 @@
 
 
 void *
-_zip_memdup(const void *mem, size_t len, struct zip_error *error)
+_zip_memdup(const void *mem, size_t len, zip_error_t *error)
 {
     void *ret;
 

@@ -37,7 +37,7 @@
 
 
 ZIP_EXTERN int
-zip_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source)
+zip_replace(zip_t *za, zip_uint64_t idx, zip_source_t *source)
 {
     return zip_file_replace(za, idx, source, 0);
 }

@@ -40,7 +40,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft const char *
-.Fn zip_file_get_comment "struct zip *archive" "zip_uint64_t index" "zip_uint32_t *lenp" \
+.Fn zip_file_get_comment "zip_t *archive" "zip_uint64_t index" "zip_uint32_t *lenp" \
 "zip_flags_t flags"
 .Sh DESCRIPTION
 The

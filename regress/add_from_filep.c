@@ -47,8 +47,8 @@ main(int argc, char *argv[])
     const char *archive;
     const char *file;
     const char *name;
-    struct zip *za;
-    struct zip_source *zs;
+    zip_t *za;
+    zip_source_t *zs;
     char buf[100];
     int err;
     FILE *fp;

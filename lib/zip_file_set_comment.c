@@ -38,11 +38,11 @@
 
 
 ZIP_EXTERN int
-zip_file_set_comment(struct zip *za, zip_uint64_t idx,
+zip_file_set_comment(zip_t *za, zip_uint64_t idx,
 		     const char *comment, zip_uint16_t len, zip_flags_t flags)
 {
-    struct zip_entry *e;
-    struct zip_string *cstr;
+    zip_entry_t *e;
+    zip_string_t *cstr;
     int changed;
 
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL)

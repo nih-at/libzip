@@ -50,18 +50,18 @@ struct trad_pkware {
 
 static void decrypt(struct trad_pkware *, zip_uint8_t *,
 		    const zip_uint8_t *, zip_uint64_t, int);
-static int decrypt_header(struct zip_source *, struct trad_pkware *);
-static zip_int64_t pkware_decrypt(struct zip_source *, void *, void *,
-				  zip_uint64_t, enum zip_source_cmd);
+static int decrypt_header(zip_source_t *, struct trad_pkware *);
+static zip_int64_t pkware_decrypt(zip_source_t *, void *, void *,
+				  zip_uint64_t, zip_source_cmd_t);
 static void pkware_free(struct trad_pkware *);
 
 
-struct zip_source *
-zip_source_pkware(struct zip *za, struct zip_source *src,
+zip_source_t *
+zip_source_pkware(zip_t *za, zip_source_t *src,
 		  zip_uint16_t em, int flags, const char *password)
 {
     struct trad_pkware *ctx;
-    struct zip_source *s2;
+    zip_source_t *s2;
 
     if (password == NULL || src == NULL || em != ZIP_EM_TRAD_PKWARE) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -125,7 +125,7 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 
 
 static int
-decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
+decrypt_header(zip_source_t *src, struct trad_pkware *ctx)
 {
     zip_uint8_t header[HEADERLEN];
     struct zip_stat st;
@@ -161,8 +161,8 @@ decrypt_header(struct zip_source *src, struct trad_pkware *ctx)
 
 
 static zip_int64_t
-pkware_decrypt(struct zip_source *src, void *ud, void *data,
-	       zip_uint64_t len, enum zip_source_cmd cmd)
+pkware_decrypt(zip_source_t *src, void *ud, void *data,
+	       zip_uint64_t len, zip_source_cmd_t cmd)
 {
     struct trad_pkware *ctx;
     zip_int64_t n;
@@ -189,9 +189,9 @@ pkware_decrypt(struct zip_source *src, void *ud, void *data,
 
         case ZIP_SOURCE_STAT:
         {
-	    struct zip_stat *st;
+	    zip_stat_t *st;
 
-	    st = (struct zip_stat *)data;
+	    st = (zip_stat_t *)data;
 
 	    st->encryption_method = ZIP_EM_NONE;
 	    st->valid |= ZIP_STAT_ENCRYPTION_METHOD;

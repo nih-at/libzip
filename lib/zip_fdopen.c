@@ -35,13 +35,13 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN struct zip *
+ZIP_EXTERN zip_t *
 zip_fdopen(int fd_orig, int _flags, int *zep)
 {
     int fd;
     FILE *fp;
-    struct zip *za;
-    struct zip_source *src;
+    zip_t *za;
+    zip_source_t *src;
     struct zip_error error;
 
     if (_flags < 0 || (_flags & ZIP_TRUNCATE)) {

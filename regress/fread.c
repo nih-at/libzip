@@ -54,7 +54,7 @@ const char *when_name[] = {
     "no", "zip_fopen", "zip_fread", "zip_fclose"
 };
 
-static int do_read(struct zip *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex);
+static int do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex);
 
 int verbose;
 
@@ -66,8 +66,8 @@ main(int argc, char *argv[])
 {
     int fail, ze;
     int c;
-    struct zip *z;
-    struct zip_source *zs;
+    zip_t *z;
+    zip_source_t *zs;
     char *archive;
     char errstr[1024];
     zip_int64_t idx;
@@ -171,9 +171,9 @@ main(int argc, char *argv[])
 
 
 static int
-do_read(struct zip *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex)
+do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex)
 {
-    struct zip_file *zf;
+    zip_file_t *zf;
     enum when when_got;
     int err, ze_got, se_got;
     char b[8192];

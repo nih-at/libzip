@@ -36,7 +36,7 @@
 
 
 ZIP_EXTERN int
-zip_file_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source, zip_flags_t flags)
+zip_file_replace(zip_t *za, zip_uint64_t idx, zip_source_t *source, zip_flags_t flags)
 {
     if (idx >= za->nentry || source == NULL) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -54,7 +54,7 @@ zip_file_replace(struct zip *za, zip_uint64_t idx, struct zip_source *source, zi
 /* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
 
 zip_int64_t
-_zip_file_replace(struct zip *za, zip_uint64_t idx, const char *name, struct zip_source *source, zip_flags_t flags)
+_zip_file_replace(zip_t *za, zip_uint64_t idx, const char *name, zip_source_t *source, zip_flags_t flags)
 {
     zip_uint64_t za_nentry_prev;
     

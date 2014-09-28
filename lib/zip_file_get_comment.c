@@ -37,9 +37,9 @@
 /* lenp is 32 bit because converted comment can be longer than ZIP_UINT16_MAX */
 
 ZIP_EXTERN const char *
-zip_file_get_comment(struct zip *za, zip_uint64_t idx, zip_uint32_t *lenp, zip_flags_t flags)
+zip_file_get_comment(zip_t *za, zip_uint64_t idx, zip_uint32_t *lenp, zip_flags_t flags)
 {
-    struct zip_dirent *de;
+    zip_dirent_t *de;
     zip_uint32_t len;
     const zip_uint8_t *str;
 

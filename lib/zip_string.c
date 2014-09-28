@@ -39,7 +39,7 @@
 
 
 zip_uint32_t
-_zip_string_crc32(const struct zip_string *s)
+_zip_string_crc32(const zip_string_t *s)
 {
     zip_uint32_t crc;
     
@@ -53,7 +53,7 @@ _zip_string_crc32(const struct zip_string *s)
 
 
 int
-_zip_string_equal(const struct zip_string *a, const struct zip_string *b)
+_zip_string_equal(const zip_string_t *a, const zip_string_t *b)
 {
     if (a == NULL || b == NULL)
 	return a == b;
@@ -68,7 +68,7 @@ _zip_string_equal(const struct zip_string *a, const struct zip_string *b)
 
 
 void
-_zip_string_free(struct zip_string *s)
+_zip_string_free(zip_string_t *s)
 {
     if (s == NULL)
 	return;
@@ -80,7 +80,7 @@ _zip_string_free(struct zip_string *s)
 
 
 const zip_uint8_t *
-_zip_string_get(struct zip_string *string, zip_uint32_t *lenp, zip_flags_t flags, struct zip_error *error)
+_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error)
 {
     static const zip_uint8_t empty[1] = "";
 
@@ -116,7 +116,7 @@ _zip_string_get(struct zip_string *string, zip_uint32_t *lenp, zip_flags_t flags
 
 
 zip_uint16_t
-_zip_string_length(const struct zip_string *s)
+_zip_string_length(const zip_string_t *s)
 {
     if (s == NULL)
 	return 0;
@@ -125,11 +125,11 @@ _zip_string_length(const struct zip_string *s)
 }
 
 
-struct zip_string *
-_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, struct zip_error *error)
+zip_string_t *
+_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error)
 {
-    struct zip_string *s;
-    enum zip_encoding_type expected_encoding;
+    zip_string_t *s;
+    zip_encoding_type_t expected_encoding;
     
     if (length == 0)
 	return NULL;
@@ -149,7 +149,7 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
 	return NULL;
     }
 	
-    if ((s=(struct zip_string *)malloc(sizeof(*s))) == NULL) {
+    if ((s=(zip_string_t *)malloc(sizeof(*s))) == NULL) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }

@@ -48,18 +48,18 @@ struct deflate {
     z_stream zstr;
 };
 
-static zip_int64_t compress_read(struct zip_source *, struct deflate *, void *, zip_uint64_t);
-static zip_int64_t decompress_read(struct zip_source *, struct deflate *, void *, zip_uint64_t);
-static zip_int64_t deflate_compress(struct zip_source *, void *, void *, zip_uint64_t, enum zip_source_cmd);
-static zip_int64_t deflate_decompress(struct zip_source *, void *, void *, zip_uint64_t, enum zip_source_cmd);
+static zip_int64_t compress_read(zip_source_t *, struct deflate *, void *, zip_uint64_t);
+static zip_int64_t decompress_read(zip_source_t *, struct deflate *, void *, zip_uint64_t);
+static zip_int64_t deflate_compress(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
+static zip_int64_t deflate_decompress(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 static void deflate_free(struct deflate *);
 
 
-struct zip_source *
-zip_source_deflate(struct zip *za, struct zip_source *src, zip_int32_t cm, int flags)
+zip_source_t *
+zip_source_deflate(zip_t *za, zip_source_t *src, zip_int32_t cm, int flags)
 {
     struct deflate *ctx;
-    struct zip_source *s2;
+    zip_source_t *s2;
 
     if (src == NULL || (cm != ZIP_CM_DEFLATE && !ZIP_CM_IS_DEFAULT(cm))) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -93,7 +93,7 @@ zip_source_deflate(struct zip *za, struct zip_source *src, zip_int32_t cm, int f
 
 
 static zip_int64_t
-compress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uint64_t len)
+compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t len)
 {
     int end, ret;
     zip_int64_t n;
@@ -178,7 +178,7 @@ compress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uint6
 
 
 static zip_int64_t
-decompress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uint64_t len)
+decompress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t len)
 {
     int end, ret;
     zip_int64_t n;
@@ -259,7 +259,7 @@ decompress_read(struct zip_source *src, struct deflate *ctx, void *data, zip_uin
 
 
 static zip_int64_t
-deflate_compress(struct zip_source *src, void *ud, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+deflate_compress(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
     struct deflate *ctx;
     int ret;
@@ -293,9 +293,9 @@ deflate_compress(struct zip_source *src, void *ud, void *data, zip_uint64_t len,
 
     case ZIP_SOURCE_STAT:
     	{
-	    struct zip_stat *st;
+	    zip_stat_t *st;
 
-	    st = (struct zip_stat *)data;
+	    st = (zip_stat_t *)data;
 
 	    st->comp_method = ZIP_CM_DEFLATE;
 	    st->valid |= ZIP_STAT_COMP_METHOD;
@@ -323,8 +323,8 @@ deflate_compress(struct zip_source *src, void *ud, void *data, zip_uint64_t len,
 
 
 static zip_int64_t
-deflate_decompress(struct zip_source *src, void *ud, void *data,
-		   zip_uint64_t len, enum zip_source_cmd cmd)
+deflate_decompress(zip_source_t *src, void *ud, void *data,
+		   zip_uint64_t len, zip_source_cmd_t cmd)
 {
     struct deflate *ctx;
     zip_int64_t n;
@@ -361,9 +361,9 @@ deflate_decompress(struct zip_source *src, void *ud, void *data,
 
         case ZIP_SOURCE_STAT:
         {
-            struct zip_stat *st;
+            zip_stat_t *st;
             
-            st = (struct zip_stat *)data;
+            st = (zip_stat_t *)data;
             
             st->comp_method = ZIP_CM_STORE;
             if (st->comp_size > 0 && st->size > 0)

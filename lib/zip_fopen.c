@@ -35,8 +35,8 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN struct zip_file *
-zip_fopen(struct zip *za, const char *fname, zip_flags_t flags)
+ZIP_EXTERN zip_file_t *
+zip_fopen(zip_t *za, const char *fname, zip_flags_t flags)
 {
     zip_int64_t idx;
 

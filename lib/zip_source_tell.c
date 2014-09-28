@@ -36,7 +36,7 @@
 
 
 zip_int64_t
-zip_source_tell(struct zip_source *src)
+zip_source_tell(zip_source_t *src)
 {
     if (src->source_closed) {
         return -1;

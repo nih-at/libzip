@@ -40,10 +40,10 @@
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
-.Ft struct zip_file *
-.Fn zip_fopen_encrypted "struct zip *archive" "const char *fname" "zip_flags_t flags" "const char *password"
-.Ft struct zip_file *
-.Fn zip_fopen_index_encrypted "struct zip *archive" "zip_uint64_t index" "zip_flags_t flags" "const char *password"
+.Ft zip_file_t *
+.Fn zip_fopen_encrypted "zip_t *archive" "const char *fname" "zip_flags_t flags" "const char *password"
+.Ft zip_file_t *
+.Fn zip_fopen_index_encrypted "zip_t *archive" "zip_uint64_t index" "zip_flags_t flags" "const char *password"
 .Sh DESCRIPTION
 The
 .Fn zip_fopen_encrypted

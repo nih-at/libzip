@@ -240,7 +240,6 @@ after merge:
 - direct reference to source and from upper layer are equivalent: only close/free if all are gone.
 - only allow multiple upper layers for sources that support seek
 - cache supported state in struct zip_source and check in _zip_source_call before calling
-- style cleanup (xxx_t instead of struct xxx)
 - adapt man pages
   - zip_source_is_deleted
   - zip_source_stat

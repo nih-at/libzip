@@ -58,14 +58,14 @@ typedef struct dispatch_table_s {
 static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
-static struct zip *read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp);
+static zip_t *read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp);
 
-struct zip *za, *z_in;
+zip_t *za, *z_in;
 zip_flags_t stat_flags;
 
 static int
 add(int argc, char *argv[]) {
-    struct zip_source *zs;
+    zip_source_t *zs;
 
     if ((zs=zip_source_buffer(za, argv[1], strlen(argv[1]), 0)) == NULL) {
 	fprintf(stderr, "can't create zip_source from buffer: %s\n", zip_strerror(za));
@@ -92,7 +92,7 @@ add_dir(int argc, char *argv[]) {
 
 static int
 add_file(int argc, char *argv[]) {
-    struct zip_source *zs;
+    zip_source_t *zs;
     zip_uint64_t start = strtoull(argv[2], NULL, 10);
     zip_int64_t len = strtoll(argv[3], NULL, 10);
 
@@ -121,7 +121,7 @@ add_from_zip(int argc, char *argv[]) {
     zip_uint64_t idx;
     int err;
     char buf[100];
-    struct zip_source *zs;
+    zip_source_t *zs;
     /* add from another zip file */
     idx = strtoull(argv[2], NULL, 10);
     zip_uint64_t start = strtoull(argv[3], NULL, 10);
@@ -311,7 +311,7 @@ static int
 replace_file_contents(int argc, char *argv[]) {
     /* replace file contents with data from command line */
     const char *content;
-    struct zip_source *s;
+    zip_source_t *s;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     content = argv[1];
@@ -471,7 +471,7 @@ hexdump(const zip_uint8_t *data, zip_uint16_t len)
     return;    
 }
 
-static struct zip *
+static zip_t *
 read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 {
     struct stat st;
@@ -654,7 +654,7 @@ int
 main(int argc, char *argv[])
 {
     const char *archive;
-    struct zip_source *memory_src;
+    zip_source_t *memory_src;
     char buf[100];
     int c, arg, err, flags, in_memory;
     const char *prg;

@@ -41,9 +41,9 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft void
-.Fn zip_error_get "struct zip *archive" "int *zep" "int *sep"
+.Fn zip_error_get "zip_t *archive" "int *zep" "int *sep"
 .Ft void
-.Fn zip_file_error_get "struct zip_file *file" "int *zep" "int *sep"
+.Fn zip_file_error_get "zip_file_t *file" "int *zep" "int *sep"
 .Sh DESCRIPTION
 The
 .Fn zip_error_get

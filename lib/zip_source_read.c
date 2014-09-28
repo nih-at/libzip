@@ -36,7 +36,7 @@
 
 
 zip_int64_t
-zip_source_read(struct zip_source *src, void *data, zip_uint64_t len)
+zip_source_read(zip_source_t *src, void *data, zip_uint64_t len)
 {
     if (src->source_closed) {
         return -1;

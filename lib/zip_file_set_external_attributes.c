@@ -34,9 +34,9 @@
 #include "zipint.h"
 
 int
-zip_file_set_external_attributes(struct zip *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes)
+zip_file_set_external_attributes(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes)
 {
-    struct zip_entry *e;
+    zip_entry_t *e;
     int changed;
     zip_uint8_t unchanged_opsys;
     zip_uint32_t unchanged_attributes;

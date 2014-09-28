@@ -41,9 +41,9 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft const char *
-.Fn zip_file_strerror "struct zip_file *file"
+.Fn zip_file_strerror "zip_file_t *file"
 .Ft const char *
-.Fn zip_strerror "struct zip *archive"
+.Fn zip_strerror "zip_t *archive"
 .Sh DESCRIPTION
 The
 .Fn zip_strerror

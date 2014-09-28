@@ -40,7 +40,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_fread "struct zip_file *file" "void *buf" "zip_uint64_t nbytes"
+.Fn zip_fread "zip_file_t *file" "void *buf" "zip_uint64_t nbytes"
 .Sh DESCRIPTION
 The
 .Fn zip_fread

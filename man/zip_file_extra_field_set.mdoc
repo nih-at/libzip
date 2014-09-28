@@ -40,7 +40,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_file_extra_field_set "struct zip *archive" "zip_uint64_t index" \
+.Fn zip_file_extra_field_set "zip_t *archive" "zip_uint64_t index" \
 "zip_uint16_t extra_field_id" "zip_uint16_t extra_field_index" \
 "const zip_uint8_t *extra_field_data" "zip_uint16_t len" \
 "zip_flags_t flags"

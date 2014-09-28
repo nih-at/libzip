@@ -39,8 +39,8 @@
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
-.Ft struct zip_source *
-.Fn zip_source_buffer "struct zip *archive" "const void *data" \
+.Ft zip_source_t *
+.Fn zip_source_buffer "zip_t *archive" "const void *data" \
 "zip_uint64_t len" "int freep"
 .Sh DESCRIPTION
 The function

@@ -37,8 +37,8 @@
 #include "zipint.h"
 
 
-struct zip_source *
-zip_source_layered(struct zip *za, struct zip_source *src, zip_source_layered_callback cb, void *ud)
+zip_source_t *
+zip_source_layered(zip_t *za, zip_source_t *src, zip_source_layered_callback cb, void *ud)
 {
     if (za == NULL)
         return NULL;
@@ -48,9 +48,9 @@ zip_source_layered(struct zip *za, struct zip_source *src, zip_source_layered_ca
 
 
 zip_source_t *
-zip_source_layered_create(struct zip_source *src, zip_source_layered_callback cb, void *ud, zip_error_t *error)
+zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error)
 {
-    struct zip_source *zs;
+    zip_source_t *zs;
     
     if ((zs=_zip_source_new(error)) == NULL)
         return NULL;

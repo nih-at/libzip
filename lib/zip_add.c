@@ -44,7 +44,7 @@
 */
 
 ZIP_EXTERN zip_int64_t
-zip_add(struct zip *za, const char *name, struct zip_source *source)
+zip_add(zip_t *za, const char *name, zip_source_t *source)
 {
     return zip_file_add(za, name, source, 0);
 }

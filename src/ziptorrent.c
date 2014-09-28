@@ -129,7 +129,7 @@ main(int argc, char * const argv[])
 static int
 torrentzip(const char *fname, int flags)
 {
-    struct zip *za;
+    zip_t *za;
     int err;
     char errstr[1024];
 

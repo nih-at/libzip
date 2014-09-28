@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_file_rename(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t flags)
+zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags)
 {
     const char *old_name;
     int old_is_dir, new_is_dir;

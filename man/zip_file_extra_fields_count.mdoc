@@ -41,10 +41,10 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_int16_t
-.Fn zip_file_extra_fields_count "struct zip *archive" "zip_uint64_t index" \
+.Fn zip_file_extra_fields_count "zip_t *archive" "zip_uint64_t index" \
 "zip_flags_t flags"
 .Ft zip_int16_t
-.Fn zip_file_extra_fields_count_by_id "struct zip *archive" "zip_uint64_t index" \
+.Fn zip_file_extra_fields_count_by_id "zip_t *archive" "zip_uint64_t index" \
 "zip_uint16_t extra_field_id" "zip_flags_t flags"
 .Sh DESCRIPTION
 The

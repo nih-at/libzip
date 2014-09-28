@@ -36,10 +36,10 @@
 
 
 ZIP_EXTERN int
-zip_set_file_compression(struct zip *za, zip_uint64_t idx,
+zip_set_file_compression(zip_t *za, zip_uint64_t idx,
 			 zip_int32_t method, zip_uint32_t flags)
 {
-    struct zip_entry *e;
+    zip_entry_t *e;
     zip_int32_t old_method;
 
     if (idx >= za->nentry) {

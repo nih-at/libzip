@@ -36,7 +36,7 @@
 
 
 ZIP_EXTERN zip_int64_t
-zip_fread(struct zip_file *zf, void *outbuf, zip_uint64_t toread)
+zip_fread(zip_file_t *zf, void *outbuf, zip_uint64_t toread)
 {
     zip_int64_t n;
 

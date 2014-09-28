@@ -55,20 +55,20 @@
 /* max deflate size increase: size + ceil(size/16k)*5+6 */
 #define MAX_DEFLATE_SIZE_32	4293656963u
 
-static int add_data(struct zip *, struct zip_source *, struct zip_dirent *);
-static int copy_data(struct zip *, zip_uint64_t);
-static int copy_source(struct zip *, struct zip_source *);
-static int write_cdir(struct zip *, const struct zip_filelist *, zip_uint64_t);
+static int add_data(zip_t *, zip_source_t *, zip_dirent_t *);
+static int copy_data(zip_t *, zip_uint64_t);
+static int copy_source(zip_t *, zip_source_t *);
+static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
 static int _zip_torrentzip_cmp(const void *, const void *);
 
 
 ZIP_EXTERN int
-zip_close(struct zip *za)
+zip_close(zip_t *za)
 {
     zip_uint64_t i, j, survivors;
     zip_int64_t off;
     int error;
-    struct zip_filelist *filelist;
+    zip_filelist_t *filelist;
     int new_torrentzip;
     int changed;
 
@@ -99,7 +99,7 @@ zip_close(struct zip *za)
         return -1;
     }
     
-    if ((filelist=(struct zip_filelist *)malloc(sizeof(filelist[0])*(size_t)survivors)) == NULL)
+    if ((filelist=(zip_filelist_t *)malloc(sizeof(filelist[0])*(size_t)survivors)) == NULL)
 	return -1;
 
     /* archive comment is special for torrentzip */
@@ -150,8 +150,8 @@ zip_close(struct zip *za)
     error = 0;
     for (j=0; j<survivors; j++) {
 	int new_data;
-	struct zip_entry *entry;
-	struct zip_dirent *de;
+	zip_entry_t *entry;
+	zip_dirent_t *de;
 
 	i = filelist[j].idx;
 	entry = za->entry+i;
@@ -183,7 +183,7 @@ zip_close(struct zip *za)
         de->offset = (zip_uint64_t)off;
 
 	if (new_data) {
-	    struct zip_source *zs;
+	    zip_source_t *zs;
 
 	    zs = NULL;
 	    if (!ZIP_ENTRY_DATA_CHANGED(entry)) {
@@ -254,11 +254,11 @@ zip_close(struct zip *za)
 
 
 static int
-add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
+add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 {
     zip_int64_t offstart, offdata, offend;
     struct zip_stat st;
-    struct zip_source *s2;
+    zip_source_t *s2;
     int ret;
     int is_zip64;
     zip_flags_t flags;
@@ -312,7 +312,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
 
 
     if (st.comp_method == ZIP_CM_STORE || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method != de->comp_method)) {
-	struct zip_source *s_store, *s_crc;
+	zip_source_t *s_store, *s_crc;
 	zip_compression_implementation comp_impl;
 	
 	if (st.comp_method != ZIP_CM_STORE) {
@@ -427,7 +427,7 @@ add_data(struct zip *za, struct zip_source *src, struct zip_dirent *de)
 
 
 static int
-copy_data(struct zip *za, zip_uint64_t len)
+copy_data(zip_t *za, zip_uint64_t len)
 {
     zip_uint8_t buf[BUFSIZE];
     size_t n;
@@ -450,7 +450,7 @@ copy_data(struct zip *za, zip_uint64_t len)
 
 
 static int
-copy_source(struct zip *za, struct zip_source *src)
+copy_source(zip_t *za, zip_source_t *src)
 {
     zip_uint8_t buf[BUFSIZE];
     zip_int64_t n;
@@ -481,7 +481,7 @@ copy_source(struct zip *za, struct zip_source *src)
 
 
 static int
-write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t survivors)
+write_cdir(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors)
 {
     zip_int64_t cd_start, end, size;
     uLong crc;
@@ -522,7 +522,7 @@ write_cdir(struct zip *za, const struct zip_filelist *filelist, zip_uint64_t sur
 
 
 int
-_zip_changed(const struct zip *za, zip_uint64_t *survivorsp)
+_zip_changed(const zip_t *za, zip_uint64_t *survivorsp)
 {
     int changed;
     zip_uint64_t i, survivors;
@@ -551,8 +551,8 @@ _zip_changed(const struct zip *za, zip_uint64_t *survivorsp)
 static int
 _zip_torrentzip_cmp(const void *a, const void *b)
 {
-    const char *aname = ((const struct zip_filelist *)a)->name;
-    const char *bname = ((const struct zip_filelist *)b)->name;
+    const char *aname = ((const zip_filelist_t *)a)->name;
+    const char *bname = ((const zip_filelist_t *)b)->name;
 
     if (aname == NULL)
 	return (bname != NULL) * -1;

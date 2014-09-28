@@ -36,7 +36,7 @@
 
 
 int
-zip_source_open(struct zip_source *src)
+zip_source_open(zip_source_t *src)
 {
     if (src->source_closed) {
         return -1;

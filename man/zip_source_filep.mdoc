@@ -38,8 +38,8 @@
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
-.Ft struct zip_source *
-.Fn zip_source_filep "struct zip *archive" "FILE *file" \
+.Ft zip_source_t *
+.Fn zip_source_filep "zip_t *archive" "FILE *file" \
 "zip_uint64_t start" "zip_int64_t len"
 .Sh DESCRIPTION
 The function

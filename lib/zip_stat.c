@@ -36,7 +36,7 @@
 
 
 ZIP_EXTERN int
-zip_stat(struct zip *za, const char *fname, zip_flags_t flags, struct zip_stat *st)
+zip_stat(zip_t *za, const char *fname, zip_flags_t flags, zip_stat_t *st)
 {
     zip_int64_t idx;
 

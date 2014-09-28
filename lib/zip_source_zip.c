@@ -38,8 +38,8 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN struct zip_source *
-zip_source_zip(struct zip *za, struct zip *srcza, zip_uint64_t srcidx,
+ZIP_EXTERN zip_source_t *
+zip_source_zip(zip_t *za, zip_t *srcza, zip_uint64_t srcidx,
 	       zip_flags_t flags, zip_uint64_t start, zip_int64_t len)
 {
     if (len < -1) {

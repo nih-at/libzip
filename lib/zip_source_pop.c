@@ -37,10 +37,10 @@
 #include "zipint.h"
 
 
-struct zip_source *
-zip_source_pop(struct zip_source *src)
+zip_source_t *
+zip_source_pop(zip_source_t *src)
 {
-    struct zip_source *lower;
+    zip_source_t *lower;
 
     if (src == NULL)
 	return NULL;

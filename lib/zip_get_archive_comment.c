@@ -38,9 +38,9 @@
 
 
 ZIP_EXTERN const char *
-zip_get_archive_comment(struct zip *za, int *lenp, zip_flags_t flags)
+zip_get_archive_comment(zip_t *za, int *lenp, zip_flags_t flags)
 {
-    struct zip_string *comment;
+    zip_string_t *comment;
     zip_uint32_t len;
     const zip_uint8_t *str;
 

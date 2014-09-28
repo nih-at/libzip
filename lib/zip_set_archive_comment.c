@@ -38,9 +38,9 @@
 
 
 ZIP_EXTERN int
-zip_set_archive_comment(struct zip *za, const char *comment, zip_uint16_t len)
+zip_set_archive_comment(zip_t *za, const char *comment, zip_uint16_t len)
 {
-    struct zip_string *cstr;
+    zip_string_t *cstr;
 
     if (ZIP_IS_RDONLY(za)) {
 	zip_error_set(&za->error, ZIP_ER_RDONLY, 0);

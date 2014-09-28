@@ -39,8 +39,8 @@
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
-.Ft struct zip_source *
-.Fn zip_source_function "struct zip *archive" "zip_source_callback fn" "void *userdata"
+.Ft zip_source_t *
+.Fn zip_source_function "zip_t *archive" "zip_source_callback fn" "void *userdata"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_function
@@ -49,7 +49,7 @@ creates a zip source from the user-provided function
 which must be of the following type:
 .Bd -literal
 typedef zip_int64_t (*zip_source_callback)(void *state,
-    void *data, zip_uint64_t len, enum zip_source_cmd cmd);
+    void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 .Ed
 .Pp
 .Ar archive

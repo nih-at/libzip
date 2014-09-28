@@ -85,16 +85,16 @@ Copyright (C) 2004-2014 Dieter Baron and Thomas Klausner\n\
 int confirm;
 zip_flags_t name_flags;
 
-static int confirm_replace(struct zip *, const char *, zip_uint64_t,
-			   struct zip *, const char *, zip_uint64_t);
-static struct zip *merge_zip(struct zip *, const char *, const char *);
+static int confirm_replace(zip_t *, const char *, zip_uint64_t,
+			   zip_t *, const char *, zip_uint64_t);
+static zip_t *merge_zip(zip_t *, const char *, const char *);
 
 
 int
 main(int argc, char *argv[])
 {
-    struct zip *za;
-    struct zip **zs;
+    zip_t *za;
+    zip_t **zs;
     int c, err;
     unsigned int i, n;
     char errstr[1024], *tname;
@@ -148,7 +148,7 @@ main(int argc, char *argv[])
     argv += optind;
 
     n = (unsigned int)(argc-optind);
-    if ((zs=(struct zip **)malloc(sizeof(zs[0])*n)) == NULL) {
+    if ((zs=(zip_t **)malloc(sizeof(zs[0])*n)) == NULL) {
 	fprintf(stderr, "%s: out of memory\n", prg);
 	exit(1);
     }
@@ -179,8 +179,8 @@ main(int argc, char *argv[])
 
 
 static int
-confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
-		struct zip *zs, const char *sname, zip_uint64_t is)
+confirm_replace(zip_t *za, const char *tname, zip_uint64_t it,
+		zip_t *zs, const char *sname, zip_uint64_t is)
 {
     char line[1024];
     struct zip_stat st, ss;
@@ -227,11 +227,11 @@ confirm_replace(struct zip *za, const char *tname, zip_uint64_t it,
 }
 
 
-static struct zip *
-merge_zip(struct zip *za, const char *tname, const char *sname)
+static zip_t *
+merge_zip(zip_t *za, const char *tname, const char *sname)
 {
-    struct zip *zs;
-    struct zip_source *source;
+    zip_t *zs;
+    zip_source_t *source;
     zip_int64_t ret, idx;
     zip_uint64_t i;
     int err;

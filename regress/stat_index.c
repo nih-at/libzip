@@ -58,7 +58,7 @@ main(int argc, char *argv[])
 {
     const char *fname;
     char buf[100];
-    struct zip *z;
+    zip_t *z;
     int c, flags, ze;
     struct zip_stat sb;
     int index;

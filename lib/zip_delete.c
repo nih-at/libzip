@@ -36,7 +36,7 @@
 
 
 ZIP_EXTERN int
-zip_delete(struct zip *za, zip_uint64_t idx)
+zip_delete(zip_t *za, zip_uint64_t idx)
 {
     if (idx >= za->nentry) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);

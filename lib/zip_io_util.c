@@ -75,7 +75,7 @@ _zip_get_64(const zip_uint8_t **a)
 }
 
 int
-_zip_read(struct zip_source *src, zip_uint8_t *b, zip_uint64_t length, struct zip_error *error)
+_zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error)
 {
     zip_int64_t n;
 
@@ -99,7 +99,7 @@ _zip_read(struct zip_source *src, zip_uint8_t *b, zip_uint64_t length, struct zi
 
 
 zip_uint8_t *
-_zip_read_data(const zip_uint8_t **buf, struct zip_source *src, size_t len, int nulp, struct zip_error *error)
+_zip_read_data(const zip_uint8_t **buf, zip_source_t *src, size_t len, int nulp, zip_error_t *error)
 {
     zip_uint8_t *r;
 
@@ -136,11 +136,11 @@ _zip_read_data(const zip_uint8_t **buf, struct zip_source *src, size_t len, int 
 }
 
 
-struct zip_string *
-_zip_read_string(const zip_uint8_t **buf, struct zip_source *src, zip_uint16_t len, int nulp, struct zip_error *error)
+zip_string_t *
+_zip_read_string(const zip_uint8_t **buf, zip_source_t *src, zip_uint16_t len, int nulp, zip_error_t *error)
 {
     zip_uint8_t *raw;
-    struct zip_string *s;
+    zip_string_t *s;
 
     if ((raw=_zip_read_data(buf, src, len, nulp, error)) == NULL)
 	return NULL;
@@ -194,7 +194,7 @@ _zip_put_data(zip_uint8_t **p, const char *s, size_t len)
 
 
 int
-_zip_write(struct zip *za, const void *data, zip_uint64_t length)
+_zip_write(zip_t *za, const void *data, zip_uint64_t length)
 {
     zip_int64_t n;
     

@@ -40,7 +40,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_set_file_compression "struct zip *archive" "zip_uint64_t index" \
+.Fn zip_set_file_compression "zip_t *archive" "zip_uint64_t index" \
 "zip_int32_t comp" "zip_uint32_t comp_flags"
 .Sh DESCRIPTION
 The

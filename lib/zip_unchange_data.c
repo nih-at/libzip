@@ -35,7 +35,7 @@
 #include "zipint.h"
 
 void
-_zip_unchange_data(struct zip_entry *ze)
+_zip_unchange_data(zip_entry_t *ze)
 {
     if (ze->source) {
 	zip_source_free(ze->source);

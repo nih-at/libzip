@@ -38,16 +38,16 @@
 
 
 ZIP_EXTERN const char *
-zip_get_name(struct zip *za, zip_uint64_t idx, zip_flags_t flags)
+zip_get_name(zip_t *za, zip_uint64_t idx, zip_flags_t flags)
 {
     return _zip_get_name(za, idx, flags, &za->error);
 }
 
 
 const char *
-_zip_get_name(struct zip *za, zip_uint64_t idx, zip_flags_t flags, struct zip_error *error)
+_zip_get_name(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *error)
 {
-    struct zip_dirent *de;
+    zip_dirent_t *de;
     const zip_uint8_t *str;
 
     if ((de=_zip_get_dirent(za, idx, flags, error)) == NULL)

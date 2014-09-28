@@ -49,7 +49,7 @@ int
 main(int argc, char *argv[])
 {
     const char *archive;
-    struct zip *za;
+    zip_t *za;
     char buf[100];
     int err;
     zip_int64_t i;

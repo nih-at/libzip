@@ -69,11 +69,11 @@ static zip_int64_t buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t
 static int buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error);
 static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *);
 
-static zip_int64_t read_data(void *, void *, zip_uint64_t, enum zip_source_cmd);
+static zip_int64_t read_data(void *, void *, zip_uint64_t, zip_source_cmd_t);
 
 
-ZIP_EXTERN struct zip_source *
-zip_source_buffer(struct zip *za, const void *data, zip_uint64_t len, int freep)
+ZIP_EXTERN zip_source_t *
+zip_source_buffer(zip_t *za, const void *data, zip_uint64_t len, int freep)
 {
     if (za == NULL)
 	return NULL;
@@ -82,11 +82,11 @@ zip_source_buffer(struct zip *za, const void *data, zip_uint64_t len, int freep)
 }
 
 
-ZIP_EXTERN struct zip_source *
+ZIP_EXTERN zip_source_t *
 zip_source_buffer_create(const void *data, zip_uint64_t len, int freep, zip_error_t *error)
 {
     struct read_data *ctx;
-    struct zip_source *zs;
+    zip_source_t *zs;
 
     if (data == NULL && len > 0) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -119,7 +119,7 @@ zip_source_buffer_create(const void *data, zip_uint64_t len, int freep, zip_erro
 
 
 static zip_int64_t
-read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
     struct read_data *ctx = (struct read_data *)state;
 
@@ -186,14 +186,14 @@ read_data(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
        
         case ZIP_SOURCE_STAT:
         {
-            struct zip_stat *st;
+            zip_stat_t *st;
 	    
 	    if (len < sizeof(*st)) {
                 zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
 		return -1;
 	    }
 
-	    st = (struct zip_stat *)data;
+	    st = (zip_stat_t *)data;
 
 	    zip_stat_init(st);
 	    st->mtime = ctx->mtime;

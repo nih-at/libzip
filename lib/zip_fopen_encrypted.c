@@ -35,8 +35,8 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN struct zip_file *
-zip_fopen_encrypted(struct zip *za, const char *fname, zip_flags_t flags, const char *password)
+ZIP_EXTERN zip_file_t *
+zip_fopen_encrypted(zip_t *za, const char *fname, zip_flags_t flags, const char *password)
 {
     zip_int64_t idx;
 

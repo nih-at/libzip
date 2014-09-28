@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_unchange_archive(struct zip *za)
+zip_unchange_archive(zip_t *za)
 {
     if (za->comment_changed) {
 	_zip_string_free(za->comment_changes);

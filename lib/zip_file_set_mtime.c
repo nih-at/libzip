@@ -33,9 +33,9 @@
 
 #include "zipint.h"
 
-ZIP_EXTERN int zip_file_set_mtime(struct zip *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags)
+ZIP_EXTERN int zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags)
 {
-    struct zip_entry *e;
+    zip_entry_t *e;
     int changed;
     
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL)

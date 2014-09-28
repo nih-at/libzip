@@ -49,7 +49,7 @@
 */
 
 zip_uint64_t
-_zip_file_get_offset(const struct zip *za, zip_uint64_t idx, struct zip_error *error)
+_zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t *error)
 {
     zip_uint64_t offset;
     zip_int32_t size;

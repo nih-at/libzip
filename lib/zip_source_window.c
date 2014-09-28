@@ -47,11 +47,11 @@ struct window {
     int needs_seek;
 };
 
-static zip_int64_t window_read(struct zip_source *, void *, void *, zip_uint64_t, enum zip_source_cmd);
+static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 
 
-struct zip_source *
-zip_source_window(struct zip *za, struct zip_source *src, zip_uint64_t start, zip_uint64_t len)
+zip_source_t *
+zip_source_window(zip_t *za, zip_source_t *src, zip_uint64_t start, zip_uint64_t len)
 {
     return _zip_source_window_new(src, start, len, NULL, &za->error);
 }
@@ -91,7 +91,7 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t lengt
 
 
 int
-_zip_source_set_source_archive(struct zip_source *src, struct zip *za)
+_zip_source_set_source_archive(zip_source_t *src, zip_t *za)
 {
     src->source_archive = za;
     return _zip_register_source(za, src);
@@ -100,7 +100,7 @@ _zip_source_set_source_archive(struct zip_source *src, struct zip *za)
 
 /* called by zip_discard to avoid operating on file from closed archive */
 void
-_zip_source_invalidate(struct zip_source *src)
+_zip_source_invalidate(zip_source_t *src)
 {
     src->source_closed = 1;
 
@@ -111,7 +111,7 @@ _zip_source_invalidate(struct zip_source *src)
 
 
 static zip_int64_t
-window_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
     struct window *ctx;
     zip_int64_t ret;
@@ -215,9 +215,9 @@ window_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, en
 
        case ZIP_SOURCE_STAT:
         {
-            struct zip_stat *st;
+            zip_stat_t *st;
             
-	    st = (struct zip_stat *)data;
+	    st = (zip_stat_t *)data;
             
             if (_zip_stat_merge(st, &ctx->stat, &ctx->error) < 0) {
                 return -1;
@@ -239,7 +239,7 @@ window_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, en
 
 
 void
-_zip_deregister_source(struct zip *za, zip_source_t *src)
+_zip_deregister_source(zip_t *za, zip_source_t *src)
 {
     unsigned int i;
     
@@ -261,7 +261,7 @@ _zip_register_source(zip_t *za, zip_source_t *src)
     if (za->nopen_source+1 >= za->nopen_source_alloc) {
         unsigned int n;
         n = za->nopen_source_alloc + 10;
-        open_source = (struct zip_source **)realloc(za->open_source, n*sizeof(struct zip_source *));
+        open_source = (zip_source_t **)realloc(za->open_source, n*sizeof(zip_source_t *));
         if (open_source == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             return -1;

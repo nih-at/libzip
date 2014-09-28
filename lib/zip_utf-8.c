@@ -113,10 +113,10 @@ static const zip_uint16_t _cp437_to_unicode[256] = {
 #define UTF_8_CONTINUE_MATCH 0x80
 
 
-enum zip_encoding_type
-_zip_guess_encoding(struct zip_string *str, enum zip_encoding_type expected_encoding)
+zip_encoding_type_t
+_zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding)
 {
-    enum zip_encoding_type enc;
+    zip_encoding_type_t enc;
     const zip_uint8_t *name;
     zip_uint32_t i, j, ulen;
 
@@ -216,7 +216,7 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf)
 
 zip_uint8_t *
 _zip_cp437_to_utf8(const zip_uint8_t * const _cp437buf, zip_uint32_t len,
-		   zip_uint32_t *utf8_lenp, struct zip_error *error)
+		   zip_uint32_t *utf8_lenp, zip_error_t *error)
 {
     zip_uint8_t *cp437buf = (zip_uint8_t *)_cp437buf;
     zip_uint8_t *utf8buf;

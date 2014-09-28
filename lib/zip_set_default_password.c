@@ -39,7 +39,7 @@
 
 
 ZIP_EXTERN int
-zip_set_default_password(struct zip *za, const char *passwd)
+zip_set_default_password(zip_t *za, const char *passwd)
 {
     if (za == NULL)
 	return -1;

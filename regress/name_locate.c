@@ -40,8 +40,8 @@
 
 #include "compat.h"
 
-static int find_fail(struct zip *z, const char *name, zip_flags_t flags, int zerr);
-static int find_success(struct zip *z, const char *name, zip_flags_t flags);
+static int find_fail(zip_t *z, const char *name, zip_flags_t flags, int zerr);
+static int find_success(zip_t *z, const char *name, zip_flags_t flags);
 
 const char *prg;
 
@@ -50,9 +50,9 @@ int
 main(int argc, char *argv[])
 {
     int fail, ze;
-    struct zip *z;
+    zip_t *z;
     const char *archive;
-    struct zip_source *s;
+    zip_source_t *s;
     const char buf[] = "teststring";
 
     fail = 0;
@@ -115,7 +115,7 @@ main(int argc, char *argv[])
 
 
 static int
-find_fail(struct zip *z, const char *name, zip_flags_t flags, int zerr)
+find_fail(zip_t *z, const char *name, zip_flags_t flags, int zerr)
 {
     int ze, se;
     char expected[80];
@@ -139,7 +139,7 @@ find_fail(struct zip *z, const char *name, zip_flags_t flags, int zerr)
 
 
 static int
-find_success(struct zip *z, const char *name, zip_flags_t flags)
+find_success(zip_t *z, const char *name, zip_flags_t flags)
 {
 
     if (zip_name_locate(z, name, flags) < 0) {

@@ -39,10 +39,10 @@
 
 
 int
-_zip_set_name(struct zip *za, zip_uint64_t idx, const char *name, zip_flags_t flags)
+_zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags)
 {
-    struct zip_entry *e;
-    struct zip_string *str;
+    zip_entry_t *e;
+    zip_string_t *str;
     int changed;
     zip_int64_t i;
 

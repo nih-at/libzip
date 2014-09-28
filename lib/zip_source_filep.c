@@ -58,12 +58,12 @@ struct read_file {
     FILE *fout;
 };
 
-static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, enum zip_source_cmd cmd);
+static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 static int create_temp_output(struct read_file *ctx);
 
 
-ZIP_EXTERN struct zip_source *
-zip_source_filep(struct zip *za, FILE *file, zip_uint64_t start, zip_int64_t len)
+ZIP_EXTERN zip_source_t *
+zip_source_filep(zip_t *za, FILE *file, zip_uint64_t start, zip_int64_t len)
 {
     if (za == NULL)
 	return NULL;
@@ -84,11 +84,11 @@ zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_
 }
 
 
-struct zip_source *
+zip_source_t *
 _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, zip_error_t *error)
 {
     struct read_file *ctx;
-    struct zip_source *zs;
+    zip_source_t *zs;
     
     if (file == NULL && fname == NULL) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -387,7 +387,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 	    if (ctx->st.valid != 0)
 		memcpy(data, &ctx->st, sizeof(ctx->st));
 	    else {
-		struct zip_stat *st;
+		zip_stat_t *st;
 		struct stat fst;
 		int err;
 	    
@@ -401,7 +401,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 		    return -1;
 		}
 
-		st = (struct zip_stat *)data;
+		st = (zip_stat_t *)data;
 		
 		zip_stat_init(st);
 		st->mtime = fst.st_mtime;

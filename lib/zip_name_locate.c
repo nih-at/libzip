@@ -41,14 +41,14 @@
 
 
 ZIP_EXTERN zip_int64_t
-zip_name_locate(struct zip *za, const char *fname, zip_flags_t flags)
+zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags)
 {
     return _zip_name_locate(za, fname, flags, &za->error);
 }
 
 
 zip_int64_t
-_zip_name_locate(struct zip *za, const char *fname, zip_flags_t flags, struct zip_error *error)
+_zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zip_error_t *error)
 {
     int (*cmp)(const char *, const char *);
     const char *fn, *p;

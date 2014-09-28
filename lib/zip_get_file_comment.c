@@ -37,7 +37,7 @@
 
 
 ZIP_EXTERN const char *
-zip_get_file_comment(struct zip *za, zip_uint64_t idx, int *lenp, int flags)
+zip_get_file_comment(zip_t *za, zip_uint64_t idx, int *lenp, int flags)
 {
     zip_uint32_t len;
     const char *s;

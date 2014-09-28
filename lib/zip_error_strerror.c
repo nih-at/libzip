@@ -41,7 +41,7 @@
 
 
 ZIP_EXTERN const char *
-zip_error_strerror(struct zip_error *err)
+zip_error_strerror(zip_error_t *err)
 {
     const char *zs, *ss;
     char buf[128], *s;

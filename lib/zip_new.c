@@ -41,12 +41,12 @@
    creates a new zipfile struct, and sets the contents to zero; returns
    the new struct. */
 
-struct zip *
-_zip_new(struct zip_error *error)
+zip_t *
+_zip_new(zip_error_t *error)
 {
-    struct zip *za;
+    zip_t *za;
 
-    za = (struct zip *)malloc(sizeof(struct zip));
+    za = (zip_t *)malloc(sizeof(struct zip));
     if (!za) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;

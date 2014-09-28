@@ -38,7 +38,7 @@
 
 
 ZIP_EXTERN int
-zip_get_num_files(struct zip *za)
+zip_get_num_files(zip_t *za)
 {
     if (za == NULL)
 	return -1;

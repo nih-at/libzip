@@ -41,9 +41,9 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft void
-.Fn zip_error_clear "struct zip *archive"
+.Fn zip_error_clear "zip_t *archive"
 .Ft void
-.Fn zip_file_error_clear "struct zip_file *file"
+.Fn zip_file_error_clear "zip_file_t *file"
 .Sh DESCRIPTION
 The
 .Fn zip_error_clear

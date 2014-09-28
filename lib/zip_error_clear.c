@@ -36,7 +36,7 @@
 
 
 ZIP_EXTERN void
-zip_error_clear(struct zip *za)
+zip_error_clear(zip_t *za)
 {
     if (za == NULL)
 	return;

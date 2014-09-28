@@ -36,11 +36,11 @@
 
 
 ZIP_EXTERN int
-zip_stat_index(struct zip *za, zip_uint64_t index, zip_flags_t flags,
-	       struct zip_stat *st)
+zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags,
+	       zip_stat_t *st)
 {
     const char *name;
-    struct zip_dirent *de;
+    zip_dirent_t *de;
 
     if ((de=_zip_get_dirent(za, index, flags, NULL)) == NULL)
 	return -1;

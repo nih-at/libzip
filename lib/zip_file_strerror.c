@@ -36,7 +36,7 @@
 
 
 ZIP_EXTERN const char *
-zip_file_strerror(struct zip_file *zf)
+zip_file_strerror(zip_file_t *zf)
 {
     return zip_error_strerror(&zf->error);
 }

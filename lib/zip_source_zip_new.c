@@ -37,13 +37,13 @@
 #include "zipint.h"
 
 
-struct zip_source *
-_zip_source_zip_new(struct zip *za, struct zip *srcza, zip_uint64_t srcidx, zip_flags_t flags,
+zip_source_t *
+_zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags,
 		    zip_uint64_t start, zip_uint64_t len, const char *password)
 {
     zip_compression_implementation comp_impl;
     zip_encryption_implementation enc_impl;
-    struct zip_source *src, *s2;
+    zip_source_t *src, *s2;
     zip_uint64_t offset;
     struct zip_stat st;
 

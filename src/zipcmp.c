@@ -61,7 +61,7 @@
 
 struct archive {
     const char *name;
-    struct zip *za;
+    zip_t *za;
     zip_uint64_t nentry;
     struct entry *entry;
     const char *comment;
@@ -127,7 +127,7 @@ static int compare_zip(char * const zn[]);
 static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
 static int ef_order(const void *a, const void *b);
 static void ef_print(const void *p);
-static int ef_read(struct zip *za, zip_uint64_t idx, struct entry *e);
+static int ef_read(zip_t *za, zip_uint64_t idx, struct entry *e);
 static int entry_cmp(const void *p1, const void *p2);
 static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
 static void entry_print(const void *p);
@@ -136,7 +136,7 @@ static int is_directory(const char *name);
 static int list_directory(const char *name, struct archive *a);
 #endif
 static int list_zip(const char *name, struct archive *a);
-static int test_file(struct zip *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc);
+static int test_file(zip_t *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc);
 
 int ignore_case, test_files, paranoid, verbose;
 int header_done;
@@ -384,7 +384,7 @@ list_directory(const char *name, struct archive *a)
 static int
 list_zip(const char *name, struct archive *a)
 {
-    struct zip *za;
+    zip_t *za;
     int err;
     char errstr[1024];
     struct zip_stat st;
@@ -512,7 +512,7 @@ compare_list(char * const name[2],
 
 
 static int
-ef_read(struct zip *za, zip_uint64_t idx, struct entry *e)
+ef_read(zip_t *za, zip_uint64_t idx, struct entry *e)
 {
     zip_int16_t n_local, n_central;
     zip_uint16_t i;
@@ -677,9 +677,9 @@ entry_print(const void *p)
 
 
 static int
-test_file(struct zip *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc)
+test_file(zip_t *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc)
 {
-    struct zip_file *zf;
+    zip_file_t *zf;
     char buf[8192];
     zip_uint64_t nsize;
     zip_int64_t n;

@@ -41,11 +41,11 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_int64_t
-.Fn zip_file_add "struct zip *archive" "const char *name" \
-"struct zip_source *source" "zip_flags_t flags"
+.Fn zip_file_add "zip_t *archive" "const char *name" \
+"zip_source_t *source" "zip_flags_t flags"
 .Ft int
-.Fn zip_file_replace "struct zip *archive" "zip_uint64_t index" \
-"struct zip_source *source" "zip_flags_t flags"
+.Fn zip_file_replace "zip_t *archive" "zip_uint64_t index" \
+"zip_source_t *source" "zip_flags_t flags"
 .Sh DESCRIPTION
 The function
 .Fn zip_file_add
@@ -102,7 +102,7 @@ Otherwise, \-1 is returned and the error code in
 is set to indicate the error.
 .Sh EXAMPLES
 .Bd -literal -offset indent
-struct zip_source *s;
+zip_source_t *s;
 const char buf="teststring";
 
 if ((s=zip_source_buffer(archive, buffer, sizeof(buf), 0)) == NULL ||

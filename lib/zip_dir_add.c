@@ -41,12 +41,12 @@
 /* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
 
 ZIP_EXTERN zip_int64_t
-zip_dir_add(struct zip *za, const char *name, zip_flags_t flags)
+zip_dir_add(zip_t *za, const char *name, zip_flags_t flags)
 {
     size_t len;
     zip_int64_t idx;
     char *s;
-    struct zip_source *source;
+    zip_source_t *source;
 
     if (ZIP_IS_RDONLY(za)) {
 	zip_error_set(&za->error, ZIP_ER_RDONLY, 0);

@@ -46,11 +46,11 @@ struct crc_context {
     zip_uint32_t crc;
 };
 
-static zip_int64_t crc_read(struct zip_source *, void *, void *, zip_uint64_t, enum zip_source_cmd);
+static zip_int64_t crc_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 
 
-struct zip_source *
-zip_source_crc(struct zip *za, struct zip_source *src, int validate)
+zip_source_t *
+zip_source_crc(zip_t *za, zip_source_t *src, int validate)
 {
     struct crc_context *ctx;
 
@@ -75,7 +75,7 @@ zip_source_crc(struct zip *za, struct zip_source *src, int validate)
 
 
 static zip_int64_t
-crc_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, enum zip_source_cmd cmd)
+crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
     struct crc_context *ctx;
     zip_int64_t n;
@@ -136,9 +136,9 @@ crc_read(struct zip_source *src, void *_ctx, void *data, zip_uint64_t len, enum 
 
         case ZIP_SOURCE_STAT:
         {
-            struct zip_stat *st;
+            zip_stat_t *st;
 
-	    st = (struct zip_stat *)data;
+	    st = (zip_stat_t *)data;
 
 	    if (ctx->eof) {
 		/* TODO: Set comp_size, comp_method, encryption_method?
