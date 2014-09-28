@@ -65,9 +65,9 @@ static void buffer_free(buffer_t *buffer);
 static buffer_t *buffer_new(zip_uint64_t fragment_size);
 static buffer_t *buffer_new_read(const void *data, zip_uint64_t length, int free_data);
 static buffer_t *buffer_new_write(zip_uint64_t fragment_size);
-static zip_int64_t buffer_read(buffer_t *buffer, void *data, zip_uint64_t length);
+static zip_int64_t buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length);
 static int buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error);
-static zip_int64_t buffer_write(buffer_t *buffer, const void *data, zip_uint64_t length, zip_error_t *);
+static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *);
 
 static zip_int64_t read_data(void *, void *, zip_uint64_t, enum zip_source_cmd);
 
@@ -327,7 +327,7 @@ buffer_new_write(zip_uint64_t fragment_size)
 
 
 static zip_int64_t
-buffer_read(buffer_t *buffer, void *data, zip_uint64_t length)
+buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length)
 {
     zip_uint64_t n, i, fragment_offset;
 
@@ -396,7 +396,7 @@ buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error)
 
 
 static zip_int64_t
-buffer_write(buffer_t *buffer, const void *data, zip_uint64_t length, zip_error_t *error)
+buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error)
 {
     zip_uint64_t n, i, fragment_offset;
 
