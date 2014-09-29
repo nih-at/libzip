@@ -911,6 +911,7 @@
 		4BDC729915B1B2A600236D3C /* zipint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zipint.h; path = ../lib/zipint.h; sourceTree = "<group>"; };
 		4BDC729E15B1B4E900236D3C /* zipconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zipconf.h; sourceTree = SOURCE_ROOT; };
 		4BDC72A015B1B56400236D3C /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
+		4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_is_deleted.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1310,6 +1311,7 @@
 				4BDC722E15B1B25E00236D3C /* zip_source_filep.c */,
 				4BDC722F15B1B25E00236D3C /* zip_source_free.c */,
 				4BDC723015B1B25E00236D3C /* zip_source_function.c */,
+				4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */,
 				4BDC723115B1B25E00236D3C /* zip_source_layered.c */,
 				4BDC723215B1B25E00236D3C /* zip_source_open.c */,
 				4BDC723315B1B25E00236D3C /* zip_source_pkware.c */,
