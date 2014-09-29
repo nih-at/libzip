@@ -402,7 +402,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
     de->comp_method = st.comp_method;
     de->crc = st.crc;
     de->uncomp_size = st.size;
-    de->comp_size = (zip_uint8_t)(offend - offdata);
+    de->comp_size = (zip_uint64_t)(offend - offdata);
 
     if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	_zip_dirent_torrent_normalize(de);
