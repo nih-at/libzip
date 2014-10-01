@@ -147,6 +147,7 @@ add_from_zip(int argc, char *argv[]) {
     return 0;
 }
 
+int
 add_nul(int argc, char *argv[]) {
     zip_source_t *zs;
     zip_uint64_t length = strtoull(argv[1], NULL, 10);
@@ -574,13 +575,18 @@ source_nul_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t comman
             return 0;
             
         case ZIP_SOURCE_READ:
+	    if (length > ZIP_INT64_MAX) {
+		zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+		return -1;
+	    }
+
             if (length > ctx->length - ctx->offset) {
                 length =ctx->length - ctx->offset;
             }
             
             memset(data, 0, length);
             ctx->offset += length;
-            return length;
+            return (zip_int64_t)length;
             
         case ZIP_SOURCE_STAT: {
             zip_stat_t *st = ZIP_SOURCE_GET_ARGS(zip_stat_t, data, length, &ctx->error);
@@ -605,13 +611,13 @@ source_nul_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t comman
 }
 
 static zip_source_t *
-source_nul(zip_t *za, zip_uint64_t length)
+source_nul(zip_t *zs, zip_uint64_t length)
 {
     source_nul_t *ctx;
     zip_source_t *src;
     
     if ((ctx = (source_nul_t *)malloc(sizeof(*ctx))) == NULL) {
-        zip_error_set(zip_get_error(za), ZIP_ER_MEMORY, 0);
+        zip_error_set(zip_get_error(zs), ZIP_ER_MEMORY, 0);
         return NULL;
     }
     
@@ -619,7 +625,7 @@ source_nul(zip_t *za, zip_uint64_t length)
     ctx->length = length;
     ctx->offset = 0;
     
-    if ((src = zip_source_function(za, source_nul_cb, ctx)) == NULL) {
+    if ((src = zip_source_function(zs, source_nul_cb, ctx)) == NULL) {
         free(ctx);
         return NULL;
     }
