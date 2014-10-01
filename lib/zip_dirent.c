@@ -127,7 +127,7 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
 {
     zip_uint64_t offset, size;
     zip_string_t *comment;
-    zip_uint8_t buf[EOCDLEN + EOCD64LEN], *p;
+    zip_uint8_t buf[EOCDLEN + EOCD64LEN + EOCD64LOCLEN], *p;
     zip_int64_t off;
     zip_uint64_t i;
     int is_zip64;
@@ -639,7 +639,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     zip_uint16_t dostime, dosdate;
     zip_encoding_type_t com_enc, name_enc;
     zip_extra_field_t *ef;
-    zip_uint8_t ef_zip64[24], *ef_zip64_p;
+    zip_uint8_t ef_zip64[EFZIP64SIZE], *ef_zip64_p;
     int is_zip64;
     int is_really_zip64;
     zip_uint8_t buf[CDENTRYSIZE], *p;

@@ -148,6 +148,7 @@ int _zip_mkstemp(char *);
 #define EOCD64LEN	    56
 #define CDBUFSIZE       (MAXCOMLEN+EOCDLEN+EOCD64LOCLEN)
 #define BUFSIZE		8192
+#define EFZIP64SIZE 28
 
 #define ZIP_CM_REPLACED_DEFAULT 65534
 
