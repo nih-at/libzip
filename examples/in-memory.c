@@ -58,7 +58,7 @@ get_data(void **datap, size_t *sizep, const char *archive)
 	return 0;
     }
 
-    if ((*datap = malloc(st.st_size)) == NULL) {
+    if ((*datap = malloc((size_t)st.st_size)) == NULL) {
 	fprintf(stderr, "can't allocate buffer\n");
 	return -1;
     }
@@ -69,7 +69,7 @@ get_data(void **datap, size_t *sizep, const char *archive)
 	return -1;
     }
     
-    if (fread(*datap, 1, st.st_size, fp) < st.st_size) {
+    if (fread(*datap, 1, (size_t)st.st_size, fp) < (size_t)st.st_size) {
 	free(*datap);
 	fprintf(stderr, "can't read %s: %s\n", archive, strerror(errno));
 	return -1;
@@ -77,7 +77,7 @@ get_data(void **datap, size_t *sizep, const char *archive)
 
     fclose(fp);
 
-    *sizep = st.st_size;
+    *sizep = (size_t)st.st_size;
     return 0;
 }
 
@@ -197,7 +197,7 @@ main(int argc, char *argv[])
 	    zip_source_close(src);
 	    return 1;
 	}
-	if (zip_source_read(src, data, size) < size) {
+	if ((zip_uint64_t)zip_source_read(src, data, size) < size) {
 	    fprintf(stderr, "can't read data from source: %s\n", zip_error_strerror(zip_source_error(src)));
 	    zip_source_close(src);
 	    free(data);
