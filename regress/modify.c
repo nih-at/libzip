@@ -60,6 +60,7 @@ static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
 static zip_t *read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp);
+static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
 
 zip_t *za, *z_in;
 zip_flags_t stat_flags;
@@ -142,6 +143,23 @@ add_from_zip(int argc, char *argv[]) {
 	zip_source_free(zs);
 	zip_close(z_in);
 	return -1;
+    }
+    return 0;
+}
+
+add_nul(int argc, char *argv[]) {
+    zip_source_t *zs;
+    zip_uint64_t length = strtoull(argv[1], NULL, 10);
+    
+    if ((zs=source_nul(za, length)) == NULL) {
+        fprintf(stderr, "can't create zip_source for length: %s\n", zip_strerror(za));
+        return -1;
+    }
+    
+    if (zip_add(za, argv[0], zs) == -1) {
+        zip_source_free(zs);
+        fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
+        return -1;
     }
     return 0;
 }
@@ -529,6 +547,87 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
     return zb;
 }
 
+typedef struct source_nul {
+    zip_error_t error;
+    zip_uint64_t length;
+    zip_uint64_t offset;
+} source_nul_t;
+
+static zip_int64_t
+source_nul_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command)
+{
+    source_nul_t *ctx = (source_nul_t *)ud;
+    
+    switch (command) {
+        case ZIP_SOURCE_CLOSE:
+            return 0;
+
+        case ZIP_SOURCE_ERROR:
+            return zip_error_to_data(&ctx->error, data, length);
+            
+        case ZIP_SOURCE_FREE:
+            free(ctx);
+            return 0;
+            
+        case ZIP_SOURCE_OPEN:
+            ctx->offset = 0;
+            return 0;
+            
+        case ZIP_SOURCE_READ:
+            if (length > ctx->length - ctx->offset) {
+                length =ctx->length - ctx->offset;
+            }
+            
+            memset(data, 0, length);
+            ctx->offset += length;
+            return length;
+            
+        case ZIP_SOURCE_STAT: {
+            zip_stat_t *st = ZIP_SOURCE_GET_ARGS(zip_stat_t, data, length, &ctx->error);
+            
+            if (st == NULL) {
+                return -1;
+            }
+            
+            st->valid |= ZIP_STAT_SIZE;
+            st->size = ctx->length;
+            
+            return 0;
+        }
+            
+        case ZIP_SOURCE_SUPPORTS:
+            return zip_source_make_command_bitmap(ZIP_SOURCE_CLOSE, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_STAT, -1);
+
+        default:
+            zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
+            return -1;
+    }
+}
+
+static zip_source_t *
+source_nul(zip_t *za, zip_uint64_t length)
+{
+    source_nul_t *ctx;
+    zip_source_t *src;
+    
+    if ((ctx = (source_nul_t *)malloc(sizeof(*ctx))) == NULL) {
+        zip_error_set(zip_get_error(za), ZIP_ER_MEMORY, 0);
+        return NULL;
+    }
+    
+    zip_error_init(&ctx->error);
+    ctx->length = length;
+    ctx->offset = 0;
+    
+    if ((src = zip_source_function(za, source_nul_cb, ctx)) == NULL) {
+        free(ctx);
+        return NULL;
+    }
+    
+    return src;
+}
+
+
 static int
 write_memory_src_to_file(const char *archive, zip_source_t *src)
 {
@@ -586,6 +685,7 @@ dispatch_table_t dispatch_table[] = {
     { "add_dir", 1, "name", "add directory", add_dir },
     { "add_file", 4, "name file_to_add offset len", "add file to archive, len bytes starting from offset", add_file },
     { "add_from_zip", 5, "name archivename index offset len", "add file from another archive, len bytes starting from offset", add_from_zip },
+    { "add_nul", 2, "name length", "add NUL bytes", add_nul },
     { "count_extra", 2, "index flags", "show number of extra fields for archive entry", count_extra },
     { "count_extra_by_id", 3, "index extra_id flags", "show number of extra fields of type extra_id for archive entry", count_extra_by_id },
     { "delete", 1, "index", "remove entry", delete },
