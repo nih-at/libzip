@@ -1,5 +1,5 @@
 # create big zip64 zip file from scratch
 program modify
-args bigzero  add_nul bigzero 4294967296
-file-new bigzero bigzero.zip
+args bigzero.zip  add_nul bigzero 4294967296
+file-new bigzero.zip bigzero.zip
 return 0
