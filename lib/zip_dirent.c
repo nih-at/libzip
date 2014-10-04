@@ -718,14 +718,25 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     _zip_put_16(&p, dosdate);
 
     _zip_put_32(&p, de->crc);
-    if (de->comp_size < ZIP_UINT32_MAX)
-	_zip_put_32(&p, (zip_uint32_t)de->comp_size);
-    else
+    if (((flags & ZIP_FL_LOCAL) == ZIP_FL_LOCAL) && ((de->comp_size >= ZIP_UINT32_MAX) || (de->uncomp_size >= ZIP_UINT32_MAX))) {
+	/* In local headers, if a ZIP64 EF is written, it MUST contain
+	 * both compressed and uncompressed sizes (even if one of the
+	 * two is smaller than 0xFFFFFFFF); on the other hand, those
+	 * may only appear when the corresponding standard entry is
+	 * 0xFFFFFFFF.  (appnote.txt 4.5.3) */
 	_zip_put_32(&p, ZIP_UINT32_MAX);
-    if (de->uncomp_size < ZIP_UINT32_MAX)
-	_zip_put_32(&p, (zip_uint32_t)de->uncomp_size);
-    else
 	_zip_put_32(&p, ZIP_UINT32_MAX);
+    }
+    else {
+	if (de->comp_size < ZIP_UINT32_MAX)
+	    _zip_put_32(&p, (zip_uint32_t)de->comp_size);
+	else
+	    _zip_put_32(&p, ZIP_UINT32_MAX);
+	if (de->uncomp_size < ZIP_UINT32_MAX)
+	    _zip_put_32(&p, (zip_uint32_t)de->uncomp_size);
+	else
+	    _zip_put_32(&p, ZIP_UINT32_MAX);
+    }
 
     _zip_put_16(&p, _zip_string_length(de->filename));
     _zip_put_16(&p, (zip_uint16_t)(_zip_ef_size(de->extra_fields, flags) + _zip_ef_size(ef, ZIP_EF_BOTH)));
