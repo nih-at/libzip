@@ -364,16 +364,14 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
         }
             
         case ZIP_SOURCE_SEEK_WRITE: {
-            zip_int64_t offset, whence;
+            zip_source_args_seek_t *args;
             
-            if (len < sizeof(zip_int64_t)*2) {
-                zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
+            if (args == NULL) {
                 return -1;
             }
-            offset = ((zip_int64_t *)data)[0];
-            whence = ((zip_int64_t *)data)[1];
-
-            if (fseeko(ctx->fout, offset, (int)whence) < 0) {
+            
+            if (fseeko(ctx->fout, args->offset, args->whence) < 0) {
                 zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
                 return -1;
             }
