@@ -13,6 +13,12 @@ For example for adding extractors for self-extracting zip archives.
 * zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t length);
 * const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
 
+Progress Callback
+-----------------
+Register callback; will be called from zip_close() after each file has been processed.
+typedef void (*zip_progress_callback_t)(double);
+void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
+
 API Issues
 ==========
 ! D zip_get_archive_comment has int *lenp argument.  Cleaner would be zip_uint32_t *.
@@ -25,9 +31,7 @@ API Issues
 
 Features
 ========
-* progress callback for zip_close (called after each file written completely)
 * function to copy file from one archive to another
-* do not compress if storing is smaller
 * set O_CLOEXEC flag after fopen and mkstemp
 * Windows specific I/O source (to be written by a Windows expert)
 

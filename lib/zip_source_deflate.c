@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
@@ -41,10 +40,12 @@
 struct deflate {
     zip_error_t error;
     
-    int eof;
+    bool eof;
+    bool can_store;
+    bool is_stored;
     int mem_level;
     zip_uint64_t size;
-    char buffer[BUFSIZE];
+    zip_uint8_t buffer[BUFSIZE];
     z_stream zstr;
 };
 
@@ -72,7 +73,9 @@ zip_source_deflate(zip_t *za, zip_source_t *src, zip_int32_t cm, int flags)
     }
 
     zip_error_init(&ctx->error);
-    ctx->eof = 0;
+    ctx->eof = false;
+    ctx->is_stored = false;
+    ctx->can_store = ZIP_CM_IS_DEFAULT(cm);
     if (flags & ZIP_CODEC_ENCODE) {
 	if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
 	    ctx->mem_level = TORRENT_MEM_LEVEL;
@@ -103,8 +106,9 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
     if (zip_error_code_zip(&ctx->error) != ZIP_ER_OK)
 	return -1;
     
-    if (len == 0)
+    if (len == 0 || ctx->is_stored) {
 	return 0;
+    }
 	
     out_offset = 0;
     out_len = (uInt)ZIP_MIN(UINT_MAX, len);
@@ -121,6 +125,32 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
 	    /* all ok */
 
 	    if (ctx->zstr.avail_out == 0) {
+		    /* if we can return stored data (ZIP_CM_DEFAULT and we never returned compressed data),
+		       all input is still available,
+		       the output buffer is at least as big as the input data,
+		       and at least one byte from buffer used by zlib */
+		if (ctx->can_store && ctx->zstr.total_in+ctx->zstr.avail_in <= sizeof(ctx->buffer) && len >= ctx->zstr.total_in && ctx->zstr.avail_in < sizeof(ctx->buffer)) {
+		    zip_uint8_t buf[1];
+		    if ((n=zip_source_read(src, buf, 1)) < 0) {
+			_zip_error_set_from_source(&ctx->error, src);
+			end = 1;
+			break;
+		    }
+		    if (n == 0) {
+			ctx->is_stored = true;
+			ctx->eof = true;
+			ctx->size = ctx->zstr.total_in + ctx->zstr.avail_in;
+			memcpy(data, ctx->buffer, ctx->size);
+			return (zip_int64_t)ctx->size;
+		    }
+		    else {
+			/* not EOF */
+			memmove(ctx->buffer, ctx->zstr.next_in, ctx->zstr.avail_in);
+			ctx->buffer[ctx->zstr.avail_in] = buf[0];
+			ctx->zstr.avail_in += 1;
+			ctx->zstr.next_in = (Bytef *)ctx->buffer;
+		    }
+		}
 		out_offset += out_len;
 		if (out_offset < len) {
 		    out_len = (uInt)ZIP_MIN(UINT_MAX, len-out_offset);
@@ -148,9 +178,17 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
 		    break;
 		}
 		else if (n == 0) {
-		    ctx->eof = 1;
-		    ctx->size = ctx->zstr.total_in;
+		    ctx->eof = true;
 		    /* TODO: check against stat of src? */
+		    ctx->size = ctx->zstr.total_in;
+		    /* if we can return stored data (ZIP_CM_DEFAULT and we never returned compressed data),
+		       all input is still available,
+		       and the output buffer is at least as big as the input data */
+		    if (ctx->can_store && ctx->zstr.total_in+ctx->zstr.avail_in <= sizeof(ctx->buffer) && len >= ctx->zstr.total_in) {
+			ctx->is_stored = true;
+			memcpy(data, ctx->buffer, ctx->zstr.total_in);
+			return (zip_int64_t)ctx->zstr.total_in;
+		    }
 		}
 		else {
 		    ctx->zstr.next_in = (Bytef *)ctx->buffer;
@@ -170,8 +208,10 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
 	}
     }
 
-    if (ctx->zstr.avail_out < len)
+    if (ctx->zstr.avail_out < len) {
+	ctx->can_store = false;
 	return (zip_int64_t)(len - ctx->zstr.avail_out);
+    }
 
     return (zip_error_code_zip(&ctx->error) == ZIP_ER_OK) ? 0 : -1;
 }
@@ -232,8 +272,9 @@ decompress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t
 		    end = 1;
 		    break;
 		}
-		else if (n == 0)
+		else if (n == 0) {
 		    ctx->eof = 1;
+		}
 		else {
 		    ctx->zstr.next_in = (Bytef *)ctx->buffer;
 		    ctx->zstr.avail_in = (uInt)n;
@@ -297,7 +338,7 @@ deflate_compress(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_
 
 	    st = (zip_stat_t *)data;
 
-	    st->comp_method = ZIP_CM_DEFLATE;
+	    st->comp_method = ctx->is_stored ? ZIP_CM_STORE : ZIP_CM_DEFLATE;
 	    st->valid |= ZIP_STAT_COMP_METHOD;
 	    if (ctx->eof) {
 		st->comp_size = ctx->size;

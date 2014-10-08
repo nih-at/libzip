@@ -22,6 +22,7 @@
 #cmakedefine HAVE_STRDUP
 #cmakedefine HAVE_STRUCT_TM_TM_ZONE
 #cmakedefine HAVE_MOVEFILEEXA
+#cmakedefine HAVE_STDBOOL_H
 #cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
 #cmakedefine __INT8_LIBZIP ${__INT8_LIBZIP}

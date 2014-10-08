@@ -52,6 +52,14 @@
 #include "zip.h"
 #include "config.h"
 
+#ifdef HAVE_STDBOOL_H
+#include <stdbool.h>
+#else
+typedef char bool;
+#define true    1
+#define false   0
+#endif
+
 #ifdef HAVE_MOVEFILEEXA
 #include <windows.h>
 #define _zip_rename(s, t)	(!MoveFileExA((s), (t), MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
