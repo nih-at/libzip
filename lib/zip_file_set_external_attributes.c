@@ -74,8 +74,7 @@ zip_file_set_external_attributes(zip_t *za, zip_uint64_t idx, zip_flags_t flags,
 	    e->changes = NULL;
 	}
 	else {
-	    e->changes->version_madeby = (zip_uint16_t)((unchanged_opsys << 8) | (e->changes->version_madeby & 0xff))
-;
+	    e->changes->version_madeby = (zip_uint16_t)((unchanged_opsys << 8) | (e->changes->version_madeby & 0xff));
 	    e->changes->ext_attrib = unchanged_attributes;
 	}
     }

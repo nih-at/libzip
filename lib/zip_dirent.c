@@ -399,7 +399,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
     zde->extra_fields = NULL;
     zde->comment = NULL;
 
-    size += (zip_uint32_t)filename_len+ef_len+comment_len;
+    size += (zip_uint32_t)filename_len+(zip_uint32_t)ef_len+(zip_uint32_t)comment_len;
 
     if (leftp && (*leftp < size)) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
@@ -739,7 +739,9 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     }
 
     _zip_put_16(&p, _zip_string_length(de->filename));
-    _zip_put_16(&p, (zip_uint16_t)(_zip_ef_size(de->extra_fields, flags) + _zip_ef_size(ef, ZIP_EF_BOTH)));
+    /* TODO: check for overflow */
+    zip_uint32_t ef_total_size = (zip_uint32_t)_zip_ef_size(de->extra_fields, flags) + (zip_uint32_t)_zip_ef_size(ef, ZIP_EF_BOTH);
+    _zip_put_16(&p, (zip_uint16_t)ef_total_size);
     
     if ((flags & ZIP_FL_LOCAL) == 0) {
 	_zip_put_16(&p, _zip_string_length(de->comment));

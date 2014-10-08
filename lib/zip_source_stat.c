@@ -59,9 +59,5 @@ zip_source_stat(zip_source_t *src, zip_stat_t *st)
 	return -1;
     }
 
-    if ((st->valid & ZIP_STAT_COMP_METHOD) && ZIP_CM_IS_DEFAULT(st->comp_method)) {
-	st->valid &= ~ZIP_STAT_COMP_METHOD;
-    }
-
     return 0;
 }

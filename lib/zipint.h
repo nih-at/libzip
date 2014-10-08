@@ -150,7 +150,7 @@ int _zip_mkstemp(char *);
 #define BUFSIZE		8192
 #define EFZIP64SIZE 28
 
-#define ZIP_CM_REPLACED_DEFAULT 65534
+#define ZIP_CM_REPLACED_DEFAULT	(-2)
 
 #define ZIP_CM_IS_DEFAULT(x)	((x) == ZIP_CM_DEFAULT || (x) == ZIP_CM_REPLACED_DEFAULT)
 
