@@ -83,6 +83,7 @@ Cleanup
 
 Test Case Issues
 ================
+* add test case for ZIP_CM_DEFAULT -> stored (edge cases)
 * replace Text::Diff with own implementation
 * use zipcmp -p?
 * zip_open file less than EOCDLEN bytes long
