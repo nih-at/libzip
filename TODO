@@ -29,6 +29,7 @@ Features
 * function to copy file from one archive to another
 * do not compress if storing is smaller
 * set O_CLOEXEC flag after fopen and mkstemp
+* Windows specific I/O source (to be written by a Windows expert)
 
 * I/O methods
 * support streaming output (creating new archive to e.g. stdout)
@@ -36,8 +37,8 @@ Features
   . read/set ASCII file flag? (wiz: more general options?)
 * zip_commit (to finish changes without closing archive)
 * add custom compression function support
+* zip_fseek
 * zip_source_zip: allow rewinding
-* zip_source_seek, zip_fseek
 * zipcmp: add option for file content comparison
 * zipcmp: compare bit flags if paranoid
 * zipcmp: compare external attributes/opsys if paranoid
@@ -52,6 +53,7 @@ Features
 
 Bugs
 ====
+* support InfoZIP encryption header extension
 * embed stripped down old zlib for torrentzip
 ! ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
 * Xcode 32bit build uses 64bit config.h
@@ -61,7 +63,6 @@ Bugs
 * check for limits imposed by format (central dir size, file size, extra fields, ...)
 * _zip_u2d_time: handle localtime(3) failure
 * POSIX: zip_open: check whether file can be created and fail if not
-* POSIX: fix permissions of new file to match old one
 * fix inconsistent usage of valid flags (not checked in many places)
 * cdr == NULL -> ER_NOENT vs. idx > cdir->nentry -> ER_INVAL inconsistent (still there?)
 * torrentzip broken on NetBSD/amd64 6.99
@@ -240,14 +241,37 @@ after merge:
 - direct reference to source and from upper layer are equivalent: only close/free if all are gone.
 - only allow multiple upper layers for sources that support seek
 - cache supported state in struct zip_source and check in _zip_source_call before calling
+D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
+- find out FSEEK_MAX/FTELL_MAX and use it
 - adapt man pages
-  - zip_source_is_deleted
-  - zip_source_stat
-  - zip_source_open
-  - zip_source_close
-  - zip_source_read
-  - zip_source_make_command_bitmap
-  - zip_error_set
-  - zip_error_to_data
-- ask on libzip-discuss whether Windows backend will use stdio, make plan for avoiding code duplication with Unix backend
-- re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
+- document ZIP_RDONLY
+- keep error codes in man pages in sync
+- document ZIP_SOURCE_GET_ARGS(type, data, len, error) ((len) < sizeof(type) ? zip_error_set((error), ZIP_ER_INVAL, 0), NULL : (type *)(data))
+- document new functions
+** zip_error_t *zip_get_error(zip_t *);
+** int zip_error_code_zip(const zip_error_t *);
+** int zip_error_code_system(const zip_error_t *);
+** void zip_error_fini(zip_error_t *);
+** void zip_error_init(zip_error_t *);
+** void zip_error_set(zip_error_t *, int, int);
+** const char *zip_error_strerror(zip_error_t *);
+** int zip_error_system_type(const zip_error_t *);
+** zip_int64_t zip_error_to_data(const zip_error_t *, void *, zip_uint64_t);
+** zip_error_t *zip_file_get_error(zip_file_t *);
+** zip_t *zip_open_from_source(zip_source_t *, int, zip_error_t *);
+** zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
+** int zip_source_close(zip_source_t *);
+** zip_error_t *zip_source_error(zip_source_t *src);
+** zip_source_t *zip_source_file_create(const char *, zip_uint64_t, zip_int64_t, zip_error_t *);
+** zip_source_t *zip_source_filep_create(FILE *, zip_uint64_t, zip_int64_t, zip_error_t *);
+** zip_source_t *zip_source_function_create(zip_source_callback, void *, zip_error_t *);
+** int zip_source_is_deleted(zip_source_t *);
+** void zip_source_keep(zip_source_t *);
+** zip_int64_t zip_source_make_command_bitmap(zip_source_cmd_t, ...);
+** int zip_source_open(zip_source_t *);
+** zip_int64_t zip_source_read(zip_source_t *, void *, zip_uint64_t);
+** int zip_source_stat(zip_source_t *, zip_stat_t *);
+- document deprecations
+** int zip_error_get_sys_type(int); /* use zip_error_system_type */
+** void zip_error_get(zip_t *, int *, int *); /* use zip_get_error, zip_error_code_zip / zip_error_code_system */
+** void zip_file_error_get(zip_file_t *, int *, int *); /* use zip_file_get_error, zip_error_code_zip / zip_error_code_system */
