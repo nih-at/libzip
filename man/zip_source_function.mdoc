@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd August 11, 2014
+.Dd October 9, 2014
 .Dt ZIP_SOURCE_FUNCTION 3
 .Os
 .Sh NAME
@@ -69,23 +69,104 @@ when data is expected to be returned, or else
 and 0.
 The last argument,
 .Ar cmd ,
-specifies which action the function should perform:
-.Bl -tag -width XZIPXSOURCEXCLOSEXX -offset indent
-.It Dv ZIP_SOURCE_OPEN
+specifies which action the function should perform.
+.Pp
+Depending on the uses, there are three useful sets of commands to be supported by a
+.Fn zip_source_callback :
+.Bl -tag -width seekable-read-sourceXX
+.It read source
+Providing streamed data (for file data added to archives).
+Must support
+.Dv ZIP_SOURCE_OPEN ,
+.Dv ZIP_SOURCE_READ ,
+.Dv ZIP_SOURCE_CLOSE ,
+.Dv ZIP_SOURCE_STAT ,
+and
+.Dv ZIP_SOURCE_ERROR .
+.It seekable read source
+Same as previous, but from a source allowing reading from arbitrary
+offsets (also for read-only zip archive).
+Must additionally support
+.Dv ZIP_SOURCE_SEEK ,
+.Dv ZIP_SOURCE_TELL ,
+and
+.Dv ZIP_SOURCE_SUPPORTS .
+.It read/write source
+Same as previous, but additionally allowing writing (also for writable
+zip archives).
+Must additionally support
+.Dv ZIP_SOURCE_BEGIN_WRITE ,
+.Dv ZIP_SOURCE_COMMIT_WRITE ,
+.Dv ZIP_SOURCE_ROLLBACK_WRITE ,
+.Dv ZIP_SOURCE_SEEK_WRITE ,
+.Dv ZIP_SOURCE_TELL_WRITE ,
+and
+.Dv ZIP_SOURCE_REMOVE .
+.El
+.Ss Dv ZIP_SOURCE_BEGIN_WRITE
+Prepare the source for writing.
+Use this to create any temporary file(s).
+.Ss Dv ZIP_SOURCE_CLOSE
+Reading is done.
+.Ss Dv ZIP_SOURCE_COMMIT_WRITE
+Finish writing to the source.
+Replace the original data with the newly written data.
+Clean up temporary files or internal buffers.
+Subsequently opening and reading from the source should return the
+newly written data.
+.Ss Dv ZIP_SOURCE_ERROR
+Get error information.
+.Ar data
+points to an array of two ints, which should be filled with the libzip
+error code and the corresponding system error code for the error that
+occurred.
+See
+.Xr zip_errors 3
+for details on the error codes.
+If the source stores error information in a zip_error_t, use
+.Xr zip_error_to_data 3
+and return its return value.
+Otherwise, return 2 * sizeof(int).
+.Ss Dv ZIP_SOURCE_FREE
+Clean up and free all resources.
+.Ss Dv ZIP_SOURCE_OPEN
 Prepare for reading.
-Return 0 on success, \-1 on error.
-.It Dv ZIP_SOURCE_READ
+.Ss Dv ZIP_SOURCE_READ
 Read data into the buffer
 .Ar data
 of size
 .Ar len .
 Return the number of bytes placed into
 .Ar data
-on success, \-1 on error.
-.It Dv ZIP_SOURCE_CLOSE
-Reading is done.
-Return 0.
-.It Dv ZIP_SOURCE_STAT
+on success.
+.Ss Dv ZIP_SOURCE_REMOVE
+Remove the underlying file.
+This is called if a zip archive is empty when closed.
+.Ss Dv ZIP_SOURCE_ROLLBACK_WRITE
+Abort writing to the source.
+Discard written data.
+Clean up temporary files or internal buffers.
+Subsequently opening and reading from the source should return the
+original data.
+.Ss Dv ZIP_SOURCE_SEEK
+Specify position to read next byte from, like
+.Xr fseek 3 .
+Use
+.Xr ZIP_SOURCE_GET_ARGS
+to decode the arguments into the following struct:
+.Bd -literal
+struct zip_source_args_seek {
+    zip_int64_t offset;
+    int whence;
+};
+.Ed
+.Ss Dv ZIP_SOURCE_SEEK_WRITE
+Specify position to write next byte to, like
+.Xr fseek 3 .
+See
+.Dv ZIP_SOURCE_SEEK
+for details.
+.Ss Dv ZIP_SOURCE_STAT
 Get meta information for the input data.
 .Ar data
 points to an allocated
@@ -95,26 +176,33 @@ which should be initialized using
 and then filled in.
 Information only available after the source has been read (e.g. size)
 can be omitted in an earlier call.
-Return sizeof(struct zip_stat) on success, \-1 on error.
+Return sizeof(struct zip_stat) on success.
 .Em NOTE :
 .Fn zip_source_function
 may be called with this argument even after being called with
 .Dv ZIP_SOURCE_CLOSE .
-.It Dv ZIP_SOURCE_ERROR
-Get error information.
-.Ar data
-points to an array of two ints, which should be filled with the libzip
-error code and the corresponding system error code for the error that
-occurred.
-See
-.Xr zip_errors 3
-for details on the error codes.
-Return return(2 * sizeof(int)).
-.It Dv ZIP_SOURCE_FREE
-Clean up and free all resources.
-Return 0.
-.El
-.Pp
+.Ss Dv ZIP_SOURCE_SUPPORTS
+Return bitmap specifying which commands are supported.
+Use
+.Xr zip_source_make_command_bitmap 3 .
+If this command is not implemented, the source is assumed to be a
+read source without seek support.
+.Ss Dv ZIP_SOURCE_TELL
+Return the current read offset in the source, like
+.Xr ftell 3 .
+.Ss Dv ZIP_SOURCE_TELL_WRITE
+Return the current write offset in the source, like
+.Xr ftell 3 .
+.Ss Dv ZIP_SOURCE_WRITE
+Write data to the source.
+Return number of bytes written.
+.Ss Return Values
+Commands should return \-1 on error.
+.Dv ZIP_SOURCE_ERROR
+will be called to retrieve the error code.
+On success, commands return 0, unless specified otherwise in the
+description above.
+.Ss Calling Conventions
 The library will always issue
 .Dv ZIP_SOURCE_OPEN
 before issuing
