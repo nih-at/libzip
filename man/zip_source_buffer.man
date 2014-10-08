@@ -9,10 +9,10 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct zip_source *\fR
+\fIzip_source_t *\fR
 .PD 0
 .HP 4n
-\fBzip_source_buffer\fR(\fIstruct\ zip\ *archive\fR, \fIconst\ void\ *data\fR, \fIzip_uint64_t\ len\fR, \fIint\ freep\fR);
+\fBzip_source_buffer\fR(\fIzip_t\ *archive\fR, \fIconst\ void\ *data\fR, \fIzip_uint64_t\ len\fR, \fIint\ freep\fR);
 .PD
 .SH "DESCRIPTION"
 The function

@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_EXTRA_FIELD_GET" "3" "February 20, 2013" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_EXTRA_FIELD_GET" "3" "October 8, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,13 +10,17 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIconst\ zip_uint8_t\ *\fR
-.br
-\fBzip_file_extra_field_get\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIzip_uint16_t extra_field_index\fR,\ \fIzip_uint16_t *idp\fR,\ \fIzip_uint16_t *lenp\fR,\ \fIzip_flags_t flags\fR);
-.sp
-\fIconst\ zip_uint8_t\ *\fR
-.br
-\fBzip_file_extra_field_get_by_id\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIzip_uint16_t extra_field_id\fR,\ \fIzip_uint16_t extra_field_index\fR,\ \fIzip_uint16_t *lenp\fR,\ \fIzip_flags_t flags\fR);
+\fIconst zip_uint8_t *\fR
+.PD 0
+.HP 4n
+\fBzip_file_extra_field_get\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_index\fR, \fIzip_uint16_t\ *idp\fR, \fIzip_uint16_t\ *lenp\fR, \fIzip_flags_t\ flags\fR);
+.PD
+.PP
+\fIconst zip_uint8_t *\fR
+.PD 0
+.HP 4n
+\fBzip_file_extra_field_get_by_id\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_id\fR, \fIzip_uint16_t\ extra_field_index\fR, \fIzip_uint16_t\ *lenp\fR, \fIzip_flags_t\ flags\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_file_extra_field_get\fR()
@@ -116,3 +120,11 @@ zip_file_extra_fields_count(3)
 Dieter Baron <\fIdillo@nih.at\fR>
 and
 Thomas Klausner <\fItk@giga.or.at\fR>
+.SH "CAVEATS"
+Please note that the extra field IDs 0x0001 (ZIP64 extension),
+0x6375 (Infozip UTF-8 comment), and
+0x7075 (Infozip UTF-8 file name) can not be read using
+\fBzip_file_extra_field_get\fR()
+since they are used by
+libzip(3)
+internally.

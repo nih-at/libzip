@@ -11,12 +11,16 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_stat\fR(\fIstruct zip *archive\fR,\ \fIconst char *fname\fR,\ \fIzip_flags_t flags\fR,\ \fIstruct zip_stat *sb\fR);
-.sp
+.PD 0
+.HP 4n
+\fBzip_stat\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_flags_t\ flags\fR, \fIzip_stat_t\ *sb\fR);
+.PD
+.PP
 \fIint\fR
-.br
-\fBzip_stat_index\fR(\fIstruct zip *archive\fR,\ \fIint index\fR,\ \fIzip_flags_t flags\fR,\ \fIstruct zip_stat *sb\fR);
+.PD 0
+.HP 4n
+\fBzip_stat_index\fR(\fIzip_t\ *archive\fR, \fIint\ index\fR, \fIzip_flags_t\ flags\fR, \fIzip_stat_t\ *sb\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_stat\fR()

@@ -11,12 +11,16 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
-.br
-\fBzip_error_clear\fR(\fIstruct zip *archive\fR);
-.sp
+.PD 0
+.HP 4n
+\fBzip_error_clear\fR(\fIzip_t\ *archive\fR);
+.PD
+.PP
 \fIvoid\fR
-.br
-\fBzip_file_error_clear\fR(\fIstruct zip_file *file\fR);
+.PD 0
+.HP 4n
+\fBzip_file_error_clear\fR(\fIzip_file_t\ *file\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_error_clear\fR()

@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_delete\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR);
+.PD 0
+.HP 4n
+\fBzip_delete\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR);
+.PD
 .SH "DESCRIPTION"
 The file at position
 \fIindex\fR

@@ -9,9 +9,11 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIconst\ char\ *\fR
-.br
-\fBzip_file_get_comment\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIzip_uint32_t *lenp\fR,\ \fIzip_flags_t flags\fR);
+\fIconst char *\fR
+.PD 0
+.HP 4n
+\fBzip_file_get_comment\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint32_t\ *lenp\fR, \fIzip_flags_t\ flags\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_file_get_comment\fR()

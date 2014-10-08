@@ -13,13 +13,13 @@ libzip (-lzip)
 \fIzip_int64_t\fR
 .PD 0
 .HP 4n
-\fBzip_file_add\fR(\fIstruct\ zip\ *archive\fR, \fIconst\ char\ *name\fR, \fIstruct\ zip_source\ *source\fR, \fIzip_flags_t\ flags\fR);
+\fBzip_file_add\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *name\fR, \fIzip_source_t\ *source\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .PP
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_file_replace\fR(\fIstruct\ zip\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIstruct\ zip_source\ *source\fR, \fIzip_flags_t\ flags\fR);
+\fBzip_file_replace\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_source_t\ *source\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .SH "DESCRIPTION"
 The function
@@ -83,7 +83,7 @@ is set to indicate the error.
 .SH "EXAMPLES"
 .nf
 .RS 6n
-struct zip_source *s;
+zip_source_t *s;
 const char buf="teststring";
 
 if ((s=zip_source_buffer(archive, buffer, sizeof(buf), 0)) == NULL ||

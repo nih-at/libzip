@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
-.br
-\fBzip_add_dir\fR(\fIstruct zip *archive\fR,\ \fIconst char *name\fR);
+.PD 0
+.HP 4n
+\fBzip_add_dir\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *name\fR);
+.PD
 .SH "DESCRIPTION"
 The function
 \fBzip_add_dir\fR()

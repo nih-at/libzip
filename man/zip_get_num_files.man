@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_get_num_files\fR(\fIstruct zip *archive\fR);
+.PD 0
+.HP 4n
+\fBzip_get_num_files\fR(\fIzip_t\ *archive\fR);
+.PD
 .SH "DESCRIPTION"
 \fIThis function is deprecated.\fR
 \fIUse\fR

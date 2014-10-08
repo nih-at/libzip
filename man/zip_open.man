@@ -1,4 +1,4 @@
-.TH "ZIP_OPEN" "3" "February 13, 2012" "NiH" "Library Functions Manual"
+.TH "ZIP_OPEN" "3" "August 17, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -9,9 +9,11 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct\ zip\ *\fR
-.br
-\fBzip_open\fR(\fIconst char *path\fR,\ \fIint flags\fR,\ \fIint *errorp\fR);
+\fIzip_t *\fR
+.PD 0
+.HP 4n
+\fBzip_open\fR(\fIconst\ char\ *path\fR, \fIint\ flags\fR, \fIint\ *errorp\fR);
+.PD
 .SH "DESCRIPTION"
 The zip archive specified by
 \fIpath\fR
@@ -38,6 +40,9 @@ Error if archive already exists.
 \fRZIP_TRUNCATE\fR
 If archive exists, ignore its current contents.
 In other words, handle it the same way as an empty archive.
+.TP 15n
+\fRZIP_RDONLY\fR
+Open archive in read-only mode.
 .RE
 .PP
 If an error occurs and

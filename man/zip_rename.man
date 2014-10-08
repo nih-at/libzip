@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_rename\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIconst char *name\fR);
+.PD 0
+.HP 4n
+\fBzip_rename\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIconst\ char\ *name\fR);
+.PD
 .SH "DESCRIPTION"
 \fBzip_rename\fR()
 is the obsolete version of

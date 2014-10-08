@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_close\fR(\fIstruct zip *archive\fR);
+.PD 0
+.HP 4n
+\fBzip_close\fR(\fIzip_t\ *archive\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_close\fR()

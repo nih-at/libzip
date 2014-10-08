@@ -10,13 +10,17 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIconst\ char\ *\fR
-.br
-\fBzip_file_strerror\fR(\fIstruct zip_file *file\fR);
-.sp
-\fIconst\ char\ *\fR
-.br
-\fBzip_strerror\fR(\fIstruct zip *archive\fR);
+\fIconst char *\fR
+.PD 0
+.HP 4n
+\fBzip_file_strerror\fR(\fIzip_file_t\ *file\fR);
+.PD
+.PP
+\fIconst char *\fR
+.PD 0
+.HP 4n
+\fBzip_strerror\fR(\fIzip_t\ *archive\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_strerror\fR()

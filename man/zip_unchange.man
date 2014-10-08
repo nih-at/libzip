@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_unchange\fR(\fIstruct zip *archive\fR,\ \fIint index\fR);
+.PD 0
+.HP 4n
+\fBzip_unchange\fR(\fIzip_t\ *archive\fR, \fIint\ index\fR);
+.PD
 .SH "DESCRIPTION"
 Changes to the file at position
 \fIindex\fR

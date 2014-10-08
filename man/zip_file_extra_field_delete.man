@@ -11,12 +11,16 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_file_extra_field_delete\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIzip_uint16_t extra_field_index\fR,\ \fIzip_flags_t flags\fR);
-.sp
+.PD 0
+.HP 4n
+\fBzip_file_extra_field_delete\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_index\fR, \fIzip_flags_t\ flags\fR);
+.PD
+.PP
 \fIint\fR
-.br
-\fBzip_file_extra_field_delete_by_id\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIzip_uint16_t extra_field_id\fR,\ \fIzip_uint16_t extra_field_index\fR,\ \fIzip_flags_t flags\fR);
+.PD 0
+.HP 4n
+\fBzip_file_extra_field_delete_by_id\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_id\fR, \fIzip_uint16_t\ extra_field_index\fR, \fIzip_flags_t\ flags\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_file_extra_field_delete\fR()

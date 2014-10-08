@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
-.br
-\fBzip_stat_init\fR(\fIstruct zip_stat *sb\fR);
+.PD 0
+.HP 4n
+\fBzip_stat_init\fR(\fIzip_stat_t\ *sb\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_stat_init\fR()

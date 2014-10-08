@@ -10,13 +10,17 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct\ zip_file\ *\fR
-.br
-\fBzip_fopen\fR(\fIstruct zip *archive\fR,\ \fIconst char *fname\fR,\ \fIzip_flags_t flags\fR);
-.sp
-\fIstruct\ zip_file\ *\fR
-.br
-\fBzip_fopen_index\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIzip_flags_t flags\fR);
+\fIzip_file_t *\fR
+.PD 0
+.HP 4n
+\fBzip_fopen\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_flags_t\ flags\fR);
+.PD
+.PP
+\fIzip_file_t *\fR
+.PD 0
+.HP 4n
+\fBzip_fopen_index\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_flags_t\ flags\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_fopen\fR()

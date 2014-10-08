@@ -9,9 +9,11 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct\ zip\ *\fR
-.br
-\fBzip_fdopen\fR(\fIint fd\fR,\ \fIint flags\fR,\ \fIint *errorp\fR);
+\fIzip_t *\fR
+.PD 0
+.HP 4n
+\fBzip_fdopen\fR(\fIint\ fd\fR, \fIint\ flags\fR, \fIint\ *errorp\fR);
+.PD
 .SH "DESCRIPTION"
 The zip archive specified by the open file descriptor
 \fIfd\fR

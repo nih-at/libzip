@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_unchange_archive\fR(\fIstruct zip *archive\fR);
+.PD 0
+.HP 4n
+\fBzip_unchange_archive\fR(\fIzip_t\ *archive\fR);
+.PD
 .SH "DESCRIPTION"
 Revert all global changes to the archive
 \fIarchive\fR.

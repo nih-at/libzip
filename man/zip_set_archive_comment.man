@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_set_archive_comment\fR(\fIstruct zip *archive\fR,\ \fIconst char *comment\fR,\ \fIzip_uint16_t len\fR);
+.PD 0
+.HP 4n
+\fBzip_set_archive_comment\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *comment\fR, \fIzip_uint16_t\ len\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_set_archive_comment\fR()

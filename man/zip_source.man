@@ -9,7 +9,7 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIstruct zip_source *zs\fR;
+\fIzip_source_t *zs\fR;
 .SH "DESCRIPTION"
 A
 \fIstruct zip_source\fR

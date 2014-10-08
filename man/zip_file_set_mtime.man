@@ -12,7 +12,7 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_set_file_mtime\fR(\fIstruct\ zip\ *archive\fR, \fIzip_uint64_t\ index\fR, \fItime_t\ mtime\fR, \fIzip_flags_t\ flags\fR);
+\fBzip_set_file_mtime\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fItime_t\ mtime\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .SH "DESCRIPTION"
 The

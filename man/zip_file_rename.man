@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_file_rename\fR(\fIstruct zip *archive\fR,\ \fIzip_uint64_t index\fR,\ \fIconst char *name\fR,\ \fIzip_flags_t flags\fR);
+.PD 0
+.HP 4n
+\fBzip_file_rename\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIconst\ char\ *name\fR, \fIzip_flags_t\ flags\fR);
+.PD
 .SH "DESCRIPTION"
 The file at position
 \fIindex\fR

@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
-.br
-\fBzip_discard\fR(\fIstruct zip *archive\fR);
+.PD 0
+.HP 4n
+\fBzip_discard\fR(\fIzip_t\ *archive\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_discard\fR()

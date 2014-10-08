@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_fread\fR(\fIstruct zip_file *file\fR,\ \fIvoid *buf\fR,\ \fIzip_uint64_t nbytes\fR);
+.PD 0
+.HP 4n
+\fBzip_fread\fR(\fIzip_file_t\ *file\fR, \fIvoid\ *buf\fR, \fIzip_uint64_t\ nbytes\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_fread\fR()

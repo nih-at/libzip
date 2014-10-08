@@ -7,10 +7,10 @@
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
-\fIstruct zip_source *\fR
+\fIzip_source_t *\fR
 .PD 0
 .HP 4n
-\fBzip_source_filep\fR(\fIstruct\ zip\ *archive\fR, \fIFILE\ *file\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
+\fBzip_source_filep\fR(\fIzip_t\ *archive\fR, \fIFILE\ *file\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
 .PD
 .SH "DESCRIPTION"
 The function
