@@ -299,6 +299,8 @@ buffer_seek(buffer_t *buffer, void *data, zip_uint64_t length, zip_error_t *erro
         return -1;
     }
     
+    buffer->offset = offset;
+    
     return 0;
 }
 
