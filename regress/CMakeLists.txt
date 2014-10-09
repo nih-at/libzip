@@ -119,6 +119,7 @@ SET(EXTRA_TESTS
 	torrent-already.test
 	utf-8-standardization.test
 	zip64_creation.test
+	zip64_stored_creation.test
 )
 
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})
