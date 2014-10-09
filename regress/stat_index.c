@@ -59,10 +59,11 @@ main(int argc, char *argv[])
     const char *fname;
     char buf[100];
     zip_t *z;
-    int c, flags, ze;
+    int c, ze;
+    zip_flags_t flags;
     struct zip_stat sb;
-    int index;
-
+    zip_uint64_t idx;
+    
     flags = 0;
     prg = argv[0];
 
@@ -91,7 +92,7 @@ main(int argc, char *argv[])
     fname = argv[optind++];
     errno = 0;
 
-    if ((z=zip_open(fname, flags, &ze)) == NULL) {
+    if ((z=zip_open(fname, 0, &ze)) == NULL) {
 	zip_error_to_str(buf, sizeof(buf), ze, errno);
 	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
 		fname, buf);
@@ -99,11 +100,10 @@ main(int argc, char *argv[])
     }
 
     while (optind < argc) {
-        index = atoi(argv[optind++]);
+        idx = strtoull(argv[optind++], NULL, 10);
 
-	if (zip_stat_index(z, index, flags, &sb) < 0) {
-	    fprintf(stderr, "%s: zip_stat_index failed on '%d' failed: %s\n",
-		    prg, index, zip_strerror(z));
+	if (zip_stat_index(z, idx, flags, &sb) < 0) {
+	    fprintf(stderr, "%s: zip_stat_index failed on '%" PRIu64 "' failed: %s\n", prg, idx, zip_strerror(z));
 	    return 1;
 	}
 
