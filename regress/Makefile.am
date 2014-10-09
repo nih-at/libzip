@@ -7,6 +7,7 @@ noinst_PROGRAMS= \
 	add_from_filep \
 	fopen_unchanged \
 	fread \
+	hole \
 	modify \
 	name_locate \
 	set_comment_all \
@@ -15,6 +16,14 @@ noinst_PROGRAMS= \
 	set_comment_revert \
 	set_compression \
 	tryopen
+
+modify_SOURCES= \
+	modify.c \
+	source_hole.c
+
+hole_SOURCES= \
+	hole.c \
+	source_hole.c
 
 EXTRA_DIST= \
 	CMakeLists.txt \

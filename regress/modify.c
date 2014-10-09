@@ -48,6 +48,14 @@
 
 #include "zip.h"
 
+zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
+
+typedef enum {
+    SOURCE_TYPE_NONE,
+    SOURCE_TYPE_IN_MEMORY,
+    SOURCE_TYPE_HOLE
+} source_type_t;
+
 typedef struct dispatch_table_s {
     const char *cmdline_name;
     int argument_count;
@@ -491,6 +499,27 @@ hexdump(const zip_uint8_t *data, zip_uint16_t len)
     return;    
 }
 
+
+static zip_t *
+read_hole(const char *archive, int flags, int *err)
+{
+    zip_error_t error;
+    zip_source_t *src = NULL;
+    zip_t *za = NULL;
+    
+    zip_error_init(&error);
+    
+    if ((src = source_hole_create(archive, flags, &error)) == NULL
+        || (za = zip_open_from_source(src, flags, &error)) == NULL) {
+        zip_source_free(src);
+        *err = zip_error_code_zip(&error);
+        errno = zip_error_code_system(&error);
+    }
+    
+    return za;
+}
+
+
 static zip_t *
 read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 {
@@ -547,6 +576,7 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
     *srcp = src;
     return zb;
 }
+
 
 typedef struct source_nul {
     zip_error_t error;
@@ -744,6 +774,7 @@ usage(const char *progname)
 	    "\t-c\tcheck consistency\n"
 	    "\t-e\terror if archive already exists (only useful with -n)\n"
 	    "\t-g\tguess file name encoding (for stat)\n"
+            "\t-H\twrite files with holes compactly\n"
 	    "\t-m\tread archive into memory, and modify there; write out at end\n"
 	    "\t-n\tcreate archive if it doesn't exist (default)\n"
 	    "\t-r\tprint raw file name encoding without translation (for stat)\n"
@@ -763,17 +794,17 @@ main(int argc, char *argv[])
     const char *archive;
     zip_source_t *memory_src;
     char buf[100];
-    int c, arg, err, flags, in_memory;
+    int c, arg, err, flags;
     const char *prg;
+    source_type_t source_type = SOURCE_TYPE_NONE;
 
     flags = 0;
-    in_memory = 0;
     prg = argv[0];
 
     if (argc < 2)
 	usage(prg);
 
-    while ((c=getopt(argc, argv, "cegmnrst")) != -1) {
+    while ((c=getopt(argc, argv, "cegHmnrst")) != -1) {
 	switch (c) {
 	case 'c':
 	    flags |= ZIP_CHECKCONS;
@@ -784,9 +815,12 @@ main(int argc, char *argv[])
 	case 'g':
 	    stat_flags = ZIP_FL_ENC_GUESS;
 	    break;
+        case 'H':
+            source_type = SOURCE_TYPE_HOLE;
+            break;
 	case 'm':
-	    in_memory = 1;
-	    break;
+            source_type = SOURCE_TYPE_IN_MEMORY;
+            break;
 	case 'n':
 	    flags |= ZIP_CREATE;
 	    break;
@@ -812,10 +846,19 @@ main(int argc, char *argv[])
     if (flags == 0)
 	flags = ZIP_CREATE;
 
-    if (in_memory) {
-	za = read_to_memory(archive, flags, &err, &memory_src);
-    } else {
-	za = zip_open(archive, flags, &err);
+    switch (source_type) {
+        case SOURCE_TYPE_NONE:
+            za = zip_open(archive, flags, &err);
+            break;
+            
+        case SOURCE_TYPE_IN_MEMORY:
+            za = read_to_memory(archive, flags, &err, &memory_src);
+            break;
+            
+        case SOURCE_TYPE_HOLE: {
+            za = read_hole(archive, flags, &err);
+            break;
+        }
     }
     if (za == NULL) {
 	zip_error_to_str(buf, sizeof(buf), err, errno);
@@ -839,7 +882,7 @@ main(int argc, char *argv[])
 	fprintf(stderr, "can't close zip archive '%s': %s\n", archive, zip_strerror(za));
 	return 1;
     }
-    if (in_memory) {
+    if (source_type == SOURCE_TYPE_IN_MEMORY) {
 	if (write_memory_src_to_file(archive, memory_src) < 0) {
 	    err = 1;
 	}
