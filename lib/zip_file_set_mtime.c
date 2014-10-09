@@ -48,7 +48,7 @@ ZIP_EXTERN int zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip
     
     e = za->entry+idx;
 
-    changed = mtime != e->orig->last_mod;
+    changed = e->orig == NULL || mtime != e->orig->last_mod;
     
     if (changed) {
         if (e->changes == NULL) {
