@@ -91,10 +91,6 @@ Test Case Issues
 * run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)
 * fix comment test to be newline insensitive
-* zip64 test case ideas (but how to provide comparison and input files?)
-  Create files with:
-  * compressed >= 4GB
-  * offset of file or central directory >= 4GB
 * check if http://bugs.python.org/issue20078 provides ideas for new tests
 
 * (add, replace)

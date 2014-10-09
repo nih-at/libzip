@@ -30,6 +30,7 @@ EXTRA_DIST= \
 	NiHTest.pm \
 	runtest.in \
 	${TESTS} \
+	bigstored.zh \
 	bigzero-zip.zip \
 	bogus.zip \
 	broken.zip \
@@ -203,7 +204,8 @@ TESTS= \
 	stat_index_zip64.test \
 	torrent-already.test \
 	utf-8-standardization.test \
-	zip64_creation.test
+	zip64_creation.test \
+	zip64_stored_creation.test
 
 DISABLED_TESTS= \
 	encoding-ascii.test \
