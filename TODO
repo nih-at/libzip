@@ -272,6 +272,10 @@ D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 ** int zip_source_open(zip_source_t *);
 ** zip_int64_t zip_source_read(zip_source_t *, void *, zip_uint64_t);
 ** int zip_source_stat(zip_source_t *, zip_stat_t *);
+** int zip_source_begin_write(zip_source_t *);
+** int zip_source_commit_write(zip_source_t *);
+** void zip_source_rollback_write(zip_source_t *);
+** zip_int64_t zip_source_write(zip_source_t *, const void *, zip_uint64_t);
 - document deprecations
 ** int zip_error_get_sys_type(int); /* use zip_error_system_type */
 ** void zip_error_get(zip_t *, int *, int *); /* use zip_get_error, zip_error_code_zip / zip_error_code_system */
