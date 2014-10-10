@@ -126,16 +126,16 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
    
     zip_error_init(&ctx->error);
 
-    ctx->supports = zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_TELL, -1);
+    ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1);
     if (ctx->fname) {
 	struct stat sb;
 
 	if (stat(ctx->fname, &sb) < 0 || S_ISREG(sb.st_mode)) {
-	    ctx->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, -1);
+            ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
 	}
     }
     else if (fseek(ctx->f, 0, SEEK_CUR) == 0) {
-	ctx->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_SEEK, -1);
+        ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
     }
 
     if ((zs=zip_source_function_create(read_file, ctx, error)) == NULL) {

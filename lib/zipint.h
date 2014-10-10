@@ -363,9 +363,10 @@ struct zip_source {
     } cb;
     void *ud;
     zip_error_t error;
+    zip_int64_t supports;       /* supported commands */
     unsigned int open_count;    /* number of times source was opened (directly or as lower layer) */
     zip_source_write_state_t write_state;          /* whether source is open for writing */
-    int source_closed;          /* set if source archive is closed */
+    bool source_closed;          /* set if source archive is closed */
     zip_t *source_archive;      /* zip archive we're reading from, NULL if not from archive */
     unsigned int refcount;
 };

@@ -241,7 +241,6 @@ plan for merge:
 after merge:
 - direct reference to source and from upper layer are equivalent: only close/free if all are gone.
 - only allow multiple upper layers for sources that support seek
-- cache supported state in struct zip_source and check in _zip_source_call before calling
 D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 - find out FSEEK_MAX/FTELL_MAX and use it
 - adapt man pages

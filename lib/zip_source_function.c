@@ -59,6 +59,11 @@ zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error
     zs->cb.f = zcb;
     zs->ud = ud;
     
+    zs->supports = zcb(ud, NULL, 0, ZIP_SOURCE_SUPPORTS);
+    if (zs->supports < 0) {
+        zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
+    }
+    
     return zs;
 }
 
@@ -85,7 +90,7 @@ _zip_source_new(zip_error_t *error)
     src->ud = NULL;
     src->open_count = 0;
     src->write_state = ZIP_SOURCE_WRITE_CLOSED;
-    src->source_closed = 0;
+    src->source_closed = false;
     src->source_archive = NULL;
     src->refcount = 1;
     zip_error_init(&src->error);

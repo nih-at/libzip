@@ -40,15 +40,7 @@
 zip_int64_t
 zip_source_supports(zip_source_t *src)
 {
-    zip_int64_t ret;
-    
-    ret = _zip_source_call(src, NULL , 0, ZIP_SOURCE_SUPPORTS);
-    
-    if (ret < 0) {
-        ret = zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, -1);
-    }
-    
-    return ret;
+    return src->supports;
 }
 
 
@@ -58,7 +50,7 @@ zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...)
     zip_int64_t bitmap;
     va_list ap;
     
-    bitmap = 1<<cmd0;
+    bitmap = ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd0);
     
     
     
@@ -68,7 +60,7 @@ zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...)
         if (cmd < 0) {
             break;
         }
-        bitmap |= 1<<cmd;
+        bitmap |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd);
     }
     va_end(ap);
     

@@ -44,7 +44,7 @@ struct window {
     zip_stat_t stat;
     zip_error_t error;
     zip_int64_t supports;
-    int needs_seek;
+    bool needs_seek;
 };
 
 static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
@@ -76,8 +76,8 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t lengt
     ctx->end = start + length;
     zip_stat_init(&ctx->stat);
     zip_error_init(&ctx->error);
-    ctx->supports = (zip_source_supports(src) & zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, -1)) | (zip_source_make_command_bitmap(ZIP_SOURCE_TELL, -1));
-    ctx->needs_seek = (ctx->supports & zip_source_make_command_bitmap(ZIP_SOURCE_SEEK, -1)) ? 1 : 0;
+    ctx->supports = (zip_source_supports(src) & ZIP_SOURCE_SUPPORTS_SEEKABLE) | (zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1));
+    ctx->needs_seek = (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) ? true : false;
     
     if (st) {
         if (_zip_stat_merge(&ctx->stat, st, error) < 0) {

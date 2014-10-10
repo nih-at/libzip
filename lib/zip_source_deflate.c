@@ -356,6 +356,9 @@ deflate_compress(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_
 	deflate_free(ctx);
 	return 0;
 
+    case ZIP_SOURCE_SUPPORTS:
+        return ZIP_SOURCE_SUPPORTS_READABLE;
+            
     default:
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
 	return -1;

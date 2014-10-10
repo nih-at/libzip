@@ -39,6 +39,11 @@ zip_int64_t
 _zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command)
 {
     zip_int64_t ret;
+    
+    if ((src->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(command)) == 0) {
+        zip_error_set(&src->error, ZIP_ER_OPNOTSUPP, 0);
+        return -1;
+    }
 
     if (src->src == NULL) {
         ret = src->cb.f(src->ud, data, length, command);
