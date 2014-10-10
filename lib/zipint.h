@@ -197,22 +197,18 @@ const zip_uint8_t *zip_get_extra_field_by_id(zip_t *, int, int, zip_uint16_t, in
    Thus we will keep it private for now. */
 
 typedef zip_int64_t (*zip_source_layered_callback)(zip_source_t *, void *, void *, zip_uint64_t, enum zip_source_cmd);
-int zip_source_begin_write(zip_source_t *);
-int zip_source_commit_write(zip_source_t *);
 zip_source_t *zip_source_crc(zip_t *, zip_source_t *, int);
 zip_source_t *zip_source_deflate(zip_t *, zip_source_t *, zip_int32_t, int);
 zip_source_t *zip_source_layered(zip_t *, zip_source_t *, zip_source_layered_callback, void *);
 zip_source_t *zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error);
 zip_source_t *zip_source_pkware(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 int zip_source_remove(zip_source_t *);
-void zip_source_rollback_write(zip_source_t *);
 int zip_source_seek(zip_source_t *, zip_int64_t, int);
 int zip_source_seek_write(zip_source_t *, zip_int64_t, int);
 zip_int64_t zip_source_supports(zip_source_t *src);
 zip_int64_t zip_source_tell(zip_source_t *);
 zip_int64_t zip_source_tell_write(zip_source_t *);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
-zip_int64_t zip_source_write(zip_source_t *, const void *, zip_uint64_t);
 
 
 /* This function will probably remain private.  It is not needed to

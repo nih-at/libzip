@@ -45,7 +45,7 @@
 #include "getopt.h"
 #endif
 
-#include "zipint.h" /* for source write functions */
+#include "zip.h"
 
 /* public API */
 
