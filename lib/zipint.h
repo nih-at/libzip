@@ -180,6 +180,12 @@ int _zip_mkstemp(char *);
 /* This section contains API that won't materialize like this.  It's
    placed in the internal section, pending cleanup. */
 
+/* flags for compression and encryption sources */
+
+#define ZIP_CODEC_DECODE	0 /* decompress/decrypt (encode flag not set) */
+#define ZIP_CODEC_ENCODE	1 /* compress/encrypt */
+
+
 typedef zip_source_t *(*zip_compression_implementation)(zip_t *, zip_source_t *, zip_int32_t, int);
 typedef zip_source_t *(*zip_encryption_implementation)(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 
@@ -273,7 +279,7 @@ struct zip {
 
     zip_string_t *comment_orig;         /* archive comment */
     zip_string_t *comment_changes;  /* changed archive comment */
-    int comment_changed;		/* whether archive comment was changed */
+    bool comment_changed;		/* whether archive comment was changed */
 
     zip_uint64_t nentry;		/* number of entries */
     zip_uint64_t nentry_alloc;		/* number of entries allocated */
@@ -291,7 +297,7 @@ struct zip {
 struct zip_file {
     zip_t *za;		/* zip archive containing this file */
     zip_error_t error;	/* error information */
-    int eof;
+    bool eof;
     zip_source_t *src;	/* data source */
 };
 
@@ -307,8 +313,8 @@ struct zip_file {
 
 struct zip_dirent {
     zip_uint32_t changed;
-    int local_extra_fields_read;	/*      whether we already read in local header extra fields */
-    int cloned;                         /*      whether this instance is cloned, and thus shares non-changed strings */
+    bool local_extra_fields_read;	/*      whether we already read in local header extra fields */
+    bool cloned;                         /*      whether this instance is cloned, and thus shares non-changed strings */
 
     zip_uint16_t version_madeby;	/* (c)  version of creator */
     zip_uint16_t version_needed;	/* (cl) version needed to extract */
@@ -381,7 +387,7 @@ struct zip_entry {
     zip_dirent_t *orig;
     zip_dirent_t *changes;
     zip_source_t *source;
-    int deleted;
+    bool deleted;
 };
 
 

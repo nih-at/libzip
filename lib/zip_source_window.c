@@ -180,36 +180,13 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             
         case ZIP_SOURCE_SEEK:
         {
-            zip_int64_t new_offset;
-	    zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
+            zip_int64_t new_offset = zip_source_seek_compute_offset(ctx->offset - ctx->start, ctx->end - ctx->start, data, len, &ctx->error);
 
-	    if (args == NULL)
-		return -1;
-            
-            switch (args->whence) {
-                case SEEK_CUR:
-                    new_offset = (zip_int64_t)ctx->offset + args->offset;
-                    break;
-                    
-                case SEEK_END:
-                    new_offset = (zip_int64_t)ctx->end + args->offset;
-                    break;
-                    
-                case SEEK_SET:
-                    new_offset = (zip_int64_t)ctx->start + args->offset;
-                    break;
-
-		default:
-                    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
-                    return -1;
-            }
-            
-            if (new_offset < (zip_int64_t)ctx->start || (zip_uint64_t)new_offset > ctx->end) {
-                zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            if (new_offset < 0) {
                 return -1;
             }
             
-            ctx->offset = (zip_uint64_t)new_offset;
+            ctx->offset = (zip_uint64_t)new_offset + ctx->start;
             return 0;
         }
 

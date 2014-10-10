@@ -100,11 +100,6 @@ extern "C" {
 #define ZIP_EXTRA_FIELD_ALL	ZIP_UINT16_MAX
 #define ZIP_EXTRA_FIELD_NEW	ZIP_UINT16_MAX
 
-/* flags for compression and encryption sources */
-
-#define ZIP_CODEC_DECODE	0 /* decompress/decrypt (encode flag not set) */
-#define ZIP_CODEC_ENCODE	1 /* compress/encrypt */
-
 
 /* libzip error codes */
 
@@ -396,6 +391,7 @@ ZIP_EXTERN zip_int64_t zip_source_make_command_bitmap(zip_source_cmd_t, ...);
 ZIP_EXTERN int zip_source_open(zip_source_t *);
 ZIP_EXTERN zip_int64_t zip_source_read(zip_source_t *, void *, zip_uint64_t);
 ZIP_EXTERN void zip_source_rollback_write(zip_source_t *);
+ZIP_EXTERN zip_int64_t zip_source_seek_compute_offset(zip_uint64_t, zip_uint64_t, void *, zip_uint64_t, zip_error_t *);
 ZIP_EXTERN int zip_source_stat(zip_source_t *, zip_stat_t *);
 ZIP_EXTERN zip_int64_t zip_source_write(zip_source_t *, const void *, zip_uint64_t);
 ZIP_EXTERN zip_source_t *zip_source_zip(zip_t *, zip_t *, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_int64_t);

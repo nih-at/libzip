@@ -268,39 +268,13 @@ buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error)
 static zip_int64_t
 buffer_seek(buffer_t *buffer, void *data, zip_uint64_t length, zip_error_t *error)
 {
-    zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, length, error);
-    zip_int64_t offset;
-    
-    if (args == NULL) {
+    zip_int64_t new_offset = zip_source_seek_compute_offset(buffer->offset, buffer->size, data, length, error);
+
+    if (new_offset < 0) {
         return -1;
     }
     
-    /* TODO: check for overflow */
-    switch (args->whence) {
-        case SEEK_CUR:
-            offset = (zip_int64_t)buffer->offset + args->offset;
-            break;
-            
-        case SEEK_END:
-            offset = (zip_int64_t)buffer->size + args->offset;
-            break;
-            
-        case SEEK_SET:
-            offset = args->offset;
-            break;
-            
-        default:
-            offset = -1;
-            break;
-    }
-    
-    if (offset < 0 || offset > (zip_int64_t)buffer->size) {
-        zip_error_set(error, ZIP_ER_INVAL, 0);
-        return -1;
-    }
-    
-    buffer->offset = (zip_uint64_t)offset;
-    
+    buffer->offset = (zip_uint64_t)new_offset;
     return 0;
 }
 

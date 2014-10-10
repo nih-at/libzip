@@ -361,36 +361,13 @@ buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length)
 static int
 buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error)
 {
-    zip_int64_t offset;
-    zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, error);
-
-    if (args == NULL)
-	return -1;
-
-    switch (args->whence) {
-    case SEEK_CUR:
-	offset = (zip_int64_t)buffer->offset + args->offset;
-	break;
-                    
-    case SEEK_END:
-	offset = (zip_int64_t)buffer->size + args->offset;
-	break;
-
-    case SEEK_SET:
-	offset = (zip_int64_t)args->offset;
-	break;
-
-    default:
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return -1;
+    zip_int64_t new_offset = zip_source_seek_compute_offset(buffer->offset, buffer->size, data, len, error);
+    
+    if (new_offset < 0) {
+        return -1;
     }
-
-    if (offset < 0 || (zip_uint64_t)offset > buffer->size) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    buffer->offset = (zip_uint64_t)offset;
+    
+    buffer->offset = (zip_uint64_t)new_offset;
     return 0;
 }
 
