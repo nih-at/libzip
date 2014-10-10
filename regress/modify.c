@@ -155,7 +155,7 @@ add_from_zip(int argc, char *argv[]) {
     return 0;
 }
 
-int
+static int
 add_nul(int argc, char *argv[]) {
     zip_source_t *zs;
     zip_uint64_t length = strtoull(argv[1], NULL, 10);
@@ -505,18 +505,18 @@ read_hole(const char *archive, int flags, int *err)
 {
     zip_error_t error;
     zip_source_t *src = NULL;
-    zip_t *za = NULL;
+    zip_t *zs = NULL;
     
     zip_error_init(&error);
     
     if ((src = source_hole_create(archive, flags, &error)) == NULL
-        || (za = zip_open_from_source(src, flags, &error)) == NULL) {
+        || (zs = zip_open_from_source(src, flags, &error)) == NULL) {
         zip_source_free(src);
         *err = zip_error_code_zip(&error);
         errno = zip_error_code_system(&error);
     }
     
-    return za;
+    return zs;
 }
 
 
@@ -741,7 +741,7 @@ dispatch_table_t dispatch_table[] = {
     { "zin_close", 0, "", "close input zip_source (for internal tests)", zin_close }
 };
 
-int
+static int
 dispatch(int argc, char *argv[])
 {
     unsigned int i;
@@ -765,7 +765,7 @@ dispatch(int argc, char *argv[])
 }
 
 
-void
+static void
 usage(const char *progname)
 {
     unsigned int i;

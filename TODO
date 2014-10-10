@@ -84,6 +84,7 @@ Cleanup
 Test Case Issues
 ================
 * add test case for ZIP_CM_DEFAULT -> stored (edge cases)
+* add test case to change values for newly added files (name, compression method, comment, mtime, . . .)
 * replace Text::Diff with own implementation
 * use zipcmp -p?
 * zip_open file less than EOCDLEN bytes long
