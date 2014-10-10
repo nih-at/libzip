@@ -35,7 +35,7 @@
 #include "zipint.h"
 
 
-void
+ZIP_EXTERN void
 zip_source_rollback_write(zip_source_t *src)
 {
     if (src->write_state != ZIP_SOURCE_WRITE_OPEN && src->write_state != ZIP_SOURCE_WRITE_FAILED) {

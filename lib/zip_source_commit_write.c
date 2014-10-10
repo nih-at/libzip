@@ -35,7 +35,7 @@
 #include "zipint.h"
 
 
-int
+ZIP_EXTERN int
 zip_source_commit_write(zip_source_t *src)
 {
     if (!ZIP_SOURCE_IS_OPEN_WRITING(src)) {

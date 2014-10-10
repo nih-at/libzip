@@ -33,7 +33,7 @@
 
 #include "zipint.h"
 
-int
+ZIP_EXTERN int
 zip_file_set_external_attributes(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes)
 {
     zip_entry_t *e;
