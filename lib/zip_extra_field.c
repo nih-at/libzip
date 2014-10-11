@@ -210,29 +210,31 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_fla
 zip_extra_field_t *
 _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_error_t *error)
 {
+    zip_buffer_t *buffer;
     zip_extra_field_t *ef, *ef2, *ef_head;
-    const zip_uint8_t *p;
-    zip_uint16_t fid, flen;
 
+    if ((buffer = _zip_buffer_new((zip_uint8_t *)data, len)) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
+    }
+    
     ef_head = ef = NULL;
-    for (p=data; p<data+len; p+=flen) {
-	if (p+4 > data+len) {
-	    zip_error_set(error, ZIP_ER_INCONS, 0);
-	    _zip_ef_free(ef_head);
-	    return NULL;
-	}
+    
+    while (_zip_buffer_ok(buffer) && !_zip_buffer_eof(buffer)) {
+        zip_uint16_t fid, flen;
+        zip_uint8_t *ef_data;
+        
+        fid = _zip_buffer_get_16(buffer);
+	flen = _zip_buffer_get_16(buffer);
+        ef_data = _zip_buffer_get(buffer, flen);
 
-	fid = _zip_get_16(&p);
-	flen = _zip_get_16(&p);
-
-	if (p+flen > data+len) {
-	    zip_error_set(error, ZIP_ER_INCONS, 0);
-	    _zip_ef_free(ef_head);
-	    return NULL;
-	}
-
-	if ((ef2=_zip_ef_new(fid, flen, p, flags)) == NULL) {
+        if (ef_data == NULL) {
+            break;
+        }
+        
+	if ((ef2=_zip_ef_new(fid, flen, ef_data, flags)) == NULL) {
 	    zip_error_set(error, ZIP_ER_MEMORY, 0);
+            _zip_buffer_free(buffer);
 	    _zip_ef_free(ef_head);
 	    return NULL;
 	}
@@ -245,6 +247,15 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
 	    ef_head = ef = ef2;
     }
 
+    if (!_zip_buffer_eof(buffer)) {
+        zip_error_set(error, ZIP_ER_INCONS, 0);
+        _zip_buffer_free(buffer);
+        _zip_ef_free(ef_head);
+        return NULL;
+    }
+
+    _zip_buffer_free(buffer);
+    
     return ef_head;
 }
 
@@ -297,23 +308,33 @@ _zip_ef_size(const zip_extra_field_t *ef, zip_flags_t flags)
 int
 _zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags)
 {
-    zip_uint8_t b[4], *p;
-
+    zip_uint8_t b[4];
+    zip_buffer_t *buffer = _zip_buffer_new(b, sizeof(b));
+    
     for (; ef; ef=ef->next) {
 	if (ef->flags & flags & ZIP_EF_BOTH) {
-	    p = b;
-	    _zip_put_16(&p, ef->id);
-	    _zip_put_16(&p, ef->size);
+            _zip_buffer_set_offset(buffer, 0);
+            _zip_buffer_put_16(buffer, ef->id);
+	    _zip_buffer_put_16(buffer, ef->size);
+            if (!_zip_buffer_ok(buffer)) {
+                zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+                _zip_buffer_free(buffer);
+                return -1;
+            }
 	    if (_zip_write(za, b, 4) < 0) {
-		return -1;
+                _zip_buffer_free(buffer);
+                return -1;
 	    }
 	    if (ef->size > 0) {
 		if (_zip_write(za, ef->data, ef->size) < 0) {
-		    return -1;
+                    _zip_buffer_free(buffer);
+                    return -1;
 		}
 	    }
 	}
     }
+    
+    _zip_buffer_free(buffer);
     return 0;
 }
 
@@ -323,7 +344,7 @@ _zip_read_local_ef(zip_t *za, zip_uint64_t idx)
 {
     zip_entry_t *e;
     unsigned char b[4];
-    const unsigned char *p;
+    zip_buffer_t *buffer;
     zip_uint16_t fname_len, ef_len;
 
     if (idx >= za->nentry) {
@@ -345,15 +366,22 @@ _zip_read_local_ef(zip_t *za, zip_uint64_t idx)
 	_zip_error_set_from_source(&za->error, za->src);
 	return -1;
     }
-
-    if (_zip_read(za->src, b, sizeof(b), &za->error) < 0) {
-	return -1;
+    
+    if ((buffer = _zip_buffer_new_from_source(za->src, sizeof(b), b, &za->error)) == NULL) {
+        return -1;
     }
-
-    p = b;
-    fname_len = _zip_get_16(&p);
-    ef_len = _zip_get_16(&p);
-
+    
+    fname_len = _zip_buffer_get_16(buffer);
+    ef_len = _zip_buffer_get_16(buffer);
+    
+    if (!_zip_buffer_eof(buffer)) {
+        _zip_buffer_free(buffer);
+        zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+        return -1;
+    }
+    
+    _zip_buffer_free(buffer);
+    
     if (ef_len > 0) {
 	zip_extra_field_t *ef;
 	zip_uint8_t *ef_raw;

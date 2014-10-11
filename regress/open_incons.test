@@ -69,7 +69,7 @@ stdout opening 'incons-local-compression-method.zzip' returned error 21
 stdout opening 'incons-local-compsize-larger.zzip' returned error 21
 stdout opening 'incons-local-compsize-smaller.zzip' returned error 21
 stdout opening 'incons-local-crc.zzip' returned error 21
-stdout opening 'incons-local-filename-long.zzip' returned error 21
+stdout opening 'incons-local-filename-long.zzip' returned error 17
 stdout opening 'incons-local-filename-missing.zzip' returned error 21
 stdout opening 'incons-local-filename-short.zzip' returned error 21
 stdout opening 'incons-local-filename.zzip' returned error 21

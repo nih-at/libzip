@@ -127,10 +127,11 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
 {
     zip_uint64_t offset, size;
     zip_string_t *comment;
-    zip_uint8_t buf[EOCDLEN + EOCD64LEN + EOCD64LOCLEN], *p;
+    zip_uint8_t buf[EOCDLEN + EOCD64LEN + EOCD64LOCLEN];
+    zip_buffer_t *buffer;
     zip_int64_t off;
     zip_uint64_t i;
-    int is_zip64;
+    bool is_zip64;
     int ret;
 
     if ((off = zip_source_tell_write(za->src)) < 0) {
@@ -147,7 +148,7 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
 	if ((ret=_zip_dirent_write(za, entry->changes ? entry->changes : entry->orig, ZIP_FL_CENTRAL)) < 0)
 	    return -1;
 	if (ret)
-	    is_zip64 = 1;
+	    is_zip64 = true;
     }
 
     if ((off = zip_source_tell_write(za->src)) < 0) {
@@ -157,38 +158,48 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     size = (zip_uint64_t)off - offset;
 
     if (offset > ZIP_UINT32_MAX || survivors > ZIP_UINT16_MAX)
-	is_zip64 = 1;
+	is_zip64 = true;
 
-    p = buf;
-    if (is_zip64) {
-	_zip_put_data(&p, EOCD64_MAGIC, 4);
-	_zip_put_64(&p, EOCD64LEN-12);
-	_zip_put_16(&p, 45);
-	_zip_put_16(&p, 45);
-	_zip_put_32(&p, 0);
-	_zip_put_32(&p, 0);
-	_zip_put_64(&p, survivors);
-	_zip_put_64(&p, survivors);
-	_zip_put_64(&p, size);
-	_zip_put_64(&p, offset);
-	_zip_put_data(&p, EOCD64LOC_MAGIC, 4);
-	_zip_put_32(&p, 0);
-	_zip_put_64(&p, offset+size);
-	_zip_put_32(&p, 1);
+
+    if ((buffer = _zip_buffer_new(buf, sizeof(buf))) == NULL) {
+        zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+        return -1;
     }
     
-    _zip_put_data(&p, EOCD_MAGIC, 4);
-    _zip_put_32(&p, 0);
-    _zip_put_16(&p, (zip_uint16_t)(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors));
-    _zip_put_16(&p, (zip_uint16_t)(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors));
-    _zip_put_32(&p, size >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)size);
-    _zip_put_32(&p, offset >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)offset);
+    if (is_zip64) {
+	_zip_buffer_put(buffer, EOCD64_MAGIC, 4);
+        _zip_buffer_put_64(buffer, EOCD64LEN-12);
+	_zip_buffer_put_16(buffer, 45);
+	_zip_buffer_put_16(buffer, 45);
+	_zip_buffer_put_32(buffer, 0);
+	_zip_buffer_put_32(buffer, 0);
+	_zip_buffer_put_64(buffer, survivors);
+	_zip_buffer_put_64(buffer, survivors);
+	_zip_buffer_put_64(buffer, size);
+	_zip_buffer_put_64(buffer, offset);
+	_zip_buffer_put(buffer, EOCD64LOC_MAGIC, 4);
+	_zip_buffer_put_32(buffer, 0);
+	_zip_buffer_put_64(buffer, offset+size);
+	_zip_buffer_put_32(buffer, 1);
+    }
+    
+    _zip_buffer_put(buffer, EOCD_MAGIC, 4);
+    _zip_buffer_put_32(buffer, 0);
+    _zip_buffer_put_16(buffer, (zip_uint16_t)(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors));
+    _zip_buffer_put_16(buffer, (zip_uint16_t)(survivors >= ZIP_UINT16_MAX ? ZIP_UINT16_MAX : survivors));
+    _zip_buffer_put_32(buffer, size >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)size);
+    _zip_buffer_put_32(buffer, offset >= ZIP_UINT32_MAX ? ZIP_UINT32_MAX : (zip_uint32_t)offset);
 
     comment = za->comment_changed ? za->comment_changes : za->comment_orig;
 
-    _zip_put_16(&p, (zip_uint16_t)(comment ? comment->length : 0));
+    _zip_buffer_put_16(buffer, (zip_uint16_t)(comment ? comment->length : 0));
+    
+    if (!_zip_buffer_ok(buffer)) {
+        zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+        return -1;
+    }
 
-    if (_zip_write(za, buf, (zip_uint64_t)(p-buf)) < 0) {
+    if (_zip_write(za, _zip_buffer_data(buffer), _zip_buffer_offset(buffer)) < 0) {
 	return -1;
     }
 
@@ -270,14 +281,14 @@ _zip_dirent_init(zip_dirent_t *de)
 }
 
 
-int
+bool
 _zip_dirent_needs_zip64(const zip_dirent_t *de, zip_flags_t flags)
 {
     if (de->uncomp_size >= ZIP_UINT32_MAX || de->comp_size >= ZIP_UINT32_MAX
 	|| ((flags & ZIP_FL_CENTRAL) && de->offset >= ZIP_UINT32_MAX))
-	return 1;
+	return true;
 
-    return 0;
+    return false;
 }
 
 
@@ -297,89 +308,67 @@ _zip_dirent_new(void)
 /* _zip_dirent_read(zde, fp, bufp, left, localp, error):
    Fills the zip directory entry zde.
 
-   If bufp is non-NULL, data is taken from there and bufp is advanced
-   by the amount of data used; otherwise data is read from fp as needed.
+   If buffer is non-NULL, data is taken from there; otherwise data is read from fp as needed.
    
-   if leftp is non-NULL, no more bytes than specified by it are used,
-   and *leftp is reduced by the number of bytes used.
+   If local is true, it reads a local header instead of a central directory entry.
 
-   If local != 0, it reads a local header instead of a central
-   directory entry.
-
-   Returns 0 if successful. On error, error is filled in and -1 is
-   returned.
-
-   TODO: leftp and file position undefined on error.
+   Returns size of dirent read if successful. On error, error is filled in and -1 is returned.
 */
 
-int
-_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
-		 const unsigned char **bufp, zip_uint64_t *leftp, int local,
-		 zip_error_t *error)
+zip_int64_t
+_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_error_t *error)
 {
-    unsigned char buf[CDENTRYSIZE];
-    const unsigned char *cur;
+    zip_uint8_t buf[CDENTRYSIZE];
     zip_uint16_t dostime, dosdate;
-    zip_uint32_t size;
+    zip_uint32_t size, variable_size;
     zip_uint16_t filename_len, comment_len, ef_len;
 
-    if (local)
-	size = LENTRYSIZE;
-    else
-	size = CDENTRYSIZE;
+    bool from_buffer = (buffer != NULL);
+    
+    size = local ? LENTRYSIZE : CDENTRYSIZE;
 
-    if (leftp && (*leftp < size)) {
-	zip_error_set(error, ZIP_ER_NOZIP, 0);
-	return -1;
-    }
-
-    if (bufp) {
-	/* use data from buffer */
-	cur = *bufp;
+    if (buffer) {
+        if (_zip_buffer_left(buffer) < size) {
+            zip_error_set(error, ZIP_ER_NOZIP, 0);
+            return -1;
+        }
     }
     else {
-	zip_int64_t n;
-
-	if ((n = zip_source_read(src, buf, size)) < 0) {
-            _zip_error_set_from_source(error, src);
-	    return -1;
-	}
-	if ((zip_uint64_t)n != size) {
-	    zip_error_set(error, ZIP_ER_NOZIP, errno);
-	    return -1;
-	}
-	cur = buf;
+        if ((buffer = _zip_buffer_new_from_source(src, size, buf, error)) == NULL) {
+            return -1;
+        }
     }
 
-    if (memcmp(cur, (local ? LOCAL_MAGIC : CENTRAL_MAGIC), 4) != 0) {
+    if (memcmp(_zip_buffer_get(buffer, 4), (local ? LOCAL_MAGIC : CENTRAL_MAGIC), 4) != 0) {
 	zip_error_set(error, ZIP_ER_NOZIP, 0);
+        if (!from_buffer) {
+            _zip_buffer_free(buffer);
+        }
 	return -1;
     }
-    cur += 4;
-
 
     /* convert buffercontents to zip_dirent */
 
     _zip_dirent_init(zde);
     if (!local)
-	zde->version_madeby = _zip_get_16(&cur);
+	zde->version_madeby = _zip_buffer_get_16(buffer);
     else
 	zde->version_madeby = 0;
-    zde->version_needed = _zip_get_16(&cur);
-    zde->bitflags = _zip_get_16(&cur);
-    zde->comp_method = _zip_get_16(&cur);
+    zde->version_needed = _zip_buffer_get_16(buffer);
+    zde->bitflags = _zip_buffer_get_16(buffer);
+    zde->comp_method = _zip_buffer_get_16(buffer);
     
     /* convert to time_t */
-    dostime = _zip_get_16(&cur);
-    dosdate = _zip_get_16(&cur);
+    dostime = _zip_buffer_get_16(buffer);
+    dosdate = _zip_buffer_get_16(buffer);
     zde->last_mod = _zip_d2u_time(dostime, dosdate);
     
-    zde->crc = _zip_get_32(&cur);
-    zde->comp_size = _zip_get_32(&cur);
-    zde->uncomp_size = _zip_get_32(&cur);
+    zde->crc = _zip_buffer_get_32(buffer);
+    zde->comp_size = _zip_buffer_get_32(buffer);
+    zde->uncomp_size = _zip_buffer_get_32(buffer);
     
-    filename_len = _zip_get_16(&cur);
-    ef_len = _zip_get_16(&cur);
+    filename_len = _zip_buffer_get_16(buffer);
+    ef_len = _zip_buffer_get_16(buffer);
     
     if (local) {
 	comment_len = 0;
@@ -388,29 +377,49 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
 	zde->ext_attrib = 0;
 	zde->offset = 0;
     } else {
-	comment_len = _zip_get_16(&cur);
-	zde->disk_number = _zip_get_16(&cur);
-	zde->int_attrib = _zip_get_16(&cur);
-	zde->ext_attrib = _zip_get_32(&cur);
-	zde->offset = _zip_get_32(&cur);
+	comment_len = _zip_buffer_get_16(buffer);
+	zde->disk_number = _zip_buffer_get_16(buffer);
+	zde->int_attrib = _zip_buffer_get_16(buffer);
+	zde->ext_attrib = _zip_buffer_get_32(buffer);
+	zde->offset = _zip_buffer_get_32(buffer);
+    }
+    
+    if (!_zip_buffer_ok(buffer)) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        if (!from_buffer) {
+            _zip_buffer_free(buffer);
+        }
+        return -1;
     }
 
     zde->filename = NULL;
     zde->extra_fields = NULL;
     zde->comment = NULL;
 
-    size += (zip_uint32_t)filename_len+(zip_uint32_t)ef_len+(zip_uint32_t)comment_len;
+    variable_size = (zip_uint32_t)filename_len+(zip_uint32_t)ef_len+(zip_uint32_t)comment_len;
 
-    if (leftp && (*leftp < size)) {
-	zip_error_set(error, ZIP_ER_INCONS, 0);
-	return -1;
+    if (from_buffer) {
+        if (_zip_buffer_left(buffer) < variable_size) {
+            zip_error_set(error, ZIP_ER_INCONS, 0);
+            return -1;
+        }
+    }
+    else {
+        _zip_buffer_free(buffer);
+        
+        if ((buffer = _zip_buffer_new_from_source(src, variable_size, NULL, error)) == NULL) {
+            return -1;
+        }
     }
 
     if (filename_len) {
-	zde->filename = _zip_read_string(bufp ? &cur : NULL, src, filename_len, 1, error);
+	zde->filename = _zip_read_string(buffer, src, filename_len, 1, error);
         if (!zde->filename) {
             if (zip_error_code_zip(error) == ZIP_ER_EOF) {
                 zip_error_set(error, ZIP_ER_INCONS, 0);
+            }
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
             }
 	    return -1;
         }
@@ -418,18 +427,28 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
 	if (zde->bitflags & ZIP_GPBF_ENCODING_UTF_8) {
 	    if (_zip_guess_encoding(zde->filename, ZIP_ENCODING_UTF8_KNOWN) == ZIP_ENCODING_ERROR) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
+                if (!from_buffer) {
+                    _zip_buffer_free(buffer);
+                }
 		return -1;
 	    }
 	}
     }
 
     if (ef_len) {
-	zip_uint8_t *ef = _zip_read_data(bufp ? &cur : NULL, src, ef_len, 0, error);
+	zip_uint8_t *ef = _zip_read_data(buffer, src, ef_len, 0, error);
 
-	if (ef == NULL)
+        if (ef == NULL) {
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
 	    return -1;
-	if ((zde->extra_fields=_zip_ef_parse(ef, ef_len, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error)) == NULL) {
+        }
+        if ((zde->extra_fields=_zip_ef_parse(ef, ef_len, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error)) == NULL) {
 	    free(ef);
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
 	    return -1;
 	}
 	free(ef);
@@ -438,13 +457,19 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
     }
 
     if (comment_len) {
-	zde->comment = _zip_read_string(bufp ? &cur : NULL, src, comment_len, 0, error);
-	if (!zde->comment)
+	zde->comment = _zip_read_string(buffer, src, comment_len, 0, error);
+        if (!zde->comment) {
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
 	    return -1;
-
+        }
 	if (zde->bitflags & ZIP_GPBF_ENCODING_UTF_8) {
 	    if (_zip_guess_encoding(zde->comment, ZIP_ENCODING_UTF8_KNOWN) == ZIP_ENCODING_ERROR) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
+                if (!from_buffer) {
+                    _zip_buffer_free(buffer);
+                }
 		return -1;
 	    }
 	}
@@ -456,47 +481,60 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
     /* Zip64 */
 
     if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
-	zip_uint32_t needed_len;
 	zip_uint16_t got_len;
+        zip_buffer_t *ef_buffer;
 	const zip_uint8_t *ef = _zip_ef_get_by_id(zde->extra_fields, &got_len, ZIP_EF_ZIP64, 0, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error);
 	/* TODO: if got_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
-	if (ef == NULL)
+        if (ef == NULL) {
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
 	    return -1;
-
-
-	if (local)
-	    needed_len = 16;
-	else {
-	    needed_len = 0;
-	    if (zde->uncomp_size == ZIP_UINT32_MAX)
-		needed_len += 8;
-	    if (zde->comp_size == ZIP_UINT32_MAX)
-		needed_len += 8;
-	    if (zde->offset == ZIP_UINT32_MAX)
-		needed_len += 8;
-	    if (zde->disk_number == ZIP_UINT16_MAX)
-		needed_len += 4;
-	}
-
-	if (got_len != needed_len) {
-	    zip_error_set(error, ZIP_ER_INCONS, 0);
-	    return -1;
-	}
+        }
+        
+        if ((ef_buffer = _zip_buffer_new((zip_uint8_t *)ef, got_len)) == NULL) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
+            return -1;
+        }
 	
 	if (zde->uncomp_size == ZIP_UINT32_MAX)
-	    zde->uncomp_size = _zip_get_64(&ef);
+	    zde->uncomp_size = _zip_buffer_get_64(ef_buffer);
 	else if (local)
 	    ef += 8;
 	if (zde->comp_size == ZIP_UINT32_MAX)
-	    zde->comp_size = _zip_get_64(&ef);
+	    zde->comp_size = _zip_buffer_get_64(ef_buffer);
 	if (!local) {
 	    if (zde->offset == ZIP_UINT32_MAX)
-		zde->offset = _zip_get_64(&ef);
+		zde->offset = _zip_buffer_get_64(ef_buffer);
 	    if (zde->disk_number == ZIP_UINT16_MAX)
-		zde->disk_number = _zip_get_32(&ef);
+		zde->disk_number = _zip_buffer_get_32(buffer);
 	}
+        
+        if (!_zip_buffer_eof(ef_buffer)) {
+            zip_error_set(error, ZIP_ER_INCONS, 0);
+            _zip_buffer_free(ef_buffer);
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
+            return -1;
+        }
+        _zip_buffer_free(ef_buffer);
     }
     
+    if (!_zip_buffer_ok(buffer)) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        if (!from_buffer) {
+            _zip_buffer_free(buffer);
+        }
+        return -1;
+    }
+    if (!from_buffer) {
+        _zip_buffer_free(buffer);
+    }
+
     /* zip_source_seek / zip_source_tell don't support values > ZIP_INT64_MAX */
     if (zde->offset > ZIP_INT64_MAX) {
 	zip_error_set(error, ZIP_ER_SEEK, EFBIG);
@@ -505,12 +543,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src,
     
     zde->extra_fields = _zip_ef_remove_internal(zde->extra_fields);
 
-    if (bufp)
-      *bufp = cur;
-    if (leftp)
-	*leftp -= size;
-
-    return 0;
+    return (zip_int64_t)(size + variable_size);
 }
 
 
@@ -519,23 +552,32 @@ _zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string
 {
     zip_uint16_t ef_len;
     zip_uint32_t ef_crc;
+    zip_buffer_t *buffer;
 
     const zip_uint8_t *ef = _zip_ef_get_by_id(de->extra_fields, &ef_len, id, 0, ZIP_EF_BOTH, NULL);
-
-    if (ef == NULL || ef_len < 5 || ef[0] != 1)
+    
+    if (ef == NULL || ef_len < 5 || ef[0] != 1) {
 	return str;
-
-    ef++;
-    ef_crc = _zip_get_32(&ef);
+    }
+    
+    if ((buffer = _zip_buffer_new((zip_uint8_t *)ef, ef_len)) == NULL) {
+        return str;
+    }
+    
+    _zip_buffer_get_8(buffer);
+    ef_crc = _zip_buffer_get_32(buffer);
 
     if (_zip_string_crc32(str) == ef_crc) {
-	zip_string_t *ef_str = _zip_string_new(ef, (zip_uint16_t)(ef_len-5), ZIP_FL_ENC_UTF_8, NULL);
+        zip_uint16_t len = (zip_uint16_t)_zip_buffer_left(buffer);
+        zip_string_t *ef_str = _zip_string_new(_zip_buffer_get(buffer, len), len, ZIP_FL_ENC_UTF_8, NULL);
 
 	if (ef_str != NULL) {
 	    _zip_string_free(str);
 	    str = ef_str;
 	}
     }
+    
+    _zip_buffer_free(buffer);
     
     return str;
 }
@@ -545,10 +587,10 @@ zip_int32_t
 _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error)
 {
     zip_int32_t size;
-    int local = (flags & ZIP_EF_LOCAL);
+    bool local = (flags & ZIP_EF_LOCAL) != 0;
     int i;
-    unsigned char b[6];
-    const unsigned char *p;
+    zip_uint8_t b[6];
+    zip_buffer_t *buffer;
 
     size = local ? LENTRYSIZE : CDENTRYSIZE;
 
@@ -556,14 +598,18 @@ _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error)
         _zip_error_set_from_source(error, src);
 	return -1;
     }
-
-    if (_zip_read(src, b, local ? 4 : 6, error) < 0) {
+    
+    if ((buffer = _zip_buffer_new_from_source(src, local ? 4 : 6, b, error)) == NULL) {
 	return -1;
     }
 
-    p = b;
     for (i=0; i<(local ? 2 : 3); i++) {
-	size += _zip_get_16(&p);
+	size += _zip_buffer_get_16(buffer);
+    }
+    
+    if (!_zip_buffer_eof(buffer)) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        return -1;
     }
 
     return size;
@@ -639,18 +685,14 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     zip_uint16_t dostime, dosdate;
     zip_encoding_type_t com_enc, name_enc;
     zip_extra_field_t *ef;
-    zip_uint8_t ef_zip64[EFZIP64SIZE], *ef_zip64_p;
-    int is_zip64;
-    int is_really_zip64;
-    zip_uint8_t buf[CDENTRYSIZE], *p;
+    bool is_zip64;
+    bool is_really_zip64;
+    zip_uint8_t buf[CDENTRYSIZE];
+    zip_buffer_t *buffer;
 
     ef = NULL;
 
-    is_zip64 = 0;
-
-    p = buf;
-
-    _zip_put_data(&p, (flags & ZIP_FL_LOCAL) ? LOCAL_MAGIC : CENTRAL_MAGIC, 4);
+    is_zip64 = false;
 
     name_enc = _zip_guess_encoding(de->filename, ZIP_ENCODING_UNKNOWN);
     com_enc = _zip_guess_encoding(de->comment, ZIP_ENCODING_UNKNOWN);
@@ -676,99 +718,138 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
 	    ef = ef2;
 	}
     }
-
-    ef_zip64_p = ef_zip64;
-    if (flags & ZIP_FL_LOCAL) {
-	if ((flags & ZIP_FL_FORCE_ZIP64) || de->comp_size > ZIP_UINT32_MAX || de->uncomp_size > ZIP_UINT32_MAX) {
-	    _zip_put_64(&ef_zip64_p, de->uncomp_size);
-	    _zip_put_64(&ef_zip64_p, de->comp_size);
-	}
-    }
-    else {
-	if ((flags & ZIP_FL_FORCE_ZIP64) || de->comp_size > ZIP_UINT32_MAX || de->uncomp_size > ZIP_UINT32_MAX || de->offset > ZIP_UINT32_MAX) {
-	    if (de->uncomp_size >= ZIP_UINT32_MAX)
-		_zip_put_64(&ef_zip64_p, de->uncomp_size);
-	    if (de->comp_size >= ZIP_UINT32_MAX)
-		_zip_put_64(&ef_zip64_p, de->comp_size);
-	    if (de->offset >= ZIP_UINT32_MAX)
-		_zip_put_64(&ef_zip64_p, de->offset);
-	}
-    }
-
-    if (ef_zip64_p != ef_zip64) {
-	zip_extra_field_t *ef64 = _zip_ef_new(ZIP_EF_ZIP64, (zip_uint16_t)(ef_zip64_p-ef_zip64), ef_zip64, ZIP_EF_BOTH);
-	ef64->next = ef;
-	ef = ef64;
-	is_zip64 = 1;
-    }
-
-    if ((flags & (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64)) == (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64))
-	is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
-    else
-	is_really_zip64 = is_zip64;
     
-    if ((flags & ZIP_FL_LOCAL) == 0)
-	_zip_put_16(&p, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_madeby));
-    _zip_put_16(&p, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_needed));
-    _zip_put_16(&p, de->bitflags&0xfff9); /* clear compression method specific flags */
-    _zip_put_16(&p, (zip_uint16_t)de->comp_method);
+    is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
+    is_zip64 = (flags & (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64)) == (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64) || is_really_zip64;
+    
+    if (is_zip64) {
+        zip_uint8_t ef_zip64[EFZIP64SIZE];
+        zip_buffer_t *ef_buffer = _zip_buffer_new(ef_zip64, sizeof(ef_zip64));
+        if (ef_buffer == NULL) {
+            zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            return -1;
+        }
+        
+        if (flags & ZIP_FL_LOCAL) {
+            if ((flags & ZIP_FL_FORCE_ZIP64) || de->comp_size > ZIP_UINT32_MAX || de->uncomp_size > ZIP_UINT32_MAX) {
+                _zip_buffer_put_64(ef_buffer, de->uncomp_size);
+                _zip_buffer_put_64(ef_buffer, de->comp_size);
+            }
+        }
+        else {
+            if ((flags & ZIP_FL_FORCE_ZIP64) || de->comp_size > ZIP_UINT32_MAX || de->uncomp_size > ZIP_UINT32_MAX || de->offset > ZIP_UINT32_MAX) {
+                if (de->uncomp_size >= ZIP_UINT32_MAX) {
+                    _zip_buffer_put_64(ef_buffer, de->uncomp_size);
+                }
+                if (de->comp_size >= ZIP_UINT32_MAX) {
+                    _zip_buffer_put_64(ef_buffer, de->comp_size);
+                }
+                if (de->offset >= ZIP_UINT32_MAX) {
+                    _zip_buffer_put_64(ef_buffer, de->offset);
+                }
+            }
+        }
+        
+        if (!_zip_buffer_ok(ef_buffer)) {
+            zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+            return -1;
+        }
+
+        zip_extra_field_t *ef64 = _zip_ef_new(ZIP_EF_ZIP64, (zip_uint16_t)(_zip_buffer_offset(ef_buffer)), ef_zip64, ZIP_EF_BOTH);
+        _zip_buffer_free(ef_buffer);
+        ef64->next = ef;
+        ef = ef64;
+    }
+
+    if ((buffer = _zip_buffer_new(buf, sizeof(buf))) == NULL) {
+        zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+        return -1;
+    }
+    
+    _zip_buffer_put(buffer, (flags & ZIP_FL_LOCAL) ? LOCAL_MAGIC : CENTRAL_MAGIC, 4);
+    
+    if ((flags & ZIP_FL_LOCAL) == 0) {
+        _zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_madeby));
+    }
+    _zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_needed));
+    _zip_buffer_put_16(buffer, de->bitflags&0xfff9); /* clear compression method specific flags */
+    _zip_buffer_put_16(buffer, (zip_uint16_t)de->comp_method);
 
     _zip_u2d_time(de->last_mod, &dostime, &dosdate);
-    _zip_put_16(&p, dostime);
-    _zip_put_16(&p, dosdate);
+    _zip_buffer_put_16(buffer, dostime);
+    _zip_buffer_put_16(buffer, dosdate);
 
-    _zip_put_32(&p, de->crc);
+    _zip_buffer_put_32(buffer, de->crc);
+    
     if (((flags & ZIP_FL_LOCAL) == ZIP_FL_LOCAL) && ((de->comp_size >= ZIP_UINT32_MAX) || (de->uncomp_size >= ZIP_UINT32_MAX))) {
 	/* In local headers, if a ZIP64 EF is written, it MUST contain
 	 * both compressed and uncompressed sizes (even if one of the
 	 * two is smaller than 0xFFFFFFFF); on the other hand, those
 	 * may only appear when the corresponding standard entry is
 	 * 0xFFFFFFFF.  (appnote.txt 4.5.3) */
-	_zip_put_32(&p, ZIP_UINT32_MAX);
-	_zip_put_32(&p, ZIP_UINT32_MAX);
+	_zip_buffer_put_32(buffer, ZIP_UINT32_MAX);
+	_zip_buffer_put_32(buffer, ZIP_UINT32_MAX);
     }
     else {
-	if (de->comp_size < ZIP_UINT32_MAX)
-	    _zip_put_32(&p, (zip_uint32_t)de->comp_size);
-	else
-	    _zip_put_32(&p, ZIP_UINT32_MAX);
-	if (de->uncomp_size < ZIP_UINT32_MAX)
-	    _zip_put_32(&p, (zip_uint32_t)de->uncomp_size);
-	else
-	    _zip_put_32(&p, ZIP_UINT32_MAX);
+        if (de->comp_size < ZIP_UINT32_MAX) {
+	    _zip_buffer_put_32(buffer, (zip_uint32_t)de->comp_size);
+        }
+        else {
+	    _zip_buffer_put_32(buffer, ZIP_UINT32_MAX);
+        }
+        if (de->uncomp_size < ZIP_UINT32_MAX) {
+	    _zip_buffer_put_32(buffer, (zip_uint32_t)de->uncomp_size);
+        }
+        else {
+	    _zip_buffer_put_32(buffer, ZIP_UINT32_MAX);
+        }
     }
 
-    _zip_put_16(&p, _zip_string_length(de->filename));
+    _zip_buffer_put_16(buffer, _zip_string_length(de->filename));
     /* TODO: check for overflow */
     zip_uint32_t ef_total_size = (zip_uint32_t)_zip_ef_size(de->extra_fields, flags) + (zip_uint32_t)_zip_ef_size(ef, ZIP_EF_BOTH);
-    _zip_put_16(&p, (zip_uint16_t)ef_total_size);
+    _zip_buffer_put_16(buffer, (zip_uint16_t)ef_total_size);
     
     if ((flags & ZIP_FL_LOCAL) == 0) {
-	_zip_put_16(&p, _zip_string_length(de->comment));
-	_zip_put_16(&p, (zip_uint16_t)de->disk_number);
-	_zip_put_16(&p, de->int_attrib);
-	_zip_put_32(&p, de->ext_attrib);
+	_zip_buffer_put_16(buffer, _zip_string_length(de->comment));
+	_zip_buffer_put_16(buffer, (zip_uint16_t)de->disk_number);
+	_zip_buffer_put_16(buffer, de->int_attrib);
+	_zip_buffer_put_32(buffer, de->ext_attrib);
 	if (de->offset < ZIP_UINT32_MAX)
-	    _zip_put_32(&p, (zip_uint32_t)de->offset);
+	    _zip_buffer_put_32(buffer, (zip_uint32_t)de->offset);
 	else
-	    _zip_put_32(&p, ZIP_UINT32_MAX);
+	    _zip_buffer_put_32(buffer, ZIP_UINT32_MAX);
+    }
+    
+    if (!_zip_buffer_ok(buffer)) {
+        zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+        _zip_buffer_free(buffer);
+        _zip_ef_free(ef);
+        return -1;
     }
 
-    if (_zip_write(za, buf, (zip_uint64_t)(p-buf)) < 0) {
-	return -1;
+    if (_zip_write(za, buf, _zip_buffer_offset(buffer)) < 0) {
+        _zip_buffer_free(buffer);
+        _zip_ef_free(ef);
+        return -1;
     }
+    
+    _zip_buffer_free(buffer);
 
     if (de->filename) {
 	if (_zip_string_write(za, de->filename) < 0) {
+            _zip_ef_free(ef);
 	    return -1;
 	}
     }
 
     if (ef) {
 	if (_zip_ef_write(za, ef, ZIP_EF_BOTH) < 0) {
+            _zip_ef_free(ef);
 	    return -1;
 	}
     }
+    _zip_ef_free(ef);
     if (de->extra_fields) {
 	if (_zip_ef_write(za, de->extra_fields, flags) < 0) {
 	    return -1;
@@ -783,7 +864,6 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
 	}
     }
 
-    _zip_ef_free(ef);
 
     return is_zip64;
 }
@@ -815,29 +895,35 @@ static zip_extra_field_t *
 _zip_ef_utf8(zip_uint16_t id, zip_string_t *str, zip_error_t *error)
 {
     const zip_uint8_t *raw;
-    zip_uint8_t *data, *p;
     zip_uint32_t len;
+    zip_buffer_t *buffer;
     zip_extra_field_t *ef;
 
     raw = _zip_string_get(str, &len, ZIP_FL_ENC_RAW, NULL);
 
     if (len+5 > ZIP_UINT16_MAX) {
-        /* TODO: error */
+        zip_error_set(error, ZIP_ER_INVAL, 0); /* TODO: better error code? */
+        return NULL;
     }
     
-    if ((data=(zip_uint8_t *)malloc(len+5)) == NULL) {
+    if ((buffer = _zip_buffer_new(NULL, len+5)) == NULL) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
-    p = data;
-    *(p++) = 1;
-    _zip_put_32(&p, _zip_string_crc32(str));
-    memcpy(p, raw, len);
-    p += len;
+    _zip_buffer_put_8(buffer, 1);
+    _zip_buffer_put_32(buffer, _zip_string_crc32(str));
+    _zip_buffer_put(buffer, raw, len);
 
-    ef = _zip_ef_new(id, (zip_uint16_t)(p-data), data, ZIP_EF_BOTH);
-    free(data);
+    if (!_zip_buffer_ok(buffer)) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        _zip_buffer_free(buffer);
+        return NULL;
+    }
+    
+    ef = _zip_ef_new(id, (zip_uint16_t)(_zip_buffer_offset(buffer)), _zip_buffer_data(buffer), ZIP_EF_BOTH);
+    _zip_buffer_free(buffer);
+
     return ef;
 }
 

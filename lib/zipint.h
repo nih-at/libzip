@@ -263,6 +263,7 @@ typedef struct zip_dirent zip_dirent_t;
 typedef struct zip_entry zip_entry_t;
 typedef struct zip_extra_field zip_extra_field_t;
 typedef struct zip_string zip_string_t;
+typedef struct zip_buffer zip_buffer_t;
 
 
 /* zip archive, part of API */
@@ -402,6 +403,17 @@ struct zip_string {
 };
 
 
+/* bounds checked access to memory buffer */
+
+struct zip_buffer {
+    bool ok;
+    bool free_data;
+    
+    zip_uint8_t *data;
+    zip_uint64_t size;
+    zip_uint64_t offset;
+};
+
 /* which files to write, and in which order (name is for torrentzip sorting) */
 
 struct zip_filelist {
@@ -426,6 +438,27 @@ extern const int _zip_err_type[];
 
 zip_int64_t _zip_add_entry(zip_t *);
 
+zip_uint8_t *_zip_buffer_data(zip_buffer_t *buffer);
+bool _zip_buffer_eof(zip_buffer_t *buffer);
+void _zip_buffer_free(zip_buffer_t *buffer);
+zip_uint8_t *_zip_buffer_get(zip_buffer_t *buffer, zip_uint64_t length);
+zip_uint16_t _zip_buffer_get_16(zip_buffer_t *buffer);
+zip_uint32_t _zip_buffer_get_32(zip_buffer_t *buffer);
+zip_uint64_t _zip_buffer_get_64(zip_buffer_t *buffer);
+zip_uint8_t _zip_buffer_get_8(zip_buffer_t *buffer);
+zip_uint64_t _zip_buffer_left(zip_buffer_t *buffer);
+zip_buffer_t *_zip_buffer_new(zip_uint8_t *data, zip_uint64_t size);
+zip_buffer_t *_zip_buffer_new_from_source(zip_source_t *src, zip_uint64_t size, zip_uint8_t *buf, zip_error_t *error);
+zip_uint64_t _zip_buffer_offset(zip_buffer_t *buffer);
+bool _zip_buffer_ok(zip_buffer_t *buffer);
+int _zip_buffer_put(zip_buffer_t *buffer, const void *src, size_t length);
+int _zip_buffer_put_16(zip_buffer_t *buffer, zip_uint16_t i);
+int _zip_buffer_put_32(zip_buffer_t *buffer, zip_uint32_t i);
+int _zip_buffer_put_64(zip_buffer_t *buffer, zip_uint64_t i);
+int _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i);
+int _zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset);
+zip_uint64_t _zip_buffer_size(zip_buffer_t *buffer);
+
 int _zip_cdir_compute_crc(zip_t *, uLong *);
 void _zip_cdir_free(zip_cdir_t *);
 int _zip_cdir_grow(zip_cdir_t *, zip_uint64_t, zip_error_t *);
@@ -437,11 +470,9 @@ zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *);
 void _zip_dirent_free(zip_dirent_t *);
 void _zip_dirent_finalize(zip_dirent_t *);
 void _zip_dirent_init(zip_dirent_t *);
-int _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
+bool _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
 zip_dirent_t *_zip_dirent_new(void);
-int _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, 
-		 const unsigned char **bufp, zip_uint64_t *leftp, int local,
-		 zip_error_t *error);
+zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_error_t *error);
 zip_int32_t _zip_dirent_size(zip_source_t *src, zip_uint16_t, zip_error_t *);
 void _zip_dirent_torrent_normalize(zip_dirent_t *);
 int _zip_dirent_write(zip_t *za, zip_dirent_t *dirent, zip_flags_t flags);
@@ -481,15 +512,11 @@ zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t, zip_uin
 
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 
-void _zip_put_16(zip_uint8_t **p, zip_uint16_t i);
-void _zip_put_32(zip_uint8_t **p, zip_uint32_t i);
-void _zip_put_64(zip_uint8_t **p, zip_uint64_t i);
-void _zip_put_data(zip_uint8_t **p, const char *s, size_t len);
-
 int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);
+zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error);
 int _zip_read_local_ef(zip_t *, zip_uint64_t);
-zip_string_t *_zip_read_string(const zip_uint8_t **buf, zip_source_t *src, zip_uint16_t len, int nulp, zip_error_t *error);
+zip_string_t *_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t lenght, bool nulp, zip_error_t *error);
 int _zip_register_source(zip_t *za, zip_source_t *src);
 
 void _zip_set_open_error(int *zep, const zip_error_t *err, int ze);
@@ -518,10 +545,7 @@ int _zip_local_header_read(zip_t *, int);
 void *_zip_memdup(const void *, size_t, zip_error_t *);
 zip_int64_t _zip_name_locate(zip_t *, const char *, zip_flags_t, zip_error_t *);
 zip_t *_zip_new(zip_error_t *);
-zip_uint16_t _zip_get_16(const zip_uint8_t **);
-zip_uint32_t _zip_get_32(const zip_uint8_t **);
-zip_uint64_t _zip_get_64(const zip_uint8_t **);
-zip_uint8_t *_zip_read_data(const zip_uint8_t **bufferp, zip_source_t *src, size_t length, int nulp, zip_error_t *error);
+
 zip_int64_t _zip_file_replace(zip_t *, zip_uint64_t, const char *, zip_source_t *, zip_flags_t);
 int _zip_set_name(zip_t *, zip_uint64_t, const char *, zip_flags_t);
 void _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *);

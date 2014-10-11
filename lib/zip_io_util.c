@@ -37,43 +37,6 @@
 
 #include "zipint.h"
 
-zip_uint16_t
-_zip_get_16(const zip_uint8_t **a)
-{
-    zip_uint16_t ret;
-
-    ret = (zip_uint16_t)((*a)[0]+((*a)[1]<<8));
-    *a += 2;
-
-    return ret;
-}
-
-
-zip_uint32_t
-_zip_get_32(const zip_uint8_t **a)
-{
-    zip_uint32_t ret;
-
-    ret = ((((((zip_uint32_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
-    *a += 4;
-
-    return ret;
-}
-
-
-zip_uint64_t
-_zip_get_64(const zip_uint8_t **a)
-{
-    zip_uint64_t x, y;
-
-    x = ((((((zip_uint64_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
-    *a += 4;
-    y = ((((((zip_uint64_t)(*a)[3]<<8)+(*a)[2])<<8)+(*a)[1])<<8)+(*a)[0];
-    *a += 4;
-
-    return x+(y<<32);
-}
-
 int
 _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error)
 {
@@ -99,25 +62,32 @@ _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *e
 
 
 zip_uint8_t *
-_zip_read_data(const zip_uint8_t **buf, zip_source_t *src, size_t len, int nulp, zip_error_t *error)
+_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error)
 {
     zip_uint8_t *r;
-
-    if (len == 0 && nulp == 0)
+    
+    if (length == 0 && !nulp) {
 	return NULL;
+    }
 
-    r = (zip_uint8_t *)malloc(nulp ? len+1 : len);
+    r = (zip_uint8_t *)malloc(length + (nulp ? 1 : 0));
     if (!r) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
-    if (buf) {
-	memcpy(r, *buf, len);
-	*buf += len;
+    if (buffer) {
+        zip_uint8_t *data = _zip_buffer_get(buffer, length);
+        
+        if (data == NULL) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            free(r);
+            return NULL;
+        }
+	memcpy(r, data, length);
     }
     else {
-	if (_zip_read(src, r, len, error) < 0) {
+	if (_zip_read(src, r, length, error) < 0) {
 	    free(r);
 	    return NULL;
 	}
@@ -126,8 +96,8 @@ _zip_read_data(const zip_uint8_t **buf, zip_source_t *src, size_t len, int nulp,
     if (nulp) {
 	zip_uint8_t *o;
 	/* replace any in-string NUL characters with spaces */
-	r[len] = 0;
-	for (o=r; o<r+len; o++)
+	r[length] = 0;
+	for (o=r; o<r+length; o++)
 	    if (*o == '\0')
 		*o = ' ';
     }
@@ -137,59 +107,17 @@ _zip_read_data(const zip_uint8_t **buf, zip_source_t *src, size_t len, int nulp,
 
 
 zip_string_t *
-_zip_read_string(const zip_uint8_t **buf, zip_source_t *src, zip_uint16_t len, int nulp, zip_error_t *error)
+_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t len, bool nulp, zip_error_t *error)
 {
     zip_uint8_t *raw;
     zip_string_t *s;
 
-    if ((raw=_zip_read_data(buf, src, len, nulp, error)) == NULL)
+    if ((raw=_zip_read_data(buffer, src, len, nulp, error)) == NULL)
 	return NULL;
 
     s = _zip_string_new(raw, len, ZIP_FL_ENC_GUESS, error);
     free(raw);
     return s;
-}
-
-
-
-
-void
-_zip_put_16(zip_uint8_t **p, zip_uint16_t i)
-{
-    *((*p)++) = (zip_uint8_t)(i&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>8)&0xff);
-}
-
-
-void
-_zip_put_32(zip_uint8_t **p, zip_uint32_t i)
-{
-    *((*p)++) = (zip_uint8_t)(i&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>8)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>16)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>24)&0xff);
-}
-
-
-void
-_zip_put_64(zip_uint8_t **p, zip_uint64_t i)
-{
-    *((*p)++) = (zip_uint8_t)(i&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>8)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>16)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>24)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>32)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>40)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>48)&0xff);
-    *((*p)++) = (zip_uint8_t)((i>>56)&0xff);
-}
-
-
-void
-_zip_put_data(zip_uint8_t **p, const char *s, size_t len)
-{
-    memcpy(*p, s, len);
-    *p += len;
 }
 
 
