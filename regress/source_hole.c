@@ -43,6 +43,11 @@
 zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
 
 
+#ifndef EFTYPE
+#define EFTYPE	EINVAL
+#endif
+
+
 #define MY_MIN(a, b)	((a) < (b) ? (a) : (b))
 
 #define FRAGMENT_SIZE   (8*1024)

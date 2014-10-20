@@ -1,4 +1,5 @@
 # zip_open: various inconsistent files
+setenv LANG C
 program tryopen
 file incons-archive-comment-longer.zzip incons-archive-comment-longer.zip incons-archive-comment-longer.zip
 file incons-archive-comment-shorter.zzip incons-archive-comment-shorter.zip incons-archive-comment-shorter.zip
