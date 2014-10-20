@@ -112,6 +112,8 @@ EXTRA_DIST= \
 	teststdin.zip \
 	teststored.zip \
 	testtorrent.tzip \
+	utf-8-standardization-input.zip \
+	utf-8-standardization-output.zip \
 	zip64.zip
 
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
