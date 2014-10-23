@@ -134,7 +134,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
             ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
 	}
     }
-    else if (fseek(ctx->f, 0, SEEK_CUR) == 0) {
+    else if (fseeko(ctx->f, 0, SEEK_CUR) == 0) {
         ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
     }
 
