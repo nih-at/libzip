@@ -48,3 +48,10 @@ zip_get_error(zip_t *za)
 {
     return &za->error;
 }
+
+
+ZIP_EXTERN zip_error_t *
+zip_file_get_error(zip_file_t *f)
+{
+    return &f->error;
+}
