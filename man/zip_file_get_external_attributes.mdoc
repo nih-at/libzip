@@ -120,18 +120,6 @@ In case of an error,
 is returned and the error code in
 .Ar archive
 is set to indicate the error.
-.Sh ERRORS
-.Fn zip_file_get_external_attributes
-fails if:
-.Bl -tag -width Er
-.It Bq Er ZIP_ER_INVAL
-.Ar index
-is not a valid file index in
-.Ar archive .
-.El
-.Sh SEE ALSO
-.Xr libzip 3 ,
-.Xr zip_file_set_external_attributes 3
 .Sh EXAMPLES
 The following code can be used to expand
 .Ar attributes
@@ -156,6 +144,18 @@ _zip_dos_attr2mode(zip_uint32_t attr)
    return m;
 }
 .Ed
+.Sh ERRORS
+.Fn zip_file_get_external_attributes
+fails if:
+.Bl -tag -width Er
+.It Bq Er ZIP_ER_INVAL
+.Ar index
+is not a valid file index in
+.Ar archive .
+.El
+.Sh SEE ALSO
+.Xr libzip 3 ,
+.Xr zip_file_set_external_attributes 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at
