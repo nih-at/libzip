@@ -1,0 +1,31 @@
+.TH "ZIP_ERROR_INIT" "3" "October 30, 2014" "NiH" "Library Functions Manual"
+.nh
+.if n .ad l
+.SH "NAME"
+\fBzip_error_init\fR
+\- initialize zip_error structure
+.SH "LIBRARY"
+libzip (-lzip)
+.SH "SYNOPSIS"
+\fB#include <zip.h>\fR
+.sp
+\fIvoid\fR
+.PD 0
+.HP 4n
+\fBzip_error_init\fR(\fIzip_error_t\ *ze\fR);
+.PD
+.SH "DESCRIPTION"
+The
+\fBzip_error_init\fR()
+function initializes the zip_error pointed to by
+\fIze\fR.
+\fI*ze\fR
+must be allocated before calling
+\fBzip_error_init\fR().
+.SH "SEE ALSO"
+libzip(3),
+zip_error_fini(3)
+.SH "AUTHORS"
+Dieter Baron <\fIdillo@nih.at\fR>
+and
+Thomas Klausner <\fItk@giga.or.at\fR>
