@@ -15,10 +15,10 @@ libzip (-lzip)
 \fBzip_get_num_files\fR(\fIzip_t\ *archive\fR);
 .PD
 .SH "DESCRIPTION"
-\fIThis function is deprecated.\fR
+\fIThis function is deprecated\fR.
 \fIUse\fR
 zip_get_num_entries(3)
-\fIinstead.\fR
+\fIinstead\fR.
 .PP
 The
 \fBzip_get_num_files\fR()

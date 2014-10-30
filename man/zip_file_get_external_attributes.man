@@ -94,17 +94,6 @@ In case of an error,
 is returned and the error code in
 \fIarchive\fR
 is set to indicate the error.
-.SH "ERRORS"
-\fBzip_file_get_external_attributes\fR()
-fails if:
-.TP 19n
-[\fRZIP_ER_INVAL\fR]
-\fIindex\fR
-is not a valid file index in
-\fIarchive\fR.
-.SH "SEE ALSO"
-libzip(3),
-zip_file_set_external_attributes(3)
 .SH "EXAMPLES"
 The following code can be used to expand
 \fIattributes\fR
@@ -132,6 +121,17 @@ _zip_dos_attr2mode(zip_uint32_t attr)
 }
 .RE
 .fi
+.SH "ERRORS"
+\fBzip_file_get_external_attributes\fR()
+fails if:
+.TP 19n
+[\fRZIP_ER_INVAL\fR]
+\fIindex\fR
+is not a valid file index in
+\fIarchive\fR.
+.SH "SEE ALSO"
+libzip(3),
+zip_file_set_external_attributes(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

@@ -56,7 +56,7 @@ Follow the ZIP specification for file names and extend it to the
 archive comment, thus also expecting it in CP-437 encoding.
 Convert it to UTF-8.
 .RE
-\fINote:\fR
+\fINote\fR:
 ASCII is a subset of both CP-437 and UTF-8.
 .SH "RETURN VALUES"
 Upon successful completion, a pointer to the comment is returned,

@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_SYS_TYPE" "3" "November 30, 2004" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_GET_SYS_TYPE" "3" "October 30, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,8 +10,10 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_error_get_sys_type\fR(\fIint ze\fR);
+.PD 0
+.HP 4n
+\fBzip_error_get_sys_type\fR(\fIint\ ze\fR);
+.PD
 .SH "DESCRIPTION"
 The
 \fBzip_error_get_sys_type\fR()

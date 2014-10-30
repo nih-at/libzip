@@ -129,7 +129,7 @@ original data.
 Specify position to read next byte from, like
 fseek(3).
 Use
-ZIP_SOURCE_GET_ARGS
+ZIP_SOURCE_GET_ARGS(3)
 to decode the arguments into the following struct:
 .nf
 .sp

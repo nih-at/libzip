@@ -77,8 +77,8 @@ The
 was opened in read-only mode.
 .SH "SEE ALSO"
 libzip(3),
-zip_get_archive_comment(3),
 zip_file_get_comment(3),
+zip_get_archive_comment(3),
 zip_set_archive_comment(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>

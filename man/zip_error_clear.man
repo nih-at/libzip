@@ -1,4 +1,4 @@
-.TH "ZIP_CLEAR_ERROR" "3" "October 4, 2006" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_CLEAR" "3" "October 30, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"

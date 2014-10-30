@@ -52,7 +52,7 @@ Follow the ZIP specification and expect CP-437 encoded names in
 the ZIP archive (except if they are explicitly marked as UTF-8).
 Convert it to UTF-8 before comparing.
 .RE
-\fINote:\fR
+\fINote\fR:
 ASCII is a subset of both CP-437 and UTF-8.
 .SH "RETURN VALUES"
 \fBzip_name_locate\fR()
