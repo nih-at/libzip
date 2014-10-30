@@ -17,6 +17,7 @@
 ^config\.(guess|h|h\.in|log|status|sub)$
 ^configure$
 ^depcomp$
+^examples/in-memory$
 ^install-sh$
 ^lib/zip_err_str\.c$
 ^lib/zipconf\.h$
@@ -44,6 +45,7 @@
 ^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/get_comment$
+^regress/hole$
 ^regress/manyfiles.zip$
 ^regress/modify$
 ^regress/name_locate$
