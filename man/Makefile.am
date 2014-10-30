@@ -14,8 +14,15 @@ MAN3=	libzip.mdoc \
 	zip_dir_add.mdoc \
 	zip_discard.mdoc \
 	zip_error_clear.mdoc \
+	zip_error_code_system.mdoc \
+	zip_error_code_zip.mdoc \
+	zip_error_fini.mdoc \
 	zip_error_get.mdoc \
 	zip_error_get_sys_type.mdoc \
+	zip_error_init.mdoc \
+	zip_error_set.mdoc \
+	zip_error_strerror.mdoc \
+	zip_error_system_type.mdoc \
 	zip_error_to_str.mdoc \
 	zip_errors.mdoc \
 	zip_fclose.mdoc \
@@ -37,6 +44,7 @@ MAN3=	libzip.mdoc \
 	zip_fread.mdoc \
 	zip_get_archive_comment.mdoc \
 	zip_get_archive_flag.mdoc \
+	zip_get_error.mdoc \
 	zip_get_file_comment.mdoc \
 	zip_get_name.mdoc \
 	zip_get_num_entries.mdoc \
