@@ -1,8 +1,8 @@
 File:    APPNOTE.TXT - .ZIP File Format Specification
-Version: 6.3.3 
-Status: Final - replaces version 6.3.2
-Revised: September 1, 2012
-Copyright (c) 1989 - 2012 PKWARE Inc., All Rights Reserved.
+Version: 6.3.4 
+Status: Final - replaces version 6.3.3
+Revised: October 1, 2014
+Copyright (c) 1989 - 2014 PKWARE Inc., All Rights Reserved.
 
 1.0 Introduction
 ---------------
@@ -68,8 +68,8 @@ Copyright (c) 1989 - 2012 PKWARE Inc., All Rights Reserved.
    wish to report defects, request changes or additions, please contact:
 
      PKWARE, Inc.
-     648 N. Plankinton Avenue, Suite 220
-     Milwaukee, WI 53203
+     201 E. Pittsburgh Avenue, Suite 400
+     Milwaukee, WI 53204
      +1-414-289-9788
      +1-414-289-9789 FAX
      zipformat@pkware.com
@@ -178,7 +178,9 @@ Copyright (c) 1989 - 2012 PKWARE Inc., All Rights Reserved.
    6.3.3         -Formatting changes to support           09/01/2012
                   easier referencing of this APPNOTE
                   from other documents and standards        
- 
+
+   6.3.4         -Address change                          10/01/2014
+
 
 3.0 Notations
 -------------
