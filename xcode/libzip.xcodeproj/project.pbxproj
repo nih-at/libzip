@@ -719,71 +719,83 @@
 		4B01D70815B2F4CF002D5007 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		4B01D71315B2F4EB002D5007 /* zipcmp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipcmp; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D71E15B2F4F7002D5007 /* ziptorrent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptorrent; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B01D72115B2F572002D5007 /* zipcmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = zipcmp.c; path = ../src/zipcmp.c; sourceTree = "<group>"; };
-		4B01D72215B2F572002D5007 /* zipmerge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = zipmerge.c; path = ../src/zipmerge.c; sourceTree = "<group>"; };
-		4B01D72315B2F572002D5007 /* ziptorrent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ziptorrent.c; path = ../src/ziptorrent.c; sourceTree = "<group>"; };
+		4B01D72115B2F572002D5007 /* zipcmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipcmp.c; sourceTree = "<group>"; };
+		4B01D72215B2F572002D5007 /* zipmerge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipmerge.c; sourceTree = "<group>"; };
+		4B01D72315B2F572002D5007 /* ziptorrent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ziptorrent.c; sourceTree = "<group>"; };
 		4B01D73D15B2FB6B002D5007 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		4B28A9EC15BACC3900D0C17D /* libzip.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = libzip.mdoc; path = ../man/libzip.mdoc; sourceTree = "<group>"; };
-		4B28A9ED15BACC3900D0C17D /* zip_add_dir.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_add_dir.mdoc; path = ../man/zip_add_dir.mdoc; sourceTree = "<group>"; };
-		4B28A9EE15BACC3900D0C17D /* zip_add.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_add.mdoc; path = ../man/zip_add.mdoc; sourceTree = "<group>"; };
-		4B28A9EF15BACC3900D0C17D /* zip_close.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_close.mdoc; path = ../man/zip_close.mdoc; sourceTree = "<group>"; };
-		4B28A9F015BACC3900D0C17D /* zip_delete.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_delete.mdoc; path = ../man/zip_delete.mdoc; sourceTree = "<group>"; };
-		4B28A9F115BACC3900D0C17D /* zip_dir_add.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_dir_add.mdoc; path = ../man/zip_dir_add.mdoc; sourceTree = "<group>"; };
-		4B28A9F215BACC3900D0C17D /* zip_discard.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_discard.mdoc; path = ../man/zip_discard.mdoc; sourceTree = "<group>"; };
-		4B28A9F315BACC3900D0C17D /* zip_error_clear.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_error_clear.mdoc; path = ../man/zip_error_clear.mdoc; sourceTree = "<group>"; };
-		4B28A9F415BACC3900D0C17D /* zip_error_get_sys_type.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_error_get_sys_type.mdoc; path = ../man/zip_error_get_sys_type.mdoc; sourceTree = "<group>"; };
-		4B28A9F515BACC3900D0C17D /* zip_error_get.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_error_get.mdoc; path = ../man/zip_error_get.mdoc; sourceTree = "<group>"; };
-		4B28A9F615BACC3900D0C17D /* zip_error_to_str.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_error_to_str.mdoc; path = ../man/zip_error_to_str.mdoc; sourceTree = "<group>"; };
-		4B28A9F715BACC3900D0C17D /* zip_errors.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_errors.mdoc; path = ../man/zip_errors.mdoc; sourceTree = "<group>"; };
-		4B28A9F815BACC3900D0C17D /* zip_fclose.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_fclose.mdoc; path = ../man/zip_fclose.mdoc; sourceTree = "<group>"; };
-		4B28A9F915BACC3900D0C17D /* zip_fdopen.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_fdopen.mdoc; path = ../man/zip_fdopen.mdoc; sourceTree = "<group>"; };
-		4B28A9FA15BACC3900D0C17D /* zip_file_add.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_add.mdoc; path = ../man/zip_file_add.mdoc; sourceTree = "<group>"; };
-		4B28A9FB15BACC3900D0C17D /* zip_file_extra_field_delete.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_extra_field_delete.mdoc; path = ../man/zip_file_extra_field_delete.mdoc; sourceTree = "<group>"; };
-		4B28A9FC15BACC3900D0C17D /* zip_file_extra_field_get.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_extra_field_get.mdoc; path = ../man/zip_file_extra_field_get.mdoc; sourceTree = "<group>"; };
-		4B28A9FD15BACC3900D0C17D /* zip_file_extra_field_set.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_extra_field_set.mdoc; path = ../man/zip_file_extra_field_set.mdoc; sourceTree = "<group>"; };
-		4B28A9FE15BACC3900D0C17D /* zip_file_extra_fields_count.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_extra_fields_count.mdoc; path = ../man/zip_file_extra_fields_count.mdoc; sourceTree = "<group>"; };
-		4B28A9FF15BACC3900D0C17D /* zip_file_get_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_get_comment.mdoc; path = ../man/zip_file_get_comment.mdoc; sourceTree = "<group>"; };
-		4B28AA0015BACC3900D0C17D /* zip_file_rename.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_rename.mdoc; path = ../man/zip_file_rename.mdoc; sourceTree = "<group>"; };
-		4B28AA0115BACC3900D0C17D /* zip_file_set_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_set_comment.mdoc; path = ../man/zip_file_set_comment.mdoc; sourceTree = "<group>"; };
-		4B28AA0215BACC3900D0C17D /* zip_file_strerror.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_file_strerror.mdoc; path = ../man/zip_file_strerror.mdoc; sourceTree = "<group>"; };
-		4B28AA0315BACC3900D0C17D /* zip_fopen_encrypted.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_fopen_encrypted.mdoc; path = ../man/zip_fopen_encrypted.mdoc; sourceTree = "<group>"; };
-		4B28AA0415BACC3900D0C17D /* zip_fopen.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_fopen.mdoc; path = ../man/zip_fopen.mdoc; sourceTree = "<group>"; };
-		4B28AA0515BACC3900D0C17D /* zip_fread.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_fread.mdoc; path = ../man/zip_fread.mdoc; sourceTree = "<group>"; };
-		4B28AA0615BACC3900D0C17D /* zip_get_archive_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_get_archive_comment.mdoc; path = ../man/zip_get_archive_comment.mdoc; sourceTree = "<group>"; };
-		4B28AA0715BACC3900D0C17D /* zip_get_archive_flag.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_get_archive_flag.mdoc; path = ../man/zip_get_archive_flag.mdoc; sourceTree = "<group>"; };
-		4B28AA0815BACC3900D0C17D /* zip_get_file_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_get_file_comment.mdoc; path = ../man/zip_get_file_comment.mdoc; sourceTree = "<group>"; };
-		4B28AA0915BACC3900D0C17D /* zip_get_name.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_get_name.mdoc; path = ../man/zip_get_name.mdoc; sourceTree = "<group>"; };
-		4B28AA0A15BACC3900D0C17D /* zip_get_num_entries.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_get_num_entries.mdoc; path = ../man/zip_get_num_entries.mdoc; sourceTree = "<group>"; };
-		4B28AA0B15BACC3900D0C17D /* zip_get_num_files.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_get_num_files.mdoc; path = ../man/zip_get_num_files.mdoc; sourceTree = "<group>"; };
-		4B28AA0C15BACC3900D0C17D /* zip_name_locate.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_name_locate.mdoc; path = ../man/zip_name_locate.mdoc; sourceTree = "<group>"; };
-		4B28AA0D15BACC3900D0C17D /* zip_open.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_open.mdoc; path = ../man/zip_open.mdoc; sourceTree = "<group>"; };
-		4B28AA0E15BACC3900D0C17D /* zip_rename.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_rename.mdoc; path = ../man/zip_rename.mdoc; sourceTree = "<group>"; };
-		4B28AA0F15BACC3900D0C17D /* zip_set_archive_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_set_archive_comment.mdoc; path = ../man/zip_set_archive_comment.mdoc; sourceTree = "<group>"; };
-		4B28AA1015BACC3900D0C17D /* zip_set_archive_flag.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_set_archive_flag.mdoc; path = ../man/zip_set_archive_flag.mdoc; sourceTree = "<group>"; };
-		4B28AA1115BACC3900D0C17D /* zip_set_default_password.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_set_default_password.mdoc; path = ../man/zip_set_default_password.mdoc; sourceTree = "<group>"; };
-		4B28AA1215BACC3900D0C17D /* zip_set_file_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_set_file_comment.mdoc; path = ../man/zip_set_file_comment.mdoc; sourceTree = "<group>"; };
-		4B28AA1315BACC3900D0C17D /* zip_set_file_compression.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_set_file_compression.mdoc; path = ../man/zip_set_file_compression.mdoc; sourceTree = "<group>"; };
-		4B28AA1415BACC3900D0C17D /* zip_source_buffer.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_source_buffer.mdoc; path = ../man/zip_source_buffer.mdoc; sourceTree = "<group>"; };
-		4B28AA1515BACC3900D0C17D /* zip_source_file.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_source_file.mdoc; path = ../man/zip_source_file.mdoc; sourceTree = "<group>"; };
-		4B28AA1615BACC3900D0C17D /* zip_source_filep.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_source_filep.mdoc; path = ../man/zip_source_filep.mdoc; sourceTree = "<group>"; };
-		4B28AA1715BACC3900D0C17D /* zip_source_free.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_source_free.mdoc; path = ../man/zip_source_free.mdoc; sourceTree = "<group>"; };
-		4B28AA1815BACC3900D0C17D /* zip_source_function.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_source_function.mdoc; path = ../man/zip_source_function.mdoc; sourceTree = "<group>"; };
-		4B28AA1915BACC3900D0C17D /* zip_source_zip.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_source_zip.mdoc; path = ../man/zip_source_zip.mdoc; sourceTree = "<group>"; };
-		4B28AA1A15BACC3900D0C17D /* zip_stat_init.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_stat_init.mdoc; path = ../man/zip_stat_init.mdoc; sourceTree = "<group>"; };
-		4B28AA1B15BACC3900D0C17D /* zip_stat.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_stat.mdoc; path = ../man/zip_stat.mdoc; sourceTree = "<group>"; };
-		4B28AA1C15BACC3900D0C17D /* zip_unchange_all.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_unchange_all.mdoc; path = ../man/zip_unchange_all.mdoc; sourceTree = "<group>"; };
-		4B28AA1D15BACC3900D0C17D /* zip_unchange_archive.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_unchange_archive.mdoc; path = ../man/zip_unchange_archive.mdoc; sourceTree = "<group>"; };
-		4B28AA1E15BACC3900D0C17D /* zip_unchange.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zip_unchange.mdoc; path = ../man/zip_unchange.mdoc; sourceTree = "<group>"; };
-		4B28AA1F15BACC3900D0C17D /* zipcmp.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zipcmp.mdoc; path = ../man/zipcmp.mdoc; sourceTree = "<group>"; };
-		4B28AA2015BACC3900D0C17D /* zipmerge.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = zipmerge.mdoc; path = ../man/zipmerge.mdoc; sourceTree = "<group>"; };
-		4B28AA2115BACC3900D0C17D /* ziptorrent.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = ziptorrent.mdoc; path = ../man/ziptorrent.mdoc; sourceTree = "<group>"; };
-		4B28AA2215BAD4E200D0C17D /* API-CHANGES */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "API-CHANGES"; path = "../API-CHANGES"; sourceTree = "<group>"; };
-		4B28AA2315BAD4E200D0C17D /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AUTHORS; path = ../AUTHORS; sourceTree = "<group>"; };
-		4B28AA2415BAD4E200D0C17D /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = NEWS; path = ../NEWS; sourceTree = "<group>"; };
-		4B28AA2515BAD4E200D0C17D /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../README; sourceTree = "<group>"; };
-		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = THANKS; path = ../THANKS; sourceTree = "<group>"; };
-		4B28AA2715BAD4E200D0C17D /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO; path = ../TODO; sourceTree = "<group>"; };
-		4B6B06E115F119AE008C2CBE /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = compat.h; path = ../src/compat.h; sourceTree = "<group>"; };
+		4B1E46E51A08CB7600A376D2 /* zip_error_code_system.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_code_system.mdoc; sourceTree = "<group>"; };
+		4B1E46E61A08CB7600A376D2 /* zip_error_code_zip.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_code_zip.mdoc; sourceTree = "<group>"; };
+		4B1E46E71A08CB7600A376D2 /* zip_error_fini.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_fini.mdoc; sourceTree = "<group>"; };
+		4B1E46E81A08CB7600A376D2 /* zip_error_init.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_init.mdoc; sourceTree = "<group>"; };
+		4B1E46E91A08CB7600A376D2 /* zip_error_set.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_set.mdoc; sourceTree = "<group>"; };
+		4B1E46EA1A08CB7600A376D2 /* zip_error_strerror.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_strerror.mdoc; sourceTree = "<group>"; };
+		4B1E46EB1A08CB7600A376D2 /* zip_error_system_type.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_system_type.mdoc; sourceTree = "<group>"; };
+		4B26FF141A07DF1A000E9788 /* Makefile.am */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; indentWidth = 8; path = Makefile.am; sourceTree = "<group>"; usesTabs = 1; };
+		4B26FF151A07DF1A000E9788 /* zip_file_get_external_attributes.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_get_external_attributes.mdoc; sourceTree = "<group>"; };
+		4B26FF161A07DF1A000E9788 /* zip_file_set_external_attributes.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_set_external_attributes.mdoc; sourceTree = "<group>"; };
+		4B26FF171A07DF1A000E9788 /* zip_file_set_mtime.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_set_mtime.mdoc; sourceTree = "<group>"; };
+		4B26FF181A07DFEA000E9788 /* mkdocset.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = mkdocset.pl; sourceTree = "<group>"; };
+		4B28A9EC15BACC3900D0C17D /* libzip.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = libzip.mdoc; sourceTree = "<group>"; };
+		4B28A9ED15BACC3900D0C17D /* zip_add_dir.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_add_dir.mdoc; sourceTree = "<group>"; };
+		4B28A9EE15BACC3900D0C17D /* zip_add.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_add.mdoc; sourceTree = "<group>"; };
+		4B28A9EF15BACC3900D0C17D /* zip_close.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_close.mdoc; sourceTree = "<group>"; };
+		4B28A9F015BACC3900D0C17D /* zip_delete.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_delete.mdoc; sourceTree = "<group>"; };
+		4B28A9F115BACC3900D0C17D /* zip_dir_add.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_dir_add.mdoc; sourceTree = "<group>"; };
+		4B28A9F215BACC3900D0C17D /* zip_discard.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_discard.mdoc; sourceTree = "<group>"; };
+		4B28A9F315BACC3900D0C17D /* zip_error_clear.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_clear.mdoc; sourceTree = "<group>"; };
+		4B28A9F415BACC3900D0C17D /* zip_error_get_sys_type.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_get_sys_type.mdoc; sourceTree = "<group>"; };
+		4B28A9F515BACC3900D0C17D /* zip_error_get.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_get.mdoc; sourceTree = "<group>"; };
+		4B28A9F615BACC3900D0C17D /* zip_error_to_str.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_to_str.mdoc; sourceTree = "<group>"; };
+		4B28A9F715BACC3900D0C17D /* zip_errors.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_errors.mdoc; sourceTree = "<group>"; };
+		4B28A9F815BACC3900D0C17D /* zip_fclose.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_fclose.mdoc; sourceTree = "<group>"; };
+		4B28A9F915BACC3900D0C17D /* zip_fdopen.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_fdopen.mdoc; sourceTree = "<group>"; };
+		4B28A9FA15BACC3900D0C17D /* zip_file_add.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_add.mdoc; sourceTree = "<group>"; };
+		4B28A9FB15BACC3900D0C17D /* zip_file_extra_field_delete.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_extra_field_delete.mdoc; sourceTree = "<group>"; };
+		4B28A9FC15BACC3900D0C17D /* zip_file_extra_field_get.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_extra_field_get.mdoc; sourceTree = "<group>"; };
+		4B28A9FD15BACC3900D0C17D /* zip_file_extra_field_set.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_extra_field_set.mdoc; sourceTree = "<group>"; };
+		4B28A9FE15BACC3900D0C17D /* zip_file_extra_fields_count.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_extra_fields_count.mdoc; sourceTree = "<group>"; };
+		4B28A9FF15BACC3900D0C17D /* zip_file_get_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_get_comment.mdoc; sourceTree = "<group>"; };
+		4B28AA0015BACC3900D0C17D /* zip_file_rename.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_rename.mdoc; sourceTree = "<group>"; };
+		4B28AA0115BACC3900D0C17D /* zip_file_set_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_set_comment.mdoc; sourceTree = "<group>"; };
+		4B28AA0215BACC3900D0C17D /* zip_file_strerror.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_strerror.mdoc; sourceTree = "<group>"; };
+		4B28AA0315BACC3900D0C17D /* zip_fopen_encrypted.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_fopen_encrypted.mdoc; sourceTree = "<group>"; };
+		4B28AA0415BACC3900D0C17D /* zip_fopen.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_fopen.mdoc; sourceTree = "<group>"; };
+		4B28AA0515BACC3900D0C17D /* zip_fread.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_fread.mdoc; sourceTree = "<group>"; };
+		4B28AA0615BACC3900D0C17D /* zip_get_archive_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_archive_comment.mdoc; sourceTree = "<group>"; };
+		4B28AA0715BACC3900D0C17D /* zip_get_archive_flag.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_archive_flag.mdoc; sourceTree = "<group>"; };
+		4B28AA0815BACC3900D0C17D /* zip_get_file_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_file_comment.mdoc; sourceTree = "<group>"; };
+		4B28AA0915BACC3900D0C17D /* zip_get_name.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_name.mdoc; sourceTree = "<group>"; };
+		4B28AA0A15BACC3900D0C17D /* zip_get_num_entries.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_num_entries.mdoc; sourceTree = "<group>"; };
+		4B28AA0B15BACC3900D0C17D /* zip_get_num_files.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_num_files.mdoc; sourceTree = "<group>"; };
+		4B28AA0C15BACC3900D0C17D /* zip_name_locate.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_name_locate.mdoc; sourceTree = "<group>"; };
+		4B28AA0D15BACC3900D0C17D /* zip_open.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_open.mdoc; sourceTree = "<group>"; };
+		4B28AA0E15BACC3900D0C17D /* zip_rename.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_rename.mdoc; sourceTree = "<group>"; };
+		4B28AA0F15BACC3900D0C17D /* zip_set_archive_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_set_archive_comment.mdoc; sourceTree = "<group>"; };
+		4B28AA1015BACC3900D0C17D /* zip_set_archive_flag.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_set_archive_flag.mdoc; sourceTree = "<group>"; };
+		4B28AA1115BACC3900D0C17D /* zip_set_default_password.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_set_default_password.mdoc; sourceTree = "<group>"; };
+		4B28AA1215BACC3900D0C17D /* zip_set_file_comment.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_set_file_comment.mdoc; sourceTree = "<group>"; };
+		4B28AA1315BACC3900D0C17D /* zip_set_file_compression.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_set_file_compression.mdoc; sourceTree = "<group>"; };
+		4B28AA1415BACC3900D0C17D /* zip_source_buffer.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_buffer.mdoc; sourceTree = "<group>"; };
+		4B28AA1515BACC3900D0C17D /* zip_source_file.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_file.mdoc; sourceTree = "<group>"; };
+		4B28AA1615BACC3900D0C17D /* zip_source_filep.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_filep.mdoc; sourceTree = "<group>"; };
+		4B28AA1715BACC3900D0C17D /* zip_source_free.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_free.mdoc; sourceTree = "<group>"; };
+		4B28AA1815BACC3900D0C17D /* zip_source_function.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_function.mdoc; sourceTree = "<group>"; };
+		4B28AA1915BACC3900D0C17D /* zip_source_zip.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_zip.mdoc; sourceTree = "<group>"; };
+		4B28AA1A15BACC3900D0C17D /* zip_stat_init.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_stat_init.mdoc; sourceTree = "<group>"; };
+		4B28AA1B15BACC3900D0C17D /* zip_stat.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_stat.mdoc; sourceTree = "<group>"; };
+		4B28AA1C15BACC3900D0C17D /* zip_unchange_all.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_unchange_all.mdoc; sourceTree = "<group>"; };
+		4B28AA1D15BACC3900D0C17D /* zip_unchange_archive.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_unchange_archive.mdoc; sourceTree = "<group>"; };
+		4B28AA1E15BACC3900D0C17D /* zip_unchange.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_unchange.mdoc; sourceTree = "<group>"; };
+		4B28AA1F15BACC3900D0C17D /* zipcmp.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zipcmp.mdoc; sourceTree = "<group>"; };
+		4B28AA2015BACC3900D0C17D /* zipmerge.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zipmerge.mdoc; sourceTree = "<group>"; };
+		4B28AA2115BACC3900D0C17D /* ziptorrent.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = ziptorrent.mdoc; sourceTree = "<group>"; };
+		4B28AA2215BAD4E200D0C17D /* API-CHANGES */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "API-CHANGES"; sourceTree = "<group>"; };
+		4B28AA2315BAD4E200D0C17D /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		4B28AA2415BAD4E200D0C17D /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		4B28AA2515BAD4E200D0C17D /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
+		4B28AA2715BAD4E200D0C17D /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		4B6B06E115F119AE008C2CBE /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compat.h; sourceTree = "<group>"; };
 		4B82CED319915F360097BC18 /* zip_file_set_mtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_mtime.c; sourceTree = "<group>"; };
 		4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_get_external_attributes.c; sourceTree = "<group>"; };
 		4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_external_attributes.c; sourceTree = "<group>"; };
@@ -811,6 +823,7 @@
 		4BACD62415BC2FAC00920691 /* set_comment_revert */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_comment_revert; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD63115BC2FAE00920691 /* set_compression */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = set_compression; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD65015BC301300920691 /* tryopen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tryopen; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BC972001A0A1D85003A2981 /* zip_error_to_data.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_to_data.mdoc; sourceTree = "<group>"; };
 		4BCB434119E9347E0067FAA3 /* zip_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_buffer.c; sourceTree = "<group>"; };
 		4BCF3019199A2F820064207B /* zip_io_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_io_util.c; sourceTree = "<group>"; };
 		4BCF301A199A2F820064207B /* zip_source_begin_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_begin_write.c; sourceTree = "<group>"; };
@@ -1092,11 +1105,14 @@
 				4B01D72315B2F572002D5007 /* ziptorrent.c */,
 			);
 			name = src;
+			path = ../src;
 			sourceTree = "<group>";
 		};
 		4B28A9EA15BACBE100D0C17D /* man */ = {
 			isa = PBXGroup;
 			children = (
+				4B26FF141A07DF1A000E9788 /* Makefile.am */,
+				4B26FF181A07DFEA000E9788 /* mkdocset.pl */,
 				4B28A9EC15BACC3900D0C17D /* libzip.mdoc */,
 				4B28A9ED15BACC3900D0C17D /* zip_add_dir.mdoc */,
 				4B28A9EE15BACC3900D0C17D /* zip_add.mdoc */,
@@ -1105,8 +1121,16 @@
 				4B28A9F115BACC3900D0C17D /* zip_dir_add.mdoc */,
 				4B28A9F215BACC3900D0C17D /* zip_discard.mdoc */,
 				4B28A9F315BACC3900D0C17D /* zip_error_clear.mdoc */,
+				4B1E46E51A08CB7600A376D2 /* zip_error_code_system.mdoc */,
+				4B1E46E61A08CB7600A376D2 /* zip_error_code_zip.mdoc */,
+				4B1E46E71A08CB7600A376D2 /* zip_error_fini.mdoc */,
 				4B28A9F415BACC3900D0C17D /* zip_error_get_sys_type.mdoc */,
 				4B28A9F515BACC3900D0C17D /* zip_error_get.mdoc */,
+				4B1E46E81A08CB7600A376D2 /* zip_error_init.mdoc */,
+				4B1E46E91A08CB7600A376D2 /* zip_error_set.mdoc */,
+				4B1E46EA1A08CB7600A376D2 /* zip_error_strerror.mdoc */,
+				4B1E46EB1A08CB7600A376D2 /* zip_error_system_type.mdoc */,
+				4BC972001A0A1D85003A2981 /* zip_error_to_data.mdoc */,
 				4B28A9F615BACC3900D0C17D /* zip_error_to_str.mdoc */,
 				4B28A9F715BACC3900D0C17D /* zip_errors.mdoc */,
 				4B28A9F815BACC3900D0C17D /* zip_fclose.mdoc */,
@@ -1117,8 +1141,11 @@
 				4B28A9FD15BACC3900D0C17D /* zip_file_extra_field_set.mdoc */,
 				4B28A9FE15BACC3900D0C17D /* zip_file_extra_fields_count.mdoc */,
 				4B28A9FF15BACC3900D0C17D /* zip_file_get_comment.mdoc */,
+				4B26FF151A07DF1A000E9788 /* zip_file_get_external_attributes.mdoc */,
 				4B28AA0015BACC3900D0C17D /* zip_file_rename.mdoc */,
 				4B28AA0115BACC3900D0C17D /* zip_file_set_comment.mdoc */,
+				4B26FF161A07DF1A000E9788 /* zip_file_set_external_attributes.mdoc */,
+				4B26FF171A07DF1A000E9788 /* zip_file_set_mtime.mdoc */,
 				4B28AA0215BACC3900D0C17D /* zip_file_strerror.mdoc */,
 				4B28AA0315BACC3900D0C17D /* zip_fopen_encrypted.mdoc */,
 				4B28AA0415BACC3900D0C17D /* zip_fopen.mdoc */,
@@ -1153,6 +1180,7 @@
 				4B28AA2115BACC3900D0C17D /* ziptorrent.mdoc */,
 			);
 			name = man;
+			path = ../man;
 			sourceTree = "<group>";
 		};
 		4B28AA2815BAD4F800D0C17D /* info */ = {
@@ -1166,6 +1194,7 @@
 				4B28AA2715BAD4E200D0C17D /* TODO */,
 			);
 			name = info;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		4BACD57415BC2AA100920691 /* regress */ = {
