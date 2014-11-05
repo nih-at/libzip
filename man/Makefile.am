@@ -23,6 +23,7 @@ MAN3=	libzip.mdoc \
 	zip_error_set.mdoc \
 	zip_error_strerror.mdoc \
 	zip_error_system_type.mdoc \
+	zip_error_to_data.mdoc \
 	zip_error_to_str.mdoc \
 	zip_errors.mdoc \
 	zip_fclose.mdoc \
