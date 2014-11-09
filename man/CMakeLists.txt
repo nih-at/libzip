@@ -26,7 +26,8 @@ SET(MDOC3_PAGES
   zip_file_extra_field_get.mdoc
   zip_file_extra_field_set.mdoc
   zip_file_extra_fields_count.mdoc
-  zip_file_get_comment.mdoc
+  zip_file_get_comment.mdoc 
+  zip_file_get_error.mdoc
   zip_file_rename.mdoc
   zip_file_set_comment.mdoc
   zip_file_strerror.mdoc
@@ -109,6 +110,8 @@ INSTALL(FILES zip_add.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_replace.3)
 INSTALL(FILES zip_stat.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_stat_index.3)
+INSTALL(FILES zip_open.${MANFMT} DESTINATION ${MAN_PATH}/man3
+  RENAME zip_open_from_source.3)
 INSTALL(FILES zip_file_strerror.${MANFMT} DESTINATION ${MAN_PATH}/man3
   RENAME zip_strerror.3)
 

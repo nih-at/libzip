@@ -33,6 +33,7 @@ MAN3=	libzip.mdoc \
 	zip_file_extra_field_get.mdoc \
 	zip_file_extra_field_set.mdoc \
 	zip_file_extra_fields_count.mdoc \
+	zip_file_get_error.mdoc \
 	zip_file_get_comment.mdoc \
 	zip_file_get_external_attributes.mdoc \
 	zip_file_rename.mdoc \
@@ -94,6 +95,8 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_fopen_index_encrypted.3
 	${LN} ${DESTDIR}${man3dir}/zip_add.3 \
 		${DESTDIR}${man3dir}/zip_replace.3
+	${LN} ${DESTDIR}${man3dir}/zip_open.3 \
+		${DESTDIR}${man3dir}/zip_open_from_source.3
 	${LN} ${DESTDIR}${man3dir}/zip_stat.3 \
 		${DESTDIR}${man3dir}/zip_stat_index.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_strerror.3 \

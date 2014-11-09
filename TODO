@@ -262,8 +262,6 @@ D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 - keep error codes in man pages in sync
 - document ZIP_SOURCE_GET_ARGS(type, data, len, error) ((len) < sizeof(type) ? zip_error_set((error), ZIP_ER_INVAL, 0), NULL : (type *)(data))
 - document new functions
-** zip_int64_t zip_error_to_data(const zip_error_t *, void *, zip_uint64_t);
-** zip_error_t *zip_file_get_error(zip_file_t *);
 ** zip_t *zip_open_from_source(zip_source_t *, int, zip_error_t *);
 ** zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
 ** int zip_source_close(zip_source_t *);
