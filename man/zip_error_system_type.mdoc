@@ -40,25 +40,25 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_error_system_type "const zip_error_t *"
+.Fn zip_error_system_type "const zip_error_t *ze"
 .Sh DESCRIPTION
 The
 .Fn zip_error_system_type
-function returns the system type for the zip_error
+function returns the type of the system specific part for the zip_error
 .Ar ze .
 Currently, the following system types are defined:
 .Bl -tag -width ZIP_ET_NONE
 .It Dv ZIP_ET_NONE
-System error part of
+System specific part of
 .Ar ze
 is unused.
 .It Dv ZIP_ET_SYS
-System error part of
+System specific part of
 .Ar ze
 is an
 .Xr errno 3 .
 .It Dv ZIP_ET_ZLIB
-.System error part of
+.System specific part of
 .Ar ze
 is a
 .Xr zlib 3
