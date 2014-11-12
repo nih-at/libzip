@@ -29,11 +29,12 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd August 17, 2014
+.Dd November 9, 2014
 .Dt ZIP_OPEN 3
 .Os
 .Sh NAME
-.Nm zip_open
+.Nm zip_open ,
+.Nm zip_open_from_source
 .Nd open zip archive
 .Sh LIBRARY
 libzip (-lzip)
@@ -41,12 +42,16 @@ libzip (-lzip)
 .In zip.h
 .Ft zip_t *
 .Fn zip_open "const char *path" "int flags" "int *errorp"
+.Ft zip_t *
+.Fn zip_open_from_source "zip_source_t *zs" "int flags" "zip_error_t *ze"
 .Sh DESCRIPTION
-The zip archive specified by
+The
+.Fn zip_open
+function opens the zip archive specified by
 .Ar path
-is opened and a pointer to a
+and returns a pointer to a
 .Ft struct zip ,
-used to manipulate the archive, is returned.
+used to manipulate the archive.
 The
 .Fa flags
 are specified by
@@ -69,18 +74,38 @@ Open archive in read-only mode.
 .Pp
 If an error occurs and
 .Ar errorp
-is non-NULL, it will be set to the corresponding error code.
+is
+.Pf non- Dv NULL ,
+it will be set to the corresponding error code.
+.Pp
+The
+.Fn zip_open_from_source
+function opens a zip archive encapsulated by the zip_source
+.Fa zs
+using the provided
+.Fa flags .
+In case of error, the zip_error
+.Fa ze
+is filled in.
 .Sh RETURN VALUES
 Upon successful completion
 .Fn zip_open
-returns a
+and
+.Fn zip_open_from_source
+return a
 .Ft struct zip
 pointer.
 Otherwise,
 .Dv NULL
 is returned and
+.Fn zip_open
+sets
 .Ar *errorp
-is set to indicate the error.
+to indicate the error, while
+.Fn zip_open_from source
+sets
+.Ar ze
+to indicate the error.
 .Sh ERRORS
 The archive specified by
 .Ar path
