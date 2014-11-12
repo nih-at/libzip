@@ -7,6 +7,8 @@ my $DOCSETUTIL = '/Applications/Xcode.app/Contents/Developer/usr/bin/docsetutil'
 my $BASE_URL = 'http://nih.at/libzip';
 my $BUNDLE_ID = 'at.nih.libzip';
 
+my $SRCDIR = $ENV{SRCDIR} // '.';
+
 my @files = @ARGV;
 
 my $docset = 'at.nih.libzip.docset';
@@ -44,7 +46,7 @@ print I <<EOF;
 	<key>DocSetPublisherName</key>
 	<string>NiH</string>
         <key>NSHumanReadableCopyright</key>
-        <string>Copyright © 2012 Dieter Baron and Thomas Klausner</string>
+        <string>Copyright © 2014 Dieter Baron and Thomas Klausner</string>
 	<key>CFBundleVersion</key>
 	<string>$version</string>
 	<key>DocSetFeedURL</key>
@@ -114,7 +116,7 @@ print N "</DocSetNodes>\n";
 
 close N;
 
-link('nih-man.css', "$docset/Contents/Resources/Documents/nih-man.css") or die "can't link css file: $!";
+link("$SRCDIR/nih-man.css", "$docset/Contents/Resources/Documents/nih-man.css") or die "can't link css file: $!";
 copy_html('libzip.html', "$docset/Contents/Resources/Documents/libzip.html");
 
 write_tokens();
@@ -151,7 +153,7 @@ sub process_file {
 
     my $name = $html;
     $name =~ s/.html//;
-    my $mdoc = "$name.mdoc";
+    my $mdoc = "$SRCDIR/$name.mdoc";
 
     my $description;
     my @names = ();

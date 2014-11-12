@@ -147,7 +147,7 @@ mkman: ${MAN}
 mkhtml: ${HTML} link-html
 
 mkdocset: mkdocset.pl ${HTML}
-	perl mkdocset.pl ${HTML}
+	SRCDIR=${srcdir} perl ${srcdir}/mkdocset.pl ${HTML}
 
 update-errors:
 	sh $(srcdir)/make_zip_errors.sh $(srcdir)/../lib/zip.h zip_errors.mdoc
