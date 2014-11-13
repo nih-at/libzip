@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_FUNCTION" "3" "October 9, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "November 13, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -13,6 +13,12 @@ libzip (-lzip)
 .PD 0
 .HP 4n
 \fBzip_source_function\fR(\fIzip_t\ *archive\fR, \fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR);
+.PD
+.PP
+\fIzip_source_t *\fR
+.PD 0
+.HP 4n
+\fBzip_source_function_create\fR(\fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR, \fIzip_error_t\ *error\fR);
 .PD
 .SH "DESCRIPTION"
 The function
@@ -29,7 +35,9 @@ typedef zip_int64_t (*zip_source_callback)(void *state,
 .fi
 .PP
 \fIarchive\fR
-is used for reporting errors and can be
+or
+\fIerror\fR
+are used for reporting errors and can be
 \fRNULL\fR.
 .PP
 When called by the library, the first argument is the
@@ -40,7 +48,7 @@ The next two arguments are a buffer
 \fIdata\fR
 of size
 \fIlen\fR
-when data is expected to be returned, or else
+when data is passed in or expected to be returned, or else
 \fRNULL\fR
 and 0.
 The last argument,
@@ -105,7 +113,9 @@ zip_error_to_data(3)
 and return its return value.
 Otherwise, return 2 * sizeof(int).
 .SS "\fRZIP_SOURCE_FREE\fR"
-Clean up and free all resources.
+Clean up and free all resources, including
+\fIstate\fR.
+The callback function will not be called again.
 .SS "\fRZIP_SOURCE_OPEN\fR"
 Prepare for reading.
 .SS "\fRZIP_SOURCE_READ\fR"
@@ -140,6 +150,10 @@ struct zip_source_args_seek {
 };
 .RE
 .fi
+.PP
+If the size of the source's data is known, use
+zip_source_seek_compute_offset(3)
+to validate the arguments and compute the new offset.
 .SS "\fRZIP_SOURCE_SEEK_WRITE\fR"
 Specify position to write next byte to, like
 fseek(3).
@@ -186,7 +200,10 @@ description above.
 The library will always issue
 \fRZIP_SOURCE_OPEN\fR
 before issuing
-\fRZIP_SOURCE_READ\fR.
+\fRZIP_SOURCE_READ\fR,
+\fRZIP_SOURCE_SEEK\fR,
+or
+\fRZIP_SOURCE_TELL\fR.
 When it no longer wishes to read from this source, it will issue
 \fRZIP_SOURCE_CLOSE\fR.
 If the library wishes to read the data again, it will issue
@@ -195,11 +212,25 @@ a second time.
 If the function is unable to provide the data again, it should
 return \-1.
 .PP
+\fRZIP_SOURCE_BEGIN_WRITE\fR
+will be called before
+\fRZIP_SOURCE_WRITE\fR,
+\fRZIP_SOURCE_SEEK_WRITE\fR,
+or
+\fRZIP_SOURCE_TELL_WRITE\fR.
+When writing is complete, either
+\fRZIP_SOURCE_COMMIT_WRITE\fR
+or
+\fRZIP_SOURCE_ROLLBACK_WRITE\fR
+will be called.
+.PP
 \fRZIP_SOURCE_STAT\fR
 can be issued at any time.
+.PP
 \fRZIP_SOURCE_ERROR\fR
 will only be issued in response to the function
 returning \-1.
+.PP
 \fRZIP_SOURCE_FREE\fR
 will be the last command issued;
 if
@@ -207,16 +238,23 @@ if
 was called and succeeded,
 \fRZIP_SOURCE_CLOSE\fR
 will be called before
-\fRZIP_SOURCE_FREE\fR.
+\fRZIP_SOURCE_FREE\fR,
+and similarly for
+\fRZIP_SOURCE_BEGIN_WRITE\fR
+and
+\fRZIP_SOURCE_COMMIT_WRITE\fR
+or
+\fRZIP_SOURCE_ROLLBACK_WRITE\fR.
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
 \fRNULL\fR
 is returned and the error code in
 \fIarchive\fR
+or
+\fIerror\fR
 is set to indicate the error (unless
-\fIarchive\fR
-is
+it is
 \fRNULL\fR).
 .SH "ERRORS"
 \fBzip_source_function\fR()

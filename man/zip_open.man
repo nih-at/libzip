@@ -1,8 +1,9 @@
-.TH "ZIP_OPEN" "3" "August 17, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_OPEN" "3" "November 9, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_open\fR
+\fBzip_open\fR,
+\fBzip_open_from_source\fR
 \- open zip archive
 .SH "LIBRARY"
 libzip (-lzip)
@@ -14,12 +15,20 @@ libzip (-lzip)
 .HP 4n
 \fBzip_open\fR(\fIconst\ char\ *path\fR, \fIint\ flags\fR, \fIint\ *errorp\fR);
 .PD
+.PP
+\fIzip_t *\fR
+.PD 0
+.HP 4n
+\fBzip_open_from_source\fR(\fIzip_source_t\ *zs\fR, \fIint\ flags\fR, \fIzip_error_t\ *ze\fR);
+.PD
 .SH "DESCRIPTION"
-The zip archive specified by
+The
+\fBzip_open\fR()
+function opens the zip archive specified by
 \fIpath\fR
-is opened and a pointer to a
+and returns a pointer to a
 \fIstruct zip\fR,
-used to manipulate the archive, is returned.
+used to manipulate the archive.
 The
 \fIflags\fR
 are specified by
@@ -47,18 +56,38 @@ Open archive in read-only mode.
 .PP
 If an error occurs and
 \fIerrorp\fR
-is non-NULL, it will be set to the corresponding error code.
+is
+non-\fRNULL\fR,
+it will be set to the corresponding error code.
+.PP
+The
+\fBzip_open_from_source\fR()
+function opens a zip archive encapsulated by the zip_source
+\fIzs\fR
+using the provided
+\fIflags\fR.
+In case of error, the zip_error
+\fIze\fR
+is filled in.
 .SH "RETURN VALUES"
 Upon successful completion
 \fBzip_open\fR()
-returns a
+and
+\fBzip_open_from_source\fR()
+return a
 \fIstruct zip\fR
 pointer.
 Otherwise,
 \fRNULL\fR
 is returned and
+\fBzip_open\fR()
+sets
 \fI*errorp\fR
-is set to indicate the error.
+to indicate the error, while
+\fBzip_open_from\fR(\fIsource\fR)
+sets
+\fIze\fR
+to indicate the error.
 .SH "ERRORS"
 The archive specified by
 \fIpath\fR
