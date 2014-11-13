@@ -50,6 +50,7 @@ SET(MDOC3_PAGES
   zip_set_file_comment.mdoc
   zip_set_file_compression.mdoc
   zip_source_buffer.mdoc
+  zip_source_seek_compute_offset.mdoc
   zip_source_file.mdoc
   zip_source_filep.mdoc
   zip_source_free.mdoc

@@ -61,6 +61,7 @@ MAN3=	libzip.mdoc \
 	zip_set_file_compression.mdoc \
 	zip_source.mdoc \
 	zip_source_buffer.mdoc \
+	zip_source_seek_compute_offset.mdoc \
 	zip_source_file.mdoc \
 	zip_source_filep.mdoc \
 	zip_source_free.mdoc \
@@ -99,6 +100,8 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_open_from_source.3
 	${LN} ${DESTDIR}${man3dir}/zip_stat.3 \
 		${DESTDIR}${man3dir}/zip_stat_index.3
+	${LN} ${DESTDIR}${man3dir}/zip_source_function.3 \
+		${DESTDIR}${man3dir}/zip_source_function_create.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_strerror.3 \
 		${DESTDIR}${man3dir}/zip_strerror.3
 

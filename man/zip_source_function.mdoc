@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 9, 2014
+.Dd November 13, 2014
 .Dt ZIP_SOURCE_FUNCTION 3
 .Os
 .Sh NAME
@@ -41,6 +41,8 @@ libzip (-lzip)
 .In zip.h
 .Ft zip_source_t *
 .Fn zip_source_function "zip_t *archive" "zip_source_callback fn" "void *userdata"
+.Ft zip_source_t *
+.Fn zip_source_function_create "zip_source_callback fn" "void *userdata" "zip_error_t *error"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_function
@@ -53,7 +55,9 @@ typedef zip_int64_t (*zip_source_callback)(void *state,
 .Ed
 .Pp
 .Ar archive
-is used for reporting errors and can be
+or
+.Ar error
+are used for reporting errors and can be
 .Dv NULL .
 .Pp
 When called by the library, the first argument is the
@@ -64,7 +68,7 @@ The next two arguments are a buffer
 .Ar data
 of size
 .Ar len
-when data is expected to be returned, or else
+when data is passed in or expected to be returned, or else
 .Dv NULL
 and 0.
 The last argument,
@@ -128,7 +132,9 @@ If the source stores error information in a zip_error_t, use
 and return its return value.
 Otherwise, return 2 * sizeof(int).
 .Ss Dv ZIP_SOURCE_FREE
-Clean up and free all resources.
+Clean up and free all resources, including
+.Ar state .
+The callback function will not be called again.
 .Ss Dv ZIP_SOURCE_OPEN
 Prepare for reading.
 .Ss Dv ZIP_SOURCE_READ
@@ -160,6 +166,10 @@ struct zip_source_args_seek {
     int whence;
 };
 .Ed
+.Pp
+If the size of the source's data is known, use
+.Xr zip_source_seek_compute_offset 3
+to validate the arguments and compute the new offset.
 .Ss Dv ZIP_SOURCE_SEEK_WRITE
 Specify position to write next byte to, like
 .Xr fseek 3 .
@@ -206,7 +216,10 @@ description above.
 The library will always issue
 .Dv ZIP_SOURCE_OPEN
 before issuing
-.Dv ZIP_SOURCE_READ .
+.Dv ZIP_SOURCE_READ ,
+.Dv ZIP_SOURCE_SEEK ,
+or
+.Dv ZIP_SOURCE_TELL .
 When it no longer wishes to read from this source, it will issue
 .Dv ZIP_SOURCE_CLOSE .
 If the library wishes to read the data again, it will issue
@@ -215,11 +228,26 @@ a second time.
 If the function is unable to provide the data again, it should
 return \-1.
 .Pp
+.Dv ZIP_SOURCE_BEGIN_WRITE
+will be called before
+.Dv ZIP_SOURCE_WRITE ,
+.Dv ZIP_SOURCE_SEEK_WRITE ,
+or
+.Dv ZIP_SOURCE_TELL_WRITE .
+When writing is complete, either
+.Dv ZIP_SOURCE_COMMIT_WRITE
+or
+.Dv ZIP_SOURCE_ROLLBACK_WRITE
+will be called.
+.Dv
+.Pp
 .Dv ZIP_SOURCE_STAT
 can be issued at any time.
+.Pp
 .Dv ZIP_SOURCE_ERROR
 will only be issued in response to the function
 returning \-1.
+.Pp
 .Dv ZIP_SOURCE_FREE
 will be the last command issued;
 if
@@ -227,16 +255,23 @@ if
 was called and succeeded,
 .Dv ZIP_SOURCE_CLOSE
 will be called before
-.Dv ZIP_SOURCE_FREE .
+.Dv ZIP_SOURCE_FREE ,
+and similarly for
+.Dv ZIP_SOURCE_BEGIN_WRITE
+and
+.Dv ZIP_SOURCE_COMMIT_WRITE
+or
+.Dv ZIP_SOURCE_ROLLBACK_WRITE .
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
 Otherwise,
 .Dv NULL
 is returned and the error code in
 .Ar archive
+or
+.Ar error
 is set to indicate the error (unless
-.Ar archive
-is
+it is
 .Dv NULL ) .
 .Sh ERRORS
 .Fn zip_source_function

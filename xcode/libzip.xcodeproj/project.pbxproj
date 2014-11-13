@@ -825,6 +825,9 @@
 		4BACD65015BC301300920691 /* tryopen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tryopen; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC972001A0A1D85003A2981 /* zip_error_to_data.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_to_data.mdoc; sourceTree = "<group>"; };
 		4BCB434119E9347E0067FAA3 /* zip_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_buffer.c; sourceTree = "<group>"; };
+		4BCD77A71A14E404001A9F55 /* zip_file_get_error.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_get_error.mdoc; sourceTree = "<group>"; };
+		4BCD77A81A14E921001A9F55 /* zip_source_seek_compute_offset.mdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zip_source_seek_compute_offset.mdoc; sourceTree = "<group>"; };
+		4BCD77A91A14ED5C001A9F55 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		4BCF3019199A2F820064207B /* zip_io_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_io_util.c; sourceTree = "<group>"; };
 		4BCF301A199A2F820064207B /* zip_source_begin_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_begin_write.c; sourceTree = "<group>"; };
 		4BCF301B199A2F820064207B /* zip_source_commit_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_commit_write.c; sourceTree = "<group>"; };
@@ -1112,6 +1115,7 @@
 			isa = PBXGroup;
 			children = (
 				4B26FF141A07DF1A000E9788 /* Makefile.am */,
+				4BCD77A91A14ED5C001A9F55 /* CMakeLists.txt */,
 				4B26FF181A07DFEA000E9788 /* mkdocset.pl */,
 				4B28A9EC15BACC3900D0C17D /* libzip.mdoc */,
 				4B28A9ED15BACC3900D0C17D /* zip_add_dir.mdoc */,
@@ -1141,6 +1145,7 @@
 				4B28A9FD15BACC3900D0C17D /* zip_file_extra_field_set.mdoc */,
 				4B28A9FE15BACC3900D0C17D /* zip_file_extra_fields_count.mdoc */,
 				4B28A9FF15BACC3900D0C17D /* zip_file_get_comment.mdoc */,
+				4BCD77A71A14E404001A9F55 /* zip_file_get_error.mdoc */,
 				4B26FF151A07DF1A000E9788 /* zip_file_get_external_attributes.mdoc */,
 				4B28AA0015BACC3900D0C17D /* zip_file_rename.mdoc */,
 				4B28AA0115BACC3900D0C17D /* zip_file_set_comment.mdoc */,
@@ -1169,6 +1174,7 @@
 				4B28AA1615BACC3900D0C17D /* zip_source_filep.mdoc */,
 				4B28AA1715BACC3900D0C17D /* zip_source_free.mdoc */,
 				4B28AA1815BACC3900D0C17D /* zip_source_function.mdoc */,
+				4BCD77A81A14E921001A9F55 /* zip_source_seek_compute_offset.mdoc */,
 				4B28AA1915BACC3900D0C17D /* zip_source_zip.mdoc */,
 				4B28AA1A15BACC3900D0C17D /* zip_stat_init.mdoc */,
 				4B28AA1B15BACC3900D0C17D /* zip_stat.mdoc */,
