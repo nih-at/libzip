@@ -132,7 +132,9 @@ uninstall-hook:
 	-rm -f ${DESTDIR}${man3dir}/zip_file_replace.3
 	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index.3
 	-rm -f ${DESTDIR}${man3dir}/zip_fopen_index_encrypted.3
+	-rm -f ${DESTDIR}${man3dir}/zip_open_from_source.3
 	-rm -f ${DESTDIR}${man3dir}/zip_replace.3
+	-rm -f ${DESTDIR}${man3dir}/zip_source_function_create.3
 	-rm -f ${DESTDIR}${man3dir}/zip_stat_index.3
 	-rm -f ${DESTDIR}${man3dir}/zip_strerror.3
 
