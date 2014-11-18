@@ -58,6 +58,7 @@ _zip_source_free_or_pop(zip_source_t *src, int recurse)
     }
     
     if (ZIP_SOURCE_IS_OPEN_READING(src)) {
+	src->open_count = 1; /* force close */
 	zip_source_close(src);
     }
     if (ZIP_SOURCE_IS_OPEN_WRITING(src)) {

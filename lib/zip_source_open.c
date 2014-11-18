@@ -34,8 +34,7 @@
 
 #include "zipint.h"
 
-
-int
+ZIP_EXTERN int
 zip_source_open(zip_source_t *src)
 {
     if (src->source_closed) {
@@ -45,13 +44,10 @@ zip_source_open(zip_source_t *src)
         zip_error_set(&src->error, ZIP_ER_DELETED, 0);
 	return -1;
     }
-    if (ZIP_SOURCE_IS_OPEN_READING(src)) {
-        zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
  
     if (ZIP_SOURCE_IS_LAYERED(src)) {
         if (ZIP_SOURCE_IS_OPEN_READING(src->src)) {
+	    /* TODO: check that src->src supports seeking */
             src->src->open_count++;
         }
         else {
