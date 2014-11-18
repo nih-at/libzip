@@ -44,9 +44,11 @@ libzip (-lzip)
 .Sh DESCRIPTION
 The
 .Fn zip_source_make_command_bitmap
-function returns a bitmap of source commands suitable as return value for
+function returns a bitmap of source commands suitable as return value
+for
 .Dv ZIP_SOURCE_SUPPORTS .
-It includes all the commands from the argument list, which must be terminated by \-1.
+It includes all the commands from the argument list, which must be
+terminated by \-1.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source_function 3
