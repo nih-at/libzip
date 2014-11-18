@@ -58,8 +58,10 @@ has to be prepared for this by calling
 .Xr zip_source_begin_write 3
 first.
 .Sh RETURN VALUES
-.Fn zip_source_write
-returns the number of written bytes on success and \-1 on error.
+Upon successful completion the number of bytes written is returned.
+Otherwise, \-1 is returned and the error information in
+.Ar zs
+is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source 3 ,

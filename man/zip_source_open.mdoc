@@ -1,4 +1,4 @@
-.\" zip_source_begin_write.mdoc -- prepare zip source for writing
+.\" zip_source_open.mdoc -- open zip source for reading
 .\" Copyright (C) 2014 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -30,24 +30,23 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd November 18, 2014
-.Dt ZIP_SOURCE_BEGIN_WRITE 3
+.Dt ZIP_SOURCE_OPEN 3
 .Os
 .Sh NAME
-.Nm zip_source_begin_write
-.Nd prepare zip source for writing
+.Nm zip_source_open
+.Nd open zip_source for reading
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_begin_write "zip_source_t *zs"
+.Fn zip_source_open "zip_source_t *zs"
 .Sh DESCRIPTION
 The function
-.Fn zip_source_begin_write
-prepares the zip_source
+.Fn zip_source_open
+opens the zip_source
 .Fa zs
-for writing.
-Usually this involves creating temporary files or allocating buffers.
+for reading.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
@@ -56,11 +55,11 @@ is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source 3 ,
-.Xr zip_source_commit_write 3 ,
-.Xr zip_source_rollback_write 3 ,
-.Xr zip_source_seek_write 3 ,
-.Xr zip_source_tell_write 3 ,
-.Xr zip_source_write 3
+.Xr zip_source_begin_write 3 ,
+.Xr zip_source_close 3 ,
+.Xr zip_source_read 3 ,
+.Xr zip_source_seek 3 ,
+.Xr zip_source_tell 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

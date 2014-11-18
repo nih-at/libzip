@@ -65,8 +65,10 @@ current position in file
 end of file
 .El
 .Sh RETURN VALUES
-.Fn zip_source_seek_write
-returns 0 on success and \-1 on error.
+Upon successful completion 0 is returned.
+Otherwise, \-1 is returned and the error information in
+.Ar zs
+is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source 3 ,

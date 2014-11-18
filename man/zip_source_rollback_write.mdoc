@@ -48,8 +48,10 @@ reverts changes written to the zip source
 .Fa zs .
 Usually this removes temporary files or freeing buffers.
 .Sh RETURN VALUES
-.Fn zip_source_rollback_write
-returns 0 on success and \-1 on error.
+Upon successful completion 0 is returned.
+Otherwise, \-1 is returned and the error information in
+.Ar zs
+is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source 3 ,

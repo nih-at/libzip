@@ -51,8 +51,10 @@ bytes of data from the zip source
 at the current read offset and writes them to the buffer
 .Ar data .
 .Sh RETURN VALUES
-.Fn zip_source_read
-returns the number of bytes read on success or \-1 on error.
+Upon successful completion the number of bytes read is returned.
+Otherwise, \-1 is returned and the error information in
+.Ar zs
+is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source 3 ,

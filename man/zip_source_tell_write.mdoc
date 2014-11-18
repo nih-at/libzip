@@ -55,8 +55,10 @@ set to
 .Dv SEEK_SET
 to return to the same location in the file.
 .Sh RETURN VALUES
-.Fn zip_source_tell_write
-returns the current write offset on success and \-1 on error.
+Upon successful completion the current write offset is returned.
+Otherwise, \-1 is returned and the error information in
+.Ar zs
+is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source 3 ,
