@@ -44,27 +44,29 @@ zip_source_open(zip_source_t *src)
         zip_error_set(&src->error, ZIP_ER_DELETED, 0);
 	return -1;
     }
- 
-    if (ZIP_SOURCE_IS_LAYERED(src)) {
-        if (ZIP_SOURCE_IS_OPEN_READING(src->src)) {
-	    /* TODO: check that src->src supports seeking */
-            src->src->open_count++;
-        }
-        else {
-            if (zip_source_open(src->src) < 0) {
-                _zip_error_set_from_source(&src->error, src->src);
-                return -1;
-            }
-        }
+
+    if (ZIP_SOURCE_IS_OPEN_READING(src)) {
+	if ((zip_source_supports(src) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) == 0) {
+	    zip_error_set(&src->error, ZIP_ER_INUSE, 0);
+	    return -1;
+	}
+    }
+    else {
+	if (ZIP_SOURCE_IS_LAYERED(src)) {
+	    if (zip_source_open(src->src) < 0) {
+		_zip_error_set_from_source(&src->error, src->src);
+		return -1;
+	    }
+	}
+	
+	if (_zip_source_call(src, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
+	    if (ZIP_SOURCE_IS_LAYERED(src)) {
+		zip_source_close(src->src);
+	    }
+	    return -1;
+	}
     }
 
-    if (_zip_source_call(src, NULL, 0, ZIP_SOURCE_OPEN) < 0) {
-        if (ZIP_SOURCE_IS_LAYERED(src)) {
-            zip_source_close(src->src);
-        }
-        return -1;
-    }
-    
     src->open_count++;
     
     return 0;

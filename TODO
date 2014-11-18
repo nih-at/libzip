@@ -146,15 +146,14 @@ Test Case Issues
 
 
 
-- document: zip_source_write: length can't be > ZIP_INT64_MAX
-- document: ZIP_SOURCE_CLOSE implementation can't return error
 
+D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 
 - check for INT_MAX, UINT_MAX
-
-- only allow multiple upper layers for sources that support seek
-D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 - find out FSEEK_MAX/FTELL_MAX and use it
+
+- document: zip_source_write: length can't be > ZIP_INT64_MAX
+- document: ZIP_SOURCE_CLOSE implementation can't return error
 - adapt man pages
 - document ZIP_RDONLY
 - keep error codes in man pages in sync
