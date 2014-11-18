@@ -163,4 +163,4 @@ update-errors:
 	mandoc -T man $< | sed '/TH/s,"NetBSD [^"]*","NiH",' > $@.$$$$ && mv $@.$$$$ $@
 
 .mdoc.html:
-	mandoc -Thtml -Oman="%N.html",style=../nih-man.css $< > $@.$$$$ && mv $@.$$$$ $@
+	mandoc -Thtml -Oman="%N.html",style=../nih-man.css $< | ${srcdir}/fix-man-links.sh > $@.$$$$ && mv $@.$$$$ $@
