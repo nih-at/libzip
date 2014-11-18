@@ -21,18 +21,16 @@ libzip (-lzip)
 \fBzip_source_function_create\fR(\fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR, \fIzip_error_t\ *error\fR);
 .PD
 .SH "DESCRIPTION"
-The function
+The functions
 \fBzip_source_function\fR()
+and
+\fBzip_source_function_create\fR()
 creates a zip source from the user-provided function
 \fIfn\fR,
 which must be of the following type:
-.nf
-.sp
-.RS 0n
-typedef zip_int64_t (*zip_source_callback)(void *state,
-    void *data, zip_uint64_t len, zip_source_cmd_t cmd);
-.RE
-.fi
+.PP
+\fItypedef zip_int64_t\fR
+\fB(*zip_source_callback)\fR(\fIvoid *userdata\fR, \fIvoid *data\fR, \fIzip_uint64_t len\fR, \fIzip_source_cmd_t cmd\fR)
 .PP
 \fIarchive\fR
 or
@@ -42,8 +40,7 @@ are used for reporting errors and can be
 .PP
 When called by the library, the first argument is the
 \fIuserdata\fR
-argument supplied to
-\fBzip_source_function\fR().
+argument supplied to the function.
 The next two arguments are a buffer
 \fIdata\fR
 of size

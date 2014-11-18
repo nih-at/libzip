@@ -30,7 +30,7 @@ is unused.
 System specific part of
 \fIze\fR
 is an
-errno(3).
+errno(2).
 .TP 13n
 \fRZIP_ET_ZLIB\fR
 \fIze\fR

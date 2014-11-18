@@ -22,7 +22,8 @@ or
 command.
 \fIdata\fR
 and
-\fIdata_length are the arguments to the source callback,\fR
+\fIdata_length\fR
+are the arguments to the source callback,
 \fIoffset\fR
 is the current offset and
 \fIlength\fR

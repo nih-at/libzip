@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_FILE" "3" "August 2, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FILE" "3" "November 18, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -12,14 +12,21 @@ libzip (-lzip)
 .HP 4n
 \fBzip_source_file\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
 .PD
+.PP
+\fIzip_source_t *\fR
+.PD 0
+.HP 4n
+\fBzip_source_file\fR(\fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
+.PD
 .SH "DESCRIPTION"
-The function
+The functions
 \fBzip_source_file\fR()
-creates a zip source from a file.
-\fBzip_source_file\fR()
-opens
+and
+\fBzip_source_file_create\fR()
+create a zip source from a file.
+They open
 \fIfname\fR
-and reads
+and read
 \fIlen\fR
 bytes from offset
 \fIstart\fR
@@ -30,18 +37,26 @@ is 0 or \-1, the whole file (starting from
 \fIstart\fR)
 is used.
 .PP
-The fie is opened and read when the data from the source is used, usually by
-\fBzip_close\fR().
+If the file supports seek, the source can be used to open a zip archive from.
+.PP
+The file is opened and read when the data from the source is used, usually by
+\fBzip_close\fR()
+or
+\fBzip_open_from_source\fR().
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
 \fRNULL\fR
 is returned and the error code in
 \fIarchive\fR
+or
+\fIerror\fR
 is set to indicate the error.
 .SH "ERRORS"
 \fBzip_source_file\fR()
-fails if:
+and
+\fBzip_source_file_create\fR()
+fail if:
 .TP 19n
 [\fRZIP_ER_INVAL\fR]
 \fIfname\fR,
