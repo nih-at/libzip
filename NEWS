@@ -1,4 +1,4 @@
-0.12beta1 [2014/11/18]
+0.12.0beta1 [2014/11/18]
 
 * I/O abstraction layer
 * Support setting last modification time for file.
