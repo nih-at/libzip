@@ -1,4 +1,5 @@
 SET(MDOC3_PAGES
+  ZIP_SOURCE_GET_ARGS.mdoc
   libzip.mdoc
   zip_add.mdoc
   zip_add_dir.mdoc
@@ -49,12 +50,28 @@ SET(MDOC3_PAGES
   zip_set_default_password.mdoc
   zip_set_file_comment.mdoc
   zip_set_file_compression.mdoc
+  zip_source_begin_write.mdoc
   zip_source_buffer.mdoc
-  zip_source_seek_compute_offset.mdoc
+  zip_source_close.mdoc
+  zip_source_commit_write.mdoc
+  zip_source_error.mdoc
   zip_source_file.mdoc
   zip_source_filep.mdoc
   zip_source_free.mdoc
   zip_source_function.mdoc
+  zip_source_is_deleted.mdoc
+  zip_source_keep.mdoc
+  zip_source_make_command_bitmap.mdoc
+  zip_source_open.mdoc
+  zip_source_read.mdoc
+  zip_source_rollback_write.mdoc
+  zip_source_seek.mdoc
+  zip_source_seek_compute_offset.mdoc
+  zip_source_seek_write.mdoc
+  zip_source_stat.mdoc
+  zip_source_tell.mdoc
+  zip_source_tell_write.mdoc
+  zip_source_write.mdoc
   zip_source_zip.mdoc
   zip_stat.mdoc
   zip_stat_init.mdoc

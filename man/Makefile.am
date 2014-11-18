@@ -6,7 +6,9 @@ DISTCLEANFILES=${HTML}
 EXTRA_DIST=${MANDOC} ${MAN} CMakeLists.txt
 
 MAN1=	zipcmp.mdoc zipmerge.mdoc ziptorrent.mdoc
-MAN3=	libzip.mdoc \
+MAN3=	\
+	ZIP_SOURCE_GET_ARGS.mdoc \
+	libzip.mdoc \
 	zip_add.mdoc \
 	zip_add_dir.mdoc \
 	zip_close.mdoc \
@@ -33,8 +35,8 @@ MAN3=	libzip.mdoc \
 	zip_file_extra_field_get.mdoc \
 	zip_file_extra_field_set.mdoc \
 	zip_file_extra_fields_count.mdoc \
-	zip_file_get_error.mdoc \
 	zip_file_get_comment.mdoc \
+	zip_file_get_error.mdoc \
 	zip_file_get_external_attributes.mdoc \
 	zip_file_rename.mdoc \
 	zip_file_set_comment.mdoc \
@@ -60,12 +62,28 @@ MAN3=	libzip.mdoc \
 	zip_set_file_comment.mdoc \
 	zip_set_file_compression.mdoc \
 	zip_source.mdoc \
+	zip_source_begin_write.mdoc \
 	zip_source_buffer.mdoc \
-	zip_source_seek_compute_offset.mdoc \
+	zip_source_close.mdoc \
+	zip_source_commit_write.mdoc \
+	zip_source_error.mdoc \
 	zip_source_file.mdoc \
 	zip_source_filep.mdoc \
 	zip_source_free.mdoc \
 	zip_source_function.mdoc \
+	zip_source_is_deleted.mdoc \
+	zip_source_keep.mdoc \
+	zip_source_make_command_bitmap.mdoc \
+	zip_source_open.mdoc \
+	zip_source_read.mdoc \
+	zip_source_rollback_write.mdoc \
+	zip_source_seek.mdoc \
+	zip_source_seek_compute_offset.mdoc \
+	zip_source_seek_write.mdoc \
+	zip_source_stat.mdoc \
+	zip_source_tell.mdoc \
+	zip_source_tell_write.mdoc \
+	zip_source_write.mdoc \
 	zip_source_zip.mdoc \
 	zip_stat.mdoc \
 	zip_stat_init.mdoc \
