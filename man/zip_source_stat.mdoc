@@ -40,12 +40,12 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_stat "zip_source_t *zs" "zip_stat_t *sb"
+.Fn zip_source_stat "zip_source_t *source" "zip_stat_t *sb"
 .Sh DESCRIPTION
 The
 .Fn zip_source_stat
 function obtains information about the zip source
-.Ar zs
+.Ar source
 .Pp
 The
 .Ar sb
@@ -68,7 +68,9 @@ struct zip_source_stat {
 .Ed
 The structure pointed to by
 .Ar sb
-must be allocated before calling
+must be initialized with
+.Fn zip_stat_init 3
+before calling
 .Fn zip_source_stat .
 .Pp
 The
@@ -108,7 +110,7 @@ fields.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,

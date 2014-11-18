@@ -40,15 +40,12 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_seek_write "zip_source_t *zs" "zip_int64_t offset" "int whence"
+.Fn zip_source_seek_write "zip_source_t *source" "zip_int64_t offset" "int whence"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_seek_write
-sets the current write offset for the zip source
-.Fa zs
-to
-.Ar offset
-bytes.
+sets the current write offset for
+.Fa source .
 Just like in
 .Xr fseek 3 ,
 depending on the
@@ -60,14 +57,14 @@ is counted relative from:
 .It Dv SEEK_SET
 start of file
 .It Dv SEEK_CUR
-current position in file
+current write offset in file
 .It Dv SEEK_END
 end of file
 .El
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,

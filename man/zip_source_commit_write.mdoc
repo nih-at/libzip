@@ -40,18 +40,17 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_commit_write "zip_source_t *zs"
+.Fn zip_source_commit_write "zip_source_t *source"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_commit_write
-finishes writing data to the zip source
-.Fa zs .
-Usually this involves flushing buffers, replacing original files with
-temporary files or cleaning up buffers.
+finishes writing data to
+.Fa source
+and replaces the original with the newly written data.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,

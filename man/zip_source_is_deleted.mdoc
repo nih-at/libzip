@@ -40,12 +40,12 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_is_deleted "zip_source_t *zs"
+.Fn zip_source_is_deleted "zip_source_t *source"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_is_deleted
-returns if the zip_source was deleted.
-This can for example happen every entry is removed from a zip archive.
+returns whether the zip_source was deleted.
+This can for example happen when all entries are removed from a zip archive.
 .Sh RETURN VALUES
 .Fn zip_source_is_deleted
 returns 1 if the zip_source is deleted and 0 otherwise.

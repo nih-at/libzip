@@ -40,24 +40,24 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_int64_t
-.Fn zip_source_tell "zip_source_t *zs"
+.Fn zip_source_tell "zip_source_t *source"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_tell
-returns the current read offset (relative to the start of the file)
-for the zip source
-.Fa zs .
+returns the current read offset
+for
+.Fa source .
 The return value can be passed to
 .Xr zip_source_seek 3
 with
 .Ar whence
 set to
 .Dv SEEK_SET
-to return to the same location in the file.
+to return to the same location in the source.
 .Sh RETURN VALUES
 Upon successful completion the current read offset is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,

@@ -40,27 +40,27 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_int64_t
-.Fn zip_source_write "zip_source_t *zs" "const void *data" "zip_uint64_t len"
+.Fn zip_source_write "zip_source_t *source" "const void *data" "zip_uint64_t len"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_write
 writes
 .Ar len
-bytes of data from the buffer
+bytes from the buffer
 .Ar data
 to the zip source
-.Ar zs
+.Ar source
 at the current write offset.
 .Pp
 The zip source
-.Ar zs
-has to be prepared for this by calling
+.Ar source
+has to be prepared for writing by calling
 .Xr zip_source_begin_write 3
 first.
 .Sh RETURN VALUES
 Upon successful completion the number of bytes written is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,

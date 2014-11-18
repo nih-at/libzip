@@ -40,18 +40,18 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_begin_write "zip_source_t *zs"
+.Fn zip_source_begin_write "zip_source_t *source"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_begin_write
-prepares the zip_source
-.Fa zs
+prepares
+.Fa source
 for writing.
 Usually this involves creating temporary files or allocating buffers.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,

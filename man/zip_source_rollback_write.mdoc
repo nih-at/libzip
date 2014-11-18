@@ -40,17 +40,20 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_source_rollback_write "zip_source_t *zs"
+.Fn zip_source_rollback_write "zip_source_t *source"
 .Sh DESCRIPTION
 The function
 .Fn zip_source_rollback_write
-reverts changes written to the zip source
-.Fa zs .
-Usually this removes temporary files or freeing buffers.
+reverts changes written to
+.Fa source ,
+restoring the data before 
+.Xr zip_source_begin_write 3
+was called.
+Usually this removes temporary files or frees buffers.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-.Ar zs
+.Ar source
 is set to indicate the error.
 .Sh SEE ALSO
 .Xr libzip 3 ,
