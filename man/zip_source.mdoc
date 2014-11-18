@@ -46,6 +46,7 @@ A
 is a data source used by
 .Xr libzip 3
 for adding or replacing file contents for a file in a zip archive.
+If the source supports seeking, it can also be used to open zip archives from.
 It is created by calling one of
 .Xr zip_source_buffer 3 ,
 .Xr zip_source_buffer_create 3 ,
@@ -56,16 +57,22 @@ It is created by calling one of
 .Xr zip_source_function 3 ,
 .Xr zip_source_function_create 3 ,
 or
-.Xr zip_source_zip 3
-and passed to
-.Xr zip_file_add 3
-or
+.Xr zip_source_zip 3 .
+.Vt zip_source_t
+is reference counted, and created with a reference count of 1.
+.Xr zip_open_from_source 3 ,
+.Xr zip_file_add 3 ,
+and
 .Xr zip_file_replace 3 .
-These functions will free the
-.Vt struct zip_source
+will decrement the reference count of the
+.Vt zip_source_t
 when they are done using it, so
 .Xr zip_source_free 3
 only needs to be called when these functions return an error.
+Use
+.Xr zip_source_keep
+to increase the reference count, for example if you need the source after
+.Xr zip_close 3 .
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_source_buffer 3 ,

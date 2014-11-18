@@ -154,21 +154,13 @@ D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 
 - document: zip_source_write: length can't be > ZIP_INT64_MAX
 - document: ZIP_SOURCE_CLOSE implementation can't return error
-- adapt man pages
 - document ZIP_RDONLY
 - keep error codes in man pages in sync
 - document ZIP_SOURCE_GET_ARGS(type, data, len, error) ((len) < sizeof(type) ? zip_error_set((error), ZIP_ER_INVAL, 0), NULL : (type *)(data))
 - document new functions
--- include in existing zip_foo pages:
-** zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
-** zip_source_t *zip_source_file_create(const char *, zip_uint64_t, zip_int64_t, zip_error_t *);
-** zip_source_t *zip_source_filep_create(FILE *, zip_uint64_t, zip_int64_t, zip_error_t *);
 -- new pages
-** zip_t *zip_open_from_source(zip_source_t *, int, zip_error_t *);
 ** int zip_source_close(zip_source_t *);
-** zip_error_t *zip_source_error(zip_source_t *src);
 ** int zip_source_is_deleted(zip_source_t *);
-** void zip_source_keep(zip_source_t *);
 ** zip_int64_t zip_source_make_command_bitmap(zip_source_cmd_t, ...);
 ** int zip_source_open(zip_source_t *);
 ** int zip_source_stat(zip_source_t *, zip_stat_t *);
