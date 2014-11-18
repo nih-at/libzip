@@ -35,7 +35,7 @@
 #include "zipint.h"
 
 
-zip_int64_t
+ZIP_EXTERN zip_int64_t
 zip_source_tell_write(zip_source_t *src)
 {
     if (!ZIP_SOURCE_IS_OPEN_WRITING(src)) {

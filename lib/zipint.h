@@ -209,11 +209,7 @@ zip_source_t *zip_source_layered(zip_t *, zip_source_t *, zip_source_layered_cal
 zip_source_t *zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error);
 zip_source_t *zip_source_pkware(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 int zip_source_remove(zip_source_t *);
-int zip_source_seek(zip_source_t *, zip_int64_t, int);
-int zip_source_seek_write(zip_source_t *, zip_int64_t, int);
 zip_int64_t zip_source_supports(zip_source_t *src);
-zip_int64_t zip_source_tell(zip_source_t *);
-zip_int64_t zip_source_tell_write(zip_source_t *);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
 
 
