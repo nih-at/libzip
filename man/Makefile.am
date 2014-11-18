@@ -75,7 +75,7 @@ MAN3=	libzip.mdoc \
 
 install-data-hook: link-man3
 
-LN=ln
+LN=ln -f
 
 link-man3: install-man3 uninstall-hook
 	${LN} ${DESTDIR}${man3dir}/zip_error_clear.3 \
