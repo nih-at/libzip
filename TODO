@@ -266,7 +266,6 @@ D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 ** zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
 ** zip_source_t *zip_source_file_create(const char *, zip_uint64_t, zip_int64_t, zip_error_t *);
 ** zip_source_t *zip_source_filep_create(FILE *, zip_uint64_t, zip_int64_t, zip_error_t *);
-** zip_source_t *zip_source_function_create(zip_source_callback, void *, zip_error_t *);
 -- new pages
 ** zip_t *zip_open_from_source(zip_source_t *, int, zip_error_t *);
 ** int zip_source_close(zip_source_t *);

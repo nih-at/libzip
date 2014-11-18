@@ -44,15 +44,16 @@ libzip (-lzip)
 .Ft zip_source_t *
 .Fn zip_source_function_create "zip_source_callback fn" "void *userdata" "zip_error_t *error"
 .Sh DESCRIPTION
-The function
+The functions
 .Fn zip_source_function
+and
+.Fn zip_source_function_create
 creates a zip source from the user-provided function
 .Ar fn ,
 which must be of the following type:
-.Bd -literal
-typedef zip_int64_t (*zip_source_callback)(void *state,
-    void *data, zip_uint64_t len, zip_source_cmd_t cmd);
-.Ed
+.Pp
+.Ft typedef zip_int64_t
+.Fn (*zip_source_callback) "void *userdata" "void *data" "zip_uint64_t len" "zip_source_cmd_t cmd"
 .Pp
 .Ar archive
 or
@@ -62,8 +63,7 @@ are used for reporting errors and can be
 .Pp
 When called by the library, the first argument is the
 .Ar userdata
-argument supplied to
-.Fn zip_source_function .
+argument supplied to the function.
 The next two arguments are a buffer
 .Ar data
 of size
