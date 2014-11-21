@@ -53,7 +53,9 @@ creates a zip source from the user-provided function
 which must be of the following type:
 .Pp
 .Ft typedef zip_int64_t
-.Fn (*zip_source_callback) "void *userdata" "void *data" "zip_uint64_t len" "zip_source_cmd_t cmd"
+.Fo \fR(*\fPzip_source_callback\fR)\fP
+.Fa "void *userdata" "void *data" "zip_uint64_t len" "zip_source_cmd_t cmd"
+.Fc
 .Pp
 .Ar archive
 or
