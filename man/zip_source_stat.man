@@ -12,13 +12,13 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_source_stat\fR(\fIzip_source_t\ *zs\fR, \fIzip_stat_t\ *sb\fR);
+\fBzip_source_stat\fR(\fIzip_source_t\ *source\fR, \fIzip_stat_t\ *sb\fR);
 .PD
 .SH "DESCRIPTION"
 The
 \fBzip_source_stat\fR()
 function obtains information about the zip source
-\fIzs\fR
+\fIsource\fR
 .PP
 The
 \fIsb\fR
@@ -44,7 +44,9 @@ struct zip_source_stat {
 .fi
 The structure pointed to by
 \fIsb\fR
-must be allocated before calling
+must be initialized with
+\fBzip_stat_init\fR(\fI3\fR)
+before calling
 \fBzip_source_stat\fR().
 .PP
 The
@@ -95,7 +97,7 @@ fields.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

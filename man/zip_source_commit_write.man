@@ -12,19 +12,18 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_source_commit_write\fR(\fIzip_source_t\ *zs\fR);
+\fBzip_source_commit_write\fR(\fIzip_source_t\ *source\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_commit_write\fR()
-finishes writing data to the zip source
-\fIzs\fR.
-Usually this involves flushing buffers, replacing original files with
-temporary files or cleaning up buffers.
+finishes writing data to
+\fIsource\fR
+and replaces the original with the newly written data.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

@@ -12,19 +12,19 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_source_begin_write\fR(\fIzip_source_t\ *zs\fR);
+\fBzip_source_begin_write\fR(\fIzip_source_t\ *source\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_begin_write\fR()
-prepares the zip_source
-\fIzs\fR
+prepares
+\fIsource\fR
 for writing.
 Usually this involves creating temporary files or allocating buffers.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

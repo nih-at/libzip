@@ -12,21 +12,27 @@ libzip (-lzip)
 \fIzip_int64_t\fR
 .PD 0
 .HP 4n
-\fBzip_source_read\fR(\fIzip_source_t\ *zs\fR, \fIvoid\ *data\fR, \fIzip_uint64_t\ len\fR);
+\fBzip_source_read\fR(\fIzip_source_t\ *source\fR, \fIvoid\ *data\fR, \fIzip_uint64_t\ len\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_read\fR()
 reads up to
 \fIlen\fR
-bytes of data from the zip source
-\fIzs\fR
-at the current read offset and writes them to the buffer
+bytes of data from
+\fIsource\fR
+at the current read offset into the buffer
 \fIdata\fR.
+.PP
+The zip source
+\fIsource\fR
+has to be opened for reading by calling
+zip_source_open(3)
+first.
 .SH "RETURN VALUES"
 Upon successful completion the number of bytes read is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

@@ -12,18 +12,18 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_source_close\fR(\fIzip_source_t\ *zs\fR);
+\fBzip_source_close\fR(\fIzip_source_t\ *source\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_close\fR()
-closes the zip_source
-\fIzs\fR
-which was open for reading.
+closes
+\fIsource\fR,
+indicating that no more data will be read.
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

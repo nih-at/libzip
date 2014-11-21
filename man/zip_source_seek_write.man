@@ -12,16 +12,13 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_source_seek_write\fR(\fIzip_source_t\ *zs\fR, \fIzip_int64_t\ offset\fR, \fIint\ whence\fR);
+\fBzip_source_seek_write\fR(\fIzip_source_t\ *source\fR, \fIzip_int64_t\ offset\fR, \fIint\ whence\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_seek_write\fR()
-sets the current write offset for the zip source
-\fIzs\fR
-to
-\fIoffset\fR
-bytes.
+sets the current write offset for
+\fIsource\fR.
 Just like in
 fseek(3),
 depending on the
@@ -35,7 +32,7 @@ is counted relative from:
 start of file
 .TP 12n
 \fRSEEK_CUR\fR
-current position in file
+current write offset in file
 .TP 12n
 \fRSEEK_END\fR
 end of file
@@ -43,7 +40,7 @@ end of file
 .SH "RETURN VALUES"
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

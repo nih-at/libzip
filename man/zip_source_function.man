@@ -30,7 +30,7 @@ creates a zip source from the user-provided function
 which must be of the following type:
 .PP
 \fItypedef zip_int64_t\fR
-\fB(*zip_source_callback)\fR(\fIvoid *userdata\fR, \fIvoid *data\fR, \fIzip_uint64_t len\fR, \fIzip_source_cmd_t cmd\fR)
+\fB\fR(*\fPzip_source_callback\fR)\fP\fR(\fIvoid\ *userdata\fR, \fIvoid\ *data\fR, \fIzip_uint64_t\ len\fR, \fIzip_source_cmd_t\ cmd\fR)
 .PP
 \fIarchive\fR
 or

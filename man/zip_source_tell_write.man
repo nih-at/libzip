@@ -12,25 +12,25 @@ libzip (-lzip)
 \fIzip_int64_t\fR
 .PD 0
 .HP 4n
-\fBzip_source_tell_write\fR(\fIzip_source_t\ *zs\fR);
+\fBzip_source_tell_write\fR(\fIzip_source_t\ *source\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_tell_write\fR()
-returns the current write offset (relative to the start of the file)
-for the zip source
-\fIzs\fR.
+returns the current write offset
+for
+\fIsource\fR.
 The return value can be passed to
 zip_source_seek_write(3)
 with
 \fIwhence\fR
 set to
 \fRSEEK_SET\fR
-to return to the same location in the file.
+to return to the same location in the source.
 .SH "RETURN VALUES"
 Upon successful completion the current write offset is returned.
 Otherwise, \-1 is returned and the error information in
-\fIzs\fR
+\fIsource\fR
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),

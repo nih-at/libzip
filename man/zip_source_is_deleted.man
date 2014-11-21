@@ -12,13 +12,13 @@ libzip (-lzip)
 \fIint\fR
 .PD 0
 .HP 4n
-\fBzip_source_is_deleted\fR(\fIzip_source_t\ *zs\fR);
+\fBzip_source_is_deleted\fR(\fIzip_source_t\ *source\fR);
 .PD
 .SH "DESCRIPTION"
 The function
 \fBzip_source_is_deleted\fR()
-returns if the zip_source was deleted.
-This can for example happen every entry is removed from a zip archive.
+returns whether the zip_source was deleted.
+This can for example happen when all entries are removed from a zip archive.
 .SH "RETURN VALUES"
 \fBzip_source_is_deleted\fR()
 returns 1 if the zip_source is deleted and 0 otherwise.
