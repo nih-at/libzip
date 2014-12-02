@@ -9,17 +9,39 @@ might be removed at some point.
 
 * 1.0 TODO
 
-zip_error_t
+** new type zip_error_t
 
-struct foo -> foo_t
+Error information is stored in the newly public type zip_error_t. Use
+this to access information about an error, instead of the deprecated
+functions that operated on two ints.
 
-deprecated functions
+deprecated functions: zip_error_get_sys_type(), zip_error_get(),
+zip_error_to_str(), zip_file_error_get()
 
-zip_open()
+See their man pages for instructions on how to replace them.
+
+The most common affected use is zip_open. The new recommended usage
+is:
+
+int err;
+if ((za = zip_open(archive, flags, &err)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, err);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, zip_error_strerror(&error));
 	zip_error_fini(&error);
+}
+
+** more typedefs
+
+The following typedefs have been added for better readability:
+
+typedef struct zip zip_t;
+typedef struct zip_file zip_file_t;
+typedef struct zip_source zip_source_t;
+typedef struct zip_stat zip_stat_t;
+
+This means you can use "zip_t" instead of "struct zip", etc.
+
 
 
 * 0.11

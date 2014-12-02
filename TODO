@@ -103,6 +103,7 @@ Infrastructure
 
 Test Case Issues
 ================
+* merge most tools into modify
 * add test case for ZIP_CM_DEFAULT -> stored (edge cases)
 * add test case to change values for newly added files (name, compression method, comment, mtime, . . .)
 * use zipcmp -p?
@@ -162,4 +163,3 @@ D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 - document ZIP_RDONLY
 - keep error codes in man pages in sync
 - document error codes in new man pages
-- update API-CHANGES (deprecations)
