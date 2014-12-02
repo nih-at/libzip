@@ -1,5 +1,5 @@
 .\" zip_error_to_str.mdoc -- get string representation of zip error code
-.\" Copyright (C) 2003-2009 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2014 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd March 10, 2009
+.Dd December 2, 2014
 .Dt ZIP_ERROR_TO_STR 3
 .Os
 .Sh NAME
@@ -42,45 +42,31 @@ libzip (-lzip)
 .Ft int
 .Fn zip_error_to_str "char *buf" "zip_uint64_t len" "int ze" "int se"
 .Sh DESCRIPTION
-The
+The function
 .Fn zip_error_to_str
-function stores a string describing the libzip error code
-.Ar ze
-in the user-provided buffer
-.Ar buf
-which has size
-.Ar len .
-The buffer is always NUL-terminated.
-.Ar se
-should be the value of the global variable
-.Ar errno
-at the time of the error or the zlib error code, depending on
-.Ar ze .
+is deprecated; use
+.Xr zip_error_init_with_code 3
+and
+.Xr zip_error_strerror 3
+instead.
 .Pp
-.Fn zip_error_to_str
-is especially useful if
-.Fn zip_open
-failed, since then there is no
-.Vt struct zip
-is available to store the error code; otherwise
-.Fn zip_strerror
-or
-.Fn zip_file_strerror
-are more convenient.
-.Sh RETURN VALUES
-.Fn zip_error_to_str
-returns the number of characters that would have been written to a
-sufficiently sized
-.Ar buf ,
-excluding the terminating NUL character.
+Replace
+.Bd -literal -offset indent
+char buf[BUFSIZE];
+zip_error_to_str(buf, sizeof(buf), ze, se);
+printf("%s", buf);
+.Ed
+with
+.Bd -literal -offset indent
+zip_error_t error;
+zip_error_init_with_code(&error, ze);
+printf("%s", zip_error_strerror(&error));
+zip_error_fini(&error);
+.Ed
 .Sh SEE ALSO
 .Xr libzip 3 ,
-.Xr zip_error_get 3 ,
-.Xr zip_error_get_sys_type 3 ,
-.Xr zip_file_error_get 3 ,
-.Xr zip_file_strerror 3 ,
-.Xr zip_open 3 ,
-.Xr zip_strerror 3
+.Xr zip_error_init_with_code 3 ,
+.Xr zip_error_strerror 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

@@ -69,7 +69,6 @@ main(int argc, char *argv[])
     zip_t *z;
     zip_source_t *zs;
     char *archive;
-    char errstr[1024];
     zip_int64_t idx;
 
     verbose = 0;
@@ -98,8 +97,10 @@ main(int argc, char *argv[])
     archive = argv[optind];
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
-	zip_error_to_str(errstr, sizeof(errstr), ze, errno);
-	printf("%s: can't open zip archive '%s': %s\n", prg, archive, errstr);
+	zip_error_t error;
+	zip_error_init_with_code(&error, ze);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
 
@@ -175,41 +176,43 @@ do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze
 {
     zip_file_t *zf;
     enum when when_got;
-    int err, ze_got, se_got;
+    zip_error_t error_got, error_ex;
+    int err;
     char b[8192];
     zip_int64_t n;
-    char expected[80];
-    char got[80];
 
     when_got = WHEN_NEVER;
-    ze_got = se_got = 0;
+    zip_error_init(&error_got);
+    zip_error_init(&error_ex);
+    zip_error_set(&error_ex, ze_ex, se_ex);
     
     if ((zf=zip_fopen(z, name, flags)) == NULL) {
 	when_got = WHEN_OPEN;
-	zip_error_get(z, &ze_got, &se_got);
+	zip_error_t *zf_error = zip_get_error(z);
+	zip_error_set(&error_got, zip_error_code_zip(zf_error), zip_error_code_system(zf_error));
     }
     else {
 	while ((n=zip_fread(zf, b, sizeof(b))) > 0)
 	    ;
 	if (n < 0) {
 	    when_got = WHEN_READ;
-	    zip_file_error_get(zf, &ze_got, &se_got);
+	    zip_error_t *zf_error = zip_file_get_error(zf);
+	    zip_error_set(&error_got, zip_error_code_zip(zf_error), zip_error_code_system(zf_error));
 	}
 	err = zip_fclose(zf);
 	if (when_got == WHEN_NEVER && err != 0) {
 	    when_got = WHEN_CLOSE;
-	    ze_got = err;
-	    se_got = 0;
+	    zip_error_init_with_code(&error_got, err);
 	}
     }
 
-    if (when_got != when_ex || ze_got != ze_ex || se_got != se_ex) {
-	zip_error_to_str(expected, sizeof(expected), ze_ex, se_ex);
-	zip_error_to_str(got, sizeof(got), ze_got, se_got);
+    if (when_got != when_ex || zip_error_code_zip(&error_got) != zip_error_code_zip(&error_ex) || zip_error_code_system(&error_got) != zip_error_code_system(&error_ex)) {
 	printf("%s: %s: got %s error (%s), expected %s error (%s)\n",
 	       prg, name,
-	       when_name[when_got], got, 
-	       when_name[when_ex], expected);
+	       when_name[when_got], zip_error_strerror(&error_got), 
+	       when_name[when_ex], zip_error_strerror(&error_ex));
+	zip_error_fini(&error_got);
+	zip_error_fini(&error_ex);
 	return 1;
     }
     else if (verbose)

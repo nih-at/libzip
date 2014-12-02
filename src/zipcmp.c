@@ -386,19 +386,20 @@ list_zip(const char *name, struct archive *a)
 {
     zip_t *za;
     int err;
-    char errstr[1024];
     struct zip_stat st;
     unsigned int i;
 
     if ((za=zip_open(name, paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
-	zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", prg, name, errstr);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", prg, name, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return -1;
     }
 
     a->za = za;
     a->nentry = (zip_uint64_t)zip_get_num_entries(za, 0);
-
+    
     if (a->nentry == 0)
 	a->entry = NULL;
     else {

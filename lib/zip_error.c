@@ -31,7 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+#include <errno.h>
 #include <stdlib.h>
 
 #include "zipint.h"
@@ -63,6 +63,22 @@ zip_error_init(zip_error_t *err)
     err->zip_err = ZIP_ER_OK;
     err->sys_err = 0;
     err->str = NULL;
+}
+
+ZIP_EXTERN void
+zip_error_init_with_code(zip_error_t *error, int ze)
+{
+    zip_error_init(error);
+    error->zip_err = ze;
+    switch (zip_error_system_type(error)) {
+    case ZIP_ET_SYS:
+	error->sys_err = errno;
+	break;
+
+    default:
+	error->sys_err = 0;
+	break;
+    }	
 }
 
 

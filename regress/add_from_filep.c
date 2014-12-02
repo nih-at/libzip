@@ -49,7 +49,6 @@ main(int argc, char *argv[])
     const char *name;
     zip_t *za;
     zip_source_t *zs;
-    char buf[100];
     int err;
     FILE *fp;
 
@@ -64,9 +63,10 @@ main(int argc, char *argv[])
     file = argv[2];
     
     if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
-		archive, buf);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
 

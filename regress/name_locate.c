@@ -66,10 +66,10 @@ main(int argc, char *argv[])
     archive = argv[1];
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
-        char buf2[100];
-        zip_error_to_str(buf2, sizeof(buf2), ze, errno);
-	printf("%s: can't open zip archive '%s': %s\n", prg,
-	       archive, buf2);
+	zip_error_t error;
+	zip_error_init_with_code(&error, ze);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
 
@@ -117,16 +117,15 @@ main(int argc, char *argv[])
 static int
 find_fail(zip_t *z, const char *name, zip_flags_t flags, int zerr)
 {
-    int ze, se;
-    char expected[80];
     zip_int64_t idx;
 
     if ((idx=zip_name_locate(z, name, flags)) < 0) {
-	zip_error_get(z, &ze, &se);
-	if (ze != zerr) {
-	    zip_error_to_str(expected, sizeof(expected), zerr, 0);
+	if (zip_error_code_zip(zip_get_error(z)) != zerr) {
+	    zip_error_t error_ex;
+	    zip_error_init_with_code(&error_ex, zerr);
 	    printf("unexpected error while looking for '%s' with flags %x: got `%s', expected `%s'\n",
-		   name, flags, zip_strerror(z), expected);
+		   name, flags, zip_strerror(z), zip_error_strerror(&error_ex));
+	    zip_error_fini(&error_ex);
 	    return 1;
 	}
 

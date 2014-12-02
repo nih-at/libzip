@@ -100,6 +100,8 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_file_error_clear.3
 	${LN} ${DESTDIR}${man3dir}/zip_error_get.3 \
 		${DESTDIR}${man3dir}/zip_file_error_get.3
+	${LN} ${DESTDIR}${man3dir}/zip_error_init.3 \
+		${DESTDIR}${man3dir}/zip_error_init_with_code.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_add.3 \
 		${DESTDIR}${man3dir}/zip_file_replace.3
 	${LN} ${DESTDIR}${man3dir}/zip_file_extra_field_delete.3 \
@@ -124,6 +126,7 @@ link-man3: install-man3 uninstall-hook
 		${DESTDIR}${man3dir}/zip_strerror.3
 
 uninstall-hook:
+	-rm -f ${DESTDIR}${man3dir}/zip_error_init_with_code.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_error_clear.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_error_get.3
 	-rm -f ${DESTDIR}${man3dir}/zip_file_extra_field_delete_by_id.3
@@ -152,6 +155,7 @@ link-html: ${HTML}
 		zip_strerror.html
 	${LN} zip_error_clear.html zip_file_error_clear.html
 	${LN} zip_error_get.html zip_file_error_get.html
+	${LN} zip_error_init.html zip_error_code_with_init.html
 	${LN} zip_file_extra_field_delete.html zip_file_extra_field_delete_by_id.html
 	${LN} zip_file_extra_field_get.html zip_file_extra_field_get_by_id.html
 	${LN} zip_file_extra_fields_count.html zip_file_extra_fields_count_by_id.html

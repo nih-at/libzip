@@ -97,7 +97,7 @@ main(int argc, char *argv[])
     zip_t **zs;
     int c, err;
     unsigned int i, n;
-    char errstr[1024], *tname;
+    char *tname;
 
     prg = argv[0];
 
@@ -154,9 +154,10 @@ main(int argc, char *argv[])
     }
 
     if ((za=zip_open(tname, ZIP_CREATE, &err)) == NULL) {
-	zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
-		prg, tname, errstr);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, tname, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	exit(1);
     }
 
@@ -235,13 +236,13 @@ merge_zip(zip_t *za, const char *tname, const char *sname)
     zip_int64_t ret, idx;
     zip_uint64_t i;
     int err;
-    char errstr[1024];
     const char *fname;
     
     if ((zs=zip_open(sname, 0, &err)) == NULL) {
-	zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
-		prg, sname, errstr);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, sname, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return NULL;
     }
 

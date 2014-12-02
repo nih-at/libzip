@@ -46,7 +46,6 @@ main(int argc, char *argv[])
 {
     const char *archive;
     zip_t *za;
-    char buf[100];
     int err;
 
     prg = argv[0];
@@ -59,16 +58,15 @@ main(int argc, char *argv[])
     archive = argv[1];
     
     if ((za=zip_open(archive, 0, &err)) == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
-		archive, buf);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
 
     if (zip_set_archive_comment(za, NULL, 0) < 0) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n",
-		prg, buf);
+	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n", prg, zip_strerror(za));
     }
 
     if (zip_close(za) == -1) {

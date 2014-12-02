@@ -315,6 +315,7 @@ ZIP_EXTERN int zip_replace(zip_t *, zip_uint64_t, zip_source_t *); /* use zip_fi
 ZIP_EXTERN int zip_set_file_comment(zip_t *, zip_uint64_t, const char *, int); /* use zip_file_set_comment */
 ZIP_EXTERN int zip_error_get_sys_type(int); /* use zip_error_system_type */
 ZIP_EXTERN void zip_error_get(zip_t *, int *, int *); /* use zip_get_error, zip_error_code_zip / zip_error_code_system */
+ZIP_EXTERN int zip_error_to_str(char *, zip_uint64_t, int, int);
 ZIP_EXTERN void zip_file_error_get(zip_file_t *, int *, int *); /* use zip_file_get_error, zip_error_code_zip / zip_error_code_system */
 #endif
 
@@ -330,11 +331,11 @@ ZIP_EXTERN int zip_error_code_zip(const zip_error_t *);
 ZIP_EXTERN int zip_error_code_system(const zip_error_t *);
 ZIP_EXTERN void zip_error_fini(zip_error_t *);
 ZIP_EXTERN void zip_error_init(zip_error_t *);
+ZIP_EXTERN void zip_error_init_with_code(zip_error_t *, int);
 ZIP_EXTERN void zip_error_set(zip_error_t *, int, int);
 ZIP_EXTERN const char *zip_error_strerror(zip_error_t *);
 ZIP_EXTERN int zip_error_system_type(const zip_error_t *);
 ZIP_EXTERN zip_int64_t zip_error_to_data(const zip_error_t *, void *, zip_uint64_t);
-ZIP_EXTERN int zip_error_to_str(char *, zip_uint64_t, int, int);
 
 ZIP_EXTERN int zip_fclose(zip_file_t *);
 ZIP_EXTERN zip_t *zip_fdopen(int, int, int *);

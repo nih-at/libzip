@@ -64,21 +64,21 @@ main(int argc, char *argv[])
     archive = argv[1];
     
     if ((za=zip_open(archive, 0, &err)) == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, buf);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
 
     if (zip_set_archive_comment(za, new_archive_comment, (zip_uint16_t)strlen(new_archive_comment)) < 0) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n", prg, buf);
+	fprintf(stderr, "%s: zip_set_archive_comment failed: %s\n", prg, zip_strerror(za));
     }
 
     for (i=0; i<zip_get_num_entries(za, 0); i++) {
 	snprintf(buf, sizeof(buf), "File comment no %" PRId64, i);
 	if (zip_file_set_comment(za, (zip_uint64_t)i, buf, (zip_uint16_t)strlen(buf), 0) < 0) {
-	    zip_error_to_str(buf, sizeof(buf), err, errno);
-	    fprintf(stderr, "%s: zip_set_file_comment on file %" PRId64 " failed: %s\n", prg, i, buf);
+	    fprintf(stderr, "%s: zip_set_file_comment on file %" PRId64 " failed: %s\n", prg, i, zip_strerror(za));
 	}
     }
 

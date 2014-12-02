@@ -49,7 +49,6 @@ main(int argc, char *argv[])
     const char *archive, *name;
     int method;
     zip_t *za;
-    char buf[100];
     int err;
     zip_int64_t idx;
 
@@ -65,9 +64,10 @@ main(int argc, char *argv[])
     method = atoi(argv[3]);
     
     if ((za=zip_open(archive, 0, &err)) == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg,
-		archive, buf);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
     if ((idx=zip_name_locate(za, name, 0)) < 0) {

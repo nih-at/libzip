@@ -130,15 +130,16 @@ static int
 add_from_zip(int argc, char *argv[]) {
     zip_uint64_t idx;
     int err;
-    char buf[100];
     zip_source_t *zs;
     /* add from another zip file */
     idx = strtoull(argv[2], NULL, 10);
     zip_uint64_t start = strtoull(argv[3], NULL, 10);
     zip_int64_t len = strtoll(argv[4], NULL, 10);
     if ((z_in=zip_open(argv[1], ZIP_CHECKCONS, &err)) == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "can't open source zip archive '%s': %s\n", argv[1], buf);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "can't open zip archive '%s': %s\n", argv[1], zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return -1;
     }
     if ((zs=zip_source_zip(za, z_in, idx, 0, start, len)) == NULL) {
@@ -180,6 +181,7 @@ cat(int argc, char *argv[]) {
     zip_int64_t n;
     zip_file_t *zf;
     char buf[8192];
+    int err;
     idx = strtoull(argv[0], NULL, 10);
 
     if ((zf=zip_fopen_index(za, idx, 0)) == NULL) {
@@ -198,9 +200,11 @@ cat(int argc, char *argv[]) {
 	fprintf(stderr, "can't read file at index '%" PRIu64 "': %s\n", idx, zip_file_strerror(zf));
 	return -1;
     }
-    if ((n=zip_fclose(zf)) != 0) {
-	zip_error_to_str(buf, sizeof(buf), (int)n, errno);
-	fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, buf);
+    if ((err = zip_fclose(zf)) != 0) {
+	zip_error_t error;
+	
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(&error));
 	return -1;
     }
 
@@ -828,7 +832,6 @@ main(int argc, char *argv[])
 {
     const char *archive;
     zip_source_t *memory_src;
-    char buf[100];
     int c, arg, err, flags;
     const char *prg;
     source_type_t source_type = SOURCE_TYPE_NONE;
@@ -896,8 +899,10 @@ main(int argc, char *argv[])
         }
     }
     if (za == NULL) {
-	zip_error_to_str(buf, sizeof(buf), err, errno);
-	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, buf);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return 1;
     }
 

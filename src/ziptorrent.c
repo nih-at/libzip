@@ -131,12 +131,12 @@ torrentzip(const char *fname, int flags)
 {
     zip_t *za;
     int err;
-    char errstr[1024];
 
     if ((za=zip_open(fname, 0, &err)) == NULL) {
-	zip_error_to_str(errstr, sizeof(errstr), err, errno);
-	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n",
-		prg, fname, errstr);
+	zip_error_t error;
+	zip_error_init_with_code(&error, err);
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, fname, zip_error_strerror(&error));
+	zip_error_fini(&error);
 	return -1;
     }
 

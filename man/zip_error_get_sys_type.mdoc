@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 30, 2014
+.Dd December 2, 2014
 .Dt ZIP_ERROR_GET_SYS_TYPE 3
 .Os
 .Sh NAME
@@ -42,25 +42,28 @@ libzip (-lzip)
 .Ft int
 .Fn zip_error_get_sys_type "int ze"
 .Sh DESCRIPTION
-The
+The function
 .Fn zip_error_get_sys_type
-function returns the type of the system error code for the libzip error
-.Ar ze .
-Possible types are:
-.Bl -tag -width XZIP_ET_NONEXX -offset indent -compact
-.It Dv ZIP_ET_NONE
-System error code is unused.
-.It Dv ZIP_ET_SYS
-System error code is an errno value.
-.It Dv ZIP_ET_ZLIB
-System error code is from
-.Xr zlib 3 .
-.El
+is deprecated; use
+.Xr zip_error_init_with_code 3
+and
+.Xr zip_error_system_type 3
+instead.
+.Pp
+Replace
+.Bd -literal -offset indent
+int i = zip_error_get_sys_type(ze);
+.Ed
+with
+.Bd -literal -offset indent
+zip_error_t error;
+zip_error_init_with_code(&error, ze);
+int i = zip_error_system_type(&error);
+.Ed
 .Sh SEE ALSO
 .Xr libzip 3 ,
-.Xr zip_error_get  3 ,
-.Xr zip_error_to_str  3 ,
-.Xr zip_file_error_get  3
+.Xr zip_error_init_with_code 3 ,
+.Xr zip_error_system_type 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at
