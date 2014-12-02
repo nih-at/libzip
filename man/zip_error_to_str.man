@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_TO_STR" "3" "March 10, 2009" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_TO_STR" "3" "December 2, 2014" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,48 +10,42 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
-.br
-\fBzip_error_to_str\fR(\fIchar *buf\fR,\ \fIzip_uint64_t len\fR,\ \fIint ze\fR,\ \fIint se\fR);
+.PD 0
+.HP 4n
+\fBzip_error_to_str\fR(\fIchar\ *buf\fR, \fIzip_uint64_t\ len\fR, \fIint\ ze\fR, \fIint\ se\fR);
+.PD
 .SH "DESCRIPTION"
-The
+The function
 \fBzip_error_to_str\fR()
-function stores a string describing the libzip error code
-\fIze\fR
-in the user-provided buffer
-\fIbuf\fR
-which has size
-\fIlen\fR.
-The buffer is always NUL-terminated.
-\fIse\fR
-should be the value of the global variable
-\fIerrno\fR
-at the time of the error or the zlib error code, depending on
-\fIze\fR.
+is deprecated; use
+zip_error_init_with_code(3)
+and
+zip_error_strerror(3)
+instead.
 .PP
-\fBzip_error_to_str\fR()
-is especially useful if
-\fBzip_open\fR()
-failed, since then there is no
-\fIstruct zip\fR
-is available to store the error code; otherwise
-\fBzip_strerror\fR()
-or
-\fBzip_file_strerror\fR()
-are more convenient.
-.SH "RETURN VALUES"
-\fBzip_error_to_str\fR()
-returns the number of characters that would have been written to a
-sufficiently sized
-\fIbuf\fR,
-excluding the terminating NUL character.
+Replace
+.nf
+.sp
+.RS 6n
+char buf[BUFSIZE];
+zip_error_to_str(buf, sizeof(buf), ze, se);
+printf("%s", buf);
+.RE
+.fi
+with
+.nf
+.sp
+.RS 6n
+zip_error_t error;
+zip_error_init_with_code(&error, ze);
+printf("%s", zip_error_strerror(&error));
+zip_error_fini(&error);
+.RE
+.fi
 .SH "SEE ALSO"
 libzip(3),
-zip_error_get(3),
-zip_error_get_sys_type(3),
-zip_file_error_get(3),
-zip_file_strerror(3),
-zip_open(3),
-zip_strerror(3)
+zip_error_init_with_code(3),
+zip_error_strerror(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and
