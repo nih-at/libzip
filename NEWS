@@ -1,7 +1,9 @@
-0.12.0beta1 [2014/11/18]
+1.0beta1 [2014/12/02]
 
 * I/O abstraction layer
 * Support setting last modification time for file.
+* zip_error_t
+* more typedefs for structs
 
 0.11.2 [2013/12/19]
 
