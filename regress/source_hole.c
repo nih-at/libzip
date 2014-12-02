@@ -434,14 +434,14 @@ write_u64(zip_uint64_t u64, FILE *f)
 {
     zip_uint8_t b[8];
     
-    b[0] = u64 >> 56;
-    b[1] = (u64 >> 48) & 0xff;
-    b[2] = (u64 >> 40) & 0xff;
-    b[3] = (u64 >> 32) & 0xff;
-    b[4] = (u64 >> 24) & 0xff;
-    b[5] = (u64 >> 16) & 0xff;
-    b[6] = (u64 >> 8) & 0xff;
-    b[7] = u64 & 0xff;
+    b[0] = (zip_uint8_t)((u64 >> 56) & 0xff);
+    b[1] = (zip_uint8_t)((u64 >> 48) & 0xff);
+    b[2] = (zip_uint8_t)((u64 >> 40) & 0xff);
+    b[3] = (zip_uint8_t)((u64 >> 32) & 0xff);
+    b[4] = (zip_uint8_t)((u64 >> 24) & 0xff);
+    b[5] = (zip_uint8_t)((u64 >> 16) & 0xff);
+    b[6] = (zip_uint8_t)((u64 >> 8) & 0xff);
+    b[7] = (zip_uint8_t)(u64 & 0xff);
     
     return fwrite(b, 8, 1, f) == 1 ? 0 : -1;
 }
