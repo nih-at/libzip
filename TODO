@@ -95,6 +95,12 @@ Cleanup
 * clean up lint(1) warnings?
 
 
+Infrastructure
+==============
+- remove .man pages from repository
+- better infrastructure for man page links
+
+
 Test Case Issues
 ================
 * add test case for ZIP_CM_DEFAULT -> stored (edge cases)
@@ -144,6 +150,8 @@ Test Case Issues
 * read two zip entries interleaved
 
 
+Unsorted
+========
 - zip_source_file: don't allow write if start/len specify a part of the file
 - check if all exported symbols are marked with ZIP_EXTERN
 
