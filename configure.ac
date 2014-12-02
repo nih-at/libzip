@@ -82,9 +82,6 @@ AC_CHECK_SIZEOF([long long])
 AC_CHECK_SIZEOF([off_t])
 AC_CHECK_SIZEOF([size_t])
 
-AC_PATH_PROG([TOUCH], [touch])
-AC_PATH_PROG([UNZIP], [unzip])
-
 AC_STRUCT_TIMEZONE
 
 case $host_os

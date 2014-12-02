@@ -174,6 +174,40 @@ add_nul(int argc, char *argv[]) {
 }
 
 static int
+cat(int argc, char *argv[]) {
+    /* output file contents to stdout */
+    zip_uint64_t idx;
+    zip_int64_t n;
+    zip_file_t *zf;
+    char buf[8192];
+    idx = strtoull(argv[0], NULL, 10);
+
+    if ((zf=zip_fopen_index(za, idx, 0)) == NULL) {
+	fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
+	return -1;
+    }
+    while ((n=zip_fread(zf, buf, sizeof(buf))) > 0) {
+	if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
+	    zip_fclose(zf);
+	    fprintf(stderr, "can't write file contents to stdout: %s\n", strerror(errno));
+	    return -1;
+	}
+    }
+    if (n == -1) {
+	zip_fclose(zf);
+	fprintf(stderr, "can't read file at index '%" PRIu64 "': %s\n", idx, zip_file_strerror(zf));
+	return -1;
+    }
+    if ((n=zip_fclose(zf)) != 0) {
+	zip_error_to_str(buf, sizeof(buf), (int)n, errno);
+	fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, buf);
+	return -1;
+    }
+
+    return 0;
+}
+
+static int
 count_extra(int argc, char *argv[]) {
     zip_int16_t count;
     zip_uint64_t idx;
@@ -722,6 +756,7 @@ dispatch_table_t dispatch_table[] = {
     { "add_file", 4, "name file_to_add offset len", "add file to archive, len bytes starting from offset", add_file },
     { "add_from_zip", 5, "name archivename index offset len", "add file from another archive, len bytes starting from offset", add_from_zip },
     { "add_nul", 2, "name length", "add NUL bytes", add_nul },
+    { "cat", 1, "index", "output file contents to stdout", cat },
     { "count_extra", 2, "index flags", "show number of extra fields for archive entry", count_extra },
     { "count_extra_by_id", 3, "index extra_id flags", "show number of extra fields of type extra_id for archive entry", count_extra_by_id },
     { "delete", 1, "index", "remove entry", delete },

@@ -226,12 +226,10 @@ LDADD=${top_builddir}/lib/libzip.la
 check-am: bigzero.zip manyfiles.zip runtest
 
 bigzero.zip: bigzero-zip.zip
-	${UNZIP} -o ${srcdir}/bigzero-zip.zip
-	${TOUCH} ${builddir}/bigzero.zip
+	${builddir}/modify ${srcdir}/bigzero-zip.zip cat 0 > ${builddir}/bigzero.zip
 
 manyfiles.zip: manyfiles-zip.zip
-	${UNZIP} -o ${srcdir}/manyfiles-zip.zip
-	${TOUCH} ${builddir}/manyfiles.zip
+	${builddir}/modify ${srcdir}/manyfiles-zip.zip cat 0 > ${builddir}/manyfiles.zip
 
 runtest: runtest.in
 	sed -e 's!@[s]rcdir@!${srcdir}!g' -e 's!@[a]bs_srcdir@!${abs_srcdir}!g' ${srcdir}/runtest.in > runtest
