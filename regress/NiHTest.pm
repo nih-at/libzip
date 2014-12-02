@@ -452,7 +452,13 @@ sub compare_file() {
 	my $ok = $self->run_comparator($got, $real_expected);
 
 	if (!defined($ok)) {
-		my $ret = system('diff', $self->{verbose} ? '-u' : '-q', $real_expected, $got);
+		my $ret;
+		if ($self->{verbose}) {
+			$ret = system('diff', '-u', $real_expected, $got);
+		}
+		else {
+			$ret = system('cmp', '-s', $real_expected, $got);
+		}
 		$ok = ($ret == 0);
 	}
 
