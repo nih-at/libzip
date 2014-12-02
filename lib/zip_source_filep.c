@@ -60,6 +60,8 @@ struct read_file {
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 static int create_temp_output(struct read_file *ctx);
+static int _zip_fseek_u(FILE *f, zip_uint64_t offset, int whence, zip_error_t *error);
+static int _zip_fseek(FILE *f, zip_int64_t offset, int whence, zip_error_t *error);
 
 
 ZIP_EXTERN zip_source_t *
@@ -252,8 +254,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
             }
             
             if (ctx->closep && ctx->start > 0) {
-                if (fseeko(ctx->f, (off_t)ctx->start, SEEK_SET) < 0) {
-                    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                if (_zip_fseek_u(ctx->f, ctx->start, SEEK_SET, &ctx->error) < 0) {
                     return -1;
                 }
             }
@@ -275,10 +276,9 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
                 n = SIZE_MAX;
 
             if (!ctx->closep) {
-                if (fseeko(ctx->f, (off_t)ctx->current, SEEK_SET) < 0) {
-                    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
-                    return -1;
-                }
+		if (_zip_fseek_u(ctx->f, ctx->current, SEEK_SET, &ctx->error) < 0) {
+		    return -1;
+		}
             }
 
             if ((i=fread(buf, 1, (size_t)n, ctx->f)) == 0) {
@@ -324,8 +324,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
                     
                 case SEEK_END:
                     if (ctx->end == 0) {
-                        if (fseeko(ctx->f, args->offset, SEEK_END) < 0) {
-                            zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                        if (_zip_fseek(ctx->f, args->offset, SEEK_END, &ctx->error) < 0) {
                             return -1;
                         }
                         if ((new_current = ftello(ctx->f)) < 0) {
@@ -355,8 +354,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
             ctx->current = (zip_uint64_t)new_current;
 
             if (need_seek) {
-                if (fseeko(ctx->f, (off_t)ctx->current, SEEK_SET) < 0) {
-                    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+                if (_zip_fseek_u(ctx->f, ctx->current, SEEK_SET, &ctx->error) < 0) {
                     return -1;
                 }
             }
@@ -371,8 +369,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
                 return -1;
             }
             
-            if (fseeko(ctx->fout, args->offset, args->whence) < 0) {
-                zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
+            if (_zip_fseek(ctx->fout, args->offset, args->whence, &ctx->error) < 0) {
                 return -1;
             }
             return 0;
@@ -451,4 +448,30 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
             zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
             return -1;
     }
+}
+
+
+static int
+_zip_fseek_u(FILE *f, zip_uint64_t offset, int whence, zip_error_t *error)
+{
+    if (offset > ZIP_INT64_MAX) {
+	zip_error_set(error, ZIP_ER_SEEK, EOVERFLOW);
+	return -1;
+    }
+    return _zip_fseek(f, (zip_int64_t)offset, whence, error);
+}
+
+
+static int
+_zip_fseek(FILE *f, zip_int64_t offset, int whence, zip_error_t *error)
+{
+    if (offset > ZIP_FSEEK_MAX || offset < ZIP_FSEEK_MIN) {
+	zip_error_set(error, ZIP_ER_SEEK, EOVERFLOW);
+	return -1;
+    }
+    if (fseeko(f, (off_t)offset, whence) < 0) {
+	zip_error_set(error, ZIP_ER_SEEK, errno);
+	return -1;
+    }
+    return 0;
 }

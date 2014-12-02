@@ -150,14 +150,11 @@ Test Case Issues
 
 D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 
-- check for INT_MAX, UINT_MAX
-- find out FSEEK_MAX/FTELL_MAX and use it
-
 - document: zip_source_write: length can't be > ZIP_INT64_MAX
 - document: ZIP_SOURCE_CLOSE implementation can't return error
 - document ZIP_RDONLY
 - keep error codes in man pages in sync
-- document error codes in new man pageses
+- document error codes in new man pages
 - document deprecations
 ** int zip_error_get_sys_type(int); /* use zip_error_system_type */
 ** void zip_error_get(zip_t *, int *, int *); /* use zip_get_error, zip_error_code_zip / zip_error_code_system */
