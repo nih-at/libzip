@@ -263,6 +263,8 @@ sub run {
 sub runtest {
 	my ($self, $tag) = @_;
 
+	$ENV{TZ} = "UTC";
+	$ENV{LC_CTYPE} = "C";
 	$self->sandbox_create($tag);
 	$self->sandbox_enter();
 	
