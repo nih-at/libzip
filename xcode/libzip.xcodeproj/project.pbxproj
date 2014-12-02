@@ -723,6 +723,8 @@
 		4B01D72215B2F572002D5007 /* zipmerge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipmerge.c; sourceTree = "<group>"; };
 		4B01D72315B2F572002D5007 /* ziptorrent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ziptorrent.c; sourceTree = "<group>"; };
 		4B01D73D15B2FB6B002D5007 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		4B1ABD1A1A2E5DA700C93867 /* links */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = links; sourceTree = "<group>"; };
+		4B1ABD1B1A2E5E4D00C93867 /* handle_links */ = {isa = PBXFileReference; explicitFileType = text.script.perl; fileEncoding = 4; path = handle_links; sourceTree = "<group>"; };
 		4B1E46E51A08CB7600A376D2 /* zip_error_code_system.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_code_system.mdoc; sourceTree = "<group>"; };
 		4B1E46E61A08CB7600A376D2 /* zip_error_code_zip.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_code_zip.mdoc; sourceTree = "<group>"; };
 		4B1E46E71A08CB7600A376D2 /* zip_error_fini.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_fini.mdoc; sourceTree = "<group>"; };
@@ -861,7 +863,7 @@
 		4BCF3031199ABD3A0064207B /* zip_source_remove.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_remove.c; sourceTree = "<group>"; };
 		4BCF3034199ABDDA0064207B /* zip_source_seek_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_seek_write.c; sourceTree = "<group>"; };
 		4BCF3035199ABDDA0064207B /* zip_source_tell_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_tell_write.c; sourceTree = "<group>"; };
-		4BD155CE191CD28D0046F012 /* NiHTest.pm */ = {isa = PBXFileReference; indentWidth = 8; lastKnownFileType = text.script.perl; path = NiHTest.pm; sourceTree = "<group>"; };
+		4BD155CE191CD28D0046F012 /* NiHTest.pm */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = text.script.perl; path = NiHTest.pm; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; };
 		4BD155CF191CD28D0046F012 /* runtest.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = runtest.in; sourceTree = "<group>"; };
 		4BD5053219A0116D007DD28A /* zip_source_call.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_call.c; sourceTree = "<group>"; };
 		4BD6CB5C19E6A5D900710654 /* source_hole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = source_hole.c; sourceTree = "<group>"; };
@@ -1137,6 +1139,8 @@
 			isa = PBXGroup;
 			children = (
 				4BCD77A91A14ED5C001A9F55 /* CMakeLists.txt */,
+				4B1ABD1B1A2E5E4D00C93867 /* handle_links */,
+				4B1ABD1A1A2E5DA700C93867 /* links */,
 				4B26FF141A07DF1A000E9788 /* Makefile.am */,
 				4BC386511A1BE04700CDCAAC /* fix-man-links.sh */,
 				4BC386521A1BE04700CDCAAC /* make_zip_errors.sh */,

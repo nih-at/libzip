@@ -97,8 +97,7 @@ Cleanup
 
 Infrastructure
 ==============
-- remove .man pages from repository
-- better infrastructure for man page links
+- create CMakefile.txt man page linking from links file
 
 
 Test Case Issues
