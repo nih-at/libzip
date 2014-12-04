@@ -402,7 +402,7 @@ sub check_features_requirement() {
 sub comparator_zip {
 	my ($self, $got, $expected) = @_;
 
-	my @args = ($self->{zipcmp}, $self->{verbose} ? '-v' : '-q');
+	my @args = ($self->{zipcmp}, $self->{verbose} ? '-pv' : '-pq');
 	push @args, $self->{zipcmp_flags} if ($self->{zipcmp_flags});
 	push @args, ($expected, $got);
         
