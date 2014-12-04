@@ -497,6 +497,15 @@ zstat(int argc, char *argv[]) {
 }
 
 static int
+unchange_all(int argc, char *argv[]) {
+    if (zip_unchange_all(za) < 0) {
+	fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
 zin_close(int argc, char *argv[]) {
     if (zip_close(z_in) < 0) {
 	fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in));
@@ -787,6 +796,7 @@ dispatch_table_t dispatch_table[] = {
     { "set_file_compression", 3, "index method flags", "set file compression method", set_file_compression },
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
     { "stat", 1, "index", "print information about entry", zstat },
+    { "unchange_all", 0, "", "revert all changes", unchange_all },
     { "zin_close", 0, "", "close input zip_source (for internal tests)", zin_close }
 };
 
