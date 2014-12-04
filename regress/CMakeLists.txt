@@ -18,7 +18,6 @@ SET(STANDALONE_TEST_PROGRAMS
 
 SET(HELPER_TEST_PROGRAMS
 #  modify
-  set_compression
 #  tryopen
 )
 

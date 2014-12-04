@@ -48,7 +48,6 @@
 ^regress/name_locate$
 ^regress/runtest$
 ^regress/set_comment_all$
-^regress/set_compression$
 ^regress/tryopen$
 ^src/zipcmp$
 ^src/zipmerge$

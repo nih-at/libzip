@@ -536,6 +536,8 @@ get_compression_method(const char *arg)
         return ZIP_CM_STORE;
     else if (strcmp(arg, "deflate") ==0)
         return ZIP_CM_DEFLATE;
+    else if (strcmp(arg, "unknown") ==0)
+        return 99;
     return 0; /* TODO: error handling */
 }
 
