@@ -11,7 +11,6 @@ noinst_PROGRAMS= \
 	modify \
 	name_locate \
 	set_comment_all \
-	set_comment_removeglobal \
 	set_comment_revert \
 	set_compression \
 	tryopen

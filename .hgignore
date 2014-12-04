@@ -52,7 +52,6 @@
 ^regress/rename$
 ^regress/runtest$
 ^regress/set_comment_all$
-^regress/set_comment_removeglobal$
 ^regress/set_comment_revert$
 ^regress/set_compression$
 ^regress/stat_index$

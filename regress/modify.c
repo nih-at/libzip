@@ -409,6 +409,15 @@ set_extra(int argc, char *argv[]) {
 }
 
 static int
+set_archive_comment(int argc, char *argv[]) {
+    if (zip_set_archive_comment(za, argv[0], (zip_uint16_t)strlen(argv[0])) < 0) {
+	fprintf(stderr, "can't set archive comment to `%s': %s\n", argv[0], zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
 set_file_comment(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
@@ -772,6 +781,7 @@ dispatch_table_t dispatch_table[] = {
     { "get_file_comment", 1, "index", "get file comment", get_file_comment },
     { "rename", 2, "index name", "rename entry", zrename },
     { "replace_file_contents", 2, "index data", "replace entry with data", replace_file_contents },
+    { "set_archive_comment", 1, "comment", "set archive comment", set_archive_comment },
     { "set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra },
     { "set_file_comment", 2, "index comment", "set file comment", set_file_comment },
     { "set_file_compression", 3, "index method flags", "set file compression method", set_file_compression },
