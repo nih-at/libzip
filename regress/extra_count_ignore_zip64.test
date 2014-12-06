@@ -3,6 +3,6 @@ program modify
 args bigzero.zip count_extra 0 l count_extra 0 c count_extra 0 lc
 return 0
 file bigzero.zip bigzero.zip bigzero.zip
-stdout Extra field count: 2
-stdout Extra field count: 2
-stdout Extra field count: 3
+stdout Extra field count: 0
+stdout Extra field count: 0
+stdout Extra field count: 0

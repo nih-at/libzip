@@ -409,6 +409,15 @@ set_extra(int argc, char *argv[]) {
 }
 
 static int
+set_archive_comment(int argc, char *argv[]) {
+    if (zip_set_archive_comment(za, argv[0], (zip_uint16_t)strlen(argv[0])) < 0) {
+	fprintf(stderr, "can't set archive comment to `%s': %s\n", argv[0], zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
 set_file_comment(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
@@ -488,6 +497,15 @@ zstat(int argc, char *argv[]) {
 }
 
 static int
+unchange_all(int argc, char *argv[]) {
+    if (zip_unchange_all(za) < 0) {
+	fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
 zin_close(int argc, char *argv[]) {
     if (zip_close(z_in) < 0) {
 	fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in));
@@ -518,6 +536,8 @@ get_compression_method(const char *arg)
         return ZIP_CM_STORE;
     else if (strcmp(arg, "deflate") ==0)
         return ZIP_CM_DEFLATE;
+    else if (strcmp(arg, "unknown") ==0)
+        return 99;
     return 0; /* TODO: error handling */
 }
 
@@ -772,11 +792,13 @@ dispatch_table_t dispatch_table[] = {
     { "get_file_comment", 1, "index", "get file comment", get_file_comment },
     { "rename", 2, "index name", "rename entry", zrename },
     { "replace_file_contents", 2, "index data", "replace entry with data", replace_file_contents },
+    { "set_archive_comment", 1, "comment", "set archive comment", set_archive_comment },
     { "set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra },
     { "set_file_comment", 2, "index comment", "set file comment", set_file_comment },
     { "set_file_compression", 3, "index method flags", "set file compression method", set_file_compression },
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
     { "stat", 1, "index", "print information about entry", zstat },
+    { "unchange_all", 0, "", "revert all changes", unchange_all },
     { "zin_close", 0, "", "close input zip_source (for internal tests)", zin_close }
 };
 

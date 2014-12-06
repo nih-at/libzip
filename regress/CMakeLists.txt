@@ -14,14 +14,10 @@ SET(STANDALONE_TEST_PROGRAMS
 #  fread
   name_locate
   set_comment_all
-  set_comment_localonly
-  set_comment_removeglobal
-  set_comment_revert
 )
 
 SET(HELPER_TEST_PROGRAMS
 #  modify
-  set_compression
 #  tryopen
 )
 

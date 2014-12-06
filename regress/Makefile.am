@@ -11,10 +11,6 @@ noinst_PROGRAMS= \
 	modify \
 	name_locate \
 	set_comment_all \
-	set_comment_localonly \
-	set_comment_removeglobal \
-	set_comment_revert \
-	set_compression \
 	tryopen
 
 modify_SOURCES= \
@@ -168,6 +164,10 @@ TESTS= \
 	open_empty.test \
 	open_empty_2.test \
 	open_extrabytes.test \
+	open_filename_duplicate.test \
+	open_filename_duplicate_consistency.test \
+	open_filename_duplicate_empty.test \
+	open_filename_duplicate_empty_consistency.test \
 	open_filename_empty.test \
 	open_incons.test \
 	open_many_ok.test \
@@ -207,18 +207,14 @@ TESTS= \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
 	torrent-already.test \
+	torrent-new.test \
 	utf-8-standardization.test \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
-DISABLED_TESTS= \
-	encoding-ascii.test \
-	encoding-cp437.test \
-	encoding-cp437-all.test \
-	encoding-utf-8.test \
-	open_filename_duplicate.test \
+XFAIL_TESTS= \
+	add_from_zip_stored.test \
 	open_filename_duplicate_consistency.test \
-	open_filename_duplicate_empty.test \
 	open_filename_duplicate_empty_consistency.test \
 	torrent-new.test
 
