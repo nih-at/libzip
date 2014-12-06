@@ -120,37 +120,18 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
 	ret = deflate(&ctx->zstr, ctx->eof ? Z_FINISH : 0);
 
 	switch (ret) {
+        case Z_STREAM_END:
+            if (ctx->can_store && ctx->zstr.total_in <= ctx->zstr.total_out) {
+                ctx->is_stored = true;
+                ctx->size = ctx->zstr.total_in;
+                memcpy(data, ctx->buffer, ctx->size);
+                return (zip_int64_t)ctx->size;
+            }
+            /* fallthrough */
 	case Z_OK:
-	case Z_STREAM_END:
 	    /* all ok */
 
 	    if (ctx->zstr.avail_out == 0) {
-		    /* if we can return stored data (ZIP_CM_DEFAULT and we never returned compressed data),
-		       all input is still available,
-		       the output buffer is at least as big as the input data,
-		       and at least one byte from buffer used by zlib */
-		if (ctx->can_store && ctx->zstr.total_in+ctx->zstr.avail_in <= sizeof(ctx->buffer) && len >= ctx->zstr.total_in && ctx->zstr.avail_in < sizeof(ctx->buffer)) {
-		    zip_uint8_t buf[1];
-		    if ((n=zip_source_read(src, buf, 1)) < 0) {
-			_zip_error_set_from_source(&ctx->error, src);
-			end = 1;
-			break;
-		    }
-		    if (n == 0) {
-			ctx->is_stored = true;
-			ctx->eof = true;
-			ctx->size = ctx->zstr.total_in + ctx->zstr.avail_in;
-			memcpy(data, ctx->buffer, ctx->size);
-			return (zip_int64_t)ctx->size;
-		    }
-		    else {
-			/* not EOF */
-			memmove(ctx->buffer, ctx->zstr.next_in, ctx->zstr.avail_in);
-			ctx->buffer[ctx->zstr.avail_in] = buf[0];
-			ctx->zstr.avail_in += 1;
-			ctx->zstr.next_in = (Bytef *)ctx->buffer;
-		    }
-		}
 		out_offset += out_len;
 		if (out_offset < len) {
 		    out_len = (uInt)ZIP_MIN(UINT_MAX, len-out_offset);
@@ -158,6 +139,7 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
 		    ctx->zstr.avail_out = out_len;
 		}
 		else {
+                    ctx->can_store = false;
 		    end = 1;
 		}
 	    }
@@ -181,16 +163,12 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
 		    ctx->eof = true;
 		    /* TODO: check against stat of src? */
 		    ctx->size = ctx->zstr.total_in;
-		    /* if we can return stored data (ZIP_CM_DEFAULT and we never returned compressed data),
-		       all input is still available,
-		       and the output buffer is at least as big as the input data */
-		    if (ctx->can_store && ctx->zstr.total_in+ctx->zstr.avail_in <= sizeof(ctx->buffer) && len >= ctx->zstr.total_in) {
-			ctx->is_stored = true;
-			memcpy(data, ctx->buffer, ctx->zstr.total_in);
-			return (zip_int64_t)ctx->zstr.total_in;
-		    }
 		}
 		else {
+                    if (ctx->zstr.total_in > 0) {
+                        /* we overwrote a previously filled ctx->buffer */
+                        ctx->can_store = false;
+                    }
 		    ctx->zstr.next_in = (Bytef *)ctx->buffer;
 		    ctx->zstr.avail_in = (uInt)n;
 		}

@@ -34,6 +34,7 @@ EXTRA_DIST= \
 	bigzero-zip.zip \
 	bogus.zip \
 	broken.zip \
+	cm-default.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
 	encrypt_plus_extra_modified_c.zip \
@@ -80,6 +81,7 @@ EXTRA_DIST= \
 	incons-local-filename.zip \
 	incons-local-magic-bad.zip \
 	incons-local-size-larger.zip \
+	large-uncompressable \
 	manyfiles-zip.zip \
 	rename_ok.zip \
 	streamed.zip \
