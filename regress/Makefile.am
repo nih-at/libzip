@@ -213,7 +213,6 @@ TESTS= \
 	zip64_stored_creation.test
 
 XFAIL_TESTS= \
-	add_from_zip_stored.test \
 	open_filename_duplicate_consistency.test \
 	open_filename_duplicate_empty_consistency.test \
 	torrent-new.test
