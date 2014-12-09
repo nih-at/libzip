@@ -12,7 +12,6 @@ SET(STANDALONE_TEST_PROGRAMS
   add_from_filep
   fopen_unchanged
 #  fread
-  name_locate
   set_comment_all
 )
 
