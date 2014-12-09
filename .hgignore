@@ -45,7 +45,6 @@
 ^regress/hole$
 ^regress/manyfiles.zip$
 ^regress/modify$
-^regress/name_locate$
 ^regress/runtest$
 ^regress/set_comment_all$
 ^regress/tryopen$

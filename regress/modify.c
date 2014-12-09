@@ -363,6 +363,21 @@ get_file_comment(int argc, char *argv[]) {
 }
 
 static int
+name_locate(int argc, char *argv[]) {
+    zip_flags_t flags;
+    zip_int64_t idx;
+    flags = get_flags(argv[1]);
+
+    if ((idx=zip_name_locate(za, argv[0], flags)) < 0) {
+	fprintf(stderr, "can't find entry with name '%s' using flags '%s'\n", argv[0], argv[1]);
+    } else {
+	printf("name '%s' using flags '%s' found at index %" PRId64 "\n", argv[0], argv[1], idx);
+    }	
+
+    return 0;
+}
+
+static int
 zrename(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
@@ -518,8 +533,12 @@ static zip_flags_t
 get_flags(const char *arg)
 {
     zip_flags_t flags = 0;
+    if (strchr(arg, 'C') != NULL)
+	flags |= ZIP_FL_NOCASE;
     if (strchr(arg, 'c') != NULL)
 	flags |= ZIP_FL_CENTRAL;
+    if (strchr(arg, 'd') != NULL)
+	flags |= ZIP_FL_NODIR;
     if (strchr(arg, 'l') != NULL)
 	flags |= ZIP_FL_LOCAL;
     if (strchr(arg, 'u') != NULL)
@@ -790,6 +809,7 @@ dispatch_table_t dispatch_table[] = {
     { "get_extra", 3, "index extra_index flags", "show extra field", get_extra },
     { "get_extra_by_id", 4, "index extra_id extra_index flags", "show extra field of type extra_id", get_extra_by_id },
     { "get_file_comment", 1, "index", "get file comment", get_file_comment },
+    { "name_locate", 2, "name flags", "find entry in archive", name_locate },
     { "rename", 2, "index name", "rename entry", zrename },
     { "replace_file_contents", 2, "index data", "replace entry with data", replace_file_contents },
     { "set_archive_comment", 1, "comment", "set archive comment", set_archive_comment },
@@ -845,6 +865,12 @@ usage(const char *progname)
     for (i=0; i<sizeof(dispatch_table)/sizeof(dispatch_table_t); i++) {
 	fprintf(stderr, "\t%s %s -- %s\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
     }
+    fprintf(stderr, "\nSupported flags are:\n"
+	    "\tC\tZIP_FL_NOCASE\n"
+	    "\tc\tZIP_FL_CENTRAL\n"
+	    "\td\tZIP_FL_NODIR\n"
+	    "\tl\tZIP_FL_LOCAL\n"
+	    "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(stderr, "\nThe index is zero-based.\n");
     exit(1);
 }

@@ -9,7 +9,6 @@ noinst_PROGRAMS= \
 	fread \
 	hole \
 	modify \
-	name_locate \
 	set_comment_all \
 	tryopen
 
