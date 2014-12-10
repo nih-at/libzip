@@ -12,7 +12,6 @@ SET(STANDALONE_TEST_PROGRAMS
   add_from_filep
   fopen_unchanged
 #  fread
-  set_comment_all
 )
 
 SET(HELPER_TEST_PROGRAMS

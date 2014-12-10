@@ -46,7 +46,6 @@
 ^regress/manyfiles.zip$
 ^regress/modify$
 ^regress/runtest$
-^regress/set_comment_all$
 ^regress/tryopen$
 ^src/zipcmp$
 ^src/zipmerge$

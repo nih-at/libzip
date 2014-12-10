@@ -9,7 +9,6 @@ noinst_PROGRAMS= \
 	fread \
 	hole \
 	modify \
-	set_comment_all \
 	tryopen
 
 modify_SOURCES= \
