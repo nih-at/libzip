@@ -36,8 +36,6 @@
 ^missing$
 ^regress/.*log$
 ^regress/.*trs$
-^regress/add_dir$
-^regress/add_from_buffer$
 ^regress/add_from_filep$
 ^regress/bigzero.zip$
 ^regress/fopen_unchanged$

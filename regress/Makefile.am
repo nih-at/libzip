@@ -3,7 +3,6 @@ AUTOMAKE_OPTIONS=	parallel-tests
 noinst_SCRIPTS=		runtest
 
 noinst_PROGRAMS= \
-	add_from_buffer \
 	add_from_filep \
 	fopen_unchanged \
 	fread \

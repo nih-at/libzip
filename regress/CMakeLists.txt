@@ -8,7 +8,6 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
 ENDIF(NOT HAVE_GETOPT)
 
 SET(STANDALONE_TEST_PROGRAMS
-  add_from_buffer
   add_from_filep
   fopen_unchanged
 #  fread
