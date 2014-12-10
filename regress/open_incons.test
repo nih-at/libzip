@@ -36,7 +36,7 @@ file incons-local-filename-short.zzip incons-local-filename-short.zip incons-loc
 file incons-local-filename.zzip incons-local-filename.zip incons-local-filename.zip
 file incons-local-magic-bad.zzip incons-local-magic-bad.zip incons-local-magic-bad.zip
 file incons-local-size-larger.zzip incons-local-size-larger.zip incons-local-size-larger.zip
-args -c incons-*
+args -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-incomplete1.zzip incons-ef-local-incomplete2.zzip incons-ef-local-incomplete3.zzip incons-ef-local-incomplete4.zzip incons-ef-local-size.zzip incons-eocd-magic-bad.zzip incons-file-count.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip
 return 1
 stdout opening 'incons-archive-comment-longer.zzip' returned error 21
 stdout opening 'incons-archive-comment-shorter.zzip' returned error 21

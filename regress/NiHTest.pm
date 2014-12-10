@@ -622,8 +622,29 @@ sub get_extension {
 
 sub parse_args {
 	my ($self, $type, $str) = @_;
-	
-	if ($type =~ m/(\s|\.\.\.$)/) {
+
+	if ($type eq 'string...') {
+		my $args = [];
+
+		while ($str ne '') {
+			if ($str =~ m/^\"/) {
+				unless ($str =~ m/^\"([^\"]*)\"\s*(.*)/) {
+					$self->warn_file_line("unclosed quote in [$str]");
+					return undef;
+				}
+				push @$args, $1;
+				$str = $2;
+			}
+			else {
+				$str =~ m/^(\S+)\s*(.*)/;
+				push @$args, $1;
+				$str = $2;
+			}
+		}
+
+		return $args;
+	}
+	elsif ($type =~ m/(\s|\.\.\.$)/) {
 		my $ellipsis = 0;
 		if ($type =~ m/(.*)\.\.\.$/) {
 			$ellipsis = 1;
@@ -706,8 +727,11 @@ sub parse_case() {
 		}
 		
 		my $args = $self->parse_args($def->{type}, $argstring);
-		
-		next unless (defined($args));
+
+		if (!defined($args)) {
+			$ok = 0;
+			next;
+		}
 		
 		if ($def->{once}) {
 			if (defined($test{$cmd})) {
@@ -838,17 +862,37 @@ sub run_hook {
 }
 
 
+sub backslash_decode {
+	my ($str) = @_;
+
+	if ($str =~ m/\\/) {
+		$str =~ s/\\a/\a/gi;
+		$str =~ s/\\b/\b/gi;
+		$str =~ s/\\f/\f/gi;
+		$str =~ s/\\n/\n/gi;
+		$str =~ s/\\r/\r/gi;
+		$str =~ s/\\t/\t/gi;
+		$str =~ s/\\v/\cK/gi;
+		$str =~ s/\\s/ /gi;
+		# TODO: \xhh, \ooo
+		$str =~ s/\\(.)/$1/g;
+	}
+
+	return $str;
+}
+
+
 sub run_program {
 	my ($self) = @_;
 	
 	my ($stdin, $stdout, $stderr);
 	$stderr = gensym;
-	
-	my $cmd = '../' . $self->{test}->{program} . " " . (join ' ', @{$self->{test}->{args}});
-	
+
+	my @cmd = ('../' . $self->{test}->{program}, map ({ backslash_decode($_); } @{$self->{test}->{args}}));
+
 	### TODO: catch errors?
 	
-	my $pid = open3($stdin, $stdout, $stderr, $cmd);
+	my $pid = open3($stdin, $stdout, $stderr, @cmd);
 	
 	$self->{stdout} = [];
 	$self->{stderr} = [];
