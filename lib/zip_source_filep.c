@@ -39,6 +39,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _MSC_VER
+/* MSVC needs <fcntl.h> for _O_BINARY */
+#include <fcntl.h>
+/* MSVC doesn't have S_ISREG */
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+/* MSVC doesn't have mode_t */
+typedef int mode_t;
+#endif
 
 struct read_file {
     zip_error_t error;      /* last error information */
