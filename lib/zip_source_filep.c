@@ -225,6 +225,8 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 	    mask = umask(022);
 	    umask(mask);
 	    chmod(ctx->fname, 0666&~mask);
+	    free(ctx->tmpname);
+	    ctx->tmpname = NULL;
             return 0;
 	}
             
@@ -240,6 +242,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
             
         case ZIP_SOURCE_FREE:
             free(ctx->fname);
+	    free(ctx->tmpname);
             if (ctx->closep && ctx->f)
                 fclose(ctx->f);
             free(ctx);
@@ -304,6 +307,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
                 ctx->fout = NULL;
             }
             remove(ctx->tmpname);
+	    free(ctx->tmpname);
             ctx->tmpname = NULL;
             return 0;
 	
