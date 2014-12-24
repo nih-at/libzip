@@ -95,7 +95,7 @@ _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 
     len = strlen((const char *)ctx->fname) + 10;
     if (*temp == NULL) {
-	if ((*temp = (char *)malloc(sizeof(char) * len)) == NULL) {
+	if ((*temp = malloc(sizeof(char) * len)) == NULL) {
 	    zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
 	    return INVALID_HANDLE_VALUE;
 	}
