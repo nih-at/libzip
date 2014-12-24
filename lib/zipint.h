@@ -608,7 +608,6 @@ void _zip_unchange_data(zip_entry_t *);
 int _zip_write(zip_t *za, const void *data, zip_uint64_t length);
 
 #ifdef _WIN32
-int _zip_set_win32_error(unsigned long win32err, unsigned long *win32errptr);
 zip_source_t *_zip_source_win32_handle_or_name(const void *fname, void *h, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, _zip_source_win32_file_ops_t *ops, zip_error_t *error);
 #endif
 

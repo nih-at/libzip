@@ -45,6 +45,7 @@ static int _win32_create_temp_file(_zip_source_win32_read_file_t *ctx);
 static int _zip_filetime_to_time_t(FILETIME ft, time_t *t);
 static int _zip_seek_win32_u(void *h, zip_uint64_t offset, int whence, zip_error_t *error, unsigned long *win32errptr);
 static int _zip_seek_win32(void *h, zip_int64_t offset, int whence, zip_error_t *error, unsigned long *win32errptr);
+static int _zip_set_win32_error(unsigned long win32err, unsigned long *win32errptr);
 static int _zip_stat_win32(void *h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx);
 
 ZIP_EXTERN zip_source_t *
@@ -67,6 +68,7 @@ zip_source_win32file_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zi
 
     return _zip_source_win32_handle_or_name(NULL, h, start, length, 1, NULL, NULL, error);
 }
+
 
 zip_source_t *
 _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, _zip_source_win32_file_ops_t *ops, zip_error_t *error)
@@ -136,6 +138,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
     return zs;
 }
 
+
 zip_int64_t
 _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
@@ -161,7 +164,11 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	    zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_set_win32_error(GetLastError(), &ctx->win32err));
 	}
 	ctx->hout = INVALID_HANDLE_VALUE;
-	return ctx->ops->op_rename_temp(ctx);
+	if (ctx->ops->op_rename_temp(ctx) < 0) {
+	    zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_set_win32_error(GetLastError(), &ctx->win32err));
+	    return -1;
+	}
+	return 0;
     }
 
     case ZIP_SOURCE_CLOSE:
@@ -391,6 +398,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
     }
 }
 
+
 int
 _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 {
@@ -421,6 +429,7 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 
     return 0;
 }
+
 
 int
 _zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error, DWORD *win32errptr)
@@ -465,6 +474,36 @@ _zip_seek_win32(HANDLE h, zip_int64_t offset, int whence, zip_error_t *error, DW
 
 
 int
+_zip_set_win32_error(DWORD win32err, DWORD *win32errptr)
+{
+    /*
+    Note: This list isn't exhaustive, but should cover common cases.
+    */
+    if (win32errptr != NULL) {
+	*win32errptr = win32err;
+    }
+    switch (win32err) {
+    case ERROR_INVALID_PARAMETER:
+	return EINVAL;
+    case ERROR_FILE_NOT_FOUND:
+	return ENOENT;
+    case ERROR_INVALID_HANDLE:
+	return EBADF;
+    case ERROR_ACCESS_DENIED:
+	return EACCES;
+    case ERROR_FILE_EXISTS:
+	return EEXIST;
+    case ERROR_TOO_MANY_OPEN_FILES:
+	return EMFILE;
+    case ERROR_DISK_FULL:
+	return ENOSPC;
+    default:
+	return 0;
+    }
+}
+
+
+int
 _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
 {
     FILETIME mtimeft;
@@ -500,35 +539,6 @@ _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
     return 0;
 }
 
-
-int
-_zip_set_win32_error(DWORD win32err, DWORD *win32errptr)
-{
-    /*
-    Note: This list isn't exhaustive, but should cover common cases.
-    */
-    if (win32errptr != NULL) {
-	*win32errptr = win32err;
-    }
-    switch (win32err) {
-    case ERROR_INVALID_PARAMETER:
-	return EINVAL;
-    case ERROR_FILE_NOT_FOUND:
-	return ENOENT;
-    case ERROR_INVALID_HANDLE:
-	return EBADF;
-    case ERROR_ACCESS_DENIED:
-	return EACCES;
-    case ERROR_FILE_EXISTS:
-	return EEXIST;
-    case ERROR_TOO_MANY_OPEN_FILES:
-	return EMFILE;
-    case ERROR_DISK_FULL:
-	return ENOSPC;
-    default:
-	return 0;
-    }
-}
 
 int
 _zip_filetime_to_time_t(FILETIME ft, time_t *t)

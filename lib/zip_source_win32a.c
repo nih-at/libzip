@@ -111,10 +111,8 @@ _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 int
 _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
 {
-    if (!MoveFileExA(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING)) {
-	zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_set_win32_error(GetLastError(), &ctx->win32err));
+    if (!MoveFileExA(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING))
 	return -1;
-    }
     return 0;
 }
 
