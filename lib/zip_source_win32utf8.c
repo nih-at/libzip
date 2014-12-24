@@ -34,8 +34,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <errno.h>
 #include <stdio.h>
-#include <windows.h>
 
+#include "zipwin32.h"
 #include "zipint.h"
 
 

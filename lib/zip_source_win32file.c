@@ -32,12 +32,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#include <windows.h>
 #include <wchar.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "zipwin32.h"
 #include "zipint.h"
 
 static zip_int64_t _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);

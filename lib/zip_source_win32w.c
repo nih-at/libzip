@@ -34,8 +34,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <errno.h>
 #include <stdio.h>
-#include <windows.h>
 
+#include "zipwin32.h"
 #include "zipint.h"
 
 static void *_win32_strdup_w(const void *str);
