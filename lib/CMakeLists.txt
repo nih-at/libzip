@@ -139,6 +139,10 @@ SET(LIBZIP_SOURCES
   zip_source_supports.c
   zip_source_tell.c
   zip_source_tell_write.c
+  zip_source_win32a.c
+  zip_source_win32file.c
+  zip_source_win32utf8.c
+  zip_source_win32w.c
   zip_source_window.c
   zip_source_write.c
   zip_source_zip.c
