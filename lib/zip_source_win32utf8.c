@@ -62,7 +62,7 @@ zip_source_win32utf8_create(const char *fname, zip_uint64_t start, zip_int64_t l
     }
 
     /* Convert fname from UTF-8 to Windows-friendly UTF-16. */
-    size = MultiByteToWideChar(CP_UTF8, WC_ERR_INVALID_CHARS, fname, -1, NULL, 0);
+    size = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, fname, -1, NULL, 0);
     if (size == 0) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
@@ -71,7 +71,7 @@ zip_source_win32utf8_create(const char *fname, zip_uint64_t start, zip_int64_t l
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
-    MultiByteToWideChar(CP_UTF8, WC_ERR_INVALID_CHARS, fname, -1, wfname, size);
+    MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, fname, -1, wfname, size);
 
     source = zip_source_win32w_create(wfname, start, length, error);
 
