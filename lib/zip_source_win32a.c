@@ -42,16 +42,14 @@ static void * _win32_strdup_a(const void *str);
 static HANDLE _win32_open_a(_zip_source_win32_read_file_t *ctx);
 static HANDLE _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value);
 static int _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx);
-static int _win32_discard_source_a(_zip_source_win32_read_file_t *ctx);
-static int _win32_discard_temp_a(_zip_source_win32_read_file_t *ctx);
+static int _win32_remove_a(const void *fname);
 
 static _zip_source_win32_file_ops_t win32_ops_a = {
     .op_strdup         = _win32_strdup_a,
     .op_open           = _win32_open_a,
     .op_create_temp    = _win32_create_temp_a,
     .op_rename_temp    = _win32_rename_temp_a,
-    .op_discard_source = _win32_discard_source_a,
-    .op_discard_temp   = _win32_discard_temp_a
+    .op_remove         = _win32_remove_a
 };
 
 ZIP_EXTERN zip_source_t *
@@ -122,19 +120,8 @@ _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
 
 
 int
-_win32_discard_source_a(_zip_source_win32_read_file_t *ctx)
+_win32_remove_a(const void *fname)
 {
-    if (!DeleteFileA(ctx->fname)) {
-	zip_error_set(&ctx->error, ZIP_ER_REMOVE, _zip_set_win32_error(GetLastError(), &ctx->win32err));
-	return -1;
-    }
-    return 0;
-}
-
-
-int
-_win32_discard_temp_a(_zip_source_win32_read_file_t *ctx)
-{
-    DeleteFileA(ctx->tmpname);
+    DeleteFileA((const char *)fname);
     return 0;
 }

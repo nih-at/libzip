@@ -227,14 +227,18 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	return (zip_int64_t)i;
 
     case ZIP_SOURCE_REMOVE:
-	return ctx->ops->op_discard_source(ctx);
+	if (ctx->ops->op_remove(ctx->fname) < 0) {
+	    zip_error_set(&ctx->error, ZIP_ER_REMOVE, _zip_set_win32_error(GetLastError(), &ctx->win32err));
+	    return -1;
+	}
+	return 0;
 
     case ZIP_SOURCE_ROLLBACK_WRITE:
 	if (ctx->hout) {
 	    CloseHandle(ctx->hout);
 	    ctx->hout = INVALID_HANDLE_VALUE;
 	}
-	ctx->ops->op_discard_temp(ctx);
+	ctx->ops->op_remove(ctx->tmpname);
 	free(ctx->tmpname);
 	ctx->tmpname = NULL;
 	return 0;

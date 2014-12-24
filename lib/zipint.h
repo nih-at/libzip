@@ -429,8 +429,7 @@ struct _zip_source_win32_file_ops {
     void *(*op_open)(_zip_source_win32_read_file_t *ctx);
     void *(*op_create_temp)(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value);
     int (*op_rename_temp)(_zip_source_win32_read_file_t *ctx);
-    int (*op_discard_source)(_zip_source_win32_read_file_t *ctx);
-    int (*op_discard_temp)(_zip_source_win32_read_file_t *ctx);
+    int (*op_remove)(const void *fname);
 };
 
 typedef struct _zip_source_win32_file_ops _zip_source_win32_file_ops_t;
