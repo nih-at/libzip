@@ -44,7 +44,6 @@ static HANDLE _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **te
 static int _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx);
 static int _win32_discard_source_a(_zip_source_win32_read_file_t *ctx);
 static int _win32_discard_temp_a(_zip_source_win32_read_file_t *ctx);
-static HANDLE _win32_create_temp_file_a(const char *fname, char *temp, int len);
 
 
 static _zip_source_win32_file_ops_t win32_ops_a = {
