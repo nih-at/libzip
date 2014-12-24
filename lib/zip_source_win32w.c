@@ -38,7 +38,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "zipwin32.h"
 #include "zipint.h"
 
-static void *_win32_strdup_w(const void *str);
+static void * _win32_strdup_w(const void *str);
 static HANDLE _win32_open_w(_zip_source_win32_read_file_t *ctx);
 static HANDLE _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value);
 static int _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx);

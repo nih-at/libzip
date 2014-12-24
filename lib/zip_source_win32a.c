@@ -45,7 +45,6 @@ static int _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx);
 static int _win32_discard_source_a(_zip_source_win32_read_file_t *ctx);
 static int _win32_discard_temp_a(_zip_source_win32_read_file_t *ctx);
 
-
 static _zip_source_win32_file_ops_t win32_ops_a = {
     .op_strdup         = _win32_strdup_a,
     .op_open           = _win32_open_a,
