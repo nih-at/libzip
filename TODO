@@ -63,7 +63,7 @@ Features
   . data descriptor
   . local headers come before central dir
 
-- support for old compression methods?????
+* support for old compression methods?????
 
 
 Bugs
@@ -83,7 +83,6 @@ Bugs
 * torrentzip broken on NetBSD/amd64 6.99
 * torrentzip: check behaviour of files with empty name (size 0; file size > 0)
 
-
 Cleanup
 =======
 * use bool
@@ -97,15 +96,14 @@ Cleanup
 
 Infrastructure
 ==============
-- create CMakefile.txt man page linking from links file
+* create CMakefile.txt man page linking from links file
 
 
 Test Case Issues
 ================
+* use gcov output to increase test coverage
 * merge most tools into modify
-* add test case for ZIP_CM_DEFAULT -> stored (edge cases)
 * add test case to change values for newly added files (name, compression method, comment, mtime, . . .)
-* use zipcmp -p?
 * zip_open file less than EOCDLEN bytes long
 * test calls against old API
 * run regression tests also from CMake framework
@@ -152,13 +150,13 @@ Test Case Issues
 
 Unsorted
 ========
-- zip_source_file: don't allow write if start/len specify a part of the file
-- check if all exported symbols are marked with ZIP_EXTERN
+* zip_source_file: don't allow write if start/len specify a part of the file
+* script to check if all exported symbols are marked with ZIP_EXTERN, add to make distcheck
 
 D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 
-- document: zip_source_write: length can't be > ZIP_INT64_MAX
-- document: ZIP_SOURCE_CLOSE implementation can't return error
-- document ZIP_RDONLY
-- keep error codes in man pages in sync
-- document error codes in new man pages
+* document: zip_source_write: length can't be > ZIP_INT64_MAX
+* document: ZIP_SOURCE_CLOSE implementation can't return error
+* document ZIP_RDONLY
+* keep error codes in man pages in sync
+* document error codes in new man pages
