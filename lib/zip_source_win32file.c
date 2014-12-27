@@ -168,6 +168,8 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	    zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_set_win32_error(GetLastError(), &ctx->win32err));
 	    return -1;
 	}
+	free(ctx->tmpname);
+	ctx->tmpname = NULL;
 	return 0;
     }
 
