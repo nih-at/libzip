@@ -94,6 +94,11 @@ Cleanup
 * clean up lint(1) warnings?
 
 
+Analysis
+========
+* pass through coverity
+
+
 Infrastructure
 ==============
 * create CMakefile.txt man page linking from links file
@@ -101,6 +106,7 @@ Infrastructure
 
 Test Case Issues
 ================
+* test cases for set_extra*, delete_extra*, *extra_field*
 * use gcov output to increase test coverage
 * merge most tools into modify
 * add test case to change values for newly added files (name, compression method, comment, mtime, . . .)
