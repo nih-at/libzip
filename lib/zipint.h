@@ -34,6 +34,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 /* to have *_MAX definitions for all types when compiling with g++ */
 #define __STDC_LIMIT_MACROS
 
@@ -50,7 +54,6 @@
 #endif
 
 #include "zip.h"
-#include "config.h"
 
 #ifdef HAVE_STDBOOL_H
 #include <stdbool.h>

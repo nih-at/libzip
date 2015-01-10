@@ -32,13 +32,13 @@
 */
 
 
+#include "zipint.h"
+
 #include <sys/stat.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "zipint.h"
 
 struct read_file {
     zip_error_t error;      /* last error information */
