@@ -514,7 +514,12 @@ _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
     LARGE_INTEGER size;
     int regularp;
 
-    if (!GetFileTime(h, NULL, NULL, &mtimeft) || _zip_filetime_to_time_t(mtimeft, &mtime) < 0) {
+    if (!GetFileTime(h, NULL, NULL, &mtimeft)) {
+	zip_error_set(&ctx->error, ZIP_ER_READ, _zip_set_win32_error(GetLastError(), NULL));
+	return -1;
+    }
+    if (_zip_filetime_to_time_t(mtimeft, &mtime) < 0) {
+	zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
 	return -1;
     }
 
@@ -524,6 +529,7 @@ _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
     }
 
     if (!GetFileSizeEx(h, &size)) {
+	zip_error_set(&ctx->error, ZIP_ER_READ, _zip_set_win32_error(GetLastError(), NULL));
 	return -1;
     }
 
