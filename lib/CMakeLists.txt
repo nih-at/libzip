@@ -121,7 +121,6 @@ SET(LIBZIP_SOURCES
   zip_source_crc.c
   zip_source_deflate.c
   zip_source_error.c
-  zip_source_file.c
   zip_source_filep.c
   zip_source_free.c
   zip_source_function.c
@@ -139,10 +138,6 @@ SET(LIBZIP_SOURCES
   zip_source_supports.c
   zip_source_tell.c
   zip_source_tell_write.c
-  zip_source_win32a.c
-  zip_source_win32file.c
-  zip_source_win32utf8.c
-  zip_source_win32w.c
   zip_source_window.c
   zip_source_write.c
   zip_source_zip.c
@@ -158,6 +153,19 @@ SET(LIBZIP_SOURCES
   zip_unchange_data.c
   zip_utf-8.c
 )
+
+IF(WIN32)
+  SET(LIBZIP_OPSYS_FILES
+    zip_source_win32a.c
+    zip_source_win32file.c
+    zip_source_win32utf8.c
+    zip_source_win32w.c
+  )
+ELSE(WIN32)
+  SET(LIBZIP_OPSYS_FILES
+    zip_source_file.c
+  )
+ENDIF(WIN32)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/..)
@@ -175,7 +183,7 @@ IF(NOT HAVE_MKSTEMP)
   SET(LIBZIP_EXTRA_FILES mkstemp.c)
 ENDIF(NOT HAVE_MKSTEMP)
 
-ADD_LIBRARY(zip SHARED ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES})
+ADD_LIBRARY(zip SHARED ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
 SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 3.0 SOVERSION 3 )
 TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY})
 INSTALL(TARGETS zip
