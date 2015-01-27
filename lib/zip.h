@@ -403,8 +403,6 @@ ZIP_EXTERN zip_source_t *zip_source_win32a(zip_t *, const char *, zip_uint64_t, 
 ZIP_EXTERN zip_source_t *zip_source_win32a_create(const char *, zip_uint64_t, zip_int64_t, zip_error_t *);
 ZIP_EXTERN zip_source_t *zip_source_win32file(zip_t *, void *, zip_uint64_t, zip_int64_t);
 ZIP_EXTERN zip_source_t *zip_source_win32file_create(void *, zip_uint64_t, zip_int64_t, zip_error_t *);
-ZIP_EXTERN zip_source_t *zip_source_win32utf8(zip_t *, const char *, zip_uint64_t, zip_int64_t);
-ZIP_EXTERN zip_source_t *zip_source_win32utf8_create(const char *, zip_uint64_t, zip_int64_t, zip_error_t *);
 ZIP_EXTERN zip_source_t *zip_source_win32w(zip_t *, const wchar_t *, zip_uint64_t, zip_int64_t);
 ZIP_EXTERN zip_source_t *zip_source_win32w_create(const wchar_t *, zip_uint64_t, zip_int64_t, zip_error_t *);
 #endif
