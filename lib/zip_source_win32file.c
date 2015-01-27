@@ -140,7 +140,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 }
 
 
-zip_int64_t
+static zip_int64_t
 _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 {
     _zip_source_win32_read_file_t *ctx;
@@ -402,7 +402,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 }
 
 
-int
+static int
 _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 {
     /*
@@ -434,7 +434,7 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 }
 
 
-int
+static int
 _zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error, DWORD *win32errptr)
 {
     if (offset > ZIP_INT64_MAX) {
@@ -445,7 +445,7 @@ _zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error,
 }
 
 
-int
+static int
 _zip_seek_win32(HANDLE h, zip_int64_t offset, int whence, zip_error_t *error, DWORD *win32errptr)
 {
     LARGE_INTEGER li;
@@ -476,7 +476,7 @@ _zip_seek_win32(HANDLE h, zip_int64_t offset, int whence, zip_error_t *error, DW
 }
 
 
-int
+static int
 _zip_set_win32_error(DWORD win32err, DWORD *win32errptr)
 {
     /*
@@ -506,7 +506,7 @@ _zip_set_win32_error(DWORD win32err, DWORD *win32errptr)
 }
 
 
-int
+static int
 _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
 {
     FILETIME mtimeft;
@@ -543,7 +543,7 @@ _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
 }
 
 
-int
+static int
 _zip_filetime_to_time_t(FILETIME ft, time_t *t)
 {
     /*

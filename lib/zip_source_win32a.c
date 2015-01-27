@@ -74,21 +74,21 @@ zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t leng
 }
 
 
-void *
+static void *
 _win32_strdup_a(const void *str)
 {
     return strdup((const char *)str);
 }
 
 
-HANDLE
+static HANDLE
 _win32_open_a(_zip_source_win32_read_file_t *ctx)
 {
     return CreateFileA(ctx->fname, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
 
-HANDLE
+static HANDLE
 _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value)
 {
     int len;
@@ -108,7 +108,7 @@ _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 }
 
 
-int
+static int
 _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
 {
     if (!MoveFileExA(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING))
@@ -117,7 +117,7 @@ _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
 }
 
 
-int
+static int
 _win32_remove_a(const void *fname)
 {
     DeleteFileA((const char *)fname);
