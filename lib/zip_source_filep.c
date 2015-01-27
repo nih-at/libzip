@@ -141,6 +141,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
     }
 
     if ((zs=zip_source_function_create(read_file, ctx, error)) == NULL) {
+	free(ctx->fname);
 	free(ctx);
 	return NULL;
     }

@@ -131,6 +131,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
     }
 
     if ((zs = zip_source_function_create(_win32_read_file, ctx, error)) == NULL) {
+	free(ctx->fname);
 	free(ctx);
 	return NULL;
     }
