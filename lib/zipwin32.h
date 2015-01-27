@@ -46,7 +46,6 @@ struct _zip_source_win32_file_ops;
 
 struct _zip_source_win32_read_file {
     zip_error_t error;      /* last error information */
-    DWORD win32err;         /* last Win32 error */
     zip_int64_t supports;
 
     /* operations */
