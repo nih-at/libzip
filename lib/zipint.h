@@ -392,50 +392,6 @@ struct zip_source {
 #define ZIP_SOURCE_IS_OPEN_WRITING(src) ((src)->write_state == ZIP_SOURCE_WRITE_OPEN)
 #define ZIP_SOURCE_IS_LAYERED(src)  ((src)->src != NULL)
 
-#ifdef _WIN32
-
-/* context for Win32 source */
-
-struct _zip_source_win32_file_ops;
-
-struct _zip_source_win32_read_file {
-    zip_error_t error;      /* last error information */
-    DWORD win32err;         /* last Win32 error */
-    zip_int64_t supports;
-
-    /* operations */
-    struct _zip_source_win32_file_ops *ops;
-
-    /* reading */
-    void *fname;            /* name of file to read from - ANSI (char *) or Unicode (wchar_t *) */
-    void *h;                /* HANDLE for file to read from */
-    int closep;             /* whether to close f on ZIP_CMD_FREE */
-    struct zip_stat st;     /* stat information passed in */
-    zip_uint64_t start;     /* start offset of data to read */
-    zip_uint64_t end;       /* end offset of data to read, 0 for up to EOF */
-    zip_uint64_t current;   /* current offset */
-
-    /* writing */
-    void *tmpname;          /* name of temp file - ANSI (char *) or Unicode (wchar_t *) */
-    void *hout;             /* HANDLE for output file */
-};
-
-typedef struct _zip_source_win32_read_file _zip_source_win32_read_file_t;
-
-/* internal operations for Win32 source */
-
-struct _zip_source_win32_file_ops {
-    void *(*op_strdup)(const void *str);
-    void *(*op_open)(_zip_source_win32_read_file_t *ctx);
-    void *(*op_create_temp)(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value);
-    int (*op_rename_temp)(_zip_source_win32_read_file_t *ctx);
-    int (*op_remove)(const void *fname);
-};
-
-typedef struct _zip_source_win32_file_ops _zip_source_win32_file_ops_t;
-
-#endif
-
 /* entry in zip archive directory */
 
 struct zip_entry {
@@ -606,9 +562,5 @@ void _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *);
 int _zip_unchange(zip_t *, zip_uint64_t, int);
 void _zip_unchange_data(zip_entry_t *);
 int _zip_write(zip_t *za, const void *data, zip_uint64_t length);
-
-#ifdef _WIN32
-zip_source_t *_zip_source_win32_handle_or_name(const void *fname, void *h, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, _zip_source_win32_file_ops_t *ops, zip_error_t *error);
-#endif
 
 #endif /* zipint.h */

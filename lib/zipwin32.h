@@ -40,4 +40,46 @@
 #define _WIN32_WINDOWS 0x0500
 #include <windows.h>
 
+/* context for Win32 source */
+
+struct _zip_source_win32_file_ops;
+
+struct _zip_source_win32_read_file {
+    zip_error_t error;      /* last error information */
+    DWORD win32err;         /* last Win32 error */
+    zip_int64_t supports;
+
+    /* operations */
+    struct _zip_source_win32_file_ops *ops;
+
+    /* reading */
+    void *fname;            /* name of file to read from - ANSI (char *) or Unicode (wchar_t *) */
+    void *h;                /* HANDLE for file to read from */
+    int closep;             /* whether to close f on ZIP_CMD_FREE */
+    struct zip_stat st;     /* stat information passed in */
+    zip_uint64_t start;     /* start offset of data to read */
+    zip_uint64_t end;       /* end offset of data to read, 0 for up to EOF */
+    zip_uint64_t current;   /* current offset */
+
+    /* writing */
+    void *tmpname;          /* name of temp file - ANSI (char *) or Unicode (wchar_t *) */
+    void *hout;             /* HANDLE for output file */
+};
+
+typedef struct _zip_source_win32_read_file _zip_source_win32_read_file_t;
+
+/* internal operations for Win32 source */
+
+struct _zip_source_win32_file_ops {
+    void *(*op_strdup)(const void *);
+    void *(*op_open)(_zip_source_win32_read_file_t *);
+    void *(*op_create_temp)(_zip_source_win32_read_file_t *, void **, zip_uint32_t);
+    int (*op_rename_temp)(_zip_source_win32_read_file_t *);
+    int (*op_remove)(const void *);
+};
+
+typedef struct _zip_source_win32_file_ops _zip_source_win32_file_ops_t;
+
+zip_source_t *_zip_source_win32_handle_or_name(const void *, void *, zip_uint64_t, zip_int64_t, int, const zip_stat_t *, _zip_source_win32_file_ops_t *, zip_error_t *);
+
 #endif /* zipwin32.h */
