@@ -35,8 +35,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <errno.h>
 #include <stdio.h>
 
-#include "zipwin32.h"
 #include "zipint.h"
+#include "zipwin32.h"
 
 
 ZIP_EXTERN zip_source_t *
