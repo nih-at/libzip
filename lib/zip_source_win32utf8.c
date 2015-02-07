@@ -45,7 +45,7 @@ zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t le
     if (za == NULL)
 	return NULL;
 
-    return zip_source_win32utf8_create(fname, start, len, &za->error);
+    return zip_source_file_create(fname, start, len, &za->error);
 }
 
 
