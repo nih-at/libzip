@@ -33,8 +33,8 @@
 
 #include <zip.h>
 
-zip_t
-windows_open(wchar_t *name, int flags)
+zip_t *
+windows_open(const wchar_t *name, int flags)
 {
     zip_source_t *src;
     zip_t *za;
@@ -45,7 +45,7 @@ windows_open(wchar_t *name, int flags)
     if ((src = zip_source_win32w_create(name, 0, -1, &error)) == NULL) {
 	fprintf(stderr, "can't create source: %s\n", zip_error_strerror(&error));
 	zip_error_fini(&error);
-	return 1;
+	return NULL;
     }
 
     /* open zip archive from source */
@@ -53,7 +53,7 @@ windows_open(wchar_t *name, int flags)
 	fprintf(stderr, "can't open zip from source: %s\n", zip_error_strerror(&error));
 	zip_source_free(src);
 	zip_error_fini(&error);
-	return 1;
+	return NULL;
     }
     zip_error_fini(&error);
 
