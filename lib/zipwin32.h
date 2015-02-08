@@ -2,7 +2,7 @@
 #define _HAD_ZIPWIN32_H
 
 /*
-  zipwin32.h -- Perform the necessary incantations for windows.h
+  zipwin32.h -- internal declarations for Windows.
   Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
