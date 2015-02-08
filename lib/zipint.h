@@ -63,7 +63,12 @@ typedef char bool;
 #define false   0
 #endif
 
+#ifdef HAVE_MOVEFILEEXA
+#include <windows.h>
+#define _zip_rename(s, t)	(!MoveFileExA((s), (t), MOVEFILE_COPY_ALLOWED|MOVEFILE_REPLACE_EXISTING))
+#else
 #define _zip_rename	rename
+#endif
 
 #ifdef _WIN32
 #if defined(HAVE__CLOSE)

@@ -34,10 +34,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/* Target Windows 2000 and later */
-#define WINVER 0x0500
-#define _WIN32_WINNT 0x0500
-#define _WIN32_WINDOWS 0x0500
 #include <windows.h>
 
 /* context for Win32 source */
