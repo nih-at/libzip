@@ -39,9 +39,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef _MSC_VER
-/* MSVC needs <fcntl.h> for _O_BINARY */
+#ifdef _WIN32
+/* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
+#endif
+#ifdef _MSC_VER
 /* MSVC doesn't have S_ISREG */
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 /* MSVC doesn't have mode_t */
