@@ -119,7 +119,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 	HANDLE th;
 
 	th = ops->op_open(ctx);
-	if (th != INVALID_HANDLE_VALUE && GetFileType(th) == FILE_TYPE_DISK) {
+	if (th == INVALID_HANDLE_VALUE || GetFileType(th) == FILE_TYPE_DISK) {
 	    ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
 	}
 	if (th != INVALID_HANDLE_VALUE) {
@@ -345,6 +345,10 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	    }
 	    else {
 		h = ctx->ops->op_open(ctx);
+		if (h == INVALID_HANDLE_VALUE && GetLastError() == ERROR_FILE_NOT_FOUND) {
+		    zip_error_set(&ctx->error, ZIP_ER_READ, ENOENT);
+		    return -1;
+		}
 	    }
 
 	    success = _zip_stat_win32(h, st, ctx);
