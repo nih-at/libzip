@@ -68,7 +68,7 @@ typedef struct _zip_source_win32_read_file _zip_source_win32_read_file_t;
 struct _zip_source_win32_file_ops {
     void *(*op_strdup)(const void *);
     void *(*op_open)(_zip_source_win32_read_file_t *);
-    void *(*op_create_temp)(_zip_source_win32_read_file_t *, void **, zip_uint32_t);
+    void *(*op_create_temp)(_zip_source_win32_read_file_t *, void **, zip_uint32_t, PSECURITY_ATTRIBUTES);
     int (*op_rename_temp)(_zip_source_win32_read_file_t *);
     int (*op_remove)(const void *);
 };

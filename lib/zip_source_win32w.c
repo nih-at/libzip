@@ -40,7 +40,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 static void * _win32_strdup_w(const void *str);
 static HANDLE _win32_open_w(_zip_source_win32_read_file_t *ctx);
-static HANDLE _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value);
+static HANDLE _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa);
 static int _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx);
 static int _win32_remove_w(const void *fname);
 
@@ -89,7 +89,7 @@ _win32_open_w(_zip_source_win32_read_file_t *ctx)
 
 
 static HANDLE
-_win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value)
+_win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa)
 {
     int len;
 
@@ -104,7 +104,7 @@ _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 	return INVALID_HANDLE_VALUE;
     }
 
-    return CreateFileW((const wchar_t *)*temp, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY, NULL);
+    return CreateFileW((const wchar_t *)*temp, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, sa, CREATE_NEW, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY, NULL);
 }
 
 
