@@ -84,7 +84,7 @@ _win32_strdup_a(const void *str)
 static HANDLE
 _win32_open_a(_zip_source_win32_read_file_t *ctx)
 {
-    return CreateFileA(ctx->fname, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    return CreateFileA(ctx->fname, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
 
