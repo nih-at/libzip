@@ -157,7 +157,7 @@ SET(LIBZIP_SOURCES
 IF(WIN32)
   SET(LIBZIP_OPSYS_FILES
     zip_source_win32a.c
-    zip_source_win32file.c
+    zip_source_win32handle.c
     zip_source_win32utf8.c
     zip_source_win32w.c
   )
