@@ -83,6 +83,9 @@ MAN3=	\
 	zip_source_stat.mdoc \
 	zip_source_tell.mdoc \
 	zip_source_tell_write.mdoc \
+	zip_source_win32a.mdoc \
+	zip_source_win32handle.mdoc \
+	zip_source_win32w.mdoc \
 	zip_source_write.mdoc \
 	zip_source_zip.mdoc \
 	zip_stat.mdoc \

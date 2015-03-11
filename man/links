@@ -12,3 +12,6 @@ zip_open zip_open_from_source
 zip_stat zip_stat_index
 zip_source_function zip_source_function_create
 zip_file_strerror zip_strerror
+zip_source_win32a zip_source_win32a_create
+zip_source_win32handle zip_source_win32handle_create
+zip_source_win32w zip_source_win32w_create
