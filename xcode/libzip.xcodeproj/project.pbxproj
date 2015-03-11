@@ -646,6 +646,11 @@
 		4BC386531A1BE04700CDCAAC /* nih-man.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "nih-man.css"; sourceTree = "<group>"; };
 		4BC972001A0A1D85003A2981 /* zip_error_to_data.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_to_data.mdoc; sourceTree = "<group>"; };
 		4BCB434119E9347E0067FAA3 /* zip_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_buffer.c; sourceTree = "<group>"; };
+		4BCD54C41AB05AA90003D379 /* zip_source_win32a.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32a.c; sourceTree = "<group>"; };
+		4BCD54C51AB05AA90003D379 /* zip_source_win32file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32file.c; sourceTree = "<group>"; };
+		4BCD54C61AB05AA90003D379 /* zip_source_win32utf8.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32utf8.c; sourceTree = "<group>"; };
+		4BCD54C71AB05AA90003D379 /* zip_source_win32w.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32w.c; sourceTree = "<group>"; };
+		4BCD54C81AB05AA90003D379 /* zipwin32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zipwin32.h; sourceTree = "<group>"; };
 		4BCD77A71A14E404001A9F55 /* zip_file_get_error.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_get_error.mdoc; sourceTree = "<group>"; };
 		4BCD77A81A14E921001A9F55 /* zip_source_seek_compute_offset.mdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zip_source_seek_compute_offset.mdoc; sourceTree = "<group>"; };
 		4BCD77A91A14ED5C001A9F55 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -1340,6 +1345,11 @@
 				4BDC723D15B1B25E00236D3C /* zip_strerror.c */,
 				4BDC723E15B1B25E00236D3C /* zip_string.c */,
 				4BDC723F15B1B25E00236D3C /* zip_unchange_all.c */,
+				4BCD54C41AB05AA90003D379 /* zip_source_win32a.c */,
+				4BCD54C51AB05AA90003D379 /* zip_source_win32file.c */,
+				4BCD54C61AB05AA90003D379 /* zip_source_win32utf8.c */,
+				4BCD54C71AB05AA90003D379 /* zip_source_win32w.c */,
+				4BCD54C81AB05AA90003D379 /* zipwin32.h */,
 				4BDC724015B1B25E00236D3C /* zip_unchange_archive.c */,
 				4BDC724115B1B25E00236D3C /* zip_unchange_data.c */,
 				4BDC724215B1B25E00236D3C /* zip_unchange.c */,

@@ -49,17 +49,17 @@ static int _zip_win32_error_to_errno(unsigned long win32err);
 static int _zip_stat_win32(void *h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx);
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32file(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len)
+zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len)
 {
     if (za == NULL)
 	return NULL;
 
-    return zip_source_win32file_create(h, start, len, &za->error);
+    return zip_source_win32handle_create(h, start, len, &za->error);
 }
 
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32file_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zip_error_t *error)
+zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zip_error_t *error)
 {
     if (h == INVALID_HANDLE_VALUE || length < -1) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
