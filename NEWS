@@ -1,5 +1,6 @@
 1.0beta1 [2014/12/02]
 
+* Fixed CVE-2015-2331.
 * I/O abstraction layer
 * Support setting last modification time for file.
 * zip_error_t
