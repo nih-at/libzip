@@ -105,7 +105,7 @@ _zip_cdir_new(zip_uint64_t nentry, zip_error_t *error)
 
     if (nentry == 0)
 	cd->entry = NULL;
-    else if ((cd->entry=(zip_entry_t *)malloc(sizeof(*(cd->entry))*(size_t)nentry)) == NULL) {
+    else if ((nentry > SIZE_MAX/sizeof(*(cd->entry))) || (cd->entry=(zip_entry_t *)malloc(sizeof(*(cd->entry))*(size_t)nentry)) == NULL) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	free(cd);
 	return NULL;
