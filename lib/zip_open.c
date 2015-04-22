@@ -259,6 +259,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     zip_uint16_t comment_len;
     zip_uint64_t i, left;
     zip_uint64_t eocd_offset = _zip_buffer_offset(buffer);
+    zip_buffer_t *cd_buffer;
 
     if (_zip_buffer_left(buffer) < EOCDLEN) {
 	/* not enough bytes left for comment */
@@ -329,14 +330,14 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
             _zip_cdir_free(cd);
             return NULL;
         }
-        if ((buffer = _zip_buffer_new(data, cd->size)) == NULL) {
+        if ((cd_buffer = _zip_buffer_new(data, cd->size)) == NULL) {
             zip_error_set(error, ZIP_ER_MEMORY, 0);
             _zip_cdir_free(cd);
             return NULL;
         }
     }
     else {
-        buffer = NULL;
+        cd_buffer = NULL;
         
         if (zip_source_seek(za->src, (zip_int64_t)cd->offset, SEEK_SET) < 0) {
             _zip_error_set_from_source(error, za->src);
@@ -356,9 +357,9 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     i=0;
     while (i<cd->nentry && left > 0) {
         zip_int64_t entry_size;
-	if ((cd->entry[i].orig=_zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, buffer, false, error)) < 0) {
+	if ((cd->entry[i].orig=_zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, error)) < 0) {
 	    _zip_cdir_free(cd);
-            _zip_buffer_free(buffer);
+            _zip_buffer_free(cd_buffer);
 	    return NULL;
 	}
 	i++;
@@ -367,7 +368,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     
     if (i != cd->nentry) {
         zip_error_set(error, ZIP_ER_INCONS, 0);
-        _zip_buffer_free(buffer);
+        _zip_buffer_free(cd_buffer);
         _zip_cdir_free(cd);
         return NULL;
     }
@@ -375,15 +376,15 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     if (za->open_flags & ZIP_CHECKCONS) {
         bool ok;
         
-        if (buffer) {
-            ok = _zip_buffer_eof(buffer);
+        if (cd_buffer) {
+            ok = _zip_buffer_eof(cd_buffer);
         }
         else {
             zip_int64_t offset = zip_source_tell(za->src);
             
             if (offset < 0) {
                 _zip_error_set_from_source(error, za->src);
-                _zip_buffer_free(buffer);
+                _zip_buffer_free(cd_buffer);
                 _zip_cdir_free(cd);
                 return NULL;
             }
@@ -392,12 +393,13 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         
         if (!ok) {
             zip_error_set(error, ZIP_ER_INCONS, 0);
-            _zip_buffer_free(buffer);
+            _zip_buffer_free(cd_buffer);
             _zip_cdir_free(cd);
             return NULL;
         }
     }
 
+    _zip_buffer_free(cd_buffer);
     return cd;
 }
 
