@@ -201,7 +201,7 @@ zip_close(zip_t *za)
 		break;
 	    }
 	    if (zs)
-		zip_source_free(zs);
+	zip_source_free(zs);
 	}
 	else {
 	    zip_uint64_t offset;
@@ -325,12 +325,15 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 		return -1;
 	    }
 	}
-	else
+	else {
+	    /* to have the same reference count to src as in the case where it's not stored */
+	    zip_source_keep(src);
 	    s_store = src;
+	}
 
-	if ((s_crc=zip_source_crc(za, s_store, 0)) == NULL) {
-	    if (s_store != src)
-		zip_source_pop(s_store);
+	s_crc = zip_source_crc(za, s_store, 0);
+	zip_source_free(s_store);
+	if (s_crc == NULL) {
 	    return -1;
 	}
 
@@ -338,23 +341,23 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 	if (de->comp_method != ZIP_CM_STORE && ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
 	    if ((comp_impl=_zip_get_compression_implementation(de->comp_method)) == NULL) {
 		zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-		zip_source_pop(s_crc);
-		if (s_store != src)
-		    zip_source_pop(s_store);
+		zip_source_free(s_crc);
 		return -1;
 	    }
-	    if ((s2=comp_impl(za, s_crc, de->comp_method, ZIP_CODEC_ENCODE)) == NULL) {
-		zip_source_pop(s_crc);
-		if (s_store != src)
-		    zip_source_pop(s_store);
+	    s2 = comp_impl(za, s_crc, de->comp_method, ZIP_CODEC_ENCODE);
+	    zip_source_free(s_crc);
+	    if (s2 == NULL) {
 		return -1;
 	    }
 	}
-	else
+	else {
 	    s2 = s_crc;
+	}
     }
-    else
+    else {
+	zip_source_keep(src);
 	s2 = src;
+    }
 
     if ((offdata = zip_source_tell_write(za->src)) < 0) {
         return -1;
@@ -364,17 +367,8 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 	
     if (zip_source_stat(s2, &st) < 0)
 	ret = -1;
-    
-    while (s2 != src) {
-	zip_source_t *tmp = zip_source_pop(s2);
 
-	if (tmp == NULL) {
-	    _zip_error_set_from_source(&za->error, s2);
-	    ret = -1;
-	    break;
-	}
-	s2 = tmp;
-    }
+    zip_source_free(s2);
 
     if (ret < 0)
 	return -1;

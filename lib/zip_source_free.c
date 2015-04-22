@@ -40,13 +40,6 @@
 ZIP_EXTERN void
 zip_source_free(zip_source_t *src)
 {
-    _zip_source_free_or_pop(src, 1);
-}
-
-
-void
-_zip_source_free_or_pop(zip_source_t *src, int recurse)
-{
     if (src == NULL)
 	return;
 
@@ -71,8 +64,9 @@ _zip_source_free_or_pop(zip_source_t *src, int recurse)
     
     (void)_zip_source_call(src, NULL, 0, ZIP_SOURCE_FREE);
     
-    if (recurse && src->src) {
+    if (src->src) {
         zip_source_free(src->src);
     }
+
     free(src);
 }

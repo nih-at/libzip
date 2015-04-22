@@ -38,8 +38,7 @@
 
 
 zip_source_t *
-_zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags,
-		    zip_uint64_t start, zip_uint64_t len, const char *password)
+_zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_uint64_t len, const char *password)
 {
     zip_compression_implementation comp_impl;
     zip_encryption_implementation enc_impl;
@@ -50,7 +49,7 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
     if (za == NULL)
 	return NULL;
 
-    if (srcza == NULL ||  srcidx >= srcza->nentry) {
+    if (srcza == NULL || srcidx >= srcza->nentry) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
@@ -106,65 +105,68 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	return NULL;
 
     if (st.comp_size == 0) {
-	if ((src=zip_source_buffer(za, NULL, 0, 0)) == NULL)
+	return zip_source_buffer(za, NULL, 0, 0);
+    }
+
+    if (start+len > 0 && enc_impl == NULL && comp_impl == NULL) {
+	struct zip_stat st2;
+	
+	st2.size = len ? len : st.size-start;
+	st2.comp_size = st2.size;
+	st2.comp_method = ZIP_CM_STORE;
+	st2.mtime = st.mtime;
+	st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
+	
+	if ((src = _zip_source_window_new(srcza->src, offset+start, st2.size, &st2, &za->error)) == NULL) {
 	    return NULL;
+	}
     }
     else {
-	if (start+len > 0 && enc_impl == NULL && comp_impl == NULL) {
-	    struct zip_stat st2;
-
-	    st2.size = len ? len : st.size-start;
-	    st2.comp_size = st2.size;
-	    st2.comp_method = ZIP_CM_STORE;
-	    st2.mtime = st.mtime;
-	    st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
-
-            if ((src = _zip_source_window_new(za->src, offset+start, st2.size, &st2, &za->error)) == NULL) {
-                return NULL;
-            }
-	}
-	else {
-        if ((src = _zip_source_window_new(srcza->src, offset, st.comp_size, &st, &za->error)) == NULL) {
-            return NULL;
-        }
-	}
-	
-	if (_zip_source_set_source_archive(src, srcza) < 0) {
-	    zip_source_free(src);
+	if ((src = _zip_source_window_new(srcza->src, offset, st.comp_size, &st, &za->error)) == NULL) {
 	    return NULL;
 	}
+    }
 	
-	if (enc_impl) {
-	    if ((s2=enc_impl(za, src, st.encryption_method, 0, password)) == NULL) {
-		zip_source_free(src);
-		return NULL;
-	    }
-	    src = s2;
-	}
-	if (comp_impl) {
-	    if ((s2=comp_impl(za, src, st.comp_method, 0)) == NULL) {
-		zip_source_free(src);
-		return NULL;
-	    }
-	    src = s2;
-	}
-	if (((flags & ZIP_FL_COMPRESSED) == 0 || st.comp_method == ZIP_CM_STORE)
-	    && (len == 0 || len == st.comp_size)) {
-	    /* when reading the whole file, check for crc errors */
-	    if ((s2=zip_source_crc(za, src, 1)) == NULL) {
-		zip_source_free(src);
-		return NULL;
-	    }
-	    src = s2;
-	}
+    if (_zip_source_set_source_archive(src, srcza) < 0) {
+	zip_source_free(src);
+	return NULL;
+    }
 
-	if (start+len > 0 && (comp_impl || enc_impl)) {
-	    if ((s2=zip_source_window(za, src, start, len ? len : st.size-start)) == NULL) {
-		zip_source_free(src);
-		return NULL;
-	    }
-	    src = s2;
+    /* creating a layered source calls zip_keep() on the lower layer, so we free it */
+	
+    if (enc_impl) {
+	s2 = enc_impl(za, src, st.encryption_method, 0, password);
+	zip_source_free(src);
+	if (s2 == NULL) {
+	    return NULL;
 	}
+	src = s2;
+    }
+    if (comp_impl) {
+	s2 = comp_impl(za, src, st.comp_method, 0);
+	zip_source_free(src);
+	if (s2 == NULL) {
+	    return NULL;
+	}
+	src = s2;
+    }
+    if (((flags & ZIP_FL_COMPRESSED) == 0 || st.comp_method == ZIP_CM_STORE) && (len == 0 || len == st.comp_size)) {
+	/* when reading the whole file, check for CRC errors */
+	s2 = zip_source_crc(za, src, 1);
+	zip_source_free(src);
+	if (s2 == NULL) {
+	    return NULL;
+	}
+	src = s2;
+    }
+
+    if (start+len > 0 && (comp_impl || enc_impl)) {
+	s2 = zip_source_window(za, src, start, len ? len : st.size-start);
+	zip_source_free(src);
+	if (s2 == NULL) {
+	    return NULL;
+	}
+	src = s2;
     }
 
     return src;

@@ -220,13 +220,6 @@ zip_int64_t zip_source_supports(zip_source_t *src);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
 
 
-/* This function will probably remain private.  It is not needed to
-   implement compression/encryption routines.  (We should probably
-   rename it to _zip_source_pop.) */
-
-zip_source_t *zip_source_pop(zip_source_t *);
-
-
 /* error source for layered sources */
 
 enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
@@ -526,7 +519,6 @@ void _zip_set_open_error(int *zep, const zip_error_t *err, int ze);
 zip_int64_t _zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command);
 zip_source_t *_zip_source_file_or_p(const char *, FILE *, zip_uint64_t, zip_int64_t, int, const zip_stat_t *, zip_error_t *error);
 void _zip_source_invalidate(zip_source_t *src);
-void _zip_source_free_or_pop(zip_source_t *src, int recurse);
 zip_source_t *_zip_source_new(zip_error_t *error);
 int _zip_source_set_source_archive(zip_source_t *, zip_t *);
 zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_error_t *error);
