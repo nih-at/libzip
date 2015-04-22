@@ -25,7 +25,7 @@ file incons-ef-local-incomplete3.zzip incons-ef-local-incomplete3.zip incons-ef-
 file incons-ef-local-incomplete4.zzip incons-ef-local-incomplete4.zip incons-ef-local-incomplete4.zip
 file incons-ef-local-size.zzip incons-ef-local-size.zip incons-ef-local-size.zip
 file incons-eocd-magic-bad.zzip incons-eocd-magic-bad.zip incons-eocd-magic-bad.zip
-file incons-file-count.zzip incons-file-count.zip incons-file-count.zip
+file incons-file-count-high.zzip incons-file-count-high.zip incons-file-count-high.zip
 file incons-file-count-low.zzip incons-file-count-low.zip incons-file-count-low.zip
 file incons-local-compression-method.zzip incons-local-compression-method.zip incons-local-compression-method.zip
 file incons-local-compsize-larger.zzip incons-local-compsize-larger.zip incons-local-compsize-larger.zip
@@ -37,7 +37,7 @@ file incons-local-filename-short.zzip incons-local-filename-short.zip incons-loc
 file incons-local-filename.zzip incons-local-filename.zip incons-local-filename.zip
 file incons-local-magic-bad.zzip incons-local-magic-bad.zip incons-local-magic-bad.zip
 file incons-local-size-larger.zzip incons-local-size-larger.zip incons-local-size-larger.zip
-args -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-incomplete1.zzip incons-ef-local-incomplete2.zzip incons-ef-local-incomplete3.zzip incons-ef-local-incomplete4.zzip incons-ef-local-size.zzip incons-eocd-magic-bad.zzip incons-file-count.zzip incons-file-count-low.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip
+args -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-incomplete1.zzip incons-ef-local-incomplete2.zzip incons-ef-local-incomplete3.zzip incons-ef-local-incomplete4.zzip incons-ef-local-size.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip
 return 1
 stdout opening 'incons-archive-comment-longer.zzip' returned error 21
 stdout opening 'incons-archive-comment-shorter.zzip' returned error 21
@@ -66,7 +66,7 @@ stdout opening 'incons-ef-local-incomplete3.zzip' returned error 21
 stdout opening 'incons-ef-local-incomplete4.zzip' succeeded, 1 entries
 stdout opening 'incons-ef-local-size.zzip' returned error 21
 stdout opening 'incons-eocd-magic-bad.zzip' returned error 19
-stdout opening 'incons-file-count.zzip' returned error 21
+stdout opening 'incons-file-count-high.zzip' returned error 21
 stdout opening 'incons-file-count-low.zzip' returned error 21
 stdout opening 'incons-local-compression-method.zzip' returned error 21
 stdout opening 'incons-local-compsize-larger.zzip' returned error 21

@@ -63,7 +63,7 @@ EXTRA_DIST= \
 	incons-ef-local-incomplete4.zip \
 	incons-ef-local-size.zip \
 	incons-eocd-magic-bad.zip \
-	incons-file-count.zip \
+	incons-file-count-high.zip \
 	incons-file-count-low.zip \
 	incons-local-compression-method.zip \
 	incons-local-compsize-larger.zip \
@@ -162,6 +162,7 @@ TESTS= \
 	open_empty.test \
 	open_empty_2.test \
 	open_extrabytes.test \
+	open_file_count.test \
 	open_filename_duplicate.test \
 	open_filename_duplicate_consistency.test \
 	open_filename_duplicate_empty.test \
