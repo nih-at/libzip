@@ -110,6 +110,7 @@ use_data(void *data, size_t size, const char *archive)
     }
     if (fwrite(data, 1, size, fp) < size) {
 	fprintf(stderr, "can't write %s: %s\n", archive, strerror(errno));
+	fclose(fp);
 	return -1;
     }
     if (fclose(fp) < 0) {
