@@ -144,6 +144,7 @@ buffer_from_file(const char *fname, int flags, zip_error_t *error)
                 buffer_free(buffer);
                 return NULL;
             }
+	    fclose(f);
         }
     }
     
