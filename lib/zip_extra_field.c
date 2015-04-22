@@ -310,7 +310,11 @@ _zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags)
 {
     zip_uint8_t b[4];
     zip_buffer_t *buffer = _zip_buffer_new(b, sizeof(b));
-    
+
+    if (buffer == NULL) {
+	return -1;
+    }
+
     for (; ef; ef=ef->next) {
 	if (ef->flags & flags & ZIP_EF_BOTH) {
             _zip_buffer_set_offset(buffer, 0);
