@@ -65,6 +65,7 @@ EXTRA_DIST= \
 	incons-eocd-magic-bad.zip \
 	incons-file-count-high.zip \
 	incons-file-count-low.zip \
+	incons-file-count-overflow.zip \
 	incons-local-compression-method.zip \
 	incons-local-compsize-larger.zip \
 	incons-local-compsize-smaller.zip \

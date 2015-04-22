@@ -403,7 +403,7 @@ list_zip(const char *name, struct archive *a)
     if (a->nentry == 0)
 	a->entry = NULL;
     else {
-	if ((a->entry=(struct entry *)malloc(sizeof(a->entry[0]) * a->nentry)) == NULL) {
+	if ((a->nentry > SIZE_MAX/sizeof(a->entry[0])) || (a->entry=(struct entry *)malloc(sizeof(a->entry[0]) * a->nentry)) == NULL) {
 	    fprintf(stderr, "%s: malloc failure\n", prg);
 	    exit(1);
 	}
