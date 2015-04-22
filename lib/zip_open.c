@@ -214,6 +214,9 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error)
     
     if ((cdir = _zip_find_central_dir(za, len)) == NULL) {
         _zip_error_copy(error, &za->error);
+	/* keep src so discard does not get rid of it */
+	zip_source_keep(src);
+	zip_discard(za);
 	return NULL;
     }
 
