@@ -351,6 +351,10 @@ list_directory(const char *name, struct archive *a)
 	case FTS_F:
 	    if (a->nentry >= nalloc) {
 		nalloc += 16;
+		if (nalloc > SIZE_MAX/sizeof(a->entry[0])) {
+		    fprintf(stderr, "%s: malloc failure\n", prg);
+		    exit(1);
+		}
 		a->entry = realloc(a->entry, sizeof(a->entry[0])*nalloc);
 		if (a->entry == NULL) {
 		    fprintf(stderr, "%s: malloc failure\n", prg);
