@@ -783,6 +783,7 @@ write_memory_src_to_file(const char *archive, zip_source_t *src)
     if (fwrite(buf, zst.size, 1, fp) < 1) {
 	fprintf(stderr, "fwrite failed: %s\n", strerror(errno));
 	free(buf);
+	fclose(fp);
 	return -1;
     }
     free(buf);
