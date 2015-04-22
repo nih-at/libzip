@@ -72,6 +72,7 @@ get_data(void **datap, size_t *sizep, const char *archive)
     if (fread(*datap, 1, (size_t)st.st_size, fp) < (size_t)st.st_size) {
 	free(*datap);
 	fprintf(stderr, "can't read %s: %s\n", archive, strerror(errno));
+	fclose(fp);
 	return -1;
     }
 
