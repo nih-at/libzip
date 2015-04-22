@@ -62,36 +62,6 @@ _zip_cdir_free(zip_cdir_t *cd)
 }
 
 
-int
-_zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t nentry, zip_error_t *error)
-{
-    zip_entry_t *entry;
-    zip_uint64_t i;
-
-    if (nentry < cd->nentry_alloc) {
-	zip_error_set(error, ZIP_ER_INTERNAL, 0);
-	return -1;
-    }
-
-    if (nentry == cd->nentry_alloc)
-	return 0;
-
-    if ((entry=((zip_entry_t *)
-		realloc(cd->entry, sizeof(*(cd->entry))*(size_t)nentry))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return -1;
-    }
-    
-    for (i=cd->nentry_alloc; i<nentry; i++)
-	_zip_entry_init(entry+i);
-
-    cd->nentry_alloc = nentry;
-    cd->entry = entry;
-
-    return 0;
-}
-
-
 zip_cdir_t *
 _zip_cdir_new(zip_uint64_t nentry, zip_error_t *error)
 {
