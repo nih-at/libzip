@@ -628,6 +628,7 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 	}
 	if (fread(buf, (size_t)st.st_size, 1, fp) < 1) {
 	    free(buf);
+	    fclose(fp);
 	    *err = ZIP_ER_READ;
 	    return NULL;
 	}
