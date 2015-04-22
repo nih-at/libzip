@@ -74,6 +74,7 @@ zip_open(const char *fn, int _flags, int *zep)
     }
 
     if ((za = zip_open_from_source(src, _flags, &error)) == NULL) {
+	zip_source_free(src);
 	_zip_set_open_error(zep, &error, 0);
 	zip_error_fini(&error);
 	return NULL;
