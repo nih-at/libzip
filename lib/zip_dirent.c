@@ -579,9 +579,11 @@ _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error)
     
     if (!_zip_buffer_eof(buffer)) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
+	_zip_buffer_free(buffer);
         return -1;
     }
 
+    _zip_buffer_free(buffer);
     return size;
 }
 
