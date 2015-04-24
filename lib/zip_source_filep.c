@@ -57,7 +57,6 @@ struct read_file {
     /* reading */
     char *fname;            /* name of file to read from */
     FILE *f;                /* file to read from */
-    int closep;             /* whether to close f on ZIP_CMD_FREE */
     struct zip_stat st;     /* stat information passed in */
     zip_uint64_t start;     /* start offset of data to read */
     zip_uint64_t end;       /* end offset of data to read, 0 for up to EOF */
@@ -123,7 +122,6 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
     ctx->f = file;
     ctx->start = start;
     ctx->end = (len < 0 ? 0 : start+(zip_uint64_t)len);
-    ctx->closep = 1;
     if (st) {
 	memcpy(&ctx->st, st, sizeof(ctx->st));
         ctx->st.name = NULL;
@@ -254,7 +252,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
         case ZIP_SOURCE_FREE:
             free(ctx->fname);
 	    free(ctx->tmpname);
-            if (ctx->closep && ctx->f)
+            if (ctx->f)
                 fclose(ctx->f);
             free(ctx);
             return 0;
@@ -267,7 +265,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
                 }
             }
             
-            if (ctx->closep && ctx->start > 0) {
+            if (ctx->start > 0) {
                 if (_zip_fseek_u(ctx->f, ctx->start, SEEK_SET, &ctx->error) < 0) {
                     return -1;
                 }
@@ -288,12 +286,6 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
             
             if (n > SIZE_MAX)
                 n = SIZE_MAX;
-
-            if (!ctx->closep) {
-		if (_zip_fseek_u(ctx->f, ctx->current, SEEK_SET, &ctx->error) < 0) {
-		    return -1;
-		}
-            }
 
             if ((i=fread(buf, 1, (size_t)n, ctx->f)) == 0) {
                 if (ferror(ctx->f)) {
@@ -330,7 +322,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
 	    if (args == NULL)
 		return -1;
             
-            need_seek = ctx->closep;
+            need_seek = 1;
             
             switch (args->whence) {
                 case SEEK_SET:
