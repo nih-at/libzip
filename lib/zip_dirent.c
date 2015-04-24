@@ -166,12 +166,16 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     
     if (!_zip_buffer_ok(buffer)) {
         zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+        _zip_buffer_free(buffer);
         return -1;
     }
 
     if (_zip_write(za, _zip_buffer_data(buffer), _zip_buffer_offset(buffer)) < 0) {
+        _zip_buffer_free(buffer);
 	return -1;
     }
+
+    _zip_buffer_free(buffer);
 
     if (comment) {
 	if (_zip_write(za, comment->raw, comment->length) < 0) {
@@ -724,6 +728,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
         
         if (!_zip_buffer_ok(ef_buffer)) {
             zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+            _zip_buffer_free(ef_buffer);
             return -1;
         }
 
