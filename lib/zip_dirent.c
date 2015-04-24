@@ -210,12 +210,18 @@ _zip_dirent_clone(const zip_dirent_t *sde)
 void
 _zip_dirent_finalize(zip_dirent_t *zde)
 {
-    if (!zde->cloned || zde->changed & ZIP_DIRENT_FILENAME)
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_FILENAME) {
 	_zip_string_free(zde->filename);
-    if (!zde->cloned || zde->changed & ZIP_DIRENT_EXTRA_FIELD)
+	zde->filename = NULL;
+    }
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_EXTRA_FIELD) {
 	_zip_ef_free(zde->extra_fields);
-    if (!zde->cloned || zde->changed & ZIP_DIRENT_COMMENT)
+	zde->extra_fields = NULL;
+    }
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_COMMENT) {
 	_zip_string_free(zde->comment);
+	zde->comment = NULL;
+    }
 }
 
 

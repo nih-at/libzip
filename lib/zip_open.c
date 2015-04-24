@@ -421,6 +421,7 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
     zip_uint64_t min, max, j;
     struct zip_dirent temp;
 
+    _zip_dirent_init(&temp);
     if (cd->nentry) {
 	max = cd->entry[0].orig->offset;
 	min = cd->entry[0].orig->offset;
@@ -450,8 +451,10 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
 	}
 	
-	if (_zip_dirent_read(&temp, za->src, NULL, true, error) == -1)
+	if (_zip_dirent_read(&temp, za->src, NULL, true, error) == -1) {
+	    _zip_dirent_finalize(&temp);
 	    return -1;
+	}
 	
 	if (_zip_headercomp(cd->entry[i].orig, &temp) != 0) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
