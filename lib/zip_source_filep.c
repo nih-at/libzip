@@ -92,12 +92,12 @@ zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_
 	return NULL;
     }
 
-    return _zip_source_file_or_p(NULL, file, start, length, 1, NULL, error);
+    return _zip_source_file_or_p(NULL, file, start, length, NULL, error);
 }
 
 
 zip_source_t *
-_zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, zip_error_t *error)
+_zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_error_t *error)
 {
     struct read_file *ctx;
     zip_source_t *zs;
@@ -123,7 +123,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
     ctx->f = file;
     ctx->start = start;
     ctx->end = (len < 0 ? 0 : start+(zip_uint64_t)len);
-    ctx->closep = ctx->fname ? 1 : closep;
+    ctx->closep = 1;
     if (st) {
 	memcpy(&ctx->st, st, sizeof(ctx->st));
         ctx->st.name = NULL;

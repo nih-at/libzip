@@ -56,5 +56,5 @@ zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length
 	return NULL;
     }
 
-    return _zip_source_file_or_p(fname, NULL, start, length, 1, NULL, error);
+    return _zip_source_file_or_p(fname, NULL, start, length, NULL, error);
 }
