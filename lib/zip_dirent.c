@@ -746,6 +746,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
 
     if ((buffer = _zip_buffer_new(buf, sizeof(buf))) == NULL) {
         zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+        _zip_ef_free(ef);
         return -1;
     }
     
