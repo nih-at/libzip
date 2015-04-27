@@ -163,6 +163,7 @@ create_temp_output(struct read_file *ctx)
 {
     char *temp;
     int tfd;
+    mode_t mask;
     FILE *tfp;
     
     if ((temp=(char *)malloc(strlen(ctx->fname)+8)) == NULL) {
@@ -170,13 +171,16 @@ create_temp_output(struct read_file *ctx)
 	return -1;
     }
     sprintf(temp, "%s.XXXXXX", ctx->fname);
-    
+
+    mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
     if ((tfd=mkstemp(temp)) == -1) {
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+	umask(mask);
         free(temp);
         return -1;
     }
-    
+    umask(mask);
+
     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
         close(tfd);
