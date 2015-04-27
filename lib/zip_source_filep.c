@@ -309,7 +309,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
                 fclose(ctx->fout);
                 ctx->fout = NULL;
             }
-            remove(ctx->tmpname);
+            (void)remove(ctx->tmpname);
 	    free(ctx->tmpname);
             ctx->tmpname = NULL;
             return 0;
