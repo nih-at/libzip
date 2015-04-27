@@ -142,6 +142,7 @@ buffer_from_file(const char *fname, int flags, zip_error_t *error)
         else {
             if (buffer_read_file(buffer, f, error) < 0) {
                 buffer_free(buffer);
+		fclose(f);
                 return NULL;
             }
 	    fclose(f);
