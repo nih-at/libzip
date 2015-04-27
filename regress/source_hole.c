@@ -530,7 +530,7 @@ source_hole_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t comma
             ctx->in = buffer_new();
             buffer_free(ctx->out);
             ctx->out = NULL;
-            remove(ctx->fname);
+            (void)remove(ctx->fname);
             return 0;
             
         case ZIP_SOURCE_ROLLBACK_WRITE:
