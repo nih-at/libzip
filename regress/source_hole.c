@@ -228,7 +228,8 @@ buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error)
     buffer->size = get_u64(b+12);
     
     buffer->nfragments = (buffer->size + buffer->fragment_size - 1) / buffer->fragment_size;
-    if ((buffer->fragment = (zip_uint8_t **)malloc(sizeof(buffer->fragment[0]) * buffer->nfragments)) == NULL) {
+    if ((buffer->nfragments > SIZE_MAX/sizeof(buffer->fragment[0]))
+	|| ((buffer->fragment = (zip_uint8_t **)malloc(sizeof(buffer->fragment[0]) * buffer->nfragments)) == NULL)) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return -1;
     }
