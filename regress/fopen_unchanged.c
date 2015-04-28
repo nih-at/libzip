@@ -71,13 +71,15 @@ main(int argc, char *argv[])
     }
 
     if (zip_add(za, file, zs) == -1) {
-	zip_source_free(zs);
 	fprintf(stderr, "can't add file '%s': %s\n", file, zip_strerror(za));
+	(void)zip_source_free(zs);
+	(void)zip_close(za);
 	return 1;
     }
 
     if (zip_fopen(za, file, ZIP_FL_UNCHANGED) == NULL) {
 	fprintf(stderr, "can't zip_fopen file '%s': %s\n", file, zip_strerror(za));
+	(void)zip_discard(za);
 	return 1;
     }
 
