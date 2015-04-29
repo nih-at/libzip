@@ -528,7 +528,7 @@ zin_close(int argc, char *argv[]) {
 
     idx = strtoull(argv[0], NULL, 10);
     if (idx >= z_in_count) {
-	fprintf(stderr, "invalid argument '%d', only %d zip sources open\n", idx, z_in_count);
+	fprintf(stderr, "invalid argument '%" PRIu64 "', only %d zip sources open\n", idx, z_in_count);
 	return -1;
     }
     if (zip_close(z_in[idx]) < 0) {
