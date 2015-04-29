@@ -1,11 +1,13 @@
-1.0beta1 [2014/12/02]
+1.0 [2015/04/29]
 
-* Fixed CVE-2015-2331.
-* I/O abstraction layer
-* Support setting last modification time for file.
-* zip_error_t
-* more typedefs for structs
-* removed support for torrentzip
+* Implemented an I/O abstraction layer.
+* Added support for native Windows API for files.
+* Added support for setting the last modification time for a file.
+* Added a new type zip_error_t for errors.
+* Added more typedefs for structs.
+* Torrentzip support was removed.
+* CVE-2015-2331 was fixed.
+* Addressed all Coverity CIDs.
 
 0.11.2 [2013/12/19]
 

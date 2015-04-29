@@ -15,7 +15,7 @@ file API-CHANGES.
   For generic installation instructions, see file `INSTALL'.
 Additionally, you'll need zlib (at least version 1.1.2). It comes
 with most operating systems nowadays, or you can get it at
-	http://www.gzip.org/zlib/
+	http://www.zlib.net/
 
   When using a static Windows library, you need to define ZIP_STATIC
 when compiling packages using libzip.

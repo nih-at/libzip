@@ -7,7 +7,7 @@ include_HEADERS = zip.h
 nodist_libinclude_HEADERS = zipconf.h
 
 # also update CMakeLists.txt when changing version
-libzip_la_LDFLAGS=-no-undefined -version-info 3:0:1
+libzip_la_LDFLAGS=-no-undefined -version-info 4:0:0
 libzip_la_LIBADD=@LTLIBOBJS@
 
 libzip_la_SOURCES=\
