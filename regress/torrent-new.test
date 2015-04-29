@@ -1,6 +1,0 @@
-# convert archive to torrentzip format
-program ../src/ziptorrent
-return 0
-args -v test.tzip
-file test.tzip testnottorrent.zip testtorrent.tzip
-stdout test.tzip: torrentzipping

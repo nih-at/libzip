@@ -1,6 +1,0 @@
-# try converting archive to torrentzip that's already in that format
-program ../src/ziptorrent
-return 0
-args -v test.tzip
-file test.tzip testtorrent.tzip testtorrent.tzip
-stdout test.tzip: already torrentzipped
