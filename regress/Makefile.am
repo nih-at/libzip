@@ -98,6 +98,7 @@ EXTRA_DIST= \
 	testcomment13.zip \
 	testcommentremoved.zip \
 	testdeflated.zip \
+	testdeflated2.zip \
 	testempty.zip \
 	testextrabytes.zip \
 	testfile.txt \
@@ -129,6 +130,7 @@ TESTS= \
 	add_from_stdin.test \
 	add_from_zip_closed.test \
 	add_from_zip_deflated.test \
+	add_from_zip_deflated2.test \
 	add_from_zip_partial_deflated.test \
 	add_from_zip_partial_stored.test \
 	add_from_zip_stored.test \
