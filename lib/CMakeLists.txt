@@ -128,7 +128,6 @@ SET(LIBZIP_SOURCES
   zip_source_layered.c
   zip_source_open.c
   zip_source_pkware.c
-  zip_source_pop.c
   zip_source_read.c
   zip_source_remove.c
   zip_source_rollback_write.c
