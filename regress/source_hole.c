@@ -251,6 +251,10 @@ buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error)
         }
         
         if (memcmp(b, MARK_DATA, 4) == 0) {
+            if (buffer->fragment_size > SIZE_MAX) {
+                zip_error_set(error, ZIP_ER_MEMORY, 0);
+                return -1;
+            }
             if ((buffer->fragment[i] = (zip_uint8_t *)malloc(buffer->fragment_size)) == NULL) {
                 zip_error_set(error, ZIP_ER_MEMORY, 0);
                 return -1;
