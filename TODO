@@ -44,9 +44,7 @@ Features
 * delete all extra fields during zip_replace()
 * function to copy file from one archive to another
 * set O_CLOEXEC flag after fopen and mkstemp
-* Windows specific I/O source (to be written by a Windows expert)
 
-* I/O methods
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
   . read/set ASCII file flag? (wiz: more general options?)
@@ -79,6 +77,7 @@ Bugs
 * fix inconsistent usage of valid flags (not checked in many places)
 * cdr == NULL -> ER_NOENT vs. idx > cdir->nentry -> ER_INVAL inconsistent (still there?)
 
+
 Cleanup
 =======
 * use bool
@@ -87,13 +86,11 @@ Cleanup
 * move compat refs from zipint.h to own file, and include that in zipint.h and src
 * get rid of zip_get_{compression,encryption}_implementation
 * use zip_*int*_t internally
-* clean up lint(1) warnings?
 
 
 Analysis
 ========
 * pass through coverity
-* fix Windows warnings (mail: "errors during build the libzip with VisualStudio 2010")
 
 
 Infrastructure
@@ -165,6 +162,5 @@ D re-implement fix for OS X sandboxing (zip_archive_set_tempdir).
 
 * document: zip_source_write: length can't be > ZIP_INT64_MAX
 * document: ZIP_SOURCE_CLOSE implementation can't return error
-* document ZIP_RDONLY
 * keep error codes in man pages in sync
 * document error codes in new man pages
