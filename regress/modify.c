@@ -70,7 +70,8 @@ static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
 static zip_t *read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp);
 static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
 
-zip_t *za, *z_in;
+zip_t *za, *z_in[16];
+int z_in_count;
 zip_flags_t stat_flags;
 
 static int
@@ -135,24 +136,25 @@ add_from_zip(int argc, char *argv[]) {
     idx = strtoull(argv[2], NULL, 10);
     zip_uint64_t start = strtoull(argv[3], NULL, 10);
     zip_int64_t len = strtoll(argv[4], NULL, 10);
-    if ((z_in=zip_open(argv[1], ZIP_CHECKCONS, &err)) == NULL) {
+    if ((z_in[z_in_count]=zip_open(argv[1], ZIP_CHECKCONS, &err)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, err);
 	fprintf(stderr, "can't open zip archive '%s': %s\n", argv[1], zip_error_strerror(&error));
 	zip_error_fini(&error);
 	return -1;
     }
-    if ((zs=zip_source_zip(za, z_in, idx, 0, start, len)) == NULL) {
+    if ((zs=zip_source_zip(za, z_in[z_in_count], idx, 0, start, len)) == NULL) {
 	fprintf(stderr, "error creating file source from '%s' index '%" PRIu64 "': %s\n", argv[1], idx, zip_strerror(za));
-	zip_close(z_in);
+	zip_close(z_in[z_in_count]);
 	return -1;
     }
     if (zip_add(za, argv[0], zs) == -1) {
 	fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
 	zip_source_free(zs);
-	zip_close(z_in);
+	zip_close(z_in[z_in_count]);
 	return -1;
     }
+    z_in_count++;
     return 0;
 }
 
@@ -522,10 +524,20 @@ unchange_all(int argc, char *argv[]) {
 
 static int
 zin_close(int argc, char *argv[]) {
-    if (zip_close(z_in) < 0) {
-	fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in));
+    zip_uint64_t idx;
+
+    idx = strtoull(argv[0], NULL, 10);
+    if (idx >= z_in_count) {
+	fprintf(stderr, "invalid argument '%d', only %d zip sources open\n", idx, z_in_count);
 	return -1;
     }
+    if (zip_close(z_in[idx]) < 0) {
+	fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in[idx]));
+	return -1;
+    }
+    z_in[idx] = z_in[z_in_count];
+    z_in_count--;
+
     return 0;
 }
 
@@ -821,7 +833,7 @@ dispatch_table_t dispatch_table[] = {
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
     { "stat", 1, "index", "print information about entry", zstat },
     { "unchange_all", 0, "", "revert all changes", unchange_all },
-    { "zin_close", 0, "", "close input zip_source (for internal tests)", zin_close }
+    { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
 };
 
 static int
@@ -882,7 +894,7 @@ main(int argc, char *argv[])
 {
     const char *archive;
     zip_source_t *memory_src;
-    int c, arg, err, flags;
+    int c, arg, err, flags, i;
     const char *prg;
     source_type_t source_type = SOURCE_TYPE_NONE;
 
@@ -977,6 +989,12 @@ main(int argc, char *argv[])
 	    err = 1;
 	}
 	zip_source_free(memory_src);
+    }
+
+    for (i=0; i<z_in_count; i++) {
+	if (zip_close(z_in[i]) < 0) {
+	    err = 1;
+	}
     }
 
     return err;
