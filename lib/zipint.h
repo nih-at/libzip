@@ -150,10 +150,6 @@ int _zip_mkstemp(char *);
 #define DATADES_MAGIC "PK\7\8"
 #define EOCD64LOC_MAGIC "PK\6\7"
 #define EOCD64_MAGIC  "PK\6\6"
-#define TORRENT_SIG	"TORRENTZIPPED-"
-#define TORRENT_SIG_LEN	14
-#define TORRENT_CRC_LEN 8
-#define TORRENT_MEM_LEVEL	8
 #define CDENTRYSIZE         46u
 #define LENTRYSIZE          30
 #define MAXCOMLEN        65536
@@ -410,11 +406,11 @@ struct zip_buffer {
     zip_uint64_t offset;
 };
 
-/* which files to write, and in which order (name is for torrentzip sorting) */
+/* which files to write in which order */
 
 struct zip_filelist {
     zip_uint64_t idx;
-    const char *name;
+// TODO    const char *name;
 };
 
 typedef struct zip_filelist zip_filelist_t;
@@ -469,7 +465,6 @@ bool _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
 zip_dirent_t *_zip_dirent_new(void);
 zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_error_t *error);
 zip_int32_t _zip_dirent_size(zip_source_t *src, zip_uint16_t, zip_error_t *);
-void _zip_dirent_torrent_normalize(zip_dirent_t *);
 int _zip_dirent_write(zip_t *za, zip_dirent_t *dirent, zip_flags_t flags);
 
 zip_extra_field_t *_zip_ef_clone(const zip_extra_field_t *, zip_error_t *);

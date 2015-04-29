@@ -33,6 +33,7 @@ EXTRA_DIST= \
 	encrypt_plus_extra_modified_c.zip \
 	encrypt_plus_extra_modified_l.zip \
 	filename_duplicate.zip \
+	filename_duplicate_empty.zip \
 	filename_empty.zip \
 	fileorder.zip \
 	firstsecond.zip \
@@ -105,10 +106,8 @@ EXTRA_DIST= \
 	testfile-plus-extra.zip \
 	testfile-UTF8.zip \
 	testfile2014.zip \
-	testnottorrent.zip \
 	teststdin.zip \
 	teststored.zip \
-	testtorrent.tzip \
 	utf-8-standardization-input.zip \
 	utf-8-standardization-output.zip \
 	zip64.zip
@@ -206,16 +205,13 @@ TESTS= \
 	stat_index_utf8_strict.test \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
-	torrent-already.test \
-	torrent-new.test \
 	utf-8-standardization.test \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
 XFAIL_TESTS= \
 	open_filename_duplicate_consistency.test \
-	open_filename_duplicate_empty_consistency.test \
-	torrent-new.test
+	open_filename_duplicate_empty_consistency.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la

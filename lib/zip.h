@@ -91,7 +91,6 @@ extern "C" {
 
 /* archive global flags flags */
 
-#define ZIP_AFL_TORRENT		1u /* torrent zipped */
 #define ZIP_AFL_RDONLY		2u /* read only -- cannot be cleared */
 
 

@@ -598,59 +598,6 @@ _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error)
 }
 
 
-/* _zip_dirent_torrent_normalize(de);
-   Set values suitable for torrentzip.
-*/
-
-void
-_zip_dirent_torrent_normalize(zip_dirent_t *de)
-{
-    static struct tm torrenttime;
-    static time_t last_mod = 0;
-
-    if (last_mod == 0) {
-#ifdef HAVE_STRUCT_TM_TM_ZONE
-	time_t now;
-	struct tm *l;
-#endif
-
-	torrenttime.tm_sec = 0;
-	torrenttime.tm_min = 32;
-	torrenttime.tm_hour = 23;
-	torrenttime.tm_mday = 24;
-	torrenttime.tm_mon = 11;
-	torrenttime.tm_year = 96;
-	torrenttime.tm_wday = 0;
-	torrenttime.tm_yday = 0;
-	torrenttime.tm_isdst = 0;
-
-#ifdef HAVE_STRUCT_TM_TM_ZONE
-	time(&now);
-	l = localtime(&now);
-	torrenttime.tm_gmtoff = l->tm_gmtoff;
-	torrenttime.tm_zone = l->tm_zone;
-#endif
-
-	last_mod = mktime(&torrenttime);
-    }
-    
-    de->version_madeby = 0;
-    de->version_needed = 20; /* 2.0 */
-    de->bitflags = 2; /* maximum compression */
-    de->comp_method = ZIP_CM_DEFLATE;
-    de->last_mod = last_mod;
-
-    de->disk_number = 0;
-    de->int_attrib = 0;
-    de->ext_attrib = 0;
-
-    _zip_ef_free(de->extra_fields);
-    de->extra_fields = NULL;
-    _zip_string_free(de->comment);
-    de->comment = NULL;
-}
-
-
 /* _zip_dirent_write
    Writes zip directory entry.
 

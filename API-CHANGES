@@ -43,6 +43,10 @@ typedef struct zip_stat zip_stat_t;
 This means you can use "zip_t" instead of "struct zip", etc.
 
 
+** torrentzip support removed
+
+torrentzip depends on a particular zlib version which is by now quite
+old.
 
 * 0.11
 

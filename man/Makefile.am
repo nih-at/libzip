@@ -5,7 +5,7 @@ man3_MANS=${MAN3:.mdoc=.${MANFMT}}
 DISTCLEANFILES=${HTML}
 EXTRA_DIST=${MANDOC} ${MAN} CMakeLists.txt handle_links links
 
-MAN1=	zipcmp.mdoc zipmerge.mdoc ziptorrent.mdoc
+MAN1=	zipcmp.mdoc zipmerge.mdoc
 MAN3=	\
 	ZIP_SOURCE_GET_ARGS.mdoc \
 	libzip.mdoc \

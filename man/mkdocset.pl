@@ -12,7 +12,7 @@ my $SRCDIR = $ENV{SRCDIR} // '.';
 my @files = @ARGV;
 
 my $docset = 'at.nih.libzip.docset';
-my @sh_nodes = qw(zipcmp zipmerge ziptorrent);
+my @sh_nodes = qw(zipcmp zipmerge);
 
 (system('rm', '-rf', $docset) == 0) or die "can't remove old version of docset: $!";
 

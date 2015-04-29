@@ -49,7 +49,6 @@ typedef enum {
 } exists_t;
 static zip_t *_zip_allocate_new(zip_source_t *src, unsigned int flags, zip_error_t *error);
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cdir, zip_error_t *error);
-static void _zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir);
 static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len);
 static exists_t _zip_file_exists(zip_source_t *src, zip_error_t *error);
 static int _zip_headercomp(const zip_dirent_t *, const zip_dirent_t *);
@@ -225,8 +224,6 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error)
     za->nentry_alloc = cdir->nentry_alloc;
     za->comment_orig = cdir->comment;
     
-    _zip_check_torrentzip(za, cdir);
-
     za->ch_flags = za->flags;
 
     free(cdir);
@@ -471,39 +468,6 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
 
     return (max-min) < ZIP_INT64_MAX ? (zip_int64_t)(max-min) : ZIP_INT64_MAX;
 }
-
-
-/* _zip_check_torrentzip:
-   check whether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
-
-static void
-_zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir)
-{
-    uLong crc_got, crc_should;
-    char buf[8+1];
-    char *end;
-
-    if (cdir == NULL)
-	return;
-
-    if (_zip_string_length(cdir->comment) != TORRENT_SIG_LEN+8
-	|| strncmp((const char *)cdir->comment->raw, TORRENT_SIG, TORRENT_SIG_LEN) != 0)
-	return;
-
-    memcpy(buf, cdir->comment->raw+TORRENT_SIG_LEN, 8);
-    buf[8] = '\0';
-    errno = 0;
-    crc_should = strtoul(buf, &end, 16);
-    if ((crc_should == UINT_MAX && errno != 0) || (end && *end))
-	return;
-
-    if (_zip_filerange_crc(za->src, cdir->offset, cdir->size, &crc_got, NULL) < 0)
-	return;
-
-    if (crc_got == crc_should)
-	za->flags |= ZIP_AFL_TORRENT;
-}
-
 
 
 /* _zip_headercomp:

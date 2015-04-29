@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd July 22, 2012
+.Dd April 29, 2015
 .Dt ZIP_SET_ARCHIVE_FLAG 3
 .Os
 .Sh NAME
@@ -51,16 +51,7 @@ for the archive
 to the value
 .Ar value .
 .Pp
-Supported flags are:
-.Bl -tag -width XZIPXAFLXTORRENTXXX
-.It Dv ZIP_AFL_TORRENT
-Create a torrent-zipped archive.
-This restricts the values that can be set from the application side.
-In particular, time stamps are not saved and the order of the files in
-the archive is alphabetical.
-No file comments or extended attributes are allowed and the archive
-comment can not be chosen.
-.El
+Currently there are no supported flags.
 .Sh RETURN VALUES
 Upon successful completion 0 is returned, and \-1 if an error
 occurred.

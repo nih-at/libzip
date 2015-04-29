@@ -109,7 +109,6 @@ SET(EXTRA_TESTS
 	stat_index_utf8_strict.test
 	stat_index_utf8_unmarked_strict.test
 	stat_index_zip64.test
-	torrent-already.test
 	utf-8-standardization.test
 	zip64_creation.test
 	zip64_stored_creation.test

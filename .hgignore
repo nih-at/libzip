@@ -47,7 +47,6 @@
 ^regress/tryopen$
 ^src/zipcmp$
 ^src/zipmerge$
-^src/ziptorrent$
 ^stamp-h1$
 ^test-driver$
 ^xcode/libzip\.xcodeproj/project\.xcworkspace/xcuserdata

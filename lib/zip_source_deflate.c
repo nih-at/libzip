@@ -77,10 +77,7 @@ zip_source_deflate(zip_t *za, zip_source_t *src, zip_int32_t cm, int flags)
     ctx->is_stored = false;
     ctx->can_store = ZIP_CM_IS_DEFAULT(cm);
     if (flags & ZIP_CODEC_ENCODE) {
-	if (zip_get_archive_flag(za, ZIP_AFL_TORRENT, 0))
-	    ctx->mem_level = TORRENT_MEM_LEVEL;
-	else
-	    ctx->mem_level = MAX_MEM_LEVEL;
+	ctx->mem_level = MAX_MEM_LEVEL;
     }
 
     if ((s2=zip_source_layered(za, src,

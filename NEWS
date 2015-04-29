@@ -5,6 +5,7 @@
 * Support setting last modification time for file.
 * zip_error_t
 * more typedefs for structs
+* removed support for torrentzip
 
 0.11.2 [2013/12/19]
 
