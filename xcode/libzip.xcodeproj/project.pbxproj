@@ -15,7 +15,6 @@
 			dependencies = (
 				4B01D72D15B2F5AC002D5007 /* PBXTargetDependency */,
 				4B01D72F15B2F5AC002D5007 /* PBXTargetDependency */,
-				4B01D73115B2F5AC002D5007 /* PBXTargetDependency */,
 			);
 			name = "command line tools";
 			productName = "command line tools";
@@ -129,7 +128,6 @@
 		4B01D6E615B2F46B002D5007 /* zip_source_layered.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723115B1B25E00236D3C /* zip_source_layered.c */; };
 		4B01D6E715B2F46B002D5007 /* zip_source_open.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723215B1B25E00236D3C /* zip_source_open.c */; };
 		4B01D6E815B2F46B002D5007 /* zip_source_pkware.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723315B1B25E00236D3C /* zip_source_pkware.c */; };
-		4B01D6E915B2F46B002D5007 /* zip_source_pop.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723415B1B25E00236D3C /* zip_source_pop.c */; };
 		4B01D6EA15B2F46B002D5007 /* zip_source_read.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723515B1B25E00236D3C /* zip_source_read.c */; };
 		4B01D6EB15B2F46B002D5007 /* zip_source_stat.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723615B1B25E00236D3C /* zip_source_stat.c */; };
 		4B01D6EC15B2F46B002D5007 /* zip_source_window.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723715B1B25E00236D3C /* zip_source_window.c */; };
@@ -149,11 +147,8 @@
 		4B01D70915B2F4CF002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
 		4B01D70D15B2F4EB002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
 		4B01D70E15B2F4EB002D5007 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
-		4B01D71815B2F4F7002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
-		4B01D71915B2F4F7002D5007 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
 		4B01D72515B2F57B002D5007 /* zipcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B01D72115B2F572002D5007 /* zipcmp.c */; };
 		4B01D72615B2F57F002D5007 /* zipmerge.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B01D72215B2F572002D5007 /* zipmerge.c */; };
-		4B01D72715B2F583002D5007 /* ziptorrent.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B01D72315B2F572002D5007 /* ziptorrent.c */; };
 		4B01D73215B2F5EE002D5007 /* zipconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC729E15B1B4E900236D3C /* zipconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B01D73415B2F5F4002D5007 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC72A015B1B56400236D3C /* config.h */; };
 		4B01D73C15B2F6AF002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
@@ -276,7 +271,6 @@
 		4BDC728415B1B25E00236D3C /* zip_source_layered.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723115B1B25E00236D3C /* zip_source_layered.c */; };
 		4BDC728515B1B25E00236D3C /* zip_source_open.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723215B1B25E00236D3C /* zip_source_open.c */; };
 		4BDC728615B1B25E00236D3C /* zip_source_pkware.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723315B1B25E00236D3C /* zip_source_pkware.c */; };
-		4BDC728715B1B25E00236D3C /* zip_source_pop.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723415B1B25E00236D3C /* zip_source_pop.c */; };
 		4BDC728815B1B25E00236D3C /* zip_source_read.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723515B1B25E00236D3C /* zip_source_read.c */; };
 		4BDC728915B1B25E00236D3C /* zip_source_stat.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723615B1B25E00236D3C /* zip_source_stat.c */; };
 		4BDC728A15B1B25E00236D3C /* zip_source_window.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723715B1B25E00236D3C /* zip_source_window.c */; };
@@ -311,13 +305,6 @@
 			remoteGlobalIDString = 4B01D70A15B2F4EB002D5007;
 			remoteInfo = zipcmp;
 		};
-		4B01D73015B2F5AC002D5007 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4B01D71515B2F4F7002D5007;
-			remoteInfo = ziptorrent;
-		};
 		4B01D73515B2F639002D5007 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
@@ -326,13 +313,6 @@
 			remoteInfo = "libzip Mac";
 		};
 		4B01D73715B2F643002D5007 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4B01D68A15B2F3F1002D5007;
-			remoteInfo = "libzip Mac";
-		};
-		4B01D73915B2F649002D5007 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
 			proxyType = 1;
@@ -458,15 +438,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		4B01D71A15B2F4F7002D5007 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		4BACD58715BC2CEA00920691 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -529,10 +500,8 @@
 		4B01D6FD15B2F4B1002D5007 /* zipmerge */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipmerge; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D70815B2F4CF002D5007 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		4B01D71315B2F4EB002D5007 /* zipcmp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipcmp; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B01D71E15B2F4F7002D5007 /* ziptorrent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptorrent; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D72115B2F572002D5007 /* zipcmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipcmp.c; sourceTree = "<group>"; };
 		4B01D72215B2F572002D5007 /* zipmerge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipmerge.c; sourceTree = "<group>"; };
-		4B01D72315B2F572002D5007 /* ziptorrent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ziptorrent.c; sourceTree = "<group>"; };
 		4B01D73D15B2FB6B002D5007 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		4B1ABD1A1A2E5DA700C93867 /* links */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = links; sourceTree = "<group>"; };
 		4B1ABD1B1A2E5E4D00C93867 /* handle_links */ = {isa = PBXFileReference; explicitFileType = text.script.perl; fileEncoding = 4; path = handle_links; sourceTree = "<group>"; };
@@ -647,7 +616,6 @@
 		4BC972001A0A1D85003A2981 /* zip_error_to_data.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_to_data.mdoc; sourceTree = "<group>"; };
 		4BCB434119E9347E0067FAA3 /* zip_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_buffer.c; sourceTree = "<group>"; };
 		4BCD54C41AB05AA90003D379 /* zip_source_win32a.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32a.c; sourceTree = "<group>"; };
-		4BCD54C51AB05AA90003D379 /* zip_source_win32file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32file.c; sourceTree = "<group>"; };
 		4BCD54C61AB05AA90003D379 /* zip_source_win32utf8.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32utf8.c; sourceTree = "<group>"; };
 		4BCD54C71AB05AA90003D379 /* zip_source_win32w.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32w.c; sourceTree = "<group>"; };
 		4BCD54C81AB05AA90003D379 /* zipwin32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zipwin32.h; sourceTree = "<group>"; };
@@ -832,7 +800,6 @@
 		4BDC723115B1B25E00236D3C /* zip_source_layered.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_layered.c; path = ../lib/zip_source_layered.c; sourceTree = "<group>"; };
 		4BDC723215B1B25E00236D3C /* zip_source_open.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_open.c; path = ../lib/zip_source_open.c; sourceTree = "<group>"; };
 		4BDC723315B1B25E00236D3C /* zip_source_pkware.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_pkware.c; path = ../lib/zip_source_pkware.c; sourceTree = "<group>"; };
-		4BDC723415B1B25E00236D3C /* zip_source_pop.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_pop.c; path = ../lib/zip_source_pop.c; sourceTree = "<group>"; };
 		4BDC723515B1B25E00236D3C /* zip_source_read.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_read.c; path = ../lib/zip_source_read.c; sourceTree = "<group>"; };
 		4BDC723615B1B25E00236D3C /* zip_source_stat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_stat.c; path = ../lib/zip_source_stat.c; sourceTree = "<group>"; };
 		4BDC723715B1B25E00236D3C /* zip_source_window.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_window.c; path = ../lib/zip_source_window.c; sourceTree = "<group>"; };
@@ -853,6 +820,7 @@
 		4BDC729E15B1B4E900236D3C /* zipconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zipconf.h; sourceTree = SOURCE_ROOT; };
 		4BDC72A015B1B56400236D3C /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
 		4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_is_deleted.c; sourceTree = "<group>"; };
+		4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_win32handle.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -879,15 +847,6 @@
 			files = (
 				4B01D70D15B2F4EB002D5007 /* libz.dylib in Frameworks */,
 				4B01D70E15B2F4EB002D5007 /* libzip.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B01D71715B2F4F7002D5007 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B01D71815B2F4F7002D5007 /* libz.dylib in Frameworks */,
-				4B01D71915B2F4F7002D5007 /* libzip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -961,7 +920,6 @@
 				4B6B06E115F119AE008C2CBE /* compat.h */,
 				4B01D72115B2F572002D5007 /* zipcmp.c */,
 				4B01D72215B2F572002D5007 /* zipmerge.c */,
-				4B01D72315B2F572002D5007 /* ziptorrent.c */,
 			);
 			name = src;
 			path = ../src;
@@ -1223,7 +1181,6 @@
 				4B01D68B15B2F3F1002D5007 /* libzip.framework */,
 				4B01D6FD15B2F4B1002D5007 /* zipmerge */,
 				4B01D71315B2F4EB002D5007 /* zipcmp */,
-				4B01D71E15B2F4F7002D5007 /* ziptorrent */,
 				4BACD58915BC2CEA00920691 /* modify */,
 				4BACD5C115BC2DC900920691 /* add_from_filep */,
 				4BACD5D015BC2DF200920691 /* fopen_unchanged */,
@@ -1325,7 +1282,6 @@
 				4BDC723115B1B25E00236D3C /* zip_source_layered.c */,
 				4BDC723215B1B25E00236D3C /* zip_source_open.c */,
 				4BDC723315B1B25E00236D3C /* zip_source_pkware.c */,
-				4BDC723415B1B25E00236D3C /* zip_source_pop.c */,
 				4BDC723515B1B25E00236D3C /* zip_source_read.c */,
 				4BCF3031199ABD3A0064207B /* zip_source_remove.c */,
 				4BCF301C199A2F820064207B /* zip_source_rollback_write.c */,
@@ -1346,7 +1302,7 @@
 				4BDC723E15B1B25E00236D3C /* zip_string.c */,
 				4BDC723F15B1B25E00236D3C /* zip_unchange_all.c */,
 				4BCD54C41AB05AA90003D379 /* zip_source_win32a.c */,
-				4BCD54C51AB05AA90003D379 /* zip_source_win32file.c */,
+				4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */,
 				4BCD54C61AB05AA90003D379 /* zip_source_win32utf8.c */,
 				4BCD54C71AB05AA90003D379 /* zip_source_win32w.c */,
 				4BCD54C81AB05AA90003D379 /* zipwin32.h */,
@@ -1447,24 +1403,6 @@
 			name = zipcmp;
 			productName = zipmerge;
 			productReference = 4B01D71315B2F4EB002D5007 /* zipcmp */;
-			productType = "com.apple.product-type.tool";
-		};
-		4B01D71515B2F4F7002D5007 /* ziptorrent */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4B01D71B15B2F4F7002D5007 /* Build configuration list for PBXNativeTarget "ziptorrent" */;
-			buildPhases = (
-				4B01D71615B2F4F7002D5007 /* Sources */,
-				4B01D71715B2F4F7002D5007 /* Frameworks */,
-				4B01D71A15B2F4F7002D5007 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4B01D73A15B2F649002D5007 /* PBXTargetDependency */,
-			);
-			name = ziptorrent;
-			productName = zipmerge;
-			productReference = 4B01D71E15B2F4F7002D5007 /* ziptorrent */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD58815BC2CEA00920691 /* modify */ = {
@@ -1599,7 +1537,7 @@
 		4BDC71BF15B181DA00236D3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = NiH;
 			};
 			buildConfigurationList = 4BDC71C215B181DA00236D3C /* Build configuration list for PBXProject "libzip" */;
@@ -1621,7 +1559,6 @@
 				4B01D72815B2F5A2002D5007 /* command line tools */,
 				4B01D6FC15B2F4B1002D5007 /* zipmerge */,
 				4B01D70A15B2F4EB002D5007 /* zipcmp */,
-				4B01D71515B2F4F7002D5007 /* ziptorrent */,
 				4BACD5A715BC2D8200920691 /* test programs */,
 				4BACD5B515BC2DC900920691 /* add_from_filep */,
 				4BACD5C415BC2DF200920691 /* fopen_unchanged */,
@@ -1778,7 +1715,6 @@
 				4B01D6E615B2F46B002D5007 /* zip_source_layered.c in Sources */,
 				4B01D6E715B2F46B002D5007 /* zip_source_open.c in Sources */,
 				4B01D6E815B2F46B002D5007 /* zip_source_pkware.c in Sources */,
-				4B01D6E915B2F46B002D5007 /* zip_source_pop.c in Sources */,
 				4B01D6EA15B2F46B002D5007 /* zip_source_read.c in Sources */,
 				4B01D6EB15B2F46B002D5007 /* zip_source_stat.c in Sources */,
 				4BCF302C199A2F820064207B /* zip_source_supports.c in Sources */,
@@ -1814,14 +1750,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B01D72515B2F57B002D5007 /* zipcmp.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B01D71615B2F4F7002D5007 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B01D72715B2F583002D5007 /* ziptorrent.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1958,7 +1886,6 @@
 				4BDC728415B1B25E00236D3C /* zip_source_layered.c in Sources */,
 				4BDC728515B1B25E00236D3C /* zip_source_open.c in Sources */,
 				4BDC728615B1B25E00236D3C /* zip_source_pkware.c in Sources */,
-				4BDC728715B1B25E00236D3C /* zip_source_pop.c in Sources */,
 				4BDC728815B1B25E00236D3C /* zip_source_read.c in Sources */,
 				4BDC728915B1B25E00236D3C /* zip_source_stat.c in Sources */,
 				4BCF302B199A2F820064207B /* zip_source_supports.c in Sources */,
@@ -1994,11 +1921,6 @@
 			target = 4B01D70A15B2F4EB002D5007 /* zipcmp */;
 			targetProxy = 4B01D72E15B2F5AC002D5007 /* PBXContainerItemProxy */;
 		};
-		4B01D73115B2F5AC002D5007 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4B01D71515B2F4F7002D5007 /* ziptorrent */;
-			targetProxy = 4B01D73015B2F5AC002D5007 /* PBXContainerItemProxy */;
-		};
 		4B01D73615B2F639002D5007 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4B01D68A15B2F3F1002D5007 /* libzip */;
@@ -2008,11 +1930,6 @@
 			isa = PBXTargetDependency;
 			target = 4B01D68A15B2F3F1002D5007 /* libzip */;
 			targetProxy = 4B01D73715B2F643002D5007 /* PBXContainerItemProxy */;
-		};
-		4B01D73A15B2F649002D5007 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4B01D68A15B2F3F1002D5007 /* libzip */;
-			targetProxy = 4B01D73915B2F649002D5007 /* PBXContainerItemProxy */;
 		};
 		4B54447F15C977AF0067BA33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2209,29 +2126,6 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = zipcmp;
-			};
-			name = Release;
-		};
-		4B01D71C15B2F4F7002D5007 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
-				PRODUCT_NAME = ziptorrent;
-			};
-			name = Debug;
-		};
-		4B01D71D15B2F4F7002D5007 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
-				PRODUCT_NAME = ziptorrent;
 			};
 			name = Release;
 		};
@@ -2439,11 +2333,9 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_CONFIG_H=1";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2480,6 +2372,8 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_CONFIG_H=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -2584,15 +2478,6 @@
 			buildConfigurations = (
 				4B01D71115B2F4EB002D5007 /* Debug */,
 				4B01D71215B2F4EB002D5007 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4B01D71B15B2F4F7002D5007 /* Build configuration list for PBXNativeTarget "ziptorrent" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4B01D71C15B2F4F7002D5007 /* Debug */,
-				4B01D71D15B2F4F7002D5007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
