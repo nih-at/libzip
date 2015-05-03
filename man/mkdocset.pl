@@ -46,7 +46,7 @@ print I <<EOF;
 	<key>DocSetPublisherName</key>
 	<string>NiH</string>
         <key>NSHumanReadableCopyright</key>
-        <string>Copyright © 2014 Dieter Baron and Thomas Klausner</string>
+        <string>Copyright © 2015 Dieter Baron and Thomas Klausner</string>
 	<key>CFBundleVersion</key>
 	<string>$version</string>
 	<key>DocSetFeedURL</key>
