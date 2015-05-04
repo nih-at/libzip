@@ -1,4 +1,8 @@
-1.0 [2015/04/29]
+1.0.1 [2015/05/04]
+
+* Build fixes for Windows.
+
+1.0 [2015/05/03]
 
 * Implemented an I/O abstraction layer.
 * Added support for native Windows API for files.
