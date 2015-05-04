@@ -39,15 +39,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
 #endif
-#ifdef _MSC_VER
-/* MSVC doesn't have S_ISREG, S_IRWXG, S_IRWXO */
+
+/* Windows sys/types.h does not provide these */
+#ifndef S_ISREG
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#endif
+#ifndef S_IRWXG
 #define S_IRWXG (S_IRWXU >> 3)
+#endif
+#ifndef S_IRWXO
 #define S_IRWXO (S_IRWXG >> 3)
+#endif
+
+#ifdef _MSC_VER
 /* MSVC doesn't have mode_t */
 typedef int mode_t;
 #endif
