@@ -44,8 +44,10 @@
 #include <fcntl.h>
 #endif
 #ifdef _MSC_VER
-/* MSVC doesn't have S_ISREG */
+/* MSVC doesn't have S_ISREG, S_IRWXG, S_IRWXO */
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_IRWXG (S_IRWXU >> 3)
+#define S_IRWXO (S_IRWXG >> 3)
 /* MSVC doesn't have mode_t */
 typedef int mode_t;
 #endif
