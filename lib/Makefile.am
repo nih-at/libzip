@@ -116,7 +116,12 @@ CLEANFILES=	${BUILT_SOURCES}
 
 EXTRA_DIST=	CMakeLists.txt \
 		make_zip_err_str.sh \
-		make_zipconf.sh
+		make_zipconf.sh \
+		zip_source_win32a.c \
+		zip_source_win32handle.c \
+		zip_source_win32utf8.c \
+		zip_source_win32w.c \
+		zipwin32.h
 
 zip_err_str.c: zip.h make_zip_err_str.sh
 	sh $(srcdir)/make_zip_err_str.sh $(srcdir)/zip.h zip_err_str.c
