@@ -28,6 +28,7 @@ EXTRA_DIST= \
 	bogus.zip \
 	broken.zip \
 	cm-default.zip \
+	encrypt-aes.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
 	encrypt_plus_extra_modified_c.zip \
@@ -136,6 +137,8 @@ TESTS= \
 	add_from_zip_stored.test \
 	add_stored.test \
 	add_stored_in_memory.test \
+	decrypt-aes-correct-password.test \
+	decrypt-aes-wrong-password.test \
 	decrypt-correct-password.test \
 	decrypt-wrong-password.test \
 	delete_add_same.test \
