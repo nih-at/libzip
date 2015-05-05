@@ -475,6 +475,16 @@ set_file_mtime(int argc, char *argv[]) {
 }
 
 static int
+set_password(int argc, char *argv[]) {
+    /* set default password */
+    if (zip_set_default_password(za, argv[0]) < 0) {
+	fprintf(stderr, "can't set default password to `%s'", argv[0]);
+	return -1;
+    }
+    return 0;
+}
+
+static int
 zstat(int argc, char *argv[]) {
     zip_uint64_t idx;
     char buf[100];
@@ -831,6 +841,7 @@ dispatch_table_t dispatch_table[] = {
     { "set_file_comment", 2, "index comment", "set file comment", set_file_comment },
     { "set_file_compression", 3, "index method flags", "set file compression method", set_file_compression },
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
+    { "set_password", 1, "set default password", "set default password for encryption", set_password },
     { "stat", 1, "index", "print information about entry", zstat },
     { "unchange_all", 0, "", "revert all changes", unchange_all },
     { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
