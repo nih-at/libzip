@@ -49,11 +49,12 @@
 #ifndef S_ISREG
 #define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #endif
-#ifndef S_IRWXG
-#define S_IRWXG (S_IRWXU >> 3)
-#endif
-#ifndef S_IRWXO
-#define S_IRWXO (S_IRWXG >> 3)
+#if defined(S_IXUSR) && defined(S_IRWXG) && defined(S_IRWXO)
+#define _SAFE_MASK (S_IXUSR | S_IRWXG | S_IRWXO)
+#elif defined(_S_IWRITE)
+#define _SAFE_MASK (_S_IWRITE)
+#else
+#error do not know safe values for umask, please report this
 #endif
 
 #ifdef _MSC_VER
@@ -183,7 +184,7 @@ create_temp_output(struct read_file *ctx)
     }
     sprintf(temp, "%s.XXXXXX", ctx->fname);
 
-    mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
+    mask = umask(_SAFE_MASK);
     if ((tfd=mkstemp(temp)) == -1) {
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
 	umask(mask);
