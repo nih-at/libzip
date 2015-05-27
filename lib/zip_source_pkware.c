@@ -107,7 +107,7 @@ decrypt(struct trad_pkware *ctx, zip_uint8_t *out, const zip_uint8_t *in,
 	if (!update_only) {
 	    /* decrypt next byte */
 	    tmp = (zip_uint16_t)(ctx->key[2] | 2);
-	    tmp = (zip_uint16_t)((tmp * (tmp ^ 1)) >> 8);
+	    tmp = (zip_uint16_t)(((zip_uint32_t)tmp * (tmp ^ 1)) >> 8);
 	    b ^= (Bytef)tmp;
 	}
 
