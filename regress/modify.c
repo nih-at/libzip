@@ -71,7 +71,7 @@ static zip_t *read_to_memory(const char *archive, int flags, int *err, zip_sourc
 static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
 
 zip_t *za, *z_in[16];
-int z_in_count;
+unsigned int z_in_count;
 zip_flags_t stat_flags;
 
 static int
@@ -905,7 +905,8 @@ main(int argc, char *argv[])
 {
     const char *archive;
     zip_source_t *memory_src;
-    int c, arg, err, flags, i;
+    unsigned int i;
+    int c, arg, err, flags;
     const char *prg;
     source_type_t source_type = SOURCE_TYPE_NONE;
 
