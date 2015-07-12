@@ -39,8 +39,8 @@
 #include "zipint.h"
 
 struct crc_context {
-    int validate; // wether to check CRC on EOF and return error on mismatch
-    int crc_complete; // wether CRC was computed for complete file
+    int validate; // whether to check CRC on EOF and return error on mismatch
+    int crc_complete; // whether CRC was computed for complete file
     zip_error_t error;
     zip_uint64_t size;
     zip_uint64_t position; // current reading position
