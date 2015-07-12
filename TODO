@@ -100,6 +100,7 @@ Infrastructure
 
 Test Case Issues
 ================
+* test seek in zip_source_crc
 * test cases for set_extra*, delete_extra*, *extra_field*
 * test cases for in memory archives
   add
