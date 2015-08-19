@@ -44,9 +44,6 @@
 /* Define to 1 if you have the `mkstemp' function. */
 #define HAVE_MKSTEMP 1
 
-/* Define to 1 if you have the `MoveFileExA' function. */
-/* #undef HAVE_MOVEFILEEXA */
-
 /* Define to 1 if you have the `open' function. */
 #define HAVE_OPEN 1
 

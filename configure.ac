@@ -55,14 +55,6 @@ LT_INIT
 AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _snprintf _strdup _stricmp fseeko ftello getopt open snprintf strcasecmp strdup])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
-AC_MSG_CHECKING([MoveFileExA])
-AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <windows.h>],
-			       [MoveFileExA("", "", 0);])],
-	       [AC_MSG_RESULT([yes])
-	        AC_DEFINE([HAVE_MOVEFILEEXA], [1],
-			[Define to 1 if you have the `MoveFileExA' function.])],
-	       [AC_MSG_RESULT([no])])
-
 AC_CHECK_HEADERS([fts.h stdbool.h strings.h unistd.h])
 
 AC_CHECK_TYPES([int8_t])
