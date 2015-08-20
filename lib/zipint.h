@@ -74,7 +74,7 @@ typedef char bool;
 #if defined(HAVE__FDOPEN)
 #define fdopen		_fdopen
 #endif
-#if defined(HAVE__FILENO)
+#if !defined(HAVE_FILENO) && defined(HAVE__FILENO)
 #define fileno		_fileno
 #endif
 /* Windows' open() doesn't understand Unix permissions */
