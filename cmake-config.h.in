@@ -12,6 +12,7 @@
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__STRDUP
 #cmakedefine HAVE__STRICMP
+#cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_OPEN
