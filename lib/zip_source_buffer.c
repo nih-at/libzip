@@ -37,6 +37,13 @@
 
 #include "zipint.h"
 
+/* at least MinGW does not provide this error code, see
+ * http://sourceforge.net/p/mingw/bugs/242/
+ */
+#ifndef EOVERFLOW
+#define EOVERFLOW EFBIG
+#endif
+
 #ifndef WRITE_FRAGMENT_SIZE
 #define WRITE_FRAGMENT_SIZE 64*1024
 #endif

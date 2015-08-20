@@ -40,6 +40,13 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "zipint.h"
 #include "zipwin32.h"
 
+/* at least MinGW does not provide this error code, see
+ * http://sourceforge.net/p/mingw/bugs/242/
+ */
+#ifndef EOVERFLOW
+#define EOVERFLOW EFBIG
+#endif
+
 static zip_int64_t _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 static int _win32_create_temp_file(_zip_source_win32_read_file_t *ctx);
 static int _zip_filetime_to_time_t(FILETIME ft, time_t *t);

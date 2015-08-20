@@ -62,6 +62,13 @@
 typedef int mode_t;
 #endif
 
+/* at least MinGW does not provide this error code, see
+ * http://sourceforge.net/p/mingw/bugs/242/
+ */
+#ifndef EOVERFLOW
+#define EOVERFLOW EFBIG
+#endif
+
 struct read_file {
     zip_error_t error;      /* last error information */
     zip_int64_t supports;
