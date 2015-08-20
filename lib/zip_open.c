@@ -39,6 +39,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* at least MinGW does not provide this error code, see
+ * http://sourceforge.net/p/mingw/bugs/263/
+ */
+#ifndef EOPNOTSUPP
+#define EOPNOTSUPP EINVAL
+#endif
+
 #include "zipint.h"
 
 typedef enum {
