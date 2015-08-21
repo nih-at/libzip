@@ -31,18 +31,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "zipint.h"
-
-/* at least MinGW does not provide this error code, see
- * http://sourceforge.net/p/mingw/bugs/242/
- */
-#ifndef EOVERFLOW
-#define EOVERFLOW EFBIG
-#endif
 
 #ifndef WRITE_FRAGMENT_SIZE
 #define WRITE_FRAGMENT_SIZE 64*1024

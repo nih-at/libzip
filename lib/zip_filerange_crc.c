@@ -33,7 +33,6 @@
 
 
 #include <stdio.h>
-#include <errno.h>
 
 #include "zipint.h"
 

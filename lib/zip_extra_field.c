@@ -31,12 +31,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include "zipint.h"
-
-#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "zipint.h"
 
 
 zip_extra_field_t *

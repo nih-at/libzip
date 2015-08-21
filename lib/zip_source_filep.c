@@ -31,14 +31,12 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include "zipint.h"
-
 #include <sys/stat.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "zipint.h"
 
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
@@ -60,13 +58,6 @@
 #ifdef _MSC_VER
 /* MSVC doesn't have mode_t */
 typedef int mode_t;
-#endif
-
-/* at least MinGW does not provide this error code, see
- * http://sourceforge.net/p/mingw/bugs/242/
- */
-#ifndef EOVERFLOW
-#define EOVERFLOW EFBIG
 #endif
 
 struct read_file {
