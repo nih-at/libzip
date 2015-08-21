@@ -44,7 +44,7 @@ zip_source_supports(zip_source_t *src)
 }
 
 
-zip_int64_t
+ZIP_EXTERN zip_int64_t
 zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...)
 {
     zip_int64_t bitmap;
