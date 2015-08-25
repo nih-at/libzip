@@ -99,7 +99,7 @@ _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 	    return INVALID_HANDLE_VALUE;
 	}
     }
-    if (swprintf((wchar_t *)*temp, len, L"%s.%08x", (const wchar_t *)ctx->fname, value) != len - 1) {
+    if (_snwprintf((wchar_t *)*temp, len, L"%s.%08x", (const wchar_t *)ctx->fname, value) != len - 1) {
 	return INVALID_HANDLE_VALUE;
     }
 
