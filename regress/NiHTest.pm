@@ -894,7 +894,9 @@ sub backslash_decode {
 
 sub run_program {
 	my ($self) = @_;
-	
+
+	goto &pipein_win32 if $^O eq 'MSWin32' && $self->{test}->{pipein};
+
 	my ($stdin, $stdout, $stderr);
 	$stderr = gensym;
 
@@ -921,13 +923,23 @@ sub run_program {
         }
 	
 	while (my $line = <$stdout>) {
-		chomp $line;
+		if ($^O eq 'MSWin32') {
+			$line =~ s/[\r\n]+$//;
+		}
+		else {
+			chomp $line;
+		}
 		push @{$self->{stdout}}, $line;
 	}
 	my $prg = $self->{test}->{program};
 	$prg =~ s,.*/,,;
 	while (my $line = <$stderr>) {
-		chomp $line;
+		if ($^O eq 'MSWin32') {
+			$line =~ s/[\r\n]+$//;
+		}
+		else {
+			chomp $line;
+		}
 
 		$line =~ s/^[^: ]*$prg: //;
 		if (defined($self->{test}->{'stderr-replace'})) {
@@ -941,6 +953,39 @@ sub run_program {
 	$self->{exit_status} = $? >> 8;
 }
 
+sub pipein_win32() {
+	my ($self) = @_;
+
+	my $cmd = "$self->{test}->{pipein}| ..\\$self->{test}->{program} " . join(' ', map ({ backslash_decode($_); } @{$self->{test}->{args}}));
+	my ($success, $error_message, $full_buf, $stdout_buf, $stderr_buf) = IPC::Cmd::run(command => $cmd);
+	if (!$success) {
+		### TODO: catch errors?
+	}
+
+	my @stdout = map { s/[\r\n]+$// } @$stdout_buf;
+	$self->{stdout} = \@stdout;
+        $self->{stderr} = [];
+
+	my $prg = $self->{test}->{program};
+	$prg =~ s,.*/,,;
+	foreach my $line (@$stderr_buf) {
+		$line =~ s/[\r\n]+$//;
+
+		$line =~ s/^[^: ]*$prg: //;
+		if (defined($self->{test}->{'stderr-replace'})) {
+			$line = $self->stderr_rewrite($self->{test}->{'stderr-replace'}, $line);
+		}
+		push @{$self->{stderr}}, $line;
+	}
+
+	$self->{exit_status} = 1;
+	if ($success) {
+		$self->{exit_status} = 0;
+	}
+	elsif ($error_message =~ /exited with value ([0-9]+)$/) {
+		$self->{exit_status} = $1 + 0;
+	}
+}
 
 sub sandbox_create {
 	my ($self, $tag) = @_;
