@@ -5,7 +5,7 @@ use warnings;
 
 use Cwd;
 use File::Copy;
-use File::Path qw(mkpath);
+use File::Path qw(mkpath remove_tree);
 use IPC::Open3;
 use Symbol 'gensym';
 use UNIVERSAL;
@@ -471,20 +471,13 @@ sub compare_files() {
 	
 	my $ok = 1;
 	
-	my $ls;
-	open $ls, "find . -type f -print |";
+	opendir(my $ls, '.');
 	unless ($ls) {
 		# TODO: handle error
 	}
-	my @files_got = ();
-	
-	while (my $line = <$ls>) {
-		chomp $line;
-		$line =~ s,^\./,,;
-		push @files_got, $line;
-	}
-	close($ls);
-	
+	my @files_got = grep { -f } readdir($ls);
+	closedir($ls);
+
 	@files_got = sort @files_got;
 	my @files_should = ();
 	
@@ -974,14 +967,8 @@ sub sandbox_remove {
 	my ($self) = @_;
 
 	my $ok = 1;
-	unless (system('chmod', '-R', 'u+rwx', $self->{sandbox_dir}) == 0) {
-		$self->warn("can't ensure that sandbox is writable: $!");
-	}
-	unless (system('rm', '-rf', $self->{sandbox_dir}) == 0) {
-		$self->warn("can't remove sandbox: $!");
-		$ok = 0;
-	}
-	
+	remove_tree($self->{sandbox_dir});
+
 	return $ok;
 }
 
