@@ -41,6 +41,10 @@
 #include <unistd.h>
 #endif
 #include <inttypes.h>
+#ifdef _WIN32
+/* WIN32 needs <fcntl.h> for _O_BINARY */
+#include <fcntl.h>
+#endif
 
 #ifndef HAVE_GETOPT
 #include "getopt.h"
@@ -186,6 +190,10 @@ cat(int argc, char *argv[]) {
     int err;
     idx = strtoull(argv[0], NULL, 10);
 
+#ifdef _WIN32
+    /* Need to set stdout to binary mode for Windows */
+    setmode(fileno(stdout), _O_BINARY);
+#endif
     if ((zf=zip_fopen_index(za, idx, 0)) == NULL) {
 	fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
 	return -1;
