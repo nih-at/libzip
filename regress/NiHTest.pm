@@ -439,8 +439,26 @@ sub compare_arrays() {
 	return $ok;
 }
 
+sub file_cmp($$) {
+	my ($a, $b) = @_;
+	my $result = 0;
+	open my $fha, "< $a";
+	open my $fhb, "< $b";
+	binmode $fha;
+	binmode $fhb;
+	BYTE: while (!eof $fha && !eof $fhb) {
+		if (getc $fha ne getc $fhb) {
+			$result = 1;
+			last BYTE;
+		}
+	}
+	$result = 1 if eof $fha != eof $fhb;
+	close $fha;
+	close $fhb;
+	return $result;
+}
 
-sub compare_file() {
+sub compare_file($$$) {
 	my ($self, $got, $expected) = @_;
 	
 	my $real_expected = $self->find_file($expected);
@@ -457,14 +475,13 @@ sub compare_file() {
 			$ret = system('diff', '-u', $real_expected, $got);
 		}
 		else {
-			$ret = system('cmp', '-s', $real_expected, $got);
+			$ret = file_cmp($real_expected, $got);
 		}
 		$ok = ($ret == 0);
 	}
 
 	return $ok;
 }
-
 
 sub compare_files() {
 	my ($self) = @_;
