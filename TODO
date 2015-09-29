@@ -44,6 +44,7 @@ Features
 * delete all extra fields during zip_replace()
 * function to copy file from one archive to another
 * set O_CLOEXEC flag after fopen and mkstemp
+* configure: use windows backends on windows
 
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
