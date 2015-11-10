@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd November 18, 2014
+.Dd November 10, 2015
 .Dt ZIP_SOURCE_FILEP 3
 .Os
 .Sh NAME
@@ -62,7 +62,12 @@ is 0 or \-1, the whole file (starting from
 .Ar start )
 is used.
 .Pp
-If the file stream supports seeking, the source can be used to open a read-only zip archive from.
+If the file stream supports seeking, the source can be used to open
+a read-only zip archive from.
+.Pp
+The file stream is closed when the source is being freed, usually
+by
+.Xr zip_close 3 .
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
 Otherwise,
