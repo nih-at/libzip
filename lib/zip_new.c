@@ -52,6 +52,11 @@ _zip_new(zip_error_t *error)
 	return NULL;
     }
 
+    if ((za->names = _zip_hash_new(ZIP_HASH_TABLE_SIZE, error)) == NULL) {
+	free(za);
+	return NULL;
+    }
+
     za->src = NULL;
     za->open_flags = 0;
     zip_error_init(&za->error);

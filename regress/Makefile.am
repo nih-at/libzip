@@ -223,10 +223,6 @@ TESTS= \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
-XFAIL_TESTS= \
-	open_filename_duplicate_consistency.test \
-	open_filename_duplicate_empty_consistency.test
-
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
 

@@ -183,7 +183,7 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error)
     zip_t *za;
     zip_cdir_t *cdir;
     struct zip_stat st;
-    zip_uint64_t len;
+    zip_uint64_t len, idx;
 
     zip_stat_init(&st);
     if (zip_source_stat(src, &st) < 0) {
@@ -222,10 +222,30 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error)
     za->nentry = cdir->nentry;
     za->nentry_alloc = cdir->nentry_alloc;
     za->comment_orig = cdir->comment;
-    
-    za->ch_flags = za->flags;
 
     free(cdir);
+
+    for (idx = 0; idx < za->nentry; idx++) {
+	const zip_uint8_t *name = _zip_string_get(za->entry[idx].orig->filename, NULL, 0, error);
+	if (name == NULL) {
+		/* keep src so discard does not get rid of it */
+		zip_source_keep(src);
+		zip_discard(za);
+		return NULL;
+	}
+	
+	if (_zip_hash_add(za->names, name, idx, ZIP_FL_UNCHANGED, &za->error) == false) {
+	    if (za->error.zip_err != ZIP_ER_EXISTS || (flags & ZIP_CHECKCONS)) {
+		_zip_error_copy(error, &za->error);
+		/* keep src so discard does not get rid of it */
+		zip_source_keep(src);
+		zip_discard(za);
+		return NULL;
+	    }
+	}
+    }
+    
+    za->ch_flags = za->flags;
 
     return za;
 }

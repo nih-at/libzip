@@ -100,6 +100,7 @@ SET(LIBZIP_SOURCES
   zip_get_name.c
   zip_get_num_entries.c
   zip_get_num_files.c
+  zip_hash.c
   zip_io_util.c
   zip_memdup.c
   zip_name_locate.c

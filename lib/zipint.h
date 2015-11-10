@@ -266,13 +266,19 @@ enum zip_encoding_type {
 
 typedef enum zip_encoding_type zip_encoding_type_t;
 
+#ifndef ZIP_HASH_TABLE_SIZE
+#define ZIP_HASH_TABLE_SIZE 8192
+#endif
+
+struct zip_hash;
+
 typedef struct zip_cdir zip_cdir_t;
 typedef struct zip_dirent zip_dirent_t;
 typedef struct zip_entry zip_entry_t;
 typedef struct zip_extra_field zip_extra_field_t;
 typedef struct zip_string zip_string_t;
 typedef struct zip_buffer zip_buffer_t;
-
+typedef struct zip_hash zip_hash_t;
 
 /* zip archive, part of API */
 
@@ -287,7 +293,7 @@ struct zip {
     char *default_password;		/* password used when no other supplied */
 
     zip_string_t *comment_orig;         /* archive comment */
-    zip_string_t *comment_changes;  /* changed archive comment */
+    zip_string_t *comment_changes;	/* changed archive comment */
     bool comment_changed;		/* whether archive comment was changed */
 
     zip_uint64_t nentry;		/* number of entries */
@@ -297,6 +303,8 @@ struct zip {
     unsigned int nopen_source;		/* number of open sources using archive */
     unsigned int nopen_source_alloc;	/* number of sources allocated */
     zip_source_t **open_source;         /* open sources using archive */
+
+    zip_hash_t *names;			/* hash table for name lookup */
     
     char *tempdir;                      /* custom temp dir (needed e.g. for OS X sandboxing) */
 };
@@ -323,7 +331,7 @@ struct zip_file {
 struct zip_dirent {
     zip_uint32_t changed;
     bool local_extra_fields_read;	/*      whether we already read in local header extra fields */
-    bool cloned;                         /*      whether this instance is cloned, and thus shares non-changed strings */
+    bool cloned;                        /*      whether this instance is cloned, and thus shares non-changed strings */
 
     zip_uint16_t version_madeby;	/* (c)  version of creator */
     zip_uint16_t version_needed;	/* (cl) version needed to extract */
@@ -515,6 +523,13 @@ zip_dirent_t *_zip_get_dirent(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *)
 
 enum zip_encoding_type _zip_guess_encoding(zip_string_t *, enum zip_encoding_type);
 zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t * const, zip_uint32_t, zip_uint32_t *, zip_error_t *);
+
+bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index, zip_flags_t flags, zip_error_t *error);
+bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *key, zip_error_t *error);
+void _zip_hash_free(zip_hash_t *hash);
+zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, zip_error_t *error);
+zip_hash_t *_zip_hash_new(zip_uint16_t hash_size, zip_error_t *error);
+void _zip_hash_revert(zip_hash_t *hash);
 
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 

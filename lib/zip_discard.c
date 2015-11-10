@@ -58,6 +58,8 @@ zip_discard(zip_t *za)
     _zip_string_free(za->comment_orig);
     _zip_string_free(za->comment_changes);
 
+    _zip_hash_free(za->names);
+
     if (za->entry) {
 	for (i=0; i<za->nentry; i++)
 	    _zip_entry_finalize(za->entry+i);
