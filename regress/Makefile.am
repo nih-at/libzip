@@ -119,6 +119,7 @@ EXTRA_DIST= \
 	teststored.zip \
 	utf-8-standardization-input.zip \
 	utf-8-standardization-output.zip \
+	zip-in-archive-comment.zip \
 	zip64.zip
 
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
@@ -220,6 +221,7 @@ TESTS= \
 	stat_index_utf8_unmarked_strict.test \
 	stat_index_zip64.test \
 	utf-8-standardization.test \
+	zip-in-archive-comment.test \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
