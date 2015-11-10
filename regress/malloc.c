@@ -47,7 +47,6 @@ static void *(*real_malloc)(size_t size) = NULL;
 static void *(*real_calloc)(size_t number, size_t size) = NULL;
 static void *(*real_realloc)(void *ptr, size_t size) = NULL;
 
-static FILE *log;
 static const char *myname = NULL;
 
 // TODO: add sentinel -- check if particular size is malloced before doing other stuff
