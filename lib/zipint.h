@@ -144,6 +144,7 @@ int _zip_mkstemp(char *);
 #define ZIP_FSEEK_MAX ZIP_OFF_MAX
 #define ZIP_FSEEK_MIN ZIP_OFF_MIN
 #else
+#include <limits.h>
 #define ZIP_FSEEK_MAX LONG_MAX
 #define ZIP_FSEEK_MIN LONG_MIN
 #endif
