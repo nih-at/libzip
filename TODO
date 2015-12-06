@@ -46,6 +46,8 @@ Features
 * set O_CLOEXEC flag after fopen and mkstemp
 * configure: use windows backends on windows
 * add append-only mode writing file to disk incrementally to keep memory usage low
+* add zipalign mode or tool that puts uncompressed data on an offset that's a multiple
+  of four; used on Android to speed up loading of data
 
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
