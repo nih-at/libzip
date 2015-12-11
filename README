@@ -12,8 +12,11 @@ is in the src/ subdirectory.
 about API changes and how to adapt your code for them in the included
 file API-CHANGES.
 
-  For generic installation instructions, see file `INSTALL'.
-Additionally, you'll need zlib (at least version 1.1.2). It comes
+  For generic installation instructions, see file 'INSTALL', which
+describes the approach using autoconf; alternatively, you can
+use cmake to build.
+
+  Additionally, you'll need zlib (at least version 1.1.2). It comes
 with most operating systems nowadays, or you can get it at
 	http://www.zlib.net/
 
