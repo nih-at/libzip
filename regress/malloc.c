@@ -33,7 +33,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
+/* #include <string.h> */
 #include <errno.h>
 #define __USE_GNU
 #include <dlfcn.h>
@@ -49,9 +49,9 @@ static void *(*real_realloc)(void *ptr, size_t size) = NULL;
 
 static const char *myname = NULL;
 
-// TODO: add sentinel -- check if particular size is malloced before doing other stuff
-// TODO: catch free for sentinel too
-// TODO: optionally, catch malloc of particular size
+/* TODO: add sentinel -- check if particular size is malloced before doing other stuff */
+/* TODO: catch free for sentinel too */
+/* TODO: optionally, catch malloc of particular size */
 
 static void
 init(void)
