@@ -43,6 +43,7 @@ SET(EXTRA_TESTS
 	add_from_zip_stored.test
 	add_stored.test
 	add_stored_in_memory.test
+	count_entries.test
 	decrypt-correct-password.test
 	decrypt-wrong-password.test
 	delete_add_same.test

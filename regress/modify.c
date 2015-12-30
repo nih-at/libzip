@@ -373,6 +373,17 @@ get_file_comment(int argc, char *argv[]) {
 }
 
 static int
+get_num_entries(int argc, char *argv[]) {
+    zip_uint64_t count;
+    zip_flags_t flags;
+    /* get number of entries in archive */
+    flags = get_flags(argv[0]);
+    count = zip_get_num_entries(za, flags);
+    printf("%" PRIu64 " entr%s in archive\n", count, count == 1 ? "y" : "ies");
+    return 0;
+}
+
+static int
 name_locate(int argc, char *argv[]) {
     zip_flags_t flags;
     zip_int64_t idx;
@@ -841,6 +852,7 @@ dispatch_table_t dispatch_table[] = {
     { "get_extra", 3, "index extra_index flags", "show extra field", get_extra },
     { "get_extra_by_id", 4, "index extra_id extra_index flags", "show extra field of type extra_id", get_extra_by_id },
     { "get_file_comment", 1, "index", "get file comment", get_file_comment },
+    { "get_num_entries", 1, "flags", "get number of entries in archive", get_num_entries },
     { "name_locate", 2, "name flags", "find entry in archive", name_locate },
     { "rename", 2, "index name", "rename entry", zrename },
     { "replace_file_contents", 2, "index data", "replace entry with data", replace_file_contents },
