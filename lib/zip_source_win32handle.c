@@ -408,6 +408,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 static int
 _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 {
+    zip_uint32_t value;
     /*
     Windows has GetTempFileName(), but it closes the file after
     creation, leaving it open to a horrible race condition. So
@@ -447,7 +448,7 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 	}
     }
 
-    zip_uint32_t value = GetTickCount();
+    value = GetTickCount();
     for (i = 0; i < 1024 && th == INVALID_HANDLE_VALUE; i++) {
 	th = ctx->ops->op_create_temp(ctx, &temp, value + i, psa);
 	if (th == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_EXISTS)

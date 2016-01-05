@@ -177,6 +177,7 @@ do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze
     zip_file_t *zf;
     enum when when_got;
     zip_error_t error_got, error_ex;
+    zip_error_t *zf_error;
     int err;
     char b[8192];
     zip_int64_t n;
@@ -188,7 +189,7 @@ do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze
     
     if ((zf=zip_fopen(z, name, flags)) == NULL) {
 	when_got = WHEN_OPEN;
-	zip_error_t *zf_error = zip_get_error(z);
+	zf_error = zip_get_error(z);
 	zip_error_set(&error_got, zip_error_code_zip(zf_error), zip_error_code_system(zf_error));
     }
     else {
@@ -196,7 +197,7 @@ do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze
 	    ;
 	if (n < 0) {
 	    when_got = WHEN_READ;
-	    zip_error_t *zf_error = zip_file_get_error(zf);
+	    zf_error = zip_file_get_error(zf);
 	    zip_error_set(&error_got, zip_error_code_zip(zf_error), zip_error_code_system(zf_error));
 	}
 	err = zip_fclose(zf);

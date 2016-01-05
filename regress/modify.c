@@ -133,13 +133,14 @@ add_file(int argc, char *argv[]) {
 
 static int
 add_from_zip(int argc, char *argv[]) {
-    zip_uint64_t idx;
+    zip_uint64_t idx, start;
+    zip_int64_t len;
     int err;
     zip_source_t *zs;
     /* add from another zip file */
     idx = strtoull(argv[2], NULL, 10);
-    zip_uint64_t start = strtoull(argv[3], NULL, 10);
-    zip_int64_t len = strtoll(argv[4], NULL, 10);
+    start = strtoull(argv[3], NULL, 10);
+    len = strtoll(argv[4], NULL, 10);
     if ((z_in[z_in_count]=zip_open(argv[1], ZIP_CHECKCONS, &err)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, err);

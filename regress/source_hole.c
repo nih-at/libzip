@@ -344,6 +344,7 @@ buffer_to_file(buffer_t *buffer, const char *fname, zip_error_t *error)
 static zip_int64_t
 buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error)
 {
+    zip_uint8_t **fragment;
     if (buffer->offset + length > buffer->nfragments * buffer->fragment_size) {
         zip_uint64_t needed_fragments = (buffer->offset + length + buffer->fragment_size - 1) / buffer->fragment_size;
         zip_uint64_t new_capacity = buffer->nfragments;
@@ -356,7 +357,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
             new_capacity *= 2;
         }
         
-        zip_uint8_t **fragment = realloc(buffer->fragment, new_capacity * sizeof(*fragment));
+        fragment = realloc(buffer->fragment, new_capacity * sizeof(*fragment));
         
         if (fragment == NULL) {
             zip_error_set(error, ZIP_ER_MEMORY, 0);

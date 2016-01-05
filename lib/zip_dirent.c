@@ -613,6 +613,8 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     zip_uint16_t dostime, dosdate;
     zip_encoding_type_t com_enc, name_enc;
     zip_extra_field_t *ef;
+    zip_extra_field_t *ef64;
+    zip_uint32_t ef_total_size;
     bool is_zip64;
     bool is_really_zip64;
     zip_uint8_t buf[CDENTRYSIZE];
@@ -686,7 +688,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
             return -1;
         }
 
-        zip_extra_field_t *ef64 = _zip_ef_new(ZIP_EF_ZIP64, (zip_uint16_t)(_zip_buffer_offset(ef_buffer)), ef_zip64, ZIP_EF_BOTH);
+        ef64 = _zip_ef_new(ZIP_EF_ZIP64, (zip_uint16_t)(_zip_buffer_offset(ef_buffer)), ef_zip64, ZIP_EF_BOTH);
         _zip_buffer_free(ef_buffer);
         ef64->next = ef;
         ef = ef64;
@@ -739,7 +741,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
 
     _zip_buffer_put_16(buffer, _zip_string_length(de->filename));
     /* TODO: check for overflow */
-    zip_uint32_t ef_total_size = (zip_uint32_t)_zip_ef_size(de->extra_fields, flags) + (zip_uint32_t)_zip_ef_size(ef, ZIP_EF_BOTH);
+    ef_total_size = (zip_uint32_t)_zip_ef_size(de->extra_fields, flags) + (zip_uint32_t)_zip_ef_size(ef, ZIP_EF_BOTH);
     _zip_buffer_put_16(buffer, (zip_uint16_t)ef_total_size);
     
     if ((flags & ZIP_FL_LOCAL) == 0) {
