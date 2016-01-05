@@ -109,7 +109,7 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     }
     offset = (zip_uint64_t)off;
 
-    is_zip64 = 0;
+    is_zip64 = false;
 
     for (i=0; i<survivors; i++) {
 	zip_entry_t *entry = za->entry+filelist[i].idx;
@@ -621,8 +621,6 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     zip_buffer_t *buffer;
 
     ef = NULL;
-
-    is_zip64 = false;
 
     name_enc = _zip_guess_encoding(de->filename, ZIP_ENCODING_UNKNOWN);
     com_enc = _zip_guess_encoding(de->comment, ZIP_ENCODING_UNKNOWN);
