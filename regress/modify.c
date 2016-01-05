@@ -375,12 +375,12 @@ get_file_comment(int argc, char *argv[]) {
 
 static int
 get_num_entries(int argc, char *argv[]) {
-    zip_uint64_t count;
+    zip_int64_t count;
     zip_flags_t flags;
     /* get number of entries in archive */
     flags = get_flags(argv[0]);
     count = zip_get_num_entries(za, flags);
-    printf("%" PRIu64 " entr%s in archive\n", count, count == 1 ? "y" : "ies");
+    printf("%" PRIi64 " entr%s in archive\n", count, count == 1 ? "y" : "ies");
     return 0;
 }
 
