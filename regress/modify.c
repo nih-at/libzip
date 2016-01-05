@@ -40,7 +40,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <inttypes.h>
+#include <zipconf.h>
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
@@ -51,6 +51,7 @@
 #endif
 
 #include "zip.h"
+#include "compat.h"
 
 zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
 

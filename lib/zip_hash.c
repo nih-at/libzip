@@ -245,13 +245,17 @@ _zip_hash_revert(zip_hash_t *hash)
 	entry = hash->table[i];
 	while (entry) {
 	    if (entry->orig_index == -1) {
+		zip_hash_entry_t *p;
 		if (previous) {
 		    previous->next = entry->next;
 		}
 		else {
 		    hash->table[i] = entry->next;
 		}
-		free(entry);
+		p = entry;
+		entry = entry->next;
+		free(p);
+		continue;
 	    }
 	    else {
 		entry->current_index = entry->orig_index;
