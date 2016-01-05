@@ -176,9 +176,12 @@ crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source
 
         case ZIP_SOURCE_SEEK:
         {
-            zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
             zip_int64_t new_position;
+            zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
 
+	    if (args == NULL) {
+		return -1;
+	    }
             if (zip_source_seek(src, args->offset, args->whence) < 0 || (new_position = zip_source_tell(src)) < 0) {
                 _zip_error_set_from_source(&ctx->error, src);
                 return -1;
