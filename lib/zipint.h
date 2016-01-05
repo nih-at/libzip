@@ -129,6 +129,8 @@ int _zip_mkstemp(char *);
 #define strcasecmp	_stricmp
 #elif defined(HAVE_STRICMP)
 #define strcasecmp	stricmp
+#else
+#error no case-insensitive string comparison operation found
 #endif
 #endif
 
