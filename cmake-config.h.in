@@ -9,6 +9,7 @@
 #cmakedefine HAVE__FDOPEN
 #cmakedefine HAVE__FILENO
 #cmakedefine HAVE__OPEN
+#cmakedefine HAVE__SETMODE
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__STRDUP
 #cmakedefine HAVE__STRICMP
@@ -17,10 +18,12 @@
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_OPEN
 #cmakedefine HAVE_MKSTEMP
+#cmakedefine HAVE_SETMODE
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_SSIZE_T_LIBZIP
 #cmakedefine HAVE_STRCASECMP
 #cmakedefine HAVE_STRDUP
+#cmakedefine HAVE_STRICMP
 #cmakedefine HAVE_STRUCT_TM_TM_ZONE
 #cmakedefine HAVE_STDBOOL_H
 #cmakedefine HAVE_STRINGS_H

@@ -106,6 +106,9 @@ typedef char bool;
 #define strdup		_strdup
 #endif
 #endif
+#if !defined(HAVE__SETMODE) && defined(HAVE_SETMODE)
+#define _setmode	setmode
+#endif
 #endif
 
 #ifndef HAVE_FSEEKO
