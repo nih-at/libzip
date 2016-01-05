@@ -380,7 +380,7 @@ get_num_entries(int argc, char *argv[]) {
     /* get number of entries in archive */
     flags = get_flags(argv[0]);
     count = zip_get_num_entries(za, flags);
-    printf("%" PRIi64 " entr%s in archive\n", count, count == 1 ? "y" : "ies");
+    printf("%" PRId64 " entr%s in archive\n", count, count == 1 ? "y" : "ies");
     return 0;
 }
 
