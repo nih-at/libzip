@@ -52,3 +52,5 @@
 ^xcode/libzip\.xcodeproj/project\.xcworkspace/xcuserdata
 ^xcode/libzip\.xcodeproj/xcuserdata/
 ~$
+^.git
+^.gitignore
