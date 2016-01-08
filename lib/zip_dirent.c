@@ -831,7 +831,10 @@ _zip_ef_utf8(zip_uint16_t id, zip_string_t *str, zip_error_t *error)
     zip_buffer_t *buffer;
     zip_extra_field_t *ef;
 
-    raw = _zip_string_get(str, &len, ZIP_FL_ENC_RAW, NULL);
+    if ((raw=_zip_string_get(str, &len, ZIP_FL_ENC_RAW, NULL)) == NULL) {
+	/* error already set */
+	return NULL;
+    }
 
     if (len+5 > ZIP_UINT16_MAX) {
         zip_error_set(error, ZIP_ER_INVAL, 0); /* TODO: better error code? */
