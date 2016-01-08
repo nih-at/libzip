@@ -1,6 +1,6 @@
 /*
   fread.c -- test cases for reading from zip archives
-  Copyright (C) 2004-2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2016 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>

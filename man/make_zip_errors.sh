@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #  make_zip_errrors.sh: create zip_errors.mdoc from zip.h
-#  Copyright (C) 1999, 2003, 2004, 2005 Dieter Baron and Thomas Klausner
+#  Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
 #
 #  This file is part of libzip, a library to manipulate ZIP archives.
 #  The authors can be contacted at <libzip@nih.at>
@@ -49,7 +49,7 @@ date=`date '+%B %e, %Y' | sed 's/  / /'`
 
 cat <<EOF >> "$2.$$" || exit 1
 .\" zip_errors.mdoc -- list of all libzip error codes
-.\" Copyright (C) 2004, 2005 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 1999-2013 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
