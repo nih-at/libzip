@@ -500,7 +500,7 @@ set_file_mtime_all(int argc, char *argv[]) {
     time_t mtime;
     zip_uint64_t idx, max_idx;
     mtime = (time_t)strtoull(argv[0], NULL, 10);
-    max_idx = zip_get_num_entries(za, 0);
+    max_idx = (zip_uint64_t)zip_get_num_entries(za, 0);
     for (idx = 0; idx < max_idx; idx++) {
 	if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
 	    fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to `%ld': %s\n", idx, mtime, zip_strerror(za));
