@@ -85,6 +85,7 @@ SET(MDOC3_PAGES
 SET(MDOC1_PAGES
   zipcmp.mdoc
   zipmerge.mdoc
+  ziptool.mdoc
 )
 SET(MDOC_PAGES ${MDOC1_PAGES} ${MDOC3_PAGES})
 STRING(REGEX REPLACE .mdoc "" MAN1_PAGES "${MDOC1_PAGES}")
