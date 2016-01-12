@@ -495,6 +495,22 @@ set_file_mtime(int argc, char *argv[]) {
 }
 
 static int
+set_file_mtime_all(int argc, char *argv[]) {
+    /* set last modification time (mtime) for all files */
+    time_t mtime;
+    zip_uint64_t idx, max_idx;
+    mtime = (time_t)strtoull(argv[0], NULL, 10);
+    max_idx = zip_get_num_entries(za, 0);
+    for (idx = 0; idx < max_idx; idx++) {
+	if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
+	    fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to `%ld': %s\n", idx, mtime, zip_strerror(za));
+	    return -1;
+	}
+    }
+    return 0;
+}
+
+static int
 set_password(int argc, char *argv[]) {
     /* set default password */
     if (zip_set_default_password(za, argv[0]) < 0) {
@@ -862,6 +878,7 @@ dispatch_table_t dispatch_table[] = {
     { "set_file_comment", 2, "index comment", "set file comment", set_file_comment },
     { "set_file_compression", 3, "index method flags", "set file compression method", set_file_compression },
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
+    { "set_file_mtime_all", 1, "timestamp", "set file modification time for all files", set_file_mtime_all },
     { "set_password", 1, "password", "set default password for encryption", set_password },
     { "stat", 1, "index", "print information about entry", zstat },
     { "unchange_all", 0, "", "revert all changes", unchange_all },

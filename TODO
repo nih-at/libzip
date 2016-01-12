@@ -50,7 +50,6 @@ Features
   of four; used on Android to speed up loading of data
 * ziptool
   * add support for enums
-  * add set_mtime_for_all
 
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
