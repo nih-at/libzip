@@ -38,6 +38,6 @@ BEGIN { push @INC, '@abs_srcdir@'; }
 
 use NiHTest;
 
-my $test = NiHTest::new({ default_program => 'modify', srcdir => '@srcdir@', zipcmp => '../../src/zipcmp', zipcmp_flags => '-p' });
+my $test = NiHTest::new({ default_program => '../src/ziptool', srcdir => '@srcdir@', zipcmp => '../../src/zipcmp', zipcmp_flags => '-p' });
 
 $test->run(@ARGV);

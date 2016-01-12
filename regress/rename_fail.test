@@ -1,5 +1,4 @@
 # rename file inside zip archive, but file name already exists
-program modify
 return 1
 args rename.zip   rename 0 file4
 file rename.zip testcomment.zip testcomment.zip

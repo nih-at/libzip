@@ -1,5 +1,4 @@
 # change method to unknown
-program modify
 return 1
 args test.zip  set_file_compression 0 unknown 0
 file test.zip teststored.zip teststored.zip

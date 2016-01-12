@@ -1,5 +1,4 @@
 # stat file in streamed zip file
-program modify
 args streamed stat 0
 file streamed streamed-zip64.zip streamed-zip64.zip
 return 0

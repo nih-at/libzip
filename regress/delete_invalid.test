@@ -1,5 +1,4 @@
 # delete last entry in zip archive
-program modify
 return 1
 args testfile.zzip delete 5
 file testfile.zzip testfile.zip testfile.zip

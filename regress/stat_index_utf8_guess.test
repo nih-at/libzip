@@ -1,5 +1,4 @@
 # guess UTF-8 file names
-program modify
 args test-utf8.zip stat 0
 return 0
 file test-utf8.zip test-utf8.zip test-utf8.zip

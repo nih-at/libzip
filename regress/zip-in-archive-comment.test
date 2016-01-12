@@ -1,5 +1,4 @@
 # stat file in zip that contains archive comment to find out if it detected the right one of the two
-program modify
 args zip-in-archive-comment.zip stat 0
 file zip-in-archive-comment.zip zip-in-archive-comment.zip zip-in-archive-comment.zip
 return 0

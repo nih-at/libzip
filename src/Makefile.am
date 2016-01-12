@@ -1,10 +1,10 @@
-bin_PROGRAMS=zipcmp zipmerge
+bin_PROGRAMS=zipcmp zipmerge ziptool
+noinst_PROGRAMS=hole
 
-zipcmp_SOURCES=zipcmp.c
+hole_SOURCES= hole.c source_hole.c
+ziptool_SOURCES= source_hole.c ziptool.c
 
-zipcmp_CPPFLAGS=-I${top_srcdir}/lib -I../lib
-zipcmp_LDADD=${top_builddir}/lib/libzip.la
-zipmerge_CPPFLAGS=-I${top_srcdir}/lib -I../lib
-zipmerge_LDADD=${top_builddir}/lib/libzip.la
+AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib
+LDADD=${top_builddir}/lib/libzip.la
 
 EXTRA_DIST=	CMakeLists.txt getopt.c getopt.h compat.h

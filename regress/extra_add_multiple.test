@@ -1,5 +1,4 @@
 # add extra fields
-program modify
 args testfile.zip  set_extra 0 2345 65535 cl extra1  set_extra 0 2345 65535 cl extra2  set_extra 0 2345 0 c extra1c  set_extra 0 2345 1 l extra2l  get_extra_by_id 0 2345 0 c  get_extra_by_id 0 2345 1 c  get_extra_by_id 0 2345 0 l  get_extra_by_id 0 2345 1 l
 return 0
 file testfile.zip testfile.zip testfile-plus-extra.zip

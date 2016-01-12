@@ -1,6 +1,5 @@
 # follow strict rules and convert UTF-8 as if it was CP437,
 # if not marked otherwise (in this case: not marked)
-program modify
 args -s test-utf8-unmarked.zip stat 0
 return 0
 file test-utf8-unmarked.zip test-utf8-unmarked.zip test-utf8-unmarked.zip

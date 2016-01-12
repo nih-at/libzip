@@ -1,5 +1,4 @@
 # zip_open: entries ordered by central directory order
-program modify
 args fileorder.zzip stat 0 stat 1
 return 0
 file fileorder.zzip fileorder.zip fileorder.zip

@@ -13,3 +13,11 @@ INSTALL(TARGETS zipcmp RUNTIME DESTINATION bin)
 ADD_EXECUTABLE(zipmerge zipmerge.c ${SRC_EXTRA_FILES})
 TARGET_LINK_LIBRARIES(zipmerge zip)
 INSTALL(TARGETS zipmerge RUNTIME DESTINATION bin)
+
+ADD_EXECUTABLE(ziptool ziptool.c ${SRC_EXTRA_FILES} source_hole.c)
+TARGET_LINK_LIBRARIES(ziptool zip)
+INSTALL(TARGETS ziptool RUNTIME DESTINATION bin)
+
+ADD_EXECUTABLE(hole hole.c ${SRC_EXTRA_FILES} source_hole.c)
+TARGET_LINK_LIBRARIES(hole zip)
+# do not install hole, just a test helper

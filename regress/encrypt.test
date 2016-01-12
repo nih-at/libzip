@@ -1,6 +1,5 @@
 # test encryption support
 # TODO: only checks recognition of encrypted entries for now.
-program modify
 return 0
 args encrypt.zzip stat 0 stat 1
 file encrypt.zzip encrypt.zip encrypt.zip

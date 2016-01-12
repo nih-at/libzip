@@ -1,5 +1,5 @@
 /*
-  modify.c -- test tool for modifying zip archive in multiple ways
+  ziptool.c -- tool for modifying zip archive in multiple ways
   Copyright (C) 2012-2016 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -167,12 +167,12 @@ static int
 add_nul(int argc, char *argv[]) {
     zip_source_t *zs;
     zip_uint64_t length = strtoull(argv[1], NULL, 10);
-    
+
     if ((zs=source_nul(za, length)) == NULL) {
         fprintf(stderr, "can't create zip_source for length: %s\n", zip_strerror(za));
         return -1;
     }
-    
+
     if (zip_add(za, argv[0], zs) == -1) {
         zip_source_free(zs);
         fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
@@ -213,7 +213,7 @@ cat(int argc, char *argv[]) {
     }
     if ((err = zip_fclose(zf)) != 0) {
 	zip_error_t error;
-	
+
 	zip_error_init_with_code(&error, err);
 	fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(&error));
 	return -1;
@@ -394,7 +394,7 @@ name_locate(int argc, char *argv[]) {
 	fprintf(stderr, "can't find entry with name '%s' using flags '%s'\n", argv[0], argv[1]);
     } else {
 	printf("name '%s' using flags '%s' found at index %" PRId64 "\n", argv[0], argv[1], idx);
-    }	
+    }
 
     return 0;
 }
@@ -611,11 +611,11 @@ hexdump(const zip_uint8_t *data, zip_uint16_t len)
 	return;
 
     printf("0x");
-	
+
     for (i=0; i<len; i++)
 	printf("%02x", data[i]);
 
-    return;    
+    return;
 }
 
 
@@ -625,16 +625,16 @@ read_hole(const char *archive, int flags, int *err)
     zip_error_t error;
     zip_source_t *src = NULL;
     zip_t *zs = NULL;
-    
+
     zip_error_init(&error);
-    
+
     if ((src = source_hole_create(archive, flags, &error)) == NULL
         || (zs = zip_open_from_source(src, flags, &error)) == NULL) {
         zip_source_free(src);
         *err = zip_error_code_zip(&error);
         errno = zip_error_code_system(&error);
     }
-    
+
     return zs;
 }
 
@@ -708,22 +708,22 @@ static zip_int64_t
 source_nul_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command)
 {
     source_nul_t *ctx = (source_nul_t *)ud;
-    
+
     switch (command) {
         case ZIP_SOURCE_CLOSE:
             return 0;
 
         case ZIP_SOURCE_ERROR:
             return zip_error_to_data(&ctx->error, data, length);
-            
+
         case ZIP_SOURCE_FREE:
             free(ctx);
             return 0;
-            
+
         case ZIP_SOURCE_OPEN:
             ctx->offset = 0;
             return 0;
-            
+
         case ZIP_SOURCE_READ:
 	    if (length > ZIP_INT64_MAX) {
 		zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
@@ -733,24 +733,24 @@ source_nul_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t comman
             if (length > ctx->length - ctx->offset) {
                 length =ctx->length - ctx->offset;
             }
-            
+
             memset(data, 0, length);
             ctx->offset += length;
             return (zip_int64_t)length;
-            
+
         case ZIP_SOURCE_STAT: {
             zip_stat_t *st = ZIP_SOURCE_GET_ARGS(zip_stat_t, data, length, &ctx->error);
-            
+
             if (st == NULL) {
                 return -1;
             }
-            
+
             st->valid |= ZIP_STAT_SIZE;
             st->size = ctx->length;
-            
+
             return 0;
         }
-            
+
         case ZIP_SOURCE_SUPPORTS:
             return zip_source_make_command_bitmap(ZIP_SOURCE_CLOSE, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_STAT, -1);
 
@@ -765,21 +765,21 @@ source_nul(zip_t *zs, zip_uint64_t length)
 {
     source_nul_t *ctx;
     zip_source_t *src;
-    
+
     if ((ctx = (source_nul_t *)malloc(sizeof(*ctx))) == NULL) {
         zip_error_set(zip_get_error(zs), ZIP_ER_MEMORY, 0);
         return NULL;
     }
-    
+
     zip_error_init(&ctx->error);
     ctx->length = length;
     ctx->offset = 0;
-    
+
     if ((src = zip_source_function(zs, source_nul_cb, ctx)) == NULL) {
         free(ctx);
         return NULL;
     }
-    
+
     return src;
 }
 
@@ -971,7 +971,7 @@ main(int argc, char *argv[])
 	    usage(prg);
 	}
     }
-    
+
     arg = optind;
 
     archive = argv[arg++];
@@ -983,11 +983,11 @@ main(int argc, char *argv[])
         case SOURCE_TYPE_NONE:
             za = zip_open(archive, flags, &err);
             break;
-            
+
         case SOURCE_TYPE_IN_MEMORY:
             za = read_to_memory(archive, flags, &err, &memory_src);
             break;
-            
+
         case SOURCE_TYPE_HOLE: {
             za = read_hole(archive, flags, &err);
             break;

@@ -1,5 +1,4 @@
 # stat file in zip64 zip file
-program modify
 args bigzero stat 0
 file bigzero bigzero.zip bigzero.zip
 return 0

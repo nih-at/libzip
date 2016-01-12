@@ -6,17 +6,7 @@ noinst_PROGRAMS= \
 	add_from_filep \
 	fopen_unchanged \
 	fread \
-	hole \
-	modify \
 	tryopen
-
-modify_SOURCES= \
-	modify.c \
-	source_hole.c
-
-hole_SOURCES= \
-	hole.c \
-	source_hole.c
 
 pkglib_LTLIBRARIES=	malloc.la
 malloc_la_SOURCES=	malloc.c
@@ -232,10 +222,10 @@ LDADD=${top_builddir}/lib/libzip.la
 check-am: bigzero.zip manyfiles.zip runtest
 
 bigzero.zip: bigzero-zip.zip
-	${builddir}/modify ${srcdir}/bigzero-zip.zip cat 0 > ${builddir}/bigzero.zip
+	${top_builddir}/src/ziptool ${srcdir}/bigzero-zip.zip cat 0 > ${builddir}/bigzero.zip
 
 manyfiles.zip: manyfiles-zip.zip
-	${builddir}/modify ${srcdir}/manyfiles-zip.zip cat 0 > ${builddir}/manyfiles.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 0 > ${builddir}/manyfiles.zip
 
 runtest: runtest.in
 	sed -e 's!@[s]rcdir@!${srcdir}!g' -e 's!@[a]bs_srcdir@!${abs_srcdir}!g' ${srcdir}/runtest.in > runtest

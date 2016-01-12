@@ -1,5 +1,4 @@
 # add already existing file to zip, making duplicate names
-program modify
 return 1
 args -- testfile.zip   add_file testfile.txt testfile.txt 0 -1
 file testfile.txt testfile.txt testfile.txt

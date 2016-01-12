@@ -1,5 +1,4 @@
 # count extra fields for index
-program modify
 args encrypt.zip count_extra 0 l count_extra 0 c count_extra 0 lc count_extra 1 l count_extra 1 c count_extra 1 lc
 return 0
 file encrypt.zip encrypt.zip encrypt.zip

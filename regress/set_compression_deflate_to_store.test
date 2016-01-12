@@ -1,5 +1,4 @@
 # change method from deflated to stored
-program modify
 return 0
 args test.zip  set_file_compression 0 store 0
 file test.zip testdeflated.zip teststored.zip
