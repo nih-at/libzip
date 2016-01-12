@@ -1,6 +1,6 @@
 /*
   zip_dirent.c -- read directory entry (local or central), clean dirent
-  Copyright (C) 1999-2015 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2016 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -481,8 +481,12 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	
 	if (zde->uncomp_size == ZIP_UINT32_MAX)
 	    zde->uncomp_size = _zip_buffer_get_64(ef_buffer);
-	else if (local)
-	    ef += 8;
+	else if (local) {
+	    /* From appnote.txt: This entry in the Local header MUST
+	       include BOTH original and compressed file size fields. */
+	    zip_uint64_t ignore;
+	    ignore = _zip_buffer_get_64(ef_buffer);
+	}
 	if (zde->comp_size == ZIP_UINT32_MAX)
 	    zde->comp_size = _zip_buffer_get_64(ef_buffer);
 	if (!local) {
