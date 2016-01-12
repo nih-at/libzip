@@ -40,13 +40,13 @@
 ^regress/bigzero.zip$
 ^regress/fopen_unchanged$
 ^regress/fread$
-^regress/hole$
 ^regress/manyfiles.zip$
-^regress/modify$
 ^regress/runtest$
 ^regress/tryopen$
+^src/hole$
 ^src/zipcmp$
 ^src/zipmerge$
+^src/ziptool$
 ^stamp-h1$
 ^test-driver$
 ^xcode/libzip\.xcodeproj/project\.xcworkspace/xcuserdata
