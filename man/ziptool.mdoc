@@ -196,7 +196,7 @@ Get file comment for archive entry
 .Ar index .
 .It Cm get_num_entries Ar flags
 Print number of entries in archive using
-.Ar flags.
+.Ar flags .
 .It Cm name_locate Ar name flags
 Find entry in archive with the filename
 .Ar name
@@ -291,6 +291,8 @@ Supported methods are:
 .It
 .Dv store
 .El
+.Sh EXIT STATUS
+.Ex -std
 .Sh EXAMPLES
 Add a file called
 .Pa teststring.txt
@@ -310,8 +312,6 @@ Delete the first file from the zip archive
 .Bd -literal -offset indent
 ziptool testfile.zip delete 0
 .Ed
-.Sh EXIT STATUS
-.Ex -std
 .Sh SEE ALSO
 .Xr zipcmp 1 ,
 .Xr zipmerge 1 ,
