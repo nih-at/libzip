@@ -78,7 +78,7 @@ Read archive into memory, and modify there; write out at end.
 This command is for internal testing of
 .Xr libzip 3 .
 .It Fl n
-Create archive if it doesn't exist (default).
+Create archive if it doesn't exist.
 See also
 .Fl e .
 .It Fl r
@@ -90,9 +90,9 @@ Follow file name convention strictly (for
 .Cm stat
 command).
 .It Fl t
-Disregard current archive contents, if any.
+Disregard current file contents, if any.
 .Em Note :
-use this with care, it deletes all existing zip archive contents when
+use this with care, it deletes all existing file contents when
 you modify the archive.
 .El
 .Ss Commands
@@ -201,7 +201,8 @@ Print number of entries in archive using
 Find entry in archive with the filename
 .Ar name
 using
-.Ar flags .
+.Ar flags
+and print its index.
 .It Cm rename Ar index name
 Rename archive entry
 .Ar index
@@ -216,11 +217,10 @@ with the string
 Set archive comment to
 .Ar comment .
 .It Cm set_extra Ar index extra_id extra_index flags value
-Set extra field
+Set extra field number
 .Ar extra_index
-.Ar index
 of type
-.Ar extra_index
+.Ar extra_id
 for archive entry
 .Ar index
 using
@@ -232,13 +232,17 @@ Set file comment for archive entry
 .Ar index
 to string
 .Ar comment .
-.It Cm set_file_compression Ar index method flags
+.It Cm set_file_compression Ar index method compression_flags
 Set file compression method for archive entry
 .Ar index
 to
 .Ar method
 using
-.Ar flags .
+.Ar compression_flags .
+.Em Note :
+Currently,
+.Ar compression_flags
+are ignored.
 .It Cm set_file_mtime Ar index timestamp
 Set file modification time for archive entry
 .Ar index
@@ -247,7 +251,7 @@ to UNIX mtime
 .It Cm set_file_mtime_all Ar timestamp
 Set file modification time for all archive entries to UNIX mtime
 .Ar timestamp .
-.It Cm set_password Ar set default password
+.It Cm set_password Ar password
 Set default password for encryption/decryption to
 .Ar password .
 .It Cm stat Ar index
@@ -258,7 +262,7 @@ Revert all changes up to that point.
 Mostly useful for testing.
 .It Cm zin_close Ar index
 Close input zip_source
-.Ar index
+.Ar index .
 For internal tests only.
 .El
 .Ss Flags
@@ -310,6 +314,7 @@ ziptool testfile.zip delete 0
 .Ex -std
 .Sh SEE ALSO
 .Xr zipcmp 1 ,
+.Xr zipmerge 1 ,
 .Xr libzip 3
 .Sh AUTHORS
 .An -nosplit

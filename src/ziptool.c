@@ -876,7 +876,7 @@ dispatch_table_t dispatch_table[] = {
     { "set_archive_comment", 1, "comment", "set archive comment", set_archive_comment },
     { "set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra },
     { "set_file_comment", 2, "index comment", "set file comment", set_file_comment },
-    { "set_file_compression", 3, "index method flags", "set file compression method", set_file_compression },
+    { "set_file_compression", 3, "index method compression_flags", "set file compression method", set_file_compression },
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
     { "set_file_mtime_all", 1, "timestamp", "set file modification time for all files", set_file_mtime_all },
     { "set_password", 1, "password", "set default password for encryption", set_password },
@@ -931,7 +931,7 @@ usage(const char *progname, const char *reason)
             "\t-H\twrite files with holes compactly\n"
             "\t-h\tdisplay this usage\n"
 	    "\t-m\tread archive into memory, and modify there; write out at end\n"
-	    "\t-n\tcreate archive if it doesn't exist (default)\n"
+	    "\t-n\tcreate archive if it doesn't exist\n"
 	    "\t-r\tprint raw file name encoding without translation (for stat)\n"
 	    "\t-s\tfollow file name convention strictly (for stat)\n"
 	    "\t-t\tdisregard current archive contents, if any\n");
