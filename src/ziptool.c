@@ -945,6 +945,10 @@ usage(const char *progname, const char *reason)
 	    "\td\tZIP_FL_NODIR\n"
 	    "\tl\tZIP_FL_LOCAL\n"
 	    "\tu\tZIP_FL_UNCHANGED\n");
+    fprintf(out, "\nSupported compression methods are:\n"
+	    "\tdefault\n"
+	    "\tdeflate\n"
+	    "\tstore\n");
     fprintf(out, "\nThe index is zero-based.\n");
     exit(0);
 }
