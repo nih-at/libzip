@@ -40,13 +40,6 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_STDBOOL_H
-#include <stdbool.h>
-#else
-typedef char bool;
-#define true    1
-#define false   0
-#endif
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
@@ -917,16 +910,21 @@ dispatch(int argc, char *argv[])
 
 
 static void
-usage(const char *progname, bool ok)
+usage(const char *progname, const char *reason)
 {
     unsigned int i;
     FILE *out;
-    if (ok)
+    if (reason == NULL)
 	out = stdout;
     else
 	out = stderr;
-    fprintf(out, "usage: %s [-cegHhmnrst] archive command1 [args] [command2 [args] ...]\n\n"
-	    "Supported options are:\n"
+    fprintf(out, "usage: %s [-cegHhmnrst] archive command1 [args] [command2 [args] ...]\n", progname);
+    if (reason != NULL) {
+	fprintf(out, "%s\n", reason);
+	exit(1);
+    }
+
+    fprintf(out, "\nSupported options are:\n"
 	    "\t-c\tcheck consistency\n"
 	    "\t-e\terror if archive already exists (only useful with -n)\n"
 	    "\t-g\tguess file name encoding (for stat)\n"
@@ -936,7 +934,7 @@ usage(const char *progname, bool ok)
 	    "\t-n\tcreate archive if it doesn't exist (default)\n"
 	    "\t-r\tprint raw file name encoding without translation (for stat)\n"
 	    "\t-s\tfollow file name convention strictly (for stat)\n"
-	    "\t-t\tdisregard current archive contents, if any\n", progname);
+	    "\t-t\tdisregard current archive contents, if any\n");
     fprintf(out, "\nSupported commands and arguments are:\n");
     for (i=0; i<sizeof(dispatch_table)/sizeof(dispatch_table_t); i++) {
 	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
@@ -948,7 +946,7 @@ usage(const char *progname, bool ok)
 	    "\tl\tZIP_FL_LOCAL\n"
 	    "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nThe index is zero-based.\n");
-    exit(1);
+    exit(0);
 }
 
 int
@@ -965,7 +963,7 @@ main(int argc, char *argv[])
     prg = argv[0];
 
     if (argc < 2)
-	usage(prg, false);
+	usage(prg, "too few arguments");
 
     while ((c=getopt(argc, argv, "cegHhmnrst")) != -1) {
 	switch (c) {
@@ -982,7 +980,7 @@ main(int argc, char *argv[])
             source_type = SOURCE_TYPE_HOLE;
             break;
 	case 'h':
-	    usage(prg, true);
+	    usage(prg, NULL);
 	    break;
 	case 'm':
             source_type = SOURCE_TYPE_IN_MEMORY;
@@ -1001,7 +999,11 @@ main(int argc, char *argv[])
 	    break;
 
 	default:
-	    usage(prg, false);
+	{
+	    char reason[128];
+	    snprintf(reason, sizeof(reason), "invalid option -%c", optopt);
+	    usage(prg, reason);
+	}
 	}
     }
 
