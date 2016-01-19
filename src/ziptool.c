@@ -40,6 +40,13 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_STDBOOL_H
+#include <stdbool.h>
+#else
+typedef char bool;
+#define true    1
+#define false   0
+#endif
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
@@ -910,31 +917,37 @@ dispatch(int argc, char *argv[])
 
 
 static void
-usage(const char *progname)
+usage(const char *progname, bool ok)
 {
     unsigned int i;
-    fprintf(stderr, "usage: %s [-cemnt] archive command1 [args] [command2 [args] ...]\n\n"
+    FILE *out;
+    if (ok)
+	out = stdout;
+    else
+	out = stderr;
+    fprintf(out, "usage: %s [-cegHhmnrst] archive command1 [args] [command2 [args] ...]\n\n"
 	    "Supported options are:\n"
 	    "\t-c\tcheck consistency\n"
 	    "\t-e\terror if archive already exists (only useful with -n)\n"
 	    "\t-g\tguess file name encoding (for stat)\n"
             "\t-H\twrite files with holes compactly\n"
+            "\t-h\tdisplay this usage\n"
 	    "\t-m\tread archive into memory, and modify there; write out at end\n"
 	    "\t-n\tcreate archive if it doesn't exist (default)\n"
 	    "\t-r\tprint raw file name encoding without translation (for stat)\n"
 	    "\t-s\tfollow file name convention strictly (for stat)\n"
 	    "\t-t\tdisregard current archive contents, if any\n", progname);
-    fprintf(stderr, "\nSupported commands and arguments are:\n");
+    fprintf(out, "\nSupported commands and arguments are:\n");
     for (i=0; i<sizeof(dispatch_table)/sizeof(dispatch_table_t); i++) {
-	fprintf(stderr, "\t%s %s -- %s\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
+	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
     }
-    fprintf(stderr, "\nSupported flags are:\n"
+    fprintf(out, "\nSupported flags are:\n"
 	    "\tC\tZIP_FL_NOCASE\n"
 	    "\tc\tZIP_FL_CENTRAL\n"
 	    "\td\tZIP_FL_NODIR\n"
 	    "\tl\tZIP_FL_LOCAL\n"
 	    "\tu\tZIP_FL_UNCHANGED\n");
-    fprintf(stderr, "\nThe index is zero-based.\n");
+    fprintf(out, "\nThe index is zero-based.\n");
     exit(1);
 }
 
@@ -952,9 +965,9 @@ main(int argc, char *argv[])
     prg = argv[0];
 
     if (argc < 2)
-	usage(prg);
+	usage(prg, false);
 
-    while ((c=getopt(argc, argv, "cegHmnrst")) != -1) {
+    while ((c=getopt(argc, argv, "cegHhmnrst")) != -1) {
 	switch (c) {
 	case 'c':
 	    flags |= ZIP_CHECKCONS;
@@ -968,6 +981,9 @@ main(int argc, char *argv[])
         case 'H':
             source_type = SOURCE_TYPE_HOLE;
             break;
+	case 'h':
+	    usage(prg, true);
+	    break;
 	case 'm':
             source_type = SOURCE_TYPE_IN_MEMORY;
             break;
@@ -985,7 +1001,7 @@ main(int argc, char *argv[])
 	    break;
 
 	default:
-	    usage(prg);
+	    usage(prg, false);
 	}
     }
 
