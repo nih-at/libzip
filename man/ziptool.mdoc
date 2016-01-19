@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd January 12, 2016
+.Dd January 19, 2016
 .Dt ZIPTOOL 1
 .Os
 .Sh NAME
@@ -37,7 +37,7 @@
 .Nd modify zip archives
 .Sh SYNOPSIS
 .Nm
-.Op Fl cegHmnrst
+.Op Fl cegHhmnrst
 .Ar zip-archive
 .Cm command Op Ar command-args ...
 .Op Cm command Oo Ar command-args ... Oc ...
@@ -70,6 +70,8 @@ write a basic run-length encoded block instead.
 This command is for internal testing of
 .Xr libzip 3
 and will usually create invalid zip archives.
+.It Fl h
+Display help.
 .It Fl m
 Read archive into memory, and modify there; write out at end.
 .Em Note :
@@ -274,12 +276,19 @@ Supported flags are:
 .It Ar u
 .Dv ZIP_FL_UNCHANGED
 .El
+.Ss Compression Methods
+Some commands take compression method arguments.
+Supported methods are:
+.Bl -bullet -compact -offset indent
+.It
+.Dv default
+.It
+.Dv deflate
+.It
+.Dv store
+.El
 .Sh EXAMPLES
-.Bd -literal -offset indent
-ziptool testbuffer.zip add teststring.txt \\"This is a test.\en\\"
-.Ed
-.Pp
-Adds a file called
+Add a file called
 .Pa teststring.txt
 to the zip archive
 .Pa testbuffer.zip
@@ -287,13 +296,16 @@ with data
 .Dq This is a test.\en
 where
 .Dq \en
-is replaced with a newline character.
+is replaced with a newline character:
 .Bd -literal -offset indent
-ziptool testfile.zip delete 0
+ziptool testbuffer.zip add teststring.txt \\"This is a test.\en\\"
 .Ed
 .Pp
 Delete the first file from the zip archive
-.Pa testfile.zip .
+.Pa testfile.zip :
+.Bd -literal -offset indent
+ziptool testfile.zip delete 0
+.Ed
 .Sh EXIT STATUS
 .Ex -std
 .Sh SEE ALSO
