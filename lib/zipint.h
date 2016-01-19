@@ -503,7 +503,7 @@ void _zip_ef_free(zip_extra_field_t *);
 const zip_uint8_t *_zip_ef_get_by_id(const zip_extra_field_t *, zip_uint16_t *, zip_uint16_t, zip_uint16_t, zip_flags_t, zip_error_t *);
 zip_extra_field_t *_zip_ef_merge(zip_extra_field_t *, zip_extra_field_t *);
 zip_extra_field_t *_zip_ef_new(zip_uint16_t, zip_uint16_t, const zip_uint8_t *, zip_flags_t);
-zip_extra_field_t *_zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_error_t *);
+bool _zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_extra_field_t **, zip_error_t *);
 zip_extra_field_t *_zip_ef_remove_internal(zip_extra_field_t *);
 zip_uint16_t _zip_ef_size(const zip_extra_field_t *, zip_flags_t);
 int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags);
