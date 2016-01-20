@@ -37,6 +37,12 @@ EXTRA_DIST= \
 	extra_field_align_3-0.zip \
 	extra_field_align_3-ff.zip \
 	extra_field_align_4-ff.zip \
+	extra_field_align_1-ef_00.zip \
+	extra_field_align_1-ef_ff.zip \
+	extra_field_align_2-ef_00.zip \
+	extra_field_align_2-ef_ff.zip \
+	extra_field_align_3-ef_00.zip \
+	extra_field_align_3-ef_ff.zip \
 	filename_duplicate.zip \
 	filename_duplicate_empty.zip \
 	filename_empty.zip \
@@ -223,6 +229,9 @@ TESTS= \
 	zip-in-archive-comment.test \
 	zip64_creation.test \
 	zip64_stored_creation.test
+
+XFAIL_TESTS=\
+	extra_field_align.test
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
