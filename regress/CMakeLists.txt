@@ -54,6 +54,7 @@ SET(EXTRA_TESTS
 	extra_count_ignore_zip64.test
 	extra_delete.test
 	extra_delete_by_id.test
+	extra_field_align.test
 	extra_get.test
 	extra_get_by_id.test
 	extra_set.test

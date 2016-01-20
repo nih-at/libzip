@@ -30,6 +30,13 @@ EXTRA_DIST= \
 	encrypt_plus_extra.zip \
 	encrypt_plus_extra_modified_c.zip \
 	encrypt_plus_extra_modified_l.zip \
+	extra_field_align_1-0.zip \
+	extra_field_align_1-ff.zip \
+	extra_field_align_2-0.zip \
+	extra_field_align_2-ff.zip \
+	extra_field_align_3-0.zip \
+	extra_field_align_3-ff.zip \
+	extra_field_align_4-ff.zip \
 	filename_duplicate.zip \
 	filename_duplicate_empty.zip \
 	filename_empty.zip \
@@ -154,6 +161,7 @@ TESTS= \
 	extra_count_ignore_zip64.test \
 	extra_delete.test \
 	extra_delete_by_id.test \
+	extra_field_align.test \
 	extra_get.test \
 	extra_get_by_id.test \
 	extra_set.test \
