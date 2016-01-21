@@ -267,6 +267,9 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
     if (ef_head_p) {
 	*ef_head_p = ef_head;
     }
+    else {
+        _zip_ef_free(ef_head);
+    }
     
     return true;
 }
