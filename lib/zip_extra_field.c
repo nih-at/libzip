@@ -253,7 +253,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
 	/* see https://android.googlesource.com/platform/build/+/master/tools/zipalign/ZipAlign.cpp */
 	size_t glen = _zip_buffer_left(buffer);
 	zip_uint8_t *garbage;
-	garbage = _zip_buffer_get(buffer, len);
+	garbage = _zip_buffer_get(buffer, glen);
 	if (glen >= 4 || garbage == NULL || memcmp(garbage, "\0\0\0", glen) != 0) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
 	    _zip_buffer_free(buffer);

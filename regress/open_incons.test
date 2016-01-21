@@ -60,9 +60,10 @@ stdout opening 'incons-ef-central-size-wrong.zzip' returned error 21
 stdout opening 'incons-ef-local-id-size.zzip' returned error 21
 # different extra fields local vs. central is fine
 stdout opening 'incons-ef-local-id.zzip' succeeded, 1 entries
-stdout opening 'incons-ef-local-incomplete1.zzip' returned error 21
-stdout opening 'incons-ef-local-incomplete2.zzip' returned error 21
-stdout opening 'incons-ef-local-incomplete3.zzip' returned error 21
+# Allow up to 3 bytes of NUL padding (APK compatibility)
+stdout opening 'incons-ef-local-incomplete1.zzip' succeeded, 1 entries
+stdout opening 'incons-ef-local-incomplete2.zzip' succeeded, 1 entries
+stdout opening 'incons-ef-local-incomplete3.zzip' succeeded, 1 entries
 # EF consisting of 4 zero bytes is technically ok
 stdout opening 'incons-ef-local-incomplete4.zzip' succeeded, 1 entries
 stdout opening 'incons-ef-local-size.zzip' returned error 21
@@ -80,4 +81,4 @@ stdout opening 'incons-local-filename-short.zzip' returned error 21
 stdout opening 'incons-local-filename.zzip' returned error 21
 stdout opening 'incons-local-magic-bad.zzip' returned error 19
 stdout opening 'incons-local-size-larger.zzip' returned error 21
-stderr 34 errors
+stderr 31 errors

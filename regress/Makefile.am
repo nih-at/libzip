@@ -230,8 +230,8 @@ TESTS= \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
-XFAIL_TESTS=\
-	extra_field_align.test
+#XFAIL_TESTS=
+
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
