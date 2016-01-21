@@ -498,10 +498,15 @@ static int
 set_file_mtime_all(int argc, char *argv[]) {
     /* set last modification time (mtime) for all files */
     time_t mtime;
-    zip_uint64_t idx, max_idx;
+    zip_int64_t num_entries;
+    zip_uint64_t idx;
     mtime = (time_t)strtoull(argv[0], NULL, 10);
-    max_idx = (zip_uint64_t)zip_get_num_entries(za, 0);
-    for (idx = 0; idx < max_idx; idx++) {
+    
+    if ((num_entries = zip_get_num_entries(za, 0)) < 0) {
+        fprintf(stderr, "can't get number of entries: %s\n", zip_strerror(za));
+        return -1;
+    }
+    for (idx = 0; idx < (zip_uint64_t)num_entries; idx++) {
 	if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
 	    fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to `%ld': %s\n", idx, mtime, zip_strerror(za));
 	    return -1;
