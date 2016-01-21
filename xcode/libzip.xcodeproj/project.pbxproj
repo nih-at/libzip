@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				4B2CADAC1C50D57800291DE6 /* PBXTargetDependency */,
 				4B01D72D15B2F5AC002D5007 /* PBXTargetDependency */,
 				4B01D72F15B2F5AC002D5007 /* PBXTargetDependency */,
 			);
@@ -42,7 +43,6 @@
 				4BACD65515BC303B00920691 /* PBXTargetDependency */,
 				4BACD65715BC303B00920691 /* PBXTargetDependency */,
 				4BACD65915BC303B00920691 /* PBXTargetDependency */,
-				4BACD5B215BC2DB300920691 /* PBXTargetDependency */,
 				4BACD66915BC303B00920691 /* PBXTargetDependency */,
 			);
 			name = "test programs";
@@ -179,7 +179,7 @@
 		4B972052188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */; };
 		4BACD59315BC2CFA00920691 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
 		4BACD59415BC2D0800920691 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
-		4BACD59515BC2D1C00920691 /* modify.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BACD57C15BC2AEF00920691 /* modify.c */; };
+		4BACD59515BC2D1C00920691 /* ziptool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BACD57C15BC2AEF00920691 /* ziptool.c */; };
 		4BACD5BB15BC2DC900920691 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
 		4BACD5BC15BC2DC900920691 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
 		4BACD5C315BC2DE000920691 /* add_from_filep.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BACD57715BC2AEF00920691 /* add_from_filep.c */; };
@@ -345,6 +345,13 @@
 			remoteGlobalIDString = 4B01D68A15B2F3F1002D5007;
 			remoteInfo = "libzip Mac";
 		};
+		4B2CADAB1C50D57800291DE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4BACD58815BC2CEA00920691;
+			remoteInfo = ziptool;
+		};
 		4B54447E15C977AF0067BA33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
@@ -365,13 +372,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4B01D68A15B2F3F1002D5007;
 			remoteInfo = "libzip Mac";
-		};
-		4BACD5B115BC2DB300920691 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4BDC71BF15B181DA00236D3C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4BACD58815BC2CEA00920691;
-			remoteInfo = modify;
 		};
 		4BACD5B715BC2DC900920691 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -638,9 +638,9 @@
 		4BACD57715BC2AEF00920691 /* add_from_filep.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = add_from_filep.c; path = ../regress/add_from_filep.c; sourceTree = "<group>"; };
 		4BACD57A15BC2AEF00920691 /* fopen_unchanged.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fopen_unchanged.c; path = ../regress/fopen_unchanged.c; sourceTree = "<group>"; };
 		4BACD57B15BC2AEF00920691 /* fread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = fread.c; path = ../regress/fread.c; sourceTree = "<group>"; };
-		4BACD57C15BC2AEF00920691 /* modify.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = modify.c; path = ../regress/modify.c; sourceTree = "<group>"; };
+		4BACD57C15BC2AEF00920691 /* ziptool.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ziptool.c; sourceTree = "<group>"; };
 		4BACD58415BC2AEF00920691 /* tryopen.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = tryopen.c; path = ../regress/tryopen.c; sourceTree = "<group>"; };
-		4BACD58915BC2CEA00920691 /* modify */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = modify; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BACD58915BC2CEA00920691 /* ziptool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptool; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD5C115BC2DC900920691 /* add_from_filep */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = add_from_filep; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD5D015BC2DF200920691 /* fopen_unchanged */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fopen_unchanged; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD5DF15BC2F3700920691 /* fread */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fread; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -993,6 +993,9 @@
 				4B6B06E115F119AE008C2CBE /* compat.h */,
 				4B01D72115B2F572002D5007 /* zipcmp.c */,
 				4B01D72215B2F572002D5007 /* zipmerge.c */,
+				4BD6CB5E19E71B3B00710654 /* hole.c */,
+				4BACD57C15BC2AEF00920691 /* ziptool.c */,
+				4BD6CB5C19E6A5D900710654 /* source_hole.c */,
 			);
 			name = src;
 			path = ../src;
@@ -1123,9 +1126,6 @@
 				4BACD57715BC2AEF00920691 /* add_from_filep.c */,
 				4BACD57A15BC2AEF00920691 /* fopen_unchanged.c */,
 				4BACD57B15BC2AEF00920691 /* fread.c */,
-				4BD6CB5E19E71B3B00710654 /* hole.c */,
-				4BACD57C15BC2AEF00920691 /* modify.c */,
-				4BD6CB5C19E6A5D900710654 /* source_hole.c */,
 				4BACD58415BC2AEF00920691 /* tryopen.c */,
 				4BD35E401A33362A00256CB7 /* test cases */,
 			);
@@ -1255,7 +1255,7 @@
 				4B01D68B15B2F3F1002D5007 /* libzip.framework */,
 				4B01D6FD15B2F4B1002D5007 /* zipmerge */,
 				4B01D71315B2F4EB002D5007 /* zipcmp */,
-				4BACD58915BC2CEA00920691 /* modify */,
+				4BACD58915BC2CEA00920691 /* ziptool */,
 				4BACD5C115BC2DC900920691 /* add_from_filep */,
 				4BACD5D015BC2DF200920691 /* fopen_unchanged */,
 				4BACD5DF15BC2F3700920691 /* fread */,
@@ -1500,9 +1500,9 @@
 			productReference = 4B01D71315B2F4EB002D5007 /* zipcmp */;
 			productType = "com.apple.product-type.tool";
 		};
-		4BACD58815BC2CEA00920691 /* modify */ = {
+		4BACD58815BC2CEA00920691 /* ziptool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4BACD59015BC2CEA00920691 /* Build configuration list for PBXNativeTarget "modify" */;
+			buildConfigurationList = 4BACD59015BC2CEA00920691 /* Build configuration list for PBXNativeTarget "ziptool" */;
 			buildPhases = (
 				4BACD58515BC2CEA00920691 /* Sources */,
 				4BACD58615BC2CEA00920691 /* Frameworks */,
@@ -1513,9 +1513,9 @@
 			dependencies = (
 				4BACD59715BC2D3800920691 /* PBXTargetDependency */,
 			);
-			name = modify;
+			name = ziptool;
 			productName = modify;
-			productReference = 4BACD58915BC2CEA00920691 /* modify */;
+			productReference = 4BACD58915BC2CEA00920691 /* ziptool */;
 			productType = "com.apple.product-type.tool";
 		};
 		4BACD5B515BC2DC900920691 /* add_from_filep */ = {
@@ -1666,7 +1666,7 @@
 				4BACD5C415BC2DF200920691 /* fopen_unchanged */,
 				4BACD5D315BC2F3700920691 /* fread */,
 				4BD6CB5F19E71CD100710654 /* hole */,
-				4BACD58815BC2CEA00920691 /* modify */,
+				4BACD58815BC2CEA00920691 /* ziptool */,
 				4BACD64515BC301300920691 /* tryopen */,
 			);
 		};
@@ -1869,7 +1869,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BACD59515BC2D1C00920691 /* modify.c in Sources */,
+				4BACD59515BC2D1C00920691 /* ziptool.c in Sources */,
 				4BD6CB5D19E6A5D900710654 /* source_hole.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2050,6 +2050,11 @@
 			target = 4B01D68A15B2F3F1002D5007 /* libzip */;
 			targetProxy = 4B01D73715B2F643002D5007 /* PBXContainerItemProxy */;
 		};
+		4B2CADAC1C50D57800291DE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4BACD58815BC2CEA00920691 /* ziptool */;
+			targetProxy = 4B2CADAB1C50D57800291DE6 /* PBXContainerItemProxy */;
+		};
 		4B54447F15C977AF0067BA33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4B01D72815B2F5A2002D5007 /* command line tools */;
@@ -2064,11 +2069,6 @@
 			isa = PBXTargetDependency;
 			target = 4B01D68A15B2F3F1002D5007 /* libzip */;
 			targetProxy = 4BACD59615BC2D3800920691 /* PBXContainerItemProxy */;
-		};
-		4BACD5B215BC2DB300920691 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4BACD58815BC2CEA00920691 /* modify */;
-			targetProxy = 4BACD5B115BC2DB300920691 /* PBXContainerItemProxy */;
 		};
 		4BACD5B615BC2DC900920691 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2681,7 +2681,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4BACD59015BC2CEA00920691 /* Build configuration list for PBXNativeTarget "modify" */ = {
+		4BACD59015BC2CEA00920691 /* Build configuration list for PBXNativeTarget "ziptool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4BACD59115BC2CEA00920691 /* Debug */,
