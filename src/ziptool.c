@@ -818,8 +818,8 @@ write_memory_src_to_file(const char *archive, zip_source_t *src)
     }
     if (zip_source_open(src) < 0) {
 	if (zip_error_code_zip(zip_source_error(src)) == ZIP_ER_DELETED) {
-	    if (remove(archive) < 0 && errno != ENOENT) {
-		fprintf(stderr, "remove failed: %s\n", strerror(errno));
+	    if (unlink(archive) < 0 && errno != ENOENT) {
+		fprintf(stderr, "unlink failed: %s\n", strerror(errno));
 		return -1;
 	    }
 	    return 0;
