@@ -484,7 +484,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	else if (local) {
 	    /* From appnote.txt: This entry in the Local header MUST
 	       include BOTH original and compressed file size fields. */
-	    (void)_zip_buffer_get_64(ef_buffer);
+            (void)_zip_buffer_skip(ef_buffer, 8); /* error is caught by _zip_buffer_eof() call */
 	}
 	if (zde->comp_size == ZIP_UINT32_MAX)
 	    zde->comp_size = _zip_buffer_get_64(ef_buffer);
