@@ -1,6 +1,6 @@
 1.1 [2016/01/26]
 
-* ziptool(1): tool that allows modifying zip archives
+* ziptool(1): command line tool to modify zip archives
 * Speedups for archives with many entries
 * Coverity fixes
 * Better APK support
