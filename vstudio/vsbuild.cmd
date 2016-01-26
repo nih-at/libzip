@@ -150,9 +150,9 @@ if "%LIBZIP_RUN_TESTS%"=="true" (
 	copy Release\*.exe .
 	if errorlevel 1 popd & goto exit_failure
 	echo Extracting test files
-	if not exist ..\..\regress\bigzero.zip modify ..\..\regress\bigzero-zip.zip cat 0 > ..\..\regress\bigzero.zip
+	if not exist ..\..\regress\bigzero.zip ziptool ..\..\regress\bigzero-zip.zip cat 0 > ..\..\regress\bigzero.zip
 	if errorlevel 1 popd & goto exit_failure
-	if not exist ..\..\regress\manyfiles.zip modify ..\..\regress\manyfiles-zip.zip cat 0 > ..\..\regress\manyfiles.zip
+	if not exist ..\..\regress\manyfiles.zip ziptool ..\..\regress\manyfiles-zip.zip cat 0 > ..\..\regress\manyfiles.zip
 	if errorlevel 1 popd & goto exit_failure
 	echo Generating runtest script
 	for /f %%p in ("..\..\regress") do set ABS_SRCDIR=%%~fp
