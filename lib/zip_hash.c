@@ -254,14 +254,14 @@ _zip_hash_revert(zip_hash_t *hash)
 		}
 		p = entry;
 		entry = entry->next;
+		/* previous does not change */
 		free(p);
-		continue;
 	    }
 	    else {
 		entry->current_index = entry->orig_index;
+		previous = entry;
+		entry = entry->next;
 	    }
-	    previous = entry;
-	    entry = entry->next;
 	}
     }
 }
