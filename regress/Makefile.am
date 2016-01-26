@@ -69,10 +69,6 @@ EXTRA_DIST= \
 	incons-ef-central-size-wrong.zip \
 	incons-ef-local-id-size.zip \
 	incons-ef-local-id.zip \
-	incons-ef-local-incomplete1.zip \
-	incons-ef-local-incomplete2.zip \
-	incons-ef-local-incomplete3.zip \
-	incons-ef-local-incomplete4.zip \
 	incons-ef-local-size.zip \
 	incons-eocd-magic-bad.zip \
 	incons-file-count-high.zip \
