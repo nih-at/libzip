@@ -1,3 +1,14 @@
+1.1 [2016/01/26]
+
+* ziptool(1): tool that allows modifying zip archives
+* Speedups for archives with many entries
+* Coverity fixes
+* Better APK support
+* Support for running tests on Windows
+* More build fixes for Windows
+* Portability fixes
+* Documentation improvements
+
 1.0.1 [2015/05/04]
 
 * Build fixes for Windows.
