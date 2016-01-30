@@ -39,6 +39,22 @@
 #include <dlfcn.h>
 #undef __USE_GNU
 
+#include "config.h"
+
+#if defined(HAVE_GETPROGNAME)
+/* all fine */
+#else
+const char *
+getprogname(void)
+{
+#if defined(HAVE___PROGNAME)
+    return __progname;
+#else
+    return NULL;
+#endif
+}
+#endif
+
 static int inited = 0;
 static size_t count = 0;
 static size_t max_count = 0;

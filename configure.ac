@@ -52,8 +52,19 @@ AC_EXEEXT
 
 LT_INIT
 
-AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp fileno fseeko ftello getopt open setmode snprintf strcasecmp strdup stricmp])
+AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
+
+AC_CACHE_CHECK([if libc defines __progname], ac_cv_libc_defines___progname,
+	       [ AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
+						 [[ extern char *__progname; printf("%s", __progname); ]])],
+						 [ ac_cv_libc_defines___progname="yes" ],
+						 [ ac_cv_libc_defines___progname="no" ])
+	       ])
+if test "x$ac_cv_libc_defines___progname" = "xyes" ; then
+    AC_DEFINE([HAVE___PROGNAME], [1], [Define if libc defines __progname])
+fi
+
 
 AC_CHECK_HEADERS([fts.h stdbool.h strings.h unistd.h])
 
