@@ -12,7 +12,7 @@ my $SRCDIR = $ENV{SRCDIR} // '.';
 my @files = @ARGV;
 
 my $docset = 'at.nih.libzip.docset';
-my @sh_nodes = qw(zipcmp zipmerge);
+my @sh_nodes = qw(zipcmp zipmerge ziptool);
 
 (system('rm', '-rf', $docset) == 0) or die "can't remove old version of docset: $!";
 
@@ -46,7 +46,7 @@ print I <<EOF;
 	<key>DocSetPublisherName</key>
 	<string>NiH</string>
         <key>NSHumanReadableCopyright</key>
-        <string>Copyright © 2015 Dieter Baron and Thomas Klausner</string>
+        <string>Copyright © 2016 Dieter Baron and Thomas Klausner</string>
 	<key>CFBundleVersion</key>
 	<string>$version</string>
 	<key>DocSetFeedURL</key>
