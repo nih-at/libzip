@@ -38,6 +38,10 @@
 
 #include "zipint.h"
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
