@@ -213,7 +213,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
 
     if ((buffer = _zip_buffer_new((zip_uint8_t *)data, len)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+        return false;
     }
     
     ef_head = ef = NULL;
