@@ -41,6 +41,10 @@
 
 #include "config.h"
 
+#if defined(HAVE___PROGNAME)
+extern char *__progname;
+#endif
+
 #if defined(HAVE_GETPROGNAME)
 /* all fine */
 #else
