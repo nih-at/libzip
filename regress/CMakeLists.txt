@@ -72,6 +72,7 @@ SET(EXTRA_TESTS
 	open_filename_empty.test
 	open_incons.test
 	open_many_ok.test
+	open_multidisk.test
 	open_new_but_exists.test
 	open_new_ok.test
 	open_nonarchive.test
@@ -79,6 +80,7 @@ SET(EXTRA_TESTS
 	open_ok.test
 	open_too_short.test
 	open_truncate.test
+	open_zip64_3mf.test
 	open_zip64_ok.test
 	rename_ascii.test
 	rename_cp437.test

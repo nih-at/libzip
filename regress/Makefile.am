@@ -86,6 +86,7 @@ EXTRA_DIST= \
 	incons-local-size-larger.zip \
 	large-uncompressable \
 	manyfiles-zip.zip \
+	multidisk.zip \
 	rename_ok.zip \
 	streamed.zip \
 	streamed-zip64.zip \
@@ -119,7 +120,8 @@ EXTRA_DIST= \
 	utf-8-standardization-input.zip \
 	utf-8-standardization-output.zip \
 	zip-in-archive-comment.zip \
-	zip64.zip
+	zip64.zip \
+	zip64-3mf.zip
 
 TESTS_ENVIRONMENT=	ZIPCMP=${top_builddir}/src/zipcmp
 # ${srcdir}/runtest
@@ -186,6 +188,7 @@ TESTS= \
 	open_filename_empty.test \
 	open_incons.test \
 	open_many_ok.test \
+	open_multidisk.test \
 	open_new_but_exists.test \
 	open_new_ok.test \
 	open_nonarchive.test \
@@ -193,6 +196,7 @@ TESTS= \
 	open_ok.test \
 	open_too_short.test \
 	open_truncate.test \
+	open_zip64_3mf.test \
 	open_zip64_ok.test \
 	rename_ascii.test \
 	rename_cp437.test \
