@@ -293,11 +293,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 	return NULL;
     }
 
-    if (_zip_buffer_get_32(buffer) != 0) {
-	zip_error_set(error, ZIP_ER_MULTIDISK, 0);
-	return NULL;
-    }
-
     if (eocd_offset >= EOCD64LOCLEN && memcmp(_zip_buffer_data(buffer) + eocd_offset - EOCD64LOCLEN, EOCD64LOC_MAGIC, 4) == 0) {
         _zip_buffer_set_offset(buffer, eocd_offset - EOCD64LOCLEN);
         cd = _zip_read_eocd64(za->src, buffer, buf_offset, za->flags, error);
@@ -668,7 +663,8 @@ _zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little
 }
 
 
-static zip_cdir_t *_zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error)
+static zip_cdir_t *
+_zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error)
 {
     zip_cdir_t *cd;
     zip_uint64_t i, nentry, size, offset, eocd_offset;
@@ -680,7 +676,12 @@ static zip_cdir_t *_zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset,
     
     eocd_offset = _zip_buffer_offset(buffer);
 
-    _zip_buffer_get(buffer, 8); /* magic and number of disks already verified */
+    _zip_buffer_get(buffer, 4); /* magic already verified */
+
+    if (_zip_buffer_get_32(buffer) != 0) {
+	zip_error_set(error, ZIP_ER_MULTIDISK, 0);
+	return NULL;
+    }
 
     /* number of cdir-entries on this disk */
     i = _zip_buffer_get_16(buffer);
@@ -730,10 +731,14 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     zip_uint64_t eocd_offset;
     zip_uint64_t size, nentry, i, eocdloc_offset;
     bool free_buffer;
+    zip_uint32_t num_disks, num_disks64, eocd_disk, eocd_disk64;
 
     eocdloc_offset = _zip_buffer_offset(buffer);
     
-    _zip_buffer_get(buffer, 8); /* magic and single disk already verified */
+    _zip_buffer_get(buffer, 4); /* magic already verified */
+
+    num_disks = _zip_buffer_get_16(buffer);
+    eocd_disk = _zip_buffer_get_16(buffer);
     eocd_offset = _zip_buffer_get_64(buffer);
     
     if (eocd_offset > ZIP_INT64_MAX || eocd_offset + EOCD64LEN < eocd_offset) {
@@ -779,8 +784,29 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
         return NULL;
     }
 
-    _zip_buffer_get(buffer, 12); /* skip version made by/needed and num disks */
-    
+    _zip_buffer_get(buffer, 4); /* skip version made by/needed */
+
+    num_disks64 = _zip_buffer_get_32(buffer);
+    eocd_disk64 = _zip_buffer_get_32(buffer);
+
+    /* if eocd values are 0xffff, we have to use eocd64 values.
+       otherwise, if the values are not the same, it's inconsistent;
+       in any case, if the value is not 0, we don't support it */
+    if (num_disks == 0xffff) {
+	num_disks = num_disks64;
+    }
+    if (eocd_disk == 0xffff) {
+	eocd_disk = eocd_disk64;
+    }
+    if ((flags & ZIP_CHECKCONS) && (eocd_disk != eocd_disk64 || num_disks != num_disks64)) {
+	zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+    if (num_disks != 0 || eocd_disk != 0) {
+	zip_error_set(error, ZIP_ER_MULTIDISK, 0);
+	return NULL;
+    }
+
     nentry = _zip_buffer_get_64(buffer);
     i = _zip_buffer_get_64(buffer);
 
