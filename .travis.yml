@@ -2,3 +2,8 @@ language: c
 compiler:
   - clang
   - gcc
+script:
+	autoreconf -fiv
+	./configure
+	make
+	make check
