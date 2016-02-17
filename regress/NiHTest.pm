@@ -6,6 +6,7 @@ use warnings;
 use Cwd;
 use File::Copy;
 use File::Path qw(mkpath remove_tree);
+use Getopt::Long qw(:config posix_default bundling no_ignore_case);
 use IPC::Open3;
 use Symbol 'gensym';
 use UNIVERSAL;
@@ -13,7 +14,7 @@ use UNIVERSAL;
 use Data::Dumper qw(Dumper);
 
 #  NiHTest -- package to run regression tests
-#  Copyright (C) 2002-2015 Dieter Baron and Thomas Klausner
+#  Copyright (C) 2002-2016 Dieter Baron and Thomas Klausner
 #
 #  This file is part of ckmame, a program to check rom sets for MAME.
 #  The authors can be contacted at <ckmame@nih.at>
@@ -349,12 +350,25 @@ sub runtest {
 
 sub setup {
 	my ($self, @argv) = @_;
-	
-	if (scalar(@argv) != 1) {
-		print STDERR "Usage: $0 testcase\n";
+
+	my @save_argv = @ARGV;
+	@ARGV = @argv;
+	my $ok = GetOptions(
+		'help|h' => \my $help,
+		'keep-broken' => \$self->{keep_broken},
+		'no-cleanup' => \$self->{no_cleanup},
+		# 'run-gdb' => \$self->{run_gdb},
+		'setup-only' => \$self->{setup_only},
+		'verbose|v' => \$self->{verbose}
+	);
+	@argv = @ARGV;
+	@ARGV = @save_argv;
+
+	if (!$ok || scalar(@argv) != 1 || $help) {
+		print STDERR "Usage: $0 [-hv] [--keep-broken] [--no-cleanup] [--setup-only] testcase\n";
 		exit(1);
 	}
-	
+
 	my $testcase = shift @argv;
 
 	$testcase .= '.test' unless ($testcase =~ m/\.test$/);
@@ -369,6 +383,8 @@ sub setup {
 	$self->die("error in test case definition") unless $self->parse_case($testcase_file);
 	
 	$self->check_features_requirement() if ($self->{test}->{features});
+
+	$self->end_test('SKIP') if ($self->{test}->{preload} && $^O eq 'darwin');
 }
 
 
@@ -482,6 +498,7 @@ sub compare_file($$$) {
 
 	return $ok;
 }
+
 
 sub compare_files() {
 	my ($self) = @_;
@@ -662,9 +679,24 @@ sub parse_args {
 		}
 		my @types = split /\s+/, $type;
 		my @strs = split /\s+/, $str;
-		
-		if (!$ellipsis && scalar(@types) != scalar(@strs)) {
-			$self->warn_file_line("expected " . (scalar(@types)) . " arguments, got " . (scalar(@strs)));
+		my $optional = 0;
+		for (my $i = scalar(@types) - 1; $i >= 0; $i--) {
+			last unless ($types[$i] =~ m/(.*)\?$/);
+			$types[$i] = $1;
+			$optional++;
+		}
+
+		if ($ellipsis && $optional > 0) {
+			# TODO: check this when registering a directive
+			$self->warn_file_line("can't use ellipsis together with optional arguments");
+			return undef;
+		}
+		if (!$ellipsis && (scalar(@strs) < scalar(@types) - $optional || scalar(@strs) > scalar(@types))) {
+			my $expected = scalar(@types);
+			if ($optional > 0) {
+				$expected = ($expected - $optional) . "-$expected";
+			}
+			$self->warn_file_line("expected $expected arguments, got " . (scalar(@strs)));
 			return undef;
 		}
 		
@@ -737,8 +769,8 @@ sub parse_case() {
 		}
 		
 		my $args = $self->parse_args($def->{type}, $argstring);
-
-		if (!defined($args)) {
+            
+		unless (defined($args)) {
 			$ok = 0;
 			next;
 		}
@@ -870,9 +902,9 @@ sub run_hook {
 	
 	return $ok;
 }
-
-
 sub backslash_decode {
+
+
 	my ($str) = @_;
 
 	if ($str =~ m/\\/) {
@@ -894,9 +926,7 @@ sub backslash_decode {
 
 sub run_program {
 	my ($self) = @_;
-
 	goto &pipein_win32 if $^O eq 'MSWin32' && $self->{test}->{pipein};
-
 	my ($stdin, $stdout, $stderr);
 	$stderr = gensym;
 
