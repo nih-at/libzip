@@ -26,7 +26,7 @@ when compiling packages using libzip.
 If you make a binary distribution, please include a pointer to the
 distribution site:
 >	http://www.nih.at/libzip/
->	ftp.nih.at /pub/nih/libzip
+
 The latest version can always be found there.
 
 There is a mailing list for developers using libzip.  You can
