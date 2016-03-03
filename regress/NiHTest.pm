@@ -902,10 +902,10 @@ sub run_hook {
 	
 	return $ok;
 }
-sub backslash_decode {
+sub args_decode {
 
 
-	my ($str) = @_;
+	my ($str, $srcdir) = @_;
 
 	if ($str =~ m/\\/) {
 		$str =~ s/\\a/\a/gi;
@@ -920,6 +920,14 @@ sub backslash_decode {
 		$str =~ s/\\(.)/$1/g;
 	}
 
+	if ($srcdir !~ m,^/,) {
+		$srcdir = "../$srcdir";
+	}
+
+	if ($str =~ m/^\$srcdir(.*)/) {
+		$str = "$srcdir$1";
+	}
+
 	return $str;
 }
 
@@ -930,7 +938,7 @@ sub run_program {
 	my ($stdin, $stdout, $stderr);
 	$stderr = gensym;
 
-	my @cmd = ('../' . $self->{test}->{program}, map ({ backslash_decode($_); } @{$self->{test}->{args}}));
+	my @cmd = ('../' . $self->{test}->{program}, map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
 
 	### TODO: catch errors?
 	
@@ -986,7 +994,7 @@ sub run_program {
 sub pipein_win32() {
 	my ($self) = @_;
 
-	my $cmd = "$self->{test}->{pipein}| ..\\$self->{test}->{program} " . join(' ', map ({ backslash_decode($_); } @{$self->{test}->{args}}));
+	my $cmd = "$self->{test}->{pipein}| ..\\$self->{test}->{program} " . join(' ', map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
 	my ($success, $error_message, $full_buf, $stdout_buf, $stderr_buf) = IPC::Cmd::run(command => $cmd);
 	if (!$success) {
 		### TODO: catch errors?
