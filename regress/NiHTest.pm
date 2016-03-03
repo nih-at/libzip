@@ -313,7 +313,7 @@ sub runtest {
 
 	my @failed = ();
 	
-	if ($self->{exit_status} != $self->{test}->{return} // 0) {
+	if ($self->{exit_status} != ($self->{test}->{return} // 0)) {
 		push @failed, 'exit status';
 		if ($self->{verbose}) {
 			print "Unexpected exit status:\n";
