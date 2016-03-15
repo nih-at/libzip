@@ -1,15 +1,15 @@
-1.1.2 [2016/02/19]
+1.1.2 [2016-02-19]
 ==================
 
 * Improve support for 3MF files
 
-1.1.1 [2016/02/07]
+1.1.1 [2016-02-07]
 ==================
 
 * Build fixes for Linux
 * Fix some warnings reported by PVS-Studio
 
-1.1 [2016/01/26]
+1.1 [2016-01-26]
 ================
 
 * ziptool(1): command line tool to modify zip archives
@@ -21,12 +21,12 @@
 * Portability fixes
 * Documentation improvements
 
-1.0.1 [2015/05/04]
+1.0.1 [2015-05-04]
 ==================
 
 * Build fixes for Windows.
 
-1.0 [2015/05/03]
+1.0 [2015-05-03]
 ================
 
 * Implemented an I/O abstraction layer.
@@ -38,7 +38,7 @@
 * CVE-2015-2331 was fixed.
 * Addressed all Coverity CIDs.
 
-0.11.2 [2013/12/19]
+0.11.2 [2013-12-19]
 ===================
 
 * Support querying/setting operating system and external attributes.
@@ -46,13 +46,13 @@
   to 0666 (0777 for directories).
 * Fix bug when writing zip archives containing files bigger than 4GB.
 
-0.11.1 [2013/04/27]
+0.11.1 [2013-04-27]
 ===================
 
 * Fix bugs in zip_set_file_compression().
 * Include Xcode build infrastructure.
 
-0.11 [2013/03/23]
+0.11 [2013-03-23]
 =================
 
 * Added Zip64 support (large file support)
@@ -67,13 +67,13 @@
 * More changes for Windows support
 * Additional test cases
 
-0.10.1 [2012/03/20]
+0.10.1 [2012-03-20]
 ===================
 
 * Fixed CVE-2012-1162
 * Fixed CVE-2012-1163
 
-0.10 [2010/03/18]
+0.10 [2010-03-18]
 =================
 
 * Added zip_get_num_entries(), deprecated zip_get_num_files().
@@ -86,18 +86,18 @@
 * Fixed CVE-2011-0421 (no security implications though)
 * More documentation.
 
-0.9.3 [2010/02/01]
+0.9.3 [2010-02-01]
 ==================
 
 * Include m4/ directory in distribution; some packagers need it.
 
-0.9.2 [2010/01/31]
+0.9.2 [2010-01-31]
 ==================
 
 * Avoid passing uninitialized data to deflate().
 * Fix memory leak when closing zip archives.
 
-0.9.1 [2010/01/24]
+0.9.1 [2010-01-24]
 ==================
 
 * Fix infinite loop on reading some broken files.
@@ -105,7 +105,7 @@
 * Clear data descriptor flag in central directory, fixing Open Office files.
 * Allow more than 64k entries.
 
-0.9 [2008/07/25]
+0.9 [2008-07-25]
 ==================
 
 * on Windows, explictly set dllimport/dllexport
@@ -115,7 +115,7 @@
 * zip_source_zip: add flag to force recompression
 * zip_sorce_file: only keep file open while reading from it
 
-0.8 [2007/06/06]
+0.8 [2007-06-06]
 ==================
 
 * fix for zip archives larger than 2GiB
@@ -124,12 +124,12 @@
 * new functions: zip_add_dir, zip_error_clear, zip_file_error_clear
 * add basic support for building with CMake (incomplete)
 
-0.7.1 [2006/05/18]
+0.7.1 [2006-05-18]
 ==================
 
 * bugfix for zip_close
 
-0.7 [2006/05/06]
+0.7 [2006-05-06]
 ================
 
 * struct zip_stat increased for future encryption support
@@ -139,12 +139,12 @@
   New functions: zip_get_archive_comment, zip_get_file_comment,
   zip_set_archive_comment, zip_set_file_comment, zip_unchange_archive
 
-0.6.1 [2005/07/14]
+0.6.1 [2005-07-14]
 ==================
 
 * various bug fixes
 
-0.6 [2005/06/09]
+0.6 [2005-06-09]
 ================
 
 * first standalone release
