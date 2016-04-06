@@ -41,6 +41,10 @@
 
 #include "config.h"
 
+#if !defined(RTLD_NEXT)
+#define RTLD_NEXT	RTLD_DEFAULT
+#endif
+
 #if defined(HAVE___PROGNAME)
 extern char *__progname;
 #endif
