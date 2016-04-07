@@ -11,6 +11,7 @@ pkgconfig_DATA = libzip.pc
 EXTRA_DIST=	API-CHANGES \
 		CMakeLists.txt \
 		LICENSE \
+		NEWS.md \
 		README.md \
 		TODO.md \
 		cmake-config.h.in \
