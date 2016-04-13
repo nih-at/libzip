@@ -65,6 +65,13 @@ if test "x$ac_cv_libc_defines___progname" = "xyes" ; then
     AC_DEFINE([HAVE___PROGNAME], [1], [Define if libc defines __progname])
 fi
 
+AC_CACHE_CHECK([whether we are building for a Win32 host], [ac_cv_win32_host],
+	       AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifdef _WIN32
+ choke me
+ #endif
+ ]])],
+ [ac_cv_win32_host=no], [ac_cv_win32_host=yes]))
+AM_CONDITIONAL([WIN32_HOST], [test "x$ac_cv_win32_host" = "xyes"])
 
 AC_CHECK_HEADERS([fts.h stdbool.h strings.h unistd.h])
 

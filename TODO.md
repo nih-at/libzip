@@ -49,7 +49,6 @@ void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
 * delete all extra fields during `zip_replace()`
 * function to copy file from one archive to another
 * set `O_CLOEXEC` flag after fopen and mkstemp
-* configure: use windows backends on windows
 * add append-only mode writing file to disk incrementally to keep memory usage low
 * `zip_file_set_mtime()`: support InfoZIP time stamps
 
