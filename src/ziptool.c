@@ -51,6 +51,7 @@
 extern int optopt;
 
 #include "zip.h"
+#include "zipint.h"
 #include "compat.h"
 
 zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
