@@ -36,6 +36,10 @@
 
 #include "zipint.h"
 
+#ifdef _WIN32
+#error This file is incompatible with Windows, use zip_source_win32utf8.c instead.
+#error Something probably went wrong with configure/cmake.
+#endif
 
 ZIP_EXTERN zip_source_t *
 zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len)
