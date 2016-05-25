@@ -54,8 +54,6 @@
 #include "getopt.h"
 #endif
 
-/* include zipint.h for Windows compatibility */
-#include "zipint.h"
 #include "zip.h"
 #include "compat.h"
 
