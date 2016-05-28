@@ -127,6 +127,7 @@ BUILT_SOURCES=zipconf.h
 CLEANFILES=	${BUILT_SOURCES}
 
 EXTRA_DIST=	CMakeLists.txt \
+		compat.h \
 		make_zip_err_str.sh \
 		make_zipconf.sh \
 		zip_source_win32a.c \
