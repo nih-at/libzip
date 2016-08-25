@@ -381,7 +381,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         left -= (zip_uint64_t)entry_size;
     }
     
-    if (i != cd->nentry) {
+    if (i != cd->nentry || left > 0) {
         zip_error_set(error, ZIP_ER_INCONS, 0);
         _zip_buffer_free(cd_buffer);
         _zip_cdir_free(cd);

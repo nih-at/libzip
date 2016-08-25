@@ -7,6 +7,6 @@ file incons-file-count-overflow.zzip incons-file-count-overflow.zip incons-file-
 args incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip
 return 1
 stdout opening 'incons-file-count-high.zzip' returned error 21
-stdout opening 'incons-file-count-low.zzip' succeeded, 2 entries
+stdout opening 'incons-file-count-low.zzip' returned error 21
 stdout opening 'incons-file-count-overflow.zzip' returned error 14
-stderr 2 errors
+stderr 3 errors
