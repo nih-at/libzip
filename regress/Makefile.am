@@ -84,6 +84,8 @@ EXTRA_DIST= \
 	incons-local-filename.zip \
 	incons-local-magic-bad.zip \
 	incons-local-size-larger.zip \
+	junk-at-end.zip \
+	junk-at-start.zip \
 	large-uncompressable \
 	manyfiles-zip.zip \
 	multidisk.zip \
@@ -175,6 +177,8 @@ TESTS= \
 	fopen_unchanged.test \
 	fread.test \
 	get_comment.test \
+	junk_at_end.test \
+	junk_at_start.test \
 	name_locate.test \
 	open_cons_extrabytes.test \
 	open_empty.test \
