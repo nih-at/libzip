@@ -1,3 +1,7 @@
+1.1.x [xxxx-xx-xx]
+
+* Support legacy zip files with >64k entries.
+
 1.1.3 [2016-05-28]
 ==================
 
