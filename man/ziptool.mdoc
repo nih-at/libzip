@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd January 19, 2016
+.Dd August 25, 2016
 .Dt ZIPTOOL 1
 .Os
 .Sh NAME
@@ -38,6 +38,8 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl cegHhmnrst
+.Op Fl l Ar length
+.Op Fl o Ar offset
 .Ar zip-archive
 .Cm command Op Ar command-args ...
 .Op Cm command Oo Ar command-args ... Oc ...
@@ -50,7 +52,7 @@ according to the
 given.
 .Pp
 Supported options:
-.Bl -tag -width MMM
+.Bl -tag -width MoMoffsetMM
 .It Fl c
 Check zip archive consistency when opening it.
 .It Fl e
@@ -72,6 +74,12 @@ This command is for internal testing of
 and will usually create invalid zip archives.
 .It Fl h
 Display help.
+.It Fl l Ar length
+Only read
+.Ar length
+bytes of archive.
+See also
+.Fl o .
 .It Fl m
 Read archive into memory, and modify there; write out at end.
 .Em Note :
@@ -81,6 +89,11 @@ This command is for internal testing of
 Create archive if it doesn't exist.
 See also
 .Fl e .
+.It Fl o Ar offset
+Start reading input archive from
+.Ar offset .
+See also
+.Fl l .
 .It Fl r
 Print raw file name encoding without translation (for
 .Cm stat
