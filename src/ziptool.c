@@ -72,7 +72,7 @@ typedef struct dispatch_table_s {
 static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
-static zip_t *read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp);
+static zip_t *read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp);
 static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
 
 zip_t *za, *z_in[16];
@@ -502,7 +502,7 @@ set_file_mtime_all(int argc, char *argv[]) {
     zip_int64_t num_entries;
     zip_uint64_t idx;
     mtime = (time_t)strtoull(argv[0], NULL, 10);
-    
+
     if ((num_entries = zip_get_num_entries(za, 0)) < 0) {
         fprintf(stderr, "can't get number of entries: %s\n", zip_strerror(za));
         return -1;
@@ -642,19 +642,39 @@ hexdump(const zip_uint8_t *data, zip_uint16_t len)
 
 
 static zip_t *
-read_hole(const char *archive, int flags, int *err)
+read_from_file(const char *archive, int flags, zip_error_t *error, zip_uint64_t offset, zip_uint64_t length)
 {
-    zip_error_t error;
+    zip_t *za;
+    zip_source_t *source;
+    int err;
+
+    if (offset == 0 && length == 0) {
+	if ((za= zip_open(archive, flags, &err)) == NULL) {
+	    zip_error_set(error, err, errno);
+	    return NULL;
+	}
+    }
+    else {
+	if ((source = zip_source_file_create(archive, offset, length, error)) == NULL
+	    || (za = zip_open_from_source(source, flags, error)) == NULL) {
+	    zip_source_free(source);
+	    return NULL;
+	}
+    }
+
+    return za;
+}
+
+
+static zip_t *
+read_hole(const char *archive, int flags, zip_error_t *error)
+{
     zip_source_t *src = NULL;
     zip_t *zs = NULL;
 
-    zip_error_init(&error);
-
-    if ((src = source_hole_create(archive, flags, &error)) == NULL
-        || (zs = zip_open_from_source(src, flags, &error)) == NULL) {
+    if ((src = source_hole_create(archive, flags, error)) == NULL
+        || (zs = zip_open_from_source(src, flags, error)) == NULL) {
         zip_source_free(src);
-        *err = zip_error_code_zip(&error);
-        errno = zip_error_code_system(&error);
     }
 
     return zs;
@@ -662,19 +682,18 @@ read_hole(const char *archive, int flags, int *err)
 
 
 static zip_t *
-read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
+read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp)
 {
     struct stat st;
     zip_source_t *src;
     zip_t *zb;
-    zip_error_t error;
 
     if (stat(archive, &st) < 0) {
 	if (errno == ENOENT) {
-	    src = zip_source_buffer_create(NULL, 0, 0, &error);
+	    src = zip_source_buffer_create(NULL, 0, 0, error);
 	}
 	else {
-	    *err = ZIP_ER_OPEN;
+	    zip_error_set(error, ZIP_ER_OPEN, errno);
 	    return NULL;
 	}
     }
@@ -682,35 +701,31 @@ read_to_memory(const char *archive, int flags, int *err, zip_source_t **srcp)
 	char *buf;
 	FILE *fp;
 	if ((buf=malloc((size_t)st.st_size)) == NULL) {
-	    *err = ZIP_ER_MEMORY;
+	    zip_error_set(error, ZIP_ER_MEMORY, 0);
 	    return NULL;
 	}
 	if ((fp=fopen(archive, "r")) == NULL) {
 	    free(buf);
-	    *err = ZIP_ER_READ;
+	    zip_error_set(error, ZIP_ER_READ, errno);
 	    return NULL;
 	}
 	if (fread(buf, (size_t)st.st_size, 1, fp) < 1) {
 	    free(buf);
 	    fclose(fp);
-	    *err = ZIP_ER_READ;
+	    zip_error_set(error, ZIP_ER_READ, errno);
 	    return NULL;
 	}
 	fclose(fp);
-	src = zip_source_buffer_create(buf, (zip_uint64_t)st.st_size, 1, &error);
+	src = zip_source_buffer_create(buf, (zip_uint64_t)st.st_size, 1, error);
 	if (src == NULL) {
 	    free(buf);
 	}
     }
     if (src == NULL) {
-	*err = zip_error_code_zip(&error);
-	errno = zip_error_code_system(&error);
 	return NULL;
     }
-    zb = zip_open_from_source(src, flags, &error);
+    zb = zip_open_from_source(src, flags, error);
     if (zb == NULL) {
-	*err = zip_error_code_zip(&error);
-	errno = zip_error_code_system(&error);
 	zip_source_free(src);
 	return NULL;
     }
@@ -924,23 +939,25 @@ usage(const char *progname, const char *reason)
 	out = stdout;
     else
 	out = stderr;
-    fprintf(out, "usage: %s [-cegHhmnrst] archive command1 [args] [command2 [args] ...]\n", progname);
+    fprintf(out, "usage: %s [-cegHhmnrst] [-l len] [-o offset] archive command1 [args] [command2 [args] ...]\n", progname);
     if (reason != NULL) {
 	fprintf(out, "%s\n", reason);
 	exit(1);
     }
 
     fprintf(out, "\nSupported options are:\n"
-	    "\t-c\tcheck consistency\n"
-	    "\t-e\terror if archive already exists (only useful with -n)\n"
-	    "\t-g\tguess file name encoding (for stat)\n"
-            "\t-H\twrite files with holes compactly\n"
-            "\t-h\tdisplay this usage\n"
-	    "\t-m\tread archive into memory, and modify there; write out at end\n"
-	    "\t-n\tcreate archive if it doesn't exist\n"
-	    "\t-r\tprint raw file name encoding without translation (for stat)\n"
-	    "\t-s\tfollow file name convention strictly (for stat)\n"
-	    "\t-t\tdisregard current archive contents, if any\n");
+	    "\t-c\t\tcheck consistency\n"
+	    "\t-e\t\terror if archive already exists (only useful with -n)\n"
+	    "\t-g\t\tguess file name encoding (for stat)\n"
+            "\t-H\t\twrite files with holes compactly\n"
+            "\t-h\t\tdisplay this usage\n"
+	    "\t-l len\t\tonly use len bytes of file\n"
+	    "\t-m\t\tread archive into memory, and modify there; write out at end\n"
+	    "\t-n\t\tcreate archive if it doesn't exist\n"
+	    "\t-o offset\tstart reading file at offset\n"
+	    "\t-r\t\tprint raw file name encoding without translation (for stat)\n"
+	    "\t-s\t\tfollow file name convention strictly (for stat)\n"
+	    "\t-t\t\tdisregard current archive contents, if any\n");
     fprintf(out, "\nSupported commands and arguments are:\n");
     for (i=0; i<sizeof(dispatch_table)/sizeof(dispatch_table_t); i++) {
 	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
@@ -969,14 +986,13 @@ main(int argc, char *argv[])
     int c, arg, err, flags;
     const char *prg;
     source_type_t source_type = SOURCE_TYPE_NONE;
+    zip_uint64_t len = 0, offset = 0;
+    zip_error_t error;
 
     flags = 0;
     prg = argv[0];
 
-    if (argc < 2)
-	usage(prg, "too few arguments");
-
-    while ((c=getopt(argc, argv, "cegHhmnrst")) != -1) {
+    while ((c=getopt(argc, argv, "cegHhl:mno:rst")) != -1) {
 	switch (c) {
 	case 'c':
 	    flags |= ZIP_CHECKCONS;
@@ -993,11 +1009,17 @@ main(int argc, char *argv[])
 	case 'h':
 	    usage(prg, NULL);
 	    break;
+	case 'l':
+	    len = strtoull(optarg, NULL, 10);
+	    break;
 	case 'm':
             source_type = SOURCE_TYPE_IN_MEMORY;
             break;
 	case 'n':
 	    flags |= ZIP_CREATE;
+	    break;
+	case 'o':
+	    offset = strtoull(optarg, NULL, 10);
 	    break;
 	case 'r':
 	    stat_flags = ZIP_FL_ENC_RAW;
@@ -1018,6 +1040,9 @@ main(int argc, char *argv[])
 	}
     }
 
+    if (optind >= argc-1)
+	usage(prg, "too few arguments");
+
     arg = optind;
 
     archive = argv[arg++];
@@ -1025,27 +1050,26 @@ main(int argc, char *argv[])
     if (flags == 0)
 	flags = ZIP_CREATE;
 
+    zip_error_init(&error);
     switch (source_type) {
-        case SOURCE_TYPE_NONE:
-            za = zip_open(archive, flags, &err);
-            break;
+    	case SOURCE_TYPE_NONE:
+	    za = read_from_file(archive, flags, &error, offset, len);
+	    break;
 
         case SOURCE_TYPE_IN_MEMORY:
-            za = read_to_memory(archive, flags, &err, &memory_src);
+            za = read_to_memory(archive, flags, &error, &memory_src);
             break;
 
-        case SOURCE_TYPE_HOLE: {
-            za = read_hole(archive, flags, &err);
+    	case SOURCE_TYPE_HOLE:
+	    za = read_hole(archive, flags, &error);
             break;
-        }
     }
     if (za == NULL) {
-	zip_error_t error;
-	zip_error_init_with_code(&error, err);
 	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, zip_error_strerror(&error));
 	zip_error_fini(&error);
 	return 1;
     }
+    zip_error_fini(&error);
 
     err = 0;
     while (arg < argc) {
