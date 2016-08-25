@@ -241,7 +241,18 @@ TESTS= \
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
 
-check-am: bigzero.zip manyfiles.zip manyfiles-133000.zip manyfiles-65536.zip manyfiles-fewer.zip manyfiles-more.zip manyfiles-zip64-modulo.zip manyfiles-zip64.zip runtest
+CREATED_FILES= \
+	bigzero.zip \
+	manyfiles-133000.zip \
+	manyfiles-65536.zip \
+	manyfiles-fewer.zip \
+	manyfiles-more.zip \
+	manyfiles-zip64-modulo.zip \
+	manyfiles-zip64.zip \
+	manyfiles.zip \
+	runtest
+
+check-am: ${CREATED_FILES}
 
 bigzero.zip: bigzero-zip.zip
 	${top_builddir}/src/ziptool ${srcdir}/bigzero-zip.zip cat 0 > ${builddir}/bigzero.zip
@@ -274,4 +285,4 @@ runtest: runtest.in
 cleanup:
 	rm -rf ${builddir}/sandbox-*.d[0-9]*/
 
-CLEANFILES=bigzero.zip manyfiles.zip runtest
+CLEANFILES=${CREATED_FILES}
