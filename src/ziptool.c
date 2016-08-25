@@ -946,6 +946,7 @@ usage(const char *progname, const char *reason)
 	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
     }
     fprintf(out, "\nSupported flags are:\n"
+	    "\t0\t(no flags)\n"
 	    "\tC\tZIP_FL_NOCASE\n"
 	    "\tc\tZIP_FL_CENTRAL\n"
 	    "\td\tZIP_FL_NODIR\n"

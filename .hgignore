@@ -41,6 +41,12 @@
 ^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/manyfiles.zip$
+^regress/manyfiles-133000.zip$
+^regress/manyfiles-65536.zip$
+^regress/manyfiles-fewer.zip$
+^regress/manyfiles-more.zip$
+^regress/manyfiles-zip64-modulo.zip$
+^regress/manyfiles-zip64.zip$
 ^regress/runtest$
 ^regress/tryopen$
 ^src/hole$

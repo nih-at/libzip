@@ -66,29 +66,58 @@ zip_cdir_t *
 _zip_cdir_new(zip_uint64_t nentry, zip_error_t *error)
 {
     zip_cdir_t *cd;
-    zip_uint64_t i;
 
     if ((cd=(zip_cdir_t *)malloc(sizeof(*cd))) == NULL) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
-    if (nentry == 0)
-	cd->entry = NULL;
-    else if ((nentry > SIZE_MAX/sizeof(*(cd->entry))) || (cd->entry=(zip_entry_t *)malloc(sizeof(*(cd->entry))*(size_t)nentry)) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	free(cd);
+    cd->entry = NULL;
+    cd->nentry = cd->nentry_alloc = 0;
+    cd->size = cd->offset = 0;
+    cd->comment = NULL;
+    cd->is_zip64 = false;
+
+    if (!_zip_cdir_grow(cd, nentry, error)) {
+	_zip_cdir_free(cd);
 	return NULL;
     }
 
-    for (i=0; i<nentry; i++)
-	_zip_entry_init(cd->entry+i);
-
-    cd->nentry = cd->nentry_alloc = nentry;
-    cd->size = cd->offset = 0;
-    cd->comment = NULL;
-
     return cd;
+}
+
+
+bool
+_zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error)
+{
+    zip_uint64_t i, new_alloc;
+    zip_entry_t *new_entry;
+
+    if (additional_entries == 0) {
+	return true;
+    }
+
+    new_alloc = cd->nentry_alloc + additional_entries;
+
+    if (new_alloc < additional_entries || new_alloc > SIZE_MAX/sizeof(*(cd->entry))) {
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return false;
+    }
+
+    if ((new_entry = (zip_entry_t *)realloc(cd->entry, sizeof(*(cd->entry))*(size_t)new_alloc)) == NULL) {
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return false;
+    }
+
+    cd->entry = new_entry;
+
+    for (i = cd->nentry; i < new_alloc; i++) {
+	_zip_entry_init(cd->entry+i);
+    }
+
+    cd->nentry = cd->nentry_alloc = new_alloc;
+
+    return true;
 }
 
 

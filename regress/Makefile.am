@@ -187,6 +187,7 @@ TESTS= \
 	open_filename_duplicate_empty_consistency.test \
 	open_filename_empty.test \
 	open_incons.test \
+	open_many_fail.test \
 	open_many_ok.test \
 	open_multidisk.test \
 	open_new_but_exists.test \
@@ -236,13 +237,31 @@ TESTS= \
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
 LDADD=${top_builddir}/lib/libzip.la
 
-check-am: bigzero.zip manyfiles.zip runtest
+check-am: bigzero.zip manyfiles.zip manyfiles-133000.zip manyfiles-65536.zip manyfiles-fewer.zip manyfiles-more.zip manyfiles-zip64-modulo.zip manyfiles-zip64.zip runtest
 
 bigzero.zip: bigzero-zip.zip
 	${top_builddir}/src/ziptool ${srcdir}/bigzero-zip.zip cat 0 > ${builddir}/bigzero.zip
 
 manyfiles.zip: manyfiles-zip.zip
-	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 0 > ${builddir}/manyfiles.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 0 > ${builddir}/$@
+
+manyfiles-133000.zip: manyfiles-zip.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 1 > ${builddir}/$@
+
+manyfiles-65536.zip: manyfiles-zip.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 2 > ${builddir}/$@
+
+manyfiles-fewer.zip: manyfiles-zip.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 5 > ${builddir}/$@
+
+manyfiles-more.zip: manyfiles-zip.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 6 > ${builddir}/$@
+
+manyfiles-zip64-modulo.zip: manyfiles-zip.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 3 > ${builddir}/$@
+
+manyfiles-zip64.zip: manyfiles-zip.zip
+	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 4 > ${builddir}/$@
 
 runtest: runtest.in
 	sed -e 's!@[s]rcdir@!${srcdir}!g' -e 's!@[a]bs_srcdir@!${abs_srcdir}!g' ${srcdir}/runtest.in > runtest
