@@ -6,6 +6,7 @@ noinst_PROGRAMS= \
 	add_from_filep \
 	fopen_unchanged \
 	fread \
+	fseek \
 	tryopen
 
 pkglib_LTLIBRARIES=	malloc.la
@@ -176,6 +177,9 @@ TESTS= \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \
+	fseek_deflated.test \
+	fseek_fail.test \
+	fseek_ok.test \
 	get_comment.test \
 	junk_at_end.test \
 	junk_at_start.test \

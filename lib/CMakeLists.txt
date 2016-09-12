@@ -92,6 +92,7 @@ SET(LIBZIP_SOURCES
   zip_fopen_index.c
   zip_fopen_index_encrypted.c
   zip_fread.c
+  zip_fseek.c
   zip_get_archive_comment.c
   zip_get_archive_flag.c
   zip_get_compression_implementation.c

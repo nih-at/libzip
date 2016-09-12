@@ -361,6 +361,7 @@ ZIP_EXTERN zip_file_t *zip_fopen_encrypted(zip_t *, const char *, zip_flags_t, c
 ZIP_EXTERN zip_file_t *zip_fopen_index(zip_t *, zip_uint64_t, zip_flags_t);
 ZIP_EXTERN zip_file_t *zip_fopen_index_encrypted(zip_t *, zip_uint64_t, zip_flags_t, const char *);
 ZIP_EXTERN zip_int64_t zip_fread(zip_file_t *, void *, zip_uint64_t);
+ZIP_EXTERN zip_int8_t zip_fseek(zip_file_t *, zip_int64_t, int);
 ZIP_EXTERN const char *zip_get_archive_comment(zip_t *, int *, zip_flags_t);
 ZIP_EXTERN int zip_get_archive_flag(zip_t *, zip_flags_t, zip_flags_t);
 ZIP_EXTERN const char *zip_get_name(zip_t *, zip_uint64_t, zip_flags_t);
@@ -377,7 +378,7 @@ ZIP_EXTERN zip_source_t *zip_source_buffer(zip_t *, const void *, zip_uint64_t, 
 ZIP_EXTERN zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
 ZIP_EXTERN int zip_source_close(zip_source_t *);
 ZIP_EXTERN int zip_source_commit_write(zip_source_t *);
-ZIP_EXTERN zip_error_t *zip_source_error(zip_source_t *src);
+ZIP_EXTERN zip_error_t *zip_source_error(zip_source_t *);
 ZIP_EXTERN zip_source_t *zip_source_file(zip_t *, const char *, zip_uint64_t, zip_int64_t);
 ZIP_EXTERN zip_source_t *zip_source_file_create(const char *, zip_uint64_t, zip_int64_t, zip_error_t *);
 ZIP_EXTERN zip_source_t *zip_source_filep(zip_t *, FILE *, zip_uint64_t, zip_int64_t);
