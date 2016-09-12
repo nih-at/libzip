@@ -1,7 +1,9 @@
 1.1.x [xxxx-xx-xx]
+==================
 
 * Support legacy zip files with >64k entries.
 * Fix seeking in zip_source_file if start > 0.
+* Add zip_fseek() for seeking in uncompressed data.
 
 1.1.3 [2016-05-28]
 ==================
