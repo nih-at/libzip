@@ -80,7 +80,7 @@ main(int argc, char *argv[])
     }
 	
     while ((n=zip_fread(zf, b, sizeof(b))) > 0) {
-	printf("%.*s", n, b);
+	printf("%.*s", (int)n, b);
     }
     if (n < 0) {
 	fprintf(stderr, "%s: zip_fread failed: %s\n", prg, zip_error_strerror(zip_file_get_error(zf)));
