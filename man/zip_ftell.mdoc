@@ -1,4 +1,4 @@
-.\" zip_fseek.mdoc -- seek in file
+.\" zip_ftell.mdoc -- tell position in file
 .\" Copyright (C) 2016 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -30,26 +30,21 @@
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
 .Dd October 1, 2016
-.Dt ZIP_FSEEK 3
+.Dt ZIP_FTELL 3
 .Os
 .Sh NAME
-.Nm zip_fseek
-.Nd seek in file
+.Nm zip_ftell
+.Nd tell position in file
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
-.Ft zip_int8_t
-.Fn zip_fseek "zip_file_t *file" "zip_int64_t offset" "int whence"
+.Ft zip_int64_t
+.Fn zip_ftell "zip_file_t *file"
 .Sh DESCRIPTION
 The
-.Fn zip_fseek
-function seeks to the specified
-.Ar offset
-relative to
-.Ar whence ,
-just like
-.Xr fseek 3 .
+.Fn zip_ftell
+function reports the current offset in the file.
 .Pp
 .Nm
 only works on uncompressed (stored) data.
@@ -57,14 +52,14 @@ When called on compressed data it will return an error.
 .Sh RETURN VALUES
 If successful,
 .Nm
-returns 0.
+returns the current file position.
 Otherwise, \-1 is returned.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_fclose 3 ,
 .Xr zip_fopen 3 ,
 .Xr zip_fread 3 ,
-.Xr zip_ftell 3
+.Xr zip_fseek 3
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

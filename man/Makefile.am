@@ -47,6 +47,7 @@ MAN3=	\
 	zip_fopen_encrypted.mdoc \
 	zip_fread.mdoc \
 	zip_fseek.mdoc \
+	zip_ftell.mdoc \
 	zip_get_archive_comment.mdoc \
 	zip_get_archive_flag.mdoc \
 	zip_get_error.mdoc \

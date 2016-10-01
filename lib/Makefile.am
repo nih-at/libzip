@@ -63,6 +63,7 @@ libzip_la_SOURCES=\
 	zip_fopen_index_encrypted.c \
 	zip_fread.c \
 	zip_fseek.c \
+	zip_ftell.c \
 	zip_get_archive_comment.c \
 	zip_get_archive_flag.c \
 	zip_get_compression_implementation.c \

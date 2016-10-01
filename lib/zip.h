@@ -362,6 +362,7 @@ ZIP_EXTERN zip_file_t *zip_fopen_index(zip_t *, zip_uint64_t, zip_flags_t);
 ZIP_EXTERN zip_file_t *zip_fopen_index_encrypted(zip_t *, zip_uint64_t, zip_flags_t, const char *);
 ZIP_EXTERN zip_int64_t zip_fread(zip_file_t *, void *, zip_uint64_t);
 ZIP_EXTERN zip_int8_t zip_fseek(zip_file_t *, zip_int64_t, int);
+ZIP_EXTERN zip_int64_t zip_ftell(zip_file_t *);
 ZIP_EXTERN const char *zip_get_archive_comment(zip_t *, int *, zip_flags_t);
 ZIP_EXTERN int zip_get_archive_flag(zip_t *, zip_flags_t, zip_flags_t);
 ZIP_EXTERN const char *zip_get_name(zip_t *, zip_uint64_t, zip_flags_t);
