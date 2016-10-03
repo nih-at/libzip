@@ -5,6 +5,12 @@ compiler:
 os:
  - linux
  - osx
+before_install:
+ - if [ "$TRAVIS_OS_NAME" != "linux" ]; then
+     brew update;
+     brew uninstall libtool;
+     brew install libtool;
+   fi
 script:
  - autoreconf -fiv
  - ./configure
