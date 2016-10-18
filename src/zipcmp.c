@@ -225,7 +225,8 @@ compare_zip(char * const zn[])
 	    if (list_zip(zn[i], a+i) < 0)
 		exit(2);
 	}
-	qsort(a[i].entry, a[i].nentry, sizeof(a[i].entry[0]), entry_cmp);
+	if (a[i].nentry > 0)
+	    qsort(a[i].entry, a[i].nentry, sizeof(a[i].entry[0]), entry_cmp);
     }
 
     header_done = 0;
