@@ -208,8 +208,8 @@ cat(int argc, char *argv[]) {
 	}
     }
     if (n == -1) {
-	zip_fclose(zf);
 	fprintf(stderr, "can't read file at index '%" PRIu64 "': %s\n", idx, zip_file_strerror(zf));
+	zip_fclose(zf);
 	return -1;
     }
     if ((err = zip_fclose(zf)) != 0) {
