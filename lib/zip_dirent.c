@@ -660,12 +660,14 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error)
 
     default:
 	zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
+	_zip_buffer_free(buffer);
 	return false;
     }
 
     /* vendor */
     if (memcmp(_zip_buffer_get(buffer, 2), "AE", 2) != 0) {
 	zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
+	_zip_buffer_free(buffer);
 	return false;
     }
 
@@ -682,11 +684,13 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error)
 	break;
     default:
 	zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
+	_zip_buffer_free(buffer);
 	return false;
     }
 
     if (ef_len != 7) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
+	_zip_buffer_free(buffer);
 	return false;
     }
 
@@ -694,6 +698,7 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error)
     de->encryption_method = enc_method;
     de->comp_method = _zip_buffer_get_16(buffer);
 
+    _zip_buffer_free(buffer);
     return true;
 }
 
