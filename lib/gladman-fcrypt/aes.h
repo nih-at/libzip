@@ -39,27 +39,18 @@
 #if defined(__cplusplus)
 extern "C"
 {
+#if 0
+}
+#endif
 #endif
 
 /* If a table pointer is needed in the AES context, include the define  */
 /* #define AES_TABLE_PTR                                                */
 
-/*  This include is used to find 8 and 32 bit unsigned integer types    */
-#include "limits.h"
+#include "config.h"
 
-#if UCHAR_MAX == 0xff                       /* an unsigned 8 bit type   */
-  typedef unsigned char      aes_08t;
-#else
-#error Please define aes_08t as an 8-bit unsigned integer type in aes.h
-#endif
-
-#if UINT_MAX == 0xffffffff                  /* an unsigned 32 bit type  */
-  typedef   unsigned int     aes_32t;
-#elif ULONG_MAX == 0xffffffff
-  typedef   unsigned long    aes_32t;
-#else
-#error Please define aes_32t as a 32-bit unsigned integer type in aes.h
-#endif
+typedef zip_uint8_t aes_08t;
+typedef zip_uint32_t aes_32t;
 
 /* This BLOCK_SIZE is in BYTES.  It can have the values 16, 24, 32 or   */
 /* undefined for use with aescrypt.c and aeskey.c, or 16, 20, 24, 28,   */
@@ -105,7 +96,7 @@ typedef struct                     /* the AES context for encryption    */
 /* otherwise aes_bad is returned.                                       */
 
 #if !defined(BLOCK_SIZE)
-aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1]);
+INTERNAL aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1]);
 #endif
 
 /* The key length (klen) is input in bytes when it is in the range      */
@@ -116,14 +107,14 @@ aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1]);
 /* and 256 bit) keys.  The value aes_good is returned if the requested  */
 /* key size is legal, otherwise aes_bad is returned.                    */
 
-aes_rval aes_set_encrypt_key(const unsigned char in_key[],
+INTERNAL aes_rval aes_set_encrypt_key(const unsigned char in_key[],
                                         unsigned int klen, aes_ctx cx[1]);
-aes_rval aes_encrypt_block(const unsigned char in_blk[],
+INTERNAL aes_rval aes_encrypt_block(const unsigned char in_blk[],
                             unsigned char out_blk[], const aes_ctx cx[1]);
 
-aes_rval aes_set_decrypt_key(const unsigned char in_key[],
+INTERNAL aes_rval aes_set_decrypt_key(const unsigned char in_key[],
                                         unsigned int klen, aes_ctx cx[1]);
-aes_rval aes_decrypt_block(const unsigned char in_blk[],
+INTERNAL aes_rval aes_decrypt_block(const unsigned char in_blk[],
                             unsigned char out_blk[], const aes_ctx cx[1]);
 
 #if defined(__cplusplus)

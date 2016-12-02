@@ -236,7 +236,7 @@ switch(nc) \
 #define fwd_lrnd(y,x,k,c)   (s(y,c) = no_table(x,t_use(s,box),fwd_var,rf1,c) ^ (k)[c])
 #endif
 
-aes_rval aes_encrypt_block(const unsigned char in_blk[], unsigned char out_blk[], const aes_ctx cx[1])
+INTERNAL aes_rval aes_encrypt_block(const unsigned char in_blk[], unsigned char out_blk[], const aes_ctx cx[1])
 {   aes_32t        locals(b0, b1);
     const aes_32t  *kp = cx->k_sch;
     dec_fmvars  /* declare variables for fwd_mcol() if needed */
@@ -373,7 +373,7 @@ aes_rval aes_encrypt_block(const unsigned char in_blk[], unsigned char out_blk[]
 #define inv_lrnd(y,x,k,c)   (s(y,c) = no_table(x,t_use(i,box),inv_var,rf1,c) ^ (k)[c])
 #endif
 
-aes_rval aes_decrypt_block(const unsigned char in_blk[], unsigned char out_blk[], const aes_ctx cx[1])
+INTERNAL aes_rval aes_decrypt_block(const unsigned char in_blk[], unsigned char out_blk[], const aes_ctx cx[1])
 {   aes_32t        locals(b0, b1);
     const aes_32t  *kp = cx->k_sch + nc * cx->n_rnd;
     dec_imvars  /* declare variables for inv_mcol() if needed */

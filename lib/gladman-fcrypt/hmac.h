@@ -58,15 +58,15 @@ typedef struct
     unsigned int    klen;
 } hmac_ctx;
 
-void hmac_sha1_begin(hmac_ctx cx[1]);
+INTERNAL void hmac_sha1_begin(hmac_ctx cx[1]);
 
-int  hmac_sha1_key(const unsigned char key[], unsigned long key_len, hmac_ctx cx[1]);
+INTERNAL int  hmac_sha1_key(const unsigned char key[], unsigned long key_len, hmac_ctx cx[1]);
 
-void hmac_sha1_data(const unsigned char data[], unsigned long data_len, hmac_ctx cx[1]);
+INTERNAL void hmac_sha1_data(const unsigned char data[], unsigned long data_len, hmac_ctx cx[1]);
 
-void hmac_sha1_end(unsigned char mac[], unsigned long mac_len, hmac_ctx cx[1]);
+INTERNAL void hmac_sha1_end(unsigned char mac[], unsigned long mac_len, hmac_ctx cx[1]);
 
-void hmac_sha1(const unsigned char key[], unsigned int key_len,
+INTERNAL void hmac_sha1(const unsigned char key[], unsigned int key_len,
           const unsigned char data[], unsigned int data_len,
           unsigned char mac[], unsigned int mac_len);
 

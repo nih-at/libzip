@@ -97,7 +97,7 @@ static void update_pool(prng_ctx ctx[1])
     prng_mix(ctx->obuf);
 }
 
-void prng_init(prng_entropy_fn fun, prng_ctx ctx[1])
+INTERNAL void prng_init(prng_entropy_fn fun, prng_ctx ctx[1])
 {   int i;
 
     /* clear the buffers and the counter in the context     */
@@ -119,7 +119,7 @@ void prng_init(prng_entropy_fn fun, prng_ctx ctx[1])
 
 /* provide random bytes from the random data pool   */
 
-void prng_rand(unsigned char data[], unsigned int data_len, prng_ctx ctx[1])
+INTERNAL void prng_rand(unsigned char data[], unsigned int data_len, prng_ctx ctx[1])
 {   unsigned char   *rp = data;
     unsigned int    len, pos = ctx->pos;
 
@@ -143,7 +143,7 @@ void prng_rand(unsigned char data[], unsigned int data_len, prng_ctx ctx[1])
     ctx->pos = pos;
 }
 
-void prng_end(prng_ctx ctx[1])
+INTERNAL void prng_end(prng_ctx ctx[1])
 {
     /* ensure the data in the context is destroyed  */
     memset(ctx, 0, sizeof(prng_ctx));

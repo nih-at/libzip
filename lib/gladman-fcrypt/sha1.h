@@ -48,13 +48,9 @@ extern "C"
 
 /* define an unsigned 32-bit type */
 
-#if UINT_MAX == 0xffffffff
-  typedef   unsigned int     sha1_32t;
-#elif ULONG_MAX == 0xffffffff
-  typedef   unsigned long    sha1_32t;
-#else
-#error Please define sha1_32t as an unsigned 32 bit type in sha2.h
-#endif
+#include "config.h"
+
+typedef zip_uint32_t sha1_32t;
 
 /* type to hold the SHA256 context  */
 
@@ -64,12 +60,12 @@ typedef struct
     sha1_32t wbuf[16];
 } sha1_ctx;
 
-void sha1_compile(sha1_ctx ctx[1]);
+INTERNAL void sha1_compile(sha1_ctx ctx[1]);
 
-void sha1_begin(sha1_ctx ctx[1]);
-void sha1_hash(const unsigned char data[], unsigned int len, sha1_ctx ctx[1]);
-void sha1_end(unsigned char hval[], sha1_ctx ctx[1]);
-void sha1(unsigned char hval[], const unsigned char data[], unsigned int len);
+INTERNAL void sha1_begin(sha1_ctx ctx[1]);
+INTERNAL void sha1_hash(const unsigned char data[], unsigned int len, sha1_ctx ctx[1]);
+INTERNAL void sha1_end(unsigned char hval[], sha1_ctx ctx[1]);
+INTERNAL void sha1(unsigned char hval[], const unsigned char data[], unsigned int len);
 
 #if defined(__cplusplus)
 }

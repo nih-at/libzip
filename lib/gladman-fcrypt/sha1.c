@@ -37,16 +37,14 @@
 #include <string.h>     /* for memcpy() etc.        */
 #include <stdlib.h>     /* for _lrotl with VC++     */
 
-#if defined(__GNUC__) || defined(__GNU_LIBRARY__)
-#include <byteswap.h>
-#include <endian.h>
-#endif
-
 #include "sha1.h"
 
 #if defined(__cplusplus)
 extern "C"
 {
+#if 0
+}
+#endif
 #endif
 
 /*
@@ -59,6 +57,16 @@ extern "C"
 */
 #define SHA_LITTLE_ENDIAN   1234 /* byte 0 is least significant (i386) */
 #define SHA_BIG_ENDIAN      4321 /* byte 0 is most significant (mc68k) */
+
+#include "config.h"
+
+#if !defined(PLATFORM_BYTE_ORDER)
+#  if defined(WORDS_BIGENDIAN)
+#    define PLATFORM_BYTE_ORDER SHA_BIG_ENDIAN
+#  else
+#    define PLATFORM_BYTE_ORDER SHA_LITTLE_ENDIAN
+#  endif
+#endif
 
 #if !defined(PLATFORM_BYTE_ORDER)
 #if defined(LITTLE_ENDIAN) || defined(BIG_ENDIAN)
@@ -128,7 +136,7 @@ extern "C"
     t = a; a = rotl32(a,5) + f(b,c,d) + e + k + w[i]; \
     e = d; d = c; c = rotl32(b, 30); b = t
 
-void sha1_compile(sha1_ctx ctx[1])
+INTERNAL void sha1_compile(sha1_ctx ctx[1])
 {   sha1_32t    w[80], i, a, b, c, d, e, t;
 
     /* note that words are compiled from the buffer into 32-bit */
@@ -173,7 +181,7 @@ void sha1_compile(sha1_ctx ctx[1])
     ctx->hash[4] += e;
 }
 
-void sha1_begin(sha1_ctx ctx[1])
+INTERNAL void sha1_begin(sha1_ctx ctx[1])
 {
     ctx->count[0] = ctx->count[1] = 0;
     ctx->hash[0] = 0x67452301;
@@ -186,7 +194,7 @@ void sha1_begin(sha1_ctx ctx[1])
 /* SHA1 hash data in an array of bytes into hash buffer and */
 /* call the hash_compile function as required.              */
 
-void sha1_hash(const unsigned char data[], unsigned int len, sha1_ctx ctx[1])
+INTERNAL void sha1_hash(const unsigned char data[], unsigned int len, sha1_ctx ctx[1])
 {   sha1_32t pos = (sha1_32t)(ctx->count[0] & SHA1_MASK),
              space = SHA1_BLOCK_SIZE - pos;
     const unsigned char *sp = data;
@@ -226,7 +234,7 @@ static sha1_32t  bits[4] =
     {   0x80000000, 0x00800000, 0x00008000, 0x00000080 };
 #endif
 
-void sha1_end(unsigned char hval[], sha1_ctx ctx[1])
+INTERNAL void sha1_end(unsigned char hval[], sha1_ctx ctx[1])
 {   sha1_32t    i = (sha1_32t)(ctx->count[0] & SHA1_MASK);
 
     /* mask out the rest of any partial 32-bit word and then set    */
@@ -266,7 +274,7 @@ void sha1_end(unsigned char hval[], sha1_ctx ctx[1])
         hval[i] = (unsigned char)(ctx->hash[i >> 2] >> (8 * (~i & 3)));
 }
 
-void sha1(unsigned char hval[], const unsigned char data[], unsigned int len)
+INTERNAL void sha1(unsigned char hval[], const unsigned char data[], unsigned int len)
 {   sha1_ctx    cx[1];
 
     sha1_begin(cx); sha1_hash(data, len, cx); sha1_end(hval, cx);

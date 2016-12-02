@@ -70,7 +70,7 @@ static void encr_data(unsigned char data[], unsigned long d_len, fcrypt_ctx cx[1
     cx->encr_pos = pos;
 }
 
-int fcrypt_init(
+int _zip_fcrypt_init(
     int mode,                               /* the mode to be used (input)          */
     const unsigned char pwd[],              /* the user specified password (input)  */
     unsigned int pwd_len,                   /* the length of the password (input)   */
@@ -116,7 +116,7 @@ int fcrypt_init(
 
 /* perform 'in place' encryption and authentication */
 
-void fcrypt_encrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1])
+void _zip_fcrypt_encrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1])
 {
     encr_data(data, data_len, cx);
     hmac_sha1_data(data, data_len, cx->auth_ctx);
@@ -124,7 +124,7 @@ void fcrypt_encrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1
 
 /* perform 'in place' authentication and decryption */
 
-void fcrypt_decrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1])
+void _zip_fcrypt_decrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1])
 {
     hmac_sha1_data(data, data_len, cx->auth_ctx);
     encr_data(data, data_len, cx);
@@ -132,7 +132,7 @@ void fcrypt_decrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1
 
 /* close encryption/decryption and return the MAC value */
 
-int fcrypt_end(unsigned char mac[], fcrypt_ctx cx[1])
+int _zip_fcrypt_end(unsigned char mac[], fcrypt_ctx cx[1])
 {
     hmac_sha1_end(mac, MAC_LENGTH(cx->mode), cx->auth_ctx);
     return MAC_LENGTH(cx->mode);    /* return MAC length in bytes   */

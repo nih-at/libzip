@@ -154,6 +154,9 @@
 #if defined(__cplusplus)
 extern "C"
 {
+#if 0
+}
+#endif
 #endif
 
 /*  START OF CONFIGURATION OPTIONS
@@ -180,37 +183,14 @@ extern "C"
 
 /*  1. PLATFORM SPECIFIC INCLUDES */
 
-#if defined( __CRYPTLIB__ ) && !defined( INC_ALL ) && !defined( INC_CHILD )
-#include "crypt/aes.h"
-#else
-  #include "aes.h"
-#endif
+#include "aes.h"
 
-#if defined(__GNUC__) || defined(__GNU_LIBRARY__)
-#  include <endian.h>
-#  include <byteswap.h>
-#elif defined(__CRYPTLIB__)
-#  if defined( INC_ALL )
-#    include "crypt.h"
-#  elif defined( INC_CHILD )
-#    include "../crypt.h"
-#  else
-#    include "crypt.h"
-#  endif
-#  if defined(DATA_LITTLEENDIAN)
-#    define PLATFORM_BYTE_ORDER AES_LITTLE_ENDIAN
-#  else
-#    define PLATFORM_BYTE_ORDER AES_BIG_ENDIAN
-#  endif
-#elif defined(_MSC_VER)
-#  include <stdlib.h>
-#elif !defined(WIN32)
-#  include <stdlib.h>
-#  if !defined (_ENDIAN_H)
-#    include <sys/param.h>
-#  else
-#    include _ENDIAN_H
-#  endif
+#include "config.h"
+
+#if defined(WORDS_BIGENDIAN)
+#  define PLATFORM_BYTE_ORDER AES_BIG_ENDIAN
+#else
+#  define PLATFORM_BYTE_ORDER AES_LITTLE_ENDIAN
 #endif
 
 /*  2. BYTE ORDER IN 32-BIT WORDS
@@ -744,7 +724,7 @@ extern "C"
 
 #ifdef  FIXED_TABLES
 
-#define prefx    extern const
+#define prefx    INTERNAL const
 #elif defined(GLOBALS)
 #define prefx    extern
 extern aes_08t   t_dec(in,it);

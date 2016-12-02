@@ -42,7 +42,7 @@ extern "C"
 {
 #endif
 
-void derive_key(
+INTERNAL void derive_key(
         const unsigned char pwd[],   /* the PASSWORD, and   */
         unsigned int pwd_len,        /*    its length       */
         const unsigned char salt[],  /* the SALT and its    */

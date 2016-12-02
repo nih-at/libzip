@@ -197,7 +197,7 @@ extern "C"
 #define v2(p)   bytes2word(fd(p), fb(p), fe(p), f9(p))
 #define v3(p)   bytes2word(f9(p), fd(p), fb(p), fe(p))
 
-const aes_32t t_dec(r,c)[RC_LENGTH] =
+INTERNAL const aes_32t t_dec(r,c)[RC_LENGTH] =
 {
     w0(0x01), w0(0x02), w0(0x04), w0(0x08), w0(0x10),
     w0(0x20), w0(0x40), w0(0x80), w0(0x1b), w0(0x36),
@@ -216,57 +216,57 @@ const aes_32t t_dec(r,c)[RC_LENGTH] =
 };
 
 #ifdef  SBX_SET
-const aes_08t t_dec(s,box)[256] = { sb_data(h0) };
+INTERNAL const aes_08t t_dec(s,box)[256] = { sb_data(h0) };
 #endif
 #ifdef  ISB_SET
-const aes_08t t_dec(i,box)[256] = { isb_data(h0) };
+INTERNAL const aes_08t t_dec(i,box)[256] = { isb_data(h0) };
 #endif
 
 #ifdef  FT1_SET
-const aes_32t t_dec(f,n)[256] = { sb_data(u0) };
+INTERNAL const aes_32t t_dec(f,n)[256] = { sb_data(u0) };
 #endif
 #ifdef  FT4_SET
-const aes_32t t_dec(f,n)[4][256] =
+INTERNAL const aes_32t t_dec(f,n)[4][256] =
     { {  sb_data(u0) }, {  sb_data(u1) }, {  sb_data(u2) }, {  sb_data(u3) } };
 #endif
 
 #ifdef  FL1_SET
-const aes_32t t_dec(f,l)[256] = { sb_data(w0) };
+INTERNAL const aes_32t t_dec(f,l)[256] = { sb_data(w0) };
 #endif
 #ifdef  FL4_SET
-const aes_32t t_dec(f,l)[4][256] =
+INTERNAL const aes_32t t_dec(f,l)[4][256] =
     { {  sb_data(w0) }, {  sb_data(w1) }, {  sb_data(w2) }, {  sb_data(w3) } };
 #endif
 
 #ifdef  IT1_SET
-const aes_32t t_dec(i,n)[256] = { isb_data(v0) };
+INTERNAL const aes_32t t_dec(i,n)[256] = { isb_data(v0) };
 #endif
 #ifdef  IT4_SET
-const aes_32t t_dec(i,n)[4][256] =
+INTERNAL const aes_32t t_dec(i,n)[4][256] =
     { { isb_data(v0) }, { isb_data(v1) }, { isb_data(v2) }, { isb_data(v3) } };
 #endif
 
 #ifdef  IL1_SET
-const aes_32t t_dec(i,l)[256] = { isb_data(w0) };
+INTERNAL const aes_32t t_dec(i,l)[256] = { isb_data(w0) };
 #endif
 #ifdef  IL4_SET
-const aes_32t t_dec(i,l)[4][256] =
+INTERNAL const aes_32t t_dec(i,l)[4][256] =
     { { isb_data(w0) }, { isb_data(w1) }, { isb_data(w2) }, { isb_data(w3) } };
 #endif
 
 #ifdef  LS1_SET
-const aes_32t t_dec(l,s)[256] = { sb_data(w0) };
+INTERNAL const aes_32t t_dec(l,s)[256] = { sb_data(w0) };
 #endif
 #ifdef  LS4_SET
-const aes_32t t_dec(l,s)[4][256] =
+INTERNAL const aes_32t t_dec(l,s)[4][256] =
     { {  sb_data(w0) }, {  sb_data(w1) }, {  sb_data(w2) }, {  sb_data(w3) } };
 #endif
 
 #ifdef  IM1_SET
-const aes_32t t_dec(i,m)[256] = { mm_data(v0) };
+INTERNAL const aes_32t t_dec(i,m)[256] = { mm_data(v0) };
 #endif
 #ifdef  IM4_SET
-const aes_32t t_dec(i,m)[4][256] =
+INTERNAL const aes_32t t_dec(i,m)[4][256] =
     { {  mm_data(v0) }, {  mm_data(v1) }, {  mm_data(v2) }, {  mm_data(v3) } };
 #endif
 
@@ -402,9 +402,9 @@ static aes_08t fi(const aes_08t x)
     (w = (aes_32t)x, w = (w<<1)^(w<<3)^(w<<6), 0x05^(aes_08t)(w^(w>>8)))
 
 #ifdef GLOBALS
-void gen_tabs(void)
+INTERNAL void gen_tabs(void)
 #else
-void gen_tabs(aes_ctx cx[1])
+INTERNAL void gen_tabs(aes_ctx cx[1])
 #endif
 {   aes_32t  i, w;
 

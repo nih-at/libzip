@@ -52,7 +52,7 @@ extern "C"
 
 #if !defined(BLOCK_SIZE)
 
-aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1])
+INTERNAL aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1])
 {
 #if !defined(FIXED_TABLES)
 #ifdef GLOBALS
@@ -123,7 +123,7 @@ aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1])
 
 #if defined(ENCRYPTION_KEY_SCHEDULE)
 
-aes_rval aes_set_encrypt_key(const unsigned char in_key[], unsigned int klen, aes_ctx cx[1])
+INTERNAL aes_rval aes_set_encrypt_key(const unsigned char in_key[], unsigned int klen, aes_ctx cx[1])
 {   aes_32t    ss[8];
 
 #if !defined(FIXED_TABLES)
@@ -308,7 +308,7 @@ aes_rval aes_set_encrypt_key(const unsigned char in_key[], unsigned int klen, ae
     ss[2] ^= ss[1]; k[8*(i)+10] = ss[2]; ss[3] ^= ss[2]; k[8*(i)+11] = ss[3]; \
 }
 
-aes_rval aes_set_decrypt_key(const unsigned char in_key[], unsigned int klen, aes_ctx cx[1])
+INTERNAL aes_rval aes_set_decrypt_key(const unsigned char in_key[], unsigned int klen, aes_ctx cx[1])
 {   aes_32t    ss[8];
     d_vars
 
