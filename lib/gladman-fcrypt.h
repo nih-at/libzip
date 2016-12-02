@@ -34,6 +34,12 @@
 #ifndef HAD_GLADMAN_FCRYPT_H
 #define HAD_GLADMAN_FCRYPT_H
 
+/* implementation fetched from
+ * http://173.254.28.24/~brgladma//oldsite/cryptography_technology/fileencrypt/files.zip
+ *
+ * Files dated 01-27-2004 except main.c dated 11-18-2008.
+ */
+
 #include "zipint.h"
 
 #define INTERNAL static
