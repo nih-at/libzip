@@ -3,9 +3,7 @@
 ## Encryption
 
 ````c
-struct zip *zip_open_encrypted(const char *path, int flags, const char *password, int *errorp);
-int zip_set_encryption(struct zip *archive, zip_uint64_t idx, zip_uint16_t method, const char *password);
-void zip_set_archive_encryption(struct zip *archive, zip_uint16_t method, const char *password);
+int zip_file_set_encryption(struct zip *archive, zip_uint64_t idx, zip_uint16_t method, const char *password);
 ````
 
 ## Prefixes
