@@ -1,8 +1,9 @@
 This is libzip, a C library for reading, creating, and modifying zip
 archives.  Files can be added from data buffers, files, or compressed
 data copied directly from other zip archives.  Changes made without
-closing the archive can be reverted.  The API is documented by man
-pages.
+closing the archive can be reverted.  Decryption of Winzip AES and
+legacy PKware encrypted files is supported.  The API is documented
+by man pages.
 
 For more information, take a look at the included man pages.  You can
 start with [libzip(3)](http://nih.at/libzip/libzip.html), which lists
