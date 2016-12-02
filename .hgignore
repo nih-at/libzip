@@ -16,6 +16,7 @@
 ^compile$
 ^config\.(guess|h|h\.in|log|status|sub)$
 ^configure$
+^cov-int$
 ^depcomp$
 ^examples/in-memory$
 ^install-sh$
