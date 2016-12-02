@@ -1,6 +1,7 @@
 1.1.x [xxxx-xx-xx]
 ==================
 
+* Read-only support for AES encryption (Winzip version)
 * Support legacy zip files with >64k entries.
 * Fix seeking in zip_source_file if start > 0.
 * Add zip_fseek() for seeking in uncompressed data.
