@@ -36,7 +36,14 @@ void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
 
 # Features
 
-* implement compression flags for zip_set_file_compression()
+* Winzip AES support
+  * encryption
+    * don't write CRC if file too small
+	* write EF 0x9901
+  * test cases: correct pw, wrong pw, 128/192/256, <=20, >20
+  * document existence
+* consistently use `_zip_crypto_clear()` for passwords
+* implement compression flags for `zip_set_file_compression()`
 * support setting extra fields from zip_source
   * introduce layers of extra fields:
     * original

@@ -8,6 +8,7 @@ nodist_libinclude_HEADERS = zipconf.h
 
 # also update CMakeLists.txt when changing version
 libzip_la_LDFLAGS=-no-undefined -version-info 4:0:0
+libzip_la_CPPFLAGS=-I$(srcdir)/gladman-fcrypt
 libzip_la_LIBADD=@LTLIBOBJS@
 
 if WIN32_HOST
@@ -23,6 +24,7 @@ endif
 
 libzip_la_SOURCES=\
 	${IO_SOURCES} \
+	gladman-fcrypt.c \
 	zip_add.c \
 	zip_add_dir.c \
 	zip_add_entry.c \
@@ -111,6 +113,7 @@ libzip_la_SOURCES=\
 	zip_source_tell.c \
 	zip_source_tell_write.c \
 	zip_source_window.c \
+	zip_source_winzip_aes.c \
 	zip_source_write.c \
 	zip_source_zip.c \
 	zip_source_zip_new.c \

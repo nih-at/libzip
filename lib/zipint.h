@@ -20,7 +20,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -66,14 +66,16 @@
 #define EFZIP64SIZE 28
 
 #define ZIP_CM_REPLACED_DEFAULT	(-2)
+#define ZIP_CM_WINZIP_AES         99  /* Winzip AES encrypted */
 
 #define ZIP_CM_IS_DEFAULT(x)	((x) == ZIP_CM_DEFAULT || (x) == ZIP_CM_REPLACED_DEFAULT)
 
 #define ZIP_EF_UTF_8_COMMENT	0x6375
 #define ZIP_EF_UTF_8_NAME	0x7075
+#define ZIP_EF_WINZIP_AES	0x9901
 #define ZIP_EF_ZIP64		0x0001
 
-#define ZIP_EF_IS_INTERNAL(id)	((id) == ZIP_EF_UTF_8_COMMENT || (id) == ZIP_EF_UTF_8_NAME || (id) == ZIP_EF_ZIP64)
+#define ZIP_EF_IS_INTERNAL(id)	((id) == ZIP_EF_UTF_8_COMMENT || (id) == ZIP_EF_UTF_8_NAME || (id) == ZIP_EF_WINZIP_AES || (id) == ZIP_EF_ZIP64)
 
 /* according to unzip-6.0's zipinfo.c, this corresponds to a regular file with rw permissions for everyone */
 #define ZIP_EXT_ATTRIB_DEFAULT		(0100666u<<16)
@@ -118,6 +120,7 @@ zip_source_t *zip_source_pkware(zip_t *, zip_source_t *, zip_uint16_t, int, cons
 int zip_source_remove(zip_source_t *);
 zip_int64_t zip_source_supports(zip_source_t *src);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
+zip_source_t *zip_source_winzip_aes(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 
 
 /* error source for layered sources */
@@ -193,7 +196,7 @@ struct zip {
     zip_source_t **open_source;         /* open sources using archive */
 
     zip_hash_t *names;			/* hash table for name lookup */
-    
+
     char *tempdir;                      /* custom temp dir (needed e.g. for OS X sandboxing) */
 };
 
@@ -219,7 +222,9 @@ struct zip_file {
 struct zip_dirent {
     zip_uint32_t changed;
     bool local_extra_fields_read;	/*      whether we already read in local header extra fields */
-    bool cloned;                        /*      whether this instance is cloned, and thus shares non-changed strings */
+    bool cloned;			/*      whether this instance is cloned, and thus shares non-changed strings */
+
+    bool crc_valid;			/*      if CRC is valid (sometimes not for encrypted archives) */
 
     zip_uint16_t version_madeby;	/* (c)  version of creator */
     zip_uint16_t version_needed;	/* (cl) version needed to extract */
@@ -236,6 +241,8 @@ struct zip_dirent {
     zip_uint16_t int_attrib;		/* (c)  internal file attributes */
     zip_uint32_t ext_attrib;		/* (c)  external file attributes */
     zip_uint64_t offset;		/* (c)  offset of local header */
+
+    zip_uint16_t encryption_method;	/*      encryption method, computed from other fields */
 };
 
 /* zip archive central directory */
@@ -313,7 +320,7 @@ struct zip_string {
 struct zip_buffer {
     bool ok;
     bool free_data;
-    
+
     zip_uint8_t *data;
     zip_uint64_t size;
     zip_uint64_t offset;
@@ -339,6 +346,17 @@ extern const int _zip_err_type[];
 #define ZIP_ENTRY_DATA_CHANGED(x)	((x)->source != NULL)
 
 #define ZIP_IS_RDONLY(za)	((za)->ch_flags & ZIP_AFL_RDONLY)
+
+
+#ifdef HAVE_EXPLICIT_MEMSET
+#define _zip_crypto_clear(b, l) explicit_memset((b), 0, (l))
+#else
+#ifdef HAVE_EXPLICIT_BZERO
+#define _zip_crypto_clear(b, l) explicit_bzero((b), (l))
+#else
+#define _zip_crypto_clear(b, l) memset((b), 0, (l))
+#endif
+#endif
 
 
 zip_int64_t _zip_add_entry(zip_t *);

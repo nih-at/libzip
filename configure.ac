@@ -19,6 +19,7 @@ AC_SUBST(PKG_CONFIG_RPATH)
 AC_PROG_CC
 AC_SYS_LARGEFILE
 AM_PROG_CC_C_O
+AC_C_BIGENDIAN
 
 AC_ARG_WITH(zlib,
     [  --with-zlib=PREFIX  specify prefix for ZLIB library],,
@@ -52,7 +53,7 @@ AC_EXEEXT
 
 LT_INIT
 
-AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp])
+AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp explicit_bzero explicit_memset fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 AC_CACHE_CHECK([if libc defines __progname], ac_cv_libc_defines___progname,
