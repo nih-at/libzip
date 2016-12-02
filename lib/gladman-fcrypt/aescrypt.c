@@ -255,9 +255,11 @@ INTERNAL aes_rval aes_encrypt_block(const unsigned char in_blk[], unsigned char 
     case 14:
         round(fwd_rnd,  b1, b0, kp - 4 * nc);
         round(fwd_rnd,  b0, b1, kp - 3 * nc);
+        /* fallthrough */
     case 12:
         round(fwd_rnd,  b1, b0, kp - 2 * nc);
         round(fwd_rnd,  b0, b1, kp -     nc);
+        /* fallthrough */
     case 10:
         round(fwd_rnd,  b1, b0, kp         );
         round(fwd_rnd,  b0, b1, kp +     nc);
@@ -269,6 +271,7 @@ INTERNAL aes_rval aes_encrypt_block(const unsigned char in_blk[], unsigned char 
         round(fwd_rnd,  b0, b1, kp + 7 * nc);
         round(fwd_rnd,  b1, b0, kp + 8 * nc);
         round(fwd_lrnd, b0, b1, kp + 9 * nc);
+        /* fallthrough */
     default:
         ;
     }
