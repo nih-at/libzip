@@ -45,16 +45,6 @@ zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence)
     if (zf->error.zip_err != 0)
 	return -1;
 
-    if (whence != SEEK_SET && whence != SEEK_CUR && whence != SEEK_END) {
-	zip_error_set(&zf->error, ZIP_ER_INVAL, 0);
-	return -1;
-    }
-
-    if ((zip_source_supports(zf->src) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) == 0) {
-	zip_error_set(&zf->error, ZIP_ER_OPNOTSUPP, 0);
-	return -1;
-    }
-
     if (zip_source_seek(zf->src, offset, whence) < 0) {
 	_zip_error_set_from_source(&zf->error, zf->src);
 	return -1;
