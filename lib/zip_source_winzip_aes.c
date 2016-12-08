@@ -127,7 +127,6 @@ decrypt_header(zip_source_t *src, struct winzip_aes *ctx)
     zip_uint8_t password_verification[PWD_VER_LENGTH];
     zip_uint8_t headerlen;
     zip_int64_t n;
-    unsigned char key[16];
 
     headerlen = PWD_VER_LENGTH + salt_length[ctx->mode];
     if ((n=zip_source_read(src, header, headerlen)) < 0) {

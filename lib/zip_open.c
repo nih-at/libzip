@@ -375,8 +375,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         zip_int64_t entry_size;
 
 	if (i == cd->nentry) {
-	    zip_uint8_t *data;
-
 	    /* InfoZIP has a hack to avoid using Zip64: it stores nentries % 0x10000 */
 	    /* This hack isn't applicable if we're using Zip64, or if there is no central directory entry following. */
 
