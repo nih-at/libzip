@@ -71,6 +71,7 @@ typedef struct dispatch_table_s {
 
 static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
+static zip_uint16_t get_encryption_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
 static zip_t *read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp);
 static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
@@ -482,6 +483,24 @@ set_file_compression(int argc, char *argv[]) {
 }
 
 static int
+set_file_encryption(int argc, char *argv[]) {
+    zip_int32_t method;
+    zip_uint64_t idx;
+    char *password;
+    idx = strtoull(argv[0], NULL, 10);
+    method = get_encryption_method(argv[1]);
+    password = argv[2];
+    if (strlen(password) == 0) {
+	password = NULL;
+    }
+    if (zip_file_set_encryption(za, idx, method, password) < 0) {
+	fprintf(stderr, "can't set file encryption method at index '%" PRIu64 "' to `%s': %s\n", idx, argv[1], zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
 set_file_mtime(int argc, char *argv[]) {
     /* set file last modification time (mtime) */
     time_t mtime;
@@ -617,10 +636,26 @@ get_compression_method(const char *arg)
         return ZIP_CM_DEFAULT;
     else if (strcmp(arg, "store") == 0)
         return ZIP_CM_STORE;
-    else if (strcmp(arg, "deflate") ==0)
+    else if (strcmp(arg, "deflate") == 0)
         return ZIP_CM_DEFLATE;
-    else if (strcmp(arg, "unknown") ==0)
-        return 99;
+    else if (strcmp(arg, "unknown") == 0)
+        return 100;
+    return 0; /* TODO: error handling */
+}
+
+static zip_uint16_t
+get_encryption_method(const char *arg)
+{
+    if (strcmp(arg, "none") == 0)
+        return ZIP_EM_NONE;
+    else if (strcmp(arg, "AES-128") == 0)
+        return ZIP_EM_AES_128;
+    else if (strcmp(arg, "AES-192") == 0)
+        return ZIP_EM_AES_192;
+    else if (strcmp(arg, "AES-256") == 0)
+        return ZIP_EM_AES_256;
+    else if (strcmp(arg, "unknown") == 0)
+        return 100;
     return 0; /* TODO: error handling */
 }
 
@@ -898,6 +933,7 @@ dispatch_table_t dispatch_table[] = {
     { "set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra },
     { "set_file_comment", 2, "index comment", "set file comment", set_file_comment },
     { "set_file_compression", 3, "index method compression_flags", "set file compression method", set_file_compression },
+    { "set_file_encryption", 3, "index method password", "set file encryption method", set_file_encryption },
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
     { "set_file_mtime_all", 1, "timestamp", "set file modification time for all files", set_file_mtime_all },
     { "set_password", 1, "password", "set default password for encryption", set_password },
@@ -973,6 +1009,11 @@ usage(const char *progname, const char *reason)
 	    "\tdefault\n"
 	    "\tdeflate\n"
 	    "\tstore\n");
+    fprintf(out, "\nSupported compression methods are:\n"
+	    "\tnone\n"
+	    "\tAES-128\n"
+	    "\tAES-192\n"
+	    "\tAES-256\n");
     fprintf(out, "\nThe index is zero-based.\n");
     exit(0);
 }

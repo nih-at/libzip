@@ -252,6 +252,13 @@ _zip_dirent_finalize(zip_dirent_t *zde)
 	_zip_string_free(zde->comment);
 	zde->comment = NULL;
     }
+    if (!zde->cloned || zde->changed & ZIP_DIRENT_PASSWORD) {
+	if (zde->password) {
+	    _zip_crypto_clear(zde->password, strlen(zde->password));
+	}
+	free(zde->password);
+	zde->password = NULL;
+    }
 }
 
 
@@ -290,6 +297,7 @@ _zip_dirent_init(zip_dirent_t *de)
     de->ext_attrib = ZIP_EXT_ATTRIB_DEFAULT;
     de->offset = 0;
     de->encryption_method = ZIP_EM_NONE;
+    de->password = NULL;
 }
 
 
@@ -758,6 +766,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     zip_uint32_t ef_total_size;
     bool is_zip64;
     bool is_really_zip64;
+    bool is_winzip_aes;
     zip_uint8_t buf[CDENTRYSIZE];
     zip_buffer_t *buffer;
 
@@ -788,8 +797,16 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
 	}
     }
 
+    if (de->encryption_method == ZIP_EM_NONE) {
+	de->bitflags &= ~ZIP_GPBF_ENCRYPTED;
+    }
+    else {
+	de->bitflags |= ZIP_GPBF_ENCRYPTED;
+    }
+
     is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
     is_zip64 = (flags & (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64)) == (ZIP_FL_LOCAL|ZIP_FL_FORCE_ZIP64) || is_really_zip64;
+    is_winzip_aes = de->encryption_method == ZIP_EM_AES_128 || de->encryption_method == ZIP_EM_AES_192 || de->encryption_method == ZIP_EM_AES_256;
 
     if (is_zip64) {
         zip_uint8_t ef_zip64[EFZIP64SIZE];
@@ -833,6 +850,35 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
         ef = ef64;
     }
 
+    if (is_winzip_aes) {
+	zip_uint8_t data[EF_WINZIP_AES_SIZE];
+        zip_buffer_t *ef_buffer = _zip_buffer_new(data, sizeof(data));
+	zip_extra_field_t *ef_winzip;
+	
+        if (ef_buffer == NULL) {
+            zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	    _zip_ef_free(ef);
+            return -1;
+        }
+
+	_zip_buffer_put_16(ef_buffer, 2);
+	_zip_buffer_put(ef_buffer, "AE", 2);
+	_zip_buffer_put_8(ef_buffer, (de->encryption_method & 0xff));
+	_zip_buffer_put_16(ef_buffer, de->comp_method);
+
+        if (!_zip_buffer_ok(ef_buffer)) {
+            zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+            _zip_buffer_free(ef_buffer);
+	    _zip_ef_free(ef);
+            return -1;
+        }
+
+        ef_winzip = _zip_ef_new(ZIP_EF_WINZIP_AES, EF_WINZIP_AES_SIZE, data, ZIP_EF_BOTH);
+        _zip_buffer_free(ef_buffer);
+        ef_winzip->next = ef;
+        ef = ef_winzip;
+    }
+
     if ((buffer = _zip_buffer_new(buf, sizeof(buf))) == NULL) {
         zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
         _zip_ef_free(ef);
@@ -846,13 +892,23 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     }
     _zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_needed));
     _zip_buffer_put_16(buffer, de->bitflags&0xfff9); /* clear compression method specific flags */
-    _zip_buffer_put_16(buffer, (zip_uint16_t)de->comp_method);
+    if (is_winzip_aes) {
+	_zip_buffer_put_16(buffer, ZIP_CM_WINZIP_AES);
+    }
+    else {
+	_zip_buffer_put_16(buffer, (zip_uint16_t)de->comp_method);
+    }
 
     _zip_u2d_time(de->last_mod, &dostime, &dosdate);
     _zip_buffer_put_16(buffer, dostime);
     _zip_buffer_put_16(buffer, dosdate);
 
-    _zip_buffer_put_32(buffer, de->crc);
+    if (is_winzip_aes && de->uncomp_size < 20)  {
+	_zip_buffer_put_32(buffer, 0);
+    }
+    else {
+	_zip_buffer_put_32(buffer, de->crc);
+    }
 
     if (((flags & ZIP_FL_LOCAL) == ZIP_FL_LOCAL) && ((de->comp_size >= ZIP_UINT32_MAX) || (de->uncomp_size >= ZIP_UINT32_MAX))) {
 	/* In local headers, if a ZIP64 EF is written, it MUST contain

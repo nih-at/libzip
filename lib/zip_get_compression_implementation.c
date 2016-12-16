@@ -36,7 +36,7 @@
 
 
 zip_compression_implementation
-_zip_get_compression_implementation(zip_int32_t cm)
+_zip_get_compression_implementation(zip_int32_t cm, int operation)
 {
     if (cm == ZIP_CM_DEFLATE || ZIP_CM_IS_DEFAULT(cm))
 	return zip_source_deflate;

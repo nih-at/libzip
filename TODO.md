@@ -35,10 +35,9 @@ void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
 # Features
 
 * Winzip AES support
-  * encryption
-    * don't write CRC if file too small
-	* write EF 0x9901
-  * test cases: correct pw, wrong pw, 128/192/256, <=20, >20
+  * test cases decryption: correct password, wrong password, no password, 128/192/256, <=20, >20
+  * test cases encryption: no password, default password, file-specific password, 128/192/256, <=20, >20
+  * Windows random
   * document existence
 * xz support
 * consistently use `_zip_crypto_clear()` for passwords

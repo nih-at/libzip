@@ -63,7 +63,7 @@ static struct winzip_aes * winzip_aes_new(int mode, const char *password);
 
 
 zip_source_t *
-zip_source_winzip_aes(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password)
+zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password)
 {
     zip_source_t *s2;
     int mode = 0;

@@ -38,6 +38,9 @@
 zip_int64_t
 zip_source_read(zip_source_t *src, void *data, zip_uint64_t len)
 {
+    zip_uint64_t bytes_read;
+    zip_int64_t n;
+
     if (src->source_closed) {
         return -1;
     }
@@ -46,5 +49,39 @@ zip_source_read(zip_source_t *src, void *data, zip_uint64_t len)
 	return -1;
     }
 
-    return _zip_source_call(src, data, len, ZIP_SOURCE_READ);
+    if (_zip_source_had_error(src)) {
+	return -1;
+    }
+
+    if (_zip_source_eof(src)) {
+	return 0;
+    }
+
+    bytes_read = 0;
+    while (bytes_read < len) {
+	if ((n = _zip_source_call(src, data + bytes_read, len - bytes_read, ZIP_SOURCE_READ)) < 0) {
+	    if (bytes_read == 0) {
+		return -1;
+	    }
+	    else {
+		return bytes_read;
+	    }
+	}
+
+	if (n == 0) {
+	    src->eof = 1;
+	    break;
+	}
+
+	bytes_read += (zip_uint64_t)n;
+    }
+
+    return (zip_int64_t)bytes_read;
+}
+
+
+bool
+_zip_source_eof(zip_source_t *src)
+{
+    return src->eof;
 }

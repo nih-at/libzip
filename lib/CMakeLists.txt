@@ -83,6 +83,7 @@ SET(LIBZIP_SOURCES
   zip_file_rename.c
   zip_file_replace.c
   zip_file_set_comment.c
+  zip_file_set_encryption.c
   zip_file_set_external_attributes.c
   zip_file_set_mtime.c
   zip_file_strerror.c
@@ -140,6 +141,8 @@ SET(LIBZIP_SOURCES
   zip_source_tell.c
   zip_source_tell_write.c
   zip_source_window.c
+  zip_source_winzip_aes_decode.c
+  zip_source_winzip_aes_encode.c
   zip_source_write.c
   zip_source_zip.c
   zip_source_zip_new.c
@@ -157,6 +160,7 @@ SET(LIBZIP_SOURCES
 
 IF(WIN32)
   SET(LIBZIP_OPSYS_FILES
+    zip_random_win32.c
     zip_source_win32a.c
     zip_source_win32handle.c
     zip_source_win32utf8.c
@@ -164,6 +168,7 @@ IF(WIN32)
   )
 ELSE(WIN32)
   SET(LIBZIP_OPSYS_FILES
+    zip_random_unix.c
     zip_source_file.c
   )
 ENDIF(WIN32)

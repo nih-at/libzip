@@ -12,18 +12,20 @@ libzip_la_CPPFLAGS=-I$(srcdir)/gladman-fcrypt
 libzip_la_LIBADD=@LTLIBOBJS@
 
 if WIN32_HOST
-IO_SOURCES=\
+OS_SOURCES=\
+	zip_random_win32.c \
 	zip_source_win32a.c \
 	zip_source_win32handle.c \
 	zip_source_win32utf8.c \
 	zip_source_win32w.c
 else
-IO_SOURCES=\
+OS_SOURCES=\
+	zip_random_unix.c \
 	zip_source_file.c
 endif
 
 libzip_la_SOURCES=\
-	${IO_SOURCES} \
+	${OS_SOURCES} \
 	gladman-fcrypt.c \
 	zip_add.c \
 	zip_add_dir.c \
@@ -55,6 +57,7 @@ libzip_la_SOURCES=\
 	zip_file_rename.c \
 	zip_file_replace.c \
 	zip_file_set_comment.c \
+	zip_file_set_encryption.c \
 	zip_file_set_external_attributes.c \
 	zip_file_set_mtime.c \
 	zip_file_strerror.c \
@@ -113,7 +116,8 @@ libzip_la_SOURCES=\
 	zip_source_tell.c \
 	zip_source_tell_write.c \
 	zip_source_window.c \
-	zip_source_winzip_aes.c \
+	zip_source_winzip_aes_decode.c \
+	zip_source_winzip_aes_encode.c \
 	zip_source_write.c \
 	zip_source_zip.c \
 	zip_source_zip_new.c \

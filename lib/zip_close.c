@@ -134,7 +134,7 @@ zip_close(zip_t *za)
 	i = filelist[j].idx;
 	entry = za->entry+i;
 
-	new_data = (ZIP_ENTRY_DATA_CHANGED(entry) || ZIP_ENTRY_CHANGED(entry, ZIP_DIRENT_COMP_METHOD));
+	new_data = (ZIP_ENTRY_DATA_CHANGED(entry) || ZIP_ENTRY_CHANGED(entry, ZIP_DIRENT_COMP_METHOD) || ZIP_ENTRY_CHANGED(entry, ZIP_DIRENT_ENCRYPTION_METHOD));
 
 	/* create new local directory entry */
 	if (entry->changes == NULL) {
@@ -259,6 +259,10 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 	st.valid &= ~ZIP_STAT_COMP_SIZE;
     }
 
+    if ((st.valid & ZIP_STAT_ENCRYPTION_METHOD) == 0) {
+	st.valid |= ZIP_STAT_ENCRYPTION_METHOD;
+	st.encryption_method = ZIP_EM_NONE;
+    }
 
     flags = ZIP_EF_LOCAL;
 
@@ -290,8 +294,30 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
     bool needs_crc = (st.comp_method == ZIP_CM_STORE) || needs_decompress;
     bool needs_compress = needs_recompress && (de->comp_method != ZIP_CM_STORE);
 
+    bool needs_reencrypt = needs_recompress || (de->changed & ZIP_DIRENT_PASSWORD) || (de->encryption_method != st.encryption_method);
+    bool needs_decrypt = needs_reencrypt && (st.encryption_method != ZIP_EM_NONE);
+    bool needs_encrypt = needs_reencrypt && (de->encryption_method != ZIP_EM_NONE);
+
     src_final = src;
     zip_source_keep(src_final);
+
+    if (needs_decrypt) {
+	zip_encryption_implementation impl;
+	
+	if ((impl = _zip_get_encryption_implementation(st.encryption_method, ZIP_CODEC_DECODE)) == NULL) {
+	    zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
+	    zip_source_free(src_final);
+	    return -1;
+	}
+	if ((src_tmp = impl(za, src_final, st.encryption_method, ZIP_CODEC_DECODE, NULL)) == NULL) {
+	    /* error set by impl */
+	    zip_source_free(src_final);
+	    return -1;
+	}
+
+	zip_source_free(src_final);
+	src_final = src_tmp;
+    }
     
     if (needs_decompress) {
 	zip_compression_implementation comp_impl;
@@ -337,7 +363,26 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 	zip_source_free(src_final);
 	src_final = src_tmp;
     }
+
     
+    if (needs_encrypt) {
+	zip_encryption_implementation impl;
+	
+	if ((impl = _zip_get_encryption_implementation(de->encryption_method, ZIP_CODEC_ENCODE)) == NULL) {
+	    zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
+	    zip_source_free(src_final);
+	    return -1;
+	}
+	if ((src_tmp = impl(za, src_final, de->encryption_method, ZIP_CODEC_ENCODE, de->password)) == NULL) {
+	    /* error set by impl */
+	    zip_source_free(src_final);
+	    return -1;
+	}
+
+	zip_source_free(src_final);
+	src_final = src_tmp;
+    }
+
 
     if ((offdata = zip_source_tell_write(za->src)) < 0) {
         return -1;

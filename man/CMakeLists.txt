@@ -31,6 +31,9 @@ SET(MDOC3_PAGES
   zip_file_get_error.mdoc
   zip_file_rename.mdoc
   zip_file_set_comment.mdoc
+  zip_file_set_encryption.mdoc
+  zip_file_set_external_attributes.mdoc
+  zip_file_set_mtime.mdoc
   zip_file_strerror.mdoc
   zip_fopen.mdoc
   zip_fopen_encrypted.mdoc

@@ -358,6 +358,7 @@ ZIP_EXTERN int zip_file_get_external_attributes(zip_t *, zip_uint64_t, zip_flags
 ZIP_EXTERN int zip_file_rename(zip_t *, zip_uint64_t, const char *, zip_flags_t);
 ZIP_EXTERN int zip_file_replace(zip_t *, zip_uint64_t, zip_source_t *, zip_flags_t);
 ZIP_EXTERN int zip_file_set_comment(zip_t *, zip_uint64_t, const char *, zip_uint16_t, zip_flags_t);
+ZIP_EXTERN int zip_file_set_encryption(zip_t *, zip_uint64_t, zip_uint16_t, const char *);
 ZIP_EXTERN int zip_file_set_external_attributes(zip_t *, zip_uint64_t, zip_flags_t, zip_uint8_t, zip_uint32_t);
 ZIP_EXTERN int zip_file_set_mtime(zip_t *, zip_uint64_t, time_t, zip_flags_t);
 ZIP_EXTERN const char *zip_file_strerror(zip_file_t *);

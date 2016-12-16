@@ -40,6 +40,7 @@ MAN3=	\
 	zip_file_get_external_attributes.mdoc \
 	zip_file_rename.mdoc \
 	zip_file_set_comment.mdoc \
+	zip_file_set_encryption.mdoc \
 	zip_file_set_external_attributes.mdoc \
 	zip_file_set_mtime.mdoc \
 	zip_file_strerror.mdoc \

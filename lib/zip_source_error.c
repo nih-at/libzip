@@ -40,3 +40,9 @@ zip_source_error(zip_source_t *src)
 {
     return &src->error;
 }
+
+bool
+_zip_source_had_error(zip_source_t *src)
+{
+    return zip_source_error(src)->zip_err != ZIP_ER_OK;
+}

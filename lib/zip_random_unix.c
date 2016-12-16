@@ -1,6 +1,6 @@
 /*
-  zip_source_function.c -- create zip data source from callback function
-  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
+  zip_random_unix.c -- fill the user's buffer with random stuff (Unix version)
+  Copyright (C) 2016 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,70 +31,25 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <stdlib.h>
-
 #include "zipint.h"
 
+#include <fcntl.h>
 
-ZIP_EXTERN zip_source_t *
-zip_source_function(zip_t *za, zip_source_callback zcb, void *ud)
+bool
+zip_random(zip_uint8_t *buffer, zip_uint16_t length)
 {
-    if (za == NULL) {
-        return NULL;
-    }
-    
-    return zip_source_function_create(zcb, ud, &za->error);
-}
+    int fd;
+    int len_ret;
 
-
-ZIP_EXTERN zip_source_t *
-zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error)
-{
-    zip_source_t *zs;
-
-    if ((zs=_zip_source_new(error)) == NULL)
-	return NULL;
-
-    zs->cb.f = zcb;
-    zs->ud = ud;
-    
-    zs->supports = zcb(ud, NULL, 0, ZIP_SOURCE_SUPPORTS);
-    if (zs->supports < 0) {
-        zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
-    }
-    
-    return zs;
-}
-
-
-ZIP_EXTERN void
-zip_source_keep(zip_source_t *src)
-{
-    src->refcount++;
-}
-
-
-zip_source_t *
-_zip_source_new(zip_error_t *error)
-{
-    zip_source_t *src;
-
-    if ((src=(zip_source_t *)malloc(sizeof(*src))) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+    if ((fd = open("/dev/urandom", O_RDONLY)) < 0) {
+	return false;
     }
 
-    src->src = NULL;
-    src->cb.f = NULL;
-    src->ud = NULL;
-    src->open_count = 0;
-    src->write_state = ZIP_SOURCE_WRITE_CLOSED;
-    src->source_closed = false;
-    src->source_archive = NULL;
-    src->refcount = 1;
-    zip_error_init(&src->error);
-    src->eof = false;
+    if (read(fd, buffer, length) != length) {
+	close(fd);
+	return false;
+    }
 
-    return src;
+    close(fd);
+    return true;
 }
