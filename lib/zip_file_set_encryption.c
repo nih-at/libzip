@@ -88,7 +88,9 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
 	
         if (e->changes == NULL) {
             if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
-		_zip_crypto_clear(our_password, strlen(our_password));
+		if (our_password) {
+		    _zip_crypto_clear(our_password, strlen(our_password));
+		}
 		free(our_password);
                 zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
                 return -1;
