@@ -171,6 +171,14 @@
 		4B01D73215B2F5EE002D5007 /* zipconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC729E15B1B4E900236D3C /* zipconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B01D73415B2F5F4002D5007 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC72A015B1B56400236D3C /* config.h */; };
 		4B01D73C15B2F6AF002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
+		4B3A5F501DF96EA8005A53A1 /* gladman-fcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */; };
+		4B3A5F511DF96EA9005A53A1 /* gladman-fcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */; };
+		4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */; };
+		4B3A5F531DF96EB4005A53A1 /* zip_ftell.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */; };
+		4B3A5F541DF96EB5005A53A1 /* zip_fseek.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */; };
+		4B3A5F551DF96EB5005A53A1 /* zip_ftell.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */; };
+		4B3A5F561DF96F34005A53A1 /* zip_source_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4F1DF96D83005A53A1 /* zip_source_winzip_aes.c */; };
+		4B3A5F571DF96F35005A53A1 /* zip_source_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4F1DF96D83005A53A1 /* zip_source_winzip_aes.c */; };
 		4B82CED419915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B82CED519915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B97204F188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
@@ -631,6 +639,12 @@
 		4B28AA2515BAD4E200D0C17D /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
 		4B28AA2715BAD4E200D0C17D /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		4B3A5F4A1DF96D83005A53A1 /* gladman-fcrypt */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "gladman-fcrypt"; sourceTree = "<group>"; };
+		4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gladman-fcrypt.c"; sourceTree = "<group>"; };
+		4B3A5F4C1DF96D83005A53A1 /* gladman-fcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gladman-fcrypt.h"; sourceTree = "<group>"; };
+		4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_fseek.c; sourceTree = "<group>"; };
+		4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_ftell.c; sourceTree = "<group>"; };
+		4B3A5F4F1DF96D83005A53A1 /* zip_source_winzip_aes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_winzip_aes.c; sourceTree = "<group>"; };
 		4B82CED319915F360097BC18 /* zip_file_set_mtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_mtime.c; sourceTree = "<group>"; };
 		4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_get_external_attributes.c; sourceTree = "<group>"; };
 		4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_external_attributes.c; sourceTree = "<group>"; };
@@ -1282,6 +1296,9 @@
 				4BDC729E15B1B4E900236D3C /* zipconf.h */,
 				4BDC729815B1B2A600236D3C /* zip.h */,
 				4BDC729915B1B2A600236D3C /* zipint.h */,
+				4B3A5F4A1DF96D83005A53A1 /* gladman-fcrypt */,
+				4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */,
+				4B3A5F4C1DF96D83005A53A1 /* gladman-fcrypt.h */,
 				4BDC71F115B1B25E00236D3C /* zip_add_dir.c */,
 				4BDC71F215B1B25E00236D3C /* zip_add_entry.c */,
 				4BDC71F315B1B25E00236D3C /* zip_add.c */,
@@ -1321,6 +1338,8 @@
 				4BDC721115B1B25E00236D3C /* zip_fopen_index.c */,
 				4BDC721215B1B25E00236D3C /* zip_fopen.c */,
 				4BDC721315B1B25E00236D3C /* zip_fread.c */,
+				4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */,
+				4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */,
 				4BDC721415B1B25E00236D3C /* zip_get_archive_comment.c */,
 				4BDC721515B1B25E00236D3C /* zip_get_archive_flag.c */,
 				4BDC721615B1B25E00236D3C /* zip_get_compression_implementation.c */,
@@ -1369,6 +1388,7 @@
 				4BCF301F199A2F820064207B /* zip_source_tell.c */,
 				4BCF3035199ABDDA0064207B /* zip_source_tell_write.c */,
 				4BDC723715B1B25E00236D3C /* zip_source_window.c */,
+				4B3A5F4F1DF96D83005A53A1 /* zip_source_winzip_aes.c */,
 				4BCF3020199A2F820064207B /* zip_source_write.c */,
 				4BDC723815B1B25E00236D3C /* zip_source_zip_new.c */,
 				4BDC723915B1B25E00236D3C /* zip_source_zip.c */,
@@ -1632,7 +1652,7 @@
 		4BDC71BF15B181DA00236D3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = NiH;
 				TargetAttributes = {
 					3D7E35361B3305FB00022624 = {
@@ -1760,19 +1780,23 @@
 				4B01D6AD15B2F46B002D5007 /* zip_discard.c in Sources */,
 				4B01D6AE15B2F46B002D5007 /* zip_entry.c in Sources */,
 				4B01D6AF15B2F46B002D5007 /* zip_err_str.c in Sources */,
+				4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */,
 				4B01D6B015B2F46B002D5007 /* zip_error_clear.c in Sources */,
 				4B01D6B115B2F46B002D5007 /* zip_error_get_sys_type.c in Sources */,
 				4B01D6B215B2F46B002D5007 /* zip_error_get.c in Sources */,
 				4B01D6B315B2F46B002D5007 /* zip_error_strerror.c in Sources */,
+				4B3A5F561DF96F34005A53A1 /* zip_source_winzip_aes.c in Sources */,
 				4B01D6B415B2F46B002D5007 /* zip_error_to_str.c in Sources */,
 				4B01D6B515B2F46B002D5007 /* zip_error.c in Sources */,
 				4B01D6B615B2F46B002D5007 /* zip_extra_field_api.c in Sources */,
+				4B3A5F531DF96EB4005A53A1 /* zip_ftell.c in Sources */,
 				4B01D6B715B2F46B002D5007 /* zip_extra_field.c in Sources */,
 				4B01D6B815B2F46B002D5007 /* zip_fclose.c in Sources */,
 				4B01D6B915B2F46B002D5007 /* zip_fdopen.c in Sources */,
 				4B01D6BA15B2F46B002D5007 /* zip_file_add.c in Sources */,
 				4B01D6BB15B2F46B002D5007 /* zip_file_error_clear.c in Sources */,
 				4BCF3026199A2F820064207B /* zip_source_commit_write.c in Sources */,
+				4B3A5F501DF96EA8005A53A1 /* gladman-fcrypt.c in Sources */,
 				4B01D6BC15B2F46B002D5007 /* zip_file_error_get.c in Sources */,
 				4B01D6BD15B2F46B002D5007 /* zip_file_get_comment.c in Sources */,
 				4B01D6BE15B2F46B002D5007 /* zip_file_get_offset.c in Sources */,
@@ -1933,19 +1957,23 @@
 				4BDC724B15B1B25E00236D3C /* zip_discard.c in Sources */,
 				4BDC724C15B1B25E00236D3C /* zip_entry.c in Sources */,
 				4BDC724D15B1B25E00236D3C /* zip_err_str.c in Sources */,
+				4B3A5F541DF96EB5005A53A1 /* zip_fseek.c in Sources */,
 				4BDC724E15B1B25E00236D3C /* zip_error_clear.c in Sources */,
 				4BDC724F15B1B25E00236D3C /* zip_error_get_sys_type.c in Sources */,
 				4BDC725015B1B25E00236D3C /* zip_error_get.c in Sources */,
 				4BDC725115B1B25E00236D3C /* zip_error_strerror.c in Sources */,
+				4B3A5F571DF96F35005A53A1 /* zip_source_winzip_aes.c in Sources */,
 				4BDC725215B1B25E00236D3C /* zip_error_to_str.c in Sources */,
 				4BDC725315B1B25E00236D3C /* zip_error.c in Sources */,
 				4BDC725415B1B25E00236D3C /* zip_extra_field_api.c in Sources */,
+				4B3A5F551DF96EB5005A53A1 /* zip_ftell.c in Sources */,
 				4BDC725515B1B25E00236D3C /* zip_extra_field.c in Sources */,
 				4BDC725615B1B25E00236D3C /* zip_fclose.c in Sources */,
 				4BDC725715B1B25E00236D3C /* zip_fdopen.c in Sources */,
 				4BDC725815B1B25E00236D3C /* zip_file_add.c in Sources */,
 				4BDC725915B1B25E00236D3C /* zip_file_error_clear.c in Sources */,
 				4BCF3025199A2F820064207B /* zip_source_commit_write.c in Sources */,
+				4B3A5F511DF96EA9005A53A1 /* gladman-fcrypt.c in Sources */,
 				4BDC725A15B1B25E00236D3C /* zip_file_error_get.c in Sources */,
 				4BDC725B15B1B25E00236D3C /* zip_file_get_comment.c in Sources */,
 				4BDC725C15B1B25E00236D3C /* zip_file_get_offset.c in Sources */,
@@ -2171,6 +2199,7 @@
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
+				HEADER_SEARCH_PATHS = "../lib/gladman-fcrypt";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@rpath";
 				PRODUCT_BUNDLE_IDENTIFIER = "at.nih.${PRODUCT_NAME:rfc1034identifier}";
@@ -2201,6 +2230,7 @@
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
+				HEADER_SEARCH_PATHS = "../lib/gladman-fcrypt";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@rpath";
 				PRODUCT_BUNDLE_IDENTIFIER = "at.nih.${PRODUCT_NAME:rfc1034identifier}";
@@ -2494,8 +2524,10 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -2518,7 +2550,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -2535,8 +2567,10 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
@@ -2555,7 +2589,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
 				VALIDATE_PRODUCT = YES;
@@ -2573,6 +2607,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
+				HEADER_SEARCH_PATHS = "../lib/gladman-fcrypt";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
@@ -2596,6 +2631,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
+				HEADER_SEARCH_PATHS = "../lib/gladman-fcrypt";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LINK_WITH_STANDARD_LIBRARIES = NO;

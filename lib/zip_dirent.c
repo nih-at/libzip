@@ -630,11 +630,10 @@ static bool
 _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error)
 {
     zip_uint16_t ef_len;
-    zip_uint32_t ef_crc;
     zip_buffer_t *buffer;
     const zip_uint8_t *ef;
     bool crc_valid;
-    zip_int32_t enc_method;
+    zip_uint16_t enc_method;
 
 
     if (de->comp_method != ZIP_CM_WINZIP_AES) {

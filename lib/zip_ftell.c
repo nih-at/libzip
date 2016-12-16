@@ -46,11 +46,6 @@ zip_ftell(zip_file_t *zf)
     if (zf->error.zip_err != 0)
 	return -1;
 
-    if ((zip_source_supports(zf->src) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_TELL)) == 0) {
-	zip_error_set(&zf->error, ZIP_ER_OPNOTSUPP, 0);
-	return -1;
-    }
-
     res = zip_source_tell(zf->src);
     if (res < 0) {
 	_zip_error_set_from_source(&zf->error, zf->src);

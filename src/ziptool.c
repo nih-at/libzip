@@ -679,25 +679,29 @@ hexdump(const zip_uint8_t *data, zip_uint16_t len)
 static zip_t *
 read_from_file(const char *archive, int flags, zip_error_t *error, zip_uint64_t offset, zip_uint64_t length)
 {
-    zip_t *za;
+    zip_t *zaa;
     zip_source_t *source;
     int err;
 
     if (offset == 0 && length == 0) {
-	if ((za= zip_open(archive, flags, &err)) == NULL) {
+	if ((zaa = zip_open(archive, flags, &err)) == NULL) {
 	    zip_error_set(error, err, errno);
 	    return NULL;
 	}
     }
     else {
-	if ((source = zip_source_file_create(archive, offset, length, error)) == NULL
-	    || (za = zip_open_from_source(source, flags, error)) == NULL) {
+        if (length > ZIP_INT64_MAX) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return NULL;
+        }
+	if ((source = zip_source_file_create(archive, offset, (zip_int64_t)length, error)) == NULL
+	    || (zaa = zip_open_from_source(source, flags, error)) == NULL) {
 	    zip_source_free(source);
 	    return NULL;
 	}
     }
 
-    return za;
+    return zaa;
 }
 
 
