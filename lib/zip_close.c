@@ -233,7 +233,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 {
     zip_int64_t offstart, offdata, offend;
     struct zip_stat st;
-    zip_source_t *s2;
+    zip_source_t *src_final, *src_tmp;
     int ret;
     int is_zip64;
     zip_flags_t flags;
@@ -285,67 +285,75 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
     if ((is_zip64=_zip_dirent_write(za, de, flags)) < 0)
 	return -1;
 
+    bool needs_recompress = !((st.comp_method == de->comp_method) || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method == ZIP_CM_DEFLATE));
+    bool needs_decompress = needs_recompress && (st.comp_method != ZIP_CM_STORE);
+    bool needs_crc = (st.comp_method == ZIP_CM_STORE) || needs_decompress;
+    bool needs_compress = needs_recompress && (de->comp_method != ZIP_CM_STORE);
 
-    if (st.comp_method == ZIP_CM_STORE || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method != de->comp_method)) {
-	zip_source_t *s_store, *s_crc;
+    src_final = src;
+    zip_source_keep(src_final);
+    
+    if (needs_decompress) {
 	zip_compression_implementation comp_impl;
 	
-	if (st.comp_method != ZIP_CM_STORE) {
-	    if ((comp_impl=_zip_get_compression_implementation(st.comp_method)) == NULL) {
-		zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-		return -1;
-	    }
-	    if ((s_store=comp_impl(za, src, st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
-		/* error set by comp_impl */
-		return -1;
-	    }
+	if ((comp_impl = _zip_get_compression_implementation(st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
+	    zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	    zip_source_free(src_final);
+	    return -1;
 	}
-	else {
-	    /* to have the same reference count to src as in the case where it's not stored */
-	    zip_source_keep(src);
-	    s_store = src;
-	}
-
-	s_crc = zip_source_crc(za, s_store, 0);
-	zip_source_free(s_store);
-	if (s_crc == NULL) {
+	if ((src_tmp = comp_impl(za, src_final, st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
+	    /* error set by comp_impl */
+	    zip_source_free(src_final);
 	    return -1;
 	}
 
-	if (de->comp_method != ZIP_CM_STORE && ((st.valid & ZIP_STAT_SIZE) == 0 || st.size != 0)) {
-	    if ((comp_impl=_zip_get_compression_implementation(de->comp_method)) == NULL) {
-		zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-		zip_source_free(s_crc);
-		return -1;
-	    }
-	    s2 = comp_impl(za, s_crc, de->comp_method, ZIP_CODEC_ENCODE);
-	    zip_source_free(s_crc);
-	    if (s2 == NULL) {
-		return -1;
-	    }
-	}
-	else {
-	    s2 = s_crc;
-	}
+	zip_source_free(src_final);
+	src_final = src_tmp;
     }
-    else {
-	zip_source_keep(src);
-	s2 = src;
+
+    if (needs_crc) {
+	if ((src_tmp = zip_source_crc(za, src_final, 0)) == NULL) {
+	    zip_source_free(src_final);
+	    return -1;
+	}
+
+	zip_source_free(src_final);
+	src_final = src_tmp;
     }
+
+    if (needs_compress) {
+	zip_compression_implementation comp_impl;
+
+	if ((comp_impl = _zip_get_compression_implementation(de->comp_method, ZIP_CODEC_ENCODE)) == NULL) {
+	    zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	    zip_source_free(src_final);
+	    return -1;
+	}
+	if ((src_tmp = comp_impl(za, src_final, de->comp_method, ZIP_CODEC_ENCODE)) == NULL) {
+	    zip_source_free(src_final);
+	    return -1;
+	}
+	
+	zip_source_free(src_final);
+	src_final = src_tmp;
+    }
+    
 
     if ((offdata = zip_source_tell_write(za->src)) < 0) {
         return -1;
     }
 
-    ret = copy_source(za, s2);
+    ret = copy_source(za, src_final);
 	
-    if (zip_source_stat(s2, &st) < 0)
+    if (zip_source_stat(src_final, &st) < 0) {
 	ret = -1;
+    }
 
-    zip_source_free(s2);
+    zip_source_free(src_final);
 
-    if (ret < 0)
+    if (ret < 0) {
 	return -1;
+    }
 
     if ((offend = zip_source_tell_write(za->src)) < 0) {
         return -1;
