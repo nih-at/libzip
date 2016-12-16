@@ -105,7 +105,7 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
 	    if (e->changes->changed & ZIP_DIRENT_PASSWORD) {
 		_zip_crypto_clear(e->changes->password, strlen(e->changes->password));
 		free(e->changes->password);
-		e->changes->password = e->orig->password;
+		e->changes->password = e->orig ? e->orig->password : NULL;
 		e->changes->changed &= ~ZIP_DIRENT_PASSWORD;
 	    }
 	}
