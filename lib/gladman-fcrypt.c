@@ -38,6 +38,5 @@
 #include "gladman-fcrypt/aestab.c"
 #include "gladman-fcrypt/fileenc.c"
 #include "gladman-fcrypt/hmac.c"
-#include "gladman-fcrypt/prng.c"
 #include "gladman-fcrypt/pwd2key.c"
 #include "gladman-fcrypt/sha1.c"
