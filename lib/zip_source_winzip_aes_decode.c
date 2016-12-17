@@ -176,6 +176,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 {
     struct winzip_aes *ctx;
     zip_int64_t n;
+    zip_uint64_t total, offset;
 
     ctx = (struct winzip_aes *)ud;
 
@@ -205,8 +206,10 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 	}
 	ctx->current_position += n;
 
-	/* TODO: loop if len > UINT_MAX */
-	_zip_fcrypt_decrypt(data, n, &ctx->fcrypt_ctx);
+	total = (zip_uint64_t)n;
+	for (offset = 0; offset < total; offset += ZIP_MIN(total - offset, UINT_MAX)) {
+	    _zip_fcrypt_decrypt(data + offset, ZIP_MIN(total - offset, UINT_MAX), &ctx->fcrypt_ctx);
+	}
 
 	return n;
 
