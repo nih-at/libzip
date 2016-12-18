@@ -124,6 +124,7 @@ AC_CONFIG_FILES([Makefile
 		 examples/Makefile
 		 man/Makefile
 		 lib/Makefile
+		 lib/gladman-fcrypt/Makefile
 		 regress/Makefile
 		 src/Makefile])
 AC_OUTPUT

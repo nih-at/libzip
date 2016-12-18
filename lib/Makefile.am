@@ -1,8 +1,11 @@
+# for 'make dist'
+SUBDIRS=	gladman-fcrypt
+
 AM_CFLAGS=	@CFLAG_VISIBILITY@
 libincludedir = ${libdir}/@PACKAGE@/include
 
 lib_LTLIBRARIES = libzip.la
-noinst_HEADERS = zipint.h
+noinst_HEADERS = zipint.h gladman-fcrypt.h
 include_HEADERS = zip.h
 nodist_libinclude_HEADERS = zipconf.h
 
