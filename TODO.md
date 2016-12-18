@@ -1,26 +1,11 @@
 # API Plans
 
-## Encryption
-
-````c
-int zip_file_set_encryption(struct zip *archive, zip_uint64_t idx, zip_uint16_t method, const char *password);
-````
-
 ## Prefixes
 
 For example for adding extractors for self-extracting zip archives.
 ````c
 zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t length);
 const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
-````
-
-## Progress Callback
-
-Register callback; will be called from `zip_close()` after each file has been processed.
-
-````c
-typedef void (*zip_progress_callback_t)(double);
-void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
 ````
 
 # API Issues
@@ -31,6 +16,7 @@ void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la `ZIP_ER_ZLIB` (no detailed info passing)
 * check arguments for every entry point into libzip
+* remove unused `zip_archive_set_tempdir()`
 
 # Features
 

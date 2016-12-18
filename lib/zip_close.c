@@ -131,6 +131,10 @@ zip_close(zip_t *za)
 	zip_entry_t *entry;
 	zip_dirent_t *de;
 
+	if (za->progress_callback) {
+	    za->progress_callback((double)j/survivors);
+	}
+
 	i = filelist[j].idx;
 	entry = za->entry+i;
 
@@ -220,6 +224,10 @@ zip_close(zip_t *za)
     if (error) {
 	zip_source_rollback_write(za->src);
 	return -1;
+    }
+
+    if (za->progress_callback) {
+	za->progress_callback(1);
     }
 
     zip_discard(za);

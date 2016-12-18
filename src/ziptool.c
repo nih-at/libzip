@@ -401,6 +401,17 @@ name_locate(int argc, char *argv[]) {
     return 0;
 }
 
+static void
+progress_callback(double percentage) {
+    printf("%.1lf%% done\n", percentage*100);
+}
+
+static int
+print_progress(int argc, char *argv[]) {
+    zip_register_progress_callback(za, progress_callback);
+    return 0;
+}
+
 static int
 zrename(int argc, char *argv[]) {
     zip_uint64_t idx;
@@ -931,6 +942,7 @@ dispatch_table_t dispatch_table[] = {
     { "get_file_comment", 1, "index", "get file comment", get_file_comment },
     { "get_num_entries", 1, "flags", "get number of entries in archive", get_num_entries },
     { "name_locate", 2, "name flags", "find entry in archive", name_locate },
+    { "print_progress", 0, "", "print progress during zip_close()", print_progress },
     { "rename", 2, "index name", "rename entry", zrename },
     { "replace_file_contents", 2, "index data", "replace entry with data", replace_file_contents },
     { "set_archive_comment", 1, "comment", "set archive comment", set_archive_comment },
