@@ -148,6 +148,7 @@ TESTS= \
 	add_from_zip_stored.test \
 	add_stored.test \
 	add_stored_in_memory.test \
+	cm-default.test \
 	count_entries.test \
 	decrypt-aes-correct-password.test \
 	decrypt-aes-wrong-password.test \
