@@ -265,6 +265,7 @@ sub runtest {
 
 	$ENV{TZ} = "UTC";
 	$ENV{LC_CTYPE} = "C";
+	$ENV{POSIXLY_CORRECT} = 1;
 	$self->sandbox_create($tag);
 	$self->sandbox_enter();
 	
