@@ -167,7 +167,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 	if (ctx->buffer) {
 	    buffer_n = _zip_buffer_read(ctx->buffer, data, length);
 
-	    data += buffer_n;
+	    data = (zip_uint8_t *)data + buffer_n;
 	    length -= buffer_n;
 	    
 	    if (_zip_buffer_eof(ctx->buffer)) {
@@ -187,7 +187,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 
 	n = (zip_uint64_t)ret;
 	for (offset = 0; offset < n; offset += ZIP_MIN(n - offset, UINT_MAX)) {
-	    _zip_fcrypt_encrypt(data + offset, ZIP_MIN(n - offset, UINT_MAX), &ctx->fcrypt_ctx);
+	    _zip_fcrypt_encrypt((zip_uint8_t *)data + offset, ZIP_MIN(n - offset, UINT_MAX), &ctx->fcrypt_ctx);
 	}
 
 	if (n < length) {

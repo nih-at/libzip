@@ -208,7 +208,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 
 	total = (zip_uint64_t)n;
 	for (offset = 0; offset < total; offset += ZIP_MIN(total - offset, UINT_MAX)) {
-	    _zip_fcrypt_decrypt(data + offset, ZIP_MIN(total - offset, UINT_MAX), &ctx->fcrypt_ctx);
+	    _zip_fcrypt_decrypt((zip_uint8_t *)data + offset, ZIP_MIN(total - offset, UINT_MAX), &ctx->fcrypt_ctx);
 	}
 
 	return n;
