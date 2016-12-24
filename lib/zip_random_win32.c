@@ -31,9 +31,21 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "zipint.h"
+#include "zipwin32.h"
+
 bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length)
 {
-    /* TODO: implement */
-    return false;
+    HCRYPTPROV hprov;
+    if (!CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT | CRYPT_SILENT)) {
+	return false;
+    }
+    if (!CryptGenRandom(hprov, length, buffer)) {
+	return false;
+    }
+    if (!CryptReleaseContext(hprov, 0)) {
+	return false;
+    }
+    return true;
 }
