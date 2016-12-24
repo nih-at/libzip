@@ -53,6 +53,7 @@ MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
 ENDMACRO(CREATE_LIBTOOL_FILE)
  
 SET(LIBZIP_SOURCES
+  gladman-fcrypt.c
   zip_add.c
   zip_add_dir.c
   zip_add_entry.c
@@ -174,6 +175,7 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/gladman-fcrypt
   ${CMAKE_CURRENT_BINARY_DIR}/..)
 
 # TODO: distribute instead?
