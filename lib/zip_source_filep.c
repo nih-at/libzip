@@ -185,7 +185,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 	    if (S_ISREG(sb.st_mode)) {
 		ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
 
-		if (ctx->start + ctx->end > sb.st_size) {
+		if (ctx->start + ctx->end > (zip_uint64_t)sb.st_size) {
 		    zip_error_set(error, ZIP_ER_INVAL, 0);
 		    free(ctx->fname);
 		    free(ctx);
@@ -193,7 +193,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 		}
 
 		if (ctx->end == 0) {
-		    ctx->st.size = sb.st_size - ctx->start;
+		    ctx->st.size = (zip_uint64_t)sb.st_size - ctx->start;
 		    ctx->st.valid |= ZIP_STAT_SIZE;
 
 		    if (start == 0) {

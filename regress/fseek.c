@@ -45,7 +45,8 @@ main(int argc, char *argv[])
     zip_t *z;
     zip_file_t *zf;
     char *archive;
-    zip_int64_t index, offset, n;
+    zip_int64_t offset, n;
+    zip_uint64_t index;
     char b[1024];
 
     prg = argv[0];
@@ -57,7 +58,7 @@ main(int argc, char *argv[])
 
     archive = argv[1];
     index = strtoull(argv[2], NULL, 10);
-    offset = strtoull(argv[3], NULL, 10);
+    offset = (zip_int64_t)strtoull(argv[3], NULL, 10);
 
     if ((z=zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_t error;

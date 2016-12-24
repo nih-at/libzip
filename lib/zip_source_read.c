@@ -64,7 +64,7 @@ zip_source_read(zip_source_t *src, void *data, zip_uint64_t len)
 		return -1;
 	    }
 	    else {
-		return bytes_read;
+		return (zip_int64_t)bytes_read;
 	    }
 	}
 

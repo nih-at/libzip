@@ -42,7 +42,7 @@
 #define MAX_HEADER_LENGTH (16+PWD_VER_LENGTH)
 #define HMAC_LENGTH 10
 
-static int salt_length[] = { 0, 8, 12, 16 };
+static unsigned int salt_length[] = { 0, 8, 12, 16 };
 
 struct winzip_aes {
     char *password;
@@ -139,7 +139,7 @@ decrypt_header(zip_source_t *src, struct winzip_aes *ctx)
 	return -1;
     }
 
-    if (_zip_fcrypt_init(ctx->mode, ctx->password, strlen(ctx->password), header, password_verification, &ctx->fcrypt_ctx) != 0) {
+    if (_zip_fcrypt_init(ctx->mode, (unsigned char *)ctx->password, strlen(ctx->password), header, password_verification, &ctx->fcrypt_ctx) != 0) {
 	zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
@@ -204,7 +204,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 	    _zip_error_set_from_source(&ctx->error, src);
 	    return -1;
 	}
-	ctx->current_position += n;
+	ctx->current_position += (zip_uint64_t)n;
 
 	total = (zip_uint64_t)n;
 	for (offset = 0; offset < total; offset += ZIP_MIN(total - offset, UINT_MAX)) {
