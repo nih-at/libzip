@@ -40,8 +40,7 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft int
-.Fn zip_file_set_encryption "zip_t *archive" "zip_uint64_t index" \
-"zip_int32_t method" "const char *password"
+.Fn zip_file_set_encryption "zip_t *archive" "zip_uint64_t index" "zip_uint16_t method" "const char *password"
 .Sh DESCRIPTION
 The
 .Fn zip_file_set_encryption

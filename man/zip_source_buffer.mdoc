@@ -40,11 +40,9 @@ libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
 .Ft zip_source_t *
-.Fn zip_source_buffer "zip_t *archive" "const void *data" \
-"zip_uint64_t len" "int freep"
+.Fn zip_source_buffer "zip_t *archive" "const void *data" "zip_uint64_t len" "int freep"
 .Ft zip_source_t *
-.Fn zip_source_buffer_create "const void *data" \
-"zip_uint64_t len" "int freep" "zip_error_t *error"
+.Fn zip_source_buffer_create "const void *data" "zip_uint64_t len" "int freep" "zip_error_t *error"
 .Sh DESCRIPTION
 The functions
 .Fn zip_source_buffer
