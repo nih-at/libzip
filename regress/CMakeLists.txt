@@ -38,11 +38,11 @@ SET(EXTRA_TESTS
 	add_stored.test
 	add_stored_in_memory.test
 	count_entries.test
-	decrypt-aes-correct-password.test
-	decrypt-aes-no-password.test
-	decrypt-aes-wrong-password.test
-	decrypt-correct-password.test
-	decrypt-wrong-password.test
+	decrypt-correct-password-aes256.test
+	decrypt-correct-password-pkware.test
+	decrypt-no-password-aes256.test
+	decrypt-wrong-password-aes256.test
+	decrypt-wrong-password-pkware.test
 	delete_add_same.test
 	delete_invalid.test
 	delete_last.test
