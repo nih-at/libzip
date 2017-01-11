@@ -151,6 +151,7 @@ TESTS= \
 	cm-default.test \
 	count_entries.test \
 	decrypt-aes-correct-password.test \
+	decrypt-aes-no-password.test \
 	decrypt-aes-wrong-password.test \
 	decrypt-correct-password.test \
 	decrypt-wrong-password.test \
