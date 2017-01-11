@@ -152,8 +152,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * `zip_source_file()`: don't allow write if start/len specify a part of the file
 * script to check if all exported symbols are marked with `ZIP_EXTERN`, add to make distcheck
 
-* re-implement fix for OS X sandboxing (`zip_archive_set_tempdir()`).
-
 * document: `zip_source_write()`: length can't be > `ZIP_INT64_MAX`
 * document: `ZIP_SOURCE_CLOSE` implementation can't return error
 * keep error codes in man pages in sync
