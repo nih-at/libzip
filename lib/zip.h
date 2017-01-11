@@ -322,9 +322,9 @@ ZIP_EXTERN int zip_error_get_sys_type(int); /* use zip_error_system_type */
 ZIP_EXTERN void zip_error_get(zip_t *, int *, int *); /* use zip_get_error, zip_error_code_zip / zip_error_code_system */
 ZIP_EXTERN int zip_error_to_str(char *, zip_uint64_t, int, int);
 ZIP_EXTERN void zip_file_error_get(zip_file_t *, int *, int *); /* use zip_file_get_error, zip_error_code_zip / zip_error_code_system */
+ZIP_EXTERN int zip_archive_set_tempdir(zip_t *, const char *);
 #endif
 
-ZIP_EXTERN int zip_archive_set_tempdir(zip_t *, const char *);
 ZIP_EXTERN int zip_close(zip_t *);
 ZIP_EXTERN int zip_delete(zip_t *, zip_uint64_t);
 ZIP_EXTERN zip_int64_t zip_dir_add(zip_t *, const char *, zip_flags_t);
