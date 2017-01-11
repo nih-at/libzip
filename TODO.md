@@ -23,8 +23,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * Winzip AES support
   * test cases decryption: correct password, wrong password, no password, 128/192/256, <=20, >20
   * test cases encryption: no password, default password, file-specific password, 128/192/256, <=20, >20
-  * Windows random
-  * document existence
 * xz support
 * consistently use `_zip_crypto_clear()` for passwords
 * implement compression flags for `zip_set_file_compression()`
