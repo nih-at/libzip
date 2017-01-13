@@ -14,6 +14,8 @@
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__STRDUP
 #cmakedefine HAVE__STRICMP
+#cmakedefine HAVE__STRTOI64
+#cmakedefine HAVE__STRTOUI64
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
@@ -26,6 +28,8 @@
 #cmakedefine HAVE_STRCASECMP
 #cmakedefine HAVE_STRDUP
 #cmakedefine HAVE_STRICMP
+#cmakedefine HAVE_STRTOLL
+#cmakedefine HAVE_STRTOULL
 #cmakedefine HAVE_STRUCT_TM_TM_ZONE
 #cmakedefine HAVE_STDBOOL_H
 #cmakedefine HAVE_STRINGS_H
