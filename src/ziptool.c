@@ -250,7 +250,7 @@ count_extra_by_id(int argc, char *argv[]) {
     eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     ceflags = get_flags(argv[2]);
     if ((count=zip_file_extra_fields_count_by_id(za, idx, eid, ceflags)) < 0) {
-	fprintf(stderr, "can't get extra field count for file at index '%" PRIu64 "' and for id `%d': %s\n", idx, eid, zip_strerror(za));
+	fprintf(stderr, "can't get extra field count for file at index '%" PRIu64 "' and for id '%d': %s\n", idx, eid, zip_strerror(za));
 	return -1;
     } else {
 	printf("Extra field count: %d\n", count);
@@ -278,7 +278,7 @@ delete_extra(int argc, char *argv[]) {
     eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     geflags = get_flags(argv[2]);
     if ((zip_file_extra_field_delete(za, idx, eid, geflags)) < 0) {
-	fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id `%d': %s\n", idx, eid, zip_strerror(za));
+	fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id '%d': %s\n", idx, eid, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -294,7 +294,7 @@ delete_extra_by_id(int argc, char *argv[]) {
     eidx = (zip_uint16_t)strtoull(argv[2], NULL, 10);
     geflags = get_flags(argv[3]);
     if ((zip_file_extra_field_delete_by_id(za, idx, eid, eidx, geflags)) < 0) {
-	fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id `%d', extra field idx `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+	fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id '%d', extra field idx '%d': %s\n", idx, eid, eidx, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -417,7 +417,7 @@ zrename(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     if (zip_rename(za, idx, argv[1]) < 0) {
-	fprintf(stderr, "can't rename file at index '%" PRIu64 "' to `%s': %s\n", idx, argv[1], zip_strerror(za));
+	fprintf(stderr, "can't rename file at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -452,7 +452,7 @@ set_extra(int argc, char *argv[]) {
     geflags = get_flags(argv[3]);
     efdata = (zip_uint8_t *)argv[4];
     if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, (zip_uint16_t)strlen((const char *)efdata), geflags)) < 0) {
-	fprintf(stderr, "can't set extra field data for file at index '%" PRIu64 "', extra field id `%d', index `%d': %s\n", idx, eid, eidx, zip_strerror(za));
+	fprintf(stderr, "can't set extra field data for file at index '%" PRIu64 "', extra field id '%d', index '%d': %s\n", idx, eid, eidx, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -461,7 +461,7 @@ set_extra(int argc, char *argv[]) {
 static int
 set_archive_comment(int argc, char *argv[]) {
     if (zip_set_archive_comment(za, argv[0], (zip_uint16_t)strlen(argv[0])) < 0) {
-	fprintf(stderr, "can't set archive comment to `%s': %s\n", argv[0], zip_strerror(za));
+	fprintf(stderr, "can't set archive comment to '%s': %s\n", argv[0], zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -472,7 +472,7 @@ set_file_comment(int argc, char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     if (zip_file_set_comment(za, idx, argv[1], (zip_uint16_t)strlen(argv[1]), 0) < 0) {
-	fprintf(stderr, "can't set file comment at index '%" PRIu64 "' to `%s': %s\n", idx, argv[1], zip_strerror(za));
+	fprintf(stderr, "can't set file comment at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -487,7 +487,7 @@ set_file_compression(int argc, char *argv[]) {
     method = get_compression_method(argv[1]);
     flags = (zip_uint32_t)strtoull(argv[2], NULL, 10);
     if (zip_set_file_compression(za, idx, method, flags) < 0) {
-	fprintf(stderr, "can't set file compression method at index '%" PRIu64 "' to `%s', flags `%d': %s\n", idx, argv[1], flags, zip_strerror(za));
+	fprintf(stderr, "can't set file compression method at index '%" PRIu64 "' to '%s', flags '%d': %s\n", idx, argv[1], flags, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -505,7 +505,7 @@ set_file_encryption(int argc, char *argv[]) {
 	password = NULL;
     }
     if (zip_file_set_encryption(za, idx, method, password) < 0) {
-	fprintf(stderr, "can't set file encryption method at index '%" PRIu64 "' to `%s': %s\n", idx, argv[1], zip_strerror(za));
+	fprintf(stderr, "can't set file encryption method at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -519,7 +519,7 @@ set_file_mtime(int argc, char *argv[]) {
     idx = strtoull(argv[0], NULL, 10);
     mtime = (time_t)strtoull(argv[1], NULL, 10);
     if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
-	fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to `%ld': %s\n", idx, mtime, zip_strerror(za));
+	fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to '%ld': %s\n", idx, mtime, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -539,7 +539,7 @@ set_file_mtime_all(int argc, char *argv[]) {
     }
     for (idx = 0; idx < (zip_uint64_t)num_entries; idx++) {
 	if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
-	    fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to `%ld': %s\n", idx, mtime, zip_strerror(za));
+	    fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to '%ld': %s\n", idx, mtime, zip_strerror(za));
 	    return -1;
 	}
     }
@@ -550,7 +550,7 @@ static int
 set_password(int argc, char *argv[]) {
     /* set default password */
     if (zip_set_default_password(za, argv[0]) < 0) {
-	fprintf(stderr, "can't set default password to `%s'", argv[0]);
+	fprintf(stderr, "can't set default password to '%s'\n", argv[0]);
 	return -1;
     }
     return 0;
