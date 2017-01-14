@@ -25,6 +25,8 @@ EXTRA_DIST= \
 	bogus.zip \
 	broken.zip \
 	cm-default.zip \
+	encrypt-aes128.zip \
+	encrypt-aes192.zip \
 	encrypt-aes256.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
@@ -150,9 +152,13 @@ TESTS= \
 	add_stored_in_memory.test \
 	cm-default.test \
 	count_entries.test \
+	decrypt-correct-password-aes128.test \
+	decrypt-correct-password-aes192.test \
 	decrypt-correct-password-aes256.test \
 	decrypt-correct-password-pkware.test \
 	decrypt-no-password-aes256.test \
+	decrypt-wrong-password-aes128.test \
+	decrypt-wrong-password-aes192.test \
 	decrypt-wrong-password-aes256.test \
 	decrypt-wrong-password-pkware.test \
 	delete_add_same.test \
