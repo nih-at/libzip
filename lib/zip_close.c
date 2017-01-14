@@ -375,13 +375,20 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
     
     if (needs_encrypt) {
 	zip_encryption_implementation impl;
+	const char *password = NULL;
+
+	if (de->password) {
+	    password = de->password;
+	} else if (za->default_password) {
+	    password = za->default_password;
+	}
 	
 	if ((impl = _zip_get_encryption_implementation(de->encryption_method, ZIP_CODEC_ENCODE)) == NULL) {
 	    zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	    zip_source_free(src_final);
 	    return -1;
 	}
-	if ((src_tmp = impl(za, src_final, de->encryption_method, ZIP_CODEC_ENCODE, de->password)) == NULL) {
+	if ((src_tmp = impl(za, src_final, de->encryption_method, ZIP_CODEC_ENCODE, password)) == NULL) {
 	    /* error set by impl */
 	    zip_source_free(src_final);
 	    return -1;
