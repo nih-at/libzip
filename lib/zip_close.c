@@ -245,6 +245,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
     int ret;
     int is_zip64;
     zip_flags_t flags;
+    bool needs_recompress, needs_decompress, needs_crc, needs_compress, needs_reencrypt, needs_decrypt, needs_encrypt;
     
     if (zip_source_stat(src, &st) < 0) {
 	_zip_error_set_from_source(&za->error, src);
@@ -297,14 +298,14 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
     if ((is_zip64=_zip_dirent_write(za, de, flags)) < 0)
 	return -1;
 
-    bool needs_recompress = !((st.comp_method == de->comp_method) || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method == ZIP_CM_DEFLATE));
-    bool needs_decompress = needs_recompress && (st.comp_method != ZIP_CM_STORE);
-    bool needs_crc = (st.comp_method == ZIP_CM_STORE) || needs_decompress;
-    bool needs_compress = needs_recompress && (de->comp_method != ZIP_CM_STORE);
+    needs_recompress = !((st.comp_method == de->comp_method) || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method == ZIP_CM_DEFLATE));
+    needs_decompress = needs_recompress && (st.comp_method != ZIP_CM_STORE);
+    needs_crc = (st.comp_method == ZIP_CM_STORE) || needs_decompress;
+    needs_compress = needs_recompress && (de->comp_method != ZIP_CM_STORE);
 
-    bool needs_reencrypt = needs_recompress || (de->changed & ZIP_DIRENT_PASSWORD) || (de->encryption_method != st.encryption_method);
-    bool needs_decrypt = needs_reencrypt && (st.encryption_method != ZIP_EM_NONE);
-    bool needs_encrypt = needs_reencrypt && (de->encryption_method != ZIP_EM_NONE);
+    needs_reencrypt = needs_recompress || (de->changed & ZIP_DIRENT_PASSWORD) || (de->encryption_method != st.encryption_method);
+    needs_decrypt = needs_reencrypt && (st.encryption_method != ZIP_EM_NONE);
+    needs_encrypt = needs_reencrypt && (de->encryption_method != ZIP_EM_NONE);
 
     src_final = src;
     zip_source_keep(src_final);
