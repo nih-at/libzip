@@ -667,7 +667,7 @@ get_encryption_method(const char *arg)
         return ZIP_EM_AES_256;
     else if (strcmp(arg, "unknown") == 0)
         return 100;
-    return 0; /* TODO: error handling */
+    return (zip_uint16_t)-1; /* TODO: error handling */
 }
 
 static void
