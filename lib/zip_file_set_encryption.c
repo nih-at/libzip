@@ -54,7 +54,7 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
     }
 
     if (_zip_get_encryption_implementation(method, ZIP_CODEC_ENCODE) == NULL) {
-	zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
+	zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	return -1;
     }
 
