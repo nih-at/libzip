@@ -28,6 +28,7 @@ EXTRA_DIST= \
 	encrypt-aes128.zip \
 	encrypt-aes192.zip \
 	encrypt-aes256.zip \
+	encrypt-none.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
 	encrypt_plus_extra_modified_c.zip \
@@ -168,6 +169,7 @@ TESTS= \
 	delete_multiple_partial.test \
 	delete_renamed_rename.test \
 	encrypt.test \
+	encryption-remove.test \
 	extra_add.test \
 	extra_add_multiple.test \
 	extra_count.test \
@@ -247,7 +249,7 @@ TESTS= \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
-#XFAIL_TESTS=
+XFAIL_TESTS= encryption-remove.test
 
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
