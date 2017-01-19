@@ -50,6 +50,10 @@ SET(EXTRA_TESTS
 	delete_multiple_partial.test
 	delete_renamed_rename.test
 	encrypt.test
+	encryption-nonrandom-aes128.test
+	encryption-nonrandom-aes192.test
+	encryption-nonrandom-aes256.test
+	encryption-remove.test
 	extra_add.test
 	extra_add_multiple.test
 	extra_count.test

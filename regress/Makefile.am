@@ -10,9 +10,18 @@ noinst_PROGRAMS= \
 	tryopen
 
 if !WIN32_HOST
-noinst_LTLIBRARIES=	malloc.la
+pkglib_LTLIBRARIES=	malloc.la nonrandomopen.la
+
 malloc_la_SOURCES=	malloc.c
 malloc_la_LDFLAGS=	-module -avoid-version
+
+nonrandomopen_la_SOURCES=	nonrandomopen.c
+nonrandomopen_la_LDFLAGS=	-module -avoid-version
+
+# we have to do it this way, because if we choose noinst_LTLIBRARIES,
+# only the .a files are built
+install-pkglibLTLIBRARIES:
+	@echo not installing shared objects needed only for testing
 endif
 
 EXTRA_DIST= \
@@ -28,6 +37,9 @@ EXTRA_DIST= \
 	encrypt-aes128.zip \
 	encrypt-aes192.zip \
 	encrypt-aes256.zip \
+	encrypt-aes128-noentropy.zip \
+	encrypt-aes192-noentropy.zip \
+	encrypt-aes256-noentropy.zip \
 	encrypt-none.zip \
 	encrypt.zip \
 	encrypt_plus_extra.zip \
@@ -169,6 +181,9 @@ TESTS= \
 	delete_multiple_partial.test \
 	delete_renamed_rename.test \
 	encrypt.test \
+	encryption-nonrandom-aes128.test \
+	encryption-nonrandom-aes192.test \
+	encryption-nonrandom-aes256.test \
 	encryption-remove.test \
 	extra_add.test \
 	extra_add_multiple.test \
