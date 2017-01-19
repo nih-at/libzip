@@ -21,7 +21,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 # Features
 
 * Winzip AES support
-  * test cases decryption: <=20, >20
+  * test cases decryption: <=20, >20, stat for both
   * test cases encryption: no password, default password, file-specific password, 128/192/256, <=20, >20
 * xz support
 * consistently use `_zip_crypto_clear()` for passwords
