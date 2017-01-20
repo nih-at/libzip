@@ -56,6 +56,11 @@ LT_INIT
 AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp _strtoi64 _strtoui64 explicit_bzero explicit_memset fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp strtoll strtoull])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
+dnl assume dlsym in libc, but check in libdl
+DLSYM_LIB=
+AC_CHECK_LIB([dl], [dlsym], [DLSYM_LIB="-ldl"])
+AC_SUBST([DLSYM_LIB])
+
 AC_CACHE_CHECK([if libc defines __progname], ac_cv_libc_defines___progname,
 	       [ AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
 						 [[ extern char *__progname; printf("%s", __progname); ]])],

@@ -14,9 +14,11 @@ pkglib_LTLIBRARIES=	malloc.la nonrandomopen.la
 
 malloc_la_SOURCES=	malloc.c
 malloc_la_LDFLAGS=	-module -avoid-version
+malloc_la_LIBADD=	${DLSYM_LIB}
 
 nonrandomopen_la_SOURCES=	nonrandomopen.c
 nonrandomopen_la_LDFLAGS=	-module -avoid-version
+nonrandomopen_la_LIBADD=	${DLSYM_LIB}
 
 # we have to do it this way, because if we choose noinst_LTLIBRARIES,
 # only the .a files are built
