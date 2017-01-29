@@ -107,15 +107,19 @@ INTERNAL aes_rval aes_set_block_size(unsigned int blen, aes_ctx cx[1]);
 /* and 256 bit) keys.  The value aes_good is returned if the requested  */
 /* key size is legal, otherwise aes_bad is returned.                    */
 
+#ifdef BUILDING_FCRYPT
 INTERNAL aes_rval aes_set_encrypt_key(const unsigned char in_key[],
                                         unsigned int klen, aes_ctx cx[1]);
 INTERNAL aes_rval aes_encrypt_block(const unsigned char in_blk[],
                             unsigned char out_blk[], const aes_ctx cx[1]);
+#endif
 
+#if 0 /* not used */
 INTERNAL aes_rval aes_set_decrypt_key(const unsigned char in_key[],
                                         unsigned int klen, aes_ctx cx[1]);
 INTERNAL aes_rval aes_decrypt_block(const unsigned char in_blk[],
                             unsigned char out_blk[], const aes_ctx cx[1]);
+#endif
 
 #if defined(__cplusplus)
 }

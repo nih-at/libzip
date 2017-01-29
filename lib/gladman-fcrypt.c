@@ -31,6 +31,8 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define BUILDING_FCRYPT
+
 #include "gladman-fcrypt.h"
 
 #include "gladman-fcrypt/aescrypt.c"

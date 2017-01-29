@@ -60,12 +60,17 @@ typedef struct
     sha1_32t wbuf[16];
 } sha1_ctx;
 
+#ifdef BUILDING_FCRYPT
 INTERNAL void sha1_compile(sha1_ctx ctx[1]);
 
 INTERNAL void sha1_begin(sha1_ctx ctx[1]);
 INTERNAL void sha1_hash(const unsigned char data[], unsigned int len, sha1_ctx ctx[1]);
 INTERNAL void sha1_end(unsigned char hval[], sha1_ctx ctx[1]);
+#endif
+
+#if 0 /* not used */
 INTERNAL void sha1(unsigned char hval[], const unsigned char data[], unsigned int len);
+#endif
 
 #if defined(__cplusplus)
 }

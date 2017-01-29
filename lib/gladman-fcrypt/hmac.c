@@ -131,6 +131,7 @@ INTERNAL void hmac_sha1_end(unsigned char mac[], unsigned long mac_len, hmac_ctx
         mac[i] = dig[i];
 }
 
+#if 0 /* not used */
 /* 'do it all in one go' subroutine     */
 INTERNAL void hmac_sha1(const unsigned char key[], unsigned int key_len,
           const unsigned char data[], unsigned int data_len,
@@ -142,6 +143,7 @@ INTERNAL void hmac_sha1(const unsigned char key[], unsigned int key_len,
     hmac_sha1_data(data, data_len, cx);
     hmac_sha1_end(mac, mac_len, cx);
 }
+#endif
 
 #if defined(__cplusplus)
 }

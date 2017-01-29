@@ -274,11 +274,13 @@ INTERNAL void sha1_end(unsigned char hval[], sha1_ctx ctx[1])
         hval[i] = (unsigned char)(ctx->hash[i >> 2] >> (8 * (~i & 3)));
 }
 
+#if 0 /* not used */
 INTERNAL void sha1(unsigned char hval[], const unsigned char data[], unsigned int len)
 {   sha1_ctx    cx[1];
 
     sha1_begin(cx); sha1_hash(data, len, cx); sha1_end(hval, cx);
 }
+#endif
 
 #if defined(__cplusplus)
 }

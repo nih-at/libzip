@@ -42,6 +42,7 @@ extern "C"
 {
 #endif
 
+#ifdef BUILDING_FCRYPT
 INTERNAL void derive_key(
         const unsigned char pwd[],   /* the PASSWORD, and   */
         unsigned int pwd_len,        /*    its length       */
@@ -50,6 +51,7 @@ INTERNAL void derive_key(
         unsigned int iter,      /* the number of iterations */
         unsigned char key[],    /* space for the output key */
         unsigned int key_len);  /* and its required length  */
+#endif
 
 #if defined(__cplusplus)
 }
