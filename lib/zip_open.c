@@ -157,27 +157,6 @@ zip_open_from_source(zip_source_t *src, int _flags, zip_error_t *error)
     }
 }
 
-ZIP_EXTERN int
-zip_archive_set_tempdir(zip_t *za, const char *tempdir)
-{
-    char *new_tempdir;
-
-    if (tempdir) {
-        if ((new_tempdir = strdup(tempdir)) == NULL) {
-            zip_error_set(&za->error, ZIP_ER_MEMORY, errno);
-            return -1;
-        }
-    }
-    else
-        new_tempdir = NULL;
-
-    free(za->tempdir);
-    za->tempdir = new_tempdir;
-
-    return 0;
-}
-
-
 ZIP_EXTERN void
 zip_register_progress_callback(zip_t *za, zip_progress_callback_t progress_callback)
 {
