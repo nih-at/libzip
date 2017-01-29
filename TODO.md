@@ -77,7 +77,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * use bool
 * use `ZIP_SOURCE_SUPPORTS_{READABLE,SEEKABLE,WRITABLE}`
 * use `zip_source_seek_compute_offset()`
-* move compat refs from `zipint.h` to own file, and include that in `zipint.h` and `src`
 * get rid of `zip_get_{compression,encryption}_implementation()`
 * use `zip_*int*_t` internally
 
