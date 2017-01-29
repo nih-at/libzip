@@ -81,6 +81,9 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 
     enc_impl = NULL;
     if (((flags & ZIP_FL_ENCRYPTED) == 0) && (st.encryption_method != ZIP_EM_NONE)) {
+        if (password == NULL) {
+            password = za->default_password;
+        }
 	if (password == NULL) {
 	    zip_error_set(&za->error, ZIP_ER_NOPASSWD, 0);
 	    return NULL;
