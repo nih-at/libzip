@@ -88,6 +88,11 @@ zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 	return NULL;
     }
 
+    if (strlen(password) > UINT_MAX) {
+        zip_error_set(&za->error, ZIP_ER_INVAL, 0); /* TODO: better error code? (password too long) */
+        return NULL;
+    }
+
     if ((ctx = winzip_aes_new(mode, encryption_method, password)) == NULL) {
 	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return NULL;
@@ -105,12 +110,12 @@ zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 static int
 encrypt_header(zip_source_t *src, struct winzip_aes *ctx)
 {
-    if (!zip_random(ctx->data, salt_length[ctx->mode])) {
+    if (!zip_random(ctx->data, (zip_uint16_t)salt_length[ctx->mode])) {
 	zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }	
     
-    if (_zip_fcrypt_init(ctx->mode, (unsigned char *)ctx->password, strlen(ctx->password), ctx->data, ctx->data+salt_length[ctx->mode], &ctx->fcrypt_ctx) != 0) {
+    if (_zip_fcrypt_init(ctx->mode, (unsigned char *)ctx->password, (unsigned int)strlen(ctx->password), ctx->data, ctx->data+salt_length[ctx->mode], &ctx->fcrypt_ctx) != 0) {
 	zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
@@ -121,26 +126,6 @@ encrypt_header(zip_source_t *src, struct winzip_aes *ctx)
     }
     
     return 0;
-}
-
-
-static bool
-verify_hmac(zip_source_t *src, struct winzip_aes *ctx)
-{
-    unsigned char computed[HMAC_LENGTH], from_file[HMAC_LENGTH];
-    if (zip_source_read(src, from_file, HMAC_LENGTH) < HMAC_LENGTH) {
-	_zip_error_set_from_source(&ctx->error, src);
-	return false;
-    }
-
-    _zip_fcrypt_end(computed, &ctx->fcrypt_ctx);
-    
-    if (memcmp(from_file, computed, HMAC_LENGTH) != 0) {
-	zip_error_set(&ctx->error, ZIP_ER_CRC, 0);
-	return false;
-    }
-
-    return true;
 }
 
 
@@ -187,7 +172,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 
 	n = (zip_uint64_t)ret;
 	for (offset = 0; offset < n; offset += ZIP_MIN(n - offset, UINT_MAX)) {
-	    _zip_fcrypt_encrypt((zip_uint8_t *)data + offset, ZIP_MIN(n - offset, UINT_MAX), &ctx->fcrypt_ctx);
+	    _zip_fcrypt_encrypt((zip_uint8_t *)data + offset, (unsigned int)ZIP_MIN(n - offset, UINT_MAX), &ctx->fcrypt_ctx);
 	}
 
 	if (n < length) {
