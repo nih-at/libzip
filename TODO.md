@@ -16,7 +16,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la `ZIP_ER_ZLIB` (no detailed info passing)
 * check arguments for every entry point into libzip
-* remove unused `zip_archive_set_tempdir()`
 
 # Features
 
