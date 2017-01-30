@@ -50,7 +50,8 @@ extern "C"
 /* buffers and using 32 bit operations          */
 
 static void encr_data(unsigned char data[], unsigned long d_len, fcrypt_ctx cx[1])
-{   unsigned long i = 0, pos = cx->encr_pos;
+    {   unsigned long i = 0;
+        unsigned int pos = cx->encr_pos;
 
     while(i < d_len)
     {
@@ -71,7 +72,7 @@ static void encr_data(unsigned char data[], unsigned long d_len, fcrypt_ctx cx[1
 }
 
 int _zip_fcrypt_init(
-    int mode,                               /* the mode to be used (input)          */
+    unsigned int mode,                      /* the mode to be used (input)          */
     const unsigned char pwd[],              /* the user specified password (input)  */
     unsigned int pwd_len,                   /* the length of the password (input)   */
     const unsigned char salt[],             /* the salt (input)                     */

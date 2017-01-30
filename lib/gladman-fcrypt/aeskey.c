@@ -146,7 +146,7 @@ INTERNAL aes_rval aes_set_encrypt_key(const unsigned char in_key[], unsigned int
     }
 
     klen >>= (klen < 128 ? 2 : 5);
-    cx->n_blk = (cx->n_blk & ~3) | 1;
+    cx->n_blk = (cx->n_blk & ~3U) | 1;
 
     cx->k_sch[0] = ss[0] = word_in(in_key     );
     cx->k_sch[1] = ss[1] = word_in(in_key +  4);

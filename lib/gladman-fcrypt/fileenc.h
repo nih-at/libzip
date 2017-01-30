@@ -94,7 +94,7 @@ typedef struct
 /* initialise file encryption or decryption */
 
 int _zip_fcrypt_init(
-    int mode,                               /* the mode to be used (input)          */
+    unsigned int mode,                      /* the mode to be used (input)          */
     const unsigned char pwd[],              /* the user specified password (input)  */
     unsigned int pwd_len,                   /* the length of the password (input)   */
     const unsigned char salt[],             /* the salt (input)                     */

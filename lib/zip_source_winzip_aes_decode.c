@@ -46,7 +46,7 @@ static unsigned int salt_length[] = { 0, 8, 12, 16 };
 
 struct winzip_aes {
     char *password;
-    int mode;
+    unsigned int mode;
 
     zip_uint64_t data_length;
     zip_uint64_t current_position;
@@ -59,14 +59,14 @@ struct winzip_aes {
 static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx);
 static void winzip_aes_free(struct winzip_aes *);
 static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
-static struct winzip_aes * winzip_aes_new(int mode, const char *password);
+static struct winzip_aes * winzip_aes_new(unsigned int mode, const char *password);
 
 
 zip_source_t *
 zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password)
 {
     zip_source_t *s2;
-    int mode = 0;
+    unsigned int mode = 0;
     zip_stat_t st;
     zip_uint64_t aux_length;
     struct winzip_aes *ctx;
@@ -269,7 +269,7 @@ winzip_aes_free(struct winzip_aes *ctx)
 
 
 static struct winzip_aes *
-winzip_aes_new(int mode, const char *password) {
+winzip_aes_new(unsigned int mode, const char *password) {
     struct winzip_aes *ctx;
     
     if ((ctx = (struct winzip_aes *)malloc(sizeof(*ctx))) == NULL) {

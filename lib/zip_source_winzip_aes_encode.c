@@ -46,7 +46,7 @@ static unsigned int salt_length[] = { 0, 8, 12, 16 };
 
 struct winzip_aes {
     char *password;
-    int mode;
+    unsigned int mode;
     zip_uint16_t encryption_method;
 
     zip_uint8_t data[MAX_HEADER_LENGTH];
@@ -61,14 +61,14 @@ struct winzip_aes {
 static int encrypt_header(zip_source_t *src, struct winzip_aes *ctx);
 static void winzip_aes_free(struct winzip_aes *);
 static zip_int64_t winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
-static struct winzip_aes * winzip_aes_new(int mode, zip_uint16_t encryption_method, const char *password);
+static struct winzip_aes * winzip_aes_new(unsigned int mode, zip_uint16_t encryption_method, const char *password);
 
 
 zip_source_t *
 zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encryption_method, int flags, const char *password)
 {
     zip_source_t *s2;
-    int mode = 0;
+    unsigned int mode = 0;
     struct winzip_aes *ctx;
 
     switch (encryption_method) {
@@ -238,7 +238,7 @@ winzip_aes_free(struct winzip_aes *ctx)
 
 
 static struct winzip_aes *
-winzip_aes_new(int mode, zip_uint16_t encryption_method, const char *password) {
+winzip_aes_new(unsigned int mode, zip_uint16_t encryption_method, const char *password) {
     struct winzip_aes *ctx;
     
     if ((ctx = (struct winzip_aes *)malloc(sizeof(*ctx))) == NULL) {
