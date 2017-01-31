@@ -266,7 +266,7 @@ TESTS= \
 	zip64_creation.test \
 	zip64_stored_creation.test
 
-XFAIL_TESTS= encryption-remove.test
+#XFAIL_TESTS=
 
 
 AM_CPPFLAGS=-I${top_srcdir}/lib -I../lib -I${top_srcdir}/src
