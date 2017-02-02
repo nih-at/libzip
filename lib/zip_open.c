@@ -499,7 +499,7 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
 static int
 _zip_headercomp(const zip_dirent_t *central, const zip_dirent_t *local)
 {
-    if ((central->version_needed != local->version_needed)
+    if ((central->version_needed < local->version_needed)
 #if 0
 	/* some zip-files have different values in local
 	   and global headers for the bitflags */
