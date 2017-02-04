@@ -318,7 +318,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 	    zip_source_free(src_final);
 	    return -1;
 	}
-	if ((src_tmp = impl(za, src_final, st.encryption_method, ZIP_CODEC_DECODE, NULL)) == NULL) {
+	if ((src_tmp = impl(za, src_final, st.encryption_method, ZIP_CODEC_DECODE, za->default_password)) == NULL) {
 	    /* error set by impl */
 	    zip_source_free(src_final);
 	    return -1;
