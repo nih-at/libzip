@@ -1,4 +1,4 @@
-1.1.x [xxxx-xx-xx]
+1.2.0 [2017-02-19]
 ==================
 
 * Support for AES encryption (Winzip version), both encryption
