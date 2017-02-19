@@ -22,6 +22,12 @@ SET(GETOPT_USERS
   tryopen
 )
 
+SET(DISABLED_TESTS
+	encryption-nonrandom-aes128.test
+	encryption-nonrandom-aes192.test
+	encryption-nonrandom-aes256.test
+)
+
 SET(EXTRA_TESTS
 	add_dir.test
 	add_from_buffer.test
@@ -50,9 +56,6 @@ SET(EXTRA_TESTS
 	delete_multiple_partial.test
 	delete_renamed_rename.test
 	encrypt.test
-	encryption-nonrandom-aes128.test
-	encryption-nonrandom-aes192.test
-	encryption-nonrandom-aes256.test
 	encryption-remove.test
 	extra_add.test
 	extra_add_multiple.test
