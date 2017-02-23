@@ -28,7 +28,9 @@ If you make a binary distribution, please include a pointer to the
 distribution site:
 >	http://www.nih.at/libzip/
 
-The latest version can always be found there.
+The latest version can always be found there.  The official mercurial
+repository is at http://hg.nih.at/libzip/ and a read-only git mirror
+exists at https://github.com/nih-at/libzip/
 
 There is a mailing list for developers using libzip.  You can
 subscribe to it by sending a mail with the subject "subscribe
