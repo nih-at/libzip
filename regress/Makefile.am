@@ -183,6 +183,9 @@ TESTS= \
 	delete_multiple_partial.test \
 	delete_renamed_rename.test \
 	encrypt.test \
+	encryption-nonrandom-aes128.test \
+	encryption-nonrandom-aes192.test \
+	encryption-nonrandom-aes256.test
 	encryption-remove.test \
 	extra_add.test \
 	extra_add_multiple.test \
@@ -262,11 +265,6 @@ TESTS= \
 	zip-in-archive-comment.test \
 	zip64_creation.test \
 	zip64_stored_creation.test
-
-DISABLED_TESTS= \
-	encryption-nonrandom-aes128.test \
-	encryption-nonrandom-aes192.test \
-	encryption-nonrandom-aes256.test
 
 #XFAIL_TESTS=
 
