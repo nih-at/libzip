@@ -314,6 +314,7 @@ list_directory(const char *name, struct archive *a)
     FTS *fts;
     FTSENT *ent;
     zip_uint64_t nalloc;
+    size_t prefix_length;
 
     char * const names[2] = { (char *)name, NULL };
 
@@ -322,7 +323,7 @@ list_directory(const char *name, struct archive *a)
 	fprintf(stderr, "%s: can't open directory '%s': %s\n", prg, name, strerror(errno));
 	return -1;
     }
-    size_t prefix_length = strlen(name)+1;
+    prefix_length = strlen(name)+1;
 
     nalloc = 0;
 
