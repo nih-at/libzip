@@ -259,6 +259,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     int ret;
     int is_zip64;
     zip_flags_t flags;
+    zip_int8_t compression_flags;
     bool needs_recompress, needs_decompress, needs_crc, needs_compress, needs_reencrypt, needs_decrypt, needs_encrypt;
 
     if (zip_source_stat(src, &st) < 0) {
@@ -308,13 +309,15 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     }
 
     if ((offstart = zip_source_tell_write(za->src)) < 0) {
+	_zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
     /* as long as we don't support non-seekable output, clear data descriptor bit */
     de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
-    if ((is_zip64=_zip_dirent_write(za, de, flags)) < 0)
+    if ((is_zip64=_zip_dirent_write(za, de, flags)) < 0) {
 	return -1;
+    }
 
     needs_recompress = !((st.comp_method == de->comp_method) || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method == ZIP_CM_DEFLATE));
     needs_decompress = needs_recompress && (st.comp_method != ZIP_CM_STORE);
@@ -419,12 +422,19 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
 
 
     if ((offdata = zip_source_tell_write(za->src)) < 0) {
+	_zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
     ret = copy_source(za, src_final, progress_state, data_length);
 	
     if (zip_source_stat(src_final, &st) < 0) {
+	_zip_error_set_from_source(&za->error, src_final);
+	ret = -1;
+    }
+
+    if ((compression_flags = zip_source_get_compression_flags(src_final)) < 0) {
+	_zip_error_set_from_source(&za->error, src_final);
 	ret = -1;
     }
 
@@ -435,6 +445,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     }
 
     if ((offend = zip_source_tell_write(za->src)) < 0) {
+	_zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
@@ -458,6 +469,8 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     de->crc = st.crc;
     de->uncomp_size = st.size;
     de->comp_size = (zip_uint64_t)(offend - offdata);
+    /* TODO: version needed */
+    de->bitflags = (de->bitflags & ~6) | (compression_flags << 1);
 
     if ((ret=_zip_dirent_write(za, de, flags)) < 0)
 	return -1;

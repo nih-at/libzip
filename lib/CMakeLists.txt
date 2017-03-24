@@ -129,6 +129,7 @@ SET(LIBZIP_SOURCES
   zip_source_filep.c
   zip_source_free.c
   zip_source_function.c
+  zip_source_get_compression_flags.c
   zip_source_is_deleted.c
   zip_source_layered.c
   zip_source_open.c

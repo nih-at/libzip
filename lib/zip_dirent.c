@@ -890,7 +890,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
         _zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_madeby));
     }
     _zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_needed));
-    _zip_buffer_put_16(buffer, de->bitflags&0xfff9); /* clear compression method specific flags */
+    _zip_buffer_put_16(buffer, de->bitflags);
     if (is_winzip_aes) {
 	_zip_buffer_put_16(buffer, ZIP_CM_WINZIP_AES);
     }

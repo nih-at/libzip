@@ -324,6 +324,9 @@ deflate_compress(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_
 	}
 	return 0;
 
+    case ZIP_SOURCE_GET_COMPRESSION_FLAGS:
+	return ctx->is_stored ? 0 : 1;
+
     case ZIP_SOURCE_ERROR:
         return zip_error_to_data(&ctx->error, data, len);
 
@@ -332,7 +335,7 @@ deflate_compress(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_
 	return 0;
 
     case ZIP_SOURCE_SUPPORTS:
-        return ZIP_SOURCE_SUPPORTS_READABLE;
+        return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_COMPRESSION_FLAGS, -1);
             
     default:
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
@@ -391,6 +394,9 @@ deflate_decompress(zip_source_t *src, void *ud, void *data,
             return 0;
         }
 
+        case ZIP_SOURCE_GET_COMPRESSION_FLAGS:
+	    return 0;
+
         case ZIP_SOURCE_ERROR:
             return zip_error_to_data(&ctx->error, data, len);
 
@@ -399,7 +405,7 @@ deflate_decompress(zip_source_t *src, void *ud, void *data,
             return 0;
             
         case ZIP_SOURCE_SUPPORTS:
-            return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, -1);
+            return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_GET_COMPRESSION_FLAGS, -1);
 
         default:
             zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);

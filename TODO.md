@@ -8,6 +8,12 @@ zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t len
 const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
 ````
 
+# Compression API
+
+* `zip_source_compress` that gets function pointers to the actual
+  compression/decompression implementation and hides the underlying
+  differences between zlib, bzip2, and xz/lzma.
+
 # API Issues
 
 * `zip_get_archive_comment` has `int *lenp` argument.  Cleaner would be `zip_uint32_t *`.

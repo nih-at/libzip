@@ -120,16 +120,21 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	st2.mtime = st.mtime;
 	st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
 	
-	if ((src = _zip_source_window_new(srcza->src, offset+start, st2.size, &st2, &za->error)) == NULL) {
+	if ((src = _zip_source_window_new(srcza->src, offset+start, st2.size, &st2, 0, &za->error)) == NULL) {
 	    return NULL;
 	}
     }
     else {
-	if ((src = _zip_source_window_new(srcza->src, offset, st.comp_size, &st, &za->error)) == NULL) {
+	zip_dirent_t *de;
+	
+	if ((de = _zip_get_dirent(srcza, srcidx, flags, &za->error)) == NULL) {
+	    return NULL;
+	}
+	if ((src = _zip_source_window_new(srcza->src, offset, st.comp_size, &st, (de->bitflags >> 1) & 3, &za->error)) == NULL) {
 	    return NULL;
 	}
     }
-	
+    
     if (_zip_source_set_source_archive(src, srcza) < 0) {
 	zip_source_free(src);
 	return NULL;
