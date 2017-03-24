@@ -240,8 +240,8 @@ zip_close(zip_t *za)
 	return -1;
     }
 
-    if (za->progress_callback && progress_state.last_update < 1.0) {
-	za->progress_callback(1.0);
+    if (za->progress_callback) {
+	_zip_progress(za, &progress_state, 1.0);
     }
 
     zip_discard(za);
