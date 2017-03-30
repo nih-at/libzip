@@ -104,8 +104,11 @@ SET(EXTRA_TESTS
 	set_comment_localonly.test
 	set_comment_removeglobal.test
 	set_comment_revert.test
+	set_compression_bzip2_to_deflate.test
+	set_compression_deflate_to_bzip2.test
 	set_compression_deflate_to_deflate.test
 	set_compression_deflate_to_store.test
+	set_compression_store_to_bzip2.test
 	set_compression_store_to_deflate.test
 	set_compression_store_to_store.test
 	set_compression_unknown.test

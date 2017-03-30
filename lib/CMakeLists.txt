@@ -57,6 +57,7 @@ SET(LIBZIP_SOURCES
   zip_add.c
   zip_add_dir.c
   zip_add_entry.c
+  zip_algorithm_bzip2.c
   zip_algorithm_deflate.c
   zip_buffer.c
   zip_close.c

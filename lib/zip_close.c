@@ -51,9 +51,6 @@
 #endif
 
 
-/* max deflate size increase: size + ceil(size/16k)*5+6 */
-#define MAX_DEFLATE_SIZE_32	4293656963u
-
 typedef struct {
     double last_update;  /* last value callback function was called with */
 
@@ -300,9 +297,31 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
 	data_length = (zip_int64_t)st.size;
 	
 	if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
-	    if (( ((de->comp_method == ZIP_CM_DEFLATE || ZIP_CM_IS_DEFAULT(de->comp_method)) && st.size > MAX_DEFLATE_SIZE_32)
-		  || (de->comp_method != ZIP_CM_STORE && de->comp_method != ZIP_CM_DEFLATE && !ZIP_CM_IS_DEFAULT(de->comp_method))))
+	    zip_uint64_t max_size;
+
+	    switch (ZIP_CM_ACTUAL(de->comp_method)) {
+	    case ZIP_CM_BZIP2:
+		/* computed by looking at increase of 10 random files of size 1MB when
+		 * compressed with bzip2, rounded up: 1.006 */
+		max_size = 4269351188u;
+		break;
+
+	    case ZIP_CM_DEFLATE:
+		/* max deflate size increase: size + ceil(size/16k)*5+6 */
+		max_size = 4293656963u;
+		break;
+
+	    case ZIP_CM_STORE:
+		max_size = 0xffffffffu;
+		break;
+
+	    default:
+		max_size = 0;
+	    }
+
+	    if (st.size > max_size) {
 		flags |= ZIP_FL_FORCE_ZIP64;
+	    }
 	}
 	else
 	    de->comp_size = st.comp_size;
@@ -319,7 +338,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
 	return -1;
     }
 
-    needs_recompress = !((st.comp_method == de->comp_method) || (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method == ZIP_CM_DEFLATE));
+    needs_recompress = st.comp_method != ZIP_CM_ACTUAL(de->comp_method);
     needs_decompress = needs_recompress && (st.comp_method != ZIP_CM_STORE);
     needs_crc = (st.comp_method == ZIP_CM_STORE) || needs_decompress;
     needs_compress = needs_recompress && (de->comp_method != ZIP_CM_STORE);
@@ -455,9 +474,9 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     de->crc = st.crc;
     de->uncomp_size = st.size;
     de->comp_size = (zip_uint64_t)(offend - offdata);
-    /* TODO: version needed */
     de->bitflags = (zip_uint16_t)((de->bitflags & (zip_uint16_t)~6) | ((zip_uint8_t)compression_flags << 1));
-
+    _zip_dirent_set_version_needed(de, (flags & ZIP_FL_FORCE_ZIP64) != 0);
+    
     if ((ret=_zip_dirent_write(za, de, flags)) < 0)
 	return -1;
  
@@ -466,7 +485,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
 	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }
-
    
     if (zip_source_seek_write(za->src, offend, SEEK_SET) < 0) {
 	_zip_error_set_from_source(&za->error, za->src);
@@ -539,7 +557,6 @@ copy_source(zip_t *za, zip_source_t *src, progress_state_t *progress_state, zip_
     
     return ret;
 }
-
 
 static int
 write_cdir(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors)

@@ -649,6 +649,10 @@ get_compression_method(const char *arg)
         return ZIP_CM_STORE;
     else if (strcmp(arg, "deflate") == 0)
         return ZIP_CM_DEFLATE;
+#if defined(HAVE_LIBBZ2)
+    else if (strcmp(arg, "bzip2") == 0)
+        return ZIP_CM_BZIP2;
+#endif
     else if (strcmp(arg, "unknown") == 0)
         return 100;
     return 0; /* TODO: error handling */
@@ -1023,6 +1027,9 @@ usage(const char *progname, const char *reason)
 	    "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nSupported compression methods are:\n"
 	    "\tdefault\n"
+#if defined(HAVE_LIBBZ2)
+	    "\tbzip2\n"
+#endif
 	    "\tdeflate\n"
 	    "\tstore\n");
     fprintf(out, "\nSupported compression methods are:\n"

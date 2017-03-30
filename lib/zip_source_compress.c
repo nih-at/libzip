@@ -64,6 +64,9 @@ struct implementation {
 
 static struct implementation implementations[] = {
     { ZIP_CM_DEFLATE, &zip_algorithm_deflate_compress, &zip_algorithm_deflate_decompress },
+#if defined(HAVE_LIBBZ2)
+    { ZIP_CM_BZIP2, &zip_algorithm_bzip2_compress, &zip_algorithm_bzip2_decompress },
+#endif
 };
 
 static size_t implementations_size = sizeof(implementations) / sizeof(implementations[0]);
@@ -73,6 +76,33 @@ static zip_int64_t compress_callback(zip_source_t *, void *, void *, zip_uint64_
 static void context_free(struct context *ctx);
 static struct context *context_new(zip_int32_t method, bool compress, int compression_flags, zip_compression_algorithm_t *algorithm);
 static zip_int64_t compress_read(zip_source_t *, struct context *, void *, zip_uint64_t);
+
+static zip_compression_algorithm_t *
+get_algorithm(zip_int32_t method, bool compress) {
+    size_t i;
+    zip_uint16_t real_method = ZIP_CM_ACTUAL(method);
+
+    for (i = 0; i < implementations_size; i++) {
+	if (implementations[i].method == real_method) {
+	    if (compress) {
+		return implementations[i].compress;
+	    }
+	    else {
+		return implementations[i].decompress;
+	    }
+	}
+    }
+
+    return NULL;
+}
+
+bool
+zip_compression_method_supported(zip_int32_t method, bool compress) {
+    if (method == ZIP_CM_STORE) {
+	return true;
+    }
+    return get_algorithm(method, compress) != NULL;
+}
 
 zip_source_t *
 zip_source_compress(zip_t *za, zip_source_t *src, zip_int32_t method, int compression_flags) {
@@ -90,8 +120,6 @@ compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool co
 {
     struct context *ctx;
     zip_source_t *s2;
-    zip_uint16_t real_method;
-    size_t i;
     zip_compression_algorithm_t *algorithm = NULL;
     
     if (src == NULL) {
@@ -99,21 +127,7 @@ compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool co
 	return NULL;
     }
 
-    real_method = ZIP_CM_ACTUAL(method);
-
-    for (i = 0; i < implementations_size; i++) {
-	if (implementations[i].method == real_method) {
-	    if (compress) {
-		algorithm = implementations[i].compress;
-	    }
-	    else {
-		algorithm = implementations[i].decompress;
-	    }
-	    break;
-	}
-    }
-
-    if (algorithm == NULL) {
+    if ((algorithm = get_algorithm(method, compress)) == NULL) {
 	zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 	return NULL;
     }

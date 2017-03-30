@@ -37,6 +37,7 @@ const char * const _zip_err_str[] = {
     "Operation not supported",
     "Resource still in use",
     "Tell error",
+    "Compressed data invalid",    
 };
 
 const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0]);
@@ -77,4 +78,5 @@ const int _zip_err_type[] = {
     N,
     N,
     S,
+    N,    
 };

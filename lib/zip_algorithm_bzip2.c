@@ -1,5 +1,5 @@
 /*
-  zip_algorithm_deflate.c -- deflate (de)compression routines
+  zip_algorithm_bzip2.c -- bzip2 (de)compression routines
   Copyright (C) 2017 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -33,15 +33,17 @@
 
 #include "zipint.h"
 
+#if defined(HAVE_LIBBZ2)
+
+#include <bzlib.h>
 #include <stdlib.h>
-#include <zlib.h>
 
 struct ctx {
     zip_error_t *error;
     bool compress;
     int compression_flags;
     bool end_of_input;
-    z_stream zstr;
+    bz_stream zstr;
 };
 
 
@@ -58,8 +60,8 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
     ctx->compression_flags = compression_flags;
     ctx->end_of_input = false;
 
-    ctx->zstr.zalloc = Z_NULL;
-    ctx->zstr.zfree = Z_NULL;
+    ctx->zstr.bzalloc = NULL;
+    ctx->zstr.bzfree = NULL;
     ctx->zstr.opaque = NULL;
 
     return ctx;
@@ -88,17 +90,42 @@ deallocate(void *ud) {
 
 static int
 compression_flags(void *ud) {
-    struct ctx *ctx = (struct ctx *)ud;
-
-    if (ctx->compress) {
-	/* TODO */
-	return 1;
-    }
-    else {
-	return 0;
-    }
+    return 0;
 }
 
+
+static int
+map_error(int ret) {
+    switch (ret) {
+    case BZ_FINISH_OK:
+    case BZ_FLUSH_OK:
+    case BZ_OK:
+    case BZ_RUN_OK:
+    case BZ_STREAM_END:
+	return ZIP_ER_OK;
+	
+    case BZ_DATA_ERROR:
+    case BZ_DATA_ERROR_MAGIC:
+    case BZ_UNEXPECTED_EOF:
+	return ZIP_ER_COMPRESSED_DATA;
+
+    case BZ_MEM_ERROR:
+	return ZIP_ER_MEMORY;
+
+    case BZ_PARAM_ERROR:
+	return ZIP_ER_INVAL;
+
+    case BZ_CONFIG_ERROR: /* actually, bzip2 miscompiled */
+    case BZ_IO_ERROR:
+    case BZ_OUTBUFF_FULL:
+    case BZ_SEQUENCE_ERROR:
+	return ZIP_ER_INTERNAL;
+
+    default:
+	return ZIP_ER_INTERNAL;
+    }
+
+}
 
 static bool
 start(void *ud) {
@@ -112,16 +139,15 @@ start(void *ud) {
 
     if (ctx->compress) {
 	/* TODO: use ctx->compression_flags */
-	/* negative value to tell zlib not to write a header */
-	ret = deflateInit2(&ctx->zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+	ret = BZ2_bzCompressInit(&ctx->zstr, 9, 0, 30);
 
     }
     else {
-	ret = inflateInit2(&ctx->zstr, -MAX_WBITS);
+	ret = BZ2_bzDecompressInit(&ctx->zstr, 0, 0);
     }
     
-    if (ret != Z_OK) {
-	zip_error_set(ctx->error, ZIP_ER_ZLIB, ret);
+    if (ret != BZ_OK) {
+	zip_error_set(ctx->error, map_error(ret), 0);
 	return false;
     }
     
@@ -136,10 +162,10 @@ end(void *ud) {
 
     /* TODO: can this fail? */
     if (ctx->compress) {
-	deflateEnd(&ctx->zstr);
+	BZ2_bzCompressEnd(&ctx->zstr);
     }
     else {
-	inflateEnd(&ctx->zstr);
+	BZ2_bzDecompressEnd(&ctx->zstr);
     }
 
     return true;
@@ -154,8 +180,8 @@ static bool input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
 	return false;
     }
 
-    ctx->zstr.avail_in = (uInt)length;
-    ctx->zstr.next_in = (Bytef *)data;
+    ctx->zstr.avail_in = (unsigned int)length;
+    ctx->zstr.next_in = (char *)data;
 
     return true;
 }
@@ -174,40 +200,45 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 
     int ret;
 
-    ctx->zstr.avail_out = (uInt)ZIP_MIN(UINT_MAX, *length);
-    ctx->zstr.next_out = (Bytef *)data;
+    if (ctx->zstr.avail_in == 0 && !ctx->end_of_input) {
+	*length = 0;
+	return ZIP_COMPRESSION_NEED_DATA;
+    }
+
+    ctx->zstr.avail_out = (unsigned int)ZIP_MIN(UINT_MAX, *length);
+    ctx->zstr.next_out = (char *)data;
 
     if (ctx->compress) {
-	ret = deflate(&ctx->zstr, ctx->end_of_input ? Z_FINISH : 0);
+	ret = BZ2_bzCompress(&ctx->zstr, ctx->end_of_input ? BZ_FINISH : BZ_RUN);
     }
     else {
-	ret = inflate(&ctx->zstr, Z_SYNC_FLUSH);
+	ret = BZ2_bzDecompress(&ctx->zstr);
     }
 
     *length = *length - ctx->zstr.avail_out;
     
     switch (ret) {
-    case Z_OK:
+    case BZ_FINISH_OK: /* compression */
 	return ZIP_COMPRESSION_OK;
 
-    case Z_STREAM_END:
-	return ZIP_COMPRESSION_END;
-
-    case Z_BUF_ERROR:
+    case BZ_OK:	/* decompression */
+    case BZ_RUN_OK: /* compression */
 	if (ctx->zstr.avail_in == 0) {
 	    return ZIP_COMPRESSION_NEED_DATA;
 	}
+	return ZIP_COMPRESSION_OK;
 
-	/* fallthrough */
+    case BZ_STREAM_END:
+	return ZIP_COMPRESSION_END;
 
     default:
-	zip_error_set(ctx->error, ZIP_ER_ZLIB, ret);
+	zip_error_set(ctx->error, map_error(ret), 0);
 	return ZIP_COMPRESSION_ERROR;
     }
 }
 
 
-zip_compression_algorithm_t zip_algorithm_deflate_compress = {
+zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
     compress_allocate,
     deallocate,
     compression_flags,
@@ -219,7 +250,7 @@ zip_compression_algorithm_t zip_algorithm_deflate_compress = {
 };
 
 
-zip_compression_algorithm_t zip_algorithm_deflate_decompress = {
+zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
     decompress_allocate,
     deallocate,
     compression_flags,
@@ -229,3 +260,9 @@ zip_compression_algorithm_t zip_algorithm_deflate_decompress = {
     end_of_input,
     process
 };
+
+#else
+
+static int dummy;
+
+#endif /* HAVE_LIBBZ2 */

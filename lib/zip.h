@@ -102,37 +102,38 @@ extern "C" {
 
 /* libzip error codes */
 
-#define ZIP_ER_OK             0  /* N No error */
-#define ZIP_ER_MULTIDISK      1  /* N Multi-disk zip archives not supported */
-#define ZIP_ER_RENAME         2  /* S Renaming temporary file failed */
-#define ZIP_ER_CLOSE          3  /* S Closing zip archive failed */
-#define ZIP_ER_SEEK           4  /* S Seek error */
-#define ZIP_ER_READ           5  /* S Read error */
-#define ZIP_ER_WRITE          6  /* S Write error */
-#define ZIP_ER_CRC            7  /* N CRC error */
-#define ZIP_ER_ZIPCLOSED      8  /* N Containing zip archive was closed */
-#define ZIP_ER_NOENT          9  /* N No such file */
-#define ZIP_ER_EXISTS        10  /* N File already exists */
-#define ZIP_ER_OPEN          11  /* S Can't open file */
-#define ZIP_ER_TMPOPEN       12  /* S Failure to create temporary file */
-#define ZIP_ER_ZLIB          13  /* Z Zlib error */
-#define ZIP_ER_MEMORY        14  /* N Malloc failure */
-#define ZIP_ER_CHANGED       15  /* N Entry has been changed */
-#define ZIP_ER_COMPNOTSUPP   16  /* N Compression method not supported */
-#define ZIP_ER_EOF           17  /* N Premature end of file */
-#define ZIP_ER_INVAL         18  /* N Invalid argument */
-#define ZIP_ER_NOZIP         19  /* N Not a zip archive */
-#define ZIP_ER_INTERNAL      20  /* N Internal error */
-#define ZIP_ER_INCONS        21  /* N Zip archive inconsistent */
-#define ZIP_ER_REMOVE        22  /* S Can't remove file */
-#define ZIP_ER_DELETED       23  /* N Entry has been deleted */
-#define ZIP_ER_ENCRNOTSUPP   24  /* N Encryption method not supported */
-#define ZIP_ER_RDONLY        25  /* N Read-only archive */
-#define ZIP_ER_NOPASSWD      26  /* N No password provided */
-#define ZIP_ER_WRONGPASSWD   27  /* N Wrong password provided */
-#define ZIP_ER_OPNOTSUPP     28  /* N Operation not supported */
-#define ZIP_ER_INUSE         29  /* N Resource still in use */
-#define ZIP_ER_TELL          30  /* S Tell error */
+#define ZIP_ER_OK                0  /* N No error */
+#define ZIP_ER_MULTIDISK         1  /* N Multi-disk zip archives not supported */
+#define ZIP_ER_RENAME            2  /* S Renaming temporary file failed */
+#define ZIP_ER_CLOSE             3  /* S Closing zip archive failed */
+#define ZIP_ER_SEEK              4  /* S Seek error */
+#define ZIP_ER_READ              5  /* S Read error */
+#define ZIP_ER_WRITE             6  /* S Write error */
+#define ZIP_ER_CRC               7  /* N CRC error */
+#define ZIP_ER_ZIPCLOSED         8  /* N Containing zip archive was closed */
+#define ZIP_ER_NOENT             9  /* N No such file */
+#define ZIP_ER_EXISTS           10  /* N File already exists */
+#define ZIP_ER_OPEN             11  /* S Can't open file */
+#define ZIP_ER_TMPOPEN          12  /* S Failure to create temporary file */
+#define ZIP_ER_ZLIB             13  /* Z Zlib error */
+#define ZIP_ER_MEMORY           14  /* N Malloc failure */
+#define ZIP_ER_CHANGED          15  /* N Entry has been changed */
+#define ZIP_ER_COMPNOTSUPP      16  /* N Compression method not supported */
+#define ZIP_ER_EOF              17  /* N Premature end of file */
+#define ZIP_ER_INVAL            18  /* N Invalid argument */
+#define ZIP_ER_NOZIP            19  /* N Not a zip archive */
+#define ZIP_ER_INTERNAL         20  /* N Internal error */
+#define ZIP_ER_INCONS           21  /* N Zip archive inconsistent */
+#define ZIP_ER_REMOVE           22  /* S Can't remove file */
+#define ZIP_ER_DELETED          23  /* N Entry has been deleted */
+#define ZIP_ER_ENCRNOTSUPP      24  /* N Encryption method not supported */
+#define ZIP_ER_RDONLY           25  /* N Read-only archive */
+#define ZIP_ER_NOPASSWD         26  /* N No password provided */
+#define ZIP_ER_WRONGPASSWD      27  /* N Wrong password provided */
+#define ZIP_ER_OPNOTSUPP        28  /* N Operation not supported */
+#define ZIP_ER_INUSE            29  /* N Resource still in use */
+#define ZIP_ER_TELL             30  /* S Tell error */
+#define ZIP_ER_COMPRESSED_DATA	31  /* N Compressed data invalid */    
 
 /* type of system error value */
 

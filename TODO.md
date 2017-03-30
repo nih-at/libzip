@@ -8,11 +8,11 @@ zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t len
 const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
 ````
 
-# Compression API
+# Compression
 
-* `zip_source_compress` that gets function pointers to the actual
-  compression/decompression implementation and hides the underlying
-  differences between zlib, bzip2, and xz/lzma.
+* Test CMAKE for bzip2
+* disable bzip2 tests if bzip2 not enabled
+* add lzma support
 
 # API Issues
 
@@ -34,10 +34,10 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * xz support
 * consistently use `_zip_crypto_clear()` for passwords
 * implement compression flags for `zip_set_file_compression()`
-* support setting extra fields from zip_source
+* support setting extra fields from `zip_source`
   * introduce layers of extra fields:
     * original
-    * from zip_source
+    * from `zip_source`
     * manually set
   * when querying extra fields, search all of them in reverse order
   * add whiteout (deleted) flag
@@ -49,7 +49,9 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * set `O_CLOEXEC` flag after fopen and mkstemp
 * add append-only mode writing file to disk incrementally to keep memory usage low
 * `zip_file_set_mtime()`: support InfoZIP time stamps
-
+* `zipcmp`: support comparing more features:
+  * version needed/made by
+  * general purpose bit flags
 * support streaming output (creating new archive to e.g. stdout)
 * add functions to:
   * read/set ASCII file flag? (more general options?)

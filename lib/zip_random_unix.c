@@ -34,6 +34,7 @@
 #include "zipint.h"
 
 #include <fcntl.h>
+#include <unistd.h>
 
 bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length)

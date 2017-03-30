@@ -49,6 +49,27 @@ then
     AC_MSG_ERROR([ZLIB version too old, please install at least v1.1.2])
 fi
 
+AC_ARG_WITH(bzip2,
+    [  --with-bzip2=PREFIX  specify prefix for bzip2 library],,
+    with_bzip2=yes)
+
+if test "$with_bzip2" != "yes"
+then
+    if test -f "$with_bzip2"/bzlib.h
+    then
+	# PREFIX is to uninstalled version in distribution directory
+	CFLAGS="$CFLAGS -I$with_bzip2"
+	LDFLAGS="$LDFLAGS -L$with_bzip2"
+    else if test -f "$with_bzip2"/include/bzlib.h
+    then
+	# PREFIX is installation prefix
+	CFLAGS="$CFLAGS -I$with_bzip2/include"
+	LDFLAGS="$LDFLAGS -L$with_bzip2/lib"
+    fi
+    fi
+fi
+AC_CHECK_LIB(bz2, main)
+
 AC_EXEEXT
 
 LT_INIT
