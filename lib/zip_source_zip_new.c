@@ -40,11 +40,10 @@
 zip_source_t *
 _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_uint64_t len, const char *password)
 {
-    zip_compression_implementation comp_impl;
-    zip_encryption_implementation enc_impl;
     zip_source_t *src, *s2;
     zip_uint64_t offset;
     struct zip_stat st;
+    bool partial_data, needs_crc, needs_decrypt, needs_decompress;
 
     if (za == NULL)
 	return NULL;
@@ -74,13 +73,22 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
     }
 
     /* overflow or past end of file */
-    if ((start > 0 || len > 0) && (start+len < start || start+len > st.size)) {
+    if ((start > 0 || len > 0) && (start + len < start || start + len > st.size)) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
 
-    enc_impl = NULL;
-    if (((flags & ZIP_FL_ENCRYPTED) == 0) && (st.encryption_method != ZIP_EM_NONE)) {
+    if (len == 0) {
+	len = st.size - start;
+    }
+
+    partial_data = len < st.size;
+    needs_decrypt = ((flags & ZIP_FL_ENCRYPTED) == 0) && (st.encryption_method != ZIP_EM_NONE);
+    needs_decompress = ((flags & ZIP_FL_COMPRESSED) == 0) && (st.comp_method != ZIP_CM_STORE);
+    /* when reading the whole file, check for CRC errors */
+    needs_crc = ((flags & ZIP_FL_COMPRESSED) == 0 || st.comp_method == ZIP_CM_STORE) && !partial_data;
+    
+    if (needs_decrypt) {
         if (password == NULL) {
             password = za->default_password;
         }
@@ -88,39 +96,26 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	    zip_error_set(&za->error, ZIP_ER_NOPASSWD, 0);
 	    return NULL;
 	}
-	if ((enc_impl=_zip_get_encryption_implementation(st.encryption_method, ZIP_CODEC_DECODE)) == NULL) {
-	    zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
-	    return NULL;
-	}
     }
 
-    comp_impl = NULL;
-    if ((flags & ZIP_FL_COMPRESSED) == 0) {
-	if (st.comp_method != ZIP_CM_STORE) {
-	    if ((comp_impl=_zip_get_compression_implementation(st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
-		zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-		return NULL;
-	    }
-	}
-    }
-
-    if ((offset=_zip_file_get_offset(srcza, srcidx, &za->error)) == 0)
+    if ((offset = _zip_file_get_offset(srcza, srcidx, &za->error)) == 0) {
 	return NULL;
+    }
 
     if (st.comp_size == 0) {
 	return zip_source_buffer(za, NULL, 0, 0);
     }
 
-    if (start+len > 0 && enc_impl == NULL && comp_impl == NULL) {
+    if (partial_data && !needs_decrypt && !needs_decompress) {
 	struct zip_stat st2;
 	
-	st2.size = len ? len : st.size-start;
+	st2.size = len ? len : st.size - start;
 	st2.comp_size = st2.size;
 	st2.comp_method = ZIP_CM_STORE;
 	st2.mtime = st.mtime;
 	st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
 	
-	if ((src = _zip_source_window_new(srcza->src, offset+start, st2.size, &st2, 0, &za->error)) == NULL) {
+	if ((src = _zip_source_window_new(srcza->src, offset + start, st2.size, &st2, 0, &za->error)) == NULL) {
 	    return NULL;
 	}
     }
@@ -142,7 +137,14 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 
     /* creating a layered source calls zip_keep() on the lower layer, so we free it */
 	
-    if (enc_impl) {
+    if (needs_decrypt) {
+	zip_encryption_implementation enc_impl;
+	
+	if ((enc_impl = _zip_get_encryption_implementation(st.encryption_method, ZIP_CODEC_DECODE)) == NULL) {
+	    zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
+	    return NULL;
+	}
+
 	s2 = enc_impl(za, src, st.encryption_method, 0, password);
 	zip_source_free(src);
 	if (s2 == NULL) {
@@ -150,16 +152,15 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	}
 	src = s2;
     }
-    if (comp_impl) {
-	s2 = comp_impl(za, src, st.comp_method, 0);
+    if (needs_decompress) {
+	s2 = zip_source_decompress(za, src, st.comp_method);
 	zip_source_free(src);
 	if (s2 == NULL) {
 	    return NULL;
 	}
 	src = s2;
     }
-    if (((flags & ZIP_FL_COMPRESSED) == 0 || st.comp_method == ZIP_CM_STORE) && (len == 0 || len == st.comp_size)) {
-	/* when reading the whole file, check for CRC errors */
+    if (needs_crc) {
 	s2 = zip_source_crc(za, src, 1);
 	zip_source_free(src);
 	if (s2 == NULL) {
@@ -168,7 +169,7 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	src = s2;
     }
 
-    if (start+len > 0 && (comp_impl || enc_impl)) {
+    if (partial_data && (needs_decrypt || needs_decompress)) {
 	s2 = zip_source_window(za, src, start, len ? len : st.size-start);
 	zip_source_free(src);
 	if (s2 == NULL) {

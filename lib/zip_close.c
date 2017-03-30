@@ -144,8 +144,8 @@ zip_close(zip_t *za)
 	zip_dirent_t *de;
 
 	if (za->progress_callback) {
-	    progress_state.start = (double)j / survivors;
-	    progress_state.end = (double)(j+1) / survivors;
+	    progress_state.start = (double)j / (double)survivors;
+	    progress_state.end = (double)(j+1) / (double)survivors;
 	    _zip_progress(za, &progress_state, 0.0);
 	}
 
@@ -350,15 +350,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     }
     
     if (needs_decompress) {
-	zip_compression_implementation comp_impl;
-	
-	if ((comp_impl = _zip_get_compression_implementation(st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
-	    zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-	    zip_source_free(src_final);
-	    return -1;
-	}
-	if ((src_tmp = comp_impl(za, src_final, st.comp_method, ZIP_CODEC_DECODE)) == NULL) {
-	    /* error set by comp_impl */
+	if ((src_tmp = zip_source_decompress(za, src_final, st.comp_method)) == NULL) {
 	    zip_source_free(src_final);
 	    return -1;
 	}
@@ -378,14 +370,8 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     }
 
     if (needs_compress) {
-	zip_compression_implementation comp_impl;
-
-	if ((comp_impl = _zip_get_compression_implementation(de->comp_method, ZIP_CODEC_ENCODE)) == NULL) {
-	    zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-	    zip_source_free(src_final);
-	    return -1;
-	}
-	if ((src_tmp = comp_impl(za, src_final, de->comp_method, ZIP_CODEC_ENCODE)) == NULL) {
+	/* TODO: compression flags */
+	if ((src_tmp = zip_source_compress(za, src_final, de->comp_method, 0)) == NULL) {
 	    zip_source_free(src_final);
 	    return -1;
 	}
@@ -470,7 +456,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     de->uncomp_size = st.size;
     de->comp_size = (zip_uint64_t)(offend - offdata);
     /* TODO: version needed */
-    de->bitflags = (de->bitflags & ~6) | (compression_flags << 1);
+    de->bitflags = (zip_uint16_t)((de->bitflags & (zip_uint16_t)~6) | ((zip_uint8_t)compression_flags << 1));
 
     if ((ret=_zip_dirent_write(za, de, flags)) < 0)
 	return -1;
@@ -511,7 +497,7 @@ copy_data(zip_t *za, zip_uint64_t len, progress_state_t *progress_state)
 	len -= n;
 	
 	if (za->progress_callback) {
-	    _zip_progress(za, progress_state, (total - len) / total);
+	    _zip_progress(za, progress_state, (total - (double)len) / total);
 	}
     }
 
@@ -540,7 +526,7 @@ copy_source(zip_t *za, zip_source_t *src, progress_state_t *progress_state, zip_
 	}
 	if (n == sizeof(buf) && za->progress_callback && data_length > 0) {
 	    current += n;
-	    _zip_progress(za, progress_state, current/(double)data_length);
+	    _zip_progress(za, progress_state, (double)current/(double)data_length);
 	}
     }
     

@@ -70,6 +70,7 @@
 #define ZIP_CM_WINZIP_AES         99  /* Winzip AES encrypted */
 
 #define ZIP_CM_IS_DEFAULT(x)	((x) == ZIP_CM_DEFAULT || (x) == ZIP_CM_REPLACED_DEFAULT)
+#define ZIP_CM_ACTUAL(x)	((zip_uint16_t)(ZIP_CM_IS_DEFAULT(x) ? ZIP_CM_DEFLATE : (x)))
 
 #define ZIP_EF_UTF_8_COMMENT	0x6375
 #define ZIP_EF_UTF_8_NAME	0x7075
@@ -95,14 +96,46 @@
 #define ZIP_CODEC_DECODE	0 /* decompress/decrypt (encode flag not set) */
 #define ZIP_CODEC_ENCODE	1 /* compress/encrypt */
 
-
-typedef zip_source_t *(*zip_compression_implementation)(zip_t *, zip_source_t *, zip_int32_t, int);
 typedef zip_source_t *(*zip_encryption_implementation)(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 
-zip_compression_implementation _zip_get_compression_implementation(zip_int32_t method, int operation);
 zip_encryption_implementation _zip_get_encryption_implementation(zip_uint16_t method, int operation);
 
+enum zip_compression_status {
+    ZIP_COMPRESSION_OK,
+    ZIP_COMPRESSION_END,
+    ZIP_COMPRESSION_ERROR,
+    ZIP_COMPRESSION_NEED_DATA
+};
+typedef enum zip_compression_status zip_compression_status_t;
 
+struct zip_compression_algorithm {
+    /* called once to create new context */
+    void *(*allocate)(zip_uint16_t method, int compression_flags, zip_error_t *error);
+    /* called once to free context */
+    void (*deallocate)(void *ctx);
+
+    /* get compression specific general purpose bitflags */
+    int (*compression_flags)(void *ctx);
+
+    /* start processing */
+    bool (*start)(void *ctx);
+    /* stop processing */
+    bool (*end)(void *ctx);
+
+    /* provide new input data, remains valid until next call to input or end */
+    bool (*input)(void *ctx, zip_uint8_t *data, zip_uint64_t length);
+
+    /* all input data has been provided */
+    void (*end_of_input)(void *ctx);
+
+    /* process input data, writing to data, which has room for length bytes, update length to number of bytes written */
+    zip_compression_status_t (*process)(void *ctx, zip_uint8_t *data, zip_uint64_t *length);
+};
+typedef struct zip_compression_algorithm zip_compression_algorithm_t;
+
+
+extern zip_compression_algorithm_t zip_algorithm_deflate_compress;
+extern zip_compression_algorithm_t zip_algorithm_deflate_decompress;
 
 /* This API is not final yet, but we need it internally, so it's private for now. */
 
@@ -113,8 +146,9 @@ const zip_uint8_t *zip_get_extra_field_by_id(zip_t *, int, int, zip_uint16_t, in
    Thus we will keep it private for now. */
 
 typedef zip_int64_t (*zip_source_layered_callback)(zip_source_t *, void *, void *, zip_uint64_t, enum zip_source_cmd);
+zip_source_t *zip_source_compress(zip_t *za, zip_source_t *src, zip_int32_t cm, int compression_flags);
 zip_source_t *zip_source_crc(zip_t *, zip_source_t *, int);
-zip_source_t *zip_source_deflate(zip_t *, zip_source_t *, zip_int32_t, int);
+zip_source_t *zip_source_decompress(zip_t *za, zip_source_t *src, zip_int32_t cm);
 zip_source_t *zip_source_layered(zip_t *, zip_source_t *, zip_source_layered_callback, void *);
 zip_source_t *zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error);
 zip_source_t *zip_source_pkware(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
@@ -131,10 +165,10 @@ enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 
 /* directory entry: general purpose bit flags */
 
-#define ZIP_GPBF_ENCRYPTED		0x0001	/* is encrypted */
-#define ZIP_GPBF_DATA_DESCRIPTOR	0x0008	/* crc/size after file data */
-#define ZIP_GPBF_STRONG_ENCRYPTION	0x0040  /* uses strong encryption */
-#define ZIP_GPBF_ENCODING_UTF_8		0x0800  /* file name encoding is UTF-8 */
+#define ZIP_GPBF_ENCRYPTED		0x0001u	/* is encrypted */
+#define ZIP_GPBF_DATA_DESCRIPTOR	0x0008u	/* crc/size after file data */
+#define ZIP_GPBF_STRONG_ENCRYPTION	0x0040u	/* uses strong encryption */
+#define ZIP_GPBF_ENCODING_UTF_8		0x0800u	/* file name encoding is UTF-8 */
 
 
 /* extra fields */

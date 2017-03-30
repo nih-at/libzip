@@ -797,10 +797,10 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
     }
 
     if (de->encryption_method == ZIP_EM_NONE) {
-	de->bitflags &= ~ZIP_GPBF_ENCRYPTED;
+	de->bitflags &= (zip_uint16_t)~ZIP_GPBF_ENCRYPTED;
     }
     else {
-	de->bitflags |= ZIP_GPBF_ENCRYPTED;
+	de->bitflags |= (zip_uint16_t)ZIP_GPBF_ENCRYPTED;
     }
 
     is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
@@ -862,7 +862,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags)
 
 	_zip_buffer_put_16(ef_buffer, 2);
 	_zip_buffer_put(ef_buffer, "AE", 2);
-	_zip_buffer_put_8(ef_buffer, (de->encryption_method & 0xff));
+	_zip_buffer_put_8(ef_buffer, (zip_uint8_t)(de->encryption_method & 0xff));
 	_zip_buffer_put_16(ef_buffer, (zip_uint16_t)de->comp_method);
 
         if (!_zip_buffer_ok(ef_buffer)) {

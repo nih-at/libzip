@@ -52,7 +52,6 @@ static int (*real_open)(const char *path, int mode, ...) = NULL;
 static void
 init(void)
 {
-    char *foo;
     real_open = dlsym(RTLD_NEXT, "open");
     if (!real_open)
 	abort();

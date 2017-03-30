@@ -57,6 +57,7 @@ SET(LIBZIP_SOURCES
   zip_add.c
   zip_add_dir.c
   zip_add_entry.c
+  zip_algorithm_deflate.c
   zip_buffer.c
   zip_close.c
   zip_delete.c
@@ -98,7 +99,6 @@ SET(LIBZIP_SOURCES
   zip_ftell.c
   zip_get_archive_comment.c
   zip_get_archive_flag.c
-  zip_get_compression_implementation.c
   zip_get_encryption_implementation.c
   zip_get_file_comment.c
   zip_get_name.c
@@ -123,8 +123,8 @@ SET(LIBZIP_SOURCES
   zip_source_call.c
   zip_source_close.c
   zip_source_commit_write.c
+  zip_source_compress.c
   zip_source_crc.c
-  zip_source_deflate.c
   zip_source_error.c
   zip_source_filep.c
   zip_source_free.c
