@@ -3,6 +3,7 @@
 # 2. installation not tested.
 # 3. Problems generating html pages.
 # 4. create usable libtool .la file
+# 5. runtest not created
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
