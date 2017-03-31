@@ -133,6 +133,8 @@ my %EXIT_CODES = (
 	ERROR => 99
     );
 
+# MARK: - Public API
+
 sub new {
 	my $class = UNIVERSAL::isa ($_[0], __PACKAGE__) ? shift : __PACKAGE__;
 	my $self = bless {}, $class;
@@ -168,14 +170,10 @@ sub new {
 	$self->{hooks} = {};
 
 	$self->add_comparator('zip/zip', \&comparator_zip);
-	
-	$self->{srcdir} = $opts->{srcdir} // $ENV{srcdir};
-	
-	if (!defined($self->{srcdir}) || $self->{srcdir} eq '') {
-		$self->{srcdir} = `sed -n 's/^srcdir = \(.*\)/\1/p' Makefile`;
-		chomp($self->{srcdir});
-	}
-	
+
+	$self->get_variable('srcdir', $opts);
+	$self->get_variable('top_builddir', $opts);
+
 	$self->{in_sandbox} = 0;
 	
 	$self->{verbose} = $ENV{VERBOSE};
@@ -289,7 +287,6 @@ sub runtest {
                 $preload_env_var = 'DYLD_INSERT_LIBRARIES';
         }
 	if (defined($self->{test}->{'preload'})) {
-                print "preloading: $preload_env_var = $self->{test}->{preload}\n";
 		$ENV{$preload_env_var} = cwd() . "/../.libs/$self->{test}->{'preload'}";
 	}
 
@@ -394,9 +391,7 @@ sub setup {
 }
 
 
-#
-# internal methods
-#
+# MARK: - Internal Methods
 
 sub add_file {
 	my ($self, $file) = @_;
@@ -414,9 +409,36 @@ sub add_file {
 
 sub check_features_requirement() {
 	my ($self) = @_;
-	
-	### TODO: implement
-	
+
+	my %features;
+
+	my $fh;
+	unless (open($fh, '<', "$self->{top_builddir}/config.h")) {
+		$self->die("cannot open config.h in top builddir $self->{top_builddir}");
+	}
+	while (my $line = <$fh>) {
+		if ($line =~ m/^#define HAVE_([A-Z0-9_a-z]*)/) {
+			$features{$1} = 1;
+		}
+	}
+	close($fh);
+
+	my @missing = ();
+	for my $feature (@{$self->{test}->{features}}) {
+		if (!$features{$feature}) {
+			push @missing, $feature;
+		}
+	}
+
+	if (scalar @missing > 0) {
+		my $reason = "missing features";
+		if (scalar(@missing) == 1) {
+			$reason = "missing feature";
+		}
+		$self->print_test_result('SKIP', "$reason: " . (join ' ', @missing));
+		$self->end_test('SKIP');
+	}
+
 	return 1;
 }
 
@@ -650,6 +672,30 @@ sub get_extension {
 	}
 
 	return $ext;
+}
+
+
+sub get_variable {
+	my ($self, $name, $opts) = @_;
+
+	$self->{$name} = $opts->{$name} // $ENV{$name};
+	if (!defined($self->{$name}) || $self->{$name} eq '') {
+		my $fh;
+		unless (open($fh, '<', 'Makefile')) {
+			$self->die("cannot open Makefile: $!");
+		}
+		while (my $line = <$fh>) {
+			chomp $line;
+			if ($line =~ m/^$name = (.*)/) {
+				$self->{$name} = $1;
+				last;
+			}
+		}
+		close ($fh);
+	}
+	if (!defined($self->{$name} || $self->{$name} eq '')) {
+		$self->die("cannot get variable $name");
+	}
 }
 
 
@@ -1052,7 +1098,7 @@ sub sandbox_enter {
 
 	return if ($self->{in_sandbox});
 
-	chdir($self->{sandbox_dir}) or $self->die("cant cd into sandbox $self->{sandbox_dir}: $!");
+	chdir($self->{sandbox_dir}) or $self->die("cannot cd into sandbox $self->{sandbox_dir}: $!");
 	
 	$self->{in_sandbox} = 1;
 }
