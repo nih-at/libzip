@@ -20,6 +20,7 @@
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_GETPROGNAME
+#cmakedefine HAVE_LIBBZ2
 #cmakedefine HAVE_OPEN
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_SETMODE
