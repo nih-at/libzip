@@ -314,7 +314,7 @@ manyfiles-zip64.zip: manyfiles-zip.zip
 	${top_builddir}/src/ziptool ${srcdir}/manyfiles-zip.zip cat 4 > ${builddir}/$@
 
 runtest: runtest.in
-	sed -e 's!@[s]rcdir@!${srcdir}!g' -e 's!@[a]bs_srcdir@!${abs_srcdir}!g' ${srcdir}/runtest.in > runtest
+	sed -e 's!@[s]rcdir@!${srcdir}!g' -e 's!@[a]bs_srcdir@!${abs_srcdir}!g' -e 's!@[t]op_builddir@!${top_builddir}!g' ${srcdir}/runtest.in > runtest
 	chmod +x runtest
 
 cleanup:
