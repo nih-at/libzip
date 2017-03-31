@@ -33,6 +33,7 @@
 
 #include "zipint.h"
 
+#include <limits.h>
 #include <stdlib.h>
 #include <zlib.h>
 
