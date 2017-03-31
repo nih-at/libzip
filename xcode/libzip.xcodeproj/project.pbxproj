@@ -117,7 +117,6 @@
 		4B01D6C815B2F46B002D5007 /* zip_fread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721315B1B25E00236D3C /* zip_fread.c */; };
 		4B01D6C915B2F46B002D5007 /* zip_get_archive_comment.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721415B1B25E00236D3C /* zip_get_archive_comment.c */; };
 		4B01D6CA15B2F46B002D5007 /* zip_get_archive_flag.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721515B1B25E00236D3C /* zip_get_archive_flag.c */; };
-		4B01D6CB15B2F46B002D5007 /* zip_get_compression_implementation.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721615B1B25E00236D3C /* zip_get_compression_implementation.c */; };
 		4B01D6CC15B2F46B002D5007 /* zip_get_encryption_implementation.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721715B1B25E00236D3C /* zip_get_encryption_implementation.c */; };
 		4B01D6CD15B2F46B002D5007 /* zip_get_file_comment.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721815B1B25E00236D3C /* zip_get_file_comment.c */; };
 		4B01D6CE15B2F46B002D5007 /* zip_get_name.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721915B1B25E00236D3C /* zip_get_name.c */; };
@@ -138,7 +137,6 @@
 		4B01D6DD15B2F46B002D5007 /* zip_source_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722815B1B25E00236D3C /* zip_source_buffer.c */; };
 		4B01D6DE15B2F46B002D5007 /* zip_source_close.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722915B1B25E00236D3C /* zip_source_close.c */; };
 		4B01D6DF15B2F46B002D5007 /* zip_source_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722A15B1B25E00236D3C /* zip_source_crc.c */; };
-		4B01D6E015B2F46B002D5007 /* zip_source_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722B15B1B25E00236D3C /* zip_source_deflate.c */; };
 		4B01D6E115B2F46B002D5007 /* zip_source_error.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722C15B1B25E00236D3C /* zip_source_error.c */; };
 		4B01D6E215B2F46B002D5007 /* zip_source_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722D15B1B25E00236D3C /* zip_source_file.c */; };
 		4B01D6E315B2F46B002D5007 /* zip_source_filep.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722E15B1B25E00236D3C /* zip_source_filep.c */; };
@@ -171,6 +169,14 @@
 		4B01D73215B2F5EE002D5007 /* zipconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC729E15B1B4E900236D3C /* zipconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B01D73415B2F5F4002D5007 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC72A015B1B56400236D3C /* config.h */; };
 		4B01D73C15B2F6AF002D5007 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
+		4B0454B81E8E3E02002FA1F9 /* zip_source_get_compression_flags.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B71E8E3DF7002FA1F9 /* zip_source_get_compression_flags.c */; };
+		4B0454B91E8E3E03002FA1F9 /* zip_source_get_compression_flags.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B71E8E3DF7002FA1F9 /* zip_source_get_compression_flags.c */; };
+		4B0454BA1E8E3E08002FA1F9 /* zip_source_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B61E8E3DF7002FA1F9 /* zip_source_compress.c */; };
+		4B0454BB1E8E3E09002FA1F9 /* zip_source_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B61E8E3DF7002FA1F9 /* zip_source_compress.c */; };
+		4B0454BC1E8E3E24002FA1F9 /* zip_algorithm_bzip2.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B41E8E3DF7002FA1F9 /* zip_algorithm_bzip2.c */; };
+		4B0454BD1E8E3E24002FA1F9 /* zip_algorithm_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */; };
+		4B0454BE1E8E3E25002FA1F9 /* zip_algorithm_bzip2.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B41E8E3DF7002FA1F9 /* zip_algorithm_bzip2.c */; };
+		4B0454BF1E8E3E25002FA1F9 /* zip_algorithm_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */; };
 		4B3A5F501DF96EA8005A53A1 /* gladman-fcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */; };
 		4B3A5F511DF96EA9005A53A1 /* gladman-fcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */; };
 		4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */; };
@@ -266,7 +272,6 @@
 		4BDC726615B1B25E00236D3C /* zip_fread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721315B1B25E00236D3C /* zip_fread.c */; };
 		4BDC726715B1B25E00236D3C /* zip_get_archive_comment.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721415B1B25E00236D3C /* zip_get_archive_comment.c */; };
 		4BDC726815B1B25E00236D3C /* zip_get_archive_flag.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721515B1B25E00236D3C /* zip_get_archive_flag.c */; };
-		4BDC726915B1B25E00236D3C /* zip_get_compression_implementation.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721615B1B25E00236D3C /* zip_get_compression_implementation.c */; };
 		4BDC726A15B1B25E00236D3C /* zip_get_encryption_implementation.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721715B1B25E00236D3C /* zip_get_encryption_implementation.c */; };
 		4BDC726B15B1B25E00236D3C /* zip_get_file_comment.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721815B1B25E00236D3C /* zip_get_file_comment.c */; };
 		4BDC726C15B1B25E00236D3C /* zip_get_name.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC721915B1B25E00236D3C /* zip_get_name.c */; };
@@ -287,7 +292,6 @@
 		4BDC727B15B1B25E00236D3C /* zip_source_buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722815B1B25E00236D3C /* zip_source_buffer.c */; };
 		4BDC727C15B1B25E00236D3C /* zip_source_close.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722915B1B25E00236D3C /* zip_source_close.c */; };
 		4BDC727D15B1B25E00236D3C /* zip_source_crc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722A15B1B25E00236D3C /* zip_source_crc.c */; };
-		4BDC727E15B1B25E00236D3C /* zip_source_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722B15B1B25E00236D3C /* zip_source_deflate.c */; };
 		4BDC727F15B1B25E00236D3C /* zip_source_error.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722C15B1B25E00236D3C /* zip_source_error.c */; };
 		4BDC728015B1B25E00236D3C /* zip_source_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722D15B1B25E00236D3C /* zip_source_file.c */; };
 		4BDC728115B1B25E00236D3C /* zip_source_filep.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC722E15B1B25E00236D3C /* zip_source_filep.c */; };
@@ -571,6 +575,10 @@
 		4B01D72115B2F572002D5007 /* zipcmp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipcmp.c; sourceTree = "<group>"; };
 		4B01D72215B2F572002D5007 /* zipmerge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zipmerge.c; sourceTree = "<group>"; };
 		4B01D73D15B2FB6B002D5007 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		4B0454B41E8E3DF7002FA1F9 /* zip_algorithm_bzip2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_algorithm_bzip2.c; sourceTree = "<group>"; };
+		4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_algorithm_deflate.c; sourceTree = "<group>"; };
+		4B0454B61E8E3DF7002FA1F9 /* zip_source_compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_compress.c; sourceTree = "<group>"; };
+		4B0454B71E8E3DF7002FA1F9 /* zip_source_get_compression_flags.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_get_compression_flags.c; sourceTree = "<group>"; };
 		4B1ABD1A1A2E5DA700C93867 /* links */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = links; sourceTree = "<group>"; };
 		4B1ABD1B1A2E5E4D00C93867 /* handle_links */ = {isa = PBXFileReference; explicitFileType = text.script.perl; fileEncoding = 4; path = handle_links; sourceTree = "<group>"; };
 		4B1E46E51A08CB7600A376D2 /* zip_error_code_system.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_code_system.mdoc; sourceTree = "<group>"; };
@@ -843,7 +851,6 @@
 		4BDC721315B1B25E00236D3C /* zip_fread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_fread.c; path = ../lib/zip_fread.c; sourceTree = "<group>"; };
 		4BDC721415B1B25E00236D3C /* zip_get_archive_comment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_get_archive_comment.c; path = ../lib/zip_get_archive_comment.c; sourceTree = "<group>"; };
 		4BDC721515B1B25E00236D3C /* zip_get_archive_flag.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_get_archive_flag.c; path = ../lib/zip_get_archive_flag.c; sourceTree = "<group>"; };
-		4BDC721615B1B25E00236D3C /* zip_get_compression_implementation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_get_compression_implementation.c; path = ../lib/zip_get_compression_implementation.c; sourceTree = "<group>"; };
 		4BDC721715B1B25E00236D3C /* zip_get_encryption_implementation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_get_encryption_implementation.c; path = ../lib/zip_get_encryption_implementation.c; sourceTree = "<group>"; };
 		4BDC721815B1B25E00236D3C /* zip_get_file_comment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_get_file_comment.c; path = ../lib/zip_get_file_comment.c; sourceTree = "<group>"; };
 		4BDC721915B1B25E00236D3C /* zip_get_name.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_get_name.c; path = ../lib/zip_get_name.c; sourceTree = "<group>"; };
@@ -864,7 +871,6 @@
 		4BDC722815B1B25E00236D3C /* zip_source_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_buffer.c; path = ../lib/zip_source_buffer.c; sourceTree = "<group>"; };
 		4BDC722915B1B25E00236D3C /* zip_source_close.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_close.c; path = ../lib/zip_source_close.c; sourceTree = "<group>"; };
 		4BDC722A15B1B25E00236D3C /* zip_source_crc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_crc.c; path = ../lib/zip_source_crc.c; sourceTree = "<group>"; };
-		4BDC722B15B1B25E00236D3C /* zip_source_deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_deflate.c; path = ../lib/zip_source_deflate.c; sourceTree = "<group>"; };
 		4BDC722C15B1B25E00236D3C /* zip_source_error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_error.c; path = ../lib/zip_source_error.c; sourceTree = "<group>"; };
 		4BDC722D15B1B25E00236D3C /* zip_source_file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_file.c; path = ../lib/zip_source_file.c; sourceTree = "<group>"; };
 		4BDC722E15B1B25E00236D3C /* zip_source_filep.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_filep.c; path = ../lib/zip_source_filep.c; sourceTree = "<group>"; };
@@ -1312,6 +1318,8 @@
 				4BDC71F115B1B25E00236D3C /* zip_add_dir.c */,
 				4BDC71F215B1B25E00236D3C /* zip_add_entry.c */,
 				4BDC71F315B1B25E00236D3C /* zip_add.c */,
+				4B0454B41E8E3DF7002FA1F9 /* zip_algorithm_bzip2.c */,
+				4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */,
 				4BCB434119E9347E0067FAA3 /* zip_buffer.c */,
 				4BDC71F415B1B25E00236D3C /* zip_close.c */,
 				4BDC71F515B1B25E00236D3C /* zip_delete.c */,
@@ -1353,7 +1361,6 @@
 				4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */,
 				4BDC721415B1B25E00236D3C /* zip_get_archive_comment.c */,
 				4BDC721515B1B25E00236D3C /* zip_get_archive_flag.c */,
-				4BDC721615B1B25E00236D3C /* zip_get_compression_implementation.c */,
 				4BDC721715B1B25E00236D3C /* zip_get_encryption_implementation.c */,
 				4BDC721815B1B25E00236D3C /* zip_get_file_comment.c */,
 				4BDC721915B1B25E00236D3C /* zip_get_name.c */,
@@ -1379,13 +1386,14 @@
 				4BD5053219A0116D007DD28A /* zip_source_call.c */,
 				4BDC722915B1B25E00236D3C /* zip_source_close.c */,
 				4BCF301B199A2F820064207B /* zip_source_commit_write.c */,
+				4B0454B61E8E3DF7002FA1F9 /* zip_source_compress.c */,
 				4BDC722A15B1B25E00236D3C /* zip_source_crc.c */,
-				4BDC722B15B1B25E00236D3C /* zip_source_deflate.c */,
 				4BDC722C15B1B25E00236D3C /* zip_source_error.c */,
 				4BDC722D15B1B25E00236D3C /* zip_source_file.c */,
 				4BDC722E15B1B25E00236D3C /* zip_source_filep.c */,
 				4BDC722F15B1B25E00236D3C /* zip_source_free.c */,
 				4BDC723015B1B25E00236D3C /* zip_source_function.c */,
+				4B0454B71E8E3DF7002FA1F9 /* zip_source_get_compression_flags.c */,
 				4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */,
 				4BDC723115B1B25E00236D3C /* zip_source_layered.c */,
 				4BDC723215B1B25E00236D3C /* zip_source_open.c */,
@@ -1782,6 +1790,7 @@
 				4BCF3039199ABDDA0064207B /* zip_source_tell_write.c in Sources */,
 				4B01D6A615B2F46B002D5007 /* zip_add_dir.c in Sources */,
 				4B972052188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */,
+				4B0454BA1E8E3E08002FA1F9 /* zip_source_compress.c in Sources */,
 				4BCF3024199A2F820064207B /* zip_source_begin_write.c in Sources */,
 				4B01D6A715B2F46B002D5007 /* zip_add_entry.c in Sources */,
 				4B01D6A815B2F46B002D5007 /* zip_add.c in Sources */,
@@ -1790,6 +1799,7 @@
 				4B01D6AB15B2F46B002D5007 /* zip_dir_add.c in Sources */,
 				4B01D6AC15B2F46B002D5007 /* zip_dirent.c in Sources */,
 				4B01D6AD15B2F46B002D5007 /* zip_discard.c in Sources */,
+				4B0454B81E8E3E02002FA1F9 /* zip_source_get_compression_flags.c in Sources */,
 				4B01D6AE15B2F46B002D5007 /* zip_entry.c in Sources */,
 				4B01D6AF15B2F46B002D5007 /* zip_err_str.c in Sources */,
 				4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */,
@@ -1814,6 +1824,7 @@
 				4B01D6BD15B2F46B002D5007 /* zip_file_get_comment.c in Sources */,
 				4B01D6BE15B2F46B002D5007 /* zip_file_get_offset.c in Sources */,
 				4B01D6BF15B2F46B002D5007 /* zip_file_rename.c in Sources */,
+				4B0454BD1E8E3E24002FA1F9 /* zip_algorithm_deflate.c in Sources */,
 				4B01D6C015B2F46B002D5007 /* zip_file_replace.c in Sources */,
 				4B01D6C115B2F46B002D5007 /* zip_file_set_comment.c in Sources */,
 				4BCF3033199ABD3A0064207B /* zip_source_remove.c in Sources */,
@@ -1829,8 +1840,8 @@
 				736ED9BF1E3D6B7C00C36873 /* zip_file_set_encryption.c in Sources */,
 				4B01D6C915B2F46B002D5007 /* zip_get_archive_comment.c in Sources */,
 				4B01D6CA15B2F46B002D5007 /* zip_get_archive_flag.c in Sources */,
+				4B0454BC1E8E3E24002FA1F9 /* zip_algorithm_bzip2.c in Sources */,
 				736ED9BC1E3D6B6F00C36873 /* zip_source_winzip_aes_encode.c in Sources */,
-				4B01D6CB15B2F46B002D5007 /* zip_get_compression_implementation.c in Sources */,
 				4BD5053419A01BB0007DD28A /* zip_source_call.c in Sources */,
 				4BCF3030199A2F820064207B /* zip_source_write.c in Sources */,
 				4B01D6CC15B2F46B002D5007 /* zip_get_encryption_implementation.c in Sources */,
@@ -1856,7 +1867,6 @@
 				4BCB434319E9347E0067FAA3 /* zip_buffer.c in Sources */,
 				4B01D6DE15B2F46B002D5007 /* zip_source_close.c in Sources */,
 				4B01D6DF15B2F46B002D5007 /* zip_source_crc.c in Sources */,
-				4B01D6E015B2F46B002D5007 /* zip_source_deflate.c in Sources */,
 				4B01D6E115B2F46B002D5007 /* zip_source_error.c in Sources */,
 				4B01D6E215B2F46B002D5007 /* zip_source_file.c in Sources */,
 				4B01D6E315B2F46B002D5007 /* zip_source_filep.c in Sources */,
@@ -1962,6 +1972,7 @@
 				4BCF3038199ABDDA0064207B /* zip_source_tell_write.c in Sources */,
 				4BDC724415B1B25E00236D3C /* zip_add_dir.c in Sources */,
 				4B972051188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */,
+				4B0454BB1E8E3E09002FA1F9 /* zip_source_compress.c in Sources */,
 				4BCF3023199A2F820064207B /* zip_source_begin_write.c in Sources */,
 				4BDC724515B1B25E00236D3C /* zip_add_entry.c in Sources */,
 				4BDC724615B1B25E00236D3C /* zip_add.c in Sources */,
@@ -1970,6 +1981,7 @@
 				4BDC724815B1B25E00236D3C /* zip_delete.c in Sources */,
 				736ED9C21E3D6B8600C36873 /* zip_source_winzip_aes_encode.c in Sources */,
 				4BDC724915B1B25E00236D3C /* zip_dir_add.c in Sources */,
+				4B0454B91E8E3E03002FA1F9 /* zip_source_get_compression_flags.c in Sources */,
 				4BDC724A15B1B25E00236D3C /* zip_dirent.c in Sources */,
 				4BDC724B15B1B25E00236D3C /* zip_discard.c in Sources */,
 				4BDC724C15B1B25E00236D3C /* zip_entry.c in Sources */,
@@ -1994,6 +2006,7 @@
 				4BDC725B15B1B25E00236D3C /* zip_file_get_comment.c in Sources */,
 				4BDC725C15B1B25E00236D3C /* zip_file_get_offset.c in Sources */,
 				4BDC725D15B1B25E00236D3C /* zip_file_rename.c in Sources */,
+				4B0454BF1E8E3E25002FA1F9 /* zip_algorithm_deflate.c in Sources */,
 				4BDC725E15B1B25E00236D3C /* zip_file_replace.c in Sources */,
 				4BDC725F15B1B25E00236D3C /* zip_file_set_comment.c in Sources */,
 				4BCF3032199ABD3A0064207B /* zip_source_remove.c in Sources */,
@@ -2008,8 +2021,8 @@
 				4BDC726615B1B25E00236D3C /* zip_fread.c in Sources */,
 				4BDC726715B1B25E00236D3C /* zip_get_archive_comment.c in Sources */,
 				4BDC726815B1B25E00236D3C /* zip_get_archive_flag.c in Sources */,
-				4BDC726915B1B25E00236D3C /* zip_get_compression_implementation.c in Sources */,
 				736ED9C01E3D6B8000C36873 /* zip_random_unix.c in Sources */,
+				4B0454BE1E8E3E25002FA1F9 /* zip_algorithm_bzip2.c in Sources */,
 				4BD5053319A0116D007DD28A /* zip_source_call.c in Sources */,
 				4BCF302F199A2F820064207B /* zip_source_write.c in Sources */,
 				4BDC726A15B1B25E00236D3C /* zip_get_encryption_implementation.c in Sources */,
@@ -2036,7 +2049,6 @@
 				4BCB434219E9347E0067FAA3 /* zip_buffer.c in Sources */,
 				4BDC727C15B1B25E00236D3C /* zip_source_close.c in Sources */,
 				4BDC727D15B1B25E00236D3C /* zip_source_crc.c in Sources */,
-				4BDC727E15B1B25E00236D3C /* zip_source_deflate.c in Sources */,
 				4BDC727F15B1B25E00236D3C /* zip_source_error.c in Sources */,
 				4BDC728015B1B25E00236D3C /* zip_source_file.c in Sources */,
 				4BDC728115B1B25E00236D3C /* zip_source_filep.c in Sources */,
