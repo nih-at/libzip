@@ -36,6 +36,7 @@
 #if defined(HAVE_LIBBZ2)
 
 #include <bzlib.h>
+#include <limits.h>
 #include <stdlib.h>
 
 struct ctx {
