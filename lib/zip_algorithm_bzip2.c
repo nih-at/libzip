@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -107,7 +107,7 @@ map_error(int ret) {
     case BZ_RUN_OK:
     case BZ_STREAM_END:
 	return ZIP_ER_OK;
-	
+
     case BZ_DATA_ERROR:
     case BZ_DATA_ERROR_MAGIC:
     case BZ_UNEXPECTED_EOF:
@@ -148,13 +148,12 @@ start(void *ud) {
     else {
 	ret = BZ2_bzDecompressInit(&ctx->zstr, 0, 0);
     }
-    
+
     if (ret != BZ_OK) {
 	zip_error_set(ctx->error, map_error(ret), 0);
 	return false;
     }
-    
-    
+
     return true;
 }
 
@@ -162,13 +161,19 @@ start(void *ud) {
 static bool
 end(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
+    int err;
 
     /* TODO: can this fail? */
     if (ctx->compress) {
-	BZ2_bzCompressEnd(&ctx->zstr);
+	err = BZ2_bzCompressEnd(&ctx->zstr);
     }
     else {
-	BZ2_bzDecompressEnd(&ctx->zstr);
+	err = BZ2_bzDecompressEnd(&ctx->zstr);
+    }
+
+    if (err != BZ_OK) {
+	zip_error_set(ctx->error, map_error(err), 0);
+	return false;
     }
 
     return true;
@@ -219,7 +224,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
 
     *length = *length - ctx->zstr.avail_out;
-    
+
     switch (ret) {
     case BZ_FINISH_OK: /* compression */
 	return ZIP_COMPRESSION_OK;

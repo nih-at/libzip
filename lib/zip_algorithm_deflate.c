@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -125,13 +125,13 @@ start(void *ud) {
     else {
 	ret = inflateInit2(&ctx->zstr, -MAX_WBITS);
     }
-    
+
     if (ret != Z_OK) {
 	zip_error_set(ctx->error, ZIP_ER_ZLIB, ret);
 	return false;
     }
-    
-    
+
+
     return true;
 }
 
@@ -139,13 +139,18 @@ start(void *ud) {
 static bool
 end(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
+    int err;
 
-    /* TODO: can this fail? */
     if (ctx->compress) {
-	deflateEnd(&ctx->zstr);
+	err = deflateEnd(&ctx->zstr);
     }
     else {
-	inflateEnd(&ctx->zstr);
+	err = inflateEnd(&ctx->zstr);
+    }
+
+    if (err != Z_OK) {
+	zip_error_set(ctx->error, ZIP_ER_ZLIB, err);
+	return false;
     }
 
     return true;
@@ -191,7 +196,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
 
     *length = *length - ctx->zstr.avail_out;
-    
+
     switch (ret) {
     case Z_OK:
 	return ZIP_COMPRESSION_OK;
