@@ -21,6 +21,10 @@ Additionally, you'll need zlib (at least version 1.1.2). It comes
 with most operating systems nowadays, or you can get it at
 >	http://www.zlib.net/
 
+For supporting bzip2-compressed zip archives, bzip2 from
+>	http://bzip.org/
+needs to be installed.
+
 When using a static Windows library, you need to define `ZIP_STATIC`
 when compiling packages using libzip.
 
