@@ -1,6 +1,7 @@
 1.x.x [201X-XX-XX]
 ==================
 
+* Support bzip2 compressed zip archives.
 * Improve file progress callback code.
 
 1.2.0 [2017-02-19]
