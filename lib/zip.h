@@ -228,7 +228,7 @@ enum zip_source_cmd {
     ZIP_SOURCE_TELL_WRITE,      /* get write position */
     ZIP_SOURCE_SUPPORTS,        /* check whether source supports command */
     ZIP_SOURCE_REMOVE,          /* remove file */
-    ZIP_SOURCE_GET_COMPRESSION_FLAGS	/* set version needed and compression flags, internal only */
+    ZIP_SOURCE_GET_COMPRESSION_FLAGS	/* get compression flags, internal only */
 };
 typedef enum zip_source_cmd zip_source_cmd_t;
 
