@@ -59,6 +59,9 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
     ctx->error = error;
     ctx->compress = compress;
     ctx->compression_flags = compression_flags;
+    if (ctx->compression_flags < 1 || ctx->compression_flags > 9) {
+	ctx->compression_flags = 9;
+    }
     ctx->end_of_input = false;
 
     ctx->zstr.bzalloc = NULL;
@@ -139,8 +142,7 @@ start(void *ud) {
     ctx->zstr.next_out = NULL;
 
     if (ctx->compress) {
-	/* TODO: use ctx->compression_flags */
-	ret = BZ2_bzCompressInit(&ctx->zstr, 9, 0, 30);
+	ret = BZ2_bzCompressInit(&ctx->zstr, ctx->compression_flags, 0, 30);
 
     }
     else {
