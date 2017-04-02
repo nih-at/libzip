@@ -57,6 +57,9 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
     ctx->error = error;
     ctx->compress = compress;
     ctx->compression_flags = compression_flags;
+    if (ctx->compression_flags < 1 || ctx->compression_flags > 9) {
+	ctx->compression_flags = Z_BEST_COMPRESSION;
+    }
     ctx->end_of_input = false;
 
     ctx->zstr.zalloc = Z_NULL;
@@ -91,13 +94,17 @@ static int
 compression_flags(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
-    if (ctx->compress) {
-	/* TODO */
-	return 1;
-    }
-    else {
+    if (!ctx->compress) {
 	return 0;
     }
+
+    if (ctx->compression_flags < 3) {
+	return 2;
+    }
+    else if (ctx->compression_flags > 7) {
+	return 1;
+    }
+    return 0;
 }
 
 
@@ -112,10 +119,8 @@ start(void *ud) {
     ctx->zstr.next_out = NULL;
 
     if (ctx->compress) {
-	/* TODO: use ctx->compression_flags */
 	/* negative value to tell zlib not to write a header */
-	ret = deflateInit2(&ctx->zstr, Z_BEST_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
-
+	ret = deflateInit2(&ctx->zstr, ctx->compression_flags, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
     }
     else {
 	ret = inflateInit2(&ctx->zstr, -MAX_WBITS);
