@@ -163,7 +163,6 @@ end(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
     int err;
 
-    /* TODO: can this fail? */
     if (ctx->compress) {
 	err = BZ2_bzCompressEnd(&ctx->zstr);
     }
