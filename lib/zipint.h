@@ -283,6 +283,7 @@ struct zip_dirent {
     zip_uint32_t ext_attrib;		/* (c)  external file attributes */
     zip_uint64_t offset;		/* (c)  offset of local header */
 
+    zip_uint16_t compression_level;	/*      level of compression to use (never valid in orig) */
     zip_uint16_t encryption_method;	/*      encryption method, computed from other fields */
     char *password;                     /*      file specific encryption password */
 };

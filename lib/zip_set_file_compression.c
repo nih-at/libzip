@@ -41,7 +41,7 @@ zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t method, zip_ui
     zip_entry_t *e;
     zip_int32_t old_method;
 
-    if (idx >= za->nentry) {
+    if (idx >= za->nentry || flags > 9) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return -1;
     }
@@ -60,11 +60,15 @@ zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t method, zip_ui
     
     old_method = (e->orig == NULL ? ZIP_CM_DEFAULT : e->orig->comp_method);
     
-    /* TODO: revisit this when flags are supported, since they may require a recompression */
+    /* TODO: do we want to recompress if level is set? Only if it's
+     * different than what bit flags tell us, but those are not
+     * defined for all compression methods, or not directly mappable
+     * to levels */
     
     if (method == old_method) {
 	if (e->changes) {
 	    e->changes->changed &= ~ZIP_DIRENT_COMP_METHOD;
+	    e->changes->compression_level = 0;
 	    if (e->changes->changed == 0) {
 		_zip_dirent_free(e->changes);
 		e->changes = NULL;
@@ -80,6 +84,7 @@ zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t method, zip_ui
         }
 
         e->changes->comp_method = method;
+	e->changes->compression_level = (zip_uint16_t)flags;
         e->changes->changed |= ZIP_DIRENT_COMP_METHOD;
     }
     

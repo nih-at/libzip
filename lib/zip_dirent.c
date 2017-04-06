@@ -296,6 +296,7 @@ _zip_dirent_init(zip_dirent_t *de)
     de->int_attrib = 0;
     de->ext_attrib = ZIP_EXT_ATTRIB_DEFAULT;
     de->offset = 0;
+    de->compression_level = 0;
     de->encryption_method = ZIP_EM_NONE;
     de->password = NULL;
 }

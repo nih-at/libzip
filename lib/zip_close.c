@@ -389,8 +389,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
     }
 
     if (needs_compress) {
-	/* TODO: compression flags */
-	if ((src_tmp = zip_source_compress(za, src_final, de->comp_method, 0)) == NULL) {
+	if ((src_tmp = zip_source_compress(za, src_final, de->comp_method, de->compression_level)) == NULL) {
 	    zip_source_free(src_final);
 	    return -1;
 	}
