@@ -44,7 +44,7 @@ struct zip_hash_entry {
 typedef struct zip_hash_entry zip_hash_entry_t;
 
 struct zip_hash {
-    zip_uint16_t table_size;
+    zip_uint32_t table_size;
     zip_hash_entry_t **table;
 };
 
