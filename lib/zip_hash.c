@@ -49,7 +49,7 @@ struct zip_hash {
 };
 
 zip_hash_t *
-_zip_hash_new(zip_uint16_t table_size, zip_error_t *error)
+_zip_hash_new(zip_uint32_t table_size, zip_error_t *error)
 {
     zip_hash_t *hash;
 

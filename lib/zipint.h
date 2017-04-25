@@ -486,7 +486,7 @@ bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index
 bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *key, zip_error_t *error);
 void _zip_hash_free(zip_hash_t *hash);
 zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, zip_error_t *error);
-zip_hash_t *_zip_hash_new(zip_uint16_t hash_size, zip_error_t *error);
+zip_hash_t *_zip_hash_new(zip_uint32_t hash_size, zip_error_t *error);
 void _zip_hash_revert(zip_hash_t *hash);
 
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
