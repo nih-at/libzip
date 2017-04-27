@@ -52,7 +52,7 @@ _zip_new(zip_error_t *error)
 	return NULL;
     }
 
-    if ((za->names = _zip_hash_new(ZIP_HASH_TABLE_SIZE, error)) == NULL) {
+    if ((za->names = _zip_hash_new(error)) == NULL) {
 	free(za);
 	return NULL;
     }
