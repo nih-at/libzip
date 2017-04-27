@@ -567,7 +567,7 @@
 		3D7E35401B33063600022624 /* in-memory.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "in-memory.c"; sourceTree = "<group>"; };
 		3D7E35421B33063600022624 /* windows-open.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "windows-open.c"; sourceTree = "<group>"; };
 		3D7E35471B33076C00022624 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		3D9284801C309510001EABA7 /* zip_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_hash.c; sourceTree = "<group>"; };
+		3D9284801C309510001EABA7 /* zip_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_hash.c; sourceTree = "<group>"; usesTabs = 1; };
 		4B01D68B15B2F3F1002D5007 /* libzip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = libzip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D6FD15B2F4B1002D5007 /* zipmerge */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipmerge; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D70815B2F4CF002D5007 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
@@ -649,10 +649,10 @@
 		4B28AA2115BACC3900D0C17D /* ziptorrent.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = ziptorrent.mdoc; sourceTree = "<group>"; };
 		4B28AA2215BAD4E200D0C17D /* API-CHANGES */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "API-CHANGES"; sourceTree = "<group>"; };
 		4B28AA2315BAD4E200D0C17D /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
-		4B28AA2415BAD4E200D0C17D /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
-		4B28AA2515BAD4E200D0C17D /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		4B28AA2415BAD4E200D0C17D /* NEWS.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = NEWS.md; sourceTree = "<group>"; };
+		4B28AA2515BAD4E200D0C17D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
-		4B28AA2715BAD4E200D0C17D /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		4B28AA2715BAD4E200D0C17D /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		4B3A5F4A1DF96D83005A53A1 /* gladman-fcrypt */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "gladman-fcrypt"; sourceTree = "<group>"; };
 		4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gladman-fcrypt.c"; sourceTree = "<group>"; };
 		4B3A5F4C1DF96D83005A53A1 /* gladman-fcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gladman-fcrypt.h"; sourceTree = "<group>"; };
@@ -859,7 +859,7 @@
 		4BDC721C15B1B25E00236D3C /* zip_memdup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_memdup.c; path = ../lib/zip_memdup.c; sourceTree = "<group>"; };
 		4BDC721D15B1B25E00236D3C /* zip_name_locate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_name_locate.c; path = ../lib/zip_name_locate.c; sourceTree = "<group>"; };
 		4BDC721E15B1B25E00236D3C /* zip_new.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_new.c; path = ../lib/zip_new.c; sourceTree = "<group>"; };
-		4BDC721F15B1B25E00236D3C /* zip_open.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_open.c; path = ../lib/zip_open.c; sourceTree = "<group>"; };
+		4BDC721F15B1B25E00236D3C /* zip_open.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_open.c; path = ../lib/zip_open.c; sourceTree = "<group>"; usesTabs = 1; };
 		4BDC722015B1B25E00236D3C /* zip_rename.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_rename.c; path = ../lib/zip_rename.c; sourceTree = "<group>"; };
 		4BDC722115B1B25E00236D3C /* zip_replace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_replace.c; path = ../lib/zip_replace.c; sourceTree = "<group>"; };
 		4BDC722215B1B25E00236D3C /* zip_set_archive_comment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_set_archive_comment.c; path = ../lib/zip_set_archive_comment.c; sourceTree = "<group>"; };
@@ -1136,10 +1136,10 @@
 			children = (
 				4B28AA2215BAD4E200D0C17D /* API-CHANGES */,
 				4B28AA2315BAD4E200D0C17D /* AUTHORS */,
-				4B28AA2415BAD4E200D0C17D /* NEWS */,
-				4B28AA2515BAD4E200D0C17D /* README */,
+				4B28AA2415BAD4E200D0C17D /* NEWS.md */,
+				4B28AA2515BAD4E200D0C17D /* README.md */,
 				4B28AA2615BAD4E200D0C17D /* THANKS */,
-				4B28AA2715BAD4E200D0C17D /* TODO */,
+				4B28AA2715BAD4E200D0C17D /* TODO.md */,
 			);
 			name = info;
 			path = ..;
