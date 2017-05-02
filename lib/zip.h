@@ -309,10 +309,12 @@ typedef struct zip_stat zip_stat_t;
 typedef zip_uint32_t zip_flags_t;
 
 typedef zip_int64_t (*zip_source_callback)(void *, void *, zip_uint64_t, zip_source_cmd_t);
-typedef void (*zip_progress_callback_t)(double);
-
+typedef void (*zip_progress_callback)(zip_t *, double, void *);
 
 #ifndef ZIP_DISABLE_DEPRECATED
+typedef void (*zip_progress_callback_t)(double);
+ZIP_EXTERN void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
+
 ZIP_EXTERN zip_int64_t zip_add(zip_t *, const char *, zip_source_t *); /* use zip_file_add */
 ZIP_EXTERN zip_int64_t zip_add_dir(zip_t *, const char *); /* use zip_dir_add */
 ZIP_EXTERN const char *zip_get_file_comment(zip_t *, zip_uint64_t, int *, int); /* use zip_file_get_comment */
@@ -378,7 +380,7 @@ ZIP_EXTERN zip_int64_t zip_get_num_entries(zip_t *, zip_flags_t);
 ZIP_EXTERN zip_int64_t zip_name_locate(zip_t *, const char *, zip_flags_t);
 ZIP_EXTERN zip_t *zip_open(const char *, int, int *);
 ZIP_EXTERN zip_t *zip_open_from_source(zip_source_t *, int, zip_error_t *);
-ZIP_EXTERN void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
+ZIP_EXTERN int zip_register_progress_callback_with_state(zip_t *, double, zip_progress_callback, void (*)(void *), void *);
 ZIP_EXTERN int zip_set_archive_comment(zip_t *, const char *, zip_uint16_t);
 ZIP_EXTERN int zip_set_archive_flag(zip_t *, zip_flags_t, int);
 ZIP_EXTERN int zip_set_default_password(zip_t *, const char *);

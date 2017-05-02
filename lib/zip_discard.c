@@ -71,6 +71,8 @@ zip_discard(zip_t *za)
     }
     free(za->open_source);
 
+    _zip_progress_free(za->progress);
+
     zip_error_fini(&za->error);
     
     free(za);

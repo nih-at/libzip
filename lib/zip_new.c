@@ -68,7 +68,7 @@ _zip_new(zip_error_t *error)
     za->entry = NULL;
     za->nopen_source = za->nopen_source_alloc = 0;
     za->open_source = NULL;
-    za->progress_callback = NULL;
+    za->progress = NULL;
     
     return za;
 }

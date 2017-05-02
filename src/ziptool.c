@@ -402,13 +402,13 @@ name_locate(int argc, char *argv[]) {
 }
 
 static void
-progress_callback(double percentage) {
+progress_callback(zip_t *za, double percentage, void *ud) {
     printf("%.1lf%% done\n", percentage*100);
 }
 
 static int
 print_progress(int argc, char *argv[]) {
-    zip_register_progress_callback(za, progress_callback);
+    zip_register_progress_callback_with_state(za, 0.001, progress_callback, NULL, NULL);
     return 0;
 }
 

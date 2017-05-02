@@ -51,18 +51,10 @@
 #endif
 
 
-typedef struct {
-    double last_update;  /* last value callback function was called with */
-
-    double start;        /* start of sub-progress setcion */
-    double end;          /* end of sub-progress setcion */
-} progress_state_t;
-
-static int add_data(zip_t *, zip_source_t *, zip_dirent_t *, progress_state_t *);
-static int copy_data(zip_t *, zip_uint64_t, progress_state_t *);
-static int copy_source(zip_t *, zip_source_t *, progress_state_t *, zip_int64_t);
+static int add_data(zip_t *, zip_source_t *, zip_dirent_t *);
+static int copy_data(zip_t *, zip_uint64_t);
+static int copy_source(zip_t *, zip_source_t *, zip_int64_t);
 static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
-static void _zip_progress(zip_t *, progress_state_t *, double);
 
 ZIP_EXTERN int
 zip_close(zip_t *za)
@@ -72,7 +64,6 @@ zip_close(zip_t *za)
     int error;
     zip_filelist_t *filelist;
     int changed;
-    progress_state_t progress_state;
 
     if (za == NULL)
 	return -1;
@@ -129,22 +120,15 @@ zip_close(zip_t *za)
 	free(filelist);
 	return -1;
     }
-    
-    if (za->progress_callback) {
-	progress_state.last_update = 0.0;
-	za->progress_callback(0.0);
-    }
+
+    _zip_progress_start(za->progress);
     error = 0;
     for (j=0; j<survivors; j++) {
 	int new_data;
 	zip_entry_t *entry;
 	zip_dirent_t *de;
 
-	if (za->progress_callback) {
-	    progress_state.start = (double)j / (double)survivors;
-	    progress_state.end = (double)(j+1) / (double)survivors;
-	    _zip_progress(za, &progress_state, 0.0);
-	}
+        _zip_progress_subrange(za->progress, (double)j / (double)survivors, (double)(j+1) / (double)survivors);
 
 	i = filelist[j].idx;
 	entry = za->entry+i;
@@ -184,7 +168,7 @@ zip_close(zip_t *za)
 	    }
 
 	    /* add_data writes dirent */
-	    if (add_data(za, zs ? zs : entry->source, de, &progress_state) < 0) {
+	    if (add_data(za, zs ? zs : entry->source, de) < 0) {
 		error = 1;
 		if (zs)
 		    zip_source_free(zs);
@@ -211,7 +195,7 @@ zip_close(zip_t *za)
 		error = 1;
 		break;
 	    }
-	    if (copy_data(za, de->comp_size, &progress_state) < 0) {
+	    if (copy_data(za, de->comp_size) < 0) {
 		error = 1;
 		break;
 	    }
@@ -237,9 +221,7 @@ zip_close(zip_t *za)
 	return -1;
     }
 
-    if (za->progress_callback) {
-	_zip_progress(za, &progress_state, 1.0);
-    }
+    _zip_progress_end(za->progress);
 
     zip_discard(za);
     
@@ -248,7 +230,7 @@ zip_close(zip_t *za)
 
 
 static int
-add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progress_state)
+add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de)
 {
     zip_int64_t offstart, offdata, offend, data_length;
     struct zip_stat st;
@@ -430,7 +412,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
         return -1;
     }
 
-    ret = copy_source(za, src_final, progress_state, data_length);
+    ret = copy_source(za, src_final, data_length);
 	
     if (zip_source_stat(src_final, &st) < 0) {
 	_zip_error_set_from_source(&za->error, src_final);
@@ -495,7 +477,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, progress_state_t *progr
 
 
 static int
-copy_data(zip_t *za, zip_uint64_t len, progress_state_t *progress_state)
+copy_data(zip_t *za, zip_uint64_t len)
 {
     zip_uint8_t buf[BUFSIZE];
     size_t n;
@@ -512,10 +494,8 @@ copy_data(zip_t *za, zip_uint64_t len, progress_state_t *progress_state)
 	}
 	
 	len -= n;
-	
-	if (za->progress_callback) {
-	    _zip_progress(za, progress_state, (total - (double)len) / total);
-	}
+
+        _zip_progress_update(za->progress, (total - (double)len) / total);
     }
 
     return 0;
@@ -523,7 +503,7 @@ copy_data(zip_t *za, zip_uint64_t len, progress_state_t *progress_state)
 
 
 static int
-copy_source(zip_t *za, zip_source_t *src, progress_state_t *progress_state, zip_int64_t data_length)
+copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length)
 {
     zip_uint8_t buf[BUFSIZE];
     zip_int64_t n, current;
@@ -541,9 +521,9 @@ copy_source(zip_t *za, zip_source_t *src, progress_state_t *progress_state, zip_
 	    ret = -1;
 	    break;
 	}
-	if (n == sizeof(buf) && za->progress_callback && data_length > 0) {
+	if (n == sizeof(buf) && za->progress && data_length > 0) {
 	    current += n;
-	    _zip_progress(za, progress_state, (double)current/(double)data_length);
+	    _zip_progress_update(za->progress, (double)current/(double)data_length);
 	}
     }
     
@@ -601,21 +581,4 @@ _zip_changed(const zip_t *za, zip_uint64_t *survivorsp)
 	*survivorsp = survivors;
 
     return changed;
-}
-
-static void
-_zip_progress(zip_t *za, progress_state_t *progress_state, double sub_current)
-{
-    double current;
-
-    if (za->progress_callback == NULL) {
-	return;
-    }
-
-    current = ZIP_MIN(ZIP_MAX(sub_current, 0.0), 1.0) * (progress_state->end - progress_state->start) + progress_state->start;
-
-    if (current - progress_state->last_update > 0.001) {
-	za->progress_callback(current);
-	progress_state->last_update = current;
-    }
 }

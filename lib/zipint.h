@@ -197,6 +197,7 @@ enum zip_encoding_type {
 typedef enum zip_encoding_type zip_encoding_type_t;
 
 struct zip_hash;
+struct zip_progress;
 
 typedef struct zip_cdir zip_cdir_t;
 typedef struct zip_dirent zip_dirent_t;
@@ -205,6 +206,7 @@ typedef struct zip_extra_field zip_extra_field_t;
 typedef struct zip_string zip_string_t;
 typedef struct zip_buffer zip_buffer_t;
 typedef struct zip_hash zip_hash_t;
+typedef struct zip_progress zip_progress_t;
 
 /* zip archive, part of API */
 
@@ -232,7 +234,7 @@ struct zip {
 
     zip_hash_t *names;			/* hash table for name lookup */
 
-    zip_progress_callback_t progress_callback; /* progress callback for zip_close() */
+    zip_progress_t *progress;            /* progress callback for zip_close() */
 };
 
 /* file in zip archive, part of API */
@@ -487,6 +489,13 @@ bool _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_err
 bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error);
 
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
+
+void _zip_progress_end(zip_progress_t *progress);
+void _zip_progress_free(zip_progress_t *progress);
+zip_progress_t *_zip_progress_new(zip_t *za, double precision, zip_progress_callback callback, void (*ud_free)(void *), void *ud);
+void _zip_progress_start(zip_progress_t *progress);
+void _zip_progress_subrange(zip_progress_t *progress, double start, double end);
+void _zip_progress_update(zip_progress_t *progress, double value);
 
 bool zip_random(zip_uint8_t *buffer, zip_uint16_t length);
 

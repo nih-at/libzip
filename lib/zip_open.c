@@ -157,12 +157,6 @@ zip_open_from_source(zip_source_t *src, int _flags, zip_error_t *error)
     }
 }
 
-ZIP_EXTERN void
-zip_register_progress_callback(zip_t *za, zip_progress_callback_t progress_callback)
-{
-    za->progress_callback = progress_callback;
-}
-
 
 zip_t *
 _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error)
