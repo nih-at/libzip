@@ -143,7 +143,7 @@ sub new {
 
 	$self->{default_program} = $opts->{default_program};
 	$self->{zipcmp} = $opts->{zipcmp} // 'zipcmp';
-	$self->{zipcmp_flags} = $opts->{zipcmp_flags};
+	$self->{zipcmp_flags} = $opts->{zipcmp_flags} // '-p';
 
 	$self->{directives} = {
 		args => { type => 'string...', once => 1, required => 1 },
@@ -168,8 +168,6 @@ sub new {
 	$self->{compare_by_type} = {};
 	$self->{copy_by_type} = {};
 	$self->{hooks} = {};
-
-	$self->add_comparator('zip/zip', \&comparator_zip);
 
 	$self->get_variable('srcdir', $opts);
 	$self->get_variable('top_builddir', $opts);
@@ -358,7 +356,7 @@ sub setup {
 	@ARGV = @argv;
 	my $ok = GetOptions(
 		'help|h' => \my $help,
-		'keep-broken' => \$self->{keep_broken},
+		'keep-broken|k' => \$self->{keep_broken},
 		'no-cleanup' => \$self->{no_cleanup},
 		# 'run-gdb' => \$self->{run_gdb},
 		'setup-only' => \$self->{setup_only},
@@ -446,7 +444,7 @@ sub check_features_requirement() {
 sub comparator_zip {
 	my ($self, $got, $expected) = @_;
 
-	my @args = ($self->{zipcmp}, $self->{verbose} ? '-pv' : '-pq');
+	my @args = ($self->{zipcmp}, $self->{verbose} ? '-v' : '-q');
 	push @args, $self->{zipcmp_flags} if ($self->{zipcmp_flags});
 	push @args, ($expected, $got);
         
