@@ -516,7 +516,7 @@ bool _zip_source_had_error(zip_source_t *);
 void _zip_source_invalidate(zip_source_t *src);
 zip_source_t *_zip_source_new(zip_error_t *error);
 int _zip_source_set_source_archive(zip_source_t *, zip_t *);
-zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_int8_t, zip_error_t *error);
+zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_int8_t compression_flags, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error);
 zip_source_t *_zip_source_zip_new(zip_t *, zip_t *, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_uint64_t, const char *);
 
 int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error);

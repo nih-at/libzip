@@ -41,7 +41,6 @@ zip_source_t *
 _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_uint64_t len, const char *password)
 {
     zip_source_t *src, *s2;
-    zip_uint64_t offset;
     struct zip_stat st;
     bool partial_data, needs_crc, needs_decrypt, needs_decompress;
 
@@ -98,10 +97,6 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	}
     }
 
-    if ((offset = _zip_file_get_offset(srcza, srcidx, &za->error)) == 0) {
-	return NULL;
-    }
-
     if (st.comp_size == 0) {
 	return zip_source_buffer(za, NULL, 0, 0);
     }
@@ -109,13 +104,13 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
     if (partial_data && !needs_decrypt && !needs_decompress) {
 	struct zip_stat st2;
 	
-	st2.size = len ? len : st.size - start;
-	st2.comp_size = st2.size;
+	st2.size = len;
+	st2.comp_size = len;
 	st2.comp_method = ZIP_CM_STORE;
 	st2.mtime = st.mtime;
 	st2.valid = ZIP_STAT_SIZE|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_MTIME;
 	
-	if ((src = _zip_source_window_new(srcza->src, offset + start, st2.size, &st2, 0, &za->error)) == NULL) {
+	if ((src = _zip_source_window_new(srcza->src, start, len, &st2, 0, srcza, srcidx, &za->error)) == NULL) {
 	    return NULL;
 	}
     }
@@ -125,7 +120,7 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
 	if ((de = _zip_get_dirent(srcza, srcidx, flags, &za->error)) == NULL) {
 	    return NULL;
 	}
-	if ((src = _zip_source_window_new(srcza->src, offset, st.comp_size, &st, (de->bitflags >> 1) & 3, &za->error)) == NULL) {
+	if ((src = _zip_source_window_new(srcza->src, 0, st.comp_size, &st, (de->bitflags >> 1) & 3, srcza, srcidx, &za->error)) == NULL) {
 	    return NULL;
 	}
     }
@@ -170,7 +165,7 @@ _zip_source_zip_new(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t fl
     }
 
     if (partial_data && (needs_decrypt || needs_decompress)) {
-	s2 = zip_source_window(za, src, start, len ? len : st.size-start);
+	s2 = zip_source_window(za, src, start, len);
 	zip_source_free(src);
 	if (s2 == NULL) {
 	    return NULL;

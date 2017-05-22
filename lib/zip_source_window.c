@@ -38,9 +38,15 @@
 #include "zipint.h"
 
 struct window {
-    zip_uint64_t start;
-    zip_uint64_t end;
-    zip_uint64_t offset;
+    zip_uint64_t start;			/* where in file we start reading */
+    zip_uint64_t end;			/* where in file we stop reading */
+
+    /* if not NULL, read file data for this file */
+    zip_t *source_archive;
+    zip_uint64_t source_index;
+
+    zip_uint64_t offset;		/* offset in src for next read */
+
     zip_stat_t stat;
     zip_int8_t compression_flags;
     zip_error_t error;
@@ -54,16 +60,16 @@ static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip
 zip_source_t *
 zip_source_window(zip_t *za, zip_source_t *src, zip_uint64_t start, zip_uint64_t len)
 {
-    return _zip_source_window_new(src, start, len, NULL, 0, &za->error);
+    return _zip_source_window_new(src, start, len, NULL, 0, NULL, 0, &za->error);
 }
 
 
 zip_source_t *
-_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_int8_t compression_flags, zip_error_t *error)
+_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_int8_t compression_flags, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error)
 {
     struct window *ctx;
 
-    if (src == NULL || start + length < start) {
+    if (src == NULL || start + length < start || (source_archive == NULL && source_index != 0)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
@@ -77,6 +83,8 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t lengt
     ctx->end = start + length;
     zip_stat_init(&ctx->stat);
     ctx->compression_flags = compression_flags;
+    ctx->source_archive = source_archive;
+    ctx->source_index = source_index;
     zip_error_init(&ctx->error);
     ctx->supports = (zip_source_supports(src) & ZIP_SOURCE_SUPPORTS_SEEKABLE) | (zip_source_make_command_bitmap(ZIP_SOURCE_GET_COMPRESSION_FLAGS, ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1));
     ctx->needs_seek = (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) ? true : false;
@@ -134,6 +142,22 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             return 0;
 
         case ZIP_SOURCE_OPEN:
+	    if (ctx->source_archive) {
+		zip_int64_t offset;
+
+		if ((offset = _zip_file_get_offset(ctx->source_archive, ctx->source_index, &ctx->error)) == 0) {
+		    return -1;
+		}
+		if (ctx->end + offset < ctx->end) {
+		    /* zip archive data claims end of data past zip64 limits */
+		    zip_error_set(&ctx->error, ZIP_ER_INCONS, 0);
+		    return -1;
+		}
+		ctx->start += offset;
+		ctx->end += offset;
+		ctx->source_archive = NULL;
+	    }
+
             if (!ctx->needs_seek) {
                 for (n=0; n<ctx->start; n+=(zip_uint64_t)ret) {
                     i = (ctx->start-n > sizeof(b) ? sizeof(b) : ctx->start-n);
