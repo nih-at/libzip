@@ -25,7 +25,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 # Features
 
-* performance: read local directory later when copying files from zip to zip
 * set version needed correctly
 * Winzip AES support
   * test cases decryption: <=20, >20, stat for both
