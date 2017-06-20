@@ -39,11 +39,13 @@
 #include <errno.h>
 #include <fcntl.h>
 #ifdef _WIN32
+#include <process.h>
 #include <io.h>
+#else
+#include <unistd.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #ifndef O_BINARY
 #define O_BINARY 0
