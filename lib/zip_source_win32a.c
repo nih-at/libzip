@@ -90,7 +90,7 @@ _win32_open_a(_zip_source_win32_read_file_t *ctx)
 static HANDLE
 _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa)
 {
-    int len;
+    size_t len;
 
     len = strlen((const char *)ctx->fname) + 10;
     if (*temp == NULL) {
