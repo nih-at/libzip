@@ -232,7 +232,7 @@ enum zip_source_cmd {
 };
 typedef enum zip_source_cmd zip_source_cmd_t;
 
-#define ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd)    (1<<(cmd))
+#define ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd)    (((zip_uint64_t)1)<<(cmd))
 
 #define ZIP_SOURCE_SUPPORTS_READABLE	(ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_OPEN) \
                                          | ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_READ) \
