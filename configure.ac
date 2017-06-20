@@ -74,7 +74,7 @@ AC_EXEEXT
 
 LT_INIT
 
-AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp _strtoi64 _strtoui64 explicit_bzero explicit_memset fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp strtoll strtoull])
+AC_CHECK_FUNCS([_close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp _strtoi64 _strtoui64 _umask explicit_bzero explicit_memset fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp strtoll strtoull umask])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
 dnl assume dlsym in libc, but check in libdl
