@@ -152,7 +152,7 @@ FOREACH(PROGRAM ${GETOPT_USERS})
 ENDFOREACH(PROGRAM ${GETOPT_USERS})
 
 # for appveyor builds
-SET(CMAKE_MSVCIDE_RUN_PATH C:\projects\libzip\vstudio\zlib\installed\lib;${CMAKE_BINARY_DIR}/lib/Release)
+SET(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;${CMAKE_BINARY_DIR}/lib/Release)
 
 ADD_CUSTOM_TARGET(
   testinput ALL
