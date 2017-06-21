@@ -149,6 +149,8 @@ if "%LIBZIP_RUN_TESTS%"=="true" (
 	if errorlevel 1 popd & goto exit_failure
 	copy Release\*.exe .
 	if errorlevel 1 popd & goto exit_failure
+	copy ..\src\Release\*.exe .
+	if errorlevel 1 popd & goto exit_failure
 	echo Extracting test files
 	if not exist ..\..\regress\bigzero.zip ziptool ..\..\regress\bigzero-zip.zip cat 0 > ..\..\regress\bigzero.zip
 	if errorlevel 1 popd & goto exit_failure
