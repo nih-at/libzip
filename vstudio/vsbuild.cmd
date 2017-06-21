@@ -88,31 +88,6 @@ if errorlevel 1 popd & goto exit_failure
 popd
 
 rem ---------------------------------------------------------------------------
-rem regress/CMakeLists.txt thinks the Perl script to run a test is called
-rem runtest, but on Windows we have to explicitly start the Perl interpreter
-rem because cmd.exe doesn't do "shebang".
-rem Fix this up before configuring libzip.
-rem ---------------------------------------------------------------------------
-if "%LIBZIP_RUN_TESTS%"=="true" (
-	echo Fixing up runtest script for Windows
-	pushd ..\regress
-	rem Get the full path to the Perl interpreter, with backslashes replaced by
-	rem forward slashes.
-	for /f "usebackq tokens=*" %%a in (`where perl.exe`) do set PERL_PATH=%%a
-	set PERL_PATH=!PERL_PATH:\=/!
-	echo Path to Perl interpreter is !PERL_PATH!
-
-	rem Fix up the CMakeLists.txt file.
-	perl -p -e "s|\$\{CMAKE_CURRENT_SOURCE_DIR\}/runtest|!PERL_PATH! \$\{CMAKE_CURRENT_BINARY_DIR\}/runtest|;" CMakeLists.txt > CMakeLists.fixed.txt
-	if errorlevel 1 popd & goto exit_failure
-	rename CMakeLists.txt CMakeLists.orig.txt
-	if errorlevel 1 popd & goto exit_failure
-	rename CMakeLists.fixed.txt CMakeLists.txt
-	if errorlevel 1 popd & goto exit_failure
-	popd
-)
-
-rem ---------------------------------------------------------------------------
 rem Prepare the build directory and run CMake to configure the project.
 rem ---------------------------------------------------------------------------
 pushd ..
@@ -186,7 +161,7 @@ if "%LIBZIP_RUN_TESTS%"=="true" (
 	perl -p -e "s/@[s]rcdir@/..\\..\\regress/g;s/@[a]bs_srcdir@/!ABS_SRCDIR!/g;s|../../src/zipcmp|..\\..\\src\\Release\\zipcmp|g;" ..\..\regress\runtest.in > runtest
 	if errorlevel 1 popd & goto exit_failure
 	echo Running tests
-	ctest
+	ctest -VV
 	if errorlevel 1 popd & goto exit_failure
 	popd
 )
