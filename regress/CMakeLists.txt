@@ -28,15 +28,21 @@ SET(EXTRA_TESTS
 	add_from_stdin.test
 	add_from_zip_closed.test
 	add_from_zip_deflated.test
+	add_from_zip_deflated2.test
 	add_from_zip_partial_deflated.test
 	add_from_zip_partial_stored.test
 	add_from_zip_stored.test
 	add_stored.test
 	add_stored_in_memory.test
+	cm-default.test
 	count_entries.test
+	decrypt-correct-password-aes128.test
+	decrypt-correct-password-aes192.test
 	decrypt-correct-password-aes256.test
 	decrypt-correct-password-pkware.test
 	decrypt-no-password-aes256.test
+	decrypt-wrong-password-aes128.test
+	decrypt-wrong-password-aes192.test
 	decrypt-wrong-password-aes256.test
 	decrypt-wrong-password-pkware.test
 	delete_add_same.test
@@ -46,9 +52,10 @@ SET(EXTRA_TESTS
 	delete_multiple_partial.test
 	delete_renamed_rename.test
 	encrypt.test
-	encryption-nonrandom-aes128.test
-	encryption-nonrandom-aes192.test
-	encryption-nonrandom-aes256.test
+# TODO: the tests need nonrandomopen.so, which is not hooked into the CMake build
+#	encryption-nonrandom-aes128.test
+#	encryption-nonrandom-aes192.test
+#	encryption-nonrandom-aes256.test
 	encryption-remove.test
 	extra_add.test
 	extra_add_multiple.test
@@ -70,13 +77,21 @@ SET(EXTRA_TESTS
 	fseek_fail.test
 	fseek_ok.test
 	get_comment.test
+	junk_at_end.test
+	junk_at_start.test
 	name_locate.test
 	open_cons_extrabytes.test
 	open_empty.test
 	open_empty_2.test
 	open_extrabytes.test
+	open_file_count.test
+	open_filename_duplicate.test
+	open_filename_duplicate_consistency.test
+	open_filename_duplicate_empty.test
+	open_filename_duplicate_empty_consistency.test
 	open_filename_empty.test
 	open_incons.test
+	open_many_fail.test
 	open_many_ok.test
 	open_multidisk.test
 	open_new_but_exists.test
@@ -120,6 +135,7 @@ SET(EXTRA_TESTS
 	stat_index_utf8_unmarked_strict.test
 	stat_index_zip64.test
 	utf-8-standardization.test
+	zip-in-archive-comment.test
 	zip64_creation.test
 	zip64_stored_creation.test
 )
@@ -135,8 +151,46 @@ FOREACH(PROGRAM ${GETOPT_USERS})
   TARGET_LINK_LIBRARIES(${PROGRAM} zip)
 ENDFOREACH(PROGRAM ${GETOPT_USERS})
 
+ADD_CUSTOM_TARGET(
+  testinput ALL
+  VERBATIM
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 0 > manyfiles.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 1 > manyfiles-133000.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 2 > manyfiles-65536.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 3 > manyfiles-zip64-modulo.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 4 > manyfiles-zip64.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 5 > manyfiles-fewer.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 6 > manyfiles-more.zip
+  COMMAND ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/bigzero-zip.zip cat 0 > bigzero.zip
+  DEPENDS ${CMAKE_BINARY_DIR}/src/ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip ${CMAKE_CURRENT_SOURCE_DIR}/bigzero-zip.zip
+)
+SET_PROPERTY(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+  bigzero.zip
+  manyfiles-133000.zip
+  manyfiles-65536.zip
+  manyfiles-fewer.zip
+  manyfiles-more.zip
+  manyfiles-zip64-modulo.zip
+  manyfiles-zip64.zip
+  manyfiles.zip
+)
+
+ADD_CUSTOM_TARGET(
+  runtest
+  ALL
+  VERBATIM
+  COMMAND perl -p -e "s!@[s]rcdir@!${CMAKE_CURRENT_SOURCE_DIR}!g;s!@[a]bs_srcdir@!${CMAKE_CURRENT_SOURCE_DIR}!g;s!@[t]op_builddir@!${CMAKE_BINARY_DIR}!g;" ${CMAKE_CURRENT_SOURCE_DIR}/runtest.in > runtest
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/runtest.in
+  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/runtest.in
+)
+SET_PROPERTY(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+  runtest
+)
+
+#ADD_DEPENDENCIES(default_target runtest testinput)
+
 FOREACH(CASE ${EXTRA_TESTS})
-  ADD_TEST(${CASE} ${CMAKE_CURRENT_SOURCE_DIR}/runtest ${CMAKE_CURRENT_SOURCE_DIR}/${CASE})
+  ADD_TEST(${CASE} perl ${CMAKE_BINARY_DIR}/regress/runtest ${CMAKE_CURRENT_SOURCE_DIR}/${CASE})
 ENDFOREACH(CASE ${EXTRA_TESTS})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../lib
