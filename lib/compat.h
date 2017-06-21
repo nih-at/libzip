@@ -113,6 +113,9 @@ typedef char bool;
 #if defined(HAVE__UMASK)
 #define umask	_umask
 #endif
+#if defined(HAVE__UNLINK)
+#define unlink	_unlink
+#endif
 #endif
 
 #ifndef HAVE_FSEEKO
