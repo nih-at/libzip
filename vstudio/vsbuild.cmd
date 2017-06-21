@@ -29,6 +29,18 @@ if "%1"=="clean" (
 	if errorlevel 1 goto exit_failure
 	if exist ..\regress\manyfiles.zip del ..\regress\manyfiles.zip
 	if errorlevel 1 goto exit_failure
+	if exist ..\regress\manyfiles-133000.zip del ..\regress\manyfiles-133000.zip
+	if errorlevel 1 goto exit_failure
+	if exist ..\regress\manyfiles-65536.zip del ..\regress\manyfiles-65536.zip
+	if errorlevel 1 goto exit_failure
+	if exist ..\regress\manyfiles-zip64-modulo.zip del ..\regress\manyfiles-zip64-modulo.zip
+	if errorlevel 1 goto exit_failure
+	if exist ..\regress\manyfiles-zip64.zip del ..\regress\manyfiles-zip64.zip
+	if errorlevel 1 goto exit_failure
+	if exist ..\regress\manyfiles-fewer.zip del ..\regress\manyfiles-fewer.zip
+	if errorlevel 1 goto exit_failure
+	if exist ..\regress\manyfiles-more.zip del ..\regress\manyfiles-more.zip
+	if errorlevel 1 goto exit_failure
 	echo Done
 	exit /b 0
 ) else if "%1"=="build" (
@@ -155,6 +167,18 @@ if "%LIBZIP_RUN_TESTS%"=="true" (
 	if not exist ..\..\regress\bigzero.zip ziptool ..\..\regress\bigzero-zip.zip cat 0 > ..\..\regress\bigzero.zip
 	if errorlevel 1 popd & goto exit_failure
 	if not exist ..\..\regress\manyfiles.zip ziptool ..\..\regress\manyfiles-zip.zip cat 0 > ..\..\regress\manyfiles.zip
+	if errorlevel 1 popd & goto exit_failure
+	if not exist ..\..\regress\manyfiles-133000.zip ziptool ..\..\regress\manyfiles-zip.zip cat 1 > ..\..\regress\manyfiles-133000.zip
+	if errorlevel 1 popd & goto exit_failure
+	if not exist ..\..\regress\manyfiles-65536.zip ziptool ..\..\regress\manyfiles-zip.zip cat 2 > ..\..\regress\manyfiles-65536.zip
+	if errorlevel 1 popd & goto exit_failure
+	if not exist ..\..\regress\manyfiles-zip64-modulo.zip ziptool ..\..\regress\manyfiles-zip.zip cat 3 > ..\..\regress\manyfiles-zip64-modulo.zip
+	if errorlevel 1 popd & goto exit_failure
+	if not exist ..\..\regress\manyfiles-zip64.zip ziptool ..\..\regress\manyfiles-zip.zip cat 4 > ..\..\regress\manyfiles-zip64.zip
+	if errorlevel 1 popd & goto exit_failure
+	if not exist ..\..\regress\manyfiles-fewer.zip ziptool ..\..\regress\manyfiles-zip.zip cat 5 > ..\..\regress\manyfiles-fewer.zip
+	if errorlevel 1 popd & goto exit_failure
+	if not exist ..\..\regress\manyfiles-more.zip ziptool ..\..\regress\manyfiles-zip.zip cat 6 > ..\..\regress\manyfiles-more.zip
 	if errorlevel 1 popd & goto exit_failure
 	echo Generating runtest script
 	for /f %%p in ("..\..\regress") do set ABS_SRCDIR=%%~fp
