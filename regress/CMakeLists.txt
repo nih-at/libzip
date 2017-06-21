@@ -152,11 +152,11 @@ FOREACH(PROGRAM ${GETOPT_USERS})
 ENDFOREACH(PROGRAM ${GETOPT_USERS})
 
 # for appveyor builds
-SET(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;C:/projects/libzip/vstudio/zlib/installed/lib;C:/projects/libzip/build/lib/Release)
+#SET(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;C:/projects/libzip/vstudio/zlib/installed/lib;C:/projects/libzip/build/lib/Release)
 
 ADD_CUSTOM_TARGET(
   testinput
-  ALL
+  # ALL
   VERBATIM
   COMMAND ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 0 > manyfiles.zip
   COMMAND ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 1 > manyfiles-133000.zip
