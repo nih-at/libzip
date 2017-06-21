@@ -100,7 +100,7 @@ cd build
 if errorlevel 1 popd & goto exit_failure
 cmake .. -G %CMAKE_GENERATOR% -T %CMAKE_TOOLSET% -DCMAKE_PREFIX_PATH="%ZLIB_INSTALL_PATH%"
 if errorlevel 1 popd & goto exit_failure
-call :revert_cmakelists
+goto :EOF
 
 rem ---------------------------------------------------------------------------
 rem Build libzip.
@@ -161,9 +161,9 @@ if "%LIBZIP_RUN_TESTS%"=="true" (
 	perl -p -e "s/@[s]rcdir@/..\\..\\regress/g;s/@[a]bs_srcdir@/!ABS_SRCDIR!/g;s|../../src/zipcmp|..\\..\\src\\Release\\zipcmp|g;" ..\..\regress\runtest.in > runtest
 	if errorlevel 1 popd & goto exit_failure
 	echo Running tests
-	ctest -VV
-	if errorlevel 1 popd & goto exit_failure
+	ctest
 	popd
+	if errorlevel 1 goto exit_failure
 )
 
 goto :EOF
@@ -181,14 +181,6 @@ if errorlevel 1 (
 )
 goto :EOF
 
-:revert_cmakelists
-if exist ..\regress\CMakeLists.orig.txt (
-	del ..\regress\CMakeLists.txt
-	rename ..\regress\CMakeLists.orig.txt CMakeLists.txt
-)
-goto :EOF
-
 :exit_failure
-call :revert_cmakelists
 echo Build failed.
 exit /b 1
