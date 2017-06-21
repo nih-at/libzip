@@ -44,8 +44,8 @@
 #include "getopt.h"
 #endif
 
-#include "zip.h"
 #include "compat.h"
+#include "zip.h"
 
 const char *usage = "usage: %s [-cent] file\n\n"
     "\t-c\tcheck consistency\n"

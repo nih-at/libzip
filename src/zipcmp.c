@@ -54,8 +54,8 @@
 #include "getopt.h"
 #endif
 
-#include "zip.h"
 #include "compat.h"
+#include "zip.h"
 
 struct archive {
     const char *name;
