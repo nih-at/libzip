@@ -115,6 +115,8 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 {
     struct read_file *ctx;
     zip_source_t *zs;
+    struct stat sb;
+    bool stat_valid;
 
     if (file == NULL && fname == NULL) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -170,41 +172,45 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
     ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1);
 
     if (ctx->fname) {
-	struct stat sb;
-	if (stat(ctx->fname, &sb) < 0) {
-	    zip_error_set(&ctx->stat_error, ZIP_ER_READ, errno);
+	stat_valid = stat(ctx->fname, &sb) >= 0;
+
+	if (!stat_valid) {
 	    if (ctx->start == 0 && ctx->end == 0) {
 		ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
 	    }
 	}
-	else {
-	    if ((ctx->st.valid & ZIP_STAT_MTIME) == 0) {
-		ctx->st.mtime = sb.st_mtime;
-		ctx->st.valid |= ZIP_STAT_MTIME;
+    }
+    else {
+	stat_valid = fstat(fileno(ctx->f), &sb) >= 0;
+    }
+
+    if (!stat_valid) {
+	zip_error_set(&ctx->stat_error, ZIP_ER_READ, errno);
+    }
+    else {
+	if ((ctx->st.valid & ZIP_STAT_MTIME) == 0) {
+	    ctx->st.mtime = sb.st_mtime;
+	    ctx->st.valid |= ZIP_STAT_MTIME;
+	}
+	if (S_ISREG(sb.st_mode)) {
+	    ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
+
+	    if (ctx->start + ctx->end > (zip_uint64_t)sb.st_size) {
+		zip_error_set(error, ZIP_ER_INVAL, 0);
+		free(ctx->fname);
+		free(ctx);
+		return NULL;
 	    }
-	    if (S_ISREG(sb.st_mode)) {
-		ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
 
-		if (ctx->start + ctx->end > (zip_uint64_t)sb.st_size) {
-		    zip_error_set(error, ZIP_ER_INVAL, 0);
-		    free(ctx->fname);
-		    free(ctx);
-		    return NULL;
-		}
-
-		if (ctx->end == 0) {
-		    ctx->st.size = (zip_uint64_t)sb.st_size - ctx->start;
-		    ctx->st.valid |= ZIP_STAT_SIZE;
-
-		    if (start == 0) {
-			ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
-		    }
+	    if (ctx->end == 0) {
+		ctx->st.size = (zip_uint64_t)sb.st_size - ctx->start;
+		ctx->st.valid |= ZIP_STAT_SIZE;
+		
+		if (ctx->fname && start == 0) {
+		    ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
 		}
 	    }
 	}
-    }
-    else if (fseeko(ctx->f, 0, SEEK_CUR) == 0) {
-        ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
     }
 
     if ((zs=zip_source_function_create(read_file, ctx, error)) == NULL) {

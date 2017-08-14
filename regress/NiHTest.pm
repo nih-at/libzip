@@ -1004,6 +1004,7 @@ sub run_program {
 	my $pid;
         if ($self->{test}->{pipefile}) {
                 open(SPLAT, '<', $self->{test}->{pipefile});
+	        my $is_marked = eof SPLAT; # mark used
 		$pid = open3("<&SPLAT", $stdout, $stderr, @cmd);
 	}
 	else {

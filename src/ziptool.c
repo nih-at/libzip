@@ -700,7 +700,7 @@ read_from_file(const char *archive, int flags, zip_error_t *error, zip_uint64_t 
 
     if (offset == 0 && length == 0) {
 	if (strcmp(archive, "/dev/stdin") == 0) {
-	    zaa = zip_fdopen(STDIN_FILENO, flags, &err);
+	    zaa = zip_fdopen(STDIN_FILENO, flags & ~ZIP_CREATE, &err);
 	}
 	else {
 	    zaa = zip_open(archive, flags, &err);

@@ -201,6 +201,7 @@ TESTS= \
 	extra_set.test \
 	extra_set_modify_c.test \
 	extra_set_modify_l.test \
+	fdopen_ok.test \
 	file_comment_encmismatch.test \
 	fopen_unchanged.test \
 	fread.test \
