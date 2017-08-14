@@ -579,9 +579,6 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     }
 
     if (!_zip_dirent_process_winzip_aes(zde, error)) {
-	if (!from_buffer) {
-	    _zip_buffer_free(buffer);
-	}
 	return -1;
     }
 
