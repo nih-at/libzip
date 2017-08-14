@@ -40,6 +40,21 @@ use NiHTest;
 
 my $test = NiHTest::new({ default_program => '../src/ziptool', srcdir => '@srcdir@', top_builddir => '@top_builddir@', zipcmp => '../../src/zipcmp', zipcmp_flags => '-p' });
 
+sub mangle_test {
+	my ($test, $variant) = @_;
+
+	if (defined($test->{test}->{preload})) {
+		if (!defined($test->{test}->{features})) {
+			$test->{test}->{features} = [];
+		}
+		push @{$test->{test}->{features}}, 'SHARED';
+	}
+
+	return 1;
+}
+
+
 $test->add_comparator('zip/zip', \&NiHTest::comparator_zip);
+$test->add_hook('post_parse', \&mangle_test);
 
 $test->run(@ARGV);

@@ -74,6 +74,11 @@ AC_EXEEXT
 
 LT_INIT
 
+if test "$enable_shared" = "yes"
+then
+    AC_DEFINE([HAVE_SHARED], [1], [Define when building shared libraries])
+fi
+
 AC_CHECK_FUNCS([_chmod _close _dup _fdopen _fileno _open _setmode _snprintf _strdup _stricmp _strtoi64 _strtoui64 _umask _unlink explicit_bzero explicit_memset fileno fseeko ftello getopt getprogname open setmode snprintf strcasecmp strdup stricmp strtoll strtoull])
 AC_CHECK_FUNCS([mkstemp], [], [AC_LIBOBJ(mkstemp)])
 
