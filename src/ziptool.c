@@ -699,7 +699,13 @@ read_from_file(const char *archive, int flags, zip_error_t *error, zip_uint64_t 
     int err;
 
     if (offset == 0 && length == 0) {
-	if ((zaa = zip_open(archive, flags, &err)) == NULL) {
+	if (strcmp(archive, "/dev/stdin") == 0) {
+	    zaa = zip_fdopen(STDIN_FILENO, flags, &err);
+	}
+	else {
+	    zaa = zip_open(archive, flags, &err);
+	}
+	if (zaa == NULL) {
 	    zip_error_set(error, err, errno);
 	    return NULL;
 	}
@@ -726,6 +732,11 @@ read_hole(const char *archive, int flags, zip_error_t *error)
     zip_source_t *src = NULL;
     zip_t *zs = NULL;
 
+    if (strcmp(archive, "/dev/stdin") == 0) {
+	zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
+	return NULL;
+    }
+
     if ((src = source_hole_create(archive, flags, error)) == NULL
         || (zs = zip_open_from_source(src, flags, error)) == NULL) {
         zip_source_free(src);
@@ -741,6 +752,11 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
     struct stat st;
     zip_source_t *src;
     zip_t *zb;
+
+    if (strcmp(archive, "/dev/stdin") == 0) {
+	zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
+	return NULL;
+    }
 
     if (stat(archive, &st) < 0) {
 	if (errno == ENOENT) {
