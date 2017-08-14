@@ -77,6 +77,9 @@ use Data::Dumper qw(Dumper);
 #	mkdir MODE NAME
 #	    create directory NAME with permissions MODE.
 #
+#	pipefile FILE
+#	    pipe FILE to program's stdin.
+#
 #	pipein COMMAND ARGS ...
 #	    pipe output of running COMMAND to program's stdin.
 #
@@ -153,6 +156,7 @@ sub new {
 		'file-del' => { type => 'string string' },
 		'file-new' => { type => 'string string' },
 		mkdir => { type => 'string string' },
+		pipefile => { type => 'string', once => 1 },
 		pipein => { type => 'string', once => 1 },
 		preload => { type => 'string', once => 1 },
 		program => { type => 'string', once => 1 },
@@ -847,6 +851,11 @@ sub parse_case() {
 			$ok = 0;
 		}
 	}
+
+	if ($test{pipefile} && $test{pipein}) {
+		$self->warn_file("both pipefile and pipein set, choose one");
+		$ok = 0;
+	}
 	
 	return undef unless ($ok);
 
@@ -991,13 +1000,19 @@ sub run_program {
 	my @cmd = ('../' . $self->{test}->{program}, map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
 
 	### TODO: catch errors?
-	
-	my $pid = open3($stdin, $stdout, $stderr, @cmd);
-	
+
+	my $pid;
+        if ($self->{test}->{pipefile}) {
+                open(SPLAT, '<', $self->{test}->{pipefile});
+		$pid = open3("<&SPLAT", $stdout, $stderr, @cmd);
+	}
+	else {
+		$pid = open3($stdin, $stdout, $stderr, @cmd);
+	}
 	$self->{stdout} = [];
 	$self->{stderr} = [];
         
-        if ($self->{test}->{pipein}) {
+	if ($self->{test}->{pipein}) {
                 my $fh;
                 open($fh, "$self->{test}->{pipein} |");
                 if (!defined($fh)) {
