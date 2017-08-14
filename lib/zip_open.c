@@ -403,7 +403,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
             if (offset < 0) {
                 _zip_error_set_from_source(error, za->src);
-                _zip_buffer_free(cd_buffer);
                 _zip_cdir_free(cd);
                 return NULL;
             }
@@ -805,10 +804,16 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     }
     if ((flags & ZIP_CHECKCONS) && (eocd_disk != eocd_disk64 || num_disks != num_disks64)) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
+        if (free_buffer) {
+            _zip_buffer_free(buffer);
+        }
 	return NULL;
     }
     if (num_disks != 0 || eocd_disk != 0) {
 	zip_error_set(error, ZIP_ER_MULTIDISK, 0);
+        if (free_buffer) {
+            _zip_buffer_free(buffer);
+        }
 	return NULL;
     }
 
