@@ -1,17 +1,18 @@
 1.x.x [201X-XX-XX]
 ==================
 
-* Support bzip2 compressed zip archives.
-* Improve file progress callback code.
+* Support bzip2 compressed zip archives
+* Improve file progress callback code
+* Fix zip_fdopen()
 
 1.2.0 [2017-02-19]
 ==================
 
 * Support for AES encryption (Winzip version), both encryption
-  and decryption.
-* Support legacy zip files with >64k entries.
-* Fix seeking in zip_source_file if start > 0.
-* Add zip_fseek() for seeking in uncompressed data.
+  and decryption
+* Support legacy zip files with >64k entries
+* Fix seeking in zip_source_file if start > 0
+* Add zip_fseek() for seeking in uncompressed data
 * Add zip_ftell() for telling position in uncompressed data.
 * Add zip_register_progress_callback() for UI updates during zip_close()
 
