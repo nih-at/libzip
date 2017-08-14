@@ -11,7 +11,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 # Compression
 
 * Test CMAKE for bzip2
-* disable bzip2 tests if bzip2 not enabled
 * add lzma support
 
 # API Issues

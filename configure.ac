@@ -68,7 +68,10 @@ then
     fi
     fi
 fi
-AC_CHECK_LIB(bz2, main)
+if test "$with_bzip2" != "no"
+then
+    AC_CHECK_LIB(bz2, main)
+fi
 
 AC_EXEEXT
 
