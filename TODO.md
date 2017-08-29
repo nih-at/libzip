@@ -80,6 +80,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 # Cleanup
 
+* go over cdir parser and rename various offset/size variables to make it clearer
 * use bool
 * use `ZIP_SOURCE_SUPPORTS_{READABLE,SEEKABLE,WRITABLE}`
 * use `zip_source_seek_compute_offset()`
@@ -96,6 +97,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 # Test Case Issues
 
+* add test cases for lots of files (including too many)
+* add test cases for holes (between files, between files and cdir, between cdir and eocd, + zip64 where appropriate)
 * unchange on added file
 * test seek in `zip_source_crc()`
 * test cases for `set_extra*`, `delete_extra*`, `*extra_field*`
