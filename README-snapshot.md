@@ -5,3 +5,9 @@ install autoconf, automake, and libtool; then run
 Afterwards you can run configure as usual.
 
 Alternatively, use cmake.
+
+> mkdir build
+> cd build
+> cmake .. -DBUILD_SHARED_LIBS:BOOL=ON
+
+If you prefer building a static library, leave define `BUILD_SHARED_LIBS` to `OFF`
