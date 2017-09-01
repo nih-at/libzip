@@ -5,6 +5,7 @@
 * Improve file progress callback code
 * Fix zip_fdopen()
 * CVE-2017-12858: Fix double free().
+* CVE-2017-14107: Improve EOCD64 parsing.
 
 1.2.0 [2017-02-19]
 ==================
