@@ -1,4 +1,4 @@
-1.x.x [201X-XX-XX]
+1.3.0 [2017-09-02]
 ==================
 
 * Support bzip2 compressed zip archives
