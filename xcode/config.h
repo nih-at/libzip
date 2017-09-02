@@ -157,7 +157,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3.0"
+#define PACKAGE_VERSION "1.3.0a"
 
 /* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
@@ -192,7 +192,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "1.3.0"
+#define VERSION "1.3.0a"
 
 /* Enable large inode numbers on Mac OS X 10.5.  */
 #ifndef _DARWIN_USE_64_BIT_INODE
