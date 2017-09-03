@@ -17,6 +17,7 @@ INCLUDE(CheckCSourceRuns)
 INCLUDE(CheckCSourceCompiles)
 INCLUDE(CheckStructHasMember)
 INCLUDE(TestBigEndian)
+INCLUDE(GNUInstallDirs)
 
 SET(PACKAGE "libzip")
 SET(PACKAGE_NAME ${PACKAGE})
