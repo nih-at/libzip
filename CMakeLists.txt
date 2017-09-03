@@ -1,5 +1,4 @@
 # TODO:
-# 1. pkgconfig file not yet built.
 # 2. installation not tested.
 # 3. Problems generating html pages.
 # 4. create usable libtool .la file
@@ -125,7 +124,17 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(regress)
 ADD_SUBDIRECTORY(examples)
 
-# TODO: pkgconfig file
+# pkgconfig file
+SET(prefix ${CMAKE_INSTALL_PREFIX})
+SET(exec_prefix ${prefix})
+SET(libdir ${prefix}/lib)
+SET(includedir ${prefix}/lib)
+SET(LIBS -lz)
+IF(BZIP2_FOUND)
+  SET(LIBS "${LIBS} -lbz2")
+ENDIF()
+CONFIGURE_FILE(libzip.pc.in libzip.pc @ONLY)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzip.pc DESTINATION lib/pkgconfig)
 
 # write out config file
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake-config.h.in
