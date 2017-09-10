@@ -102,15 +102,15 @@ typedef unsigned long zip_uint64_t;
 typedef unsigned long long zip_uint64_t;
 #endif
 
-#define ZIP_INT8_MIN	-0x80
+#define ZIP_INT8_MIN	 (-ZIP_INT8_MAX-1)
 #define ZIP_INT8_MAX	 0x7f
 #define ZIP_UINT8_MAX	 0xff
 
-#define ZIP_INT16_MIN	-0x8000
+#define ZIP_INT16_MIN	 (-ZIP_INT16_MAX-1)
 #define ZIP_INT16_MAX	 0x7fff
 #define ZIP_UINT16_MAX	 0xffff
 
-#define ZIP_INT32_MIN	-0x80000000L
+#define ZIP_INT32_MIN	 (-ZIP_INT32_MAX-1L)
 #define ZIP_INT32_MAX	 0x7fffffffL
 #define ZIP_UINT32_MAX	 0xffffffffLU
 
