@@ -427,6 +427,12 @@ ZIP_EXTERN const char *zip_strerror(zip_t *);
 ZIP_EXTERN int zip_unchange(zip_t *, zip_uint64_t);
 ZIP_EXTERN int zip_unchange_all(zip_t *);
 ZIP_EXTERN int zip_unchange_archive(zip_t *);
+ZIP_EXTERN const char *zip_get_version(void);
+ZIP_EXTERN int zip_get_version_id(int what);
+#define LIBZIP_VERSION_ID (LIBZIP_VERSION_MAJOR << 16 | LIBZIP_VERSION_MINOR << 8 | LIBZIP_VERSION_MICRO)
+#define zip_get_version_major() zip_get_version_id(1)
+#define zip_get_version_minor() zip_get_version_id(2)
+#define zip_get_version_micro() zip_get_version_id(3)
 
 #ifdef __cplusplus
 }

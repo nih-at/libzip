@@ -7,7 +7,8 @@ noinst_PROGRAMS= \
 	fopen_unchanged \
 	fread \
 	fseek \
-	tryopen
+	tryopen \
+	version
 
 if !WIN32_HOST
 pkglib_LTLIBRARIES=	malloc.la nonrandomopen.la

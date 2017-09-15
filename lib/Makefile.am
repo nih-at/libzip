@@ -136,7 +136,8 @@ libzip_la_SOURCES=\
 	zip_unchange_all.c \
 	zip_unchange_archive.c \
 	zip_unchange_data.c \
-	zip_utf-8.c
+	zip_utf-8.c \
+	zip_version.c
 
 BUILT_SOURCES=zipconf.h
 CLEANFILES=	${BUILT_SOURCES}
