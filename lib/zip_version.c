@@ -49,5 +49,5 @@ zip_get_version_id(int what)
         case 2: return LIBZIP_VERSION_MINOR;
         case 3: return LIBZIP_VERSION_MICRO;
     }
-    return LIBZIP_VERSION_MAJOR << 16 | LIBZIP_VERSION_MINOR << 8 | LIBZIP_VERSION_MICRO;
+    return LIBZIP_VERSION_ID;
 }

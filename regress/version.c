@@ -44,7 +44,13 @@
 int
 main(int argc, char *argv[])
 {
-	printf("Version: %s, %d.%d.%d (0x%x)\n", 
+	printf("Buildtime version: %s, %d.%d.%d (0x%x)\n",
+		LIBZIP_VERSION,
+		LIBZIP_VERSION_MAJOR,
+		LIBZIP_VERSION_MINOR,
+		LIBZIP_VERSION_MICRO,
+		LIBZIP_VERSION_ID);
+	printf("Runtime Version:   %s, %d.%d.%d (0x%x)\n",
 		zip_get_version(),
 		zip_get_version_major(),
 		zip_get_version_minor(),
@@ -55,6 +61,7 @@ main(int argc, char *argv[])
 	if (zip_get_version_minor() != LIBZIP_VERSION_MINOR) return 2;
 	if (zip_get_version_micro() != LIBZIP_VERSION_MICRO) return 3;
 	if (strcmp(zip_get_version(), LIBZIP_VERSION)) return 4;
+	if (zip_get_version_id(0) != LIBZIP_VERSION_ID) return 5;
 
     return 0;
 }
