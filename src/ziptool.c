@@ -43,6 +43,7 @@
 #ifdef _WIN32
 /* WIN32 needs <fcntl.h> for _O_BINARY */
 #include <fcntl.h>
+#define STDIN_FILENO _fileno(stdin)
 #endif
 
 #ifndef HAVE_GETOPT
