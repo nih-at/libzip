@@ -33,6 +33,7 @@
 
 #include <stdlib.h>
 
+#include "compat.h"
 #include "zip.h"
 
 const char *prg;
