@@ -46,6 +46,7 @@ SET(MDOC3_PAGES
   zip_get_name.mdoc
   zip_get_num_entries.mdoc
   zip_get_num_files.mdoc
+  zip_libzip_version.mdoc
   zip_name_locate.mdoc
   zip_open.mdoc
   zip_register_progress_callback.mdoc

@@ -377,6 +377,7 @@ ZIP_EXTERN const char *zip_get_archive_comment(zip_t *, int *, zip_flags_t);
 ZIP_EXTERN int zip_get_archive_flag(zip_t *, zip_flags_t, zip_flags_t);
 ZIP_EXTERN const char *zip_get_name(zip_t *, zip_uint64_t, zip_flags_t);
 ZIP_EXTERN zip_int64_t zip_get_num_entries(zip_t *, zip_flags_t);
+ZIP_EXTERN const char *zip_libzip_version(void);
 ZIP_EXTERN zip_int64_t zip_name_locate(zip_t *, const char *, zip_flags_t);
 ZIP_EXTERN zip_t *zip_open(const char *, int, int *);
 ZIP_EXTERN zip_t *zip_open_from_source(zip_source_t *, int, zip_error_t *);

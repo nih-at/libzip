@@ -107,6 +107,7 @@ SET(LIBZIP_SOURCES
   zip_get_num_files.c
   zip_hash.c
   zip_io_util.c
+  zip_libzip_version.c
   zip_memdup.c
   zip_name_locate.c
   zip_new.c
