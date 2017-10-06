@@ -3,7 +3,7 @@
 
 * Install zipconf.h into ${PREFIX}/include
 * Add zip_libzip_version()
-* Fix preload tests on Linux
+* Fix AES tests on Linux
 
 1.3.0 [2017-09-02]
 ==================
