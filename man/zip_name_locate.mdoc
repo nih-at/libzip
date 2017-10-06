@@ -92,14 +92,14 @@ does not contain an entry of that name.
 .Fn zip_name_locate
 fails if:
 .Bl -tag -width Er
-.It Bq Er ZIP_ER_NOENT
-No entry of the name
-.Ar fname
-is found in the archive.
 .It Bq Er ZIP_ER_INVAL
 One of the arguments is invalid.
 .It Bq Er ZIP_ER_MEMORY
 Required memory could not be allocated.
+.It Bq Er ZIP_ER_NOENT
+No entry of the name
+.Ar fname
+is found in the archive.
 .El
 .Sh SEE ALSO
 .Xr libzip 3 ,

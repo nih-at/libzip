@@ -96,13 +96,13 @@ is set to indicate the error.
 .Fn zip_set_file_compression
 fails if:
 .Bl -tag -width Er
+.It Bq Er ZIP_ER_COMPNOTSUPP
+Unsupported compression method requested.
 .It Bq Er ZIP_ER_INVAL
 .Ar index
 is not a valid file index in
 .Ar archive ,
 or the argument combination is invalid.
-.It Bq Er ZIP_ER_COMPNOTSUPP
-Unsupported compression method requested.
 .It Bq Er ZIP_ER_RDONLY
 Read-only zip file, no changes allowed.
 .El
