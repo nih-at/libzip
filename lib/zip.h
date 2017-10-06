@@ -133,7 +133,7 @@ extern "C" {
 #define ZIP_ER_OPNOTSUPP        28  /* N Operation not supported */
 #define ZIP_ER_INUSE            29  /* N Resource still in use */
 #define ZIP_ER_TELL             30  /* S Tell error */
-#define ZIP_ER_COMPRESSED_DATA	31  /* N Compressed data invalid */    
+#define ZIP_ER_COMPRESSED_DATA	31  /* N Compressed data invalid */
 
 /* type of system error value */
 
