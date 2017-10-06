@@ -47,7 +47,8 @@
 #endif
 
 static int inited = 0;
-static int (*real_open)(const char *path, int mode, ...) = NULL;
+static int (*real_open)(const char *path, int flags, ...) = NULL;
+static int (*real_open64)(const char *path, int flags, ...) = NULL;
 
 static void
 init(void)
@@ -55,6 +56,10 @@ init(void)
     real_open = dlsym(RTLD_NEXT, "open");
     if (!real_open)
 	abort();
+    real_open64 = dlsym(RTLD_NEXT, "open64");
+    if (!real_open64) {
+	/* does not have to exist */
+    }
     inited = 1;
 }
 
@@ -76,5 +81,30 @@ open(const char *path, int flags, ...)
 	return real_open("/dev/zero", flags, mode);
     } else {
 	return real_open(path, flags, mode);
+    }
+}
+
+int
+open64(const char *path, int flags, ...)
+{
+    va_list ap;
+    mode_t mode;
+
+    if (!inited) {
+	init();
+    }
+
+    if (!real_open64) {
+	abort();
+    }
+
+    va_start(ap, flags);
+    mode = va_arg(ap, mode_t);
+    va_end(ap);
+
+    if (strcmp(path, "/dev/urandom") == 0) {
+	return real_open64("/dev/zero", flags, mode);
+    } else {
+	return real_open64(path, flags, mode);
     }
 }
