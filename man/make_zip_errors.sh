@@ -98,6 +98,7 @@ The following error codes are used by libzip:
 EOF
 
 sed -n  's/^#define \(ZIP_ER_[A-Z_0-9]*\).*\/\* \(.\) \([^*]*\) \*\//.It Bq Er \1@\3./p' "$1" \
+    | sort\
     | tr @ '\012' \
     >> "$2.$$" || exit 1
 
@@ -105,7 +106,7 @@ cat <<EOF >> "$2.$$" || exit 1
 .El
 .Sh AUTHORS
 .An -nosplit
-.An Dieter Baron Aq Mt dillo@giga.or.at
+.An Dieter Baron Aq Mt dillo@nih.at
 and
 .An Thomas Klausner Aq Mt tk@giga.or.at
 EOF
