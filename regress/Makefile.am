@@ -7,6 +7,7 @@ noinst_PROGRAMS= \
 	fopen_unchanged \
 	fread \
 	fseek \
+	nonrandomopentest \
 	tryopen
 
 if !WIN32_HOST
@@ -235,6 +236,7 @@ TESTS= \
 	open_truncate.test \
 	open_zip64_3mf.test \
 	open_zip64_ok.test \
+	preload.test \
 	progress.test \
 	rename_ascii.test \
 	rename_cp437.test \

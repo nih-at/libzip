@@ -42,6 +42,7 @@
 ^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/fseek$
+^regress/nonrandomopentest$
 ^regress/manyfiles.zip$
 ^regress/manyfiles-133000.zip$
 ^regress/manyfiles-65536.zip$

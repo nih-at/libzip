@@ -11,6 +11,7 @@ SET(TEST_PROGRAMS
   add_from_filep
   fopen_unchanged
   fseek
+  nonrandomopentest
 )
 
 SET(GETOPT_USERS
@@ -104,6 +105,7 @@ SET(EXTRA_TESTS
 	open_truncate.test
 	open_zip64_3mf.test
 	open_zip64_ok.test
+	preload.test
 	progress.test
 	rename_ascii.test
 	rename_cp437.test
