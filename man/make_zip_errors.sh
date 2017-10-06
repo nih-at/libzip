@@ -45,7 +45,7 @@ then
     exit 1
 fi
 
-date=`date '+%B %e, %Y' | sed 's/  / /'`
+date=`LC_TIME=en_US date '+%B %e, %Y' | sed 's/  / /'`
 
 cat <<EOF >> "$2.$$" || exit 1
 .\" zip_errors.mdoc -- list of all libzip error codes
