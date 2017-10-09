@@ -1064,7 +1064,7 @@ int
 main(int argc, char *argv[])
 {
     const char *archive;
-    zip_source_t *memory_src;
+    zip_source_t *memory_src = NULL;
     unsigned int i;
     int c, arg, err, flags;
     const char *prg;
