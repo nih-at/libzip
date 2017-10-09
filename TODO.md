@@ -93,6 +93,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 # Infrastructure
 
 * create CMakefile.txt man page linking from links file
+* handle missing mandoc on Linux
 
 # Test Case Issues
 
