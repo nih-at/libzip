@@ -6,7 +6,7 @@ Winzip AES and decryption of legacy PKware encrypted files is
 supported. The API is documented by man pages.
 
 For more information, take a look at the included man pages.  You can
-start with [libzip(3)](http://nih.at/libzip/libzip.html), which lists
+start with [libzip(3)](https:/libzip.org/documentation/libzip.html), which lists
 all others.  Example source code is in the `src/` subdirectory.
 
 If you have developed an application using libzip, you can find out
@@ -31,10 +31,10 @@ when compiling packages using libzip.
 
 If you make a binary distribution, please include a pointer to the
 distribution site:
->	http://www.nih.at/libzip/
+>	https://libzip.org/
 
 The latest version can always be found there.  The official mercurial
-repository is at http://hg.nih.at/libzip/ and a read-only git mirror
+repository is at https://hg.nih.at/libzip/ and a read-only git mirror
 exists at https://github.com/nih-at/libzip/
 
 There is a mailing list for developers using libzip.  You can
