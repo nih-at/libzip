@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 6, 2017
+.Dd October 20, 2017
 .Dt LIBZIP 3
 .Os
 .Sh NAME
@@ -64,82 +64,170 @@ Below there are two sections listing functions: one for how to read
 from zip archives and one for how to create/modify them.
 .Sh READING ZIP ARCHIVES
 .Ss open archive
+.Bl -bullet -compact
+.It
 .Xr zip_open 3
+.It
 .Xr zip_fdopen 3
+.El
 .Ss find files
+.Bl -bullet -compact
+.It
 .Xr zip_name_locate 3
+.El
 .Ss read files
+.Bl -bullet -compact
+.It
 .Xr zip_fopen 3
+.It
 .Xr zip_fopen_encrypted 3
+.It
 .Xr zip_fopen_index 3
+.It
 .Xr zip_fopen_index_encrypted 3
+.It
 .Xr zip_fread 3
+.It
 .Xr zip_fseek 3
 (uncompressed files only)
+.It
 .Xr zip_ftell 3
 (uncompressed files only)
+.It
 .Xr zip_fclose 3
+.El
 .Ss close archive
+.Bl -bullet -compact
+.It
 .Xr zip_close 3
+.It
 .Xr zip_discard 3
+.El
 .Ss miscellaneous
+.Bl -bullet -compact
+.It
 .Xr zip_stat 3
+.It
 .Xr zip_file_get_comment 3
+.It
 .Xr zip_file_get_external_attributes 3
+.It
 .Xr zip_get_archive_comment 3
+.It
 .Xr zip_get_archive_flag 3
+.It
 .Xr zip_get_name 3
+.It
 .Xr zip_get_num_entries 3
+.It
 .Xr zip_set_default_password 3
+.El
 .Sh CREATING/MODIFYING ZIP ARCHIVES
 .Ss create/open archive
+.Bl -bullet -compact
+.It
 .Xr zip_open 3
+.El
 .Ss add/change files and directories
+.Bl -bullet -compact
+.It
 .Xr zip_dir_add 3
+.It
 .Xr zip_file_add 3
+.It
 .Xr zip_file_replace 3
+.It
 .Xr zip_file_set_comment 3
+.It
 .Xr zip_file_set_external_attributes 3
+.It
 .Xr zip_file_set_encryption 3
+.It
 .Xr zip_file_set_mtime 3
+.It
 .Xr zip_set_file_compression 3
+.It
 .Xr zip_source_buffer 3
+.It
 .Xr zip_source_file 3
+.It
 .Xr zip_source_filep 3
+.It
 .Xr zip_source_free 3
+.It
 .Xr zip_source_function 3
+.It
 .Xr zip_source_zip 3
+.El
 .Ss rename files
+.Bl -bullet -compact
+.It
 .Xr zip_rename 3
+.El
 .Ss delete files
+.Bl -bullet -compact
+.It
 .Xr zip_delete 3
+.El
 .Ss revert changes
+.Bl -bullet -compact
+.It
 .Xr zip_unchange 3
+.It
 .Xr zip_unchange_all 3
+.It
 .Xr zip_unchange_archive 3
+.El
 .Ss read/modify extra fields
+.Bl -bullet -compact
+.It
 .Xr zip_file_extra_field_by_id 3
+.It
 .Xr zip_file_extra_field_delete 3
+.It
 .Xr zip_file_extra_field_delete_by_id 3
+.It
 .Xr zip_file_extra_field_get 3
+.It
 .Xr zip_file_extra_field_set 3
+.It
 .Xr zip_file_extra_fields_count 3
+.It
 .Xr zip_file_extra_fields_count_by_id 3
+.El
 .Ss close archive
+.Bl -bullet -compact
+.It
 .Xr zip_close 3
+.El
 .Ss miscellaneous
+.Bl -bullet -compact
+.It
 .Xr zip_libzip_version 3
+.It
 .Xr zip_register_progress_callback 3
+.It
 .Xr zip_set_archive_comment 3
+.It
 .Xr zip_set_archive_flag 3
+.It
 .Xr zip_source 3
+.El
 .Sh ERROR HANDLING
+.Bl -bullet -compact
+.It
 .Xr zip_error_to_str 3
+.It
 .Xr zip_strerror 3
+.It
 .Xr zip_file_strerror 3
+.It
 .Xr zip_error_get 3
+.It
 .Xr zip_error_get_sys_type 3
+.It
 .Xr zip_errors 3
+.El
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at
