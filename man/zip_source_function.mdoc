@@ -186,15 +186,16 @@ points to an allocated
 which should be initialized using
 .Xr zip_stat_init 3
 and then filled in.
-Information only available after the source has been read (e.g., size)
-can be omitted in an earlier call.
-Return sizeof(struct zip_stat) on success.
+.Pp
+For uncompressed, unencrypted data, all information is optional. However, fill in as much infromation as is readily available. 
+.Pp
 If the data is compressed,
 .Dv ZIP_STAT_COMP_METHOD ,
 .Dv ZIP_STAT_SIZE ,
 and
 .Dv ZIP_STAT_CRC
 must be filled in.
+.Pp
 If the data is encrypted,
 .Dv ZIP_STAT_ENCRYPTION_METHOD ,
 .Dv ZIP_STAT_COMP_METHOD ,
@@ -202,10 +203,15 @@ If the data is encrypted,
 and
 .Dv ZIP_STAT_CRC
 must be filled in.
+.Pp
+Information only available after the source has been read (e.g., size)
+can be omitted in an earlier call.
 .Em NOTE :
 .Fn zip_source_function
 may be called with this argument even after being called with
 .Dv ZIP_SOURCE_CLOSE .
+.Pp
+Return sizeof(struct zip_stat) on success.
 .Ss Dv ZIP_SOURCE_SUPPORTS
 Return bitmap specifying which commands are supported.
 Use
