@@ -67,6 +67,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 # Bugs
 
+* man page for zip_register_progress_callback_with_state, mark zip_register_progress_callback obsolete
+* note obsolescence in .Nd (so it's visible on documentation main page)
 * support InfoZIP encryption header extension (copy data descriptor for encrypted files)
 * ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
 * fix OpenSUSE i686 regression failures
