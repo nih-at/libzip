@@ -218,14 +218,13 @@ zip_close(zip_t *za)
 
     if (error) {
 	zip_source_rollback_write(za->src);
-	return -1;
     }
 
     _zip_progress_end(za->progress);
 
     zip_discard(za);
     
-    return 0;
+    return error ? -1 : 0;
 }
 
 
