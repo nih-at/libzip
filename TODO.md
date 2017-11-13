@@ -54,7 +54,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * add custom compression function support
 * `zip_fseek()`
 * `zip_source_zip()`: allow rewinding
-* allow aborting `zip_close()` via progress callback (or otherwise)
+* add `zip_abort()` to allow aborting `zip_close()` (can be called from progress callback)
 * zipcmp: add option for file content comparison
 * zipcmp: compare bit flags if paranoid
 * zipcmp: compare external attributes/opsys if paranoid
