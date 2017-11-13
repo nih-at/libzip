@@ -29,12 +29,12 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd December 18, 2016
+.Dd November 13, 2017
 .Dt ZIP_REGISTER_PROGRESS_CALLBACK 3
 .Os
 .Sh NAME
 .Nm zip_register_progress_callback
-.Nd provide updates during zip_close
+.Nd provide updates during zip_close (obsolete interface)
 .Sh LIBRARY
 libzip (-lzip)
 .Sh SYNOPSIS
@@ -43,6 +43,11 @@ libzip (-lzip)
 .Ft void
 .Fn zip_register_progress_callback "zip_t *archive" "zip_progress_callback_t progress_callback"
 .Sh DESCRIPTION
+The function
+.Fn zip_register_progress_callback
+is the obsolete version of
+.Xr zip_register_progress_callback_with_state 3 .
+.Pp
 The
 .Fn zip_register_progress_callback
 function registers a callback function
