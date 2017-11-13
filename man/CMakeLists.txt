@@ -50,6 +50,7 @@ SET(MDOC3_PAGES
   zip_name_locate.mdoc
   zip_open.mdoc
   zip_register_progress_callback.mdoc
+  zip_register_progress_callback_with_state.mdoc
   zip_rename.mdoc
   zip_set_archive_comment.mdoc
   zip_set_archive_flag.mdoc

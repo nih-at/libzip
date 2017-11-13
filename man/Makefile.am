@@ -61,6 +61,7 @@ MAN3=	\
 	zip_open.mdoc \
 	zip_rename.mdoc \
 	zip_register_progress_callback.mdoc \
+	zip_register_progress_callback_with_state.mdoc \
 	zip_set_archive_comment.mdoc \
 	zip_set_archive_flag.mdoc \
 	zip_set_default_password.mdoc \
