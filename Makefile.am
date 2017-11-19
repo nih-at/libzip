@@ -20,7 +20,7 @@ EXTRA_DIST=	API-CHANGES \
 		libzip.pc.in \
 		m4
 
-dist-hook:
+not-dist-hook:
 	mkdir $(distdir)/xcode
 	mkdir $(distdir)/xcode/libzip.xcodeproj
 	mkdir $(distdir)/xcode/libzip.xcodeproj/project.xcworkspace
