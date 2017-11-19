@@ -1,4 +1,4 @@
-1.X.X [20XX-XX-XX]
+1.3.1 [2017-11-19]
 ==================
 
 * Install zipconf.h into ${PREFIX}/include

@@ -157,7 +157,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3.0a"
+#define PACKAGE_VERSION "1.3.1"
 
 /* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
