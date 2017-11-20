@@ -1,6 +1,6 @@
-1.X.X [20XX-XX-XX]
+1.3.2 [2017-11-20]
 ==================
-
+* Fix bug introduced in last: zip_t was erroneously freed if zip_close() failed.
 
 1.3.1 [2017-11-19]
 ==================
