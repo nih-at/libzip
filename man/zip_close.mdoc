@@ -44,22 +44,23 @@ libzip (-lzip)
 .Sh DESCRIPTION
 The
 .Fn zip_close
-function closes
+function writes any changes made to
 .Ar archive
-and frees the memory allocated for it.
-If any files within were changed, those changes are written to disk
-first.
-If writing changes fails,
-.Fn zip_close
-fails and
-.Ar archive
-is left unchanged.
+to disk.
 If
 .Ar archive
 contains no files, the file is completely removed (no empty archive is
 written).
+If successful,
+.Ar archive
+is freed.
+If writing fails,
+.Fn zip_close
+fails;
+.Ar archive
+is left unchanged and must still be freed.
 .Pp
-To close a zip file without saving changes, use
+To close and free a zip archive without saving changes, use
 .Xr zip_discard 3 .
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
