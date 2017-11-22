@@ -11,7 +11,7 @@ SET(TEST_PROGRAMS
   add_from_filep
   fopen_unchanged
   fseek
-  nonrandomopentest
+#  nonrandomopentest
 )
 
 SET(GETOPT_USERS
