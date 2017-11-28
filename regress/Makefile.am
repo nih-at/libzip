@@ -7,10 +7,11 @@ noinst_PROGRAMS= \
 	fopen_unchanged \
 	fread \
 	fseek \
-	nonrandomopentest \
 	tryopen
 
 if !WIN32_HOST
+noinst_PROGRAMS+=	nonrandomopentest
+
 pkglib_LTLIBRARIES=	malloc.la nonrandomopen.la
 
 malloc_la_SOURCES=	malloc.c
