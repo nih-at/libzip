@@ -420,12 +420,15 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
     int i;
     HANDLE th = INVALID_HANDLE_VALUE;
     void *temp = NULL;
-    SECURITY_INFORMATION si;
-    SECURITY_ATTRIBUTES sa;
     PSECURITY_DESCRIPTOR psd = NULL;
     PSECURITY_ATTRIBUTES psa = NULL;
+
+
+#ifndef WINRT
     DWORD len;
     BOOL success;
+    SECURITY_ATTRIBUTES sa;
+    SECURITY_INFORMATION si;
 
     /*
     Read the DACL from the original file, so we can copy it to the temp file.
@@ -452,6 +455,10 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
     }
 
     value = GetTickCount();
+#else
+    value = (zip_uint32_t)GetTickCount64();
+#endif
+
     for (i = 0; i < 1024 && th == INVALID_HANDLE_VALUE; i++) {
 	th = ctx->ops->op_create_temp(ctx, &temp, value + i, psa);
 	if (th == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_EXISTS)

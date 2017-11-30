@@ -37,6 +37,7 @@
 bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length)
 {
+#ifndef WINRT
     HCRYPTPROV hprov;
     if (!CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT | CRYPT_SILENT)) {
 	return false;
@@ -48,4 +49,8 @@ zip_random(zip_uint8_t *buffer, zip_uint16_t length)
 	return false;
     }
     return true;
+#else
+    // Not implemented yet.
+    return false;
+#endif // WINRT
 }
