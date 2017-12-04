@@ -74,7 +74,7 @@ open(const char *path, int flags, ...)
     }
 
     va_start(ap, flags);
-    mode = va_arg(ap, mode_t);
+    mode = va_arg(ap, int);
     va_end(ap);
 
     if (strcmp(path, "/dev/urandom") == 0) {
@@ -99,7 +99,7 @@ open64(const char *path, int flags, ...)
     }
 
     va_start(ap, flags);
-    mode = va_arg(ap, mode_t);
+    mode = va_arg(ap, int);
     va_end(ap);
 
     if (strcmp(path, "/dev/urandom") == 0) {
