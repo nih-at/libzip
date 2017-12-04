@@ -265,6 +265,7 @@ TESTS= \
 	set_compression_store_to_deflate.test \
 	set_compression_store_to_store.test \
 	set_compression_unknown.test \
+	set_file_mtime.test \
 	stat_index_cp437_guess.test \
 	stat_index_cp437_raw.test \
 	stat_index_cp437_strict.test \
