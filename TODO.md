@@ -1,7 +1,5 @@
 # Soon
 
-* define ZIP_STATIC when libzip is built statically
-
 * review guidelines/community standards
   - (Linux Foundation Core Infrastructure Initiative Best Practices)[https://bestpractices.coreinfrastructure.org/]
   - (Readme Maturity Level)[https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md]

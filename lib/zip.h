@@ -35,6 +35,15 @@
 */
 
 
+#ifdef __cplusplus
+extern "C" {
+#if 0
+} /* fix autoindent */
+#endif
+#endif
+
+#include <zipconf.h>
+
 #ifndef ZIP_EXTERN
 # ifndef ZIP_STATIC
 #  ifdef _WIN32
@@ -48,15 +57,6 @@
 #  define ZIP_EXTERN
 # endif
 #endif
-
-#ifdef __cplusplus
-extern "C" {
-#if 0
-} /* fix autoindent */
-#endif
-#endif
-
-#include <zipconf.h>
 
 #include <sys/types.h>
 #include <stdio.h>
