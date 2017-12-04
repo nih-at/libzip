@@ -162,7 +162,7 @@ _zip_ef_merge(zip_extra_field_t *to, zip_extra_field_t *from)
 
 	duplicate = 0;
 	for (tt=to; tt; tt=tt->next) {
-	    if (tt->id == from->id && tt->size == from->size && memcmp(tt->data, from->data, tt->size) == 0) {
+	    if (tt->id == from->id && tt->size == from->size && (tt->size == 0 || memcmp(tt->data, from->data, tt->size) == 0)) {
 		tt->flags |= (from->flags & ZIP_EF_BOTH);
 		duplicate = 1;
 		break;
