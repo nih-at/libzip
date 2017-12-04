@@ -56,14 +56,6 @@ extern int optopt;
 #include "compat.h"
 #include "zip.h"
 
-zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
-
-typedef enum {
-    SOURCE_TYPE_NONE,
-    SOURCE_TYPE_IN_MEMORY,
-    SOURCE_TYPE_HOLE
-} source_type_t;
-
 typedef struct dispatch_table_s {
     const char *cmdline_name;
     int argument_count;
@@ -76,8 +68,11 @@ static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static zip_uint16_t get_encryption_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
-static zip_t *read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp);
-static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
+
+#ifndef FOR_REGRESS
+#define OPTIONS_REGRESS ""
+#define USAGE_REGRESS ""
+#endif
 
 zip_t *za, *z_in[16];
 unsigned int z_in_count;
@@ -165,24 +160,6 @@ add_from_zip(int argc, char *argv[]) {
 	return -1;
     }
     z_in_count++;
-    return 0;
-}
-
-static int
-add_nul(int argc, char *argv[]) {
-    zip_source_t *zs;
-    zip_uint64_t length = strtoull(argv[1], NULL, 10);
-
-    if ((zs=source_nul(za, length)) == NULL) {
-        fprintf(stderr, "can't create zip_source for length: %s\n", zip_strerror(za));
-        return -1;
-    }
-
-    if (zip_add(za, argv[0], zs) == -1) {
-        zip_source_free(zs);
-        fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
-        return -1;
-    }
     return 0;
 }
 
@@ -598,34 +575,6 @@ zstat(int argc, char *argv[]) {
     return 0;
 }
 
-static int
-unchange_all(int argc, char *argv[]) {
-    if (zip_unchange_all(za) < 0) {
-	fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
-	return -1;
-    }
-    return 0;
-}
-
-static int
-zin_close(int argc, char *argv[]) {
-    zip_uint64_t idx;
-
-    idx = strtoull(argv[0], NULL, 10);
-    if (idx >= z_in_count) {
-	fprintf(stderr, "invalid argument '%" PRIu64 "', only %d zip sources open\n", idx, z_in_count);
-	return -1;
-    }
-    if (zip_close(z_in[idx]) < 0) {
-	fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in[idx]));
-	return -1;
-    }
-    z_in[idx] = z_in[z_in_count];
-    z_in_count--;
-
-    return 0;
-}
-
 static zip_flags_t
 get_flags(const char *arg)
 {
@@ -728,231 +677,11 @@ read_from_file(const char *archive, int flags, zip_error_t *error, zip_uint64_t 
     return zaa;
 }
 
-
-static zip_t *
-read_hole(const char *archive, int flags, zip_error_t *error)
-{
-    zip_source_t *src = NULL;
-    zip_t *zs = NULL;
-
-    if (strcmp(archive, "/dev/stdin") == 0) {
-	zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
-	return NULL;
-    }
-
-    if ((src = source_hole_create(archive, flags, error)) == NULL
-        || (zs = zip_open_from_source(src, flags, error)) == NULL) {
-        zip_source_free(src);
-    }
-
-    return zs;
-}
-
-
-static zip_t *
-read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp)
-{
-    struct stat st;
-    zip_source_t *src;
-    zip_t *zb;
-
-    if (strcmp(archive, "/dev/stdin") == 0) {
-	zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
-	return NULL;
-    }
-
-    if (stat(archive, &st) < 0) {
-	if (errno == ENOENT) {
-	    src = zip_source_buffer_create(NULL, 0, 0, error);
-	}
-	else {
-	    zip_error_set(error, ZIP_ER_OPEN, errno);
-	    return NULL;
-	}
-    }
-    else {
-	char *buf;
-	FILE *fp;
-	if ((buf=malloc((size_t)st.st_size)) == NULL) {
-	    zip_error_set(error, ZIP_ER_MEMORY, 0);
-	    return NULL;
-	}
-	if ((fp=fopen(archive, "r")) == NULL) {
-	    free(buf);
-	    zip_error_set(error, ZIP_ER_READ, errno);
-	    return NULL;
-	}
-	if (fread(buf, (size_t)st.st_size, 1, fp) < 1) {
-	    free(buf);
-	    fclose(fp);
-	    zip_error_set(error, ZIP_ER_READ, errno);
-	    return NULL;
-	}
-	fclose(fp);
-	src = zip_source_buffer_create(buf, (zip_uint64_t)st.st_size, 1, error);
-	if (src == NULL) {
-	    free(buf);
-	}
-    }
-    if (src == NULL) {
-	return NULL;
-    }
-    zb = zip_open_from_source(src, flags, error);
-    if (zb == NULL) {
-	zip_source_free(src);
-	return NULL;
-    }
-    zip_source_keep(src);
-    *srcp = src;
-    return zb;
-}
-
-
-typedef struct source_nul {
-    zip_error_t error;
-    zip_uint64_t length;
-    zip_uint64_t offset;
-} source_nul_t;
-
-static zip_int64_t
-source_nul_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command)
-{
-    source_nul_t *ctx = (source_nul_t *)ud;
-
-    switch (command) {
-        case ZIP_SOURCE_CLOSE:
-            return 0;
-
-        case ZIP_SOURCE_ERROR:
-            return zip_error_to_data(&ctx->error, data, length);
-
-        case ZIP_SOURCE_FREE:
-            free(ctx);
-            return 0;
-
-        case ZIP_SOURCE_OPEN:
-            ctx->offset = 0;
-            return 0;
-
-        case ZIP_SOURCE_READ:
-	    if (length > ZIP_INT64_MAX) {
-		zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
-		return -1;
-	    }
-
-            if (length > ctx->length - ctx->offset) {
-                length =ctx->length - ctx->offset;
-            }
-
-            memset(data, 0, length);
-            ctx->offset += length;
-            return (zip_int64_t)length;
-
-        case ZIP_SOURCE_STAT: {
-            zip_stat_t *st = ZIP_SOURCE_GET_ARGS(zip_stat_t, data, length, &ctx->error);
-
-            if (st == NULL) {
-                return -1;
-            }
-
-            st->valid |= ZIP_STAT_SIZE;
-            st->size = ctx->length;
-
-            return 0;
-        }
-
-        case ZIP_SOURCE_SUPPORTS:
-            return zip_source_make_command_bitmap(ZIP_SOURCE_CLOSE, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_STAT, -1);
-
-        default:
-            zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
-            return -1;
-    }
-}
-
-static zip_source_t *
-source_nul(zip_t *zs, zip_uint64_t length)
-{
-    source_nul_t *ctx;
-    zip_source_t *src;
-
-    if ((ctx = (source_nul_t *)malloc(sizeof(*ctx))) == NULL) {
-        zip_error_set(zip_get_error(zs), ZIP_ER_MEMORY, 0);
-        return NULL;
-    }
-
-    zip_error_init(&ctx->error);
-    ctx->length = length;
-    ctx->offset = 0;
-
-    if ((src = zip_source_function(zs, source_nul_cb, ctx)) == NULL) {
-        free(ctx);
-        return NULL;
-    }
-
-    return src;
-}
-
-
-static int
-write_memory_src_to_file(const char *archive, zip_source_t *src)
-{
-    zip_stat_t zst;
-    char *buf;
-    FILE *fp;
-
-    if (zip_source_stat(src, &zst) < 0) {
-	fprintf(stderr, "zip_source_stat on buffer failed: %s\n", zip_error_strerror(zip_source_error(src)));
-	return -1;
-    }
-    if (zip_source_open(src) < 0) {
-	if (zip_error_code_zip(zip_source_error(src)) == ZIP_ER_DELETED) {
-	    if (unlink(archive) < 0 && errno != ENOENT) {
-		fprintf(stderr, "unlink failed: %s\n", strerror(errno));
-		return -1;
-	    }
-	    return 0;
-	}
-	fprintf(stderr, "zip_source_open on buffer failed: %s\n", zip_error_strerror(zip_source_error(src)));
-	return -1;
-    }
-    if ((buf=malloc(zst.size)) == NULL) {
-	fprintf(stderr, "malloc failed: %s\n", strerror(errno));
-	zip_source_close(src);
-	return -1;
-    }
-    if (zip_source_read(src, buf, zst.size) < (zip_int64_t)zst.size) {
-	fprintf(stderr, "zip_source_read on buffer failed: %s\n", zip_error_strerror(zip_source_error(src)));
-	zip_source_close(src);
-	free(buf);
-	return -1;
-    }
-    zip_source_close(src);
-    if ((fp=fopen(archive, "wb")) == NULL) {
-	fprintf(stderr, "fopen failed: %s\n", strerror(errno));
-	free(buf);
-	return -1;
-    }
-    if (fwrite(buf, zst.size, 1, fp) < 1) {
-	fprintf(stderr, "fwrite failed: %s\n", strerror(errno));
-	free(buf);
-	fclose(fp);
-	return -1;
-    }
-    free(buf);
-    if (fclose(fp) != 0) {
-	fprintf(stderr, "fclose failed: %s\n", strerror(errno));
-	return -1;
-    }
-    return 0;
-}
-
 dispatch_table_t dispatch_table[] = {
     { "add", 2, "name content", "add file called name using content", add },
     { "add_dir", 1, "name", "add directory", add_dir },
     { "add_file", 4, "name file_to_add offset len", "add file to archive, len bytes starting from offset", add_file },
     { "add_from_zip", 5, "name archivename index offset len", "add file from another archive, len bytes starting from offset", add_from_zip },
-    { "add_nul", 2, "name length", "add NUL bytes", add_nul },
     { "cat", 1, "index", "output file contents to stdout", cat },
     { "count_extra", 2, "index flags", "show number of extra fields for archive entry", count_extra },
     { "count_extra_by_id", 3, "index extra_id flags", "show number of extra fields of type extra_id for archive entry", count_extra_by_id },
@@ -976,9 +705,10 @@ dispatch_table_t dispatch_table[] = {
     { "set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime },
     { "set_file_mtime_all", 1, "timestamp", "set file modification time for all files", set_file_mtime_all },
     { "set_password", 1, "password", "set default password for encryption", set_password },
-    { "stat", 1, "index", "print information about entry", zstat },
-    { "unchange_all", 0, "", "revert all changes", unchange_all },
-    { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
+    { "stat", 1, "index", "print information about entry", zstat }
+#ifdef DISPATCH_REGRESS
+    , DISPATCH_REGRESS
+#endif
 };
 
 static int
@@ -1014,7 +744,7 @@ usage(const char *progname, const char *reason)
 	out = stdout;
     else
 	out = stderr;
-    fprintf(out, "usage: %s [-cegHhmnrst] [-l len] [-o offset] archive command1 [args] [command2 [args] ...]\n", progname);
+    fprintf(out, "usage: %s [-ceghnrst]" USAGE_REGRESS " [-l len] [-o offset] archive command1 [args] [command2 [args] ...]\n", progname);
     if (reason != NULL) {
 	fprintf(out, "%s\n", reason);
 	exit(1);
@@ -1024,10 +754,14 @@ usage(const char *progname, const char *reason)
 	    "\t-c\t\tcheck consistency\n"
 	    "\t-e\t\terror if archive already exists (only useful with -n)\n"
 	    "\t-g\t\tguess file name encoding (for stat)\n"
+#ifdef FOR_REGRESS
             "\t-H\t\twrite files with holes compactly\n"
+#endif
             "\t-h\t\tdisplay this usage\n"
 	    "\t-l len\t\tonly use len bytes of file\n"
+#ifdef FOR_REGRESS
 	    "\t-m\t\tread archive into memory, and modify there; write out at end\n"
+#endif
 	    "\t-n\t\tcreate archive if it doesn't exist\n"
 	    "\t-o offset\tstart reading file at offset\n"
 	    "\t-r\t\tprint raw file name encoding without translation (for stat)\n"
@@ -1060,22 +794,28 @@ usage(const char *progname, const char *reason)
     exit(0);
 }
 
+#ifndef FOR_REGRESS
+#define ziptool_open read_from_file
+int
+ziptool_post_close(const char *archive) {
+    return 0;
+}
+#endif
+
 int
 main(int argc, char *argv[])
 {
     const char *archive;
-    zip_source_t *memory_src = NULL;
     unsigned int i;
     int c, arg, err, flags;
     const char *prg;
-    source_type_t source_type = SOURCE_TYPE_NONE;
     zip_uint64_t len = 0, offset = 0;
     zip_error_t error;
 
     flags = 0;
     prg = argv[0];
 
-    while ((c=getopt(argc, argv, "cegHhl:mno:rst")) != -1) {
+    while ((c=getopt(argc, argv, "ceghl:no:rst" OPTIONS_REGRESS)) != -1) {
 	switch (c) {
 	case 'c':
 	    flags |= ZIP_CHECKCONS;
@@ -1086,18 +826,12 @@ main(int argc, char *argv[])
 	case 'g':
 	    stat_flags = ZIP_FL_ENC_GUESS;
 	    break;
-        case 'H':
-            source_type = SOURCE_TYPE_HOLE;
-            break;
 	case 'h':
 	    usage(prg, NULL);
 	    break;
 	case 'l':
 	    len = strtoull(optarg, NULL, 10);
 	    break;
-	case 'm':
-            source_type = SOURCE_TYPE_IN_MEMORY;
-            break;
 	case 'n':
 	    flags |= ZIP_CREATE;
 	    break;
@@ -1113,6 +847,9 @@ main(int argc, char *argv[])
 	case 't':
 	    flags |= ZIP_TRUNCATE;
 	    break;
+#ifdef GETOPT_REGRESS
+	GETOPT_REGRESS
+#endif
 
 	default:
 	{
@@ -1134,19 +871,7 @@ main(int argc, char *argv[])
 	flags = ZIP_CREATE;
 
     zip_error_init(&error);
-    switch (source_type) {
-    	case SOURCE_TYPE_NONE:
-	    za = read_from_file(archive, flags, &error, offset, len);
-	    break;
-
-        case SOURCE_TYPE_IN_MEMORY:
-            za = read_to_memory(archive, flags, &error, &memory_src);
-            break;
-
-    	case SOURCE_TYPE_HOLE:
-	    za = read_hole(archive, flags, &error);
-            break;
-    }
+    za = ziptool_open(archive, flags, &error, offset, len);
     if (za == NULL) {
 	fprintf(stderr, "can't open zip archive '%s': %s\n", archive, zip_error_strerror(&error));
 	zip_error_fini(&error);
@@ -1170,11 +895,8 @@ main(int argc, char *argv[])
 	fprintf(stderr, "can't close zip archive '%s': %s\n", archive, zip_strerror(za));
 	return 1;
     }
-    if (source_type == SOURCE_TYPE_IN_MEMORY) {
-	if (write_memory_src_to_file(archive, memory_src) < 0) {
-	    err = 1;
-	}
-	zip_source_free(memory_src);
+    if (ziptool_post_close(archive) < 0) {
+	err = 1;
     }
 
     for (i=0; i<z_in_count; i++) {

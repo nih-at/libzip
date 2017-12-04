@@ -7,7 +7,14 @@ noinst_PROGRAMS= \
 	fopen_unchanged \
 	fread \
 	fseek \
-	tryopen
+	hole \
+	tryopen \
+	ziptool_regress
+
+hole_SOURCES= hole.c source_hole.c
+
+ziptool_regress_SOURCES= source_hole.c ziptool_regress.c
+VPATH=../src
 
 if !WIN32_HOST
 noinst_PROGRAMS+=	nonrandomopentest

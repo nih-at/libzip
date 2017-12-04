@@ -42,6 +42,7 @@
 ^regress/fopen_unchanged$
 ^regress/fread$
 ^regress/fseek$
+^regress/hole$
 ^regress/nonrandomopentest$
 ^regress/manyfiles.zip$
 ^regress/manyfiles-133000.zip$
@@ -52,7 +53,7 @@
 ^regress/manyfiles-zip64.zip$
 ^regress/runtest$
 ^regress/tryopen$
-^src/hole$
+^regress/ziptool_regress$
 ^src/zipcmp$
 ^src/zipmerge$
 ^src/ziptool$

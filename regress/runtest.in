@@ -38,7 +38,7 @@ BEGIN { push @INC, '@abs_srcdir@'; }
 
 use NiHTest;
 
-my $test = NiHTest::new({ default_program => '../src/ziptool', srcdir => '@srcdir@', top_builddir => '@top_builddir@', zipcmp => '../../src/zipcmp', zipcmp_flags => '-p' });
+my $test = NiHTest::new({ default_program => 'ziptool_regress', srcdir => '@srcdir@', top_builddir => '@top_builddir@', zipcmp => '../../src/zipcmp', zipcmp_flags => '-p' });
 
 sub mangle_test {
 	my ($test, $variant) = @_;

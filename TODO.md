@@ -30,9 +30,6 @@
 
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 
-* build own version of `ziptool` for regress
-  - move source_hole, zip from memory there
-
 * test error cases with special source
   - tell it which command should fail
   - use it both as source for `zip_add` and `zip_open_from_source`
