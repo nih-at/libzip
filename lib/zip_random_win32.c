@@ -31,6 +31,12 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifdef WINRT
+#include <windows.h>
+#include <ntstatus.h>
+#include <bcrypt.h>
+#endif
+
 #include "zipint.h"
 #include "zipwin32.h"
 
@@ -50,7 +56,17 @@ zip_random(zip_uint8_t *buffer, zip_uint16_t length)
     }
     return true;
 #else
-    // Not implemented yet.
-    return false;
+    BCRYPT_ALG_HANDLE hAlg = NULL;
+    NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
+    if (hr != STATUS_SUCCESS || hAlg == NULL) {
+	return false;
+    }
+    hr = BCryptGenRandom(&hAlg, buffer, length, 0);
+    if (hr != STATUS_SUCCESS) {
+	BCryptCloseAlgorithmProvider(&hAlg, 0);
+	return false;
+    }
+    BCryptCloseAlgorithmProvider(&hAlg, 0);
+    return true;
 #endif // WINRT
 }
