@@ -1,0 +1,17 @@
+.gitattributes export-ignore
+.hgignore export-ignore
+.hgtags export-ignore
+.travis.yml export-ignore
+README-snapshot.md export-ignore
+create-cmake-config.h.in.pl export-ignore
+docs export-ignore
+lib/gladman-fcrypt/main.c export-ignore
+lib/gladman-fcrypt/prng.c export-ignore
+lib/gladman-fcrypt/prng.h export-ignore
+m4 export-ignore
+man/fix-man-links.sh export-ignore
+man/make_zip_errors.sh export-ignore
+man/mkdocset.pl export-ignore
+man/nih-man.css export-ignore
+vstudio export-ignore
+xcode export-ignore
