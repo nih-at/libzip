@@ -8,8 +8,6 @@
 * migration to CMake
   - replace `make distcheck`
   - check generated xcode project
-  - add custom targets:
-    - update-errors (zip.h -> zip_errors.mdoc)
 
 * clone support
   - APFS
@@ -125,8 +123,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Infrastructure
 
-* create CMakefile.txt man page linking from links file
-* handle missing mandoc on Linux
+* rewrite make_zip_errors.sh in cmake
+* rewrite make_zip_err_str.sh in cmake
 * configure appveyor for Windows builds of libzip
 
 ## Test Case Issues
