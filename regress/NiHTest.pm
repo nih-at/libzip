@@ -340,7 +340,11 @@ sub runtest_one {
                 $preload_env_var = 'DYLD_INSERT_LIBRARIES';
         }
 	if (defined($self->{test}->{'preload'})) {
-		$ENV{$preload_env_var} = cwd() . "/../.libs/$self->{test}->{'preload'}";
+		if (-f cwd() . "/../.libs/$self->{test}->{'preload'}") {
+			$ENV{$preload_env_var} = cwd() . "/../.libs/$self->{test}->{'preload'}";
+		} else {
+			$ENV{$preload_env_var} = cwd() . "/../lib$self->{test}->{'preload'}";
+		}
 	}
 
 	$self->run_program();

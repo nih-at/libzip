@@ -10,9 +10,7 @@
   - replace `make distcheck`
   - check generated xcode project
   - add custom targets:
-    - handle_links (one man page for multiple functions)
     - update-errors (zip.h -> zip_errors.mdoc)
-    - regress zip.zip -> zip
     - regress clean up sandboxes
 
 * clone support
