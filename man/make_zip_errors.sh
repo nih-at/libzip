@@ -35,7 +35,7 @@
 if [ "$#" -ne 2 ]
 then
     echo "Usage: $0 in_file out_file" >&2
-    echo "       e.g. $0 zip.h zip_err_str.c" >&2
+    echo "       e.g. $0 zip.h zip_errors.mdoc" >&2
     exit 1
 fi
 
