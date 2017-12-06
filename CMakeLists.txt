@@ -35,8 +35,8 @@ SET(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 SET(ARCHIVE_NAME ${PACKAGE_NAME}-${PACKAGE_VERSION})
 ADD_CUSTOM_TARGET(dist
   COMMAND git config tar.tar.xz.command "xz -c"
-  COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.gz
-  COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.xz
+  COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.gz HEAD
+  COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.xz HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )
 IF(NOT BUILD_SHARED_LIBS)
