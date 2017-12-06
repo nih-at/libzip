@@ -1,5 +1,3 @@
-# TESTS_ENVIRONMENT=      ZIPCMP=${top_builddir}/src/zipcmp
-
 CHECK_FUNCTION_EXISTS(getopt HAVE_GETOPT)
 IF(NOT HAVE_GETOPT)
   SET(SRC_EXTRA_FILES ../src/getopt.c)
@@ -32,9 +30,7 @@ ADD_EXECUTABLE(ziptool_regress ziptool_regress.c ${SRC_EXTRA_FILES} source_hole.
 TARGET_LINK_LIBRARIES(ziptool_regress zip)
 
 ADD_LIBRARY(malloc MODULE malloc.c)
-SET_PROPERTY(TARGET malloc PROPERTY LIBRARY_OUTPUT_NAME malloc)
 ADD_LIBRARY(nonrandomopen MODULE nonrandomopen.c)
-SET_PROPERTY(TARGET nonrandomopen PROPERTY LIBRARY_OUTPUT_NAME nonrandomopen)
 
 FOREACH(PROGRAM ${GETOPT_USERS})
   ADD_EXECUTABLE(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES})
@@ -44,8 +40,11 @@ ENDFOREACH()
 # for appveyor builds
 #SET(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;C:/projects/libzip/vstudio/zlib/installed/lib;C:/projects/libzip/build/lib/Release)
 
-ADD_CUSTOM_TARGET(
-  testinput
+ADD_CUSTOM_TARGET(cleanup
+    COMMAND ${CMAKE_COMMAND} -DDIR=${CMAKE_CURRENT_BINARY_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/cleanup.cmake
+    )
+
+ADD_CUSTOM_TARGET(testinput
   ALL
   VERBATIM
   COMMAND ziptool ${CMAKE_CURRENT_SOURCE_DIR}/manyfiles-zip.zip cat 0 > manyfiles.zip
@@ -193,9 +192,9 @@ SET(EXTRA_TESTS
 	zip64_stored_creation.test
 )
 
-
 FOREACH(CASE ${EXTRA_TESTS})
   ADD_TEST(${CASE} perl ${CMAKE_BINARY_DIR}/regress/runtest ${CMAKE_CURRENT_SOURCE_DIR}/${CASE})
+  SET_PROPERTY(TEST ${CASE} PROPERTY ENVIRONMENT ZIPCMP=${CMAKE_BINARY_DIR}/src/zipcmp)
 ENDFOREACH()
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../lib

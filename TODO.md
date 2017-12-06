@@ -6,12 +6,10 @@
   - (Github Community Profile)[https://github.com/nih-at/libzip/community]
 
 * migration to CMake
-  - tests (libgit2 tests using ctest)
   - replace `make distcheck`
   - check generated xcode project
   - add custom targets:
     - update-errors (zip.h -> zip_errors.mdoc)
-    - regress clean up sandboxes
 
 * clone support
   - APFS
