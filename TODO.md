@@ -6,7 +6,7 @@
   - (Github Community Profile)[https://github.com/nih-at/libzip/community]
 
 * migration to CMake
-  - test dist target
+  - tests (libgit2 tests using ctest)
   - replace `make distcheck`
   - check generated xcode project
   - add custom targets:
