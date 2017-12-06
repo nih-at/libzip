@@ -7,12 +7,10 @@
 
 * migration to CMake
   - tests (libgit2 tests using ctest)
-  - how to make source distributions
+  - test dist target
   - replace `make distcheck`
-  - cmake on Linux: man pages not built (https://github.com/nih-at/libzip/issues/8)
   - check generated xcode project
   - add custom targets:
-    - mkman (mdoc -> man)
     - handle_links (one man page for multiple functions)
     - update-errors (zip.h -> zip_errors.mdoc)
     - regress zip.zip -> zip
