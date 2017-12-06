@@ -4,13 +4,12 @@ INSTALL(FILES zip.h DESTINATION include)
 
 # from http://www.cmake.org/Wiki/CMakeMacroLibtoolFile
 MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_value)
+  GET_TARGET_PROPERTY(${_variable} ${_target} ${_property})
+  IF(${_variable} STREQUAL NOTFOUND)
+    SET(${_variable} ${_default_value})
+  ENDIF()
   
-  GET_TARGET_PROPERTY (${_variable} ${_target} ${_property})
-  IF (${_variable} STREQUAL NOTFOUND)
-    SET (${_variable} ${_default_value})
-  ENDIF (${_variable} STREQUAL NOTFOUND)
-  
-ENDMACRO (GET_TARGET_PROPERTY_WITH_DEFAULT)
+ENDMACRO()
   
 MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
   GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
@@ -48,9 +47,8 @@ MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
   FILE(APPEND ${_laname} "dlpreopen='${_target_dlpreopen}'\n")
   FILE(APPEND ${_laname} "# Directory that this library needs to be installed in:\n")
   FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${_install_DIR}'\n")
-  INSTALL( FILES ${_laname} ${_soname}
-    DESTINATION ${CMAKE_INSTALL_PREFIX}${_install_DIR})
-ENDMACRO(CREATE_LIBTOOL_FILE)
+  INSTALL( FILES ${_laname} ${_soname} DESTINATION ${CMAKE_INSTALL_PREFIX}${_install_DIR})
+ENDMACRO()
  
 SET(LIBZIP_SOURCES
   gladman-fcrypt.c
@@ -183,14 +181,10 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/gladman-fcrypt
   ${CMAKE_CURRENT_BINARY_DIR}/..)
 
-# TODO: distribute instead?
-#ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
-#  COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
-#    ${CMAKE_CURRENT_SOURCE_DIR}/zip.h
-#    ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
-#  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zip.h
-#    ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
-#)
+ADD_CUSTOM_TARGET(update_zip_err_str
+  COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/zip_err_str.c
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
+)
 CHECK_FUNCTION_EXISTS(mkstemp HAVE_MKSTEMP)
 IF(NOT HAVE_MKSTEMP)
   SET(LIBZIP_EXTRA_FILES mkstemp.c)
