@@ -1,180 +1,141 @@
-SET(MDOC3_PAGES
-  ZIP_SOURCE_GET_ARGS.mdoc
-  libzip.mdoc
-  zip_add.mdoc
-  zip_add_dir.mdoc
-  zip_close.mdoc
-  zip_delete.mdoc
-  zip_dir_add.mdoc
-  zip_discard.mdoc
-  zip_error_clear.mdoc
-  zip_error_code_system.mdoc
-  zip_error_code_zip.mdoc
-  zip_error_fini.mdoc
-  zip_error_get.mdoc
-  zip_error_get_sys_type.mdoc
-  zip_error_init.mdoc
-  zip_error_set.mdoc
-  zip_error_strerror.mdoc
-  zip_error_system_type.mdoc
-  zip_error_to_data.mdoc
-  zip_error_to_str.mdoc
-  zip_errors.mdoc
-  zip_fclose.mdoc
-  zip_fdopen.mdoc
-  zip_file_add.mdoc
-  zip_file_extra_field_delete.mdoc
-  zip_file_extra_field_get.mdoc
-  zip_file_extra_field_set.mdoc
-  zip_file_extra_fields_count.mdoc
-  zip_file_get_comment.mdoc 
-  zip_file_get_error.mdoc
-  zip_file_rename.mdoc
-  zip_file_set_comment.mdoc
-  zip_file_set_encryption.mdoc
-  zip_file_set_external_attributes.mdoc
-  zip_file_set_mtime.mdoc
-  zip_file_strerror.mdoc
-  zip_fopen.mdoc
-  zip_fopen_encrypted.mdoc
-  zip_fread.mdoc
-  zip_fseek.mdoc
-  zip_get_archive_comment.mdoc
-  zip_get_archive_flag.mdoc
-  zip_get_error.mdoc
-  zip_get_file_comment.mdoc
-  zip_get_name.mdoc
-  zip_get_num_entries.mdoc
-  zip_get_num_files.mdoc
-  zip_libzip_version.mdoc
-  zip_name_locate.mdoc
-  zip_open.mdoc
-  zip_register_progress_callback.mdoc
-  zip_register_progress_callback_with_state.mdoc
-  zip_rename.mdoc
-  zip_set_archive_comment.mdoc
-  zip_set_archive_flag.mdoc
-  zip_set_default_password.mdoc
-  zip_set_file_comment.mdoc
-  zip_set_file_compression.mdoc
-  zip_source_begin_write.mdoc
-  zip_source_buffer.mdoc
-  zip_source_close.mdoc
-  zip_source_commit_write.mdoc
-  zip_source_error.mdoc
-  zip_source_file.mdoc
-  zip_source_filep.mdoc
-  zip_source_free.mdoc
-  zip_source_function.mdoc
-  zip_source_is_deleted.mdoc
-  zip_source_keep.mdoc
-  zip_source_make_command_bitmap.mdoc
-  zip_source_open.mdoc
-  zip_source_read.mdoc
-  zip_source_rollback_write.mdoc
-  zip_source_seek.mdoc
-  zip_source_seek_compute_offset.mdoc
-  zip_source_seek_write.mdoc
-  zip_source_stat.mdoc
-  zip_source_tell.mdoc
-  zip_source_tell_write.mdoc
-  zip_source_win32a.mdoc
-  zip_source_win32handle.mdoc
-  zip_source_win32w.mdoc
-  zip_source_write.mdoc
-  zip_source_zip.mdoc
-  zip_stat.mdoc
-  zip_stat_init.mdoc
-  zip_unchange.mdoc
-  zip_unchange_all.mdoc
-  zip_unchange_archive.mdoc
+SET(MAN_PAGES
+  ZIP_SOURCE_GET_ARGS.3
+  libzip.3
+  zip_add.3
+  zip_add_dir.3
+  zip_close.3
+  zip_delete.3
+  zip_dir_add.3
+  zip_discard.3
+  zip_error_clear.3
+  zip_error_code_system.3
+  zip_error_code_zip.3
+  zip_error_fini.3
+  zip_error_get.3
+  zip_error_get_sys_type.3
+  zip_error_init.3
+  zip_error_set.3
+  zip_error_strerror.3
+  zip_error_system_type.3
+  zip_error_to_data.3
+  zip_error_to_str.3
+  zip_errors.3
+  zip_fclose.3
+  zip_fdopen.3
+  zip_file_add.3
+  zip_file_extra_field_delete.3
+  zip_file_extra_field_get.3
+  zip_file_extra_field_set.3
+  zip_file_extra_fields_count.3
+  zip_file_get_comment.3
+  zip_file_get_error.3
+  zip_file_rename.3
+  zip_file_set_comment.3
+  zip_file_set_encryption.3
+  zip_file_set_external_attributes.3
+  zip_file_set_mtime.3
+  zip_file_strerror.3
+  zip_fopen.3
+  zip_fopen_encrypted.3
+  zip_fread.3
+  zip_fseek.3
+  zip_get_archive_comment.3
+  zip_get_archive_flag.3
+  zip_get_error.3
+  zip_get_file_comment.3
+  zip_get_name.3
+  zip_get_num_entries.3
+  zip_get_num_files.3
+  zip_libzip_version.3
+  zip_name_locate.3
+  zip_open.3
+  zip_register_progress_callback.3
+  zip_register_progress_callback_with_state.3
+  zip_rename.3
+  zip_set_archive_comment.3
+  zip_set_archive_flag.3
+  zip_set_default_password.3
+  zip_set_file_comment.3
+  zip_set_file_compression.3
+  zip_source_begin_write.3
+  zip_source_buffer.3
+  zip_source_close.3
+  zip_source_commit_write.3
+  zip_source_error.3
+  zip_source_file.3
+  zip_source_filep.3
+  zip_source_free.3
+  zip_source_function.3
+  zip_source_is_deleted.3
+  zip_source_keep.3
+  zip_source_make_command_bitmap.3
+  zip_source_open.3
+  zip_source_read.3
+  zip_source_rollback_write.3
+  zip_source_seek.3
+  zip_source_seek_compute_offset.3
+  zip_source_seek_write.3
+  zip_source_stat.3
+  zip_source_tell.3
+  zip_source_tell_write.3
+  zip_source_win32a.3
+  zip_source_win32handle.3
+  zip_source_win32w.3
+  zip_source_write.3
+  zip_source_zip.3
+  zip_stat.3
+  zip_stat_init.3
+  zip_unchange.3
+  zip_unchange_all.3
+  zip_unchange_archive.3
+  zipcmp.1
+  zipmerge.1
+  ziptool.1
 )
-SET(MDOC1_PAGES
-  zipcmp.mdoc
-  zipmerge.mdoc
-  ziptool.mdoc
-)
-SET(MDOC_PAGES ${MDOC1_PAGES} ${MDOC3_PAGES})
-STRING(REGEX REPLACE .mdoc "" MAN1_PAGES "${MDOC1_PAGES}")
-STRING(REGEX REPLACE .mdoc "" MAN3_PAGES "${MDOC3_PAGES}")
-SET(MAN_PAGES ${MAN1_PAGES} ${MAN3_PAGES})
 
 IF(CMAKE_SYSTEM_NAME MATCHES BSD)
   SET(MANFMT mdoc)
-ELSE(CMAKE_SYSTEM_NAME MATCHES BSD)
+ELSE()
   SET(MANFMT man)
-ENDif(CMAKE_SYSTEM_NAME MATCHES BSD)
+ENDIF()
 
-# installation
+FOREACH(MAN_PAGE ${MAN_PAGES})
+  STRING(REGEX REPLACE "[1-9]$" "${MANFMT}" SOURCE_FILE ${MAN_PAGE})
+  STRING(REGEX REPLACE ".*(.)$" "man\\1" SUBDIR ${MAN_PAGE})
+  # CONFIGURE_FILE does not find out about updates to the sources, and it does not provide a target
+  #CONFIGURE_FILE(${SOURCE_FILE} ${MAN_PAGE} COPYONLY)
+  ADD_CUSTOM_COMMAND(OUTPUT ${MAN_PAGE}
+    DEPENDS ${SOURCE_FILE}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} ${CMAKE_CURRENT_BINARY_DIR}/${MAN_PAGE}
+    COMMENT "Preparing ${MAN_PAGE}"
+    )
+  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_MANDIR}/${SUBDIR})
 
-FOREACH(MAN_PAGE ${MAN1_PAGES})
-  INSTALL(FILES ${MAN_PAGE}.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-    RENAME ${MAN_PAGE}.1)
-ENDFOREACH(MAN_PAGE ${PROGRAMS})
-FOREACH(MAN_PAGE ${MAN3_PAGES})
-  INSTALL(FILES ${MAN_PAGE}.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-    RENAME ${MAN_PAGE}.3)
-ENDFOREACH(MAN_PAGE ${PROGRAMS})
-# TODO: usually symlinks, but I only know how to do this way
-INSTALL(FILES zip_error_clear.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_file_error_clear.3)
-INSTALL(FILES zip_error_get.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_file_error_get.3)
-INSTALL(FILES zip_error_init.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_error_init_with_code.3)
-INSTALL(FILES zip_file_extra_field_delete.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_file_extra_field_delete_by_id.3)
-INSTALL(FILES zip_file_extra_field_get.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_file_extra_field_get_by_id.3)
-INSTALL(FILES zip_file_extra_fields_count.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_file_extra_fields_count_by_id.3)
-INSTALL(FILES zip_file_add.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_file_replace.3)
-INSTALL(FILES zip_fopen.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_fopen_index.3)
-INSTALL(FILES zip_fopen_encrypted.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_fopen_index_encrypted.3)
-INSTALL(FILES zip_open.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_open_from_source.3)
-INSTALL(FILES zip_add.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_replace.3)
-INSTALL(FILES zip_source_function.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_source_function_create.3)
-INSTALL(FILES zip_stat.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_stat_index.3)
-INSTALL(FILES zip_file_strerror.${MANFMT} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3
-  RENAME zip_strerror.3)
+  STRING(REGEX REPLACE "[1-9]$" "html" HTML_FILE ${MAN_PAGE})
+  STRING(REGEX REPLACE "[1-9]$" "man" MAN_FILE ${MAN_PAGE})
+  STRING(REGEX REPLACE "[1-9]$" "mdoc" MDOC_FILE ${MAN_PAGE})
 
-# custom maintainer targets
+  # html re-generation
+  ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${HTML_FILE}
+    DEPENDS ${MDOC_FILE}
+    COMMAND ${CMAKE_COMMAND} -DIN=${MDOC_FILE} -DOUT=${HTML_FILE} -DDIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/update-html.cmake
+    )
+  LIST(APPEND UPDATEHTML ${CMAKE_CURRENT_SOURCE_DIR}/${HTML_FILE})
 
-#FOREACH(MAN ${MAN_PAGES})
-#  ADD_CUSTOM_TARGET(${MAN}.man
-#    DEPENDS ${MAN}.mdoc
-#    COMMAND mandoc -T man ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc | sed '/TH/s,"NetBSD [^"]*","NiH",' > ${MAN}.new
-#    COMMAND diff -I NiH ${MAN}.new ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.man || mv ${MAN}.new ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.man
-#    COMMAND rm -f ${MAN}.new
-#    COMMENT Updating man page ${MAN}.man
-#    )
-#  ADD_CUSTOM_TARGET(${MAN}.html
-#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc
-#    COMMAND mandoc -Thtml -Oman="%N.html",style=../nih-man.css ${CMAKE_CURRENT_SOURCE_DIR}/${MAN}.mdoc > ${MAN}.html
-#    COMMENT Updating HTML page ${MAN}.html
-#    )
-#ENDFOREACH(MAN)
+  # man re-generation
+  ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${MAN_FILE}
+    DEPENDS ${MDOC_FILE}
+    COMMAND ${CMAKE_COMMAND} -DIN=${MDOC_FILE} -DOUT=${MAN_FILE} -DDIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/update-man.cmake
+    )
+  LIST(APPEND UPDATEMAN ${CMAKE_CURRENT_SOURCE_DIR}/${MAN_FILE})
+ENDFOREACH()
+ADD_CUSTOM_TARGET(man ALL DEPENDS ${MAN_PAGES})
+ADD_CUSTOM_TARGET(update-man DEPENDS ${UPDATEMAN})
+ADD_CUSTOM_TARGET(update-html DEPENDS ${UPDATEHTML})
 
-#STRING(REGEX REPLACE .mdoc .man MANDEPEND "${MDOC_PAGES}")
-#ADD_CUSTOM_TARGET(update-man
-#  DEPENDS ${MANDEPEND})
-
-#STRING(REGEX REPLACE .mdoc .html HTMLDEPEND "${MDOC_PAGES}")
-#ADD_CUSTOM_TARGET(update-html
-#  DEPENDS ${HTMLDEPEND})
-
-# TODO: strange error:
-#[ 94%] zipcmp.html
-#[ 97%] Built target zipcmp.html
-#[ 97%] zipmerge.html
-#[100%] Built target zipmerge.html
-#make: don't know how to make zipcmp.html. Stop
-
-# TODO: why are all the man pages rebuilt on a second 'make update-html'?
+FILE(STRINGS links MANPAGE_LINKS)
+FOREACH(LINKS_LINE ${MANPAGE_LINKS})
+  IF(${LINKS_LINE} MATCHES "(.*) (.*)")
+    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_MATCH_1}.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 RENAME ${CMAKE_MATCH_2}.3)
+  ENDIF()
+ENDFOREACH()
