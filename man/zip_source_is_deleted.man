@@ -1,0 +1,31 @@
+.TH "ZIP_SOURCE_IS_DELETED" "3" "November 18, 2014" "NiH" "Library Functions Manual"
+.nh
+.if n .ad l
+.SH "NAME"
+\fBzip_source_is_deleted\fR
+\- check if zip_source is deleted
+.SH "LIBRARY"
+libzip (-lzip)
+.SH "SYNOPSIS"
+\fB#include <zip.h>\fR
+.sp
+\fIint\fR
+.PD 0
+.HP 4n
+\fBzip_source_is_deleted\fR(\fIzip_source_t\ *source\fR);
+.PD
+.SH "DESCRIPTION"
+The function
+\fBzip_source_is_deleted\fR()
+returns whether the zip_source was deleted.
+This can for example happen when all entries are removed from a zip archive.
+.SH "RETURN VALUES"
+\fBzip_source_is_deleted\fR()
+returns 1 if the zip_source is deleted and 0 otherwise.
+.SH "SEE ALSO"
+libzip(3),
+zip_source(3)
+.SH "AUTHORS"
+Dieter Baron <\fIdillo@nih.at\fR>
+and
+Thomas Klausner <\fItk@giga.or.at\fR>
