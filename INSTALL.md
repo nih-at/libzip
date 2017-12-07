@@ -24,3 +24,5 @@ Some useful parameters you can pass to `cmake` with `-Dparameter=value`:
 - `CMAKE_INSTALL_PREFIX`: for setting the installation path
 
 You can get verbose build output with by passing `VERBOSE=1` to `make`.
+
+You can also check the (cmake FAQ)[https://cmake.org/Wiki/CMake_FAQ].
