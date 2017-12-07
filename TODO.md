@@ -6,13 +6,6 @@
   - (Github Community Profile)[https://github.com/nih-at/libzip/community]
 
 * migration to CMake
-  - fix skipping tests (currently reported as failed)
-  - update README.md, INSTALL
-    - switch between static or shared build
-    - show actual commands during make (`make VERBOSE=1`)
-    - custom prefix
-    - custom compiler, compiler flags
-    - link to FAQ at https://cmake.org/Wiki/CMake_FAQ
   - replace `make distcheck`
   - check generated xcode project
 
