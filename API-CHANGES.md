@@ -60,7 +60,7 @@ old.
 ### new type `zip_flags_t`
 
 The functions which have flags now use the `zip_flags_t` type for this.
-All old flags fit; you need code only to adapt if you were saving flags in a
+All old flags fit; you need only to adapt code if you were saving flags in a
 local variable. Use `zip_flags_t` for such a variable.
 This affects:
 - `zip_fopen()`
