@@ -13,29 +13,15 @@ If you have developed an application using libzip, you can find out
 about API changes and how to adapt your code for them in the included
 file `API-CHANGES`.
 
-For generic installation instructions, see file `INSTALL`, which
-describes the approach using autoconf; alternatively, you can
-use cmake to build.
-
-Additionally, you'll need zlib (at least version 1.1.2). It comes
-with most operating systems nowadays, or you can get it at
->	http://www.zlib.net/
-
-For supporting bzip2-compressed zip archives, bzip2 from
->	http://bzip.org/
-
-needs to be installed.
-
-When using a static Windows library, you need to define `ZIP_STATIC`
-when compiling packages using libzip.
+See the `INSTALL.md` file for installation instructions and
+dependencies.
 
 If you make a binary distribution, please include a pointer to the
 distribution site:
 >	https://libzip.org/
 
-The latest version can always be found there.  The official mercurial
-repository is at https://hg.nih.at/libzip/ and a read-only git mirror
-exists at https://github.com/nih-at/libzip/
+The latest version can always be found there.  The official repository
+is at (github)[https://github.com/nih-at/libzip/].
 
 There is a mailing list for developers using libzip.  You can
 subscribe to it by sending a mail with the subject "subscribe
