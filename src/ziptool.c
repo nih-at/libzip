@@ -382,7 +382,7 @@ name_locate(int argc, char *argv[]) {
 }
 
 static void
-progress_callback(zip_t *za, double percentage, void *ud) {
+progress_callback(zip_t *archive, double percentage, void *ud) {
     printf("%.1lf%% done\n", percentage*100);
 }
 
@@ -475,7 +475,7 @@ set_file_compression(int argc, char *argv[]) {
 
 static int
 set_file_encryption(int argc, char *argv[]) {
-    zip_int32_t method;
+    zip_uint16_t method;
     zip_uint64_t idx;
     char *password;
     idx = strtoull(argv[0], NULL, 10);
