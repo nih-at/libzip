@@ -11,9 +11,9 @@ all others.  Example source code is in the `src/` subdirectory.
 
 If you have developed an application using libzip, you can find out
 about API changes and how to adapt your code for them in the included
-file `API-CHANGES.md`.
+file [API-CHANGES.md](API-CHANGES.md).
 
-See the `INSTALL.md` file for installation instructions and
+See the [INSTALL.md](INSTALL.md) file for installation instructions and
 dependencies.
 
 If you make a binary distribution, please include a pointer to the
