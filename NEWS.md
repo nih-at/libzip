@@ -1,3 +1,9 @@
+1.x.x [201x-xx-xx]
+==================
+
+* Improve build with cmake
+* Retire autoconf/automake build system
+
 1.3.2 [2017-11-20]
 ==================
 * Fix bug introduced in last: zip_t was erroneously freed if zip_close() failed.
