@@ -7,7 +7,7 @@ You can define `ZIP_DISABLE_DEPRECATED` before including `<zip.h>` to hide
 prototypes for deprecated functions, to find out about functions that
 might be removed at some point.
 
-# 1.0
+# Changed in libzip-1.0
 
 ## new type `zip_error_t`
 
@@ -55,7 +55,7 @@ This means you can use "`zip_t`" instead of "`struct zip`", etc.
 torrentzip depends on a particular zlib version which is by now quite
 old.
 
-# 0.11
+# Changed in libzip-0.11
 
 ## new type `zip_flags_t`
 
