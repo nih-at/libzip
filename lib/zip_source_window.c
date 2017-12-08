@@ -143,7 +143,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 
         case ZIP_SOURCE_OPEN:
 	    if (ctx->source_archive) {
-		zip_int64_t offset;
+		zip_uint64_t offset;
 
 		if ((offset = _zip_file_get_offset(ctx->source_archive, ctx->source_index, &ctx->error)) == 0) {
 		    return -1;
