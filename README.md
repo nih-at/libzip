@@ -21,7 +21,7 @@ distribution site:
 >	https://libzip.org/
 
 The latest version can always be found there.  The official repository
-is at (github)[https://github.com/nih-at/libzip/].
+is at [github](https://github.com/nih-at/libzip/).
 
 There is a mailing list for developers using libzip.  You can
 subscribe to it by sending a mail with the subject "subscribe
