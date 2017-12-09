@@ -30,7 +30,9 @@ ADD_EXECUTABLE(ziptool_regress ziptool_regress.c ${SRC_EXTRA_FILES} source_hole.
 TARGET_LINK_LIBRARIES(ziptool_regress zip)
 
 ADD_LIBRARY(malloc MODULE malloc.c)
+TARGET_LINK_LIBRARIES(malloc ${CMAKE_DL_LIBS})
 ADD_LIBRARY(nonrandomopen MODULE nonrandomopen.c)
+TARGET_LINK_LIBRARIES(nonrandomopen ${CMAKE_DL_LIBS})
 
 FOREACH(PROGRAM ${GETOPT_USERS})
   ADD_EXECUTABLE(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES})
