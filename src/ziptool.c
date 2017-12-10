@@ -753,6 +753,9 @@ usage(const char *progname, const char *reason)
     fprintf(out, "\nSupported options are:\n"
 	    "\t-c\t\tcheck consistency\n"
 	    "\t-e\t\terror if archive already exists (only useful with -n)\n"
+#ifdef FOR_REGRESS
+            "\t-F size\t\tfragment size for in memory archive\n"
+#endif
 	    "\t-g\t\tguess file name encoding (for stat)\n"
 #ifdef FOR_REGRESS
             "\t-H\t\twrite files with holes compactly\n"

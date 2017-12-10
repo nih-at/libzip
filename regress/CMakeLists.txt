@@ -87,6 +87,8 @@ SET(EXTRA_TESTS
 	add_from_zip_stored.test
 	add_stored.test
 	add_stored_in_memory.test
+	buffer-fragment-read.test
+	buffer-fragment-write.test
 	cm-default.test
 	count_entries.test
 	decrypt-correct-password-aes128.test

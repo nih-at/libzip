@@ -296,6 +296,11 @@ struct zip_stat {
     zip_uint32_t flags;			/* reserved for future use */
 };
 
+struct zip_buffer_fragment {
+    zip_uint8_t *data;
+    zip_uint64_t length;
+};
+
 struct zip;
 struct zip_file;
 struct zip_source;
@@ -305,6 +310,7 @@ typedef struct zip_error zip_error_t;
 typedef struct zip_file zip_file_t;
 typedef struct zip_source zip_source_t;
 typedef struct zip_stat zip_stat_t;
+typedef struct zip_buffer_fragment zip_buffer_fragment_t;
 
 typedef zip_uint32_t zip_flags_t;
 
@@ -389,6 +395,8 @@ ZIP_EXTERN int zip_set_file_compression(zip_t *, zip_uint64_t, zip_int32_t, zip_
 ZIP_EXTERN int zip_source_begin_write(zip_source_t *);
 ZIP_EXTERN zip_source_t *zip_source_buffer(zip_t *, const void *, zip_uint64_t, int);
 ZIP_EXTERN zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
+ZIP_EXTERN zip_source_t *zip_source_buffer_fragment(zip_t *, const zip_buffer_fragment_t *, zip_uint64_t, int);
+ZIP_EXTERN zip_source_t *zip_source_buffer_fragment_create(const zip_buffer_fragment_t *, zip_uint64_t, int, zip_error_t *);
 ZIP_EXTERN int zip_source_close(zip_source_t *);
 ZIP_EXTERN int zip_source_commit_write(zip_source_t *);
 ZIP_EXTERN zip_error_t *zip_source_error(zip_source_t *);

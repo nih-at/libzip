@@ -701,6 +701,47 @@
 		4BACD5D015BC2DF200920691 /* fopen_unchanged */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fopen_unchanged; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD5DF15BC2F3700920691 /* fread */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fread; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BACD65015BC301300920691 /* tryopen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tryopen; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BC03F781FDD55C1003C7B62 /* zip-in-archive-comment.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zip-in-archive-comment.test"; sourceTree = "<group>"; };
+		4BC03F791FDD55C1003C7B62 /* decrypt-wrong-password-aes192.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-wrong-password-aes192.test"; sourceTree = "<group>"; };
+		4BC03F7A1FDD55C1003C7B62 /* decrypt-correct-password-pkware.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-correct-password-pkware.test"; sourceTree = "<group>"; };
+		4BC03F7B1FDD55C1003C7B62 /* encryption-nonrandom-aes192.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "encryption-nonrandom-aes192.test"; sourceTree = "<group>"; };
+		4BC03F7C1FDD55C1003C7B62 /* decrypt-wrong-password-pkware.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-wrong-password-pkware.test"; sourceTree = "<group>"; };
+		4BC03F7D1FDD55C1003C7B62 /* preload.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = preload.test; sourceTree = "<group>"; };
+		4BC03F7E1FDD55C1003C7B62 /* open_file_count.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = open_file_count.test; sourceTree = "<group>"; };
+		4BC03F7F1FDD55C2003C7B62 /* fseek_fail.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fseek_fail.test; sourceTree = "<group>"; };
+		4BC03F801FDD55C2003C7B62 /* open_multidisk.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = open_multidisk.test; sourceTree = "<group>"; };
+		4BC03F811FDD55C2003C7B62 /* set_compression_deflate_to_bzip2.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_deflate_to_bzip2.test; sourceTree = "<group>"; };
+		4BC03F821FDD55C2003C7B62 /* decrypt-correct-password-aes192.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-correct-password-aes192.test"; sourceTree = "<group>"; };
+		4BC03F831FDD55C2003C7B62 /* encryption-nonrandom-aes256.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "encryption-nonrandom-aes256.test"; sourceTree = "<group>"; };
+		4BC03F841FDD55C2003C7B62 /* fseek_ok.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fseek_ok.test; sourceTree = "<group>"; };
+		4BC03F851FDD55C3003C7B62 /* set_compression_store_to_bzip2.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_store_to_bzip2.test; sourceTree = "<group>"; };
+		4BC03F861FDD55C3003C7B62 /* open_zip64_3mf.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = open_zip64_3mf.test; sourceTree = "<group>"; };
+		4BC03F871FDD55C3003C7B62 /* fseek_deflated.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fseek_deflated.test; sourceTree = "<group>"; };
+		4BC03F881FDD55C3003C7B62 /* encryption-remove.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "encryption-remove.test"; sourceTree = "<group>"; };
+		4BC03F891FDD55C3003C7B62 /* add_from_zip_deflated2.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_from_zip_deflated2.test; sourceTree = "<group>"; };
+		4BC03F8A1FDD55C3003C7B62 /* decrypt-wrong-password-aes256.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-wrong-password-aes256.test"; sourceTree = "<group>"; };
+		4BC03F8B1FDD55C3003C7B62 /* encryption-nonrandom-aes128.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "encryption-nonrandom-aes128.test"; sourceTree = "<group>"; };
+		4BC03F8C1FDD55C4003C7B62 /* progress.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = progress.test; sourceTree = "<group>"; };
+		4BC03F8D1FDD55C4003C7B62 /* junk_at_start.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = junk_at_start.test; sourceTree = "<group>"; };
+		4BC03F8E1FDD55C4003C7B62 /* buffer-fragment-read.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "buffer-fragment-read.test"; sourceTree = "<group>"; };
+		4BC03F8F1FDD55C4003C7B62 /* decrypt-wrong-password-aes128.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-wrong-password-aes128.test"; sourceTree = "<group>"; };
+		4BC03F901FDD55C4003C7B62 /* fdopen_ok.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fdopen_ok.test; sourceTree = "<group>"; };
+		4BC03F911FDD55C4003C7B62 /* junk_at_end.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = junk_at_end.test; sourceTree = "<group>"; };
+		4BC03F921FDD55C4003C7B62 /* decrypt-correct-password-aes128.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-correct-password-aes128.test"; sourceTree = "<group>"; };
+		4BC03F931FDD55C5003C7B62 /* decrypt-no-password-aes256.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-no-password-aes256.test"; sourceTree = "<group>"; };
+		4BC03F941FDD55C5003C7B62 /* buffer-fragment-write.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "buffer-fragment-write.test"; sourceTree = "<group>"; };
+		4BC03F951FDD55C5003C7B62 /* decrypt-correct-password-aes256.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "decrypt-correct-password-aes256.test"; sourceTree = "<group>"; };
+		4BC03F961FDD55C5003C7B62 /* open_many_fail.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = open_many_fail.test; sourceTree = "<group>"; };
+		4BC03F971FDD55C5003C7B62 /* set_compression_bzip2_to_deflate.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_bzip2_to_deflate.test; sourceTree = "<group>"; };
+		4BC03F981FDD55C5003C7B62 /* set_file_mtime.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_file_mtime.test; sourceTree = "<group>"; };
+		4BC03F991FDD5617003C7B62 /* nonrandomopen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nonrandomopen.c; sourceTree = "<group>"; };
+		4BC03F9A1FDD5617003C7B62 /* fseek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fseek.c; sourceTree = "<group>"; };
+		4BC03F9B1FDD5617003C7B62 /* nonrandomopentest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nonrandomopentest.c; sourceTree = "<group>"; };
+		4BC03F9C1FDD5617003C7B62 /* malloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = malloc.c; sourceTree = "<group>"; };
+		4BC03F9D1FDD5617003C7B62 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		4BC03F9E1FDD5642003C7B62 /* extra_field_align.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = extra_field_align.test; sourceTree = "<group>"; };
+		4BC03F9F1FDD5642003C7B62 /* count_entries.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = count_entries.test; sourceTree = "<group>"; };
+		4BC03FA01FDD5660003C7B62 /* cleanup.cmake */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cleanup.cmake; sourceTree = "<group>"; };
 		4BC3863E1A1BE00E00CDCAAC /* zip_get_error.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_get_error.mdoc; sourceTree = "<group>"; };
 		4BC3863F1A1BE00E00CDCAAC /* zip_source_begin_write.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_begin_write.mdoc; sourceTree = "<group>"; };
 		4BC386401A1BE00E00CDCAAC /* zip_source_close.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_source_close.mdoc; sourceTree = "<group>"; };
@@ -758,7 +799,6 @@
 		4BD35E4A1A33366200256CB7 /* add_from_zip_partial_deflated.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_from_zip_partial_deflated.test; sourceTree = "<group>"; };
 		4BD35E4B1A33366200256CB7 /* add_from_zip_partial_stored.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_from_zip_partial_stored.test; sourceTree = "<group>"; };
 		4BD35E4C1A33366200256CB7 /* add_from_zip_stored.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_from_zip_stored.test; sourceTree = "<group>"; };
-		4BD35E4D1A33366200256CB7 /* add_from_zip.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_from_zip.test; sourceTree = "<group>"; };
 		4BD35E4E1A33366200256CB7 /* add_stored_in_memory.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_stored_in_memory.test; sourceTree = "<group>"; };
 		4BD35E4F1A33366200256CB7 /* add_stored.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_stored.test; sourceTree = "<group>"; };
 		4BD35E501A33366200256CB7 /* cm-default.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cm-default.test"; sourceTree = "<group>"; };
@@ -821,7 +861,6 @@
 		4BD35EB01A33366200256CB7 /* set_compression_store_to_deflate.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_store_to_deflate.test; sourceTree = "<group>"; };
 		4BD35EB11A33366200256CB7 /* set_compression_store_to_store.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_store_to_store.test; sourceTree = "<group>"; };
 		4BD35EB21A33366200256CB7 /* set_compression_unknown.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_unknown.test; sourceTree = "<group>"; };
-		4BD35EB31A33366200256CB7 /* set_mtime.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_mtime.test; sourceTree = "<group>"; };
 		4BD35EB41A33366200256CB7 /* stat_index_cp437_guess.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stat_index_cp437_guess.test; sourceTree = "<group>"; };
 		4BD35EB51A33366200256CB7 /* stat_index_cp437_raw.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stat_index_cp437_raw.test; sourceTree = "<group>"; };
 		4BD35EB61A33366200256CB7 /* stat_index_cp437_strict.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stat_index_cp437_strict.test; sourceTree = "<group>"; };
@@ -833,8 +872,6 @@
 		4BD35EBC1A33366200256CB7 /* stat_index_utf8_strict.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stat_index_utf8_strict.test; sourceTree = "<group>"; };
 		4BD35EBD1A33366200256CB7 /* stat_index_utf8_unmarked_strict.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stat_index_utf8_unmarked_strict.test; sourceTree = "<group>"; };
 		4BD35EBE1A33366200256CB7 /* stat_index_zip64.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stat_index_zip64.test; sourceTree = "<group>"; };
-		4BD35EDD1A33366300256CB7 /* torrent-already.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "torrent-already.test"; sourceTree = "<group>"; };
-		4BD35EDE1A33366300256CB7 /* torrent-new.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "torrent-new.test"; sourceTree = "<group>"; };
 		4BD35EE11A33366300256CB7 /* utf-8-standardization.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "utf-8-standardization.test"; sourceTree = "<group>"; };
 		4BD35EE31A33366300256CB7 /* zip64_creation.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zip64_creation.test; sourceTree = "<group>"; };
 		4BD35EE41A33366300256CB7 /* zip64_stored_creation.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zip64_stored_creation.test; sourceTree = "<group>"; };
@@ -1184,16 +1221,22 @@
 		4BACD57415BC2AA100920691 /* regress */ = {
 			isa = PBXGroup;
 			children = (
+				4BC03F9D1FDD5617003C7B62 /* CMakeLists.txt */,
+				4BC03FA01FDD5660003C7B62 /* cleanup.cmake */,
 				4BD155CE191CD28D0046F012 /* NiHTest.pm */,
-				4BD155CF191CD28D0046F012 /* runtest.in */,
 				4BACD57715BC2AEF00920691 /* add_from_filep.c */,
 				4BACD57A15BC2AEF00920691 /* fopen_unchanged.c */,
 				4BACD57B15BC2AEF00920691 /* fread.c */,
+				4BC03F9A1FDD5617003C7B62 /* fseek.c */,
 				4BD6CB5E19E71B3B00710654 /* hole.c */,
+				4BC03F9C1FDD5617003C7B62 /* malloc.c */,
+				4BC03F991FDD5617003C7B62 /* nonrandomopen.c */,
+				4BC03F9B1FDD5617003C7B62 /* nonrandomopentest.c */,
+				4BD155CF191CD28D0046F012 /* runtest.in */,
 				4BD6CB5C19E6A5D900710654 /* source_hole.c */,
+				4BD35E401A33362A00256CB7 /* test cases */,
 				4BACD58415BC2AEF00920691 /* tryopen.c */,
 				4B51DDB31FDAE1DB00C5CA85 /* ziptool_regress.c */,
-				4BD35E401A33362A00256CB7 /* test cases */,
 			);
 			name = regress;
 			path = ../regress;
@@ -1211,13 +1254,25 @@
 				4BD35E471A33366200256CB7 /* add_from_stdin.test */,
 				4BD35E481A33366200256CB7 /* add_from_zip_closed.test */,
 				4BD35E491A33366200256CB7 /* add_from_zip_deflated.test */,
+				4BC03F891FDD55C3003C7B62 /* add_from_zip_deflated2.test */,
 				4BD35E4A1A33366200256CB7 /* add_from_zip_partial_deflated.test */,
 				4BD35E4B1A33366200256CB7 /* add_from_zip_partial_stored.test */,
 				4BD35E4C1A33366200256CB7 /* add_from_zip_stored.test */,
-				4BD35E4D1A33366200256CB7 /* add_from_zip.test */,
 				4BD35E4E1A33366200256CB7 /* add_stored_in_memory.test */,
 				4BD35E4F1A33366200256CB7 /* add_stored.test */,
+				4BC03F8E1FDD55C4003C7B62 /* buffer-fragment-read.test */,
+				4BC03F941FDD55C5003C7B62 /* buffer-fragment-write.test */,
 				4BD35E501A33366200256CB7 /* cm-default.test */,
+				4BC03F9F1FDD5642003C7B62 /* count_entries.test */,
+				4BC03F921FDD55C4003C7B62 /* decrypt-correct-password-aes128.test */,
+				4BC03F821FDD55C2003C7B62 /* decrypt-correct-password-aes192.test */,
+				4BC03F951FDD55C5003C7B62 /* decrypt-correct-password-aes256.test */,
+				4BC03F7A1FDD55C1003C7B62 /* decrypt-correct-password-pkware.test */,
+				4BC03F931FDD55C5003C7B62 /* decrypt-no-password-aes256.test */,
+				4BC03F8F1FDD55C4003C7B62 /* decrypt-wrong-password-aes128.test */,
+				4BC03F791FDD55C1003C7B62 /* decrypt-wrong-password-aes192.test */,
+				4BC03F8A1FDD55C3003C7B62 /* decrypt-wrong-password-aes256.test */,
+				4BC03F7C1FDD55C1003C7B62 /* decrypt-wrong-password-pkware.test */,
 				4BD35E511A33366200256CB7 /* delete_add_same.test */,
 				4BD35E521A33366200256CB7 /* delete_invalid.test */,
 				4BD35E531A33366200256CB7 /* delete_last.test */,
@@ -1225,6 +1280,10 @@
 				4BD35E551A33366200256CB7 /* delete_multiple_partial.test */,
 				4BD35E561A33366200256CB7 /* delete_renamed_rename.test */,
 				4BD35E5B1A33366200256CB7 /* encrypt.test */,
+				4BC03F8B1FDD55C3003C7B62 /* encryption-nonrandom-aes128.test */,
+				4BC03F7B1FDD55C1003C7B62 /* encryption-nonrandom-aes192.test */,
+				4BC03F831FDD55C2003C7B62 /* encryption-nonrandom-aes256.test */,
+				4BC03F881FDD55C3003C7B62 /* encryption-remove.test */,
 				4BD35E5C1A33366200256CB7 /* extra_add_multiple.test */,
 				4BD35E5D1A33366200256CB7 /* extra_add.test */,
 				4BD35E5E1A33366200256CB7 /* extra_count_by_id.test */,
@@ -1232,27 +1291,37 @@
 				4BD35E601A33366200256CB7 /* extra_count.test */,
 				4BD35E611A33366200256CB7 /* extra_delete_by_id.test */,
 				4BD35E621A33366200256CB7 /* extra_delete.test */,
+				4BC03F9E1FDD5642003C7B62 /* extra_field_align.test */,
 				4BD35E631A33366200256CB7 /* extra_get_by_id.test */,
 				4BD35E641A33366200256CB7 /* extra_get.test */,
 				4BD35E651A33366200256CB7 /* extra_set_modify_c.test */,
 				4BD35E661A33366200256CB7 /* extra_set_modify_l.test */,
 				4BD35E671A33366200256CB7 /* extra_set.test */,
+				4BC03F901FDD55C4003C7B62 /* fdopen_ok.test */,
 				4BD35E681A33366200256CB7 /* file_comment_encmismatch.test */,
 				4BD35E691A33366200256CB7 /* fopen_unchanged.test */,
 				4BD35E6A1A33366200256CB7 /* fread.test */,
+				4BC03F871FDD55C3003C7B62 /* fseek_deflated.test */,
+				4BC03F7F1FDD55C2003C7B62 /* fseek_fail.test */,
+				4BC03F841FDD55C2003C7B62 /* fseek_ok.test */,
 				4BD35E6B1A33366200256CB7 /* get_comment.test */,
+				4BC03F911FDD55C4003C7B62 /* junk_at_end.test */,
+				4BC03F8D1FDD55C4003C7B62 /* junk_at_start.test */,
 				4BD35E8E1A33366200256CB7 /* name_locate.test */,
 				4BD35E8F1A33366200256CB7 /* open_cons_extrabytes.test */,
 				4BD35E901A33366200256CB7 /* open_empty_2.test */,
 				4BD35E911A33366200256CB7 /* open_empty.test */,
 				4BD35E921A33366200256CB7 /* open_extrabytes.test */,
+				4BC03F7E1FDD55C1003C7B62 /* open_file_count.test */,
 				4BD35E931A33366200256CB7 /* open_filename_duplicate_consistency.test */,
 				4BD35E941A33366200256CB7 /* open_filename_duplicate_empty_consistency.test */,
 				4BD35E951A33366200256CB7 /* open_filename_duplicate_empty.test */,
 				4BD35E961A33366200256CB7 /* open_filename_duplicate.test */,
 				4BD35E971A33366200256CB7 /* open_filename_empty.test */,
 				4BD35E981A33366200256CB7 /* open_incons.test */,
+				4BC03F961FDD55C5003C7B62 /* open_many_fail.test */,
 				4BD35E991A33366200256CB7 /* open_many_ok.test */,
+				4BC03F801FDD55C2003C7B62 /* open_multidisk.test */,
 				4BD35E9A1A33366200256CB7 /* open_new_but_exists.test */,
 				4BD35E9B1A33366200256CB7 /* open_new_ok.test */,
 				4BD35E9C1A33366200256CB7 /* open_nonarchive.test */,
@@ -1260,7 +1329,10 @@
 				4BD35E9E1A33366200256CB7 /* open_ok.test */,
 				4BD35E9F1A33366200256CB7 /* open_too_short.test */,
 				4BD35EA01A33366200256CB7 /* open_truncate.test */,
+				4BC03F861FDD55C3003C7B62 /* open_zip64_3mf.test */,
 				4BD35EA11A33366200256CB7 /* open_zip64_ok.test */,
+				4BC03F7D1FDD55C1003C7B62 /* preload.test */,
+				4BC03F8C1FDD55C4003C7B62 /* progress.test */,
 				4BD35EA21A33366200256CB7 /* rename_ascii.test */,
 				4BD35EA31A33366200256CB7 /* rename_cp437.test */,
 				4BD35EA41A33366200256CB7 /* rename_deleted.test */,
@@ -1272,12 +1344,15 @@
 				4BD35EAB1A33366200256CB7 /* set_comment_localonly.test */,
 				4BD35EAC1A33366200256CB7 /* set_comment_removeglobal.test */,
 				4BD35EAD1A33366200256CB7 /* set_comment_revert.test */,
+				4BC03F971FDD55C5003C7B62 /* set_compression_bzip2_to_deflate.test */,
+				4BC03F811FDD55C2003C7B62 /* set_compression_deflate_to_bzip2.test */,
 				4BD35EAE1A33366200256CB7 /* set_compression_deflate_to_deflate.test */,
 				4BD35EAF1A33366200256CB7 /* set_compression_deflate_to_store.test */,
+				4BC03F851FDD55C3003C7B62 /* set_compression_store_to_bzip2.test */,
 				4BD35EB01A33366200256CB7 /* set_compression_store_to_deflate.test */,
 				4BD35EB11A33366200256CB7 /* set_compression_store_to_store.test */,
 				4BD35EB21A33366200256CB7 /* set_compression_unknown.test */,
-				4BD35EB31A33366200256CB7 /* set_mtime.test */,
+				4BC03F981FDD55C5003C7B62 /* set_file_mtime.test */,
 				4BD35EB41A33366200256CB7 /* stat_index_cp437_guess.test */,
 				4BD35EB51A33366200256CB7 /* stat_index_cp437_raw.test */,
 				4BD35EB61A33366200256CB7 /* stat_index_cp437_strict.test */,
@@ -1289,9 +1364,8 @@
 				4BD35EBC1A33366200256CB7 /* stat_index_utf8_strict.test */,
 				4BD35EBD1A33366200256CB7 /* stat_index_utf8_unmarked_strict.test */,
 				4BD35EBE1A33366200256CB7 /* stat_index_zip64.test */,
-				4BD35EDD1A33366300256CB7 /* torrent-already.test */,
-				4BD35EDE1A33366300256CB7 /* torrent-new.test */,
 				4BD35EE11A33366300256CB7 /* utf-8-standardization.test */,
+				4BC03F781FDD55C1003C7B62 /* zip-in-archive-comment.test */,
 				4BD35EE31A33366300256CB7 /* zip64_creation.test */,
 				4BD35EE41A33366300256CB7 /* zip64_stored_creation.test */,
 			);

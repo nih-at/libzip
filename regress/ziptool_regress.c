@@ -1,5 +1,7 @@
 #include "zip.h"
 
+#define ZIP_MIN(a, b)  ((a) < (b) ? (a) : (b))
+
 #define FOR_REGRESS
 
 typedef enum {
@@ -9,14 +11,15 @@ typedef enum {
 } source_type_t;
 
 source_type_t source_type = SOURCE_TYPE_NONE;
+zip_uint64_t fragment_size = 0;
 
 static int add_nul(int argc, char *argv[]);
 static int unchange_all(int argc, char *argv[]);
 static int zin_close(int argc, char *argv[]);
 
-#define OPTIONS_REGRESS "Hm"
+#define OPTIONS_REGRESS "F:Hm"
 
-#define USAGE_REGRESS " [-Hm]"
+#define USAGE_REGRESS " [-Hm] [-F fragment-size]"
 
 #define GETOPT_REGRESS \
         case 'H': \
@@ -24,6 +27,9 @@ static int zin_close(int argc, char *argv[]);
             break; \
 	case 'm': \
             source_type = SOURCE_TYPE_IN_MEMORY; \
+            break; \
+	case 'F': \
+	    fragment_size = strtoull(optarg, NULL, 10); \
             break;
 
 #define DISPATCH_REGRESS \
@@ -136,28 +142,72 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 	}
     }
     else {
-	char *buf;
-	FILE *fp;
-	if ((buf=malloc((size_t)st.st_size)) == NULL) {
-	    zip_error_set(error, ZIP_ER_MEMORY, 0);
-	    return NULL;
-	}
-	if ((fp=fopen(archive, "r")) == NULL) {
-	    free(buf);
-	    zip_error_set(error, ZIP_ER_READ, errno);
-	    return NULL;
-	}
-	if (fread(buf, (size_t)st.st_size, 1, fp) < 1) {
-	    free(buf);
-	    fclose(fp);
-	    zip_error_set(error, ZIP_ER_READ, errno);
-	    return NULL;
-	}
-	fclose(fp);
-	src = zip_source_buffer_create(buf, (zip_uint64_t)st.st_size, 1, error);
-	if (src == NULL) {
-	    free(buf);
-	}
+        FILE *fp;
+
+        if ((fp=fopen(archive, "r")) == NULL) {
+            zip_error_set(error, ZIP_ER_READ, errno);
+            return NULL;
+        }
+        if (fragment_size == 0) {
+            char *buf;
+            if ((buf=malloc((size_t)st.st_size)) == NULL) {
+                fclose(fp);
+                zip_error_set(error, ZIP_ER_MEMORY, 0);
+                return NULL;
+            }
+            if (fread(buf, (size_t)st.st_size, 1, fp) < 1) {
+                free(buf);
+                fclose(fp);
+                zip_error_set(error, ZIP_ER_READ, errno);
+                return NULL;
+            }
+            src = zip_source_buffer_create(buf, (zip_uint64_t)st.st_size, 1, error);
+            if (src == NULL) {
+                free(buf);
+            }
+        }
+        else {
+            zip_uint64_t nfragments, i, left;
+            zip_buffer_fragment_t *fragments;
+
+            nfragments = ((size_t)st.st_size + fragment_size - 1) / fragment_size;
+            if ((fragments = malloc(sizeof(fragments[0]) * nfragments)) == NULL) {
+                fclose(fp);
+                zip_error_set(error, ZIP_ER_MEMORY, 0);
+                return NULL;
+            }
+            for (i = 0; i < nfragments; i++) {
+                left = ZIP_MIN(fragment_size, (size_t)st.st_size - i * fragment_size);
+                if ((fragments[i].data = malloc(left)) == NULL) {
+                    while (--i > 0) {
+                        free(fragments[i].data);
+                    }
+                    free(fragments);
+                    fclose(fp);
+                    zip_error_set(error, ZIP_ER_MEMORY, 0);
+                    return NULL;
+                }
+                fragments[i].length = left;
+                if (fread(fragments[i].data, left, 1, fp) < 1) {
+                    while (--i > 0) {
+                        free(fragments[i].data);
+                    }
+                    free(fragments);
+                    fclose(fp);
+                    zip_error_set(error, ZIP_ER_READ, errno);
+                    return NULL;
+                }
+            }
+            src = zip_source_buffer_fragment_create(fragments, nfragments, 1, error);
+            if (src == NULL) {
+                for (i = 0; i < nfragments; i++) {
+                    free(fragments[i].data);
+                }
+                free(fragments);
+                fclose(fp);
+            }
+        }
+        fclose(fp);
     }
     if (src == NULL) {
 	return NULL;
