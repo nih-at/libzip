@@ -7,12 +7,13 @@
 
 * migration to CMake
   - replace `make distcheck`
-  - check generated xcode project
+
+* add missing entries to man/links (at least zip_source_xxx_create)
 
 * clone support
   - APFS
-  - `zip_source_buffer`: also support multiple buffers, compare `writev` `struct iovec`
   - test using `zip_source_buffer`
+  - document `zip_source_buffer_fragment`
 
 * randomness test: replace `zip_random()` instead of `open()`
 
@@ -34,6 +35,10 @@
 
 # Later
 
+## macOS / iOS framework
+
+* get cmake to optionally build frameworks
+
 ## Prefixes
 
 For example for adding extractors for self-extracting zip archives.
@@ -44,7 +49,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Compression
 
-* Test CMAKE for bzip2
 * add lzma support
 
 ## API Issues

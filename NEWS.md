@@ -1,8 +1,9 @@
-1.x.x [201x-xx-xx]
+1.4.0 [201x-xx-xx]
 ==================
 
 * Improve build with cmake
 * Retire autoconf/automake build system
+* Add `zip_source_buffer_fragment()`.
 
 1.3.2 [2017-11-20]
 ==================
