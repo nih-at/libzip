@@ -36,8 +36,6 @@
 
 #include "zipint.h"
 
-#define static
-
 #ifndef WRITE_FRAGMENT_SIZE
 #define WRITE_FRAGMENT_SIZE (64*1024)
 #endif
