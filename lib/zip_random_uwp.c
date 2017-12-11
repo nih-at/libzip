@@ -1,5 +1,5 @@
 /*
-  zip_random_win32.c -- fill the user's buffer with random stuff (Windows version)
+  zip_random_uwp.c -- fill the user's buffer with random stuff (UWP version)
   Copyright (C) 2016 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -31,21 +31,26 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <windows.h>
+#include <ntstatus.h>
+#include <bcrypt.h>
+
 #include "zipint.h"
 #include "zipwin32.h"
 
 bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length)
 {
-    HCRYPTPROV hprov;
-    if (!CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT | CRYPT_SILENT)) {
+    BCRYPT_ALG_HANDLE hAlg = NULL;
+    NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
+    if (hr != STATUS_SUCCESS || hAlg == NULL) {
 	return false;
     }
-    if (!CryptGenRandom(hprov, length, buffer)) {
+    hr = BCryptGenRandom(&hAlg, buffer, length, 0);
+    if (hr != STATUS_SUCCESS) {
+	BCryptCloseAlgorithmProvider(&hAlg, 0);
 	return false;
     }
-    if (!CryptReleaseContext(hprov, 0)) {
-	return false;
-    }
+    BCryptCloseAlgorithmProvider(&hAlg, 0);
     return true;
 }

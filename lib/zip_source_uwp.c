@@ -1,5 +1,5 @@
 /*
-zip_source_win32uwp.c -- create data source from Windows file (UWP)
+zip_source_uwp.c -- create data source from Windows file (UWP)
 Copyright (C) 1999-2017 Dieter Baron and Thomas Klausner.
 
 This file is part of libzip, a library to manipulate ZIP archives.
