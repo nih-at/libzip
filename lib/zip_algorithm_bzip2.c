@@ -270,6 +270,6 @@ zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
 
 #else
 
-static int dummy;
+static int dummy __attribute__((used));
 
 #endif /* HAVE_LIBBZ2 */
