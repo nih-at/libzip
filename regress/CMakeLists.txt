@@ -87,6 +87,9 @@ SET(EXTRA_TESTS
 	add_from_zip_stored.test
 	add_stored.test
 	add_stored_in_memory.test
+	clone-add.test
+	clone-delete.test
+	clone-replace.test
 	buffer-fragment-read.test
 	buffer-fragment-write.test
 	cm-default.test

@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_FUNCTION" "3" "November 6, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "November 6, 2017" "Darwin 17.3.0" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,12 +10,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_function\fR(\fIzip_t\ *archive\fR, \fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_function_create\fR(\fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR, \fIzip_error_t\ *error\fR);
@@ -88,6 +90,14 @@ and
 .SS "\fRZIP_SOURCE_BEGIN_WRITE\fR"
 Prepare the source for writing.
 Use this to create any temporary file(s).
+.SS "\fRZIP_SOURCE_BEGIN_WRITE_CLONING\fR"
+Prepare the source for writing, keeping the first
+\fIlen\fR
+bytes of the original file.
+Only implement this command if it is more efficient than copying the
+data, and if it does not destructively overwrite the original file
+(you still have to be able to execute
+\fRZIP_SOURCE_ROLLBACK_WRITE\fR).
 .SS "\fRZIP_SOURCE_CLOSE\fR"
 Reading is done.
 .SS "\fRZIP_SOURCE_COMMIT_WRITE\fR"
@@ -230,6 +240,8 @@ If the function is unable to provide the data again, it should
 return \-1.
 .PP
 \fRZIP_SOURCE_BEGIN_WRITE\fR
+or
+\fRZIP_SOURCE_BEGIN_WRITE_CLONING\fR
 will be called before
 \fRZIP_SOURCE_WRITE\fR,
 \fRZIP_SOURCE_SEEK_WRITE\fR,
@@ -258,6 +270,8 @@ will be called before
 \fRZIP_SOURCE_FREE\fR,
 and similarly for
 \fRZIP_SOURCE_BEGIN_WRITE\fR
+or
+\fRZIP_SOURCE_BEGIN_WRITE_CLONING\fR
 and
 \fRZIP_SOURCE_COMMIT_WRITE\fR
 or

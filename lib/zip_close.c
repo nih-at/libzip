@@ -59,7 +59,7 @@ static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
 ZIP_EXTERN int
 zip_close(zip_t *za)
 {
-    zip_uint64_t i, j, survivors;
+    zip_uint64_t i, j, survivors, unchanged_offset;
     zip_int64_t off;
     int error;
     zip_filelist_t *filelist;
@@ -95,10 +95,15 @@ zip_close(zip_t *za)
     if ((filelist=(zip_filelist_t *)malloc(sizeof(filelist[0])*(size_t)survivors)) == NULL)
 	return -1;
 
+    unchanged_offset = ZIP_UINT64_MAX;
     /* create list of files with index into original archive  */
     for (i=j=0; i<za->nentry; i++) {
-	if (za->entry[i].deleted)
+        if (za->entry[i].orig != NULL && ZIP_ENTRY_HAS_CHANGES(&za->entry[i])) {
+            unchanged_offset = ZIP_MIN(unchanged_offset, za->entry[i].orig->offset);
+        }
+        if (za->entry[i].deleted) {
 	    continue;
+        }
 
         if (j >= survivors) {
             free(filelist);
@@ -115,10 +120,43 @@ zip_close(zip_t *za)
         return -1;
     }
 
-    if (zip_source_begin_write(za->src) < 0) {
-	_zip_error_set_from_source(&za->error, za->src);
-	free(filelist);
-	return -1;
+    if ((zip_source_supports(za->src) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE_CLONING)) == 0) {
+        unchanged_offset = 0;
+    }
+    else {
+        if (unchanged_offset == ZIP_UINT64_MAX) {
+            /* we're keeping all file data, find the end of the last one */
+            zip_uint64_t last_index = ZIP_UINT64_MAX;
+            unchanged_offset = 0;
+
+            for (i = 0; i < za->nentry; i++) {
+                if (za->entry[i].orig != NULL) {
+                    if (za->entry[i].orig->offset >= unchanged_offset) {
+                        unchanged_offset = za->entry[i].orig->offset;
+                        last_index = i;
+                    }
+                }
+            }
+            if (last_index != ZIP_UINT64_MAX) {
+                if ((unchanged_offset = _zip_file_get_end(za, last_index, &za->error)) == 0) {
+                    free(filelist);
+                    return -1;
+                }
+            }
+        }
+        if (unchanged_offset > 0) {
+            if (zip_source_begin_write_cloning(za->src, unchanged_offset) < 0) {
+                /* cloning not supported, need to copy everything */
+                unchanged_offset = 0;
+            }
+        }
+    }
+    if (unchanged_offset == 0) {
+        if (zip_source_begin_write(za->src) < 0) {
+            _zip_error_set_from_source(&za->error, za->src);
+            free(filelist);
+            return -1;
+        }
     }
 
     _zip_progress_start(za->progress);
@@ -132,6 +170,11 @@ zip_close(zip_t *za)
 
 	i = filelist[j].idx;
 	entry = za->entry+i;
+
+        if (entry->orig != NULL && entry->orig->offset < unchanged_offset) {
+            /* already implicitly copied by cloning */
+            continue;
+        }
 
 	new_data = (ZIP_ENTRY_DATA_CHANGED(entry) || ZIP_ENTRY_CHANGED(entry, ZIP_DIRENT_COMP_METHOD) || ZIP_ENTRY_CHANGED(entry, ZIP_DIRENT_ENCRYPTION_METHOD));
 
@@ -567,18 +610,22 @@ _zip_changed(const zip_t *za, zip_uint64_t *survivorsp)
     changed = 0;
     survivors = 0;
 
-    if (za->comment_changed || za->ch_flags != za->flags)
+    if (za->comment_changed || za->ch_flags != za->flags) {
 	changed = 1;
-
-    for (i=0; i<za->nentry; i++) {
-	if (za->entry[i].deleted || za->entry[i].source || (za->entry[i].changes && za->entry[i].changes->changed != 0))
-	    changed = 1;
-	if (!za->entry[i].deleted)
-	    survivors++;
     }
 
-    if (survivorsp)
+    for (i=0; i<za->nentry; i++) {
+        if (ZIP_ENTRY_HAS_CHANGES(&za->entry[i])) {
+	    changed = 1;
+        }
+        if (!za->entry[i].deleted) {
+            survivors++;
+        }
+    }
+
+    if (survivorsp) {
 	*survivorsp = survivors;
+    }
 
     return changed;
 }

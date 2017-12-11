@@ -51,7 +51,7 @@
 #define CENTRAL_MAGIC "PK\1\2"
 #define LOCAL_MAGIC   "PK\3\4"
 #define EOCD_MAGIC    "PK\5\6"
-#define DATADES_MAGIC "PK\7\8"
+#define DATADES_MAGIC "PK\7\10"
 #define EOCD64LOC_MAGIC "PK\6\7"
 #define EOCD64_MAGIC  "PK\6\6"
 #define CDENTRYSIZE         46u
@@ -386,8 +386,8 @@ extern const int _zip_err_type[];
 #define ZIP_MIN(a, b)  ((a) < (b) ? (a) : (b))
 
 #define ZIP_ENTRY_CHANGED(e, f)	((e)->changes && ((e)->changes->changed & (f)))
-
 #define ZIP_ENTRY_DATA_CHANGED(x)	((x)->source != NULL)
+#define ZIP_ENTRY_HAS_CHANGES(e)    (ZIP_ENTRY_DATA_CHANGED(e) || (e)->deleted || ZIP_ENTRY_CHANGED((e), ZIP_DIRENT_ALL))
 
 #define ZIP_IS_RDONLY(za)	((za)->ch_flags & ZIP_AFL_RDONLY)
 
@@ -471,6 +471,7 @@ const zip_uint8_t *_zip_extract_extra_field_by_id(zip_error_t *, zip_uint16_t, i
 
 int _zip_file_extra_field_prepare_for_change(zip_t *, zip_uint64_t);
 int _zip_file_fillbuf(void *, size_t, zip_file_t *);
+zip_uint64_t _zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t *error);
 zip_uint64_t _zip_file_get_offset(const zip_t *, zip_uint64_t, zip_error_t *);
 
 int _zip_filerange_crc(zip_source_t *src, zip_uint64_t offset, zip_uint64_t length, uLong *crcp, zip_error_t *error);

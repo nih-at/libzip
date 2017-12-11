@@ -113,6 +113,14 @@ and
 .Ss Dv ZIP_SOURCE_BEGIN_WRITE
 Prepare the source for writing.
 Use this to create any temporary file(s).
+.Ss Dv ZIP_SOURCE_BEGIN_WRITE_CLONING
+Prepare the source for writing, keeping the first
+.Ar len
+bytes of the original file.
+Only implement this command if it is more efficient than copying the
+data, and if it does not destructively overwrite the original file
+(you still have to be able to execute
+.Dv ZIP_SOURCE_ROLLBACK_WRITE ) .
 .Ss Dv ZIP_SOURCE_CLOSE
 Reading is done.
 .Ss Dv ZIP_SOURCE_COMMIT_WRITE
@@ -252,6 +260,8 @@ If the function is unable to provide the data again, it should
 return \-1.
 .Pp
 .Dv ZIP_SOURCE_BEGIN_WRITE
+or
+.Dv ZIP_SOURCE_BEGIN_WRITE_CLONING
 will be called before
 .Dv ZIP_SOURCE_WRITE ,
 .Dv ZIP_SOURCE_SEEK_WRITE ,
@@ -280,6 +290,8 @@ will be called before
 .Dv ZIP_SOURCE_FREE ,
 and similarly for
 .Dv ZIP_SOURCE_BEGIN_WRITE
+or
+.Dv ZIP_SOURCE_BEGIN_WRITE_CLONING
 and
 .Dv ZIP_SOURCE_COMMIT_WRITE
 or

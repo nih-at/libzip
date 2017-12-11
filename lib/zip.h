@@ -3,7 +3,7 @@
 
 /*
   zip.h -- exported declarations.
-  Copyright (C) 1999-2016 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2017 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -228,7 +228,8 @@ enum zip_source_cmd {
     ZIP_SOURCE_TELL_WRITE,      /* get write position */
     ZIP_SOURCE_SUPPORTS,        /* check whether source supports command */
     ZIP_SOURCE_REMOVE,          /* remove file */
-    ZIP_SOURCE_GET_COMPRESSION_FLAGS	/* get compression flags, internal only */
+    ZIP_SOURCE_GET_COMPRESSION_FLAGS,	/* get compression flags, internal only */
+    ZIP_SOURCE_BEGIN_WRITE_CLONING	/* like ZIP_SOURCE_BEGIN_WRITE, but keep part of original file */
 };
 typedef enum zip_source_cmd zip_source_cmd_t;
 
@@ -393,6 +394,7 @@ ZIP_EXTERN int zip_set_archive_flag(zip_t *, zip_flags_t, int);
 ZIP_EXTERN int zip_set_default_password(zip_t *, const char *);
 ZIP_EXTERN int zip_set_file_compression(zip_t *, zip_uint64_t, zip_int32_t, zip_uint32_t);
 ZIP_EXTERN int zip_source_begin_write(zip_source_t *);
+ZIP_EXTERN int zip_source_begin_write_cloning(zip_source_t *, zip_uint64_t);
 ZIP_EXTERN zip_source_t *zip_source_buffer(zip_t *, const void *, zip_uint64_t, int);
 ZIP_EXTERN zip_source_t *zip_source_buffer_create(const void *, zip_uint64_t, int, zip_error_t *);
 ZIP_EXTERN zip_source_t *zip_source_buffer_fragment(zip_t *, const zip_buffer_fragment_t *, zip_uint64_t, int);

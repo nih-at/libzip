@@ -120,6 +120,7 @@ SET(LIBZIP_SOURCES
   zip_set_file_compression.c
   zip_set_name.c
   zip_source_begin_write.c
+  zip_source_begin_write_cloning.c
   zip_source_buffer.c
   zip_source_call.c
   zip_source_close.c

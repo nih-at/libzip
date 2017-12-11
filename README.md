@@ -7,7 +7,7 @@ supported. The API is documented by man pages.
 
 For more information, take a look at the included man pages.  You can
 start with [libzip(3)](https://libzip.org/documentation/libzip.html), which lists
-all others.  Example source code is in the `src/` subdirectory.
+all others.  Example source code is in the `examples/` and  `src/` subdirectories.
 
 If you have developed an application using libzip, you can find out
 about API changes and how to adapt your code for them in the included
