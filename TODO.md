@@ -8,9 +8,6 @@
 * migration to CMake
   - replace `make distcheck`
 
-* clone support
-  - APFS
-
 * randomness test: replace `zip_random()` instead of `open()`
 
 * run Coverity tests automatically via github/travis
