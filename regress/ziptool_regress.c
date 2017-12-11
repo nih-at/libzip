@@ -39,7 +39,6 @@ static int zin_close(int argc, char *argv[]);
 
 
 zip_t *ziptool_open(const char *archive, int flags, zip_error_t *error, zip_uint64_t offset, zip_uint64_t len);
-int ziptool_post_close(const char *archive);
 
 
 #include "ziptool.c"

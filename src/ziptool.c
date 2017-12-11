@@ -68,6 +68,7 @@ static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static zip_uint16_t get_encryption_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
+int ziptool_post_close(const char *archive);
 
 #ifndef FOR_REGRESS
 #define OPTIONS_REGRESS ""
