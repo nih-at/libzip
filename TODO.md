@@ -8,8 +8,6 @@
 * migration to CMake
   - replace `make distcheck`
 
-* add missing entries to man/links (at least zip_source_xxx_create)
-
 * clone support
   - APFS
   - test using `zip_source_buffer`
