@@ -46,7 +46,7 @@ struct buffer {
     zip_uint64_t nfragments;	        /* number of allocated fragments */
     zip_uint64_t fragments_capacity;    /* size of fragments (number of pointers) */
 
-    zip_uint64_t frist_owned_fragment;	/* first fragment to free data from */
+    zip_uint64_t first_owned_fragment;	/* first fragment to free data from */
 
     zip_uint64_t shared_fragments;	/* number of shared fragments */
     struct buffer *shared_buffer;	/* buffer fragments are shared with */
@@ -316,7 +316,7 @@ buffer_free(buffer_t *buffer)
         /* TODO: unshare */
     }
 
-    for (i = buffer->frist_owned_fragment; i < buffer->nfragments; i++) {
+    for (i = buffer->first_owned_fragment; i < buffer->nfragments; i++) {
         free(buffer->fragments[i].data);
     }
     free(buffer->fragments);
@@ -359,7 +359,7 @@ buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int 
     }
 
     buffer->offset = 0;
-    buffer->frist_owned_fragment = 0;
+    buffer->first_owned_fragment = 0;
     buffer->size = 0;
     buffer->fragments = NULL;
     buffer->fragment_offsets = NULL;
@@ -384,7 +384,7 @@ buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int 
         }
         memcpy(buffer->fragments, fragments, sizeof(buffer->fragments[0]) * nfragments);
         buffer->nfragments = nfragments;
-        buffer->frist_owned_fragment = free_data ? 0 : ZIP_UINT64_MAX;
+        buffer->first_owned_fragment = free_data ? 0 : ZIP_UINT64_MAX;
 
         offset = 0;
         for (i = 0; i < nfragments; i++) {
