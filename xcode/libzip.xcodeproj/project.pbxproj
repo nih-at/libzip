@@ -975,6 +975,9 @@
 		4BDC72A015B1B56400236D3C /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
 		4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_is_deleted.c; sourceTree = "<group>"; };
 		4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_win32handle.c; sourceTree = "<group>"; };
+		4BFF2B341FDEEF8B006EF3F3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		4BFF2B351FDEF277006EF3F3 /* cmake-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cmake-config.h.in"; sourceTree = "<group>"; };
+		4BFF2B361FDEF277006EF3F3 /* cmake-zipconf.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cmake-zipconf.h.in"; sourceTree = "<group>"; };
 		736ED9B71E3D688C00C36873 /* zip_file_set_encryption.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_encryption.c; sourceTree = "<group>"; };
 		736ED9B81E3D688C00C36873 /* zip_random_unix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_random_unix.c; sourceTree = "<group>"; };
 		736ED9B91E3D688C00C36873 /* zip_source_winzip_aes_decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_winzip_aes_decode.c; sourceTree = "<group>"; };
@@ -1222,6 +1225,9 @@
 				4B51DDB21FDADEDF00C5CA85 /* INSTALL.md */,
 				4B28AA2615BAD4E200D0C17D /* THANKS */,
 				4B28AA2715BAD4E200D0C17D /* TODO.md */,
+				4BFF2B341FDEEF8B006EF3F3 /* CMakeLists.txt */,
+				4BFF2B351FDEF277006EF3F3 /* cmake-config.h.in */,
+				4BFF2B361FDEF277006EF3F3 /* cmake-zipconf.h.in */,
 			);
 			name = info;
 			path = ..;
