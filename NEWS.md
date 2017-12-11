@@ -4,6 +4,8 @@
 * Improve build with cmake
 * Retire autoconf/automake build system
 * Add `zip_source_buffer_fragment()`.
+* Add support to clone unchanged beginning of archive (instead of rewriting it).
+  Supported for buffer sources and on Apple File System.
 
 1.3.2 [2017-11-20]
 ==================
