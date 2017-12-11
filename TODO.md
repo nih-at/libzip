@@ -10,8 +10,6 @@
 
 * clone support
   - APFS
-  - test using `zip_source_buffer`
-  - document `zip_source_buffer_fragment`
 
 * randomness test: replace `zip_random()` instead of `open()`
 
