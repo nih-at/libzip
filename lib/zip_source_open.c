@@ -68,6 +68,7 @@ zip_source_open(zip_source_t *src)
     }
 
     src->eof = false;
+    src->had_read_error = false;
     _zip_error_clear(&src->error);
     src->open_count++;
     

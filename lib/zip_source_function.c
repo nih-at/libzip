@@ -95,6 +95,7 @@ _zip_source_new(zip_error_t *error)
     src->refcount = 1;
     zip_error_init(&src->error);
     src->eof = false;
+    src->had_read_error = false;
 
     return src;
 }

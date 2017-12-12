@@ -330,6 +330,7 @@ struct zip_source {
     zip_t *source_archive;      /* zip archive we're reading from, NULL if not from archive */
     unsigned int refcount;
     bool eof;                   /* EOF reached */
+    bool had_read_error;    	/* a previous ZIP_SOURCE_READ reported an error */
 };
 
 #define ZIP_SOURCE_IS_OPEN_READING(src) ((src)->open_count > 0)
