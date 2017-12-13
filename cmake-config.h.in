@@ -55,6 +55,7 @@
 #cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
 #cmakedefine SSIZE_T_LIBZIP ${SSIZE_T_LIBZIP}
 #cmakedefine HAVE_DIRENT_H
+#cmakedefine HAVE_FTS_H
 #cmakedefine HAVE_NDIR_H
 #cmakedefine HAVE_SYS_DIR_H
 #cmakedefine HAVE_SYS_NDIR_H
