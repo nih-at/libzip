@@ -59,6 +59,7 @@ SET(MAN_PAGES
   zip_set_file_compression.3
   zip_source_begin_write.3
   zip_source_buffer.3
+  zip_source_buffer_fragment.3
   zip_source_close.3
   zip_source_commit_write.3
   zip_source_error.3
