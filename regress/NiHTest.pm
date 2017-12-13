@@ -84,6 +84,9 @@ use UNIVERSAL;
 #	pipein COMMAND ARGS ...
 #	    pipe output of running COMMAND to program's stdin.
 #
+#   precheck COMMAND ARGS ...
+#		if COMMAND exits with non-zero status, skip test.
+#
 #	preload LIBRARY
 #	    pre-load LIBRARY before running program.
 #
@@ -159,6 +162,7 @@ sub new {
 		mkdir => { type => 'string string' },
 		pipefile => { type => 'string', once => 1 },
 		pipein => { type => 'string', once => 1 },
+		precheck => { type => 'string...' },
 		preload => { type => 'string', once => 1 },
 		program => { type => 'string', once => 1 },
 		'return' => { type => 'int', once => 1, required => 1 },
@@ -443,6 +447,7 @@ sub setup {
 	$self->die("error in test case definition") unless $self->parse_case($testcase_file);
 
 	$self->check_features_requirement() if ($self->{test}->{features});
+	$self->run_precheck() if ($self->{test}->{precheck});
 
 	$self->end_test('SKIP') if ($self->{test}->{preload} && $^O eq 'darwin');
 }
@@ -1112,6 +1117,20 @@ sub args_decode {
 	}
 
 	return $str;
+}
+
+
+sub run_precheck {
+	my ($self) = @_;
+
+	for my $precheck (@{$self->{test}->{precheck}}) {
+		unless (system(@{$precheck}) == 0) {
+			$self->print_test_result('SKIP', "precheck failed");
+			$self->end_test('SKIP');
+		}
+	}
+
+	return 1;
 }
 
 

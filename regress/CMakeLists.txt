@@ -17,6 +17,8 @@ SET(GETOPT_USERS
   tryopen
 )
 
+ADD_EXECUTABLE(can_clone_file can_clone_file.c)
+
 SET(ENV{srcdir} ${CMAKE_CURRENT_SOURCE_DIR})
 FOREACH(PROGRAM ${TEST_PROGRAMS})
   ADD_EXECUTABLE(${PROGRAM} ${PROGRAM}.c)
@@ -87,11 +89,14 @@ SET(EXTRA_TESTS
 	add_from_zip_stored.test
 	add_stored.test
 	add_stored_in_memory.test
-	clone-add.test
-	clone-delete.test
-	clone-replace.test
 	buffer-fragment-read.test
 	buffer-fragment-write.test
+        clone-buffer-add.test
+        clone-buffer-delete.test
+        clone-buffer-replace.test
+        clone-fs-add.test
+        clone-fs-delete.test
+        clone-fs-replace.test
 	cm-default.test
 	count_entries.test
 	decrypt-correct-password-aes128.test
