@@ -2,7 +2,8 @@
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_source_buffer\fR
+\fBzip_source_buffer\fR,
+\fBzip_source_buffer_create\fR
 \- create zip data source from buffer
 .SH "LIBRARY"
 libzip (-lzip)
