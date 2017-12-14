@@ -1,8 +1,9 @@
-.TH "ZIP_SOURCE_FUNCTION" "3" "November 6, 2017" "Darwin 17.3.0" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "December 11, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_source_function\fR
+\fBzip_source_function\fR,
+\fBzip_source_function_create\fR
 \- create data source from function
 .SH "LIBRARY"
 libzip (-lzip)
@@ -10,14 +11,12 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_source_t *\fR
-.br
 .PD 0
 .HP 4n
 \fBzip_source_function\fR(\fIzip_t\ *archive\fR, \fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
-.br
 .PD 0
 .HP 4n
 \fBzip_source_function_create\fR(\fIzip_source_callback\ fn\fR, \fIvoid\ *userdata\fR, \fIzip_error_t\ *error\fR);
@@ -98,6 +97,9 @@ Only implement this command if it is more efficient than copying the
 data, and if it does not destructively overwrite the original file
 (you still have to be able to execute
 \fRZIP_SOURCE_ROLLBACK_WRITE\fR).
+.PP
+The next write should happen at byte
+\fIoffset\fR.
 .SS "\fRZIP_SOURCE_CLOSE\fR"
 Reading is done.
 .SS "\fRZIP_SOURCE_COMMIT_WRITE\fR"
