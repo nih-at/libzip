@@ -394,7 +394,7 @@ buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *erro
     }
 
     if ((fragments = realloc(buffer->fragments, sizeof(buffer->fragments[0]) * capacity)) == NULL
-        || (offsets = realloc(buffer->fragment_offsets, sizeof(buffer->fragment_offsets[0]) * capacity + 1)) == NULL) {
+        || (offsets = realloc(buffer->fragment_offsets, sizeof(buffer->fragment_offsets[0]) * (capacity + 1))) == NULL) {
         free(fragments);
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
