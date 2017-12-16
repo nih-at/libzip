@@ -35,7 +35,10 @@
 */
 
 /* 0x0501 => Windows XP; needs to be at least this value because of GetFileSizeEx */
+#ifndef WINRT
 #define _WIN32_WINNT 0x0501
+#endif
+
 #include <windows.h>
 
 /* context for Win32 source */
