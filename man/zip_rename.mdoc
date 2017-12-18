@@ -51,6 +51,18 @@ with an empty flags argument.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_file_rename 3
+.Sh HISTORY
+.Fn zip_rename
+was added in libzip 0.6.
+In libzip 0.10 the type of
+.Ar index
+was changed from
+.Vt int
+to
+.Vt zip_uint64_t .
+It was deprecated in libzip 0.11, use
+.Fn zip_file_rename
+instead.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

@@ -58,6 +58,15 @@ occurred.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_get_archive_flag 3
+.Sh HISTORY
+.Fn zip_set_archive_flag
+was added in libzip 0.9.
+In libzip 0.11 the type of
+.Ar flag
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

@@ -104,6 +104,19 @@ is found in the archive.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_get_name 3
+.Sh HISTORY
+.Fn zip_name_locate
+was added in libzip 0.6.
+In libzip 0.11 the return type was changed from
+.Vt int
+to
+.Vt zip_int64_t .
+In libzip 0.11 the type of
+.Ar flags
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

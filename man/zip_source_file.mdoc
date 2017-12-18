@@ -33,7 +33,8 @@
 .Dt ZIP_SOURCE_FILE 3
 .Os
 .Sh NAME
-.Nm zip_source_file
+.Nm zip_source_file ,
+.Nm zip_source_file_create
 .Nd create data source from a file
 .Sh LIBRARY
 libzip (-lzip)
@@ -101,6 +102,11 @@ failed.
 .Xr zip_add 3 ,
 .Xr zip_replace 3 ,
 .Xr zip_source 3
+.Sh HISTORY
+.Fn zip_source_file
+and
+.Fn zip_source_file_create
+were added in libzip 1.0.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

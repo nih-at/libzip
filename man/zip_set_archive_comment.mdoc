@@ -77,6 +77,15 @@ Required memory could not be allocated.
 .Xr zip_get_archive_comment 3 ,
 .Xr zip_get_file_comment 3 ,
 .Xr zip_set_file_comment 3
+.Sh HISTORY
+.Fn zip_set_archive_comment
+was added in libzip 0.7.
+In libzip 0.11 the type of
+.Ar len
+was changed from
+.Vt int
+to
+.Vt zip_uint16_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

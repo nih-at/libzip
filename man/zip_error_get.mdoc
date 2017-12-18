@@ -92,6 +92,24 @@ se = zip_error_code_system(error);
 .Xr zip_error_code_zip 3 ,
 .Xr zip_file_get_error 3 ,
 .Xr zip_get_error 3
+.Sh HISTORY
+.Fn zip_error_get
+was added in libzip 0.6.
+It was deprecated in libzip 1.0, use
+.Fn zip_get_error ,
+.Fn zip_error_code_zip ,
+/
+.Fn zip_error_code_system
+instead.
+.Pp
+.Fn zip_file_error_get
+was added in libzip 0.6.
+It was deprecated in libzip 1.0, use
+.Fn zip_file_get_error ,
+.Fn zip_error_code_zip ,
+/
+.Fn zip_error_code_system
+instead.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

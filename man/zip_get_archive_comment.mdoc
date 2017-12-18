@@ -95,6 +95,15 @@ if there is no comment.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_get_file_comment 3
+.Sh HISTORY
+.Fn zip_get_archive_comment
+was added in libzip 0.7.
+In libzip 0.11 the type of
+.Ar flags
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

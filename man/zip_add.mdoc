@@ -67,6 +67,28 @@ argument.
 .Xr libzip 3 ,
 .Xr zip_file_add 3 ,
 .Xr zip_file_replace 3
+.Sh HISTORY
+.Fn zip_add
+was added in libzip 0.6.
+In libzip 0.10 the return type was changed from
+.Vt int
+to
+.Vt zip_int64_t .
+It was deprecated in libzip 0.11, use
+.Fn zip_file_add
+instead.
+.Pp
+.Fn zip_replace
+was added in libzip 0.6.
+In libzip 0.10 the type of
+.Ar index
+was changed from
+.Vt int
+to
+.Vt zip_uint64_t .
+It was deprecated in libzip 0.11, use
+.Fn zip_file_replace
+instead.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

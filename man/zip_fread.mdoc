@@ -58,6 +58,19 @@ Otherwise, \-1 is returned.
 .Xr zip_fclose 3 ,
 .Xr zip_fopen 3 ,
 .Xr zip_fseek 3
+.Sh HISTORY
+.Fn zip_fread
+was added in libzip 0.6.
+In libzip 0.10 the return type was changed from
+.Vt ssize_t
+to
+.Vt zip_int64_t .
+In libzip 0.10 the type of
+.Ar nbytes
+was changed from
+.Vt size_t
+to
+.Vt zip_uint64_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

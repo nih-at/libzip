@@ -148,6 +148,30 @@ callback, the error information is set to
 .Xr zip_get_num_entries 3 ,
 .Xr zip_name_locate 3 ,
 .Xr zip_stat_init 3
+.Sh HISTORY
+.Fn zip_stat
+was added in libzip 0.6.
+In libzip 0.11 the type of
+.Ar flags
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
+.Pp
+.Fn zip_stat_index
+was added in libzip 0.6.
+In libzip 0.10 the type of
+.Ar index
+was changed from
+.Vt int
+to
+.Vt zip_uint64_t .
+In libzip 0.11 the type of
+.Ar flags
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

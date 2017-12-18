@@ -67,6 +67,15 @@ zip_error_fini(&error);
 .Xr libzip 3 ,
 .Xr zip_error_init_with_code 3 ,
 .Xr zip_error_strerror 3
+.Sh HISTORY
+.Fn zip_error_to_str
+was added in libzip 0.6.
+In libzip 0.10 the type of
+.Ar len
+was changed from
+.Vt size_t
+to
+.Vt zip_uint64_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

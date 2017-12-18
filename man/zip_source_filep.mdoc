@@ -33,7 +33,8 @@
 .Dt ZIP_SOURCE_FILEP 3
 .Os
 .Sh NAME
-.Nm zip_source_filep
+.Nm zip_source_filep ,
+.Nm zip_source_filep_create
 .Nd create data source from FILE *
 .Sh LIBRARY
 libzip (-lzip)
@@ -94,6 +95,11 @@ Required memory could not be allocated.
 .Xr zip_add 3 ,
 .Xr zip_replace 3 ,
 .Xr zip_source 3
+.Sh HISTORY
+.Fn zip_source_filep
+and
+.Fn zip_source_filep_create
+were added in libzip 1.0.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

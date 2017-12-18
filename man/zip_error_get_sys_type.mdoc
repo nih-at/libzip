@@ -64,6 +64,12 @@ int i = zip_error_system_type(&error);
 .Xr libzip 3 ,
 .Xr zip_error_init_with_code 3 ,
 .Xr zip_error_system_type 3
+.Sh HISTORY
+.Fn zip_error_get_sys_type
+was added in libzip 0.6.
+It was deprecated in libzip 1.0, use
+.Fn zip_error_system_type
+instead.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

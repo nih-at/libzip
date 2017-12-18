@@ -65,6 +65,15 @@ is not a valid file index in
 .Xr libzip 3 ,
 .Xr zip_unchange_all 3 ,
 .Xr zip_unchange_archive 3
+.Sh HISTORY
+.Fn zip_unchange
+was added in libzip 0.6.
+In libzip 0.10 the type of
+.Ar index
+was changed from
+.Vt int
+to
+.Vt zip_uint64_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

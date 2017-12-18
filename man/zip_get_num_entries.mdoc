@@ -62,6 +62,19 @@ is
 .Xr libzip 3 ,
 .Xr zip_fopen_index 3 ,
 .Xr zip_stat_index 3
+.Sh HISTORY
+.Fn zip_get_num_entries
+was added in libzip 0.10.
+In libzip 0.11 the return type was changed from
+.Vt zip_uint64_t
+to
+.Vt zip_int64_t .
+In libzip 0.11 the type of
+.Ar flags
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

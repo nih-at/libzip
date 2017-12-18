@@ -109,6 +109,21 @@ Required memory could not be allocated.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_name_locate 3
+.Sh HISTORY
+.Fn zip_get_name
+was added in libzip 0.6.
+In libzip 0.10 the type of
+.Ar index
+was changed from
+.Vt int
+to
+.Vt zip_uint64_t .
+In libzip 0.11 the type of
+.Ar flags
+was changed from
+.Vt int
+to
+.Vt zip_flags_t .
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at
