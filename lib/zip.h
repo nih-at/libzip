@@ -320,7 +320,7 @@ typedef void (*zip_progress_callback)(zip_t *, double, void *);
 
 #ifndef ZIP_DISABLE_DEPRECATED
 typedef void (*zip_progress_callback_t)(double);
-ZIP_EXTERN void zip_register_progress_callback(zip_t *, zip_progress_callback_t);
+ZIP_EXTERN void zip_register_progress_callback(zip_t *, zip_progress_callback_t); /* use zip_register_progress_callback_with_state */
 
 ZIP_EXTERN zip_int64_t zip_add(zip_t *, const char *, zip_source_t *); /* use zip_file_add */
 ZIP_EXTERN zip_int64_t zip_add_dir(zip_t *, const char *); /* use zip_dir_add */
@@ -331,7 +331,7 @@ ZIP_EXTERN int zip_replace(zip_t *, zip_uint64_t, zip_source_t *); /* use zip_fi
 ZIP_EXTERN int zip_set_file_comment(zip_t *, zip_uint64_t, const char *, int); /* use zip_file_set_comment */
 ZIP_EXTERN int zip_error_get_sys_type(int); /* use zip_error_system_type */
 ZIP_EXTERN void zip_error_get(zip_t *, int *, int *); /* use zip_get_error, zip_error_code_zip / zip_error_code_system */
-ZIP_EXTERN int zip_error_to_str(char *, zip_uint64_t, int, int);
+ZIP_EXTERN int zip_error_to_str(char *, zip_uint64_t, int, int); /* use zip_error_init_with_code / zip_error_strerror */
 ZIP_EXTERN void zip_file_error_get(zip_file_t *, int *, int *); /* use zip_file_get_error, zip_error_code_zip / zip_error_code_system */
 #endif
 
