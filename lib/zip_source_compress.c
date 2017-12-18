@@ -43,7 +43,7 @@ struct context {
     bool end_of_input;
     bool end_of_stream;
     bool can_store;
-    bool is_stored;
+    bool is_stored;		/* only valid if end_of_stream is true */
     bool compress;
     zip_int32_t method;
     
@@ -158,6 +158,9 @@ context_new(zip_int32_t method, bool compress, int compression_flags, zip_compre
     ctx->algorithm = algorithm;
     ctx->method = method;
     ctx->compress = compress;
+    ctx->end_of_input = false;
+    ctx->end_of_stream = false;
+    ctx->is_stored = false;
     
     if ((ctx->ud = ctx->algorithm->allocate(ZIP_CM_ACTUAL(method), compression_flags, &ctx->error)) == NULL) {
 	zip_error_fini(&ctx->error);
@@ -325,17 +328,18 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 	    st = (zip_stat_t *)data;
 
 	    if (ctx->compress) {
-		st->comp_method = ctx->is_stored ? ZIP_CM_STORE : ZIP_CM_ACTUAL(ctx->method);
 		if (ctx->end_of_stream) {
+                    st->comp_method = ctx->is_stored ? ZIP_CM_STORE : ZIP_CM_ACTUAL(ctx->method);
 		    st->comp_size = ctx->size;
-		    st->valid |= ZIP_STAT_COMP_SIZE;
+		    st->valid |= ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD;
 		}
 		else {
-		    st->valid &= ~ZIP_STAT_COMP_SIZE;
+		    st->valid &= ~(ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD);
 		}
 	    }
 	    else {
 		st->comp_method = ZIP_CM_STORE;
+                st->valid |= ZIP_STAT_COMP_METHOD;
 		if (ctx->end_of_stream) {
 		    st->size = ctx->size;
 		    st->valid |= ZIP_STAT_SIZE;
@@ -344,7 +348,6 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 		    st->valid &= ~ZIP_STAT_SIZE;
 		}
 	    }
-	    st->valid |= ZIP_STAT_COMP_METHOD;
 	}
 	return 0;
 
