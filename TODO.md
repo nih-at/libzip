@@ -8,16 +8,9 @@
 * migration to CMake
   - replace `make distcheck`
 
-* randomness test: replace `zip_random()` instead of `open()`
-
 * run Coverity tests automatically via github/travis
 
 * switch to newer fcrypt sources, see https://github.com/BrianGladman/AES/issues/19
-
-* add HISTORY section to man pages (semi-automatically)
-  - check out `zip.h` from different releases
-  - compare signatures
-  - create HISTORY sections
 
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 
