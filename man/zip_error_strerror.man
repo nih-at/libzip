@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_STRERROR" "3" "October 30, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_STRERROR" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIconst char *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_strerror\fR(\fIzip_error_t\ *ze\fR);
@@ -30,6 +31,9 @@ is called.
 libzip(3),
 strerror(3),
 zip_error_fini(3)
+.SH "HISTORY"
+\fBzip_error_strerror\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

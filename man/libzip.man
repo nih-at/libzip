@@ -1,4 +1,4 @@
-.TH "LIBZIP" "3" "November 13, 2017" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"

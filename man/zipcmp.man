@@ -1,4 +1,4 @@
-.TH "ZIPCMP" "1" "January 19, 2016" "NiH" "General Commands Manual"
+.TH "ZIPCMP" "1" "December 18, 2017" "NiH" "General Commands Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -55,6 +55,9 @@ and >1 if an error occurred.
 zipmerge(1),
 ziptool(1),
 libzip(3)
+.SH "HISTORY"
+\fBzipcmp\fR
+was added in libzip 0.6.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

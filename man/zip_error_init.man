@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_INIT" "3" "December 2, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_INIT" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_init\fR(\fIzip_error_t\ *error\fR);
 .PD
 .PP
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_init_with_code\fR(\fIzip_error_t\ *error\fR, \fIint\ ze\fR);
@@ -40,6 +42,11 @@ value, if appropriate.
 .SH "SEE ALSO"
 libzip(3),
 zip_error_fini(3)
+.SH "HISTORY"
+\fBzip_error_init\fR()
+and
+\fBzip_error_init_with_code\fR()
+were added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

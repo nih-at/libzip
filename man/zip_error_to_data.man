@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_TO_DATA" "3" "November 2, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_TO_DATA" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_to_data\fR(\fIconst\ zip_error_t\ *ze\fR, \fIvoid\ *data\fR, \fIzip_uint64_t\ len\fR);
@@ -32,6 +33,9 @@ returns 2*(sizeof int) on success, and \-1 on error.
 .SH "SEE ALSO"
 libzip(3),
 zip_source_function(3)
+.SH "HISTORY"
+\fBzip_error_to_data\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_GET" "3" "November 13, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_GET" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_get\fR(\fIzip_t\ *archive\fR, \fIint\ *zep\fR, \fIint\ *sep\fR);
 .PD
 .PP
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_error_get\fR(\fIzip_file_t\ *file\fR, \fIint\ *zep\fR, \fIint\ *sep\fR);
@@ -81,6 +83,24 @@ zip_error_code_system(3),
 zip_error_code_zip(3),
 zip_file_get_error(3),
 zip_get_error(3)
+.SH "HISTORY"
+\fBzip_error_get\fR()
+was added in libzip 0.6.
+It was deprecated in libzip 1.0, use
+\fBzip_get_error\fR(),
+\fBzip_error_code_zip\fR(),
+/
+\fBzip_error_code_system\fR()
+instead.
+.PP
+\fBzip_file_error_get\fR()
+was added in libzip 0.6.
+It was deprecated in libzip 1.0, use
+\fBzip_file_get_error\fR(),
+\fBzip_error_code_zip\fR(),
+/
+\fBzip_error_code_system\fR()
+instead.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

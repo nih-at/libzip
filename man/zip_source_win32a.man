@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_WIN32A" "3" "December 29, 2016" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_WIN32A" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_win32a\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_win32a_create\fR(\fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
@@ -82,6 +84,11 @@ zip_replace(3),
 zip_source(3),
 zip_source_win32handle(3),
 zip_source_win32w(3)
+.SH "HISTORY"
+\fBzip_source_win32a\fR()
+and
+\fBzip_source_win32a_create\fR()
+were added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

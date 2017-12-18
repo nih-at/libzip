@@ -1,4 +1,4 @@
-.TH "ZIP_DELETE" "3" "March 10, 2009" "NiH" "Library Functions Manual"
+.TH "ZIP_DELETE" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_delete\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR);
@@ -36,6 +37,15 @@ is not a valid file index in
 .SH "SEE ALSO"
 libzip(3),
 zip_unchange(3)
+.SH "HISTORY"
+\fBzip_delete\fR()
+was added in libzip 0.6.
+In libzip 0.10 the type of
+\fIindex\fR
+was changed from
+\fIint\fR
+to
+\fIzip_uint64_t\fR.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

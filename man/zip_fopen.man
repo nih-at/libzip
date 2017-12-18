@@ -1,4 +1,4 @@
-.TH "ZIP_FOPEN" "3" "September 12, 2016" "NiH" "Library Functions Manual"
+.TH "ZIP_FOPEN" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_file_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_fopen\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .PP
 \fIzip_file_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_fopen_index\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_flags_t\ flags\fR);
@@ -121,6 +123,11 @@ zip_fseek(3),
 zip_get_num_entries(3),
 zip_name_locate(3),
 zip_set_default_password(3)
+.SH "HISTORY"
+\fBzip_fopen\fR()
+and
+\fBzip_fopen_index\fR()
+were added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

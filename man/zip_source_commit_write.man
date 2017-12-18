@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_COMMIT_WRITE" "3" "November 18, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_COMMIT_WRITE" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_commit_write\fR(\fIzip_source_t\ *source\fR);
@@ -33,6 +34,9 @@ zip_source_rollback_write(3),
 zip_source_seek_write(3),
 zip_source_tell_write(3),
 zip_source_write(3)
+.SH "HISTORY"
+\fBzip_source_commit_write\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

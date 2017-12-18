@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_EXTRA_FIELDS_COUNT" "3" "February 20, 2013" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_EXTRA_FIELDS_COUNT" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int16_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_extra_fields_count\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .PP
 \fIzip_int16_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_extra_fields_count_by_id\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_id\fR, \fIzip_flags_t\ flags\fR);
@@ -79,6 +81,11 @@ libzip(3),
 zip_file_extra_field_delete(3),
 zip_file_extra_field_get(3),
 zip_file_extra_field_set(3)
+.SH "HISTORY"
+\fBzip_file_extra_fields_count\fR()
+and
+\fBzip_file_extra_fields_count_by_id\fR()
+were added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

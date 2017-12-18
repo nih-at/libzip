@@ -1,4 +1,4 @@
-.TH "ZIP_CLOSE" "3" "November 13, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_CLOSE" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_close\fR(\fIzip_t\ *archive\fR);
@@ -94,6 +95,9 @@ zip_fdopen(3),
 zip_open(3),
 zip_register_progress_callback_with_state(3),
 zip_strerror(3)
+.SH "HISTORY"
+\fBzip_close\fR()
+was added in libzip 0.6.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

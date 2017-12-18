@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_ADD" "3" "November 6, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_ADD" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_add\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *name\fR, \fIzip_source_t\ *source\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .PP
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_replace\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_source_t\ *source\fR, \fIzip_flags_t\ flags\fR);
@@ -137,6 +139,11 @@ Archive was opened in read-only mode.
 .SH "SEE ALSO"
 libzip(3),
 zip_source(3)
+.SH "HISTORY"
+\fBzip_file_add\fR()
+and
+\fBzip_file_replace\fR()
+were added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

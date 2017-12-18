@@ -1,4 +1,4 @@
-.TH "ZIP_DISCARD" "3" "February 13, 2012" "NiH" "Library Functions Manual"
+.TH "ZIP_DISCARD" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_discard\fR(\fIzip_t\ *archive\fR);
@@ -24,6 +25,9 @@ Any changes to the archive are not written to disk and discarded.
 .SH "SEE ALSO"
 libzip(3),
 zip_close(3)
+.SH "HISTORY"
+\fBzip_discard\fR()
+was added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

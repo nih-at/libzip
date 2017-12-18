@@ -1,4 +1,4 @@
-.TH "ZIP_SET_ARCHIVE_COMMENT" "3" "July 22, 2012" "NiH" "Library Functions Manual"
+.TH "ZIP_SET_ARCHIVE_COMMENT" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_set_archive_comment\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *comment\fR, \fIzip_uint16_t\ len\fR);
@@ -50,6 +51,15 @@ libzip(3),
 zip_get_archive_comment(3),
 zip_get_file_comment(3),
 zip_set_file_comment(3)
+.SH "HISTORY"
+\fBzip_set_archive_comment\fR()
+was added in libzip 0.7.
+In libzip 0.11 the type of
+\fIlen\fR
+was changed from
+\fIint\fR
+to
+\fIzip_uint16_t\fR.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

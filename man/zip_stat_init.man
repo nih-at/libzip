@@ -1,4 +1,4 @@
-.TH "ZIP_STAT_INIT" "3" "September 22, 2013" "NiH" "Library Functions Manual"
+.TH "ZIP_STAT_INIT" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_stat_init\fR(\fIzip_stat_t\ *sb\fR);
@@ -39,6 +40,9 @@ is valid, the function is always successful.
 .SH "SEE ALSO"
 libzip(3),
 zip_stat(3)
+.SH "HISTORY"
+\fBzip_stat_init\fR()
+was added in libzip 0.8.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

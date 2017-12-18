@@ -1,4 +1,4 @@
-.TH "ZIP_REGISTER_PROGRESS_CALLBACK" "3" "November 13, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_REGISTER_PROGRESS_CALLBACK" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -12,6 +12,7 @@ libzip (-lzip)
 \fItypedef void (*zip_progress_callback_t)(double);\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_register_progress_callback\fR(\fIzip_t\ *archive\fR, \fIzip_progress_callback_t\ progress_callback\fR);
@@ -38,6 +39,12 @@ This can be used to provide progress indicators for user interfaces.
 .SH "SEE ALSO"
 libzip(3),
 zip_close(3)
+.SH "HISTORY"
+\fBzip_register_progress_callback\fR()
+was added in libzip 1.2.0.
+It was deprecated in libzip 1.3.0, use
+\fBzip_register_progress_callback_with_state\fR()
+instead.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

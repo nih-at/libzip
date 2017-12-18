@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_GET_COMMENT" "3" "September 19, 2013" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_GET_COMMENT" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIconst char *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_get_comment\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint32_t\ *lenp\fR, \fIzip_flags_t\ flags\fR);
@@ -83,6 +84,9 @@ is not a valid file index in
 libzip(3),
 zip_file_set_comment(3),
 zip_get_archive_comment(3)
+.SH "HISTORY"
+\fBzip_file_get_comment\fR()
+was added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

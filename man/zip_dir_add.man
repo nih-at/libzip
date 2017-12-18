@@ -1,4 +1,4 @@
-.TH "ZIP_DIR_ADD" "3" "December 4, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_DIR_ADD" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_dir_add\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *name\fR, \fIzip_flags_t\ flags\fR);
@@ -69,6 +70,9 @@ Required memory could not be allocated.
 .SH "SEE ALSO"
 libzip(3),
 zip_add(3)
+.SH "HISTORY"
+\fBzip_dir_add\fR()
+was added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

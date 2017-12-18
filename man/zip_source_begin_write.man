@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_begin_write\fR(\fIzip_source_t\ *source\fR);
 .PD
 .PP
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_begin_write_cloning\fR(\fIzip_source_t\ *source\fR, \fIzip_uint64_t\ offset\fR);
@@ -54,8 +56,11 @@ zip_source_seek_write(3),
 zip_source_tell_write(3),
 zip_source_write(3)
 .SH "HISTORY"
+\fBzip_source_begin_write\fR()
+was added in libzip 1.0.
+.PP
 \fBzip_source_begin_write_cloning\fR()
-first appeared in libzip 1.4.0.
+was added in libzip 1.4.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

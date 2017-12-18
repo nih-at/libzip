@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_SET_ENCRYPTION" "3" "December 16, 2016" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_SET_ENCRYPTION" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_set_encryption\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ method\fR, \fIconst\ char\ *password\fR);
@@ -81,6 +82,9 @@ Read-only zip file, no changes allowed.
 libzip(3),
 zip_set_default_password(3),
 zip_stat(3)
+.SH "HISTORY"
+\fBzip_file_set_encryption\fR()
+was added in libzip 1.2.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

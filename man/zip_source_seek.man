@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_SEEK" "3" "November 18, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_SEEK" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_seek\fR(\fIzip_source_t\ *source\fR, \fIzip_int64_t\ offset\fR, \fIint\ whence\fR);
@@ -47,6 +48,9 @@ libzip(3),
 zip_source(3),
 zip_source_read(3),
 zip_source_tell(3)
+.SH "HISTORY"
+\fBzip_source_seek\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

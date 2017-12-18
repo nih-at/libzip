@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_SEEK_COMPUTE_OFFSET" "3" "November 13, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_SEEK_COMPUTE_OFFSET" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_seek_compute_offset\fR(\fIzip_uint64_t\ offset\fR, \fIzip_uint64_t\ length\fR, \fIvoid\ *data\fR, \fIzip_uint64_t\ data_length\fR, \fIzip_error_t\ *error\fR);
@@ -43,6 +44,9 @@ One of the arguments is invalid or the seek would place the offset
 outside the data.
 .SH "SEE ALSO"
 zip_source_function(3)
+.SH "HISTORY"
+\fBzip_source_seek_compute_offset\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

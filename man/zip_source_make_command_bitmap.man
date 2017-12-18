@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_MAKE_COMMAND_BITMAP" "3" "November 18, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_MAKE_COMMAND_BITMAP" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_make_command_bitmap\fR(\fIzip_source_cmd_t\ command\fR, \fI...\fR);
@@ -25,6 +26,9 @@ terminated by \-1.
 .SH "SEE ALSO"
 libzip(3),
 zip_source_function(3)
+.SH "HISTORY"
+\fBzip_source_make_command_bitmap\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

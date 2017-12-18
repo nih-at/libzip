@@ -1,4 +1,4 @@
-.TH "ZIP_GET_NAME" "3" "February 20, 2013" "NiH" "Library Functions Manual"
+.TH "ZIP_GET_NAME" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIconst char *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_get_name\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_flags_t\ flags\fR);
@@ -86,6 +87,21 @@ Required memory could not be allocated.
 .SH "SEE ALSO"
 libzip(3),
 zip_name_locate(3)
+.SH "HISTORY"
+\fBzip_get_name\fR()
+was added in libzip 0.6.
+In libzip 0.10 the type of
+\fIindex\fR
+was changed from
+\fIint\fR
+to
+\fIzip_uint64_t\fR.
+In libzip 0.11 the type of
+\fIflags\fR
+was changed from
+\fIint\fR
+to
+\fIzip_flags_t\fR.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

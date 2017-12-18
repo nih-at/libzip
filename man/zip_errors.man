@@ -1,4 +1,4 @@
-.TH "ZIP_ERRORS" "3" "October 6, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_ERRORS" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"

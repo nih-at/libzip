@@ -1,4 +1,4 @@
-.TH "ZIP_UNCHANGE_ALL" "3" "April 23, 2006" "NiH" "Library Functions Manual"
+.TH "ZIP_UNCHANGE_ALL" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_unchange_all\fR(\fIzip_t\ *archive\fR);
@@ -27,6 +28,9 @@ is set to indicate the error.
 libzip(3),
 zip_unchange(3),
 zip_unchange_archive(3)
+.SH "HISTORY"
+\fBzip_unchange_all\fR()
+was added in libzip 0.6.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

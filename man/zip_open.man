@@ -1,4 +1,4 @@
-.TH "ZIP_OPEN" "3" "November 9, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_OPEN" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_open\fR(\fIconst\ char\ *path\fR, \fIint\ flags\fR, \fIint\ *errorp\fR);
 .PD
 .PP
 \fIzip_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_open_from_source\fR(\fIzip_source_t\ *zs\fR, \fIint\ flags\fR, \fIzip_error_t\ *ze\fR);
@@ -147,6 +149,11 @@ libzip(3),
 zip_close(3),
 zip_error_to_str(3),
 zip_fdopen(3)
+.SH "HISTORY"
+\fBzip_open\fR()
+and
+\fBzip_open_from_source\fR()
+were added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

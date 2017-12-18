@@ -1,8 +1,9 @@
-.TH "ZIP_SOURCE_FILEP" "3" "December 29, 2016" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FILEP" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_source_filep\fR
+\fBzip_source_filep\fR,
+\fBzip_source_filep_create\fR
 \- create data source from FILE *
 .SH "LIBRARY"
 libzip (-lzip)
@@ -10,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_filep\fR(\fIzip_t\ *archive\fR, \fIFILE\ *file\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_filep_create\fR(\fIFILE\ *file\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
@@ -71,6 +74,11 @@ libzip(3),
 zip_add(3),
 zip_replace(3),
 zip_source(3)
+.SH "HISTORY"
+\fBzip_source_filep\fR()
+and
+\fBzip_source_filep_create\fR()
+were added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

@@ -1,4 +1,4 @@
-.TH "ZIP_SET_FILE_COMPRESSION" "3" "November 13, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_SET_FILE_COMPRESSION" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_set_file_compression\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_int32_t\ comp\fR, \fIzip_uint32_t\ comp_flags\fR);
@@ -86,6 +87,9 @@ Read-only zip file, no changes allowed.
 .SH "SEE ALSO"
 libzip(3),
 zip_stat(3)
+.SH "HISTORY"
+\fBzip_set_file_compression\fR()
+was added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

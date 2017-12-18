@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_EXTRA_FIELD_GET" "3" "October 8, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_EXTRA_FIELD_GET" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIconst zip_uint8_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_extra_field_get\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_index\fR, \fIzip_uint16_t\ *idp\fR, \fIzip_uint16_t\ *lenp\fR, \fIzip_flags_t\ flags\fR);
 .PD
 .PP
 \fIconst zip_uint8_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_extra_field_get_by_id\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_uint16_t\ extra_field_id\fR, \fIzip_uint16_t\ extra_field_index\fR, \fIzip_uint16_t\ *lenp\fR, \fIzip_flags_t\ flags\fR);
@@ -116,6 +118,11 @@ libzip(3),
 zip_file_extra_field_delete(3),
 zip_file_extra_field_set(3),
 zip_file_extra_fields_count(3)
+.SH "HISTORY"
+\fBzip_file_extra_field_get\fR()
+and
+\fBzip_file_extra_field_get_by_id\fR()
+were added in libzip 0.11.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

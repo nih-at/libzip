@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_KEEP" "3" "November 18, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_KEEP" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_keep\fR(\fIzip_source_t\ *source\fR);
@@ -23,6 +24,9 @@ increments the reference count of
 libzip(3),
 zip_source(3),
 zip_source_free(3)
+.SH "HISTORY"
+\fBzip_source_keep\fR()
+was added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

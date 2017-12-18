@@ -1,4 +1,4 @@
-.TH "ZIP_STAT" "3" "December 29, 2016" "NiH" "Library Functions Manual"
+.TH "ZIP_STAT" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_stat\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_flags_t\ flags\fR, \fIzip_stat_t\ *sb\fR);
 .PD
 .PP
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_stat_index\fR(\fIzip_t\ *archive\fR, \fIzip_uint64_t\ index\fR, \fIzip_flags_t\ flags\fR, \fIzip_stat_t\ *sb\fR);
@@ -139,6 +141,30 @@ libzip(3),
 zip_get_num_entries(3),
 zip_name_locate(3),
 zip_stat_init(3)
+.SH "HISTORY"
+\fBzip_stat\fR()
+was added in libzip 0.6.
+In libzip 0.11 the type of
+\fIflags\fR
+was changed from
+\fIint\fR
+to
+\fIzip_flags_t\fR.
+.PP
+\fBzip_stat_index\fR()
+was added in libzip 0.6.
+In libzip 0.10 the type of
+\fIindex\fR
+was changed from
+\fIint\fR
+to
+\fIzip_uint64_t\fR.
+In libzip 0.11 the type of
+\fIflags\fR
+was changed from
+\fIint\fR
+to
+\fIzip_flags_t\fR.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

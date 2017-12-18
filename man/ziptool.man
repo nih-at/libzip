@@ -1,4 +1,4 @@
-.TH "ZIPTOOL" "1" "December 4, 2017" "NiH" "General Commands Manual"
+.TH "ZIPTOOL" "1" "December 18, 2017" "NiH" "General Commands Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -348,6 +348,9 @@ ziptool testfile.zip delete 0
 zipcmp(1),
 zipmerge(1),
 libzip(3)
+.SH "HISTORY"
+\fBziptool\fR
+was added in libzip 1.1.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

@@ -1,4 +1,4 @@
-.TH "ZIP_GET_NUM_ENTRIES" "3" "August 1, 2012" "NiH" "Library Functions Manual"
+.TH "ZIP_GET_NUM_ENTRIES" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_int64_t\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_get_num_entries\fR(\fIzip_t\ *archive\fR, \fIzip_flags_t\ flags\fR);
@@ -35,6 +36,19 @@ is
 libzip(3),
 zip_fopen_index(3),
 zip_stat_index(3)
+.SH "HISTORY"
+\fBzip_get_num_entries\fR()
+was added in libzip 0.10.
+In libzip 0.11 the return type was changed from
+\fIzip_uint64_t\fR
+to
+\fIzip_int64_t\fR.
+In libzip 0.11 the type of
+\fIflags\fR
+was changed from
+\fIint\fR
+to
+\fIzip_flags_t\fR.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

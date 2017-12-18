@@ -1,4 +1,4 @@
-.TH "ZIP_FILE_STRERROR" "3" "December 27, 2004" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_STRERROR" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIconst char *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_strerror\fR(\fIzip_file_t\ *file\fR);
 .PD
 .PP
 \fIconst char *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_strerror\fR(\fIzip_t\ *archive\fR);
@@ -50,6 +52,11 @@ return a pointer to the error string.
 .SH "SEE ALSO"
 libzip(3),
 zip_error_to_str(3)
+.SH "HISTORY"
+\fBzip_file_strerror\fR()
+and
+\fBzip_strerror\fR()
+were added in libzip 0.6.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

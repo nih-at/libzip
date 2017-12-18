@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_TO_STR" "3" "November 13, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_TO_STR" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -10,6 +10,7 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIint\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_to_str\fR(\fIchar\ *buf\fR, \fIzip_uint64_t\ len\fR, \fIint\ ze\fR, \fIint\ se\fR);
@@ -46,6 +47,20 @@ zip_error_fini(&error);
 libzip(3),
 zip_error_init_with_code(3),
 zip_error_strerror(3)
+.SH "HISTORY"
+\fBzip_error_to_str\fR()
+was added in libzip 0.6.
+In libzip 0.10 the type of
+\fIlen\fR
+was changed from
+\fIsize_t\fR
+to
+\fIzip_uint64_t\fR.
+It was deprecated in libzip 1.0, use
+\fBzip_error_init_with_code\fR()
+and
+\fBzip_error_strerror\fR()
+instead.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

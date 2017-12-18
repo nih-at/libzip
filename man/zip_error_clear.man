@@ -1,4 +1,4 @@
-.TH "ZIP_ERROR_CLEAR" "3" "October 30, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_ERROR_CLEAR" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_error_clear\fR(\fIzip_t\ *archive\fR);
 .PD
 .PP
 \fIvoid\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_file_error_clear\fR(\fIzip_file_t\ *file\fR);
@@ -34,6 +36,11 @@ function does the same for the zip file
 .SH "SEE ALSO"
 libzip(3),
 zip_error_get(3)
+.SH "HISTORY"
+\fBzip_error_clear\fR()
+and
+\fBzip_file_error_clear\fR()
+were added in libzip 0.8.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

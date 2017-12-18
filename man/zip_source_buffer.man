@@ -1,4 +1,4 @@
-.TH "ZIP_SOURCE_BUFFER" "3" "October 17, 2014" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_BUFFER" "3" "December 18, 2017" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -11,12 +11,14 @@ libzip (-lzip)
 \fB#include <zip.h>\fR
 .sp
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_buffer\fR(\fIzip_t\ *archive\fR, \fIconst\ void\ *data\fR, \fIzip_uint64_t\ len\fR, \fIint\ freep\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
+.br
 .PD 0
 .HP 4n
 \fBzip_source_buffer_create\fR(\fIconst\ void\ *data\fR, \fIzip_uint64_t\ len\fR, \fIint\ freep\fR, \fIzip_error_t\ *error\fR);
@@ -67,6 +69,11 @@ zip_add(3),
 zip_open_from_source(3),
 zip_replace(3),
 zip_source(3)
+.SH "HISTORY"
+\fBzip_source_buffer\fR()
+and
+\fBzip_source_buffer_create\fR()
+were added in libzip 1.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and
