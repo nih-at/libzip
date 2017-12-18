@@ -35,6 +35,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <wchar.h>
 #include <stdlib.h>
 #include <string.h>
+#include <aclapi.h>
 
 #include "zipint.h"
 #include "zipwin32.h"
@@ -420,12 +421,12 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
     int i;
     HANDLE th = INVALID_HANDLE_VALUE;
     void *temp = NULL;
-    SECURITY_INFORMATION si;
-    SECURITY_ATTRIBUTES sa;
     PSECURITY_DESCRIPTOR psd = NULL;
     PSECURITY_ATTRIBUTES psa = NULL;
-    DWORD len;
-    BOOL success;
+    SECURITY_ATTRIBUTES sa;
+    SECURITY_INFORMATION si;
+    DWORD success;
+    PACL dacl = NULL;
 
     /*
     Read the DACL from the original file, so we can copy it to the temp file.
@@ -434,16 +435,8 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
     */
     if (ctx->h != INVALID_HANDLE_VALUE && GetFileType(ctx->h) == FILE_TYPE_DISK) {
 	si = DACL_SECURITY_INFORMATION | UNPROTECTED_DACL_SECURITY_INFORMATION;
-	len = 0;
-	success = GetUserObjectSecurity(ctx->h, &si, NULL, len, &len);
-	if (!success && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-	    if ((psd = (PSECURITY_DESCRIPTOR)malloc(len)) == NULL) {
-		zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
-		return -1;
-	    }
-	    success = GetUserObjectSecurity(ctx->h, &si, psd, len, &len);
-	}
-	if (success) {
+	success = GetSecurityInfo(ctx->h, SE_FILE_OBJECT, si, NULL, NULL, &dacl, NULL, &psd);
+	if (success == ERROR_SUCCESS) {
 	    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
 	    sa.bInheritHandle = FALSE;
 	    sa.lpSecurityDescriptor = psd;
@@ -451,7 +444,13 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 	}
     }
 
+
+#ifndef MS_UWP
     value = GetTickCount();
+#else
+    value = (zip_uint32_t)GetTickCount64();
+#endif
+
     for (i = 0; i < 1024 && th == INVALID_HANDLE_VALUE; i++) {
 	th = ctx->ops->op_create_temp(ctx, &temp, value + i, psa);
 	if (th == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_EXISTS)
@@ -460,12 +459,12 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 
     if (th == INVALID_HANDLE_VALUE) {
 	free(temp);
-	free(psd);
+	LocalFree(psd);
 	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, _zip_win32_error_to_errno(GetLastError()));
 	return -1;
     }
 
-    free(psd);
+    LocalFree(psd);
     ctx->hout = th;
     ctx->tmpname = temp;
 
