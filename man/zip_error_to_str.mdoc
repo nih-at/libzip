@@ -76,6 +76,11 @@ was changed from
 .Vt size_t
 to
 .Vt zip_uint64_t .
+It was deprecated in libzip 1.0, use
+.Fn zip_error_init_with_code
+and
+.Fn zip_error_strerror
+instead.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at
