@@ -204,6 +204,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
                 }
                 free(fragments);
                 fclose(fp);
+                return NULL;
             }
         }
         fclose(fp);
