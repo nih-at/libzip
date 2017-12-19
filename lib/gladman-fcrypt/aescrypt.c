@@ -46,7 +46,7 @@ extern "C"
 #error An illegal block size has been specified.
 #endif
 
-#define unused  77  /* Sunset Strip */
+#define libzip_fcrypt_unused  77  /* Sunset Strip */
 
 #define si(y,x,k,c) (s(y,c) = word_in(x + 4 * c) ^ k[c])
 #define so(y,x,c)   word_out(y + 4 * c, s(x,c))
@@ -61,14 +61,14 @@ extern "C"
    the following defines prevent the compiler requiring the declaration
    of generated but unused variables in the fwd_var and inv_var macros
  */
-#define b04 unused
-#define b05 unused
-#define b06 unused
-#define b07 unused
-#define b14 unused
-#define b15 unused
-#define b16 unused
-#define b17 unused
+#define b04 libzip_fcrypt_unused
+#define b05 libzip_fcrypt_unused
+#define b06 libzip_fcrypt_unused
+#define b07 libzip_fcrypt_unused
+#define b14 libzip_fcrypt_unused
+#define b15 libzip_fcrypt_unused
+#define b16 libzip_fcrypt_unused
+#define b17 libzip_fcrypt_unused
 #endif
 #define l_copy(y, x)    s(y,0) = s(x,0); s(y,1) = s(x,1); \
                         s(y,2) = s(x,2); s(y,3) = s(x,3);
@@ -83,10 +83,10 @@ extern "C"
 #else
 #define locals(y,x)     x##0,x##1,x##2,x##3,x##4,x##5, \
                         y##0,y##1,y##2,y##3,y##4,y##5
-#define b06 unused
-#define b07 unused
-#define b16 unused
-#define b17 unused
+#define b06 libzip_fcrypt_unused
+#define b07 libzip_fcrypt_unused
+#define b16 libzip_fcrypt_unused
+#define b17 libzip_fcrypt_unused
 #endif
 #define l_copy(y, x)    s(y,0) = s(x,0); s(y,1) = s(x,1); \
                         s(y,2) = s(x,2); s(y,3) = s(x,3); \
