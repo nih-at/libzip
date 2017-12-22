@@ -122,16 +122,16 @@ read_hole(const char *archive, int flags, zip_error_t *error)
 static zip_t *
 read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp)
 {
-    struct stat st;
     zip_source_t *src;
     zip_t *zb;
+    FILE *fp;
 
     if (strcmp(archive, "/dev/stdin") == 0) {
 	zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
 	return NULL;
     }
 
-    if (stat(archive, &st) < 0) {
+    if ((fp=fopen(archive, "r")) == NULL) {
 	if (errno == ENOENT) {
 	    src = zip_source_buffer_create(NULL, 0, 0, error);
 	}
@@ -141,10 +141,10 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 	}
     }
     else {
-        FILE *fp;
+        struct stat st;
 
-        if ((fp=fopen(archive, "r")) == NULL) {
-            zip_error_set(error, ZIP_ER_READ, errno);
+        if (stat(archive, &st) < 0) {
+            zip_error_set(error, ZIP_ER_OPEN, errno);
             return NULL;
         }
         if (fragment_size == 0) {
