@@ -46,9 +46,9 @@ get_data(void **datap, size_t *sizep, const char *archive)
     struct stat st;
     FILE *fp;
 
-    if (stat(archive, &st) < 0) {
+    if ((fp=fopen(archive, "r")) == NULL) {
 	if (errno != ENOENT) {
-	    fprintf(stderr, "can't stat %s: %s\n", archive, strerror(errno));
+	    fprintf(stderr, "can't open %s: %s\n", archive, strerror(errno));
 	    return -1;
 	}
 
@@ -58,20 +58,20 @@ get_data(void **datap, size_t *sizep, const char *archive)
 	return 0;
     }
 
+    if (fstat(fileno(fp), &st) < 0) {
+        fprintf(stderr, "can't stat %s: %s\n", archive, strerror(errno));
+        fclose(fp);
+        return -1;
+    }
+
     if ((*datap = malloc((size_t)st.st_size)) == NULL) {
 	fprintf(stderr, "can't allocate buffer\n");
 	return -1;
     }
 
-    if ((fp=fopen(archive, "r")) == NULL) {
-	free(*datap);
-	fprintf(stderr, "can't open %s: %s\n", archive, strerror(errno));
-	return -1;
-    }
-    
     if (fread(*datap, 1, (size_t)st.st_size, fp) < (size_t)st.st_size) {
-	free(*datap);
 	fprintf(stderr, "can't read %s: %s\n", archive, strerror(errno));
+        free(*datap);
 	fclose(fp);
 	return -1;
     }
