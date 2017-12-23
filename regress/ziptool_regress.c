@@ -143,7 +143,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
     else {
         struct stat st;
 
-        if (stat(archive, &st) < 0) {
+        if (fstat(fileno(fp), &st) < 0) {
             zip_error_set(error, ZIP_ER_OPEN, errno);
             return NULL;
         }
