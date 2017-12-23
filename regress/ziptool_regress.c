@@ -144,6 +144,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
         struct stat st;
 
         if (fstat(fileno(fp), &st) < 0) {
+	    fclose(fp);
             zip_error_set(error, ZIP_ER_OPEN, errno);
             return NULL;
         }
