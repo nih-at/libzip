@@ -66,6 +66,7 @@ get_data(void **datap, size_t *sizep, const char *archive)
 
     if ((*datap = malloc((size_t)st.st_size)) == NULL) {
 	fprintf(stderr, "can't allocate buffer\n");
+	fclose(fp);
 	return -1;
     }
 
