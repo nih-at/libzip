@@ -40,6 +40,7 @@ SET(MAN_PAGES
   zip_fopen_encrypted.3
   zip_fread.3
   zip_fseek.3
+  zip_ftell.3
   zip_get_archive_comment.3
   zip_get_archive_flag.3
   zip_get_error.3
