@@ -29,6 +29,7 @@ SET(MAN_PAGES
   zip_file_extra_fields_count.3
   zip_file_get_comment.3
   zip_file_get_error.3
+  zip_file_get_external_attributes.3
   zip_file_rename.3
   zip_file_set_comment.3
   zip_file_set_encryption.3
@@ -57,6 +58,7 @@ SET(MAN_PAGES
   zip_set_default_password.3
   zip_set_file_comment.3
   zip_set_file_compression.3
+  zip_source.3
   zip_source_begin_write.3
   zip_source_buffer.3
   zip_source_buffer_fragment.3
