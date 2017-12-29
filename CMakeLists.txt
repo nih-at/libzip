@@ -1,6 +1,5 @@
 # TODO:
-# 1. Problems generating html pages.
-# 2. create usable libtool .la file
+# create usable libtool .la file
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
 
@@ -141,7 +140,7 @@ endif(CMAKE_SYSTEM_NAME MATCHES WindowsPhone OR CMAKE_SYSTEM_NAME MATCHES Window
 ADD_DEFINITIONS("-DHAVE_CONFIG_H")
 
 # rpath handling: use rpath in installed binaries
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Testing
@@ -157,8 +156,8 @@ ADD_SUBDIRECTORY(examples)
 # pkgconfig file
 SET(prefix ${CMAKE_INSTALL_PREFIX})
 SET(exec_prefix \${prefix})
-SET(libdir \${exec_prefix}/lib)
-SET(includedir \${prefix}/include)
+SET(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
+SET(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
 IF(BZIP2_FOUND)
   SET(LIBS "${LIBS} -lbz2")
 ENDIF()
@@ -167,7 +166,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES BSD)
   SET(PKG_CONFIG_RPATH "-Wl,-R\${libdir}")
 ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
 CONFIGURE_FILE(libzip.pc.in libzip.pc @ONLY)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzip.pc DESTINATION lib/pkgconfig)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzip.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # write out config file
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
@@ -188,4 +187,4 @@ FILE(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest
 
 # installation
 
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/zipconf.h DESTINATION include)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/zipconf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
