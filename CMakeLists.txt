@@ -156,6 +156,7 @@ ADD_SUBDIRECTORY(examples)
 # pkgconfig file
 SET(prefix ${CMAKE_INSTALL_PREFIX})
 SET(exec_prefix \${prefix})
+SET(bindir \${exec_prefix}/${CMAKE_INSTALL_BINDIR})
 SET(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
 SET(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
 IF(BZIP2_FOUND)
