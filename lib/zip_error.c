@@ -104,6 +104,10 @@ _zip_error_clear(zip_error_t *err)
 void
 _zip_error_copy(zip_error_t *dst, const zip_error_t *src)
 {
+    if (dst == NULL) {
+        return;
+    }
+    
     dst->zip_err = src->zip_err;
     dst->sys_err = src->sys_err;
 }
