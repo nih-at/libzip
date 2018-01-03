@@ -8,8 +8,6 @@
 * migration to CMake
   - replace `make distcheck`
 
-* run Coverity tests automatically via github/travis
-
 * switch to newer fcrypt sources, see https://github.com/BrianGladman/AES/issues/19
 
 * improve man page formatting of tagged lists on webpage (`<dl>`)
@@ -90,7 +88,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 * support InfoZIP encryption header extension (copy data descriptor for encrypted files)
 * ensure that nentries is small enough not to cause overflow (size_t for entry, uint64 for CD on disk)
-* fix OpenSUSE i686 regression failures
 * check for limits imposed by format (central dir size, file size, extra fields, ...)
 * `_zip_u2d_time()`: handle `localtime(3)` failure
 * POSIX: `zip_open()`: check whether file can be created and fail if not
@@ -135,7 +132,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   * delete all
   * modify
 * use gcov output to increase test coverage
-* merge most tools into ziptool
 * add test case to change values for newly added files (name, compression method, comment, mtime, . . .)
 * `zip_open()` file less than `EOCDLEN` bytes long
 * test calls against old API
