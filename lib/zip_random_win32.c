@@ -34,6 +34,8 @@
 #include "zipint.h"
 #include "zipwin32.h"
 
+#include <wincrypt.h>
+
 bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length)
 {
