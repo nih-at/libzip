@@ -33,8 +33,6 @@
 
 #include "zipint.h"
 
-#if defined(HAVE_LIBBZ2)
-
 #include <bzlib.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -267,9 +265,3 @@ zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
     end_of_input,
     process
 };
-
-#else
-
-static int dummy __attribute__((used));
-
-#endif /* HAVE_LIBBZ2 */
