@@ -20,6 +20,7 @@
 #cmakedefine HAVE__UMASK
 #cmakedefine HAVE__UNLINK
 #cmakedefine HAVE_CLONEFILE
+#cmakedefine HAVE_FICLONERANGE
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO

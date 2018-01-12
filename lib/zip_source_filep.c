@@ -45,6 +45,12 @@
 #ifdef HAVE_CLONEFILE
 #include <sys/attr.h>
 #include <sys/clonefile.h>
+#define CAN_CLONE
+#endif
+#ifdef HAVE_FICLONERANGE
+#include <sys/ioctl.h>
+#include <linux/fs.h>
+#define CAN_CLONE
 #endif
 
 #ifdef _WIN32
@@ -89,7 +95,7 @@ struct read_file {
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 static int create_temp_output(struct read_file *ctx);
-#ifdef HAVE_CLONEFILE
+#ifdef CAN_CLONE
 static zip_int64_t create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset);
 #endif
 static int _zip_fseek_u(FILE *f, zip_uint64_t offset, int whence, zip_error_t *error);
@@ -221,7 +227,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 	}
     }
 
-#ifdef HAVE_CLONEFILE
+#ifdef CAN_CLONE
     if (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE)) {
         ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE_CLONING);
     }
@@ -282,7 +288,7 @@ create_temp_output(struct read_file *ctx)
     return 0;
 }
 
-#ifdef HAVE_CLONEFILE
+#ifdef CAN_CLONE
 zip_int64_t
 static create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset)
 {
@@ -300,6 +306,7 @@ static create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset)
     }
     sprintf(temp, "%s.XXXXXX", ctx->fname);
 
+#ifdef HAVE_CLONEFILE
     if (mktemp(temp) == NULL) {
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
         free(temp);
@@ -317,12 +324,59 @@ static create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset)
         free(temp);
         return -1;
     }
-    if (ftruncate(fileno(tfp), (off_t)offset) < 0
-        || fseeko(tfp, (off_t)offset, SEEK_SET) < 0) {
-        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+    if (ftruncate(fileno(tfp), (off_t)offset) < 0) {
+        (void)fclose(tfp);
         (void)remove(temp);
         free(temp);
         return -1;
+    }
+#else
+    {
+        int fd;
+        struct file_clone_range range;
+        struct stat st;
+
+        if (fstat(fileno(ctx->f), &st) < 0) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            return -1;
+        }
+
+        if ((fd = mkstemp(temp)) < 0) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            free(temp);
+            return -1;
+        }
+
+        range.src_fd = fileno(ctx->f);
+        range.src_offset = 0;
+        range.src_length = ((offset + st.st_blksize - 1) / st.st_blksize) * st.st_blksize;
+        if (range.src_length > st.st_size) {
+            range.src_length = 0;
+        }
+        range.dest_offset = 0;
+        if (ioctl(fd, FICLONERANGE, &range) < 0) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            (void)close(fd);
+            (void)remove(temp);
+            free(temp);
+            return -1;
+        }
+
+        if ((tfp = fdopen(fd, "r+b")) == NULL) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            (void)close(fd);
+            (void)remove(temp);
+            free(temp);
+            return -1;
+        }
+    }
+#endif
+
+    if (fseeko(tfp, (off_t)offset, SEEK_SET) < 0) {
+        (void)fclose(tfp);
+        (void)remove(temp);
+        free(temp);
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
     }
 
     ctx->fout = tfp;
@@ -352,7 +406,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
             }
             return create_temp_output(ctx);
 
-#ifdef HAVE_CLONEFILE
+#ifdef CAN_CLONE
         case ZIP_SOURCE_BEGIN_WRITE_CLONING:
             if (ctx->fname == NULL) {
                 zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);

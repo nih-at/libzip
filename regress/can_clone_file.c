@@ -43,6 +43,10 @@
 #include <sys/param.h>
 #include <sys/mount.h>
 #include <unistd.h>
+#elif defined(HAVE_FICLONERANGE)
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/fs.h>
 #endif
 
 int
@@ -77,6 +81,42 @@ main(int argc, char *argv[])
     }
 
     if (volume_attributes.capabilities.capabilities[VOL_CAPABILITIES_INTERFACES] & VOL_CAP_INT_CLONE) {
+        exit(0);
+    }
+#elif defined(HAVE_FICLONERANGE)
+    char namea[32] = "a.fioclone.XXXXXX";
+    char nameb[32] = "b.fioclone.XXXXXX";
+    int fda, fdb, ret;
+    struct file_clone_range range;
+
+    if ((fda = mkstemp(namea)) < 0) {
+        fprintf(stderr, "can't create temp file a: %s\n", strerror(errno));
+        exit(1);
+    }
+    if ((fdb = mkstemp(nameb)) < 0) {
+        fprintf(stderr, "can't create temp file b: %s\n", strerror(errno));
+        (void)close(fda);
+        (void)remove(namea);
+        exit(1);
+    }
+    if (write(fda, "test\n", 5) < 0) {
+        fprintf(stderr, "can't write temp file a: %s\n", strerror(errno));
+        (void)close(fda);
+        (void)remove(namea);
+        close(fdb);
+        (void)remove(nameb);
+        exit(1);
+    }
+    range.src_fd = fda;
+    range.src_offset = 0;
+    range.src_length = 0;
+    range.dest_offset = 0;
+    ret = ioctl(fdb, FICLONERANGE, &range);
+    (void)close(fda);
+    (void)close(fdb);
+    (void)remove(namea);
+    (void)remove(nameb);
+    if (ret >= 0) {
         exit(0);
     }
 #endif

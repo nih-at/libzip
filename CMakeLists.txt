@@ -110,6 +110,10 @@ CHECK_TYPE_SIZE("off_t" SIZEOF_OFF_T)
 CHECK_TYPE_SIZE("size_t" SIZE_T_LIBZIP)
 CHECK_TYPE_SIZE("ssize_t" SSIZE_T_LIBZIP)
 
+CHECK_C_SOURCE_COMPILES("#include <sys/ioctl.h>
+#include <linux/fs.h>
+int main(int argc, char *argv[]) { unsigned long x = FICLONERANGE; }" HAVE_FICLONERANGE)
+
 TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
 
 FIND_PACKAGE(ZLIB REQUIRED)
