@@ -116,6 +116,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Test Case Issues
 
+* add test case for clone with files > 4k
 * consider testing for malloc/realloc failures (see `ckmame/regress/malloc.c`)
 * Winzip AES support
   * test cases decryption: <=20, >20, stat for both
