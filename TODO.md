@@ -12,7 +12,17 @@
 * test error cases with special source
   - tell it which command should fail
   - use it both as source for `zip_add` and `zip_open_from_source`
-  
+  - `ziptool_regress`:
+    - `-e error_spec`: source containing zip fails depending on `error_spec`
+    - `add_with_error name content error_spec`: add content to archive, where source fails depending on `error_spec`
+    - `add_file_with_error name file_to_add offset len error_spec`: add file to archive, len bytes starting from offset, where source fails depending on `error_spec`
+  - `error_spec`:
+    - source command that fails
+	- error code that source returns
+	- conditions that must be met for error to trigger
+	  - Nth call of command
+      - read/write: total byte count so far
+	  - state of source (opened, EOF reached, ...)
 
 # Later
 
@@ -97,8 +107,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Infrastructure
 
-* rewrite make_zip_errors.sh in cmake
-* rewrite make_zip_err_str.sh in cmake
+* rewrite `make_zip_errors.sh` in cmake
+* rewrite `make_zip_err_str.sh` in cmake
 * configure appveyor for Windows builds of libzip
 
 ## Test Case Issues
@@ -128,7 +138,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * fix comment test to be newline insensitive
 * check if http://bugs.python.org/issue20078 provides ideas for new tests
 
-* (add, replace)
+* (`add`, `replace`)
   * add to empty zip
   * add to existing zip
   * add w/ existing file name [E]
@@ -136,32 +146,32 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   * replace w/ illegal index [E]
   * replace w/ deleted name [E]
   * unchange added/replaced file
-* (close)
+* (`close`)
   * copy zip file
   * open copy
   * rename, delete, replace, add w/ new name, add w/ deleted name
   * close
   * zipcmp copy expected
   * remove copy
-* (error_get)
-* (error_get_sys_type)
-* (error_to_str)
-* (extra_fields)
-* (file_error_get)
-* (file_strerror)
-* (replace)
-* (source_buffer)
-* (source_file)
-* (source_filep)
-* (source_free)
-* (source_function)
-* (source_zip)
-* (strerror)
-* (unchange)
-* (unchange_all)
-* open(ZIP_RDONLY)
+* (`error_get)
+* (`error_get_sys_type`)
+* (`error_to_str`)
+* (`extra_fields`)
+* (`file_error_get`)
+* (`file_strerror`)
+* (`replace`)
+* (`source_buffer`)
+* (`source_file`)
+* (`source_filep`)
+* (`source_free`)
+* (`source_function`)
+* (`source_zip`)
+* (`strerror`)
+* (`unchange`)
+* (`unchange_all`)
+* `open(ZIP_RDONLY)`
 * I/O abstraction layer
-  * zip_open_from_source
+  * `zip_open_from_source`
 * read two zip entries interleaved
 
 ## Unsorted
