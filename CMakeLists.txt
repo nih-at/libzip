@@ -38,6 +38,27 @@ ADD_CUSTOM_TARGET(dist
   COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.xz HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )
+ADD_CUSTOM_TARGET(distcheck
+  COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest 2>/dev/null || true
+  COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
+  COMMAND cmake -E tar xf ${ARCHIVE_NAME}.tar.gz
+  COMMAND chmod -R u-w ${ARCHIVE_NAME}
+  COMMAND mkdir ${ARCHIVE_NAME}-build
+  COMMAND mkdir ${ARCHIVE_NAME}-dest
+  COMMAND cd ${ARCHIVE_NAME}-build && cmake -DCMAKE_INSTALL_PREFIX=../${ARCHIVE_NAME}-dest ../${ARCHIVE_NAME}
+  COMMAND cd ${ARCHIVE_NAME}-build && make -j4
+  COMMAND cd ${ARCHIVE_NAME}-build && make test
+  COMMAND cd ${ARCHIVE_NAME}-build && make install
+#  COMMAND cd ${ARCHIVE_NAME}-build && make uninstall
+#  COMMAND if [ `find ${ARCHIVE_NAME}-dest ! -type d | wc -l` -ne 0 ]; then echo leftover files in ${ARCHIVE_NAME}-dest; false; fi
+  COMMAND cd ${ARCHIVE_NAME}-build && make clean
+  COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
+  COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
+  COMMAND echo "${ARCHIVE_NAME}.tar.gz is ready for distribution."
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
+ADD_DEPENDENCIES(distcheck dist)
+
 IF(BUILD_SHARED_LIBS)
   SET(HAVE_SHARED TRUE)
 ELSE()
