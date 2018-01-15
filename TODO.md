@@ -5,10 +5,7 @@
   - (Readme Maturity Level)[https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md]
   - (Github Community Profile)[https://github.com/nih-at/libzip/community]
 
-* migration to CMake
-  - replace `make distcheck`
-
-* switch to newer fcrypt sources, see https://github.com/BrianGladman/AES/issues/19
+* replace AES implementation with openssl or similar (with included C source fallback), reimplementing password verification on top of it
 
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 
@@ -42,7 +39,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * rename remaining `zip_XXX_{file,archive}_*` to `zip_{file,archive}_XXX_*`?
 * compression/crypt implementations: how to set error code on failure
 * compression/crypt error messages a la `ZIP_ER_ZLIB` (no detailed info passing)
-* check arguments for every entry point into libzip
 
 ## Features
 
@@ -60,29 +56,24 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * delete all extra fields during `zip_replace()`
 * function to copy file from one archive to another
 * set `O_CLOEXEC` flag after fopen and mkstemp
-* add append-only mode writing file to disk incrementally to keep memory usage low
 * `zip_file_set_mtime()`: support InfoZIP time stamps
-* `zipcmp`: support comparing more features:
-  * version needed/made by
-  * general purpose bit flags
 * support streaming output (creating new archive to e.g. stdout)
-* add functions to:
-  * read/set ASCII file flag? (more general options?)
+* add function to read/set ASCII file flag
 * `zip_commit()` (to finish changes without closing archive)
 * add custom compression function support
-* `zip_fseek()`
 * `zip_source_zip()`: allow rewinding
 * add `zip_abort()` to allow aborting `zip_close()` (can be called from progress callback)
-* zipcmp: add option for file content comparison
-* zipcmp: compare bit flags if paranoid
-* zipcmp: compare external attributes/opsys if paranoid
-* zipcmp: compare last_mod if paranoid (or with separate flag?)
-* consistency
-  . for stored files, test compressed = uncompressed
-  . data descriptor
-  . local headers come before central dir
-
-* support for old compression methods?????
+* `zipcmp`: add option for file content comparison
+* `zipcmp`: add more paranoid checks:
+  * external attributes/opsys
+  * last_mod
+  * version needed/made by
+  * general purpose bit flags
+* add more consistency checks:
+  * for stored files, test compressed = uncompressed
+  * data descriptor
+  * local headers come before central dir
+* support for old compression methods?
 
 ## Bugs
 
@@ -104,10 +95,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * get rid of `zip_get_{compression,encryption}_implementation()`
 * use `zip_*int*_t` internally
 
-## Analysis
-
-* pass through coverity
-
 ## Infrastructure
 
 * rewrite make_zip_errors.sh in cmake
@@ -117,7 +104,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 ## Test Case Issues
 
 * add test case for clone with files > 4k
-* consider testing for malloc/realloc failures (see `ckmame/regress/malloc.c`)
+* consider testing for malloc/realloc failures
 * Winzip AES support
   * test cases decryption: <=20, >20, stat for both
   * test cases encryption: no password, default password, file-specific password, 128/192/256, <=20, >20
