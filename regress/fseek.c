@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,8 +41,7 @@ const char *prg;
 #define USAGE "usage: %s archive index offset\n"
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     int ze;
     zip_t *z;
     zip_file_t *zf;
@@ -54,15 +53,15 @@ main(int argc, char *argv[])
     prg = argv[0];
 
     if (argc != 4) {
-        fprintf(stderr, USAGE, prg);
-        return 1;
+	fprintf(stderr, USAGE, prg);
+	return 1;
     }
 
     archive = argv[1];
     index = strtoull(argv[2], NULL, 10);
     offset = (zip_int64_t)strtoull(argv[3], NULL, 10);
 
-    if ((z=zip_open(archive, 0, &ze)) == NULL) {
+    if ((z = zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, ze);
 	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
@@ -70,7 +69,7 @@ main(int argc, char *argv[])
 	return 1;
     }
 
-    if ((zf=zip_fopen_index(z, index, 0)) == NULL) {
+    if ((zf = zip_fopen_index(z, index, 0)) == NULL) {
 	fprintf(stderr, "%s: can't open file in archive '%s': %s\n", prg, archive, zip_error_strerror(zip_file_get_error(zf)));
 	zip_close(z);
 	return 1;
@@ -81,8 +80,8 @@ main(int argc, char *argv[])
 	zip_close(z);
 	return 1;
     }
-	
-    while ((n=zip_fread(zf, b, sizeof(b))) > 0) {
+
+    while ((n = zip_fread(zf, b, sizeof(b))) > 0) {
 	printf("%.*s", (int)n, b);
     }
     if (n < 0) {
@@ -92,8 +91,8 @@ main(int argc, char *argv[])
     }
 
     if (zip_close(z) == -1) {
-        fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(z));
-        return 1;
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	return 1;
     }
 
     return 0;

@@ -37,7 +37,7 @@
 #include "zipint.h"
 #include "zipwin32.h"
 
-static void * _win32_strdup_w(const void *str);
+static void *_win32_strdup_w(const void *str);
 static HANDLE _win32_open_w(_zip_source_win32_read_file_t *ctx);
 static HANDLE _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa);
 static int _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx);
@@ -54,8 +54,7 @@ static _zip_source_win32_file_ops_t win32_ops_w = {
 // clang-format on
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64_t len)
-{
+zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
 	return NULL;
 
@@ -64,8 +63,7 @@ zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64
 
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error)
-{
+zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (fname == NULL || length < -1) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
@@ -76,17 +74,15 @@ zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t l
 
 
 static void *
-_win32_strdup_w(const void *str)
-{
+_win32_strdup_w(const void *str) {
     return _wcsdup((const wchar_t *)str);
 }
 
 
 static HANDLE
-_win32_open_w(_zip_source_win32_read_file_t *ctx)
-{
+_win32_open_w(_zip_source_win32_read_file_t *ctx) {
 #ifdef MS_UWP
-    CREATEFILE2_EXTENDED_PARAMETERS extParams = { 0 };
+    CREATEFILE2_EXTENDED_PARAMETERS extParams = {0};
     extParams.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
     extParams.dwFileFlags = FILE_FLAG_RANDOM_ACCESS;
     extParams.dwSecurityQosFlags = SECURITY_ANONYMOUS;
@@ -102,8 +98,7 @@ _win32_open_w(_zip_source_win32_read_file_t *ctx)
 
 
 static HANDLE
-_win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa)
-{
+_win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa) {
     size_t len;
 
     len = wcslen((const wchar_t *)ctx->fname) + 10;
@@ -118,7 +113,7 @@ _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
     }
 
 #ifdef MS_UWP
-    CREATEFILE2_EXTENDED_PARAMETERS extParams = { 0 };
+    CREATEFILE2_EXTENDED_PARAMETERS extParams = {0};
     extParams.dwFileAttributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY;
     extParams.dwFileFlags = FILE_FLAG_RANDOM_ACCESS;
     extParams.dwSecurityQosFlags = SECURITY_ANONYMOUS;
@@ -134,8 +129,7 @@ _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 
 
 static int
-_win32_rename_temp_w(_zip_source_win32_read_file_t *ctx)
-{
+_win32_rename_temp_w(_zip_source_win32_read_file_t *ctx) {
     if (!MoveFileExW(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING))
 	return -1;
     return 0;
@@ -143,8 +137,7 @@ _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx)
 
 
 static int
-_win32_remove_w(const void *fname)
-{
+_win32_remove_w(const void *fname) {
     DeleteFileW((const wchar_t *)fname);
     return 0;
 }

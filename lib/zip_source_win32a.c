@@ -37,7 +37,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "zipint.h"
 #include "zipwin32.h"
 
-static void * _win32_strdup_a(const void *str);
+static void *_win32_strdup_a(const void *str);
 static HANDLE _win32_open_a(_zip_source_win32_read_file_t *ctx);
 static HANDLE _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa);
 static int _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx);
@@ -54,8 +54,7 @@ static _zip_source_win32_file_ops_t win32_ops_a = {
 // clang-format on
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32a(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len)
-{
+zip_source_win32a(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
 	return NULL;
 
@@ -64,8 +63,7 @@ zip_source_win32a(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t 
 
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error)
-{
+zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (fname == NULL || length < -1) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
@@ -76,22 +74,19 @@ zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t leng
 
 
 static void *
-_win32_strdup_a(const void *str)
-{
+_win32_strdup_a(const void *str) {
     return strdup((const char *)str);
 }
 
 
 static HANDLE
-_win32_open_a(_zip_source_win32_read_file_t *ctx)
-{
+_win32_open_a(_zip_source_win32_read_file_t *ctx) {
     return CreateFileA(ctx->fname, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
 
 static HANDLE
-_win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa)
-{
+_win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32_t value, PSECURITY_ATTRIBUTES sa) {
     size_t len;
 
     len = strlen((const char *)ctx->fname) + 10;
@@ -110,8 +105,7 @@ _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 
 
 static int
-_win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
-{
+_win32_rename_temp_a(_zip_source_win32_read_file_t *ctx) {
     if (!MoveFileExA(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING))
 	return -1;
     return 0;
@@ -119,8 +113,7 @@ _win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
 
 
 static int
-_win32_remove_a(const void *fname)
-{
+_win32_remove_a(const void *fname) {
     DeleteFileA((const char *)fname);
     return 0;
 }

@@ -7,3 +7,6 @@ MaxEmptyLinesToKeep: 2
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true
+AlignEscapedNewlines: Left
+UseTab: ForContinuationAndIndentation
+#PPDirectiveIndentStyle: AfterHash

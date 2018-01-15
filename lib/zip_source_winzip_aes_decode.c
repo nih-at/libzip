@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
   products derived from this software without specific prior
   written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,10 +39,10 @@
 
 #include "gladman-fcrypt.h"
 
-#define MAX_HEADER_LENGTH (16+PWD_VER_LENGTH)
+#define MAX_HEADER_LENGTH (16 + PWD_VER_LENGTH)
 #define HMAC_LENGTH 10
 
-static unsigned int salt_length[] = { 0, 8, 12, 16 };
+static unsigned int salt_length[] = {0, 8, 12, 16};
 
 struct winzip_aes {
     char *password;
@@ -59,12 +59,11 @@ struct winzip_aes {
 static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx);
 static void winzip_aes_free(struct winzip_aes *);
 static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
-static struct winzip_aes * winzip_aes_new(unsigned int mode, const char *password);
+static struct winzip_aes *winzip_aes_new(unsigned int mode, const char *password);
 
 
 zip_source_t *
-zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password)
-{
+zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password) {
     zip_source_t *s2;
     unsigned int mode = 0;
     zip_stat_t st;
@@ -82,7 +81,7 @@ zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int 
 	mode = 3;
 	break;
     }
-	
+
     if (password == NULL || src == NULL || mode == 0) {
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
@@ -93,8 +92,8 @@ zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int 
     }
 
     if (strlen(password) > UINT_MAX) {
-        zip_error_set(&za->error, ZIP_ER_INVAL, 0); /* TODO: better error code? (password too long) */
-        return NULL;
+	zip_error_set(&za->error, ZIP_ER_INVAL, 0); /* TODO: better error code? (password too long) */
+	return NULL;
     }
 
     if (zip_source_stat(src, &st) != 0) {
@@ -103,7 +102,7 @@ zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int 
     }
 
     aux_length = PWD_VER_LENGTH + salt_length[mode] + HMAC_LENGTH;
-    
+
     if ((st.valid & ZIP_STAT_COMP_SIZE) == 0 || st.comp_size < aux_length) {
 	zip_error_set(&za->error, ZIP_ER_OPNOTSUPP, 0);
 	return NULL;
@@ -126,19 +125,18 @@ zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int 
 
 
 static int
-decrypt_header(zip_source_t *src, struct winzip_aes *ctx)
-{
+decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     zip_uint8_t header[MAX_HEADER_LENGTH];
     zip_uint8_t password_verification[PWD_VER_LENGTH];
     unsigned int headerlen;
     zip_int64_t n;
 
     headerlen = PWD_VER_LENGTH + salt_length[ctx->mode];
-    if ((n=zip_source_read(src, header, headerlen)) < 0) {
+    if ((n = zip_source_read(src, header, headerlen)) < 0) {
 	_zip_error_set_from_source(&ctx->error, src);
 	return -1;
     }
-    
+
     if (n != headerlen) {
 	zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
 	return -1;
@@ -157,8 +155,7 @@ decrypt_header(zip_source_t *src, struct winzip_aes *ctx)
 
 
 static bool
-verify_hmac(zip_source_t *src, struct winzip_aes *ctx)
-{
+verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
     unsigned char computed[HMAC_LENGTH], from_file[HMAC_LENGTH];
     if (zip_source_read(src, from_file, HMAC_LENGTH) < HMAC_LENGTH) {
 	_zip_error_set_from_source(&ctx->error, src);
@@ -166,7 +163,7 @@ verify_hmac(zip_source_t *src, struct winzip_aes *ctx)
     }
 
     _zip_fcrypt_end(computed, &ctx->fcrypt_ctx);
-    
+
     if (memcmp(from_file, computed, HMAC_LENGTH) != 0) {
 	zip_error_set(&ctx->error, ZIP_ER_CRC, 0);
 	return false;
@@ -177,8 +174,7 @@ verify_hmac(zip_source_t *src, struct winzip_aes *ctx)
 
 
 static zip_int64_t
-winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
-{
+winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct winzip_aes *ctx;
     zip_int64_t n;
     zip_uint64_t total, offset;
@@ -204,8 +200,8 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 	    }
 	    return 0;
 	}
-	
-	if ((n=zip_source_read(src, data, len)) < 0) {
+
+	if ((n = zip_source_read(src, data, len)) < 0) {
 	    _zip_error_set_from_source(&ctx->error, src);
 	    return -1;
 	}
@@ -221,8 +217,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
     case ZIP_SOURCE_CLOSE:
 	return 0;
 
-    case ZIP_SOURCE_STAT:
-    {
+    case ZIP_SOURCE_STAT: {
 	zip_stat_t *st;
 
 	st = (zip_stat_t *)data;
@@ -232,10 +227,10 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 	if (st->valid & ZIP_STAT_COMP_SIZE) {
 	    st->comp_size -= 12 + salt_length[ctx->mode];
 	}
-	
+
 	return 0;
     }
-            
+
     case ZIP_SOURCE_SUPPORTS:
 	return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, -1);
 
@@ -254,8 +249,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 
 
 static void
-winzip_aes_free(struct winzip_aes *ctx)
-{
+winzip_aes_free(struct winzip_aes *ctx) {
     if (ctx == NULL) {
 	return;
     }
@@ -271,11 +265,11 @@ winzip_aes_free(struct winzip_aes *ctx)
 static struct winzip_aes *
 winzip_aes_new(unsigned int mode, const char *password) {
     struct winzip_aes *ctx;
-    
+
     if ((ctx = (struct winzip_aes *)malloc(sizeof(*ctx))) == NULL) {
 	return NULL;
     }
-    
+
     if ((ctx->password = strdup(password)) == NULL) {
 	free(ctx);
 	return NULL;

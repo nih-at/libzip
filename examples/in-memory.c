@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,13 +40,12 @@
 #include <zip.h>
 
 static int
-get_data(void **datap, size_t *sizep, const char *archive)
-{
+get_data(void **datap, size_t *sizep, const char *archive) {
     /* example implementation that reads data from file */
     struct stat st;
     FILE *fp;
 
-    if ((fp=fopen(archive, "r")) == NULL) {
+    if ((fp = fopen(archive, "r")) == NULL) {
 	if (errno != ENOENT) {
 	    fprintf(stderr, "can't open %s: %s\n", archive, strerror(errno));
 	    return -1;
@@ -54,14 +53,14 @@ get_data(void **datap, size_t *sizep, const char *archive)
 
 	*datap = NULL;
 	*sizep = 0;
-	
+
 	return 0;
     }
 
     if (fstat(fileno(fp), &st) < 0) {
-        fprintf(stderr, "can't stat %s: %s\n", archive, strerror(errno));
-        fclose(fp);
-        return -1;
+	fprintf(stderr, "can't stat %s: %s\n", archive, strerror(errno));
+	fclose(fp);
+	return -1;
     }
 
     if ((*datap = malloc((size_t)st.st_size)) == NULL) {
@@ -72,7 +71,7 @@ get_data(void **datap, size_t *sizep, const char *archive)
 
     if (fread(*datap, 1, (size_t)st.st_size, fp) < (size_t)st.st_size) {
 	fprintf(stderr, "can't read %s: %s\n", archive, strerror(errno));
-        free(*datap);
+	free(*datap);
 	fclose(fp);
 	return -1;
     }
@@ -84,16 +83,14 @@ get_data(void **datap, size_t *sizep, const char *archive)
 }
 
 static int
-modify_archive(zip_t *za)
-{
+modify_archive(zip_t *za) {
     /* modify the archive */
     return 0;
 }
 
 
 static int
-use_data(void *data, size_t size, const char *archive)
-{
+use_data(void *data, size_t size, const char *archive) {
     /* example implementation that writes data to file */
     FILE *fp;
 
@@ -124,8 +121,7 @@ use_data(void *data, size_t size, const char *archive)
 
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     const char *archive;
     zip_source_t *src;
     zip_t *za;

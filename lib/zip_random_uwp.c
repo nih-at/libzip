@@ -31,16 +31,15 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <windows.h>
-#include <ntstatus.h>
 #include <bcrypt.h>
+#include <ntstatus.h>
+#include <windows.h>
 
 #include "zipint.h"
 #include "zipwin32.h"
 
 bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length)
-{
+zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
     BCRYPT_ALG_HANDLE hAlg = NULL;
     NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
     if (hr != STATUS_SUCCESS || hAlg == NULL) {

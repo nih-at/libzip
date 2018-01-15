@@ -157,7 +157,8 @@ end(void *ud) {
 }
 
 
-static bool input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
+static bool
+input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
     struct ctx *ctx = (struct ctx *)ud;
 
     if (length > UINT_MAX || ctx->zstr.avail_in > 0) {
@@ -172,7 +173,8 @@ static bool input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
 }
 
 
-static void end_of_input(void *ud) {
+static void
+end_of_input(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
     ctx->end_of_input = true;

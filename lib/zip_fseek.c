@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,9 +36,7 @@
 #include <stdio.h>
 
 ZIP_EXTERN zip_int8_t
-zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence)
-{
-
+zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence) {
     if (!zf)
 	return -1;
 

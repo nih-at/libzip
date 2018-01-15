@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,8 +42,7 @@
    the new struct. */
 
 zip_t *
-_zip_new(zip_error_t *error)
-{
+_zip_new(zip_error_t *error) {
     zip_t *za;
 
     za = (zip_t *)malloc(sizeof(struct zip));
@@ -69,6 +68,6 @@ _zip_new(zip_error_t *error)
     za->nopen_source = za->nopen_source_alloc = 0;
     za->open_source = NULL;
     za->progress = NULL;
-    
+
     return za;
 }

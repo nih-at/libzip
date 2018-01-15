@@ -6,7 +6,7 @@
 #endif
 
 /* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
-   */
+ */
 /* #undef HAVE_DECL_TZNAME */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
@@ -139,7 +139,7 @@
 /* #undef HAVE__STRICMP */
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+ */
 #define LT_OBJDIR ".libs/"
 
 /* Name of package */
@@ -200,7 +200,7 @@
 
 /* Enable large inode numbers on Mac OS X 10.5.  */
 #ifndef _DARWIN_USE_64_BIT_INODE
-# define _DARWIN_USE_64_BIT_INODE 1
+#define _DARWIN_USE_64_BIT_INODE 1
 #endif
 
 /* Number of bits in a file offset, on hosts where this is settable. */
@@ -211,14 +211,13 @@
 
 
 #ifndef HAVE_SSIZE_T
-#  if SIZEOF_SIZE_T == SIZEOF_INT
+#if SIZEOF_SIZE_T == SIZEOF_INT
 typedef int ssize_t;
-#  elif SIZEOF_SIZE_T == SIZEOF_LONG
+#elif SIZEOF_SIZE_T == SIZEOF_LONG
 typedef long ssize_t;
-#  elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
+#elif SIZEOF_SIZE_T == SIZEOF_LONG_LONG
 typedef long long ssize_t;
-#  else
+#else
 #error no suitable type for ssize_t found
-#  endif
 #endif
-
+#endif
