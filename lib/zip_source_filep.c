@@ -318,12 +318,6 @@ zip_int64_t static create_temp_output_cloning(struct read_file *ctx, zip_uint64_
 	free(temp);
 	return -1;
     }
-    if (ftruncate(fileno(tfp), (off_t)offset) < 0) {
-	(void)fclose(tfp);
-	(void)remove(temp);
-	free(temp);
-	return -1;
-    }
 #else
     {
 	int fd;
@@ -366,6 +360,12 @@ zip_int64_t static create_temp_output_cloning(struct read_file *ctx, zip_uint64_
     }
 #endif
 
+    if (ftruncate(fileno(tfp), (off_t)offset) < 0) {
+	(void)fclose(tfp);
+	(void)remove(temp);
+	free(temp);
+	return -1;
+    }
     if (fseeko(tfp, (off_t)offset, SEEK_SET) < 0) {
 	(void)fclose(tfp);
 	(void)remove(temp);
