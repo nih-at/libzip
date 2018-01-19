@@ -98,6 +98,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Cleanup
 
+* drop _LIBZIP suffixes in cmake defines (no longer needed since they no longer appear in zipconf.h)
 * go over cdir parser and rename various offset/size variables to make it clearer
 * use bool
 * use `ZIP_SOURCE_SUPPORTS_{READABLE,SEEKABLE,WRITABLE}`
