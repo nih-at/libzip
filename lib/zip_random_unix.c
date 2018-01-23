@@ -36,7 +36,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-bool
+ZIP_EXTERN bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
     int fd;
 
