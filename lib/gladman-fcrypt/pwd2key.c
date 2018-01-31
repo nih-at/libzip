@@ -35,12 +35,17 @@
 */
 
 #include <memory.h>
-#include "hmac.h"
+
+#include <gnutls/gnutls.h>
+#include <gnutls/crypto.h>
 
 #if defined(__cplusplus)
 extern "C"
 {
 #endif
+
+/* SHA-1 size */
+/* #define OUT_BLOCK_LENGTH 20 */
 
 INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
                unsigned int pwd_len,        /* and its length   */
@@ -52,15 +57,7 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
 {
     unsigned int    i, j, k, n_blk;
     unsigned char uu[OUT_BLOCK_LENGTH], ux[OUT_BLOCK_LENGTH];
-    hmac_ctx c1[1], c2[1], c3[1];
-
-    /* set HMAC context (c1) for password               */
-    hmac_sha1_begin(c1);
-    hmac_sha1_key(pwd, pwd_len, c1);
-
-    /* set HMAC context (c2) for password and salt      */
-    memcpy(c2, c1, sizeof(hmac_ctx));
-    hmac_sha1_data(salt, salt_len, c2);
+    gnutls_hmac_hd_t c3;
 
     /* find the number of SHA blocks in the key         */
     n_blk = 1 + (key_len - 1) / OUT_BLOCK_LENGTH;
@@ -71,7 +68,8 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
         memset(ux, 0, OUT_BLOCK_LENGTH);
 
         /* set HMAC context (c3) for password and salt  */
-        memcpy(c3, c2, sizeof(hmac_ctx));
+	gnutls_hmac_init(&c3, GNUTLS_MAC_SHA1, pwd, pwd_len);
+	gnutls_hmac(c3, salt, salt_len);
 
         /* enter additional data for 1st block into uu  */
         uu[0] = (unsigned char)((i + 1) >> 24);
@@ -83,23 +81,25 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
         for(j = 0, k = 4; j < iter; ++j)
         {
             /* add previous round data to HMAC      */
-            hmac_sha1_data(uu, k, c3);
+	    gnutls_hmac(c3, uu, k);
 
             /* obtain HMAC for uu[]                 */
-            hmac_sha1_end(uu, OUT_BLOCK_LENGTH, c3);
+	    gnutls_hmac_deinit(c3, uu);
 
             /* xor into the running xor block       */
             for(k = 0; k < OUT_BLOCK_LENGTH; ++k)
                 ux[k] ^= uu[k];
 
             /* set HMAC context (c3) for password   */
-            memcpy(c3, c1, sizeof(hmac_ctx));
+	    gnutls_hmac_init(&c3, GNUTLS_MAC_SHA1, pwd, pwd_len);
         }
 
         /* compile key blocks into the key output   */
         j = 0; k = i * OUT_BLOCK_LENGTH;
         while(j < OUT_BLOCK_LENGTH && k < key_len)
             key[k++] = ux[j++];
+
+	gnutls_hmac_deinit(c3, NULL);
     }
 }
 
