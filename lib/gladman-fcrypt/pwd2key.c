@@ -36,8 +36,7 @@
 
 #include <memory.h>
 
-#include <gnutls/gnutls.h>
-#include <gnutls/crypto.h>
+#include <openssl/hmac.h>
 
 #if defined(__cplusplus)
 extern "C"
@@ -55,10 +54,11 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
                unsigned char key[], /* space for the output key */
                unsigned int key_len)/* and its required length  */
 {
-    unsigned int    i, j, k, n_blk;
+    unsigned int    i, j, k, n_blk, len;
     unsigned char uu[OUT_BLOCK_LENGTH], ux[OUT_BLOCK_LENGTH];
-    gnutls_hmac_hd_t c3;
+    HMAC_CTX c3;
 
+    HMAC_CTX_init(&c3);
     /* find the number of SHA blocks in the key         */
     n_blk = 1 + (key_len - 1) / OUT_BLOCK_LENGTH;
 
@@ -68,8 +68,8 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
         memset(ux, 0, OUT_BLOCK_LENGTH);
 
         /* set HMAC context (c3) for password and salt  */
-	gnutls_hmac_init(&c3, GNUTLS_MAC_SHA1, pwd, pwd_len);
-	gnutls_hmac(c3, salt, salt_len);
+	HMAC_Init(&c3, pwd, pwd_len, EVP_sha1());
+	HMAC_Update(&c3, salt, salt_len);
 
         /* enter additional data for 1st block into uu  */
         uu[0] = (unsigned char)((i + 1) >> 24);
@@ -81,17 +81,17 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
         for(j = 0, k = 4; j < iter; ++j)
         {
             /* add previous round data to HMAC      */
-	    gnutls_hmac(c3, uu, k);
+	    HMAC_Update(&c3, uu, k);
 
             /* obtain HMAC for uu[]                 */
-	    gnutls_hmac_deinit(c3, uu);
+	    HMAC_Final(&c3, uu, &len);
 
             /* xor into the running xor block       */
             for(k = 0; k < OUT_BLOCK_LENGTH; ++k)
                 ux[k] ^= uu[k];
 
             /* set HMAC context (c3) for password   */
-	    gnutls_hmac_init(&c3, GNUTLS_MAC_SHA1, pwd, pwd_len);
+	    HMAC_Init(&c3, pwd, pwd_len, EVP_sha1());
         }
 
         /* compile key blocks into the key output   */
@@ -99,8 +99,8 @@ INTERNAL void derive_key(const unsigned char pwd[],  /* the PASSWORD     */
         while(j < OUT_BLOCK_LENGTH && k < key_len)
             key[k++] = ux[j++];
 
-	gnutls_hmac_deinit(c3, NULL);
     }
+    HMAC_CTX_cleanup(&c3);
 }
 
 #ifdef TEST
