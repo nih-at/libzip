@@ -44,6 +44,8 @@
 
 #define INTERNAL static
 
+#define BLOCK_SIZE          16 /* size of AES nonce */
+
 #include "fileenc.h"
 
 #endif /* HAD_GLADMAN_FCRYPT_H */

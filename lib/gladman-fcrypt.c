@@ -33,12 +33,9 @@
 
 #define BUILDING_FCRYPT
 
+#define OUT_BLOCK_LENGTH    20 /* SHA1_DIGEST_SIZE */
+
 #include "gladman-fcrypt.h"
 
-#include "gladman-fcrypt/aescrypt.c"
-#include "gladman-fcrypt/aeskey.c"
-#include "gladman-fcrypt/aestab.c"
 #include "gladman-fcrypt/fileenc.c"
-#include "gladman-fcrypt/hmac.c"
 #include "gladman-fcrypt/pwd2key.c"
-#include "gladman-fcrypt/sha1.c"

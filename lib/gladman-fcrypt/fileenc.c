@@ -61,7 +61,8 @@ static void encr_data(unsigned char data[], unsigned long d_len, fcrypt_ctx cx[1
             while(j < 8 && !++cx->nonce[j])
                 ++j;
             /* encrypt the nonce to form next xor buffer    */
-            aes_encrypt_block(cx->nonce, cx->encr_bfr, cx->encr_ctx);
+	    AES_encrypt(cx->nonce, cx->encr_bfr, &cx->aes_key);
+
             pos = 0;
         }
 
@@ -102,7 +103,7 @@ int _zip_fcrypt_init(
     memset(cx->nonce, 0, BLOCK_SIZE * sizeof(unsigned char));
 
     /* initialise for encryption using key 1            */
-    aes_set_encrypt_key(kbuf, KEY_LENGTH(mode), cx->encr_ctx);
+    AES_set_encrypt_key(kbuf, 8*KEY_LENGTH(mode), &cx->aes_key);
 
     /* initialise for authentication using key 2        */
     HMAC_CTX_init(cx->auth_ctx);
