@@ -56,6 +56,10 @@ zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
 	return 0;
     }
 
+    if (len == 0) {
+      return 0;
+    }
+
     bytes_read = 0;
     while (bytes_read < len) {
 	if ((n = _zip_source_call(src, (zip_uint8_t *)data + bytes_read, len - bytes_read, ZIP_SOURCE_READ)) < 0) {
