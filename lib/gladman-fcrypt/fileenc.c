@@ -105,8 +105,8 @@ int _zip_fcrypt_init(
     aes_set_encrypt_key(kbuf, KEY_LENGTH(mode), cx->encr_ctx);
 
     /* initialise for authentication using key 2        */
-    hmac_sha1_begin(cx->auth_ctx);
-    hmac_sha1_key(kbuf + KEY_LENGTH(mode), KEY_LENGTH(mode), cx->auth_ctx);
+    HMAC_CTX_init(cx->auth_ctx);
+    HMAC_Init(cx->auth_ctx, kbuf + KEY_LENGTH(mode), KEY_LENGTH(mode), EVP_sha1());
 
 #ifdef PASSWORD_VERIFIER
     memcpy(pwd_ver, kbuf + 2 * KEY_LENGTH(mode), PWD_VER_LENGTH);
@@ -120,14 +120,14 @@ int _zip_fcrypt_init(
 void _zip_fcrypt_encrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1])
 {
     encr_data(data, data_len, cx);
-    hmac_sha1_data(data, data_len, cx->auth_ctx);
+    HMAC_Update(cx->auth_ctx, data, data_len);
 }
 
 /* perform 'in place' authentication and decryption */
 
 void _zip_fcrypt_decrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx cx[1])
 {
-    hmac_sha1_data(data, data_len, cx->auth_ctx);
+    HMAC_Update(cx->auth_ctx, data, data_len);
     encr_data(data, data_len, cx);
 }
 
@@ -135,8 +135,10 @@ void _zip_fcrypt_decrypt(unsigned char data[], unsigned int data_len, fcrypt_ctx
 
 int _zip_fcrypt_end(unsigned char mac[], fcrypt_ctx cx[1])
 {
-    hmac_sha1_end(mac, MAC_LENGTH(cx->mode), cx->auth_ctx);
-    return MAC_LENGTH(cx->mode);    /* return MAC length in bytes   */
+    unsigned int len;
+    HMAC_Final(cx->auth_ctx, mac, &len);
+    HMAC_CTX_cleanup(cx->auth_ctx);
+    return len;    /* return MAC length in bytes   */
 }
 
 #if defined(__cplusplus)

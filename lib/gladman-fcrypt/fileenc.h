@@ -39,8 +39,9 @@
 #define _FENC_H
 
 #include "aes.h"
-#include "hmac.h"
 #include "pwd2key.h"
+
+#include <openssl/hmac.h>
 
 #define PASSWORD_VERIFIER
 
@@ -85,7 +86,7 @@ typedef struct
 {   unsigned char   nonce[BLOCK_SIZE];          /* the CTR nonce          */
     unsigned char   encr_bfr[BLOCK_SIZE];       /* encrypt buffer         */
     aes_ctx         encr_ctx[1];                /* encryption context     */
-    hmac_ctx        auth_ctx[1];                /* authentication context */
+    HMAC_CTX        auth_ctx[1];                /* authentication context */
     unsigned int    encr_pos;                   /* block position (enc)   */
     unsigned int    pwd_len;                    /* password length        */
     unsigned int    mode;                       /* File encryption mode   */
