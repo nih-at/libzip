@@ -51,7 +51,6 @@ MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
 ENDMACRO()
  
 SET(LIBZIP_SOURCES
-  gladman-fcrypt.c
   zip_add.c
   zip_add_dir.c
   zip_add_entry.c
@@ -145,8 +144,6 @@ SET(LIBZIP_SOURCES
   zip_source_tell.c
   zip_source_tell_write.c
   zip_source_window.c
-  zip_source_winzip_aes_decode.c
-  zip_source_winzip_aes_encode.c
   zip_source_write.c
   zip_source_zip.c
   zip_source_zip_new.c
@@ -185,9 +182,7 @@ ELSE(WIN32)
   )
 ENDIF(WIN32)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/gladman-fcrypt
-  ${CMAKE_CURRENT_BINARY_DIR}/..)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/..)
 
 ADD_CUSTOM_TARGET(update_zip_err_str
   COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/zip_err_str.c
@@ -199,6 +194,11 @@ IF(NOT HAVE_MKSTEMP)
 ENDIF(NOT HAVE_MKSTEMP)
 IF(HAVE_LIBBZ2)
   SET(LIBZIP_OPTIONAL_FILES zip_algorithm_bzip2.c)
+ENDIF()
+
+IF(HAVE_GNUTLS OR HAVE_OPENSSL)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c
+)
 ENDIF()
 
 ADD_LIBRARY(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPTIONAL_FILES} ${LIBZIP_OPSYS_FILES})

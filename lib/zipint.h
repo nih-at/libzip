@@ -69,6 +69,13 @@
 #define ZIP_CM_REPLACED_DEFAULT (-2)
 #define ZIP_CM_WINZIP_AES 99 /* Winzip AES encrypted */
 
+#define WINZIP_AES_PASSWORD_VERIFY_LENGTH 2
+#define WINZIP_AES_MAX_HEADER_LENGTH (16 + WINZIP_AES_PASSWORD_VERIFY_LENGTH)
+#define AES_BLOCK_SIZE 16
+#define HMAC_LENGTH 10
+#define SHA1_LENGTH 20
+#define SALT_LENGTH(method) ((method) == ZIP_EM_AES_128 ? 8 : ((method) == ZIP_EM_AES_192 ? 12 : 16))
+
 #define ZIP_CM_IS_DEFAULT(x) ((x) == ZIP_CM_DEFAULT || (x) == ZIP_CM_REPLACED_DEFAULT)
 #define ZIP_CM_ACTUAL(x) ((zip_uint16_t)(ZIP_CM_IS_DEFAULT(x) ? ZIP_CM_DEFLATE : (x)))
 
@@ -380,6 +387,8 @@ struct zip_filelist {
 
 typedef struct zip_filelist zip_filelist_t;
 
+struct _zip_winzip_aes;
+typedef struct _zip_winzip_aes zip_winzip_aes_t;
 
 extern const char *const _zip_err_str[];
 extern const int _zip_nerr_str;
@@ -531,6 +540,11 @@ const zip_uint8_t *_zip_string_get(zip_string_t *, zip_uint32_t *, zip_flags_t, 
 zip_uint16_t _zip_string_length(const zip_string_t *);
 zip_string_t *_zip_string_new(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_error_t *);
 int _zip_string_write(zip_t *za, const zip_string_t *string);
+void _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
+void _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
+void _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac);
+void _zip_winzip_aes_free(zip_winzip_aes_t *ctx);
+zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, const zip_uint8_t *salt, zip_uint16_t key_size, zip_uint8_t *password_verify, zip_error_t *error);
 
 int _zip_changed(const zip_t *, zip_uint64_t *);
 const char *_zip_get_name(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *);
