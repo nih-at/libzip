@@ -41,6 +41,7 @@
 
 #define MAX_HEADER_LENGTH (16 + PWD_VER_LENGTH)
 #define HMAC_LENGTH 10
+#define SHA1_LENGTH 20
 
 static unsigned int salt_length[] = {0, 8, 12, 16};
 
@@ -156,7 +157,7 @@ decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
 
 static bool
 verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
-    unsigned char computed[HMAC_LENGTH], from_file[HMAC_LENGTH];
+    unsigned char computed[SHA1_LENGTH], from_file[HMAC_LENGTH];
     if (zip_source_read(src, from_file, HMAC_LENGTH) < HMAC_LENGTH) {
 	_zip_error_set_from_source(&ctx->error, src);
 	return false;

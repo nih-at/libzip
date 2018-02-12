@@ -41,6 +41,7 @@
 
 #define MAX_HEADER_LENGTH (16 + PWD_VER_LENGTH)
 #define HMAC_LENGTH 10
+#define SHA1_LENGTH 20
 
 static unsigned int salt_length[] = {0, 8, 12, 16};
 
@@ -49,7 +50,7 @@ struct winzip_aes {
     unsigned int mode;
     zip_uint16_t encryption_method;
 
-    zip_uint8_t data[MAX_HEADER_LENGTH];
+    zip_uint8_t data[ZIP_MAX(MAX_HEADER_LENGTH, SHA1_LENGTH)];
     zip_buffer_t *buffer;
 
     fcrypt_ctx fcrypt_ctx;
