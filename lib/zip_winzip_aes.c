@@ -55,7 +55,7 @@
 
 #if HMAC_MAX_LENGTH < ZIP_UINT64_MAX
 static void
-hmac(HMAC_CTX *ctx, const zip_uint8_t *data, zip_uint64_t length)
+zip_hmac(HMAC_CTX *ctx, const zip_uint8_t *data, zip_uint64_t length)
 {
     zip_uint64_t n;
     
@@ -67,7 +67,7 @@ hmac(HMAC_CTX *ctx, const zip_uint8_t *data, zip_uint64_t length)
     }
 }
 #else
-#define hmac(ctx, data, length) (HMAC_Update((ctx), (data), (length)))
+#define zip_hmac(ctx, data, length) (HMAC_Update((ctx), (data), (length)))
 #endif
 
 #define MAX_KEY_LENGTH 256
@@ -153,14 +153,14 @@ void
 _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length)
 {
     aes_crypt(ctx, data, length);
-    hmac(&ctx->hmac_ctx, data, length);
+    zip_hmac(&ctx->hmac_ctx, data, length);
 }
 
 
 void
 _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length)
 {
-    hmac(&ctx->hmac_ctx, data, length);
+    zip_hmac(&ctx->hmac_ctx, data, length);
     aes_crypt(ctx, data, length);
 }
 
