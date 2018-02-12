@@ -38,8 +38,6 @@
 #ifndef _FENC_H
 #define _FENC_H
 
-#include "pwd2key.h"
-
 #include <openssl/aes.h>
 #include <openssl/hmac.h>
 

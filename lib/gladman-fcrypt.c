@@ -38,4 +38,3 @@
 #include "gladman-fcrypt.h"
 
 #include "gladman-fcrypt/fileenc.c"
-#include "gladman-fcrypt/pwd2key.c"
