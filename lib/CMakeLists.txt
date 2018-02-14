@@ -177,7 +177,6 @@ IF(WIN32)
   ENDIF()
 ELSE(WIN32)
   SET(LIBZIP_OPSYS_FILES
-    zip_random_unix.c
     zip_source_file.c
   )
 ENDIF(WIN32)
@@ -196,7 +195,15 @@ IF(HAVE_LIBBZ2)
   SET(LIBZIP_OPTIONAL_FILES zip_algorithm_bzip2.c)
 ENDIF()
 
-IF(HAVE_GNUTLS OR HAVE_OPENSSL)
+IF(HAVE_GNUTLS)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_gnutls.c
+)
+ELSEIF(HAVE_OPENSSL)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_openssl.c
+)
+ENDIF()
+
+IF(HAVE_CRYPTO)
   SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c
 )
 ENDIF()

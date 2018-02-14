@@ -410,6 +410,7 @@ extern const int _zip_err_type[];
 #ifdef HAVE_EXPLICIT_BZERO
 #define _zip_crypto_clear(b, l) explicit_bzero((b), (l))
 #else
+#include <string.h>
 #define _zip_crypto_clear(b, l) memset((b), 0, (l))
 #endif
 #endif

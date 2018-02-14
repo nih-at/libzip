@@ -179,8 +179,6 @@
 		4B0454BD1E8E3E24002FA1F9 /* zip_algorithm_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */; };
 		4B0454BE1E8E3E25002FA1F9 /* zip_algorithm_bzip2.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B41E8E3DF7002FA1F9 /* zip_algorithm_bzip2.c */; };
 		4B0454BF1E8E3E25002FA1F9 /* zip_algorithm_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */; };
-		4B3A5F501DF96EA8005A53A1 /* gladman-fcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */; };
-		4B3A5F511DF96EA9005A53A1 /* gladman-fcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */; };
 		4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */; };
 		4B3A5F531DF96EB4005A53A1 /* zip_ftell.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */; };
 		4B3A5F541DF96EB5005A53A1 /* zip_fseek.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */; };
@@ -190,6 +188,9 @@
 		4B51DDC11FDAE25B00C5CA85 /* ziptool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BACD57C15BC2AEF00920691 /* ziptool.c */; };
 		4B51DDC21FDAE25F00C5CA85 /* ziptool_regress.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B51DDB31FDAE1DB00C5CA85 /* ziptool_regress.c */; };
 		4B51DDC31FDAE26600C5CA85 /* source_hole.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6CB5C19E6A5D900710654 /* source_hole.c */; };
+		4B69E6EE2032F18B0001EEE7 /* zip_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */; };
+		4B69E6EF2032F18E0001EEE7 /* zip_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */; };
+		4B69E6F120330E0E0001EEE7 /* zip_crypto_gnutls.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6F020330D460001EEE7 /* zip_crypto_gnutls.c */; };
 		4B82CED419915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B82CED519915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B97204F188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
@@ -326,13 +327,16 @@
 		4BDC729615B1B25E00236D3C /* zip_utf-8.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC724315B1B25E00236D3C /* zip_utf-8.c */; };
 		4BDC729B15B1B2C400236D3C /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC729815B1B2A600236D3C /* zip.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BDC729F15B1B4E900236D3C /* zipconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDC729E15B1B4E900236D3C /* zipconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BE92AA720345E3800509BC8 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE92AA620345E3800509BC8 /* libbz2.tbd */; };
+		4BE92AAC20346B1900509BC8 /* zip_crypto_openssl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */; };
+		4BE92AAD20346B1900509BC8 /* zip_crypto_openssl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */; };
+		4BE92AAE20346B1900509BC8 /* zip_crypto_openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */; };
+		4BE92AAF20346B1900509BC8 /* zip_crypto_openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */; };
 		4BFF2B551FE13033006EF3F3 /* can_clone_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFF2B541FE13033006EF3F3 /* can_clone_file.c */; };
 		736ED9BB1E3D6B6B00C36873 /* zip_source_winzip_aes_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B91E3D688C00C36873 /* zip_source_winzip_aes_decode.c */; };
 		736ED9BC1E3D6B6F00C36873 /* zip_source_winzip_aes_encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9BA1E3D688C00C36873 /* zip_source_winzip_aes_encode.c */; };
-		736ED9BD1E3D6B7200C36873 /* zip_random_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B81E3D688C00C36873 /* zip_random_unix.c */; };
 		736ED9BE1E3D6B7C00C36873 /* zip_file_set_encryption.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B71E3D688C00C36873 /* zip_file_set_encryption.c */; };
 		736ED9BF1E3D6B7C00C36873 /* zip_file_set_encryption.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B71E3D688C00C36873 /* zip_file_set_encryption.c */; };
-		736ED9C01E3D6B8000C36873 /* zip_random_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B81E3D688C00C36873 /* zip_random_unix.c */; };
 		736ED9C11E3D6B8300C36873 /* zip_source_winzip_aes_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B91E3D688C00C36873 /* zip_source_winzip_aes_decode.c */; };
 		736ED9C21E3D6B8600C36873 /* zip_source_winzip_aes_encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9BA1E3D688C00C36873 /* zip_source_winzip_aes_encode.c */; };
 /* End PBXBuildFile section */
@@ -700,9 +704,6 @@
 		4B28AA2515BAD4E200D0C17D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
 		4B28AA2715BAD4E200D0C17D /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
-		4B3A5F4A1DF96D83005A53A1 /* gladman-fcrypt */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "gladman-fcrypt"; sourceTree = "<group>"; };
-		4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "gladman-fcrypt.c"; sourceTree = "<group>"; };
-		4B3A5F4C1DF96D83005A53A1 /* gladman-fcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gladman-fcrypt.h"; sourceTree = "<group>"; };
 		4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_fseek.c; sourceTree = "<group>"; };
 		4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_ftell.c; sourceTree = "<group>"; };
 		4B41A2651FE15E99005D8C91 /* clone-fs-add.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-fs-add.test"; sourceTree = "<group>"; };
@@ -711,6 +712,10 @@
 		4B51DDB21FDADEDF00C5CA85 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
 		4B51DDB31FDAE1DB00C5CA85 /* ziptool_regress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ziptool_regress.c; sourceTree = "<group>"; };
 		4B51DDC01FDAE20A00C5CA85 /* ziptool_regress */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptool_regress; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_winzip_aes.c; sourceTree = "<group>"; };
+		4B69E6F020330D460001EEE7 /* zip_crypto_gnutls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_crypto_gnutls.c; sourceTree = "<group>"; };
+		4B69E6F2203341D50001EEE7 /* zip_crypto_gnutls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip_crypto_gnutls.h; sourceTree = "<group>"; };
+		4B69E6F3203342E30001EEE7 /* zip_crypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip_crypto.h; sourceTree = "<group>"; };
 		4B77E61A1FDDCD3A006786BA /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		4B77E61B1FDEDEA4006786BA /* clone-buffer-delete.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-buffer-delete.test"; sourceTree = "<group>"; };
 		4B77E61C1FDEDEA5006786BA /* clone-buffer-replace.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-buffer-replace.test"; sourceTree = "<group>"; };
@@ -995,6 +1000,11 @@
 		4BDC729E15B1B4E900236D3C /* zipconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zipconf.h; sourceTree = SOURCE_ROOT; };
 		4BDC72A015B1B56400236D3C /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
 		4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_is_deleted.c; sourceTree = "<group>"; };
+		4BE92AA420345E2E00509BC8 /* libgnutls.30.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgnutls.30.dylib; path = ../../../../../../opt/pkg/lib/libgnutls.30.dylib; sourceTree = "<group>"; };
+		4BE92AA620345E3800509BC8 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		4BE92AA820345E5500509BC8 /* libnettle.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnettle.6.dylib; path = ../../../../../../opt/pkg/lib/libnettle.6.dylib; sourceTree = "<group>"; };
+		4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip_crypto_openssl.h; sourceTree = "<group>"; };
+		4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_crypto_openssl.c; sourceTree = "<group>"; };
 		4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_win32handle.c; sourceTree = "<group>"; };
 		4BFF2B341FDEEF8B006EF3F3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		4BFF2B351FDEF277006EF3F3 /* cmake-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cmake-config.h.in"; sourceTree = "<group>"; };
@@ -1021,6 +1031,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BE92AA720345E3800509BC8 /* libbz2.tbd in Frameworks */,
 				4B01D73C15B2F6AF002D5007 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1463,6 +1474,9 @@
 		4BDC71CA15B181DA00236D3C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BE92AA820345E5500509BC8 /* libnettle.6.dylib */,
+				4BE92AA620345E3800509BC8 /* libbz2.tbd */,
+				4BE92AA420345E2E00509BC8 /* libgnutls.30.dylib */,
 				3D7E35471B33076C00022624 /* libz.dylib */,
 				4B01D70815B2F4CF002D5007 /* libz.dylib */,
 			);
@@ -1479,9 +1493,6 @@
 				4BDC729815B1B2A600236D3C /* zip.h */,
 				4BDC729915B1B2A600236D3C /* zipint.h */,
 				4BCD54C81AB05AA90003D379 /* zipwin32.h */,
-				4B3A5F4A1DF96D83005A53A1 /* gladman-fcrypt */,
-				4B3A5F4B1DF96D83005A53A1 /* gladman-fcrypt.c */,
-				4B3A5F4C1DF96D83005A53A1 /* gladman-fcrypt.h */,
 				4BDC71F115B1B25E00236D3C /* zip_add_dir.c */,
 				4BDC71F215B1B25E00236D3C /* zip_add_entry.c */,
 				4BDC71F315B1B25E00236D3C /* zip_add.c */,
@@ -1489,6 +1500,11 @@
 				4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */,
 				4BCB434119E9347E0067FAA3 /* zip_buffer.c */,
 				4BDC71F415B1B25E00236D3C /* zip_close.c */,
+				4B69E6F3203342E30001EEE7 /* zip_crypto.h */,
+				4B69E6F020330D460001EEE7 /* zip_crypto_gnutls.c */,
+				4B69E6F2203341D50001EEE7 /* zip_crypto_gnutls.h */,
+				4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */,
+				4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */,
 				4BDC71F515B1B25E00236D3C /* zip_delete.c */,
 				4BDC71F615B1B25E00236D3C /* zip_dir_add.c */,
 				4BDC71F715B1B25E00236D3C /* zip_dirent.c */,
@@ -1596,6 +1612,7 @@
 				4BDC724115B1B25E00236D3C /* zip_unchange_data.c */,
 				4BDC724215B1B25E00236D3C /* zip_unchange.c */,
 				4BDC724315B1B25E00236D3C /* zip_utf-8.c */,
+				4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */,
 			);
 			name = libzip;
 			path = ../lib;
@@ -1618,6 +1635,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BE92AAD20346B1900509BC8 /* zip_crypto_openssl.h in Headers */,
 				4B01D73215B2F5EE002D5007 /* zipconf.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1626,6 +1644,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BE92AAC20346B1900509BC8 /* zip_crypto_openssl.h in Headers */,
 				4BDC729B15B1B2C400236D3C /* zip.h in Headers */,
 				4BDC729F15B1B4E900236D3C /* zipconf.h in Headers */,
 				4B01D73415B2F5F4002D5007 /* config.h in Headers */,
@@ -2019,14 +2038,12 @@
 				736ED9BB1E3D6B6B00C36873 /* zip_source_winzip_aes_decode.c in Sources */,
 				4B01D6B615B2F46B002D5007 /* zip_extra_field_api.c in Sources */,
 				4B3A5F531DF96EB4005A53A1 /* zip_ftell.c in Sources */,
-				736ED9BD1E3D6B7200C36873 /* zip_random_unix.c in Sources */,
 				4B01D6B715B2F46B002D5007 /* zip_extra_field.c in Sources */,
 				4B01D6B815B2F46B002D5007 /* zip_fclose.c in Sources */,
 				4B01D6B915B2F46B002D5007 /* zip_fdopen.c in Sources */,
 				4B01D6BA15B2F46B002D5007 /* zip_file_add.c in Sources */,
 				4B01D6BB15B2F46B002D5007 /* zip_file_error_clear.c in Sources */,
 				4BCF3026199A2F820064207B /* zip_source_commit_write.c in Sources */,
-				4B3A5F501DF96EA8005A53A1 /* gladman-fcrypt.c in Sources */,
 				4B01D6BC15B2F46B002D5007 /* zip_file_error_get.c in Sources */,
 				4B01D6BD15B2F46B002D5007 /* zip_file_get_comment.c in Sources */,
 				4B01D6BE15B2F46B002D5007 /* zip_file_get_offset.c in Sources */,
@@ -2041,6 +2058,7 @@
 				4BCF302A199A2F820064207B /* zip_source_seek.c in Sources */,
 				4B01D6C515B2F46B002D5007 /* zip_fopen_index_encrypted.c in Sources */,
 				4B01D6C615B2F46B002D5007 /* zip_fopen_index.c in Sources */,
+				4B69E6EE2032F18B0001EEE7 /* zip_winzip_aes.c in Sources */,
 				4B01D6C715B2F46B002D5007 /* zip_fopen.c in Sources */,
 				3D9284821C309510001EABA7 /* zip_hash.c in Sources */,
 				4B01D6C815B2F46B002D5007 /* zip_fread.c in Sources */,
@@ -2068,6 +2086,7 @@
 				4B01D6D815B2F46B002D5007 /* zip_set_archive_flag.c in Sources */,
 				4B01D6D915B2F46B002D5007 /* zip_set_default_password.c in Sources */,
 				4B01D6DA15B2F46B002D5007 /* zip_set_file_comment.c in Sources */,
+				4BE92AAF20346B1900509BC8 /* zip_crypto_openssl.c in Sources */,
 				4B01D6DB15B2F46B002D5007 /* zip_set_file_compression.c in Sources */,
 				4B01D6DC15B2F46B002D5007 /* zip_set_name.c in Sources */,
 				4B01D6DD15B2F46B002D5007 /* zip_source_buffer.c in Sources */,
@@ -2103,6 +2122,7 @@
 				4B01D6F615B2F46B002D5007 /* zip_unchange_data.c in Sources */,
 				4B01D6F715B2F46B002D5007 /* zip_unchange.c in Sources */,
 				4B01D6F815B2F46B002D5007 /* zip_utf-8.c in Sources */,
+				4B69E6F120330E0E0001EEE7 /* zip_crypto_gnutls.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2218,7 +2238,6 @@
 				4BDC725815B1B25E00236D3C /* zip_file_add.c in Sources */,
 				4BDC725915B1B25E00236D3C /* zip_file_error_clear.c in Sources */,
 				4BCF3025199A2F820064207B /* zip_source_commit_write.c in Sources */,
-				4B3A5F511DF96EA9005A53A1 /* gladman-fcrypt.c in Sources */,
 				4BDC725A15B1B25E00236D3C /* zip_file_error_get.c in Sources */,
 				4BDC725B15B1B25E00236D3C /* zip_file_get_comment.c in Sources */,
 				4BDC725C15B1B25E00236D3C /* zip_file_get_offset.c in Sources */,
@@ -2233,12 +2252,12 @@
 				4BCF3029199A2F820064207B /* zip_source_seek.c in Sources */,
 				4BDC726315B1B25E00236D3C /* zip_fopen_index_encrypted.c in Sources */,
 				4BDC726415B1B25E00236D3C /* zip_fopen_index.c in Sources */,
+				4B69E6EF2032F18E0001EEE7 /* zip_winzip_aes.c in Sources */,
 				4BDC726515B1B25E00236D3C /* zip_fopen.c in Sources */,
 				3D9284811C309510001EABA7 /* zip_hash.c in Sources */,
 				4BDC726615B1B25E00236D3C /* zip_fread.c in Sources */,
 				4BDC726715B1B25E00236D3C /* zip_get_archive_comment.c in Sources */,
 				4BDC726815B1B25E00236D3C /* zip_get_archive_flag.c in Sources */,
-				736ED9C01E3D6B8000C36873 /* zip_random_unix.c in Sources */,
 				4B0454BE1E8E3E25002FA1F9 /* zip_algorithm_bzip2.c in Sources */,
 				4BD5053319A0116D007DD28A /* zip_source_call.c in Sources */,
 				4BCF302F199A2F820064207B /* zip_source_write.c in Sources */,
@@ -2275,6 +2294,7 @@
 				4BDC728415B1B25E00236D3C /* zip_source_layered.c in Sources */,
 				4BDC728515B1B25E00236D3C /* zip_source_open.c in Sources */,
 				4BDC728615B1B25E00236D3C /* zip_source_pkware.c in Sources */,
+				4BE92AAE20346B1900509BC8 /* zip_crypto_openssl.c in Sources */,
 				4BDC728815B1B25E00236D3C /* zip_source_read.c in Sources */,
 				4BC03FA31FDD6B6F003C7B62 /* zip_source_begin_write_cloning.c in Sources */,
 				4BDC728915B1B25E00236D3C /* zip_source_stat.c in Sources */,
@@ -2470,9 +2490,12 @@
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
-				HEADER_SEARCH_PATHS = "../lib/gladman-fcrypt";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@rpath";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/pkg/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.nih.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2501,9 +2524,12 @@
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
-				HEADER_SEARCH_PATHS = "../lib/gladman-fcrypt";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@rpath";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/pkg/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.nih.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2851,6 +2877,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /opt/pkg/include;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2894,6 +2921,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /opt/pkg/include;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;

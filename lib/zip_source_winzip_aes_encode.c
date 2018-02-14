@@ -82,13 +82,13 @@ zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 
 static int
 encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
-    zip_uint64_t salt_length = SALT_LENGTH(ctx->encryption_method);
+    zip_uint16_t salt_length = SALT_LENGTH(ctx->encryption_method);
     if (!zip_random(ctx->data, salt_length)) {
 	zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }
 
-    if ((ctx->aes_ctx = _zip_winzip_aes_new(ctx->password, strlen(ctx->password), ctx->data, ctx->encryption_method, ctx->data + salt_length, &ctx->error)) == NULL) {
+    if ((ctx->aes_ctx = _zip_winzip_aes_new((zip_uint8_t *)ctx->password, strlen(ctx->password), ctx->data, ctx->encryption_method, ctx->data + salt_length, &ctx->error)) == NULL) {
 	return -1;
     }
 
@@ -143,9 +143,9 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 	    return -1;
 	}
 
-	_zip_winzip_aes_encrypt(ctx->aes_ctx, data, ret);
+	_zip_winzip_aes_encrypt(ctx->aes_ctx, data, (zip_uint64_t)ret);
 
-	if (ret < length) {
+	if ((zip_uint64_t)ret < length) {
 	    ctx->eof = true;
 	    _zip_winzip_aes_finish(ctx->aes_ctx, ctx->data);
 	    _zip_winzip_aes_free(ctx->aes_ctx);
@@ -157,7 +157,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 	    }
 	}
 
-	return (zip_int64_t)(buffer_n + ret);
+	return (zip_int64_t)(buffer_n + (zip_uint64_t)ret);
 
     case ZIP_SOURCE_CLOSE:
 	return 0;

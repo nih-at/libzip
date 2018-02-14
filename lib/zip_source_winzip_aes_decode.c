@@ -116,7 +116,7 @@ decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
 	return -1;
     }
 
-    if ((ctx->aes_ctx = _zip_winzip_aes_new(ctx->password, strlen(ctx->password), header, ctx->encryption_method, password_verification, &ctx->error)) == NULL) {
+    if ((ctx->aes_ctx = _zip_winzip_aes_new((zip_uint8_t *)ctx->password, strlen(ctx->password), header, ctx->encryption_method, password_verification, &ctx->error)) == NULL) {
 	return -1;
     }
     if (memcmp(password_verification, header + SALT_LENGTH(ctx->encryption_method), WINZIP_AES_PASSWORD_VERIFY_LENGTH) != 0) {
@@ -154,7 +154,6 @@ static zip_int64_t
 winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct winzip_aes *ctx;
     zip_int64_t n;
-    zip_uint64_t total, offset;
 
     ctx = (struct winzip_aes *)ud;
 
@@ -184,7 +183,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 	}
 	ctx->current_position += (zip_uint64_t)n;
 
-	_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, n);
+	_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n);
 
 	return n;
 

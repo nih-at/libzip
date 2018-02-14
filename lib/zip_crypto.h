@@ -1,22 +1,22 @@
 /*
-  nonrandomopentest.c -- test nonrandomopen.so
+  zip_crypto.h -- crypto definitions
   Copyright (C) 2017 Dieter Baron and Thomas Klausner
 
-  This file is part of ckmame, a program to check rom sets for MAME.
-  The authors can be contacted at <ckmame@nih.at>
+  This file is part of libzip, a library to manipulate ZIP archives.
+  The authors can be contacted at <libzip@nih.at>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
   1. Redistributions of source code must retain the above copyright
-     notice, this list of conditions and the following disclaimer.
+  notice, this list of conditions and the following disclaimer.
   2. Redistributions in binary form must reproduce the above copyright
-     notice, this list of conditions and the following disclaimer in
-     the documentation and/or other materials provided with the
-     distribution.
-  3. The name of the author may not be used to endorse or promote
-     products derived from this software without specific prior
-     written permission.
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+  3. The names of the authors may not be used to endorse or promote
+  products derived from this software without specific prior
+  written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -31,27 +31,18 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "zipint.h"
+#ifndef HAD_ZIP_CRYPTO_H
+#define HAD_ZIP_CRYPTO_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#define ZIP_CRYPTO_SHA1_LENGTH 20
+#define ZIP_CRYPTO_AES_BLOCK_LENGTH 16
 
-int
-main(int argc, const char *argv[]) {
-    char buf[1024];
-    int i;
-
-#ifdef HAVE_CRYPTO
-    if (!zip_random(buf, sizeof(buf))) {
-	fprintf(stderr, "zip_random returned false\n");
-	exit(1);
-    }
-    for (i = 0; i < sizeof(buf); i++) {
-	if (buf[i] != 0) {
-	    fprintf(stderr, "non-zero byte found\n");
-	    exit(1);
-	}
-    }
+#if defined(HAVE_OPENSSL)
+#include "zip_crypto_openssl.h"
+#elif defined(HAVE_GNUTLS)
+#include "zip_crypto_gnutls.h"
+#else
+#error "no crypto backend found"
 #endif
-    exit(0);
-}
+
+#endif /*  HAD_ZIP_CRYPTO_H */
