@@ -94,7 +94,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 #if OPENSSL_VERSION_NUMBER < 0x1010000fL
         free(hmac);
 #else
-        HMAC_CTX_free(hamc);
+        HMAC_CTX_free(hmac);
 #endif
         return NULL;
     }
