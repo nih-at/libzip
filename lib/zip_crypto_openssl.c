@@ -75,6 +75,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
         return NULL;
     }
 
+#if OPENSSL_VERSION_NUMBER < 0x1010000fL
     if ((hmac  = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
@@ -83,6 +84,15 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
     /* TODO: handle error */
     HMAC_CTX_init(hmac);
     HMAC_Init(hmac, secret, (int)secret_length, EVP_sha1());
+#else
+    if ((hmac = HMAC_CTX_new()) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
+    }
+
+    /* TODO: handle error */
+    HMAC_Init_ex(hmac, secret, secret_length, EVP_sha1(), NULL);
+#endif
 
     return hmac;
 }
@@ -95,8 +105,14 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
         return;
     }
 
+#if OPENSSL_VERSION_NUMBER < 0x1010000fL
     HMAC_CTX_cleanup(hmac);
     _zip_crypto_clear(hmac, sizeof(*hmac));
+#else
+    HMAC_CTX_free(hmac);
+    /* TODO: clear it up? but sizeof(*hmac) is unknown since HMAX_CTX is opaque */
+#endif
+
     free(hmac);
 }
 
