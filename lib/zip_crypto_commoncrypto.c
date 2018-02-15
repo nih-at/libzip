@@ -51,11 +51,12 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes)
 }
 
 
-void
+bool
 _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out)
 {
     size_t len;
     CCCryptorUpdate(aes, in, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, ZIP_CRYPTO_AES_BLOCK_LENGTH, &len);
+    return true;
 }
 
 

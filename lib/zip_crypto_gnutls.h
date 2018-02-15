@@ -52,15 +52,15 @@ typedef struct {
 #define _zip_crypto_hmac_t gnutls_hmac_hd_t
 
 void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
-void _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out);
+bool _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out);
 _zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
 
-#define _zip_crypto_hmac(hmac, data, length)  (gnutls_hmac(*(hmac), (data), (length)))
+#define _zip_crypto_hmac(hmac, data, length)  (gnutls_hmac(*(hmac), (data), (length)) == 0)
 void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
 _zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
-#define _zip_crypto_hmac_output(hmac, data) (gnutls_hmac_output(*(hmac), (data)))
+#define _zip_crypto_hmac_output(hmac, data) (gnutls_hmac_output(*(hmac), (data)), true)
 
 #define _zip_crypto_pbkdf2(key, key_length, salt, salt_length, iterations, output, output_length) \
-	(pbkdf2_hmac_sha1((key_length), (key), (iterations), (salt_length), (salt), (output_length), (output)))
+	(pbkdf2_hmac_sha1((key_length), (key), (iterations), (salt_length), (salt), (output_length), (output)), true)
 
 #endif /*  HAD_ZIP_CRYPTO_GNUTLS_H */

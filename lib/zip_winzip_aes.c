@@ -52,7 +52,7 @@ struct _zip_winzip_aes {
     int pad_offset;
 };
 
-static void
+static bool
 aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length)
 {
     zip_uint64_t i, j;
@@ -65,12 +65,15 @@ aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length)
 		    break;
 		}
 	    }
-	    _zip_crypto_aes_encrypt_block(ctx->aes, ctx->counter, ctx->pad);
+            if (!_zip_crypto_aes_encrypt_block(ctx->aes, ctx->counter, ctx->pad)) {
+                return false;
+            }
 	    ctx->pad_offset = 0;
 	}
 	data[i] ^= ctx->pad[ctx->pad_offset++];
     }
-    
+
+    return true;
 }
 
 
@@ -109,10 +112,13 @@ _zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, c
     memset(ctx->counter, 0, sizeof(ctx->counter));
     ctx->pad_offset = ZIP_CRYPTO_AES_BLOCK_LENGTH;
     
-    /* TODO: error checks */
-    _zip_crypto_pbkdf2(password, password_length, salt, key_length / 2, PBKDF2_ITERATIONS, buffer, 2 * key_length + WINZIP_AES_PASSWORD_VERIFY_LENGTH);
+    if (!_zip_crypto_pbkdf2(password, password_length, salt, key_length / 2, PBKDF2_ITERATIONS, buffer, 2 * key_length + WINZIP_AES_PASSWORD_VERIFY_LENGTH)) {
+        free(ctx);
+        return NULL;
+    }
 
     if ((ctx->aes = _zip_crypto_aes_new(buffer, key_size, error)) == NULL) {
+        _zip_crypto_clear(ctx, sizeof(*ctx));
         free(ctx);
         return NULL;
     }
@@ -130,26 +136,24 @@ _zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, c
 }
 
 
-void
+bool
 _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length)
 {
-    aes_crypt(ctx, data, length);
-    _zip_crypto_hmac(ctx->hmac, data, length);
+    return aes_crypt(ctx, data, length) && _zip_crypto_hmac(ctx->hmac, data, length);
 }
 
 
-void
+bool
 _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length)
 {
-    _zip_crypto_hmac(ctx->hmac, data, length);
-    aes_crypt(ctx, data, length);
+    return _zip_crypto_hmac(ctx->hmac, data, length) && aes_crypt(ctx, data, length);
 }
 
 
-void
+bool
 _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac)
 {
-    _zip_crypto_hmac_output(ctx->hmac, hmac);
+    return _zip_crypto_hmac_output(ctx->hmac, hmac);
 }
 
 

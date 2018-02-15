@@ -67,7 +67,7 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
     return aes;
 }
 
-void
+bool
 _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out)
 {
     switch (aes->key_size) {
@@ -81,6 +81,8 @@ _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip
         nettle_aes256_encrypt(&aes->ctx.ctx_256, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
         break;
     }
+
+    return true;
 }
 
 void

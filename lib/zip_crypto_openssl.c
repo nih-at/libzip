@@ -81,18 +81,23 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
         return NULL;
     }
 
-    /* TODO: handle error */
     HMAC_CTX_init(hmac);
-    HMAC_Init(hmac, secret, (int)secret_length, EVP_sha1());
 #else
     if ((hmac = HMAC_CTX_new()) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
-
-    /* TODO: handle error */
-    HMAC_Init_ex(hmac, secret, secret_length, EVP_sha1(), NULL);
 #endif
+
+    if (HMAC_Init_ex(hmac, secret, (int)secret_length, EVP_sha1(), NULL) != 1) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+#if OPENSSL_VERSION_NUMBER < 0x1010000fL
+        free(hmac);
+#else
+        HMAC_CTX_free(hamc);
+#endif
+        return NULL;
+    }
 
     return hmac;
 }
@@ -108,21 +113,19 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
 #if OPENSSL_VERSION_NUMBER < 0x1010000fL
     HMAC_CTX_cleanup(hmac);
     _zip_crypto_clear(hmac, sizeof(*hmac));
+    free(hmac);
 #else
     HMAC_CTX_free(hmac);
-    /* TODO: clear it up? but sizeof(*hmac) is unknown since HMAX_CTX is opaque */
 #endif
-
-    free(hmac);
 }
 
 
-void
+bool
 _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data)
 {
     unsigned int length;
 
-    HMAC_Final(hmac, data, &length);
+    return HMAC_Final(hmac, data, &length) == 1;
 }
 
 

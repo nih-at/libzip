@@ -541,9 +541,9 @@ const zip_uint8_t *_zip_string_get(zip_string_t *, zip_uint32_t *, zip_flags_t, 
 zip_uint16_t _zip_string_length(const zip_string_t *);
 zip_string_t *_zip_string_new(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_error_t *);
 int _zip_string_write(zip_t *za, const zip_string_t *string);
-void _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
-void _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
-void _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac);
+bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
+bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
+bool _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac);
 void _zip_winzip_aes_free(zip_winzip_aes_t *ctx);
 zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, const zip_uint8_t *salt, zip_uint16_t key_size, zip_uint8_t *password_verify, zip_error_t *error);
 
