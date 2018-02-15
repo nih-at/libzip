@@ -1,5 +1,5 @@
 /*
-  zip_crypto_openssl.h -- definitions for OpenSSL wrapper.
+  zip_crypto_commoncrypto.h -- definitions for CommonCrypto wrapper.
   Copyright (C) 2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -31,25 +31,24 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef HAD_ZIP_CRYPTO_OPENSSL_H
-#define HAD_ZIP_CRYPTO_OPENSSL_H
+#ifndef HAD_ZIP_CRYPTO_COMMONCRYPTO_H
+#define HAD_ZIP_CRYPTO_COMMONCRYPTO_H
 
-#include <openssl/aes.h>
-#include <openssl/hmac.h>
+#include <CommonCrypto/CommonCrypto.h>
 
-#define _zip_crypto_aes_t AES_KEY
-#define _zip_crypto_hmac_t HMAC_CTX
+#define _zip_crypto_aes_t struct _CCCryptor
+#define _zip_crypto_hmac_t CCHmacContext
 
 void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
-#define _zip_crypto_aes_encrypt_block(aes, in, out)  (AES_encrypt((in), (out), (aes)))
+void _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out);
 _zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
 
-#define _zip_crypto_hmac HMAC_Update
+#define _zip_crypto_hmac CCHmacUpdate
 void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
 _zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
-void _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data);
+#define _zip_crypto_hmac_output CCHmacFinal
 
 #define _zip_crypto_pbkdf2(key, key_length, salt, salt_length, iterations, output, output_length) \
-	(PKCS5_PBKDF2_HMAC_SHA1((const char *)(key), (key_length), (salt), (salt_length), (iterations), (output_length), (output)))
+	(CCKeyDerivationPBKDF(kCCPBKDF2, (const char *)(key), (key_length), (salt), (salt_length), kCCPRFHmacAlgSHA1, (iterations), (output), (output_length)))
 
-#endif /*  HAD_ZIP_CRYPTO_OPENSSL_H */
+#endif /* HAD_ZIP_CRYPTO_COMMONCRYPTO_H */

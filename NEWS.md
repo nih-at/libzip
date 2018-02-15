@@ -1,3 +1,8 @@
+1.5.0 [2018-XX-XX]
+==================
+
+* Use standard cryptographic library instead of custom AES implementation.
+
 1.4.0 [2017-12-29]
 ==================
 

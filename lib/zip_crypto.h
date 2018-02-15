@@ -41,6 +41,8 @@
 #include "zip_crypto_openssl.h"
 #elif defined(HAVE_GNUTLS)
 #include "zip_crypto_gnutls.h"
+#elif defined(HAVE_COMMONCRYPTO)
+#include "zip_crypto_commoncrypto.h"
 #else
 #error "no crypto backend found"
 #endif

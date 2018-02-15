@@ -8,8 +8,15 @@ comes with most operating systems.
 For supporting bzip2-compressed zip archives, you need
 [bzip2](http://bzip.org/).
 
-For AES (encryption) support, you need
-[OpenSSL](https://www.openssl.org/).
+For AES (encryption) support, you need one of these cryptographic libraries,
+listed in order of preference:
+
+- Apple's CommonCrypto (available on macOS and iOS)
+- [OpenSSL](https://www.openssl.org/)
+- [GnuTLS](https://www.gnutls.org/).
+
+If you don't want a library even if it is installed, you can
+pass `-DENABLE_<LIBRARY>=OFF` to cmake.
 
 The basic usage is
 ```sh
@@ -22,6 +29,7 @@ make install
 ```
 
 Some useful parameters you can pass to `cmake` with `-Dparameter=value`:
+
 - `BUILD_SHARED_LIBS`: set to `ON` or `OFF` to enable/disable building
   of shared libraries, defaults to `ON`
 - `CMAKE_INSTALL_PREFIX`: for setting the installation path

@@ -190,7 +190,6 @@
 		4B51DDC31FDAE26600C5CA85 /* source_hole.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6CB5C19E6A5D900710654 /* source_hole.c */; };
 		4B69E6EE2032F18B0001EEE7 /* zip_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */; };
 		4B69E6EF2032F18E0001EEE7 /* zip_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */; };
-		4B69E6F120330E0E0001EEE7 /* zip_crypto_gnutls.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6F020330D460001EEE7 /* zip_crypto_gnutls.c */; };
 		4B82CED419915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B82CED519915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
 		4B97204F188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
@@ -330,8 +329,10 @@
 		4BE92AA720345E3800509BC8 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE92AA620345E3800509BC8 /* libbz2.tbd */; };
 		4BE92AAC20346B1900509BC8 /* zip_crypto_openssl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */; };
 		4BE92AAD20346B1900509BC8 /* zip_crypto_openssl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */; };
-		4BE92AAE20346B1900509BC8 /* zip_crypto_openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */; };
-		4BE92AAF20346B1900509BC8 /* zip_crypto_openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */; };
+		4BE92AB2203597D700509BC8 /* zip_crypto_commoncrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE92AB0203597D700509BC8 /* zip_crypto_commoncrypto.h */; };
+		4BE92AB3203597D700509BC8 /* zip_crypto_commoncrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE92AB0203597D700509BC8 /* zip_crypto_commoncrypto.h */; };
+		4BE92AB4203597D700509BC8 /* zip_crypto_commoncrypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE92AB1203597D700509BC8 /* zip_crypto_commoncrypto.c */; };
+		4BE92AB5203597D700509BC8 /* zip_crypto_commoncrypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE92AB1203597D700509BC8 /* zip_crypto_commoncrypto.c */; };
 		4BFF2B551FE13033006EF3F3 /* can_clone_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BFF2B541FE13033006EF3F3 /* can_clone_file.c */; };
 		736ED9BB1E3D6B6B00C36873 /* zip_source_winzip_aes_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B91E3D688C00C36873 /* zip_source_winzip_aes_decode.c */; };
 		736ED9BC1E3D6B6F00C36873 /* zip_source_winzip_aes_encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9BA1E3D688C00C36873 /* zip_source_winzip_aes_encode.c */; };
@@ -1005,6 +1006,8 @@
 		4BE92AA820345E5500509BC8 /* libnettle.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnettle.6.dylib; path = ../../../../../../opt/pkg/lib/libnettle.6.dylib; sourceTree = "<group>"; };
 		4BE92AAA20346B1900509BC8 /* zip_crypto_openssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip_crypto_openssl.h; sourceTree = "<group>"; };
 		4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_crypto_openssl.c; sourceTree = "<group>"; };
+		4BE92AB0203597D700509BC8 /* zip_crypto_commoncrypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip_crypto_commoncrypto.h; sourceTree = "<group>"; };
+		4BE92AB1203597D700509BC8 /* zip_crypto_commoncrypto.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_crypto_commoncrypto.c; sourceTree = "<group>"; };
 		4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_win32handle.c; sourceTree = "<group>"; };
 		4BFF2B341FDEEF8B006EF3F3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		4BFF2B351FDEF277006EF3F3 /* cmake-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cmake-config.h.in"; sourceTree = "<group>"; };
@@ -1501,6 +1504,8 @@
 				4BCB434119E9347E0067FAA3 /* zip_buffer.c */,
 				4BDC71F415B1B25E00236D3C /* zip_close.c */,
 				4B69E6F3203342E30001EEE7 /* zip_crypto.h */,
+				4BE92AB0203597D700509BC8 /* zip_crypto_commoncrypto.h */,
+				4BE92AB1203597D700509BC8 /* zip_crypto_commoncrypto.c */,
 				4B69E6F020330D460001EEE7 /* zip_crypto_gnutls.c */,
 				4B69E6F2203341D50001EEE7 /* zip_crypto_gnutls.h */,
 				4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */,
@@ -1635,6 +1640,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BE92AB3203597D700509BC8 /* zip_crypto_commoncrypto.h in Headers */,
 				4BE92AAD20346B1900509BC8 /* zip_crypto_openssl.h in Headers */,
 				4B01D73215B2F5EE002D5007 /* zipconf.h in Headers */,
 			);
@@ -1648,6 +1654,7 @@
 				4BDC729B15B1B2C400236D3C /* zip.h in Headers */,
 				4BDC729F15B1B4E900236D3C /* zipconf.h in Headers */,
 				4B01D73415B2F5F4002D5007 /* config.h in Headers */,
+				4BE92AB2203597D700509BC8 /* zip_crypto_commoncrypto.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2065,6 +2072,7 @@
 				736ED9BF1E3D6B7C00C36873 /* zip_file_set_encryption.c in Sources */,
 				4B01D6C915B2F46B002D5007 /* zip_get_archive_comment.c in Sources */,
 				4B01D6CA15B2F46B002D5007 /* zip_get_archive_flag.c in Sources */,
+				4BE92AB5203597D700509BC8 /* zip_crypto_commoncrypto.c in Sources */,
 				4B0454BC1E8E3E24002FA1F9 /* zip_algorithm_bzip2.c in Sources */,
 				736ED9BC1E3D6B6F00C36873 /* zip_source_winzip_aes_encode.c in Sources */,
 				4BD5053419A01BB0007DD28A /* zip_source_call.c in Sources */,
@@ -2086,7 +2094,6 @@
 				4B01D6D815B2F46B002D5007 /* zip_set_archive_flag.c in Sources */,
 				4B01D6D915B2F46B002D5007 /* zip_set_default_password.c in Sources */,
 				4B01D6DA15B2F46B002D5007 /* zip_set_file_comment.c in Sources */,
-				4BE92AAF20346B1900509BC8 /* zip_crypto_openssl.c in Sources */,
 				4B01D6DB15B2F46B002D5007 /* zip_set_file_compression.c in Sources */,
 				4B01D6DC15B2F46B002D5007 /* zip_set_name.c in Sources */,
 				4B01D6DD15B2F46B002D5007 /* zip_source_buffer.c in Sources */,
@@ -2122,7 +2129,6 @@
 				4B01D6F615B2F46B002D5007 /* zip_unchange_data.c in Sources */,
 				4B01D6F715B2F46B002D5007 /* zip_unchange.c in Sources */,
 				4B01D6F815B2F46B002D5007 /* zip_utf-8.c in Sources */,
-				4B69E6F120330E0E0001EEE7 /* zip_crypto_gnutls.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2226,6 +2232,7 @@
 				4B3A5F541DF96EB5005A53A1 /* zip_fseek.c in Sources */,
 				4BDC724E15B1B25E00236D3C /* zip_error_clear.c in Sources */,
 				4BDC724F15B1B25E00236D3C /* zip_error_get_sys_type.c in Sources */,
+				4BE92AB4203597D700509BC8 /* zip_crypto_commoncrypto.c in Sources */,
 				4BDC725015B1B25E00236D3C /* zip_error_get.c in Sources */,
 				4BDC725115B1B25E00236D3C /* zip_error_strerror.c in Sources */,
 				4BDC725215B1B25E00236D3C /* zip_error_to_str.c in Sources */,
@@ -2294,7 +2301,6 @@
 				4BDC728415B1B25E00236D3C /* zip_source_layered.c in Sources */,
 				4BDC728515B1B25E00236D3C /* zip_source_open.c in Sources */,
 				4BDC728615B1B25E00236D3C /* zip_source_pkware.c in Sources */,
-				4BE92AAE20346B1900509BC8 /* zip_crypto_openssl.c in Sources */,
 				4BDC728815B1B25E00236D3C /* zip_source_read.c in Sources */,
 				4BC03FA31FDD6B6F003C7B62 /* zip_source_begin_write_cloning.c in Sources */,
 				4BDC728915B1B25E00236D3C /* zip_source_stat.c in Sources */,

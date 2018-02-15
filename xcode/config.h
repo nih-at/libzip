@@ -221,3 +221,5 @@ typedef long long ssize_t;
 #error no suitable type for ssize_t found
 #endif
 #endif
+
+#define HAVE_COMMONCRYPTO
