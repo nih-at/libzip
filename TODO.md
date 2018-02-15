@@ -5,7 +5,7 @@
   - (Readme Maturity Level)[https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md]
   - (Github Community Profile)[https://github.com/nih-at/libzip/community]
 
-* replace AES implementation with openssl or similar (with included C source fallback), reimplementing password verification on top of it
+* test different crypto backends with TravisCI.
 
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 
