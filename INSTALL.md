@@ -16,7 +16,7 @@ listed in order of preference:
 - [GnuTLS](https://www.gnutls.org/).
 
 If you don't want a library even if it is installed, you can
-pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `LIBRARY` is one of
+pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
 `COMMONCRYPTO`, `OPENSSL`, or `GNUTLS`.
 
 The basic usage is
