@@ -374,6 +374,7 @@ buffer_free(buffer_t *buffer) {
 	free(buffer->fragments[i].data);
     }
     free(buffer->fragments);
+    free(buffer->fragment_offsets);
     free(buffer);
 }
 
@@ -387,13 +388,15 @@ buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *erro
 	return true;
     }
 
-    if ((fragments = realloc(buffer->fragments, sizeof(buffer->fragments[0]) * capacity)) == NULL || (offsets = realloc(buffer->fragment_offsets, sizeof(buffer->fragment_offsets[0]) * (capacity + 1))) == NULL) {
-	free(fragments);
+    if ((fragments = realloc(buffer->fragments, sizeof(buffer->fragments[0]) * capacity)) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
+    buffer->fragments = fragments;
+    if ((offsets = realloc(buffer->fragment_offsets, sizeof(buffer->fragment_offsets[0]) * (capacity + 1))) == NULL) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return false;
     }
-
-    buffer->fragments = fragments;
     buffer->fragment_offsets = offsets;
     buffer->fragments_capacity = capacity;
 
