@@ -313,7 +313,10 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
 	return NULL;
     }
 
+#ifndef __clang_analyzer__
+    /* clone->fragments can't be null, since it was created with at least one fragment */
     clone->fragments[clone->nfragments - 1].length = fragment_offset;
+#endif
     clone->fragment_offsets[clone->nfragments] = offset;
     clone->size = offset;
 

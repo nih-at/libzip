@@ -170,9 +170,12 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 	    for (i = 0; i < nfragments; i++) {
 		left = ZIP_MIN(fragment_size, (size_t)st.st_size - i * fragment_size);
 		if ((fragments[i].data = malloc(left)) == NULL) {
+#ifndef __clang_analyzer__
+                    /* fragments is initialized up to i - 1*/
 		    while (--i > 0) {
 			free(fragments[i].data);
-		    }
+                    }
+#endif
 		    free(fragments);
 		    fclose(fp);
 		    zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -180,9 +183,12 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 		}
 		fragments[i].length = left;
 		if (fread(fragments[i].data, left, 1, fp) < 1) {
+#ifndef __clang_analyzer__
+                    /* fragments is initialized up to i - 1*/
 		    while (--i > 0) {
 			free(fragments[i].data);
 		    }
+#endif
 		    free(fragments);
 		    fclose(fp);
 		    zip_error_set(error, ZIP_ER_READ, errno);
@@ -198,6 +204,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 		fclose(fp);
 		return NULL;
 	    }
+            free(fragments);
 	}
 	fclose(fp);
     }

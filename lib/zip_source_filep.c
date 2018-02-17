@@ -301,11 +301,14 @@ zip_int64_t static create_temp_output_cloning(struct read_file *ctx, zip_uint64_
     sprintf(temp, "%s.XXXXXX", ctx->fname);
 
 #ifdef HAVE_CLONEFILE
+#ifndef __clang_analyzer__
+    /* we can't use mkstemp, since clonefile insists on creating the file */
     if (mktemp(temp) == NULL) {
 	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
 	free(temp);
 	return -1;
     }
+#endif
 
     if (clonefile(ctx->fname, temp, 0) < 0) {
 	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
