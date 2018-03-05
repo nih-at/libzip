@@ -33,7 +33,10 @@
 */
 
 #include <string.h>
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 #include "compat.h"
 #include "zipint.h"
