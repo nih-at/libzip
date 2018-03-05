@@ -56,6 +56,10 @@
 #cmakedefine __INT64_LIBZIP ${__INT64_LIBZIP}
 #cmakedefine INT64_T_LIBZIP ${INT64_T_LIBZIP}
 #cmakedefine UINT64_T_LIBZIP ${UINT64_T_LIBZIP}
+#cmakedefine SHORT_LIBZIP ${SHORT_LIBZIP}
+#cmakedefine INT_LIBZIP ${INT_LIBZIP}
+#cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
+#cmakedefine LONG_LONG_LIBZIP ${LONG_LONG_LIBZIP}
 #cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
 #cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
 #cmakedefine SSIZE_T_LIBZIP ${SSIZE_T_LIBZIP}
