@@ -34,9 +34,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _HAD_ZIPCONF_H
 #include "zipconf.h"
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
