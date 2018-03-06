@@ -35,7 +35,7 @@
 */
 
 /* 0x0501 => Windows XP; needs to be at least this value because of GetFileSizeEx */
-#ifndef MS_UWP
+#if !defined(MS_UWP) && !defined(_WIN32_WINNT)
 #define _WIN32_WINNT 0x0501
 #endif
 

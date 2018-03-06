@@ -34,6 +34,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef _HAD_ZIPCONF_H
+#include "zipconf.h"
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -42,7 +46,11 @@
 #define __STDC_LIMIT_MACROS
 
 #ifdef _WIN32
+#ifndef ZIP_EXTERN
+#ifndef ZIP_STATIC
 #define ZIP_EXTERN __declspec(dllexport)
+#endif
+#endif
 /* for dup(), close(), etc. */
 #include <io.h>
 #endif
