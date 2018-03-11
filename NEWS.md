@@ -1,7 +1,10 @@
-1.5.0 [2018-XX-XX]
+1.5.0 [2018-03-11]
 ==================
 
 * Use standard cryptographic library instead of custom AES implementation.
+  This also simplifies the license.
+* Use `clang-format` to format the source code.
+* More Windows improvements.
 
 1.4.0 [2017-12-29]
 ==================
