@@ -38,6 +38,11 @@
 
 #include <openssl/rand.h>
 
+#if OPENSSL_VERSION_NUMBER < 0x1010000fL || defined(LIBRESSL_VERSION_NUMBER)
+#define USE_OPENSSL_1_0_API
+#endif
+
+
 _zip_crypto_aes_t *
 _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error)
 {
@@ -75,7 +80,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
         return NULL;
     }
 
-#if OPENSSL_VERSION_NUMBER < 0x1010000fL
+#ifdef USE_OPENSSL_1_0_API
     if ((hmac  = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
@@ -91,7 +96,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 
     if (HMAC_Init_ex(hmac, secret, (int)secret_length, EVP_sha1(), NULL) != 1) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
-#if OPENSSL_VERSION_NUMBER < 0x1010000fL
+#ifdef USE_OPENSSL_1_0_API
         free(hmac);
 #else
         HMAC_CTX_free(hmac);
@@ -110,7 +115,7 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
         return;
     }
 
-#if OPENSSL_VERSION_NUMBER < 0x1010000fL
+#ifdef USE_OPENSSL_1_0_API
     HMAC_CTX_cleanup(hmac);
     _zip_crypto_clear(hmac, sizeof(*hmac));
     free(hmac);
