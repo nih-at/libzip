@@ -325,9 +325,9 @@ Add a file called
 to the zip archive
 \fItestbuffer.zip\fR
 with data
-\(LqThis is a test.\en\(Rq
+\(lqThis is a test.\en\(rq
 where
-\(Lq\en\(Rq
+\(lq\en\(rq
 is replaced with a newline character:
 .nf
 .sp
