@@ -2,6 +2,8 @@ INCLUDE(CheckFunctionExists)
 
 INSTALL(FILES zip.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
+SET(CMAKE_C_VISIBILITY_PRESET hidden)
+
 # from http://www.cmake.org/Wiki/CMakeMacroLibtoolFile
 MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_value)
   GET_TARGET_PROPERTY(${_variable} ${_target} ${_property})
