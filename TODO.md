@@ -7,6 +7,8 @@
 
 * test different crypto backends with TravisCI.
 
+* test for zipcmp reading directory (requires fts)
+
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 
 * test error cases with special source
