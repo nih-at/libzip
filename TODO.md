@@ -26,6 +26,8 @@
       - read/write: total byte count so far
 	  - state of source (opened, EOF reached, ...)
 
+* add license to generated documentation (man, html)
+
 # Later
 
 ## macOS / iOS framework

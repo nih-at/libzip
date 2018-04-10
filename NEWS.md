@@ -1,3 +1,14 @@
+1.5.x [2018-xx-xx]
+==================
+
+* Choose format of installed documentation based on available tools.
+* Fix visibility of symbols.
+* Fix zipcmp directory support.
+* Don't set RPATH on Linux.
+* Use Libs.private for link dependencies in pkg-config file.
+* Fix build with LibreSSL.
+* Various bugfixes.
+
 1.5.0 [2018-03-11]
 ==================
 
