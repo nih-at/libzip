@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>LIBZIP(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">LIBZIP(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">LIBZIP(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">libzip</b> &#8212; <span class="Nd">library for manipulating zip
+  archives</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+<b class="Nm">libzip</b> is a library for reading, creating, and modifying zip
+  archives.
+<div class="Pp"></div>
+The main design criteria for <b class="Nm">libzip</b> were:
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;">Do not create corrupt files,
+      even in case of errors.</li>
+  <li class="It-bullet" style="margin-top: 0.00em;">Do not delete data.</li>
+  <li class="It-bullet" style="margin-top: 0.00em;">Be efficient.</li>
+</ul>
+<div class="Pp"></div>
+For this reason, when modifying zip archives, <b class="Nm">libzip</b> writes to
+  a temporary file and replaces the original zip archive atomically.
+<div class="Pp"></div>
+Below there are two sections listing functions: one for how to read from zip
+  archives and one for how to create/modify them.
+<h1 class="Sh" id="READING_ZIP_ARCHIVES">READING ZIP ARCHIVES</h1>
+<h2 class="Ss" id="open_archive">open archive</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_open.html">zip_open(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fdopen.html">zip_fdopen(3)</a></li>
+</ul>
+<h2 class="Ss" id="find_files">find files</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_name_locate.html">zip_name_locate(3)</a></li>
+</ul>
+<h2 class="Ss" id="read_files">read files</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fopen.html">zip_fopen(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fopen_encrypted.html">zip_fopen_encrypted(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fopen_index.html">zip_fopen_index(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fopen_index_encrypted.html">zip_fopen_index_encrypted(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fread.html">zip_fread(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fseek.html">zip_fseek(3)</a>
+      (uncompressed files only)</li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_ftell.html">zip_ftell(3)</a>
+      (uncompressed files only)</li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_fclose.html">zip_fclose(3)</a></li>
+</ul>
+<h2 class="Ss" id="close_archive">close archive</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_close.html">zip_close(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_discard.html">zip_discard(3)</a></li>
+</ul>
+<h2 class="Ss" id="miscellaneous">miscellaneous</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_stat.html">zip_stat(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_get_comment.html">zip_file_get_comment(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_get_external_attributes.html">zip_file_get_external_attributes(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_get_archive_comment.html">zip_get_archive_comment(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_get_archive_flag.html">zip_get_archive_flag(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_get_name.html">zip_get_name(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_get_num_entries.html">zip_get_num_entries(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_set_default_password.html">zip_set_default_password(3)</a></li>
+</ul>
+<h1 class="Sh" id="CREATING/MODIFYING_ZIP_ARCHIVES">CREATING/MODIFYING ZIP
+  ARCHIVES</h1>
+<h2 class="Ss" id="create/open_archive">create/open archive</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_open.html">zip_open(3)</a></li>
+</ul>
+<h2 class="Ss" id="add/change_files_and_directories">add/change files and
+  directories</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_dir_add.html">zip_dir_add(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_add.html">zip_file_add(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_replace.html">zip_file_replace(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_set_comment.html">zip_file_set_comment(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_set_external_attributes.html">zip_file_set_external_attributes(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_set_encryption.html">zip_file_set_encryption(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_set_mtime.html">zip_file_set_mtime(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_set_file_compression.html">zip_set_file_compression(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source_buffer.html">zip_source_buffer(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source_file.html">zip_source_file(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source_filep.html">zip_source_filep(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source_free.html">zip_source_free(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source_function.html">zip_source_function(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source_zip.html">zip_source_zip(3)</a></li>
+</ul>
+<h2 class="Ss" id="rename_files">rename files</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_rename.html">zip_rename(3)</a></li>
+</ul>
+<h2 class="Ss" id="delete_files">delete files</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_delete.html">zip_delete(3)</a></li>
+</ul>
+<h2 class="Ss" id="revert_changes">revert changes</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_unchange.html">zip_unchange(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_unchange_all.html">zip_unchange_all(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_unchange_archive.html">zip_unchange_archive(3)</a></li>
+</ul>
+<h2 class="Ss" id="read/modify_extra_fields">read/modify extra fields</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_field_by_id.html">zip_file_extra_field_by_id(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_field_delete.html">zip_file_extra_field_delete(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_field_delete_by_id.html">zip_file_extra_field_delete_by_id(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_field_get.html">zip_file_extra_field_get(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_field_set.html">zip_file_extra_field_set(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_fields_count.html">zip_file_extra_fields_count(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_extra_fields_count_by_id.html">zip_file_extra_fields_count_by_id(3)</a></li>
+</ul>
+<h2 class="Ss" id="close_archive">close archive</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_close.html">zip_close(3)</a></li>
+</ul>
+<h2 class="Ss" id="miscellaneous">miscellaneous</h2>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_libzip_version.html">zip_libzip_version(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_register_progress_callback_with_state.html">zip_register_progress_callback_with_state(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_set_archive_comment.html">zip_set_archive_comment(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_set_archive_flag.html">zip_set_archive_flag(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_source.html">zip_source(3)</a></li>
+</ul>
+<h1 class="Sh" id="ERROR_HANDLING">ERROR HANDLING</h1>
+<ul class="Bl-bullet">
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_error_to_str.html">zip_error_to_str(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_strerror.html">zip_strerror(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_file_strerror.html">zip_file_strerror(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_error_get.html">zip_error_get(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_error_get_sys_type.html">zip_error_get_sys_type(3)</a></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><a class="Xr" href="zip_errors.html">zip_errors(3)</a></li>
+</ul>
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

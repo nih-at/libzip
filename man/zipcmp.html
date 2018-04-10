@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIPCMP(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIPCMP(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">ZIPCMP(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zipcmp</b> &#8212; <span class="Nd">compare contents of zip
+  archives</span>
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<table class="Nm">
+  <colgroup>
+    <col style="width: 6.00ex;"/>
+    <col/>
+  </colgroup>
+  <tr>
+    <td><b class="Nm">zipcmp</b></td>
+    <td>[<span class="Op"><b class="Fl">-hipqtVv</b></span>]
+      <var class="Ar">archive1 archive2</var></td>
+  </tr>
+</table>
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+<b class="Nm">zipcmp</b> compares the zip archives or directories
+  <var class="Ar">archive1</var> and <var class="Ar">archive2</var> and checks
+  if they contain the same files, comparing their names, uncompressed sizes, and
+  CRCs. File order and compressed size differences are ignored.
+<div class="Pp"></div>
+Supported options:
+<dl class="Bl-tag" style="margin-left: 3.00ex;">
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-h</b></dt>
+  <dd class="It-tag">Display a short help message and exit.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-i</b></dt>
+  <dd class="It-tag">Compare names ignoring case distinctions.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-p</b></dt>
+  <dd class="It-tag">Enable paranoid checks. Compares extra fields and other
+      meta data. (Automatically disabled if one of the archives is a
+    directory.)</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-q</b></dt>
+  <dd class="It-tag">Quiet mode. Compare <b class="Fl">-v</b>.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-t</b></dt>
+  <dd class="It-tag">Test zip files by comparing the contents to their
+      checksums.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-V</b></dt>
+  <dd class="It-tag">Display version information and exit.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-v</b></dt>
+  <dd class="It-tag">Verbose mode. Print details about differences to stdout.
+      (This is the default.)</dd>
+</dl>
+<h1 class="Sh" id="EXIT_STATUS">EXIT STATUS</h1>
+<b class="Nm">zipcmp</b> exits 0 if the two archives contain the same files, 1
+  if they differ, and &gt;1 if an error occurred.
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="zipmerge.html">zipmerge(1)</a>,
+  <a class="Xr" href="ziptool.html">ziptool(1)</a>,
+  <a class="Xr" href="libzip.html">libzip(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Nm">zipcmp</b> was added in libzip 0.6.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

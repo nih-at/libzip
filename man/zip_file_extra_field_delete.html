@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_FILE_EXTRA_FIELD_DELETE(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_FILE_EXTRA_FIELD_DELETE(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_FILE_EXTRA_FIELD_DELETE(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_file_extra_field_delete</b>,
+  <b class="Nm">zip_file_extra_field_delete_by_id</b> &#8212;
+  <span class="Nd">delete extra field for file in zip</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">int</var>
+<br/>
+<b class="Fn">zip_file_extra_field_delete</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>, <var class="Fa" style="white-space: nowrap;">zip_uint16_t
+  extra_field_index</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_flags_t flags</var>);
+<div class="Pp"></div>
+<var class="Ft">int</var>
+<br/>
+<b class="Fn">zip_file_extra_field_delete_by_id</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>, <var class="Fa" style="white-space: nowrap;">zip_uint16_t
+  extra_field_id</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_uint16_t
+  extra_field_index</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_flags_t flags</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The <b class="Fn">zip_file_extra_field_delete</b>() function deletes the extra
+  field with index <var class="Ar">extra_field_index</var> for the file at
+  position <var class="Ar">index</var> in the zip archive.
+<div class="Pp"></div>
+If <var class="Ar">extra_field_index</var> is
+  <code class="Dv">ZIP_EXTRA_FIELD_ALL</code>, then all extra fields will be
+  deleted.
+<div class="Pp"></div>
+The following <var class="Ar">flags</var> are supported:
+<div class="Bl-tag" style="margin-left: 6.00ex;">
+<dl class="Bl-tag" style="margin-left: 16.00ex;">
+  <dt class="It-tag" style="margin-left: -16.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -16.00ex;"><code class="Dv">ZIP_FL_CENTRAL</code></dt>
+  <dd class="It-tag">Delete extra fields from the archive's central
+    directory.</dd>
+  <dt class="It-tag" style="margin-left: -16.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -16.00ex;"><code class="Dv">ZIP_FL_LOCAL</code></dt>
+  <dd class="It-tag">Delete extra fields from the local file headers.</dd>
+</dl>
+</div>
+<div class="Pp"></div>
+The <b class="Fn">zip_file_extra_field_delete_by_id</b>() function deletes the
+  extra field with ID (two-byte signature) <var class="Ar">extra_field_id</var>
+  and index <var class="Ar">extra_field_index</var> (in other words, the
+  <var class="Ar">extra_field_index</var><span class="No">'th</span> extra field
+  with ID <var class="Ar">extra_field_id</var>) The other arguments are the same
+  as for <b class="Fn">zip_file_extra_field_delete</b>()
+  (<code class="Dv">ZIP_EXTRA_FIELD_ALL</code> will delete all extra fields of
+  the specified ID).
+<div class="Pp"></div>
+Please note that due to the library design, the index of an extra field may be
+  different between central directory and local file headers. For this reason,
+  it is not allowed to specify both <code class="Dv">ZIP_FL_CENTRAL</code> and
+  <code class="Dv">ZIP_FL_LOCAL</code> in <var class="Ar">flags</var>, except
+  when deleting all extra fields (i.e., <var class="Ar">extra_field_index</var>
+  being <code class="Dv">ZIP_EXTRA_FIELD_ALL</code>).
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+Upon successful completion 0 is returned. Otherwise, -1 is returned and the
+  error code in <var class="Ar">archive</var> is set to indicate the error.
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+<b class="Fn">zip_file_extra_field_delete</b>() and
+  <b class="Fn">zip_file_extra_field_delete_by_id</b>() fail if:
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_NOENT</code>]</dt>
+  <dd class="It-tag"><var class="Ar">index</var> is not a valid file index in
+      <var class="Ar">archive</var>.</dd>
+</dl>
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_file_extra_field_get.html">zip_file_extra_field_get(3)</a>,
+  <a class="Xr" href="zip_file_extra_field_set.html">zip_file_extra_field_set(3)</a>,
+  <a class="Xr" href="zip_file_extra_fields_count.html">zip_file_extra_fields_count(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_file_extra_field_delete</b>() and
+  <b class="Fn">zip_file_extra_field_delete_by_id</b>() were added in libzip
+  0.11.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

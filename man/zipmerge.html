@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIPMERGE(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIPMERGE(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">ZIPMERGE(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zipmerge</b> &#8212; <span class="Nd">merge zip archives</span>
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<table class="Nm">
+  <colgroup>
+    <col style="width: 8.00ex;"/>
+    <col/>
+  </colgroup>
+  <tr>
+    <td><b class="Nm">zipmerge</b></td>
+    <td>[<span class="Op"><b class="Fl">-DhIiSsV</b></span>]
+      <var class="Ar">target-zip</var> <var class="Ar">source-zip</var>
+      [<span class="Op"><var class="Ar">source-zip ...</var></span>]</td>
+  </tr>
+</table>
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+<b class="Nm">zipmerge</b> merges the source zip archives
+  <var class="Ar">source-zip</var> into the target zip archive
+  <var class="Ar">target-zip</var>. By default, files in the source zip archives
+  overwrite existing files of the same name in the target zip archive.
+<div class="Pp"></div>
+Supported options:
+<dl class="Bl-tag" style="margin-left: 3.00ex;">
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-D</b></dt>
+  <dd class="It-tag">Ignore directory components in file name comparisons. This
+      option is slow for archives with many files.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-h</b></dt>
+  <dd class="It-tag">Display a short help message and exit.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-I</b></dt>
+  <dd class="It-tag">Ignore case in file name comparisons This option is slow
+      for archives with many files.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-i</b></dt>
+  <dd class="It-tag">Ask before overwriting files. See also
+      <b class="Fl">-s</b>.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-S</b></dt>
+  <dd class="It-tag">Do not overwrite files that have the same size and CRC32 in
+      both the source and target archives.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-s</b></dt>
+  <dd class="It-tag">When <b class="Fl">-i</b> is given, do not before
+      overwriting files that have the same size and CRC32.</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><b class="Fl">-V</b></dt>
+  <dd class="It-tag">Display version information and exit.</dd>
+</dl>
+<h1 class="Sh" id="EXIT_STATUS">EXIT STATUS</h1>
+<b class="Nm">zipmerge</b> exits 0 on success and &gt;1 if an error occurred.
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="zipcmp.html">zipcmp(1)</a>,
+  <a class="Xr" href="ziptool.html">ziptool(1)</a>,
+  <a class="Xr" href="libzip.html">libzip(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Nm">zipmerge</b> was added in libzip 0.6.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_SOURCE_SEEK_COMPUTE_OFFSET(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_SOURCE_SEEK_COMPUTE_OFFSET(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_SOURCE_SEEK_COMPUTE_OFFSET(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_source_seek_compute_offset</b> &#8212;
+  <span class="Nd">validate arguments and compute offset</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">zip_int64_t</var>
+<br/>
+<b class="Fn">zip_source_seek_compute_offset</b>(<var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  offset</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  length</var>, <var class="Fa" style="white-space: nowrap;">void *data</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_uint64_t data_length</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_error_t *error</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+Use this function to compute the offset for a
+  <code class="Dv">ZIP_SOURCE_SEEK</code> or
+  <code class="Dv">ZIP_SOURCE_SEEK_WRITE</code> command.
+  <var class="Ar">data</var> and <var class="Ar">data_length</var> are the
+  arguments to the source callback, <var class="Ar">offset</var> is the current
+  offset and <var class="Ar">length</var> is the length of the source data or,
+  for <code class="Dv">ZIP_SOURCE_SEEK_WRITE</code>, the amount of data written.
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+On success, it returns the new offset, on error it returns -1 and sets
+  <var class="Ar">error</var>.
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+<b class="Fn">zip_source_seek_compute_offset</b>() fails if:
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_INVAL</code>]</dt>
+  <dd class="It-tag">One of the arguments is invalid or the seek would place the
+      offset outside the data.</dd>
+</dl>
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="zip_source_function.html">zip_source_function(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_source_seek_compute_offset</b>() was added in libzip 1.0.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

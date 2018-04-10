@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_FOPEN(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_FOPEN(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_FOPEN(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_fopen</b>, <b class="Nm">zip_fopen_index</b> &#8212;
+  <span class="Nd">open file in zip archive for reading</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">zip_file_t *</var>
+<br/>
+<b class="Fn">zip_fopen</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">const char
+  *fname</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+  flags</var>);
+<div class="Pp"></div>
+<var class="Ft">zip_file_t *</var>
+<br/>
+<b class="Fn">zip_fopen_index</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+  flags</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The <b class="Fn">zip_fopen</b>() function opens the file name
+  <var class="Ar">fname</var> in <var class="Ar">archive</var>. The
+  <var class="Ar">flags</var> argument specifies how the name lookup should be
+  done, according to the values are described in
+  <a class="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>. Also, the
+  following values may be <i class="Em">or</i><span class="No">'ed</span> to it.
+<div class="Bl-tag" style="margin-left: 6.00ex;">
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;"><code class="Dv">ZIP_FL_COMPRESSED</code></dt>
+  <dd class="It-tag">Read the compressed data. Otherwise the data is
+      uncompressed by <b class="Fn">zip_fread</b>().</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;"><code class="Dv">ZIP_FL_UNCHANGED</code></dt>
+  <dd class="It-tag">Read the original data from the zip archive, ignoring any
+      changes made to the file.</dd>
+</dl>
+</div>
+<div class="Pp"></div>
+The <b class="Fn">zip_fopen_index</b>() function opens the file at position
+  <var class="Ar">index</var>.
+<div class="Pp"></div>
+If encrypted data is encountered, the functions call
+  <a class="Xr" href="zip_fopen_encrypted.html">zip_fopen_encrypted(3)</a> or
+  <a class="Xr" href="zip_fopen_index_encrypted.html">zip_fopen_index_encrypted(3)</a>
+  respectively, using the default password set with
+  <a class="Xr" href="zip_set_default_password.html">zip_set_default_password(3)</a>.
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+Upon successful completion, a <var class="Ft">struct zip_file</var> pointer is
+  returned. Otherwise, <code class="Dv">NULL</code> is returned and the error
+  code in <var class="Ar">archive</var> is set to indicate the error.
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_CHANGED</code>]</dt>
+  <dd class="It-tag">The file data has been changed.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_COMPNOTSUPP</code>]</dt>
+  <dd class="It-tag">The compression method used is not supported.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_ENCRNOTSUPP</code>]</dt>
+  <dd class="It-tag">The encryption method used is not supported.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_MEMORY</code>]</dt>
+  <dd class="It-tag">Required memory could not be allocated.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_NOPASSWD</code>]</dt>
+  <dd class="It-tag">The file is encrypted, but no password has been
+    provided.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_READ</code>]</dt>
+  <dd class="It-tag">A file read error occurred.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_SEEK</code>]</dt>
+  <dd class="It-tag">A file seek error occurred.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_WRONGPASSWD</code>]</dt>
+  <dd class="It-tag">The provided password does not match the password used for
+      encryption. Note that some incorrect passwords are not detected by the
+      check done by <b class="Fn">zip_fopen</b>().</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_ZLIB</code>]</dt>
+  <dd class="It-tag">Initializing the zlib stream failed.</dd>
+</dl>
+<div class="Pp"></div>
+The function <b class="Fn">zip_fopen</b>() may also fail and set
+  <var class="Va">zip_err</var> for any of the errors specified for the routine
+  <a class="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>.
+<div class="Pp"></div>
+The function <b class="Fn">zip_fopen_index</b>() may also fail with
+  <code class="Er">ZIP_ER_INVAL</code> if <var class="Ar">index</var> is
+  invalid.
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_fclose.html">zip_fclose(3)</a>,
+  <a class="Xr" href="zip_fread.html">zip_fread(3)</a>,
+  <a class="Xr" href="zip_fseek.html">zip_fseek(3)</a>,
+  <a class="Xr" href="zip_get_num_entries.html">zip_get_num_entries(3)</a>,
+  <a class="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>,
+  <a class="Xr" href="zip_set_default_password.html">zip_set_default_password(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_fopen</b>() and <b class="Fn">zip_fopen_index</b>() were added
+  in libzip 1.0.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

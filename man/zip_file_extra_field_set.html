@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_FILE_EXTRA_FIELD_SET(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_FILE_EXTRA_FIELD_SET(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_FILE_EXTRA_FIELD_SET(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_file_extra_field_set</b> &#8212; <span class="Nd">set extra
+  field for file in zip</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">int</var>
+<br/>
+<b class="Fn">zip_file_extra_field_set</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>, <var class="Fa" style="white-space: nowrap;">zip_uint16_t
+  extra_field_id</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_uint16_t
+  extra_field_index</var>, <var class="Fa" style="white-space: nowrap;">const
+  zip_uint8_t *extra_field_data</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_uint16_t len</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_flags_t flags</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The <b class="Fn">zip_file_extra_field_set</b>() function sets the extra field
+  with ID (two-byte signature) <var class="Ar">extra_field_id</var> and index
+  <var class="Ar">extra_field_index</var> for the file at position
+  <var class="Ar">index</var> in the zip archive. The extra field's data will be
+  set to <var class="Ar">extra_field_data</var> and length
+  <var class="Ar">len</var>. If a new entry shall be appended, set
+  <var class="Ar">extra_field_index</var> to
+  <code class="Dv">ZIP_EXTRA_FIELD_NEW</code>.
+<div class="Pp"></div>
+At least one of the following <var class="Ar">flags</var> must be set:
+<div class="Bl-tag" style="margin-left: 6.00ex;">
+<dl class="Bl-tag" style="margin-left: 16.00ex;">
+  <dt class="It-tag" style="margin-left: -16.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -16.00ex;"><code class="Dv">ZIP_FL_CENTRAL</code></dt>
+  <dd class="It-tag">Set extra field in the archive's central directory.</dd>
+  <dt class="It-tag" style="margin-left: -16.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -16.00ex;"><code class="Dv">ZIP_FL_LOCAL</code></dt>
+  <dd class="It-tag">Set extra field in the local file headers.</dd>
+</dl>
+</div>
+<div class="Pp"></div>
+Please note that the extra field IDs 0x0001 (ZIP64 extension), 0x6375 (Infozip
+  UTF-8 comment), and 0x7075 (Infozip UTF-8 file name) can not be set using
+  <b class="Fn">zip_file_extra_field_set</b>() since they are set by
+  <a class="Xr" href="libzip.html">libzip(3)</a> automatically when needed.
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+Upon successful completion 0 is returned. Otherwise, -1 is returned and the
+  error code in <var class="Ar">archive</var> is set to indicate the error.
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+<b class="Fn">zip_file_extra_field_set</b>() fails if:
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_INVAL</code>]</dt>
+  <dd class="It-tag">The extra field size is too large (ID and length need 4
+      bytes; the maximum length of all extra fields for one file combined is
+      65536 bytes). This error also occurs if
+      <var class="Ar">extra_field_index</var> is too large.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_MEMORY</code>]</dt>
+  <dd class="It-tag">Required memory could not be allocated.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_NOENT</code>]</dt>
+  <dd class="It-tag"><var class="Ar">index</var> is not a valid file index in
+      <var class="Ar">archive</var>.</dd>
+</dl>
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_file_extra_field_delete.html">zip_file_extra_field_delete(3)</a>,
+  <a class="Xr" href="zip_file_extra_field_get.html">zip_file_extra_field_get(3)</a>,
+  <a class="Xr" href="zip_file_extra_fields_count.html">zip_file_extra_fields_count(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_file_extra_field_set</b>() was added in libzip 0.11.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

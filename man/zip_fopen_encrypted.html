@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_FOPEN_ENCRYPTED(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_FOPEN_ENCRYPTED(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_FOPEN_ENCRYPTED(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_fopen_encrypted</b>,
+  <b class="Nm">zip_fopen_index_encrypted</b> &#8212; <span class="Nd">open
+  encrypted file in zip archive for reading</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">zip_file_t *</var>
+<br/>
+<b class="Fn">zip_fopen_encrypted</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">const char
+  *fname</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+  flags</var>, <var class="Fa" style="white-space: nowrap;">const char
+  *password</var>);
+<div class="Pp"></div>
+<var class="Ft">zip_file_t *</var>
+<br/>
+<b class="Fn">zip_fopen_index_encrypted</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+  flags</var>, <var class="Fa" style="white-space: nowrap;">const char
+  *password</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The <b class="Fn">zip_fopen_encrypted</b>() function opens the encrypted file
+  name <var class="Ar">fname</var> in <var class="Ar">archive</var> using the
+  password given in the <var class="Ar">password</var> argument. The
+  <var class="Ar">flags</var> argument are the same as for
+  <a class="Xr" href="zip_fopen.html">zip_fopen(3)</a>.
+<div class="Pp"></div>
+The <b class="Fn">zip_fopen_index_encrypted</b>() function opens the file at
+  position <var class="Ar">index</var>, see
+  <a class="Xr" href="zip_fopen_index.html">zip_fopen_index(3)</a>. These
+  functions are called automatically by
+  <a class="Xr" href="zip_fopen.html">zip_fopen(3)</a>; you only need to call
+  them if you want to specify a non-default password (see
+  <a class="Xr" href="zip_set_default_password.html">zip_set_default_password(3)</a>).
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+Upon successful completion, a <var class="Ft">struct zip_file</var> pointer is
+  returned. Otherwise, <code class="Dv">NULL</code> is returned and the error
+  code in <var class="Ar">archive</var> is set to indicate the error.
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+<dl class="Bl-tag" style="margin-left: 20.00ex;">
+  <dt class="It-tag" style="margin-left: -20.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;">[<code class="Er">ZIP_ER_NOPASSWD</code>]</dt>
+  <dd class="It-tag">No password was provided.</dd>
+</dl>
+<div class="Pp"></div>
+The function <b class="Fn">zip_fopen_encrypted</b>() may also fail and set
+  <var class="Va">zip_err</var> for any of the errors specified for the routine
+  <a class="Xr" href="zip_fopen.html">zip_fopen(3)</a>.
+<div class="Pp"></div>
+The function <b class="Fn">zip_fopen_index_encrypted</b>() may also fail and set
+  <var class="Va">zip_err</var> for any of the errors specified for the routine
+  <a class="Xr" href="zip_fopen_index.html">zip_fopen_index(3)</a>.
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_fclose.html">zip_fclose(3)</a>,
+  <a class="Xr" href="zip_fopen.html">zip_fopen(3)</a>,
+  <a class="Xr" href="zip_fread.html">zip_fread(3)</a>,
+  <a class="Xr" href="zip_get_num_entries.html">zip_get_num_entries(3)</a>,
+  <a class="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_fopen_encrypted</b>() and
+  <b class="Fn">zip_fopen_index_encrypted</b>() were added in libzip 1.0.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

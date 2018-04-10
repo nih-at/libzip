@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_FILE_ADD(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_FILE_ADD(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_FILE_ADD(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_file_add</b>, <b class="Nm">zip_file_replace</b> &#8212;
+  <span class="Nd">add file to zip archive or replace file in zip archive</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">zip_int64_t</var>
+<br/>
+<b class="Fn">zip_file_add</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">const char
+  *name</var>, <var class="Fa" style="white-space: nowrap;">zip_source_t
+  *source</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+  flags</var>);
+<div class="Pp"></div>
+<var class="Ft">int</var>
+<br/>
+<b class="Fn">zip_file_replace</b>(<var class="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>, <var class="Fa" style="white-space: nowrap;">zip_source_t
+  *source</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+  flags</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The function <b class="Fn">zip_file_add</b>() adds a file to a zip archive,
+  while <b class="Fn">zip_file_replace</b>() replaces an existing file in a zip
+  archive. The argument <var class="Ar">archive</var> specifies the zip archive
+  to which the file should be added. <var class="Ar">name</var> is the file's
+  name in the zip archive (for <b class="Fn">zip_file_add</b>()), while
+  <var class="Ar">index</var> specifies which file should be replaced (for
+  <b class="Fn">zip_file_replace</b>()). The <var class="Ar">flags</var>
+  argument can be any combination of <code class="Dv">ZIP_FL_OVERWRITE</code>
+  with one of <code class="Dv">ZIP_FL_ENC_*</code>:
+<dl class="Bl-tag" style="margin-left: 20.00ex;">
+  <dt class="It-tag" style="margin-left: -20.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;"><code class="Dv">ZIP_FL_OVERWRITE</code></dt>
+  <dd class="It-tag">Overwrite any existing file of the same name. For
+      <b class="Nm">zip_file_add</b> only.</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;"><code class="Dv">ZIP_FL_ENC_GUESS</code></dt>
+  <dd class="It-tag">Guess encoding of <var class="Ar">name</var>
+    (default).</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;"><code class="Dv">ZIP_FL_ENC_UTF_8</code></dt>
+  <dd class="It-tag">Interpret <var class="Ar">name</var> as UTF-8.</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -20.00ex;"><code class="Dv">ZIP_FL_ENC_CP437</code></dt>
+  <dd class="It-tag">Interpret <var class="Ar">name</var> as code page 437
+      (CP-437).</dd>
+</dl>
+The data is obtained from the <var class="Ar">source</var> argument, see
+  <a class="Xr" href="zip_source.html">zip_source(3)</a>.
+<div class="Pp"></div>
+<i class="Em">NOTE</i>:
+  <a class="Xr" href="zip_source_free.html">zip_source_free(3)</a> should not be
+  called on a <var class="Ar">source</var> after it was used successfully in a
+  <b class="Nm">zip_file_add</b> or <b class="Nm">zip_file_replace</b> call.
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+Upon successful completion, <b class="Fn">zip_file_add</b>() returns the index
+  of the new file in the archive, and <b class="Fn">zip_file_replace</b>()
+  returns 0. Otherwise, -1 is returned and the error code in
+  <var class="Ar">archive</var> is set to indicate the error.
+<h1 class="Sh" id="EXAMPLES">EXAMPLES</h1>
+<div class="Bd" style="margin-left: 5.00ex;">
+<pre class="Li">
+zip_source_t *s; 
+const char buf=&quot;teststring&quot;; 
+ 
+if ((s=zip_source_buffer(archive, buffer, sizeof(buf), 0)) == NULL || 
+    zip_file_add(archive, name, s, ZIP_FL_ENC_UTF_8) &lt; 0) { 
+    zip_source_free(s); 
+    printf(&quot;error adding file: %s\n&quot;, zip_strerror(archive)); 
+}
+</pre>
+</div>
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+<b class="Fn">zip_file_add</b>() and <b class="Fn">zip_file_replace</b>() fail
+  if:
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_EXISTS</code>]</dt>
+  <dd class="It-tag">There is already a file called <var class="Ar">name</var>
+      in the archive. (Only applies to <b class="Fn">zip_file_add</b>(), and
+      only if <code class="Dv">ZIP_FL_OVERWRITE</code> is not provided).</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_INVAL</code>]</dt>
+  <dd class="It-tag"><var class="Ar">source</var> or <var class="Ar">name</var>
+      are <code class="Dv">NULL</code>, or <var class="Ar">index</var> is
+      invalid.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_MEMORY</code>]</dt>
+  <dd class="It-tag">Required memory could not be allocated.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_RDONLY</code>]</dt>
+  <dd class="It-tag">Archive was opened in read-only mode.</dd>
+</dl>
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_source.html">zip_source(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_file_add</b>() and <b class="Fn">zip_file_replace</b>() were
+  added in libzip 0.11.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

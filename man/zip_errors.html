@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_ERRORS(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_ERRORS(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_ERRORS(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_errors</b> &#8212; <span class="Nd">list of all libzip error
+  codes</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The following error codes are used by libzip:
+<dl class="Bl-tag" style="margin-left: 24.00ex;">
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_CHANGED</code>]</dt>
+  <dd class="It-tag">Entry has been changed.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_CLOSE</code>]</dt>
+  <dd class="It-tag">Closing zip archive failed.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_COMPNOTSUPP</code>]</dt>
+  <dd class="It-tag">Compression method not supported.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_COMPRESSED_DATA</code>]</dt>
+  <dd class="It-tag">Compressed data invalid.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_CRC</code>]</dt>
+  <dd class="It-tag">CRC error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_DELETED</code>]</dt>
+  <dd class="It-tag">Entry has been deleted.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_ENCRNOTSUPP</code>]</dt>
+  <dd class="It-tag">Encryption method not supported.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_EOF</code>]</dt>
+  <dd class="It-tag">Premature end of file.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_EXISTS</code>]</dt>
+  <dd class="It-tag">File already exists.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_INCONS</code>]</dt>
+  <dd class="It-tag">Zip archive inconsistent.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_INTERNAL</code>]</dt>
+  <dd class="It-tag">Internal error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_INUSE</code>]</dt>
+  <dd class="It-tag">Resource still in use.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_INVAL</code>]</dt>
+  <dd class="It-tag">Invalid argument.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_MEMORY</code>]</dt>
+  <dd class="It-tag">Malloc failure.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_MULTIDISK</code>]</dt>
+  <dd class="It-tag">Multi-disk zip archives not supported.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_NOENT</code>]</dt>
+  <dd class="It-tag">No such file.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_NOPASSWD</code>]</dt>
+  <dd class="It-tag">No password provided.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_NOZIP</code>]</dt>
+  <dd class="It-tag">Not a zip archive.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_OK</code>]</dt>
+  <dd class="It-tag">No error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_OPEN</code>]</dt>
+  <dd class="It-tag">Can't open file.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_OPNOTSUPP</code>]</dt>
+  <dd class="It-tag">Operation not supported.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_RDONLY</code>]</dt>
+  <dd class="It-tag">Read-only archive.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_READ</code>]</dt>
+  <dd class="It-tag">Read error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_REMOVE</code>]</dt>
+  <dd class="It-tag">Can't remove file.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_RENAME</code>]</dt>
+  <dd class="It-tag">Renaming temporary file failed.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_SEEK</code>]</dt>
+  <dd class="It-tag">Seek error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_TELL</code>]</dt>
+  <dd class="It-tag">Tell error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_TMPOPEN</code>]</dt>
+  <dd class="It-tag">Failure to create temporary file.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_WRITE</code>]</dt>
+  <dd class="It-tag">Write error.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_WRONGPASSWD</code>]</dt>
+  <dd class="It-tag">Wrong password provided.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_ZIPCLOSED</code>]</dt>
+  <dd class="It-tag">Containing zip archive was closed.</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -24.00ex;">[<code class="Er">ZIP_ER_ZLIB</code>]</dt>
+  <dd class="It-tag">Zlib error.</dd>
+</dl>
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

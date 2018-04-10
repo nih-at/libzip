@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIPTOOL(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIPTOOL(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">ZIPTOOL(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">ziptool</b> &#8212; <span class="Nd">modify zip archives</span>
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<table class="Nm">
+  <colgroup>
+    <col style="width: 7.00ex;"/>
+    <col/>
+  </colgroup>
+  <tr>
+    <td><b class="Nm">ziptool</b></td>
+    <td>[<span class="Op"><b class="Fl">-ceghnrst</b></span>]
+      [<span class="Op"><b class="Fl">-l</b>
+      <var class="Ar">length</var></span>]
+      [<span class="Op"><b class="Fl">-o</b>
+      <var class="Ar">offset</var></span>] <var class="Ar">zip-archive</var>
+      <b class="Cm">command</b> [<span class="Op"><var class="Ar">command-args
+      ...</var></span>] [<span class="Op"><b class="Cm">command</b>
+      [<span class="Op"><var class="Ar">command-args ...</var></span>]
+      ...</span>]</td>
+  </tr>
+</table>
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+<b class="Nm">ziptool</b> modifies the zip archive
+  <var class="Ar">zip-archive</var> according to the
+  <var class="Ar">commands</var> given.
+<div class="Pp"></div>
+Supported options:
+<dl class="Bl-tag" style="margin-left: 11.00ex;">
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-c</b></dt>
+  <dd class="It-tag">Check zip archive consistency when opening it.</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-e</b></dt>
+  <dd class="It-tag">Error if archive already exists (only useful with
+      <b class="Fl">-n</b>).</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-g</b></dt>
+  <dd class="It-tag">Guess file name encoding (for <b class="Cm">stat</b>
+      command).</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-h</b></dt>
+  <dd class="It-tag">Display help.</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-l</b>
+    <var class="Ar">length</var></dt>
+  <dd class="It-tag">Only read <var class="Ar">length</var> bytes of archive.
+      See also <b class="Fl">-o</b>.</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-n</b></dt>
+  <dd class="It-tag">Create archive if it doesn't exist. See also
+      <b class="Fl">-e</b>.</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-o</b>
+    <var class="Ar">offset</var></dt>
+  <dd class="It-tag">Start reading input archive from
+      <var class="Ar">offset</var>. See also <b class="Fl">-l</b>.</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-r</b></dt>
+  <dd class="It-tag">Print raw file name encoding without translation (for
+      <b class="Cm">stat</b> command).</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-s</b></dt>
+  <dd class="It-tag">Follow file name convention strictly (for
+      <b class="Cm">stat</b> command).</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -11.00ex;"><b class="Fl">-t</b></dt>
+  <dd class="It-tag">Disregard current file contents, if any.
+      <i class="Em">Note</i>: use this with care, it deletes all existing file
+      contents when you modify the archive.</dd>
+</dl>
+<h2 class="Ss" id="Commands">Commands</h2>
+For all commands below, the index is zero-based. In other words, the first entry
+  in the zip archive has index 0.
+<div class="Pp"></div>
+Supported commands and arguments are:
+<dl class="Bl-tag" style="margin-left: 10.00ex;">
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">add</b>
+    <var class="Ar">name content</var></dt>
+  <dd class="It-tag">Add file called <var class="Ar">name</var> using the string
+      <var class="Ar">content</var> from the command line as data.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">add_dir</b>
+    <var class="Ar">name</var></dt>
+  <dd class="It-tag">Add directory <var class="Ar">name</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">add_file</b>
+    <var class="Ar">name file_to_add offset len</var></dt>
+  <dd class="It-tag">Add file <var class="Ar">name</var> to archive, using
+      <var class="Ar">len</var> bytes from the file
+      <var class="Ar">file_to_add</var> as input data, starting at
+      <var class="Ar">offset</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">add_from_zip</b>
+    <var class="Ar">name archivename index offset len</var></dt>
+  <dd class="It-tag">Add file called <var class="Ar">name</var> to archive using
+      data from another zip archive <var class="Ar">archivename</var> using the
+      entry with index <var class="Ar">index</var> and reading
+      <var class="Ar">len</var> bytes from <var class="Ar">offset</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">cat</b>
+    <var class="Ar">index</var></dt>
+  <dd class="It-tag">Output file contents for entry <var class="Ar">index</var>
+      to stdout.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">count_extra</b>
+    <var class="Ar">index flags</var></dt>
+  <dd class="It-tag">Print the number of extra fields for archive entry
+      <var class="Ar">index</var> using <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">count_extra_by_id</b>
+    <var class="Ar">index extra_id flags</var></dt>
+  <dd class="It-tag">Print number of extra fields of type
+      <var class="Ar">extra_id</var> for archive entry
+      <var class="Ar">index</var> using <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">delete</b>
+    <var class="Ar">index</var></dt>
+  <dd class="It-tag">Remove entry at <var class="Ar">index</var> from zip
+      archive.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">delete_extra</b>
+    <var class="Ar">index extra_idx flags</var></dt>
+  <dd class="It-tag">Remove extra field number <var class="Ar">extra_idx</var>
+      from archive entry <var class="Ar">index</var> using
+      <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">delete_extra_by_id</b>
+    <var class="Ar">index extra_id extra_index flags</var></dt>
+  <dd class="It-tag">Remove extra field number <var class="Ar">extra_index</var>
+      of type <var class="Ar">extra_id</var> from archive entry
+      <var class="Ar">index</var> using <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">get_archive_comment</b></dt>
+  <dd class="It-tag">Print archive comment.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">get_extra</b>
+    <var class="Ar">index extra_index flags</var></dt>
+  <dd class="It-tag">Print extra field <var class="Ar">extra_index</var> for
+      archive entry <var class="Ar">index</var> using
+      <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">get_extra_by_id</b>
+    <var class="Ar">index extra_id extra_index flags</var></dt>
+  <dd class="It-tag">Print extra field <var class="Ar">extra_index</var> of type
+      <var class="Ar">extra_id</var> for archive entry
+      <var class="Ar">index</var> using <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">get_file_comment</b>
+    <var class="Ar">index</var></dt>
+  <dd class="It-tag">Get file comment for archive entry
+      <var class="Ar">index</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">get_num_entries</b>
+    <var class="Ar">flags</var></dt>
+  <dd class="It-tag">Print number of entries in archive using
+      <var class="Ar">flags</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">name_locate</b>
+    <var class="Ar">name flags</var></dt>
+  <dd class="It-tag">Find entry in archive with the filename
+      <var class="Ar">name</var> using <var class="Ar">flags</var> and print its
+      index.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">rename</b>
+    <var class="Ar">index name</var></dt>
+  <dd class="It-tag">Rename archive entry <var class="Ar">index</var> to
+      <var class="Ar">name</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">replace_file_contents</b>
+    <var class="Ar">index data</var></dt>
+  <dd class="It-tag">Replace file contents for archive entry
+      <var class="Ar">index</var> with the string
+    <var class="Ar">data</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_archive_comment</b>
+    <var class="Ar">comment</var></dt>
+  <dd class="It-tag">Set archive comment to <var class="Ar">comment</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_extra</b>
+    <var class="Ar">index extra_id extra_index flags value</var></dt>
+  <dd class="It-tag">Set extra field number <var class="Ar">extra_index</var> of
+      type <var class="Ar">extra_id</var> for archive entry
+      <var class="Ar">index</var> using <var class="Ar">flags</var> to
+      <var class="Ar">value</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_file_comment</b>
+    <var class="Ar">index comment</var></dt>
+  <dd class="It-tag">Set file comment for archive entry
+      <var class="Ar">index</var> to string <var class="Ar">comment</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_file_compression</b>
+    <var class="Ar">index method compression_flags</var></dt>
+  <dd class="It-tag">Set file compression method for archive entry
+      <var class="Ar">index</var> to <var class="Ar">method</var> using
+      <var class="Ar">compression_flags</var>. <i class="Em">Note</i>:
+      Currently, <var class="Ar">compression_flags</var> are ignored.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_file_encryption</b>
+    <var class="Ar">index method password</var></dt>
+  <dd class="It-tag">Set file encryption method for archive entry
+      <var class="Ar">index</var> to <var class="Ar">method</var> with password
+      <var class="Ar">password</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_file_mtime</b>
+    <var class="Ar">index timestamp</var></dt>
+  <dd class="It-tag">Set file modification time for archive entry
+      <var class="Ar">index</var> to UNIX mtime
+    <var class="Ar">timestamp</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_file_mtime_all</b>
+    <var class="Ar">timestamp</var></dt>
+  <dd class="It-tag">Set file modification time for all archive entries to UNIX
+      mtime <var class="Ar">timestamp</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">set_password</b>
+    <var class="Ar">password</var></dt>
+  <dd class="It-tag">Set default password for encryption/decryption to
+      <var class="Ar">password</var>.</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -10.00ex;"><b class="Cm">stat</b>
+    <var class="Ar">index</var></dt>
+  <dd class="It-tag">Print information about archive entry
+      <var class="Ar">index</var>.</dd>
+</dl>
+<h2 class="Ss" id="Flags">Flags</h2>
+Some commands take flag arguments. Supported flags are:
+<div class="Bl-tag" style="margin-left: 6.00ex;">
+<dl class="Bl-tag" style="margin-left: 3.00ex;">
+  <dt class="It-tag" style="margin-left: -3.00ex;"><var class="Ar">C</var></dt>
+  <dd class="It-tag"><code class="Dv">ZIP_FL_NOCASE</code></dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><var class="Ar">c</var></dt>
+  <dd class="It-tag"><code class="Dv">ZIP_FL_CENTRAL</code></dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><var class="Ar">d</var></dt>
+  <dd class="It-tag"><code class="Dv">ZIP_FL_NODIR</code></dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><var class="Ar">l</var></dt>
+  <dd class="It-tag"><code class="Dv">ZIP_FL_LOCAL</code></dd>
+  <dt class="It-tag" style="margin-left: -3.00ex;"><var class="Ar">u</var></dt>
+  <dd class="It-tag"><code class="Dv">ZIP_FL_UNCHANGED</code></dd>
+</dl>
+</div>
+<h2 class="Ss" id="Compression_Methods">Compression Methods</h2>
+Some commands take compression method arguments. Supported methods are:
+<ul class="Bl-bullet" style="margin-left: 6.00ex;">
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">default</code></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">deflate</code></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">store</code></li>
+</ul>
+<h2 class="Ss" id="Encryption_Methods">Encryption Methods</h2>
+Some commands take encryption method arguments. Supported methods are:
+<ul class="Bl-bullet" style="margin-left: 6.00ex;">
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">none</code></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">AES-128</code></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">AES-192</code></li>
+  <li class="It-bullet" style="margin-top: 0.00em;"><code class="Dv">AES-256</code></li>
+</ul>
+<h1 class="Sh" id="EXIT_STATUS">EXIT STATUS</h1>
+The <b class="Nm">ziptool</b> utility exits&#160;0 on success, and&#160;&gt;0 if
+  an error occurs.
+<h1 class="Sh" id="EXAMPLES">EXAMPLES</h1>
+Add a file called <i class="Pa">teststring.txt</i> to the zip archive
+  <i class="Pa">testbuffer.zip</i> with data &#8220;This is a test.\n&#8221;
+  where &#8220;\n&#8221; is replaced with a newline character:
+<div class="Pp"></div>
+<div class="Bd" style="margin-left: 5.00ex;">
+<pre class="Li">
+ziptool testbuffer.zip add teststring.txt \&quot;This is a test.\n\&quot;
+</pre>
+</div>
+<div class="Pp"></div>
+Delete the first file from the zip archive <i class="Pa">testfile.zip</i>:
+<div class="Pp"></div>
+<div class="Bd" style="margin-left: 5.00ex;">
+<pre class="Li">
+ziptool testfile.zip delete 0
+</pre>
+</div>
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="zipcmp.html">zipcmp(1)</a>,
+  <a class="Xr" href="zipmerge.html">zipmerge(1)</a>,
+  <a class="Xr" href="libzip.html">libzip(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Nm">ziptool</b> was added in libzip 1.1.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+  </style>
+  <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
+  <title>ZIP_OPEN(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ZIP_OPEN(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ZIP_OPEN(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" id="NAME">NAME</h1>
+<b class="Nm">zip_open</b>, <b class="Nm">zip_open_from_source</b> &#8212;
+  <span class="Nd">open zip archive</span>
+<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+libzip (-lzip)
+<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
+<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<div class="Pp"></div>
+<var class="Ft">zip_t *</var>
+<br/>
+<b class="Fn">zip_open</b>(<var class="Fa" style="white-space: nowrap;">const
+  char *path</var>, <var class="Fa" style="white-space: nowrap;">int
+  flags</var>, <var class="Fa" style="white-space: nowrap;">int *errorp</var>);
+<div class="Pp"></div>
+<var class="Ft">zip_t *</var>
+<br/>
+<b class="Fn">zip_open_from_source</b>(<var class="Fa" style="white-space: nowrap;">zip_source_t
+  *zs</var>, <var class="Fa" style="white-space: nowrap;">int flags</var>,
+  <var class="Fa" style="white-space: nowrap;">zip_error_t *ze</var>);
+<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
+The <b class="Fn">zip_open</b>() function opens the zip archive specified by
+  <var class="Ar">path</var> and returns a pointer to a <var class="Ft">struct
+  zip</var>, used to manipulate the archive. The <var class="Fa">flags</var> are
+  specified by <i class="Em">or</i><span class="No">'ing</span> the following
+  values, or 0 for none of them.
+<div class="Bl-tag" style="margin-left: 6.00ex;">
+<dl class="Bl-tag" style="margin-left: 13.00ex;">
+  <dt class="It-tag" style="margin-left: -13.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;"><code class="Dv">ZIP_CHECKCONS</code></dt>
+  <dd class="It-tag">Perform additional stricter consistency checks on the
+      archive, and error if they fail.</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;"><code class="Dv">ZIP_CREATE</code></dt>
+  <dd class="It-tag">Create the archive if it does not exist.</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;"><code class="Dv">ZIP_EXCL</code></dt>
+  <dd class="It-tag">Error if archive already exists.</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;"><code class="Dv">ZIP_TRUNCATE</code></dt>
+  <dd class="It-tag">If archive exists, ignore its current contents. In other
+      words, handle it the same way as an empty archive.</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -13.00ex;"><code class="Dv">ZIP_RDONLY</code></dt>
+  <dd class="It-tag">Open archive in read-only mode.</dd>
+</dl>
+</div>
+<div class="Pp"></div>
+If an error occurs and <var class="Ar">errorp</var> is
+  non-<code class="Dv">NULL</code>, it will be set to the corresponding error
+  code.
+<div class="Pp"></div>
+The <b class="Fn">zip_open_from_source</b>() function opens a zip archive
+  encapsulated by the zip_source <var class="Fa">zs</var> using the provided
+  <var class="Fa">flags</var>. In case of error, the zip_error
+  <var class="Fa">ze</var> is filled in.
+<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+Upon successful completion <b class="Fn">zip_open</b>() and
+  <b class="Fn">zip_open_from_source</b>() return a <var class="Ft">struct
+  zip</var> pointer. Otherwise, <code class="Dv">NULL</code> is returned and
+  <b class="Fn">zip_open</b>() sets <var class="Ar">*errorp</var> to indicate
+  the error, while <b class="Fn">zip_open_from</b>(<var class="Fa">source</var>)
+  sets <var class="Ar">ze</var> to indicate the error.
+<h1 class="Sh" id="ERRORS">ERRORS</h1>
+The archive specified by <var class="Ar">path</var> is opened unless:
+<dl class="Bl-tag" style="margin-left: 17.00ex;">
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_EXISTS</code>]</dt>
+  <dd class="It-tag">The file specified by <var class="Ar">path</var> exists and
+      <code class="Dv">ZIP_EXCL</code> is set.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_INCONS</code>]</dt>
+  <dd class="It-tag">Inconsistencies were found in the file specified by
+      <var class="Ar">path</var>. This error is often caused by specifying
+      <code class="Dv">ZIP_CHECKCONS</code> but can also happen without it.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_INVAL</code>]</dt>
+  <dd class="It-tag">The <var class="Ar">path</var> argument is
+      <code class="Dv">NULL</code>.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_MEMORY</code>]</dt>
+  <dd class="It-tag">Required memory could not be allocated.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_NOENT</code>]</dt>
+  <dd class="It-tag">The file specified by <var class="Ar">path</var> does not
+      exist and <code class="Dv">ZIP_CREATE</code> is not set.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_NOZIP</code>]</dt>
+  <dd class="It-tag">The file specified by <var class="Ar">path</var> is not a
+      zip archive.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_OPEN</code>]</dt>
+  <dd class="It-tag">The file specified by <var class="Ar">path</var> could not
+      be opened.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_READ</code>]</dt>
+  <dd class="It-tag">A read error occurred; see <var class="Va">errno</var> for
+      details.</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
+  <dd class="It-tag">&#160;</dd>
+  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_SEEK</code>]</dt>
+  <dd class="It-tag">The file specified by <var class="Ar">path</var> does not
+      allow seeks.</dd>
+</dl>
+<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_close.html">zip_close(3)</a>,
+  <a class="Xr" href="zip_error_to_str.html">zip_error_to_str(3)</a>,
+  <a class="Xr" href="zip_fdopen.html">zip_fdopen(3)</a>
+<h1 class="Sh" id="HISTORY">HISTORY</h1>
+<b class="Fn">zip_open</b>() and <b class="Fn">zip_open_from_source</b>() were
+  added in libzip 1.0.
+<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-os">NetBSD 8.99.14</td>
+  </tr>
+</table>
+</body>
+</html>
