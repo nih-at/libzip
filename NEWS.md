@@ -1,4 +1,4 @@
-1.5.x [2018-xx-xx]
+1.5.1 [2018-04-11]
 ==================
 
 * Choose format of installed documentation based on available tools.
