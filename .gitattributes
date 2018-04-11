@@ -3,9 +3,6 @@
 .travis.yml export-ignore
 create-cmake-config.h.in.pl export-ignore
 docs export-ignore
-lib/gladman-fcrypt/main.c export-ignore
-lib/gladman-fcrypt/prng.c export-ignore
-lib/gladman-fcrypt/prng.h export-ignore
 man/fix-man-links.sh export-ignore
 man/make_zip_errors.sh export-ignore
 man/mkdocset.pl export-ignore
