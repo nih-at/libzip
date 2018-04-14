@@ -1,5 +1,37 @@
 <!DOCTYPE html>
 <html>
+<!-- This is an automatically generated file.  Do not edit.
+   zip_get_name.mdoc -- get name of file by index
+   Copyright (C) 2003-2017 Dieter Baron and Thomas Klausner
+  
+   This file is part of libzip, a library to manipulate ZIP archives.
+   The authors can be contacted at <libzip@nih.at>
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in
+      the documentation and/or other materials provided with the
+      distribution.
+   3. The names of the authors may not be used to endorse or promote
+      products derived from this software without specific prior
+      written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
+   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+   IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   -->
 <head>
   <meta charset="utf-8"/>
   <style>
@@ -20,90 +52,99 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" id="NAME">NAME</h1>
-<b class="Nm">zip_get_name</b> &#8212; <span class="Nd">get name of file by
-  index</span>
-<h1 class="Sh" id="LIBRARY">LIBRARY</h1>
+<h1 class="Sh" title="Sh" id="NAME"><a class="selflink" href="#NAME">NAME</a></h1>
+<b class="Nm" title="Nm">zip_get_name</b> &#x2014;
+  <span class="Nd" title="Nd">get name of file by index</span>
+<h1 class="Sh" title="Sh" id="LIBRARY"><a class="selflink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" id="SYNOPSIS">SYNOPSIS</h1>
-<b class="In">#include &lt;<a class="In">zip.h</a>&gt;</b>
+<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="selflink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<b class="In" title="In">#include &lt;<a class="In" title="In">zip.h</a>&gt;</b>
 <div class="Pp"></div>
-<var class="Ft">const char *</var>
+<var class="Ft" title="Ft">const char *</var>
 <br/>
-<b class="Fn">zip_get_name</b>(<var class="Fa" style="white-space: nowrap;">zip_t
-  *archive</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
-  index</var>, <var class="Fa" style="white-space: nowrap;">zip_flags_t
+<b class="Fn" title="Fn">zip_get_name</b>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_t
+  *archive</var>,
+  <var class="Fa" title="Fa" style="white-space: nowrap;">zip_uint64_t
+  index</var>,
+  <var class="Fa" title="Fa" style="white-space: nowrap;">zip_flags_t
   flags</var>);
-<h1 class="Sh" id="DESCRIPTION">DESCRIPTION</h1>
-The <b class="Fn">zip_get_name</b>() function returns the name of the file at
-  position <var class="Ar">index</var> in <var class="Ar">archive</var>. The
-  name is in UTF-8 encoding unless <code class="Dv">ZIP_FL_ENC_RAW</code> was
-  specified (see below).
+<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="selflink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The <b class="Fn" title="Fn">zip_get_name</b>() function returns the name of the
+  file at position <var class="Ar" title="Ar">index</var> in
+  <var class="Ar" title="Ar">archive</var>. The name is in UTF-8 encoding unless
+  <code class="Dv" title="Dv">ZIP_FL_ENC_RAW</code> was specified (see below).
 <div class="Pp"></div>
-If <var class="Ar">flags</var> is set to
-  <code class="Dv">ZIP_FL_UNCHANGED</code>, the original unchanged filename is
-  returned. The returned string must not be modified or freed, and becomes
-  invalid when <var class="Ar">archive</var> is closed.
+If <var class="Ar" title="Ar">flags</var> is set to
+  <code class="Dv" title="Dv">ZIP_FL_UNCHANGED</code>, the original unchanged
+  filename is returned. The returned string must not be modified or freed, and
+  becomes invalid when <var class="Ar" title="Ar">archive</var> is closed.
 <div class="Pp"></div>
-Additionally, the following <var class="Ar">flags</var> are supported:
+Additionally, the following <var class="Ar" title="Ar">flags</var> are
+  supported:
 <div class="Bl-tag" style="margin-left: 6.00ex;">
-<dl class="Bl-tag" style="margin-left: 19.00ex;">
-  <dt class="It-tag" style="margin-left: -19.00ex;">&#160;</dt>
-  <dd class="It-tag">&#160;</dd>
-  <dt class="It-tag" style="margin-left: -19.00ex;"><code class="Dv">ZIP_FL_ENC_RAW</code></dt>
+<dl class="Bl-tag" style="margin-left: 25.80ex;">
+  <dt class="It-tag" style="margin-left: -25.80ex;">&#x00A0;</dt>
+  <dd class="It-tag">&#x00A0;</dd>
+  <dt class="It-tag" style="margin-left: -25.80ex;"><a class="selflink" href="#ZIP_FL_ENC_RAW"><code class="Dv" title="Dv" id="ZIP_FL_ENC_RAW">ZIP_FL_ENC_RAW</code></a></dt>
   <dd class="It-tag">Return the unmodified names as it is in the ZIP
     archive.</dd>
-  <dt class="It-tag" style="margin-left: -19.00ex;">&#160;</dt>
-  <dd class="It-tag">&#160;</dd>
-  <dt class="It-tag" style="margin-left: -19.00ex;"><code class="Dv">ZIP_FL_ENC_GUESS</code></dt>
+  <dt class="It-tag" style="margin-left: -25.80ex;">&#x00A0;</dt>
+  <dd class="It-tag">&#x00A0;</dd>
+  <dt class="It-tag" style="margin-left: -25.80ex;"><a class="selflink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
   <dd class="It-tag">(Default.) Guess the encoding of the name in the ZIP
       archive and convert it to UTF-8, if necessary.</dd>
-  <dt class="It-tag" style="margin-left: -19.00ex;">&#160;</dt>
-  <dd class="It-tag">&#160;</dd>
-  <dt class="It-tag" style="margin-left: -19.00ex;"><code class="Dv">ZIP_FL_ENC_STRICT</code></dt>
+  <dt class="It-tag" style="margin-left: -25.80ex;">&#x00A0;</dt>
+  <dd class="It-tag">&#x00A0;</dd>
+  <dt class="It-tag" style="margin-left: -25.80ex;"><a class="selflink" href="#ZIP_FL_ENC_STRICT"><code class="Dv" title="Dv" id="ZIP_FL_ENC_STRICT">ZIP_FL_ENC_STRICT</code></a></dt>
   <dd class="It-tag">Follow the ZIP specification and expect CP-437 encoded
       names in the ZIP archive (except if they are explicitly marked as UTF-8).
       Convert it to UTF-8.</dd>
 </dl>
 </div>
-<i class="Em">Note</i>: ASCII is a subset of both CP-437 and UTF-8.
-<h1 class="Sh" id="RETURN_VALUES">RETURN VALUES</h1>
+<i class="Em" title="Em">Note</i>: ASCII is a subset of both CP-437 and UTF-8.
+<h1 class="Sh" title="Sh" id="RETURN_VALUES"><a class="selflink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
 Upon successful completion, a pointer to the name is returned. Otherwise,
-  <code class="Dv">NULL</code> and the error code in
-  <var class="Ar">archive</var> is set to indicate the error.
-<h1 class="Sh" id="ERRORS">ERRORS</h1>
-<b class="Fn">zip_get_name</b>() fails if:
-<dl class="Bl-tag" style="margin-left: 17.00ex;">
-  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
-  <dd class="It-tag">&#160;</dd>
-  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_DELETED</code>]</dt>
-  <dd class="It-tag"><var class="Ar">index</var> refers to a file that has been
-      deleted (see <a class="Xr" href="zip_delete.html">zip_delete(3)</a>).</dd>
-  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
-  <dd class="It-tag">&#160;</dd>
-  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_INVAL</code>]</dt>
-  <dd class="It-tag"><var class="Ar">index</var> is not a valid file index in
-      <var class="Ar">archive</var>, or <var class="Ar">index</var> points to an
-      added file and <code class="Dv">ZIP_FL_UNCHANGED</code> is set.</dd>
-  <dt class="It-tag" style="margin-left: -17.00ex;">&#160;</dt>
-  <dd class="It-tag">&#160;</dd>
-  <dt class="It-tag" style="margin-left: -17.00ex;">[<code class="Er">ZIP_ER_MEMORY</code>]</dt>
+  <code class="Dv" title="Dv">NULL</code> and the error code in
+  <var class="Ar" title="Ar">archive</var> is set to indicate the error.
+<h1 class="Sh" title="Sh" id="ERRORS"><a class="selflink" href="#ERRORS">ERRORS</a></h1>
+<b class="Fn" title="Fn">zip_get_name</b>() fails if:
+<dl class="Bl-tag" style="margin-left: 23.40ex;">
+  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd class="It-tag">&#x00A0;</dd>
+  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_DELETED"><code class="Er" title="Er" id="ZIP_ER_DELETED">ZIP_ER_DELETED</code></a>]</dt>
+  <dd class="It-tag"><var class="Ar" title="Ar">index</var> refers to a file
+      that has been deleted (see
+      <a class="Xr" title="Xr" href="zip_delete.html">zip_delete(3)</a>).</dd>
+  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd class="It-tag">&#x00A0;</dd>
+  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dd class="It-tag"><var class="Ar" title="Ar">index</var> is not a valid file
+      index in <var class="Ar" title="Ar">archive</var>, or
+      <var class="Ar" title="Ar">index</var> points to an added file and
+      <code class="Dv" title="Dv">ZIP_FL_UNCHANGED</code> is set.</dd>
+  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd class="It-tag">&#x00A0;</dd>
+  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd class="It-tag">Required memory could not be allocated.</dd>
 </dl>
-<h1 class="Sh" id="SEE_ALSO">SEE ALSO</h1>
-<a class="Xr" href="libzip.html">libzip(3)</a>,
-  <a class="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>
-<h1 class="Sh" id="HISTORY">HISTORY</h1>
-<b class="Fn">zip_get_name</b>() was added in libzip 0.6. In libzip 0.10 the
-  type of <var class="Ar">index</var> was changed from <var class="Vt">int</var>
-  to <var class="Vt">zip_uint64_t</var>. In libzip 0.11 the type of
-  <var class="Ar">flags</var> was changed from <var class="Vt">int</var> to
-  <var class="Vt">zip_flags_t</var>.
-<h1 class="Sh" id="AUTHORS">AUTHORS</h1>
-<span class="An">Dieter Baron</span>
-  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
-  <span class="An">Thomas Klausner</span>
-  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="selflink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" title="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>
+<h1 class="Sh" title="Sh" id="HISTORY"><a class="selflink" href="#HISTORY">HISTORY</a></h1>
+<b class="Fn" title="Fn">zip_get_name</b>() was added in libzip 0.6. In libzip
+  0.10 the type of <var class="Ar" title="Ar">index</var> was changed from
+  <var class="Vt" title="Vt">int</var> to
+  <var class="Vt" title="Vt">zip_uint64_t</var>. In libzip 0.11 the type of
+  <var class="Ar" title="Ar">flags</var> was changed from
+  <var class="Vt" title="Vt">int</var> to
+  <var class="Vt" title="Vt">zip_flags_t</var>.
+<h1 class="Sh" title="Sh" id="AUTHORS"><a class="selflink" href="#AUTHORS">AUTHORS</a></h1>
+<span class="An" title="An">Dieter Baron</span>
+  &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
+  and <span class="An" title="An">Thomas Klausner</span>
+  &lt;<a class="Mt" title="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
