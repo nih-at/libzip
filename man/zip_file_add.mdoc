@@ -114,7 +114,7 @@ zip_source_t *s;
 const char *buf="teststring";
 
 if ((s=zip_source_buffer(archive, buf, sizeof(buf), 0)) == NULL ||
-    zip_file_add(archive, name, s, ZIP_FL_ENC_UTF_8) \*[Lt] 0) {
+    zip_file_add(archive, name, s, ZIP_FL_ENC_UTF_8) < 0) {
     zip_source_free(s);
     printf("error adding file: %s\en", zip_strerror(archive));
 }
