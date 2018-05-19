@@ -34,12 +34,6 @@
    -->
 <head>
   <meta charset="utf-8"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    div.Pp { margin: 1ex 0ex; }
-  </style>
   <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
   <title>ZIP_FILE_GET_ERROR(3)</title>
 </head>
@@ -52,27 +46,28 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="selflink" href="#NAME">NAME</a></h1>
-<b class="Nm" title="Nm">zip_file_get_error</b> &#x2014;
-  <span class="Nd" title="Nd">extract zip_error from zip_file</span>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="selflink" href="#LIBRARY">LIBRARY</a></h1>
+<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm" title="Nm">zip_file_get_error</code> &#x2014;
+<div class="Nd" title="Nd">extract zip_error from zip_file</div>
+<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="selflink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<b class="In" title="In">#include &lt;<a class="In" title="In">zip.h</a>&gt;</b>
+<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In" title="In">#include
+  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
 <div class="Pp"></div>
 <var class="Ft" title="Ft">zip_error_t *</var>
 <br/>
-<b class="Fn" title="Fn">zip_file_get_error</b>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_file_t
+<code class="Fn" title="Fn">zip_file_get_error</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_file_t
   *zf</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="selflink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<b class="Fn" title="Fn">zip_file_get_error</b>() function returns the zip_error
-  associated with the zip_file <var class="Ar" title="Ar">zf</var>.
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="selflink" href="#SEE_ALSO">SEE
+<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<code class="Fn" title="Fn">zip_file_get_error</code>() function returns the
+  zip_error associated with the zip_file <var class="Ar" title="Ar">zf</var>.
+<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="selflink" href="#HISTORY">HISTORY</a></h1>
-<b class="Fn" title="Fn">zip_file_get_error</b>() was added in libzip 1.0.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="selflink" href="#AUTHORS">AUTHORS</a></h1>
+<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn" title="Fn">zip_file_get_error</code>() was added in libzip 1.0.
+<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
 <span class="An" title="An">Dieter Baron</span>
   &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
   and <span class="An" title="An">Thomas Klausner</span>
@@ -80,7 +75,7 @@ libzip (-lzip)
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.14</td>
+    <td class="foot-os">NetBSD 8.99.16</td>
   </tr>
 </table>
 </body>

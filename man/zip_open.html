@@ -34,12 +34,6 @@
    -->
 <head>
   <meta charset="utf-8"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    div.Pp { margin: 1ex 0ex; }
-  </style>
   <link rel="stylesheet" href="../nih-man.css" type="text/css" media="all"/>
   <title>ZIP_OPEN(3)</title>
 </head>
@@ -52,31 +46,32 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="selflink" href="#NAME">NAME</a></h1>
-<b class="Nm" title="Nm">zip_open</b>,
-  <b class="Nm" title="Nm">zip_open_from_source</b> &#x2014;
-  <span class="Nd" title="Nd">open zip archive</span>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="selflink" href="#LIBRARY">LIBRARY</a></h1>
+<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm" title="Nm">zip_open</code>,
+  <code class="Nm" title="Nm">zip_open_from_source</code> &#x2014;
+<div class="Nd" title="Nd">open zip archive</div>
+<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="selflink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<b class="In" title="In">#include &lt;<a class="In" title="In">zip.h</a>&gt;</b>
+<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In" title="In">#include
+  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
 <div class="Pp"></div>
 <var class="Ft" title="Ft">zip_t *</var>
 <br/>
-<b class="Fn" title="Fn">zip_open</b>(<var class="Fa" title="Fa" style="white-space: nowrap;">const
+<code class="Fn" title="Fn">zip_open</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">const
   char *path</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
   flags</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
   *errorp</var>);
 <div class="Pp"></div>
 <var class="Ft" title="Ft">zip_t *</var>
 <br/>
-<b class="Fn" title="Fn">zip_open_from_source</b>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_source_t
+<code class="Fn" title="Fn">zip_open_from_source</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_source_t
   *zs</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
   flags</var>,
   <var class="Fa" title="Fa" style="white-space: nowrap;">zip_error_t
   *ze</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="selflink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-The <b class="Fn" title="Fn">zip_open</b>() function opens the zip archive
+<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The <code class="Fn" title="Fn">zip_open</code>() function opens the zip archive
   specified by <var class="Ar" title="Ar">path</var> and returns a pointer to a
   <var class="Ft" title="Ft">struct zip</var>, used to manipulate the archive.
   The <var class="Fa" title="Fa">flags</var> are specified by
@@ -84,28 +79,28 @@ The <b class="Fn" title="Fn">zip_open</b>() function opens the zip archive
   values, or 0 for none of them.
 <div class="Bl-tag" style="margin-left: 6.00ex;">
 <dl class="Bl-tag" style="margin-left: 18.60ex;">
-  <dt class="It-tag" style="margin-left: -18.60ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;"><a class="selflink" href="#ZIP_CHECKCONS"><code class="Dv" title="Dv" id="ZIP_CHECKCONS">ZIP_CHECKCONS</code></a></dt>
-  <dd class="It-tag">Perform additional stricter consistency checks on the
-      archive, and error if they fail.</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;"><a class="selflink" href="#ZIP_CREATE"><code class="Dv" title="Dv" id="ZIP_CREATE">ZIP_CREATE</code></a></dt>
-  <dd class="It-tag">Create the archive if it does not exist.</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;"><a class="selflink" href="#ZIP_EXCL"><code class="Dv" title="Dv" id="ZIP_EXCL">ZIP_EXCL</code></a></dt>
-  <dd class="It-tag">Error if archive already exists.</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;"><a class="selflink" href="#ZIP_TRUNCATE"><code class="Dv" title="Dv" id="ZIP_TRUNCATE">ZIP_TRUNCATE</code></a></dt>
-  <dd class="It-tag">If archive exists, ignore its current contents. In other
-      words, handle it the same way as an empty archive.</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -18.60ex;"><a class="selflink" href="#ZIP_RDONLY"><code class="Dv" title="Dv" id="ZIP_RDONLY">ZIP_RDONLY</code></a></dt>
-  <dd class="It-tag">Open archive in read-only mode.</dd>
+  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_CHECKCONS"><code class="Dv" title="Dv" id="ZIP_CHECKCONS">ZIP_CHECKCONS</code></a></dt>
+  <dd>Perform additional stricter consistency checks on the archive, and error
+      if they fail.</dd>
+  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_CREATE"><code class="Dv" title="Dv" id="ZIP_CREATE">ZIP_CREATE</code></a></dt>
+  <dd>Create the archive if it does not exist.</dd>
+  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_EXCL"><code class="Dv" title="Dv" id="ZIP_EXCL">ZIP_EXCL</code></a></dt>
+  <dd>Error if archive already exists.</dd>
+  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_TRUNCATE"><code class="Dv" title="Dv" id="ZIP_TRUNCATE">ZIP_TRUNCATE</code></a></dt>
+  <dd>If archive exists, ignore its current contents. In other words, handle it
+      the same way as an empty archive.</dd>
+  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_RDONLY"><code class="Dv" title="Dv" id="ZIP_RDONLY">ZIP_RDONLY</code></a></dt>
+  <dd>Open archive in read-only mode.</dd>
 </dl>
 </div>
 <div class="Pp"></div>
@@ -113,81 +108,81 @@ If an error occurs and <var class="Ar" title="Ar">errorp</var> is
   non-<code class="Dv" title="Dv">NULL</code>, it will be set to the
   corresponding error code.
 <div class="Pp"></div>
-The <b class="Fn" title="Fn">zip_open_from_source</b>() function opens a zip
-  archive encapsulated by the zip_source <var class="Fa" title="Fa">zs</var>
+The <code class="Fn" title="Fn">zip_open_from_source</code>() function opens a
+  zip archive encapsulated by the zip_source <var class="Fa" title="Fa">zs</var>
   using the provided <var class="Fa" title="Fa">flags</var>. In case of error,
   the zip_error <var class="Fa" title="Fa">ze</var> is filled in.
-<h1 class="Sh" title="Sh" id="RETURN_VALUES"><a class="selflink" href="#RETURN_VALUES">RETURN
+<h1 class="Sh" title="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
   VALUES</a></h1>
-Upon successful completion <b class="Fn" title="Fn">zip_open</b>() and
-  <b class="Fn" title="Fn">zip_open_from_source</b>() return a
+Upon successful completion <code class="Fn" title="Fn">zip_open</code>() and
+  <code class="Fn" title="Fn">zip_open_from_source</code>() return a
   <var class="Ft" title="Ft">struct zip</var> pointer. Otherwise,
   <code class="Dv" title="Dv">NULL</code> is returned and
-  <b class="Fn" title="Fn">zip_open</b>() sets
+  <code class="Fn" title="Fn">zip_open</code>() sets
   <var class="Ar" title="Ar">*errorp</var> to indicate the error, while
-  <b class="Fn" title="Fn">zip_open_from</b>(<var class="Fa" title="Fa">source</var>)
+  <code class="Fn" title="Fn">zip_open_from</code>(<var class="Fa" title="Fa">source</var>)
   sets <var class="Ar" title="Ar">ze</var> to indicate the error.
-<h1 class="Sh" title="Sh" id="ERRORS"><a class="selflink" href="#ERRORS">ERRORS</a></h1>
+<h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 The archive specified by <var class="Ar" title="Ar">path</var> is opened unless:
 <dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
-  <dd class="It-tag">The file specified by <var class="Ar" title="Ar">path</var>
-      exists and <code class="Dv" title="Dv">ZIP_EXCL</code> is set.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_INCONS"><code class="Er" title="Er" id="ZIP_ER_INCONS">ZIP_ER_INCONS</code></a>]</dt>
-  <dd class="It-tag">Inconsistencies were found in the file specified by
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
+  <dd>The file specified by <var class="Ar" title="Ar">path</var> exists and
+      <code class="Dv" title="Dv">ZIP_EXCL</code> is set.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INCONS"><code class="Er" title="Er" id="ZIP_ER_INCONS">ZIP_ER_INCONS</code></a>]</dt>
+  <dd>Inconsistencies were found in the file specified by
       <var class="Ar" title="Ar">path</var>. This error is often caused by
       specifying <code class="Dv" title="Dv">ZIP_CHECKCONS</code> but can also
       happen without it.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
-  <dd class="It-tag">The <var class="Ar" title="Ar">path</var> argument is
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dd>The <var class="Ar" title="Ar">path</var> argument is
       <code class="Dv" title="Dv">NULL</code>.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
-  <dd class="It-tag">Required memory could not be allocated.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_NOENT"><code class="Er" title="Er" id="ZIP_ER_NOENT">ZIP_ER_NOENT</code></a>]</dt>
-  <dd class="It-tag">The file specified by <var class="Ar" title="Ar">path</var>
-      does not exist and <code class="Dv" title="Dv">ZIP_CREATE</code> is not
-      set.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_NOZIP"><code class="Er" title="Er" id="ZIP_ER_NOZIP">ZIP_ER_NOZIP</code></a>]</dt>
-  <dd class="It-tag">The file specified by <var class="Ar" title="Ar">path</var>
-      is not a zip archive.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_OPEN"><code class="Er" title="Er" id="ZIP_ER_OPEN">ZIP_ER_OPEN</code></a>]</dt>
-  <dd class="It-tag">The file specified by <var class="Ar" title="Ar">path</var>
-      could not be opened.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
-  <dd class="It-tag">A read error occurred; see
-      <var class="Va" title="Va">errno</var> for details.</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">&#x00A0;</dt>
-  <dd class="It-tag">&#x00A0;</dd>
-  <dt class="It-tag" style="margin-left: -23.40ex;">[<a class="selflink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
-  <dd class="It-tag">The file specified by <var class="Ar" title="Ar">path</var>
-      does not allow seeks.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dd>Required memory could not be allocated.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOENT"><code class="Er" title="Er" id="ZIP_ER_NOENT">ZIP_ER_NOENT</code></a>]</dt>
+  <dd>The file specified by <var class="Ar" title="Ar">path</var> does not exist
+      and <code class="Dv" title="Dv">ZIP_CREATE</code> is not set.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOZIP"><code class="Er" title="Er" id="ZIP_ER_NOZIP">ZIP_ER_NOZIP</code></a>]</dt>
+  <dd>The file specified by <var class="Ar" title="Ar">path</var> is not a zip
+      archive.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_OPEN"><code class="Er" title="Er" id="ZIP_ER_OPEN">ZIP_ER_OPEN</code></a>]</dt>
+  <dd>The file specified by <var class="Ar" title="Ar">path</var> could not be
+      opened.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
+  <dd>A read error occurred; see <var class="Va" title="Va">errno</var> for
+      details.</dd>
+  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
+  <dd>The file specified by <var class="Ar" title="Ar">path</var> does not allow
+      seeks.</dd>
 </dl>
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="selflink" href="#SEE_ALSO">SEE
+<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
   <a class="Xr" title="Xr" href="zip_close.html">zip_close(3)</a>,
   <a class="Xr" title="Xr" href="zip_error_to_str.html">zip_error_to_str(3)</a>,
   <a class="Xr" title="Xr" href="zip_fdopen.html">zip_fdopen(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="selflink" href="#HISTORY">HISTORY</a></h1>
-<b class="Fn" title="Fn">zip_open</b>() and
-  <b class="Fn" title="Fn">zip_open_from_source</b>() were added in libzip 1.0.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="selflink" href="#AUTHORS">AUTHORS</a></h1>
+<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn" title="Fn">zip_open</code>() and
+  <code class="Fn" title="Fn">zip_open_from_source</code>() were added in libzip
+  1.0.
+<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
 <span class="An" title="An">Dieter Baron</span>
   &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
   and <span class="An" title="An">Thomas Klausner</span>
@@ -195,7 +190,7 @@ The archive specified by <var class="Ar" title="Ar">path</var> is opened unless:
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.14</td>
+    <td class="foot-os">NetBSD 8.99.16</td>
   </tr>
 </table>
 </body>
