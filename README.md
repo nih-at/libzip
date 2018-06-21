@@ -5,9 +5,12 @@ closing the archive can be reverted. Decryption and encryption of
 Winzip AES and decryption of legacy PKware encrypted files is
 supported. The API is documented by man pages.
 
-For more information, take a look at the included man pages.  You can
-start with [libzip(3)](https://libzip.org/documentation/libzip.html), which lists
-all others.  Example source code is in the [examples](examples) and  [src](src) subdirectories.
+libzip is fully documented via man pages. HTML versions of the man
+pages are in the [man](man) directory and on
+[libzip.org](https://libzip.org/documentation/). You can start with
+[libzip(3)](https://libzip.org/documentation/libzip.html), which lists
+all others. Example source code is in the [examples](examples) and
+[src](src) subdirectories.
 
 If you have developed an application using libzip, you can find out
 about API changes and how to adapt your code for them in the included
