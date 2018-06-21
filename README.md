@@ -6,9 +6,10 @@ Winzip AES and decryption of legacy PKware encrypted files is
 supported. The API is documented by man pages.
 
 libzip is fully documented via man pages. HTML versions of the man
-pages are in the [man](man) directory and on
-[libzip.org](https://libzip.org/documentation/). You can start with
-[libzip(3)](https://libzip.org/documentation/libzip.html), which lists
+pages are on [libzip.org](https://libzip.org/documentation/) and
+in the [man](man) directory. You can start with
+[libzip(3)](https://libzip.org/documentation/libzip.html), which
+lists
 all others. Example source code is in the [examples](examples) and
 [src](src) subdirectories.
 
