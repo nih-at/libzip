@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_WIN32W" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_WIN32W" "3" "June 22, 2018" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -46,14 +46,14 @@ libzip (-lzip)
 .br
 .PD 0
 .HP 4n
-\fBzip_source_win32w\fR(\fIzip_t\ *archive\fR, \fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
+\fBzip_source_win32w\fR(\fIzip_t\ *archive\fR, \fIconst\ wchar_t\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
 .br
 .PD 0
 .HP 4n
-\fBzip_source_win32w_create\fR(\fIconst\ char\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
+\fBzip_source_win32w_create\fR(\fIconst\ wchar_t\ *fname\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
 .PD
 .SH "DESCRIPTION"
 The functions
