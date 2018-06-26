@@ -14,7 +14,7 @@ MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_valu
 ENDMACRO()
   
 MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
-  SET(_target_location $<TARGET_NAME:_target>)
+  SET(_target_location $<TARGET_NAME:${_target}>)
   GET_TARGET_PROPERTY_WITH_DEFAULT(_target_static_lib ${_target} STATIC_LIB "")
   GET_TARGET_PROPERTY_WITH_DEFAULT(_target_dependency_libs ${_target} LT_DEPENDENCY_LIBS "")
   GET_TARGET_PROPERTY_WITH_DEFAULT(_target_current ${_target} LT_VERSION_CURRENT 4)
