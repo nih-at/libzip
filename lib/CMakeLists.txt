@@ -211,9 +211,37 @@ ENDIF()
 
 ADD_LIBRARY(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPTIONAL_FILES} ${LIBZIP_OPSYS_FILES})
 SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 5.0 SOVERSION 5)
-TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY} ${OPTIONAL_LIBRARY})
-INSTALL(TARGETS zip
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-#CREATE_LIBTOOL_FILE(zip lib)
+TARGET_LINK_LIBRARIES(zip
+  PRIVATE
+    ${ZLIB_TARGET}
+    ${OPTIONAL_LIBRARY}
+)
+
+# installation boilerplate
+install(TARGETS zip
+    EXPORT zipTargets
+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+)
+install(EXPORT zipTargets
+    FILE zipTargets.cmake
+    NAMESPACE zip::
+    DESTINATION lib/cmake/zip
+)
+get_target_property(zip_VERSION zip VERSION)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/zipConfigVersion.cmake"
+    VERSION ${zip_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/zipConfig.cmake"
+    "include(CMakeFindDependencyMacro)\n"
+    "find_dependency(ZLIB)\n"
+    "include(\"\${CMAKE_CURRENT_LIST_DIR}/zipTargets.cmake\")"
+)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zipConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/zipConfigVersion.cmake"
+    DESTINATION lib/cmake/zip
+)
