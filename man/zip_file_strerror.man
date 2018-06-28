@@ -83,7 +83,7 @@ and
 return a pointer to the error string.
 .SH "SEE ALSO"
 libzip(3),
-zip_error_to_str(3)
+zip_error_strerror(3)
 .SH "HISTORY"
 \fBzip_file_strerror\fR()
 and

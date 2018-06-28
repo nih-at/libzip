@@ -147,7 +147,7 @@ does not allow seeks.
 .SH "SEE ALSO"
 libzip(3),
 zip_close(3),
-zip_error_to_str(3),
+zip_error_strerror(3),
 zip_open(3)
 .SH "HISTORY"
 \fBzip_fdopen\fR()

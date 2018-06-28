@@ -111,8 +111,8 @@ Opening
 failed.
 .SH "SEE ALSO"
 libzip(3),
-zip_add(3),
-zip_replace(3),
+zip_file_add(3),
+zip_file_replace(3),
 zip_source(3),
 zip_source_win32a(3),
 zip_source_win32w(3)

@@ -101,7 +101,7 @@ or invalid UTF-8 encoded file names.
 Required memory could not be allocated.
 .SH "SEE ALSO"
 libzip(3),
-zip_add(3)
+zip_file_add(3)
 .SH "HISTORY"
 \fBzip_dir_add\fR()
 was added in libzip 0.11.

@@ -78,7 +78,7 @@ Otherwise, \-1 is returned and the error code in
 \fIarchive\fR
 is set to indicate the error.
 .SH "ERRORS"
-\fBzip_rename\fR()
+\fBzip_file_rename\fR()
 fails if:
 .TP 19n
 [\fRZIP_ER_DELETED\fR]

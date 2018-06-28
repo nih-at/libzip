@@ -264,7 +264,7 @@ zip_source(3)
 .SH "ERROR HANDLING"
 .TP 4n
 \fB\(bu\fR
-zip_error_to_str(3)
+zip_error_strerror(3)
 .PD 0
 .TP 4n
 \fB\(bu\fR
@@ -274,10 +274,13 @@ zip_strerror(3)
 zip_file_strerror(3)
 .TP 4n
 \fB\(bu\fR
-zip_error_get(3)
+zip_get_error(3)
 .TP 4n
 \fB\(bu\fR
-zip_error_get_sys_type(3)
+zip_error_init_with_code(3)
+.TP 4n
+\fB\(bu\fR
+zip_error_system_type(3)
 .TP 4n
 \fB\(bu\fR
 zip_errors(3)

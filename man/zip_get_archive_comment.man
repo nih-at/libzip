@@ -98,7 +98,7 @@ or
 if there is no comment.
 .SH "SEE ALSO"
 libzip(3),
-zip_get_file_comment(3)
+zip_file_get_comment(3)
 .SH "HISTORY"
 \fBzip_get_archive_comment\fR()
 was added in libzip 0.7.
