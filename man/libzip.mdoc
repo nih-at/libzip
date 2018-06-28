@@ -216,15 +216,17 @@ from zip archives and one for how to create/modify them.
 .Sh ERROR HANDLING
 .Bl -bullet -compact
 .It
-.Xr zip_error_to_str 3
+.Xr zip_error_strerror 3
 .It
 .Xr zip_strerror 3
 .It
 .Xr zip_file_strerror 3
 .It
-.Xr zip_error_get 3
+.Xr zip_get_error 3
 .It
-.Xr zip_error_get_sys_type 3
+.Xr zip_error_init_with_code 3
+.It
+.Xr zip_error_system_type 3
 .It
 .Xr zip_errors 3
 .El
