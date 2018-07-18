@@ -12,7 +12,7 @@ For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 
 - Apple's CommonCrypto (available on macOS and iOS)
-- [OpenSSL](https://www.openssl.org/)
+- [OpenSSL](https://www.openssl.org/) >= 1.0
 - [GnuTLS](https://www.gnutls.org/).
 
 If you don't want a library even if it is installed, you can
