@@ -1,10 +1,5 @@
 #ifndef HAD_CONFIG_H
 #define HAD_CONFIG_H
-#if defined(__linux__)
-#ifndef _FILE_OFFSET_BITS
-#define _FILE_OFFSET_BITS 64
-#endif
-#endif
 #ifndef _HAD_ZIPCONF_H
 #include "zipconf.h"
 #endif
