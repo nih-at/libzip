@@ -44,6 +44,9 @@ ENDIF()
 
 OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
+
+OPTION(SHARED_LIB_VERSIONNING "Add SO version in .so build" ON)
+
 FIND_PROGRAM(MDOCTOOL NAMES mandoc groff)
 IF (MDOCTOOL)
   SET(DOCUMENTATION_FORMAT "mdoc" CACHE STRING "Documentation format")
