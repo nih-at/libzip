@@ -1,6 +1,6 @@
 /*
-  zip_crypto.h -- crypto definitions
-  Copyright (C) 2017 Dieter Baron and Thomas Klausner
+  zip_crypto_win.h -- Windows Crypto API wrapper.
+  Copyright (C) 2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,22 +31,28 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef HAD_ZIP_CRYPTO_H
-#define HAD_ZIP_CRYPTO_H
+#ifndef HAD_ZIP_CRYPTO_WIN_H
+#define HAD_ZIP_CRYPTO_WIN_H
 
-#define ZIP_CRYPTO_SHA1_LENGTH 20
-#define ZIP_CRYPTO_AES_BLOCK_LENGTH 16
+typedef struct _zip_crypto_aes_s _zip_crypto_aes_t;
+typedef struct _zip_crypto_hmac_s _zip_crypto_hmac_t;
 
-#if defined(HAVE_OPENSSL)
-#include "zip_crypto_openssl.h"
-#elif defined(HAVE_GNUTLS)
-#include "zip_crypto_gnutls.h"
-#elif defined(HAVE_COMMONCRYPTO)
-#include "zip_crypto_commoncrypto.h"
-#elif defined(HAVE_WINDOWS_CRYPTO)
-#include "zip_crypto_win.h"
-#else
-#error "no crypto backend found"
-#endif
+void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
+_zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
+bool _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out);
 
-#endif /*  HAD_ZIP_CRYPTO_H */
+bool _zip_crypto_pbkdf2(
+	const zip_uint8_t *key,
+	zip_uint64_t key_length,
+	const zip_uint8_t *salt,
+	zip_uint16_t salt_length,
+	zip_uint16_t iterations,
+	zip_uint8_t* output,
+	zip_uint16_t output_length);
+
+_zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
+void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
+bool _zip_crypto_hmac(_zip_crypto_hmac_t *hmac, zip_uint8_t *data, zip_uint64_t length);
+bool _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data);
+
+#endif /*  HAD_ZIP_CRYPTO_WIN_H */
