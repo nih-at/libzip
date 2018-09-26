@@ -37,14 +37,14 @@
 #define ZIP_CRYPTO_SHA1_LENGTH 20
 #define ZIP_CRYPTO_AES_BLOCK_LENGTH 16
 
-#if defined(HAVE_OPENSSL)
-#include "zip_crypto_openssl.h"
-#elif defined(HAVE_GNUTLS)
-#include "zip_crypto_gnutls.h"
+#if defined(HAVE_WINDOWS_CRYPTO)
+#include "zip_crypto_win.h"
 #elif defined(HAVE_COMMONCRYPTO)
 #include "zip_crypto_commoncrypto.h"
-#elif defined(HAVE_WINDOWS_CRYPTO)
-#include "zip_crypto_win.h"
+#elif defined(HAVE_GNUTLS)
+#include "zip_crypto_gnutls.h"
+#elif defined(HAVE_OPENSSL)
+#include "zip_crypto_openssl.h"
 #else
 #error "no crypto backend found"
 #endif
