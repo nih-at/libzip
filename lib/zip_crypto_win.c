@@ -78,7 +78,7 @@ There is no #ifdef to control that, because this is working for all supported OS
 
 */
 
-#ifndef WINCE
+#if !defined(WINCE) && !defined(__MINGW32__)
 #define HAS_BCRYPTDERIVEKEYPBKDF2
 #endif
 
