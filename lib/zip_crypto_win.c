@@ -250,6 +250,7 @@ BOOL pbkdf2(
 
 	if (pbPassword == NULL || cbPassword == 0 || pbSalt == NULL || cbSalt == 0 || cIterations == 0 || pbDerivedKey == NULL || cbDerivedKey == 0)
 	{
+		free(U);
 		return FALSE;
 	}
 
