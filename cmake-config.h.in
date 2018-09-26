@@ -44,6 +44,7 @@
 #cmakedefine HAVE_STDBOOL_H
 #cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
+#cmakedefine HAVE_WINDOWS_CRYPTO
 #cmakedefine __INT8_LIBZIP ${__INT8_LIBZIP}
 #cmakedefine INT8_T_LIBZIP ${INT8_T_LIBZIP}
 #cmakedefine UINT8_T_LIBZIP ${UINT8_T_LIBZIP}
