@@ -37,7 +37,7 @@
 
 #include "zip.h"
 
-const char *prg;
+const char *progname;
 #define USAGE "usage: %s archive index offset\n"
 
 int
@@ -50,10 +50,10 @@ main(int argc, char *argv[]) {
     zip_uint64_t index;
     char b[1024];
 
-    prg = argv[0];
+    progname = argv[0];
 
     if (argc != 4) {
-	fprintf(stderr, USAGE, prg);
+	fprintf(stderr, USAGE, progname);
 	return 1;
     }
 
@@ -64,19 +64,19 @@ main(int argc, char *argv[]) {
     if ((z = zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, ze);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", progname, archive, zip_error_strerror(&error));
 	zip_error_fini(&error);
 	return 1;
     }
 
     if ((zf = zip_fopen_index(z, index, 0)) == NULL) {
-	fprintf(stderr, "%s: can't open file in archive '%s': %s\n", prg, archive, zip_error_strerror(zip_file_get_error(zf)));
+	fprintf(stderr, "%s: can't open file in archive '%s': %s\n", progname, archive, zip_error_strerror(zip_file_get_error(zf)));
 	zip_close(z);
 	return 1;
     }
 
     if (zip_fseek(zf, offset, SEEK_SET) < 0) {
-	fprintf(stderr, "%s: zip_fseek failed: %s\n", prg, zip_error_strerror(zip_file_get_error(zf)));
+	fprintf(stderr, "%s: zip_fseek failed: %s\n", progname, zip_error_strerror(zip_file_get_error(zf)));
 	zip_close(z);
 	return 1;
     }
@@ -85,13 +85,13 @@ main(int argc, char *argv[]) {
 	printf("%.*s", (int)n, b);
     }
     if (n < 0) {
-	fprintf(stderr, "%s: zip_fread failed: %s\n", prg, zip_error_strerror(zip_file_get_error(zf)));
+	fprintf(stderr, "%s: zip_fread failed: %s\n", progname, zip_error_strerror(zip_file_get_error(zf)));
 	zip_close(z);
 	return 1;
     }
 
     if (zip_close(z) == -1) {
-	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	return 1;
     }
 

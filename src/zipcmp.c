@@ -86,7 +86,7 @@ struct entry {
 };
 
 
-const char *prg;
+const char *progname;
 
 #define PROGRAM "zipcmp"
 
@@ -139,7 +139,7 @@ int
 main(int argc, char *const argv[]) {
     int c;
 
-    prg = argv[0];
+    progname = argv[0];
 
     ignore_case = 0;
     test_files = 0;
@@ -166,7 +166,7 @@ main(int argc, char *const argv[]) {
 
 	case 'h':
 	    fputs(help_head, stdout);
-	    printf(USAGE, prg);
+	    printf(USAGE, progname);
 	    fputs(help, stdout);
 	    exit(0);
 	case 'V':
@@ -174,13 +174,13 @@ main(int argc, char *const argv[]) {
 	    exit(0);
 
 	default:
-	    fprintf(stderr, USAGE, prg);
+	    fprintf(stderr, USAGE, progname);
 	    exit(2);
 	}
     }
 
     if (argc != optind + 2) {
-	fprintf(stderr, USAGE, prg);
+	fprintf(stderr, USAGE, progname);
 	exit(2);
     }
 
@@ -206,7 +206,7 @@ compare_zip(char *const zn[]) {
 
 	if (is_directory(zn[i])) {
 #ifndef HAVE_FTS_H
-	    fprintf(stderr, "%s: reading directories not supported\n", prg);
+	    fprintf(stderr, "%s: reading directories not supported\n", progname);
 	    exit(2);
 #else
 	    if (list_directory(zn[i], a + i) < 0)
@@ -266,7 +266,7 @@ compute_crc(const char *fname) {
 
 
     if ((f = fopen(fname, "r")) == NULL) {
-	fprintf(stderr, "%s: can't open %s: %s\n", prg, fname, strerror(errno));
+	fprintf(stderr, "%s: can't open %s: %s\n", progname, fname, strerror(errno));
 	return -1;
     }
 
@@ -275,7 +275,7 @@ compute_crc(const char *fname) {
     }
 
     if (ferror(f)) {
-	fprintf(stderr, "%s: read error on %s: %s\n", prg, fname, strerror(errno));
+	fprintf(stderr, "%s: read error on %s: %s\n", progname, fname, strerror(errno));
 	fclose(f);
 	return -1;
     }
@@ -310,7 +310,7 @@ list_directory(const char *name, struct archive *a) {
 
 
     if ((fts = fts_open(names, FTS_NOCHDIR | FTS_LOGICAL, NULL)) == NULL) {
-	fprintf(stderr, "%s: can't open directory '%s': %s\n", prg, name, strerror(errno));
+	fprintf(stderr, "%s: can't open directory '%s': %s\n", progname, name, strerror(errno));
 	return -1;
     }
     prefix_length = strlen(name) + 1;
@@ -342,12 +342,12 @@ list_directory(const char *name, struct archive *a) {
 	    if (a->nentry >= nalloc) {
 		nalloc += 16;
 		if (nalloc > SIZE_MAX / sizeof(a->entry[0])) {
-		    fprintf(stderr, "%s: malloc failure\n", prg);
+		    fprintf(stderr, "%s: malloc failure\n", progname);
 		    exit(1);
 		}
 		a->entry = realloc(a->entry, sizeof(a->entry[0]) * nalloc);
 		if (a->entry == NULL) {
-		    fprintf(stderr, "%s: malloc failure\n", prg);
+		    fprintf(stderr, "%s: malloc failure\n", progname);
 		    exit(1);
 		}
 	    }
@@ -366,7 +366,7 @@ list_directory(const char *name, struct archive *a) {
     }
 
     if (fts_close(fts)) {
-	fprintf(stderr, "%s: error closing directory '%s': %s\n", prg, a->name, strerror(errno));
+	fprintf(stderr, "%s: error closing directory '%s': %s\n", progname, a->name, strerror(errno));
 	return -1;
     }
 
@@ -385,7 +385,7 @@ list_zip(const char *name, struct archive *a) {
     if ((za = zip_open(name, paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, err);
-	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", prg, name, zip_error_strerror(&error));
+	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", progname, name, zip_error_strerror(&error));
 	zip_error_fini(&error);
 	return -1;
     }
@@ -397,7 +397,7 @@ list_zip(const char *name, struct archive *a) {
 	a->entry = NULL;
     else {
 	if ((a->nentry > SIZE_MAX / sizeof(a->entry[0])) || (a->entry = (struct entry *)malloc(sizeof(a->entry[0]) * a->nentry)) == NULL) {
-	    fprintf(stderr, "%s: malloc failure\n", prg);
+	    fprintf(stderr, "%s: malloc failure\n", progname);
 	    exit(1);
 	}
 
@@ -667,7 +667,7 @@ test_file(zip_t *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc) {
     zip_uint32_t ncrc;
 
     if ((zf = zip_fopen_index(za, idx, 0)) == NULL) {
-	fprintf(stderr, "%s: cannot open file %" PRIu64 " in archive: %s\n", prg, idx, zip_strerror(za));
+	fprintf(stderr, "%s: cannot open file %" PRIu64 " in archive: %s\n", progname, idx, zip_strerror(za));
 	return -1;
     }
 
@@ -680,7 +680,7 @@ test_file(zip_t *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc) {
     }
 
     if (n < 0) {
-	fprintf(stderr, "%s: error reading file %" PRIu64 " in archive: %s\n", prg, idx, zip_file_strerror(zf));
+	fprintf(stderr, "%s: error reading file %" PRIu64 " in archive: %s\n", progname, idx, zip_file_strerror(zf));
 	zip_fclose(zf);
 	return -1;
     }
@@ -688,11 +688,11 @@ test_file(zip_t *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc) {
     zip_fclose(zf);
 
     if (nsize != size) {
-	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %" PRId64 " (should be %" PRId64 ")\n", prg, idx, nsize, size);
+	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %" PRId64 " (should be %" PRId64 ")\n", progname, idx, nsize, size);
 	return -2;
     }
     if (ncrc != crc) {
-	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %x (should be %x)\n", prg, idx, ncrc, crc);
+	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %x (should be %x)\n", progname, idx, ncrc, crc);
 	return -2;
     }
 

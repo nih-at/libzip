@@ -54,7 +54,7 @@ static int do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when
 
 int verbose;
 
-const char *prg;
+const char *progname;
 #define USAGE "usage: %s [-v] archive\n"
 
 int
@@ -69,7 +69,7 @@ main(int argc, char *argv[]) {
     verbose = 0;
     fail = 0;
 
-    prg = argv[0];
+    progname = argv[0];
 
     while ((c = getopt(argc, argv, "v")) != -1) {
 	switch (c) {
@@ -78,14 +78,14 @@ main(int argc, char *argv[]) {
 	    break;
 
 	default:
-	    fprintf(stderr, USAGE, prg);
+	    fprintf(stderr, USAGE, progname);
 	    return 1;
 	}
     }
 
 
     if (argc - optind != 1) {
-	fprintf(stderr, USAGE, prg);
+	fprintf(stderr, USAGE, progname);
 	return 1;
     }
 
@@ -94,7 +94,7 @@ main(int argc, char *argv[]) {
     if ((z = zip_open(archive, 0, &ze)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, ze);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", progname, archive, zip_error_strerror(&error));
 	zip_error_fini(&error);
 	return 1;
     }
@@ -120,12 +120,12 @@ main(int argc, char *argv[]) {
 
     zs = zip_source_buffer(z, "asdf", 4, 0);
     if ((idx = zip_name_locate(z, "storedok", 0)) < 0) {
-	fprintf(stderr, "%s: can't locate 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	fprintf(stderr, "%s: can't locate 'storedok' in zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	fail++;
     }
     else {
 	if (zip_replace(z, (zip_uint64_t)idx, zs) < 0) {
-	    fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	    fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	    fail++;
 	}
 	else {
@@ -134,12 +134,12 @@ main(int argc, char *argv[]) {
 	}
     }
     if ((idx = zip_name_locate(z, "storedok", 0)) < 0) {
-	fprintf(stderr, "%s: can't locate 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	fprintf(stderr, "%s: can't locate 'storedok' in zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	fail++;
     }
     else {
 	if (zip_delete(z, (zip_uint64_t)idx) < 0) {
-	    fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	    fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	    fail++;
 	}
 	else {
@@ -149,7 +149,7 @@ main(int argc, char *argv[]) {
     }
     zs = zip_source_buffer(z, "asdf", 4, 0);
     if (zip_file_add(z, "new_file", zs, 0) < 0) {
-	fprintf(stderr, "%s: can't add file to zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	fprintf(stderr, "%s: can't add file to zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	fail++;
     }
     else {
@@ -158,7 +158,7 @@ main(int argc, char *argv[]) {
 
     zip_unchange_all(z);
     if (zip_close(z) == -1) {
-	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(z));
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", progname, archive, zip_strerror(z));
 	return 1;
     }
 
@@ -202,13 +202,13 @@ do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze
     }
 
     if (when_got != when_ex || zip_error_code_zip(&error_got) != zip_error_code_zip(&error_ex) || zip_error_code_system(&error_got) != zip_error_code_system(&error_ex)) {
-	printf("%s: %s: got %s error (%s), expected %s error (%s)\n", prg, name, when_name[when_got], zip_error_strerror(&error_got), when_name[when_ex], zip_error_strerror(&error_ex));
+	printf("%s: %s: got %s error (%s), expected %s error (%s)\n", progname, name, when_name[when_got], zip_error_strerror(&error_got), when_name[when_ex], zip_error_strerror(&error_ex));
 	zip_error_fini(&error_got);
 	zip_error_fini(&error_ex);
 	return 1;
     }
     else if (verbose)
-	printf("%s: %s: passed\n", prg, name);
+	printf("%s: %s: passed\n", progname, name);
 
     return 0;
 }
