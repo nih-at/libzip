@@ -33,8 +33,9 @@
 
 #include <stdlib.h>
 
-#include "zip_crypto.h"
 #include "zipint.h"
+
+#include "zip_crypto.h"
 
 _zip_crypto_aes_t *
 _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {

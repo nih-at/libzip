@@ -33,8 +33,9 @@
 
 #include <stdlib.h>
 
-#include "zip_crypto.h"
 #include "zipint.h"
+
+#include "zip_crypto.h"
 
 #include <openssl/rand.h>
 
