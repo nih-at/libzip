@@ -148,6 +148,6 @@ _zip_mkstemp(char *path) {
 	    }
 	}
     }
-	/*NOTREACHED*/
+    /*NOTREACHED*/
 #endif
 }

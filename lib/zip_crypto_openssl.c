@@ -33,8 +33,8 @@
 
 #include <stdlib.h>
 
-#include "zipint.h"
 #include "zip_crypto.h"
+#include "zipint.h"
 
 #include <openssl/rand.h>
 
@@ -44,13 +44,12 @@
 
 
 _zip_crypto_aes_t *
-_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error)
-{
+_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
     _zip_crypto_aes_t *aes;
 
-    if ((aes  = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+    if ((aes = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 
     AES_set_encrypt_key(key, key_size, aes);
@@ -59,10 +58,9 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
 }
 
 void
-_zip_crypto_aes_free(_zip_crypto_aes_t *aes)
-{
+_zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
-        return;
+	return;
     }
 
     _zip_crypto_clear(aes, sizeof(*aes));
@@ -71,37 +69,36 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes)
 
 
 _zip_crypto_hmac_t *
-_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error)
-{
+_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
     _zip_crypto_hmac_t *hmac;
 
     if (secret_length > INT_MAX) {
-        zip_error_set(error, ZIP_ER_INVAL, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_INVAL, 0);
+	return NULL;
     }
 
 #ifdef USE_OPENSSL_1_0_API
-    if ((hmac  = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+    if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 
     HMAC_CTX_init(hmac);
 #else
     if ((hmac = HMAC_CTX_new()) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 #endif
 
     if (HMAC_Init_ex(hmac, secret, (int)secret_length, EVP_sha1(), NULL) != 1) {
-        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 #ifdef USE_OPENSSL_1_0_API
-        free(hmac);
+	free(hmac);
 #else
-        HMAC_CTX_free(hmac);
+	HMAC_CTX_free(hmac);
 #endif
-        return NULL;
+	return NULL;
     }
 
     return hmac;
@@ -109,10 +106,9 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 
 
 void
-_zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
-{
+_zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     if (hmac == NULL) {
-        return;
+	return;
     }
 
 #ifdef USE_OPENSSL_1_0_API
@@ -126,8 +122,7 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
 
 
 bool
-_zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data)
-{
+_zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
     unsigned int length;
 
     return HMAC_Final(hmac, data, &length) == 1;
@@ -138,5 +133,3 @@ ZIP_EXTERN bool
 zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return RAND_bytes(buffer, length) == 1;
 }
-
-

@@ -41,14 +41,7 @@ void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
 _zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
 bool _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out);
 
-bool _zip_crypto_pbkdf2(
-	const zip_uint8_t *key,
-	zip_uint64_t key_length,
-	const zip_uint8_t *salt,
-	zip_uint16_t salt_length,
-	zip_uint16_t iterations,
-	zip_uint8_t* output,
-	zip_uint16_t output_length);
+bool _zip_crypto_pbkdf2(const zip_uint8_t *key, zip_uint64_t key_length, const zip_uint8_t *salt, zip_uint16_t salt_length, zip_uint16_t iterations, zip_uint8_t *output, zip_uint16_t output_length);
 
 _zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
 void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);

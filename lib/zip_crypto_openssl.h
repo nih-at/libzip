@@ -41,7 +41,7 @@
 #define _zip_crypto_hmac_t HMAC_CTX
 
 void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
-#define _zip_crypto_aes_encrypt_block(aes, in, out)  (AES_encrypt((in), (out), (aes)), true)
+#define _zip_crypto_aes_encrypt_block(aes, in, out) (AES_encrypt((in), (out), (aes)), true)
 _zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
 
 #define _zip_crypto_hmac(hmac, data, length) (HMAC_Update((hmac), (data), (length)) == 1)
@@ -49,7 +49,6 @@ void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
 _zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
 bool _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data);
 
-#define _zip_crypto_pbkdf2(key, key_length, salt, salt_length, iterations, output, output_length) \
-	(PKCS5_PBKDF2_HMAC_SHA1((const char *)(key), (key_length), (salt), (salt_length), (iterations), (output_length), (output)))
+#define _zip_crypto_pbkdf2(key, key_length, salt, salt_length, iterations, output, output_length) (PKCS5_PBKDF2_HMAC_SHA1((const char *)(key), (key_length), (salt), (salt_length), (iterations), (output_length), (output)))
 
 #endif /*  HAD_ZIP_CRYPTO_OPENSSL_H */

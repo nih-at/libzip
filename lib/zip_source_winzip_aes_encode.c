@@ -143,19 +143,19 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 	    return -1;
 	}
 
-        if (!_zip_winzip_aes_encrypt(ctx->aes_ctx, data, (zip_uint64_t)ret)) {
-            zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
-            /* TODO: return partial read? */
-            return -1;
-        }
+	if (!_zip_winzip_aes_encrypt(ctx->aes_ctx, data, (zip_uint64_t)ret)) {
+	    zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+	    /* TODO: return partial read? */
+	    return -1;
+	}
 
 	if ((zip_uint64_t)ret < length) {
 	    ctx->eof = true;
-            if (!_zip_winzip_aes_finish(ctx->aes_ctx, ctx->data)) {
-                zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
-                /* TODO: return partial read? */
-                return -1;
-            }
+	    if (!_zip_winzip_aes_finish(ctx->aes_ctx, ctx->data)) {
+		zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+		/* TODO: return partial read? */
+		return -1;
+	    }
 	    _zip_winzip_aes_free(ctx->aes_ctx);
 	    ctx->aes_ctx = NULL;
 	    if ((ctx->buffer = _zip_buffer_new(ctx->data, HMAC_LENGTH)) == NULL) {

@@ -57,7 +57,7 @@ zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
     }
 
     if (len == 0) {
-      return 0;
+	return 0;
     }
 
     bytes_read = 0;

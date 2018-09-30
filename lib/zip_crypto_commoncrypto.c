@@ -41,10 +41,9 @@
 #include <unistd.h>
 
 void
-_zip_crypto_aes_free(_zip_crypto_aes_t *aes)
-{
+_zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
-        return;
+	return;
     }
 
     CCCryptorRelease(aes);
@@ -52,8 +51,7 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes)
 
 
 bool
-_zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out)
-{
+_zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
     size_t len;
     CCCryptorUpdate(aes, in, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, ZIP_CRYPTO_AES_BLOCK_LENGTH, &len);
     return true;
@@ -61,8 +59,7 @@ _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip
 
 
 _zip_crypto_aes_t *
-_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error)
-{
+_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
     _zip_crypto_aes_t *aes;
     CCCryptorStatus ret;
 
@@ -70,28 +67,27 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
 
     switch (ret) {
     case kCCSuccess:
-        return aes;
+	return aes;
 
     case kCCMemoryFailure:
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return NULL;
 
     case kCCParamError:
-        zip_error_set(error, ZIP_ER_INVAL, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_INVAL, 0);
+	return NULL;
 
     default:
-        zip_error_set(error, ZIP_ER_INTERNAL, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_INTERNAL, 0);
+	return NULL;
     }
 }
 
 
 void
-_zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
-{
+_zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     if (hmac == NULL) {
-        return;
+	return;
     }
 
     _zip_crypto_clear(hmac, sizeof(*hmac));
@@ -100,13 +96,12 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac)
 
 
 _zip_crypto_hmac_t *
-_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error)
-{
+_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
     _zip_crypto_hmac_t *hmac;
 
     if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return NULL;
     }
 
     CCHmacInit(hmac, kCCHmacAlgSHA1, secret, secret_length);
@@ -120,12 +115,12 @@ zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
     int fd;
 
     if ((fd = open("/dev/urandom", O_RDONLY)) < 0) {
-        return false;
+	return false;
     }
 
     if (read(fd, buffer, length) != length) {
-        close(fd);
-        return false;
+	close(fd);
+	return false;
     }
 
     close(fd);

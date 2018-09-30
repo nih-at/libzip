@@ -138,8 +138,8 @@ verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
     }
 
     if (!_zip_winzip_aes_finish(ctx->aes_ctx, computed)) {
-        zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
-        return false;
+	zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+	return false;
     }
     _zip_winzip_aes_free(ctx->aes_ctx);
     ctx->aes_ctx = NULL;
@@ -186,10 +186,10 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 	}
 	ctx->current_position += (zip_uint64_t)n;
 
-        if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
-            zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
-            return -1;
-        }
+	if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
+	    zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+	    return -1;
+	}
 
 	return n;
 
