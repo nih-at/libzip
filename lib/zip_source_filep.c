@@ -244,7 +244,6 @@ static int
 create_temp_output(struct read_file *ctx) {
     char *temp;
     int tfd;
-    mode_t mask;
     FILE *tfp;
 
     if ((temp = (char *)malloc(strlen(ctx->fname) + 8)) == NULL) {
@@ -253,14 +252,20 @@ create_temp_output(struct read_file *ctx) {
     }
     sprintf(temp, "%s.XXXXXX", ctx->fname);
 
-    mask = umask(_SAFE_MASK);
+#ifdef HAVE_UMASK
+    mode_t mask = umask(_SAFE_MASK);
+#endif
     if ((tfd = mkstemp(temp)) == -1) {
 	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+#ifdef HAVE_UMASK
 	umask(mask);
+#endif
 	free(temp);
 	return -1;
     }
+#ifdef HAVE_UMASK
     umask(mask);
+#endif
 
     if ((tfp = fdopen(tfd, "r+b")) == NULL) {
 	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
@@ -412,8 +417,6 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 #endif
 
     case ZIP_SOURCE_COMMIT_WRITE: {
-	mode_t mask;
-
 	if (fclose(ctx->fout) < 0) {
 	    ctx->fout = NULL;
 	    zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
@@ -423,10 +426,12 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
 	    return -1;
 	}
-	mask = umask(022);
+#if defined(HAVE_UMASK) && defined(HAVE_CHMOD)
+	mode_t mask = umask(022);
 	umask(mask);
 	/* not much we can do if chmod fails except make the whole commit fail */
 	(void)chmod(ctx->fname, 0666 & ~mask);
+#endif
 	free(ctx->tmpname);
 	ctx->tmpname = NULL;
 	return 0;
