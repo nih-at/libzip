@@ -177,7 +177,6 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
     /* treat empty files as empty archives */
     if (len == 0) {
 	if ((za = _zip_allocate_new(src, flags, error)) == NULL) {
-	    zip_source_free(src);
 	    return NULL;
 	}
 
