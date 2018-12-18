@@ -39,7 +39,8 @@
 
 int
 _zip_filerange_crc(zip_source_t *src, zip_uint64_t start, zip_uint64_t len, uLong *crcp, zip_error_t *error) {
-    Bytef buf[BUFSIZE];
+    DEFINE_BYTE_ARRAY(buf, BUFSIZE);
+
     zip_int64_t n;
 
     *crcp = crc32(0L, Z_NULL, 0);
@@ -54,14 +55,21 @@ _zip_filerange_crc(zip_source_t *src, zip_uint64_t start, zip_uint64_t len, uLon
 	return -1;
     }
 
+    if (!byte_array_init(buf, BUFSIZE)) {
+	zip_error_set(error, ZIP_ER_MEMORY, 0);
+	return -1;
+    }
+
     while (len > 0) {
 	n = (zip_int64_t)(len > BUFSIZE ? BUFSIZE : len);
 	if ((n = zip_source_read(src, buf, (zip_uint64_t)n)) < 0) {
 	    _zip_error_set_from_source(error, src);
+	    byte_array_fini(buf);
 	    return -1;
 	}
 	if (n == 0) {
 	    zip_error_set(error, ZIP_ER_EOF, 0);
+	    byte_array_fini(buf);
 	    return -1;
 	}
 
@@ -69,6 +77,8 @@ _zip_filerange_crc(zip_source_t *src, zip_uint64_t start, zip_uint64_t len, uLon
 
 	len -= (zip_uint64_t)n;
     }
+
+    byte_array_fini(buf);
 
     return 0;
 }
