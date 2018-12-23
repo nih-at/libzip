@@ -29,9 +29,10 @@
 #cmakedefine HAVE_GETPROGNAME
 #cmakedefine HAVE_GNUTLS
 #cmakedefine HAVE_LIBBZ2
+#cmakedefine HAVE_MBEDTLS
+#cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_OPEN
 #cmakedefine HAVE_OPENSSL
-#cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_SETMODE
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_SSIZE_T_LIBZIP
