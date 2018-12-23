@@ -68,18 +68,18 @@ The function <code class="Fn" title="Fn">zip_dir_add</code>() adds a directory
   specifies the zip archive to which the directory should be added.
   <var class="Ar" title="Ar">name</var> is the directory's name in the zip
   archive. The <var class="Ar" title="Ar">flags</var> argument can be any of:
-<dl class="Bl-tag" style="margin-left: 27.00ex;">
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
   <dd>Guess encoding of <var class="Ar" title="Ar">name</var> (default).</dd>
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_ENC_UTF_8"><code class="Dv" title="Dv" id="ZIP_FL_ENC_UTF_8">ZIP_FL_ENC_UTF_8</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_UTF_8"><code class="Dv" title="Dv" id="ZIP_FL_ENC_UTF_8">ZIP_FL_ENC_UTF_8</code></a></dt>
   <dd>Interpret <var class="Ar" title="Ar">name</var> as UTF-8.</dd>
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_ENC_CP437"><code class="Dv" title="Dv" id="ZIP_FL_ENC_CP437">ZIP_FL_ENC_CP437</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_CP437"><code class="Dv" title="Dv" id="ZIP_FL_ENC_CP437">ZIP_FL_ENC_CP437</code></a></dt>
   <dd>Interpret <var class="Ar" title="Ar">name</var> as code page 437
     (CP-437).</dd>
 </dl>
@@ -90,22 +90,22 @@ Upon successful completion, the index of the new entry in the archive is
   <var class="Ar" title="Ar">archive</var> is set to indicate the error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_dir_add</code>() fails if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
   <dd>There is already an entry called <var class="Ar" title="Ar">name</var> in
       the archive.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd><var class="Ar" title="Ar">archive</var> or
       <var class="Ar" title="Ar">name</var> are
       <code class="Dv" title="Dv">NULL</code>, or invalid UTF-8 encoded file
       names.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
 </dl>
 <h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -125,7 +125,7 @@ Upon successful completion, the index of the new entry in the archive is
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

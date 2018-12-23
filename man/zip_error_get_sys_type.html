@@ -70,14 +70,14 @@ The function <code class="Fn" title="Fn">zip_error_get_sys_type</code>() is
 <div class="Pp"></div>
 Replace
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 int i = zip_error_get_sys_type(ze);
 </pre>
 </div>
 with
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 zip_error_t error; 
 zip_error_init_with_code(&amp;error, ze); 
@@ -101,7 +101,7 @@ int i = zip_error_system_type(&amp;error);
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

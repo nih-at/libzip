@@ -82,15 +82,15 @@ The function <code class="Fn" title="Fn">zip_source_zip</code>() creates a zip
   without decompressing it.
 <div class="Pp"></div>
 Supported flags are:
-<dl class="Bl-tag" style="margin-left: 28.20ex;">
-  <dt style="margin-left: -28.20ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -28.20ex;"><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" title="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" title="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dt>
   <dd>Try to get the original data without any changes that may have been made
       to <var class="Ar" title="Ar">srcarchive</var> after opening it.</dd>
-  <dt style="margin-left: -28.20ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -28.20ex;"><a class="permalink" href="#ZIP_FL_RECOMPRESS"><code class="Dv" title="Dv" id="ZIP_FL_RECOMPRESS">ZIP_FL_RECOMPRESS</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_RECOMPRESS"><code class="Dv" title="Dv" id="ZIP_FL_RECOMPRESS">ZIP_FL_RECOMPRESS</code></a></dt>
   <dd>When adding the data from <var class="Ar" title="Ar">srcarchive</var>,
       re-compress it using the current settings instead of copying the
       compressed data.</dd>
@@ -102,21 +102,21 @@ Upon successful completion, the created source is returned. Otherwise,
   <var class="Ar" title="Ar">archive</var> is set to indicate the error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_source_zip</code>() fails if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_CHANGED"><code class="Er" title="Er" id="ZIP_ER_CHANGED">ZIP_ER_CHANGED</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_CHANGED"><code class="Er" title="Er" id="ZIP_ER_CHANGED">ZIP_ER_CHANGED</code></a>]</dt>
   <dd>Unchanged data was requested, but it is not available.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd><var class="Ar" title="Ar">srcarchive</var>,
       <var class="Ar" title="Ar">srcidx</var>,
       <var class="Ar" title="Ar">start</var>, or
       <var class="Ar" title="Ar">len</var> are invalid.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
 </dl>
 Additionally, it can return all error codes from
@@ -138,7 +138,7 @@ Additionally, it can return all error codes from
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

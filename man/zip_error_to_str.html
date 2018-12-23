@@ -74,7 +74,7 @@ The function <code class="Fn" title="Fn">zip_error_to_str</code>() is
 <div class="Pp"></div>
 Replace
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 char buf[BUFSIZE]; 
 zip_error_to_str(buf, sizeof(buf), ze, se); 
@@ -83,7 +83,7 @@ printf(&quot;%s&quot;, buf);
 </div>
 with
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 zip_error_t error; 
 zip_error_init_with_code(&amp;error, ze); 
@@ -111,7 +111,7 @@ zip_error_fini(&amp;error);
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

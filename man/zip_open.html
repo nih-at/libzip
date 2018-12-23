@@ -77,29 +77,29 @@ The <code class="Fn" title="Fn">zip_open</code>() function opens the zip archive
   The <var class="Fa" title="Fa">flags</var> are specified by
   <i class="Em" title="Em">or</i><span class="No">'ing</span> the following
   values, or 0 for none of them.
-<div class="Bl-tag" style="margin-left: 6.00ex;">
-<dl class="Bl-tag" style="margin-left: 18.60ex;">
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_CHECKCONS"><code class="Dv" title="Dv" id="ZIP_CHECKCONS">ZIP_CHECKCONS</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_CHECKCONS"><code class="Dv" title="Dv" id="ZIP_CHECKCONS">ZIP_CHECKCONS</code></a></dt>
   <dd>Perform additional stricter consistency checks on the archive, and error
       if they fail.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_CREATE"><code class="Dv" title="Dv" id="ZIP_CREATE">ZIP_CREATE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_CREATE"><code class="Dv" title="Dv" id="ZIP_CREATE">ZIP_CREATE</code></a></dt>
   <dd>Create the archive if it does not exist.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_EXCL"><code class="Dv" title="Dv" id="ZIP_EXCL">ZIP_EXCL</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_EXCL"><code class="Dv" title="Dv" id="ZIP_EXCL">ZIP_EXCL</code></a></dt>
   <dd>Error if archive already exists.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_TRUNCATE"><code class="Dv" title="Dv" id="ZIP_TRUNCATE">ZIP_TRUNCATE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_TRUNCATE"><code class="Dv" title="Dv" id="ZIP_TRUNCATE">ZIP_TRUNCATE</code></a></dt>
   <dd>If archive exists, ignore its current contents. In other words, handle it
       the same way as an empty archive.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_RDONLY"><code class="Dv" title="Dv" id="ZIP_RDONLY">ZIP_RDONLY</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_RDONLY"><code class="Dv" title="Dv" id="ZIP_RDONLY">ZIP_RDONLY</code></a></dt>
   <dd>Open archive in read-only mode.</dd>
 </dl>
 </div>
@@ -124,51 +124,51 @@ Upon successful completion <code class="Fn" title="Fn">zip_open</code>() and
   sets <var class="Ar" title="Ar">ze</var> to indicate the error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 The archive specified by <var class="Ar" title="Ar">path</var> is opened unless:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
   <dd>The file specified by <var class="Ar" title="Ar">path</var> exists and
       <code class="Dv" title="Dv">ZIP_EXCL</code> is set.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INCONS"><code class="Er" title="Er" id="ZIP_ER_INCONS">ZIP_ER_INCONS</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INCONS"><code class="Er" title="Er" id="ZIP_ER_INCONS">ZIP_ER_INCONS</code></a>]</dt>
   <dd>Inconsistencies were found in the file specified by
       <var class="Ar" title="Ar">path</var>. This error is often caused by
       specifying <code class="Dv" title="Dv">ZIP_CHECKCONS</code> but can also
       happen without it.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd>The <var class="Ar" title="Ar">path</var> argument is
       <code class="Dv" title="Dv">NULL</code>.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOENT"><code class="Er" title="Er" id="ZIP_ER_NOENT">ZIP_ER_NOENT</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_NOENT"><code class="Er" title="Er" id="ZIP_ER_NOENT">ZIP_ER_NOENT</code></a>]</dt>
   <dd>The file specified by <var class="Ar" title="Ar">path</var> does not exist
       and <code class="Dv" title="Dv">ZIP_CREATE</code> is not set.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOZIP"><code class="Er" title="Er" id="ZIP_ER_NOZIP">ZIP_ER_NOZIP</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_NOZIP"><code class="Er" title="Er" id="ZIP_ER_NOZIP">ZIP_ER_NOZIP</code></a>]</dt>
   <dd>The file specified by <var class="Ar" title="Ar">path</var> is not a zip
       archive.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_OPEN"><code class="Er" title="Er" id="ZIP_ER_OPEN">ZIP_ER_OPEN</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_OPEN"><code class="Er" title="Er" id="ZIP_ER_OPEN">ZIP_ER_OPEN</code></a>]</dt>
   <dd>The file specified by <var class="Ar" title="Ar">path</var> could not be
       opened.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
   <dd>A read error occurred; see <var class="Va" title="Va">errno</var> for
       details.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
   <dd>The file specified by <var class="Ar" title="Ar">path</var> does not allow
       seeks.</dd>
 </dl>
@@ -190,7 +190,7 @@ The archive specified by <var class="Ar" title="Ar">path</var> is opened unless:
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>
