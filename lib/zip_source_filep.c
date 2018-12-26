@@ -422,6 +422,9 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
 	}
 	ctx->fout = NULL;
+#if defined(RENAME_NEEDS_UNLINK)
+	unlink(ctx->fname);
+#endif
 	if (rename(ctx->tmpname, ctx->fname) < 0) {
 	    zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
 	    return -1;
