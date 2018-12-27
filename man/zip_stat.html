@@ -92,7 +92,7 @@ The <var class="Ar" title="Ar">sb</var> argument is a pointer to a
   <var class="Ft" title="Ft">struct zip_stat</var> (shown below), into which
   information about the file is placed.
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 0.00ex;">
+<div class="Bd">
 <pre class="Li">
 struct zip_stat { 
     zip_uint64_t valid;                 /* which fields have valid values */ 
@@ -116,25 +116,25 @@ The <var class="Ar" title="Ar">valid</var> field of the structure specifies
   which other fields are valid. Check if the flag defined by the following
   defines are in <var class="Ar" title="Ar">valid</var> before accessing the
   fields:
-<div class="Bl-tag" style="margin-left: 6.00ex;">
-<dl class="Bl-tag Bl-compact" style="margin-left: 36.60ex;">
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_NAME"><code class="Dv" title="Dv" id="ZIP_STAT_NAME">ZIP_STAT_NAME</code></a></dt>
+<div class="Bd-indent">
+<dl class="Bl-tag Bl-compact">
+  <dt><a class="permalink" href="#ZIP_STAT_NAME"><code class="Dv" title="Dv" id="ZIP_STAT_NAME">ZIP_STAT_NAME</code></a></dt>
   <dd><var class="Ar" title="Ar">name</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_INDEX"><code class="Dv" title="Dv" id="ZIP_STAT_INDEX">ZIP_STAT_INDEX</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_INDEX"><code class="Dv" title="Dv" id="ZIP_STAT_INDEX">ZIP_STAT_INDEX</code></a></dt>
   <dd><var class="Ar" title="Ar">index</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_SIZE"><code class="Dv" title="Dv" id="ZIP_STAT_SIZE">ZIP_STAT_SIZE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_SIZE"><code class="Dv" title="Dv" id="ZIP_STAT_SIZE">ZIP_STAT_SIZE</code></a></dt>
   <dd><var class="Ar" title="Ar">size</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_COMP_SIZE"><code class="Dv" title="Dv" id="ZIP_STAT_COMP_SIZE">ZIP_STAT_COMP_SIZE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_COMP_SIZE"><code class="Dv" title="Dv" id="ZIP_STAT_COMP_SIZE">ZIP_STAT_COMP_SIZE</code></a></dt>
   <dd><var class="Ar" title="Ar">comp_size</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_MTIME"><code class="Dv" title="Dv" id="ZIP_STAT_MTIME">ZIP_STAT_MTIME</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_MTIME"><code class="Dv" title="Dv" id="ZIP_STAT_MTIME">ZIP_STAT_MTIME</code></a></dt>
   <dd><var class="Ar" title="Ar">mtime</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_CRC"><code class="Dv" title="Dv" id="ZIP_STAT_CRC">ZIP_STAT_CRC</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_CRC"><code class="Dv" title="Dv" id="ZIP_STAT_CRC">ZIP_STAT_CRC</code></a></dt>
   <dd><var class="Ar" title="Ar">crc</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_COMP_METHOD"><code class="Dv" title="Dv" id="ZIP_STAT_COMP_METHOD">ZIP_STAT_COMP_METHOD</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_COMP_METHOD"><code class="Dv" title="Dv" id="ZIP_STAT_COMP_METHOD">ZIP_STAT_COMP_METHOD</code></a></dt>
   <dd><var class="Ar" title="Ar">comp_method</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_ENCRYPTION_METHOD"><code class="Dv" title="Dv" id="ZIP_STAT_ENCRYPTION_METHOD">ZIP_STAT_ENCRYPTION_METHOD</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_ENCRYPTION_METHOD"><code class="Dv" title="Dv" id="ZIP_STAT_ENCRYPTION_METHOD">ZIP_STAT_ENCRYPTION_METHOD</code></a></dt>
   <dd><var class="Ar" title="Ar">encryption_method</var></dd>
-  <dt style="margin-left: -36.60ex;"><a class="permalink" href="#ZIP_STAT_FLAGS"><code class="Dv" title="Dv" id="ZIP_STAT_FLAGS">ZIP_STAT_FLAGS</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_STAT_FLAGS"><code class="Dv" title="Dv" id="ZIP_STAT_FLAGS">ZIP_STAT_FLAGS</code></a></dt>
   <dd><var class="Ar" title="Ar">flags</var></dd>
 </dl>
 </div>
@@ -181,7 +181,7 @@ The function <code class="Fn" title="Fn">zip_stat_index</code>() fails and sets
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

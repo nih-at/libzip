@@ -81,16 +81,16 @@ The <code class="Fn" title="Fn">zip_fopen</code>() function opens the file name
   <a class="Xr" title="Xr" href="zip_name_locate.html">zip_name_locate(3)</a>.
   Also, the following values may be
   <i class="Em" title="Em">or</i><span class="No">'ed</span> to it.
-<div class="Bl-tag" style="margin-left: 6.00ex;">
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_FL_COMPRESSED"><code class="Dv" title="Dv" id="ZIP_FL_COMPRESSED">ZIP_FL_COMPRESSED</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_COMPRESSED"><code class="Dv" title="Dv" id="ZIP_FL_COMPRESSED">ZIP_FL_COMPRESSED</code></a></dt>
   <dd>Read the compressed data. Otherwise the data is uncompressed by
       <code class="Fn" title="Fn">zip_fread</code>().</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" title="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" title="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dt>
   <dd>Read the original data from the zip archive, ignoring any changes made to
       the file.</dd>
 </dl>
@@ -112,44 +112,44 @@ Upon successful completion, a <var class="Ft" title="Ft">struct zip_file</var>
   returned and the error code in <var class="Ar" title="Ar">archive</var> is set
   to indicate the error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_CHANGED"><code class="Er" title="Er" id="ZIP_ER_CHANGED">ZIP_ER_CHANGED</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_CHANGED"><code class="Er" title="Er" id="ZIP_ER_CHANGED">ZIP_ER_CHANGED</code></a>]</dt>
   <dd>The file data has been changed.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_COMPNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_COMPNOTSUPP">ZIP_ER_COMPNOTSUPP</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_COMPNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_COMPNOTSUPP">ZIP_ER_COMPNOTSUPP</code></a>]</dt>
   <dd>The compression method used is not supported.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_ENCRNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_ENCRNOTSUPP">ZIP_ER_ENCRNOTSUPP</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_ENCRNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_ENCRNOTSUPP">ZIP_ER_ENCRNOTSUPP</code></a>]</dt>
   <dd>The encryption method used is not supported.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOPASSWD"><code class="Er" title="Er" id="ZIP_ER_NOPASSWD">ZIP_ER_NOPASSWD</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_NOPASSWD"><code class="Er" title="Er" id="ZIP_ER_NOPASSWD">ZIP_ER_NOPASSWD</code></a>]</dt>
   <dd>The file is encrypted, but no password has been provided.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
   <dd>A file read error occurred.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
   <dd>A file seek error occurred.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_WRONGPASSWD"><code class="Er" title="Er" id="ZIP_ER_WRONGPASSWD">ZIP_ER_WRONGPASSWD</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_WRONGPASSWD"><code class="Er" title="Er" id="ZIP_ER_WRONGPASSWD">ZIP_ER_WRONGPASSWD</code></a>]</dt>
   <dd>The provided password does not match the password used for encryption.
       Note that some incorrect passwords are not detected by the check done by
       <code class="Fn" title="Fn">zip_fopen</code>().</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_ZLIB"><code class="Er" title="Er" id="ZIP_ER_ZLIB">ZIP_ER_ZLIB</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_ZLIB"><code class="Er" title="Er" id="ZIP_ER_ZLIB">ZIP_ER_ZLIB</code></a>]</dt>
   <dd>Initializing the zlib stream failed.</dd>
 </dl>
 <div class="Pp"></div>
@@ -181,7 +181,7 @@ The function <code class="Fn" title="Fn">zip_fopen_index</code>() may also fail
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

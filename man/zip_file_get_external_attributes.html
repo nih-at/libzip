@@ -79,7 +79,7 @@ The <code class="Fn" title="Fn">zip_file_get_external_attributes</code>()
   <code class="Dv" title="Dv">NULL</code>, they are not filled in.
 <div class="Pp"></div>
 The following operating systems are defined by the zip specification:
-<ul class="Bl-item Bl-compact" style="margin-left: 6.00ex;">
+<ul class="Bl-item Bd-indent Bl-compac">
   <li><a class="permalink" href="#ZIP_OPSYS_ACORN_RISC"><code class="Dv" title="Dv" id="ZIP_OPSYS_ACORN_RISC">ZIP_OPSYS_ACORN_RISC</code></a></li>
   <li><a class="permalink" href="#ZIP_OPSYS_ALTERNATE_MVS"><code class="Dv" title="Dv" id="ZIP_OPSYS_ALTERNATE_MVS">ZIP_OPSYS_ALTERNATE_MVS</code></a></li>
   <li><a class="permalink" href="#ZIP_OPSYS_AMIGA"><code class="Dv" title="Dv" id="ZIP_OPSYS_AMIGA">ZIP_OPSYS_AMIGA</code></a></li>
@@ -116,7 +116,7 @@ The following code can be used to expand
   <var class="Ar" title="Ar">attributes</var> if the operating system is
   <code class="Dv" title="Dv">ZIP_OPSYS_DOS</code>.
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 0.00ex;">
+<div class="Bd">
 <pre class="Li">
 #include &lt;sys/stat.h&gt; 
  
@@ -139,10 +139,10 @@ _zip_dos_attr2mode(zip_uint32_t attr)
 </div>
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_file_get_external_attributes</code>() fails if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd><var class="Ar" title="Ar">index</var> is not a valid file index in
       <var class="Ar" title="Ar">archive</var>.</dd>
 </dl>
@@ -161,7 +161,7 @@ _zip_dos_attr2mode(zip_uint32_t attr)
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

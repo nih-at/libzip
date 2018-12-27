@@ -70,33 +70,33 @@ The <code class="Fn" title="Fn">zip_name_locate</code>() function returns the
   name, -1 is returned. The <var class="Fa" title="Fa">flags</var> are specified
   by <i class="Em" title="Em">or</i><span class="No">'ing</span> the following
   values, or 0 for none of them.
-<div class="Bl-tag" style="margin-left: 6.00ex;">
-<dl class="Bl-tag" style="margin-left: 18.60ex;">
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_FL_NOCASE"><code class="Dv" title="Dv" id="ZIP_FL_NOCASE">ZIP_FL_NOCASE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_NOCASE"><code class="Dv" title="Dv" id="ZIP_FL_NOCASE">ZIP_FL_NOCASE</code></a></dt>
   <dd>Ignore case distinctions. (Will only work well if the file names are
       ASCII.) With this flag,
       <code class="Fn" title="Fn">zip_name_locate</code>() will be slow for
       archives with many files.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_FL_NODIR"><code class="Dv" title="Dv" id="ZIP_FL_NODIR">ZIP_FL_NODIR</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_NODIR"><code class="Dv" title="Dv" id="ZIP_FL_NODIR">ZIP_FL_NODIR</code></a></dt>
   <dd>Ignore directory part of file name in archive. With this flag,
       <code class="Fn" title="Fn">zip_name_locate</code>() will be slow for
       archives with many files.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_FL_ENC_RAW"><code class="Dv" title="Dv" id="ZIP_FL_ENC_RAW">ZIP_FL_ENC_RAW</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_RAW"><code class="Dv" title="Dv" id="ZIP_FL_ENC_RAW">ZIP_FL_ENC_RAW</code></a></dt>
   <dd>Compare against the unmodified names as it is in the ZIP archive.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
   <dd>(Default.) Guess the encoding of the name in the ZIP archive and convert
       it to UTF-8, if necessary, before comparing.</dd>
-  <dt style="margin-left: -18.60ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -18.60ex;"><a class="permalink" href="#ZIP_FL_ENC_STRICT"><code class="Dv" title="Dv" id="ZIP_FL_ENC_STRICT">ZIP_FL_ENC_STRICT</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_STRICT"><code class="Dv" title="Dv" id="ZIP_FL_ENC_STRICT">ZIP_FL_ENC_STRICT</code></a></dt>
   <dd>Follow the ZIP specification and expect CP-437 encoded names in the ZIP
       archive (except if they are explicitly marked as UTF-8). Convert it to
       UTF-8 before comparing.</dd>
@@ -111,18 +111,18 @@ The <code class="Fn" title="Fn">zip_name_locate</code>() function returns the
   name.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_name_locate</code>() fails if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd>One of the arguments is invalid.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOENT"><code class="Er" title="Er" id="ZIP_ER_NOENT">ZIP_ER_NOENT</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_NOENT"><code class="Er" title="Er" id="ZIP_ER_NOENT">ZIP_ER_NOENT</code></a>]</dt>
   <dd>No entry of the name <var class="Ar" title="Ar">fname</var> is found in
       the archive.</dd>
 </dl>
@@ -146,7 +146,7 @@ The <code class="Fn" title="Fn">zip_name_locate</code>() function returns the
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

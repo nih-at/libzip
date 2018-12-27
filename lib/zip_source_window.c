@@ -153,26 +153,30 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 	}
 
 	if (!ctx->needs_seek) {
-	    char *b;
-	    if ((b = malloc(BUFSIZE)) == NULL) {
+	    DEFINE_BYTE_ARRAY(b, BUFSIZE);
+
+	    if (!byte_array_init(b, BUFSIZE)) {
 		zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
 		return -1;
 	    }
+
 	    for (n = 0; n < ctx->start; n += (zip_uint64_t)ret) {
 		i = (ctx->start - n > BUFSIZE ? BUFSIZE : ctx->start - n);
 		if ((ret = zip_source_read(src, b, i)) < 0) {
 		    _zip_error_set_from_source(&ctx->error, src);
-		    free(b);
+		    byte_array_fini(b);
 		    return -1;
 		}
 		if (ret == 0) {
 		    zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
-		    free(b);
+		    byte_array_fini(b);
 		    return -1;
 		}
 	    }
-	    free(b);
+	    
+	    byte_array_fini(b);
 	}
+
 	ctx->offset = ctx->start;
 	return 0;
 

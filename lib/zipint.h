@@ -40,6 +40,10 @@
 
 #include "compat.h"
 
+#ifdef ZIP_ALLOCATE_BUFFER
+#include <stdlib.h>
+#endif
+
 #include <zlib.h>
 
 #ifndef _ZIP_COMPILING_DEPRECATED
@@ -365,6 +369,23 @@ struct zip_string {
     zip_uint8_t *converted;          /* autoconverted string */
     zip_uint32_t converted_length;   /* length of converted */
 };
+
+
+/* byte array */
+
+/* For performance, we usually keep 8k byte arrays on the stack.
+   However, there are (embedded) systems with a stack size of 12k;
+   for those, use malloc()/free() */
+
+#ifdef ZIP_ALLOCATE_BUFFER
+#define DEFINE_BYTE_ARRAY(buf, size)	zip_uint8_t *buf
+#define byte_array_init(buf, size)	(((buf) = (zip_uint8_t *)malloc(size)) != NULL)
+#define byte_array_fini(buf)	(free(buf))
+#else
+#define DEFINE_BYTE_ARRAY(buf, size)	zip_uint8_t buf[size]
+#define byte_array_init(buf, size)	(1)
+#define byte_array_fini(buf)	((void)0)
+#endif
 
 
 /* bounds checked access to memory buffer */

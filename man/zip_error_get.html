@@ -81,7 +81,7 @@ The functions <code class="Fn" title="Fn">zip_error_get</code>() and
 <div class="Pp"></div>
 For <code class="Fn" title="Fn">zip_error_get</code>(), replace
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 int ze, se; 
 zip_error_get(za, &amp;ze, &amp;se);
@@ -89,7 +89,7 @@ zip_error_get(za, &amp;ze, &amp;se);
 </div>
 with
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 int ze, se; 
 zip_error_t *error = zip_get_error(za); 
@@ -99,7 +99,7 @@ se = zip_error_code_system(error);
 </div>
 For <code class="Fn" title="Fn">zip_file_error_get</code>(), replace
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 int ze, se; 
 zip_file_error_get(zf, &amp;ze, &amp;se);
@@ -107,7 +107,7 @@ zip_file_error_get(zf, &amp;ze, &amp;se);
 </div>
 with
 <div class="Pp"></div>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 int ze, se; 
 zip_error_t *error = zip_file_get_error(zf); 
@@ -142,7 +142,7 @@ se = zip_error_code_system(error);
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

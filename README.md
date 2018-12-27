@@ -36,4 +36,4 @@ If you want to reach the authors in private, use <libzip@nih.at>.
 
 [![Travis Build Status](https://api.travis-ci.org/nih-at/libzip.svg?branch=master)](https://travis-ci.org/nih-at/libzip)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/5x1raqqjro4wny7r?svg=true)](https://ci.appveyor.com/project/0-wiz-0/libzip)
-![Coverity Status](https://scan.coverity.com/projects/127/badge.svg?flat=1)
+[![Coverity Status](https://scan.coverity.com/projects/127/badge.svg)](https://scan.coverity.com/projects/libzip)

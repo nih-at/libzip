@@ -1,3 +1,8 @@
+1.5.2 [201X-XX-XX]
+==================
+* Support systems with small stack size.
+* Support mbed TLS as crypto backend.
+
 1.5.1 [2018-04-11]
 ==================
 

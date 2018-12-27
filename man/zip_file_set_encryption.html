@@ -74,22 +74,22 @@ The <code class="Fn" title="Fn">zip_file_set_encryption</code>() function sets
   <a class="Xr" title="Xr" href="zip_stat.html">zip_stat(3)</a>. For the
   <var class="Ar" title="Ar">method</var> argument, currently only the following
   values are supported:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_EM_NONE"><code class="Dv" title="Dv" id="ZIP_EM_NONE">ZIP_EM_NONE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_EM_NONE"><code class="Dv" title="Dv" id="ZIP_EM_NONE">ZIP_EM_NONE</code></a></dt>
   <dd>No encryption.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_EM_AES_128"><code class="Dv" title="Dv" id="ZIP_EM_AES_128">ZIP_EM_AES_128</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_EM_AES_128"><code class="Dv" title="Dv" id="ZIP_EM_AES_128">ZIP_EM_AES_128</code></a></dt>
   <dd>Winzip AES-128 encryption.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_EM_AES_192"><code class="Dv" title="Dv" id="ZIP_EM_AES_192">ZIP_EM_AES_192</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_EM_AES_192"><code class="Dv" title="Dv" id="ZIP_EM_AES_192">ZIP_EM_AES_192</code></a></dt>
   <dd>Winzip AES-192 encryption.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_EM_AES_256"><code class="Dv" title="Dv" id="ZIP_EM_AES_256">ZIP_EM_AES_256</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_EM_AES_256"><code class="Dv" title="Dv" id="ZIP_EM_AES_256">ZIP_EM_AES_256</code></a></dt>
   <dd>Winzip AES-256 encryption.</dd>
 </dl>
 <div class="Pp"></div>
@@ -107,24 +107,24 @@ Upon successful completion 0 is returned. Otherwise, -1 is returned and the
   indicate the error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_file_set_encryption</code>() fails if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_ENCRNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_ENCRNOTSUPP">ZIP_ER_ENCRNOTSUPP</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_ENCRNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_ENCRNOTSUPP">ZIP_ER_ENCRNOTSUPP</code></a>]</dt>
   <dd>Unsupported compression method requested.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd><var class="Ar" title="Ar">index</var> is not a valid file index in
       <var class="Ar" title="Ar">archive</var>, or the argument combination is
       invalid.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_RDONLY"><code class="Er" title="Er" id="ZIP_ER_RDONLY">ZIP_ER_RDONLY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_RDONLY"><code class="Er" title="Er" id="ZIP_ER_RDONLY">ZIP_ER_RDONLY</code></a>]</dt>
   <dd>Read-only zip file, no changes allowed.</dd>
 </dl>
 <h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -143,7 +143,7 @@ Upon successful completion 0 is returned. Otherwise, -1 is returned and the
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

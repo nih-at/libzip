@@ -1,6 +1,6 @@
 /*
-  zip_crypto_mbedtls.c -- mbed TLS wrapper.
-  Copyright (C) 2018 Michael Balzer
+  zip_crypto_mbedtls.c -- mbed TLS wrapper
+  Copyright (C) 2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -38,6 +38,7 @@
 
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/entropy.h>
+#include <mbedtls/pkcs5.h>
 
 
 _zip_crypto_aes_t *

@@ -78,52 +78,52 @@ Upon successful completion 0 is returned. Otherwise, -1 is returned and the
   error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_close</code>() will fail if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_EOF"><code class="Er" title="Er" id="ZIP_ER_EOF">ZIP_ER_EOF</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_EOF"><code class="Er" title="Er" id="ZIP_ER_EOF">ZIP_ER_EOF</code></a>]</dt>
   <dd>Unexpected end-of-file found while reading from a file.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INTERNAL"><code class="Er" title="Er" id="ZIP_ER_INTERNAL">ZIP_ER_INTERNAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INTERNAL"><code class="Er" title="Er" id="ZIP_ER_INTERNAL">ZIP_ER_INTERNAL</code></a>]</dt>
   <dd>The callback function of an added or replaced file returned an error but
       failed to report which.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd>The <var class="Ar" title="Ar">path</var> argument is
       <code class="Dv" title="Dv">NULL</code>.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_NOZIP"><code class="Er" title="Er" id="ZIP_ER_NOZIP">ZIP_ER_NOZIP</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_NOZIP"><code class="Er" title="Er" id="ZIP_ER_NOZIP">ZIP_ER_NOZIP</code></a>]</dt>
   <dd>File is not a zip archive.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_READ"><code class="Er" title="Er" id="ZIP_ER_READ">ZIP_ER_READ</code></a>]</dt>
   <dd>A file read failed.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_RENAME"><code class="Er" title="Er" id="ZIP_ER_RENAME">ZIP_ER_RENAME</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_RENAME"><code class="Er" title="Er" id="ZIP_ER_RENAME">ZIP_ER_RENAME</code></a>]</dt>
   <dd>A temporary file could not be renamed to its final name.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_SEEK"><code class="Er" title="Er" id="ZIP_ER_SEEK">ZIP_ER_SEEK</code></a>]</dt>
   <dd>A file seek failed.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_TMPOPEN"><code class="Er" title="Er" id="ZIP_ER_TMPOPEN">ZIP_ER_TMPOPEN</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_TMPOPEN"><code class="Er" title="Er" id="ZIP_ER_TMPOPEN">ZIP_ER_TMPOPEN</code></a>]</dt>
   <dd>A temporary file could not be created.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_WRITE"><code class="Er" title="Er" id="ZIP_ER_WRITE">ZIP_ER_WRITE</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_WRITE"><code class="Er" title="Er" id="ZIP_ER_WRITE">ZIP_ER_WRITE</code></a>]</dt>
   <dd>A file write failed.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_ZLIB"><code class="Er" title="Er" id="ZIP_ER_ZLIB">ZIP_ER_ZLIB</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_ZLIB"><code class="Er" title="Er" id="ZIP_ER_ZLIB">ZIP_ER_ZLIB</code></a>]</dt>
   <dd>An error occurred while (de)compressing a stream with
       <a class="Xr" title="Xr" href="zlib.html">zlib(3)</a>.</dd>
 </dl>
@@ -148,7 +148,7 @@ Additionally, any errors returned by the callback function for added or replaced
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

@@ -90,23 +90,23 @@ The function <code class="Fn" title="Fn">zip_file_add</code>() adds a file to a
   <var class="Ar" title="Ar">flags</var> argument can be any combination of
   <code class="Dv" title="Dv">ZIP_FL_OVERWRITE</code> with one of
   <code class="Dv" title="Dv">ZIP_FL_ENC_*</code>:
-<dl class="Bl-tag" style="margin-left: 27.00ex;">
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_OVERWRITE"><code class="Dv" title="Dv" id="ZIP_FL_OVERWRITE">ZIP_FL_OVERWRITE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_OVERWRITE"><code class="Dv" title="Dv" id="ZIP_FL_OVERWRITE">ZIP_FL_OVERWRITE</code></a></dt>
   <dd>Overwrite any existing file of the same name. For
       <code class="Nm" title="Nm">zip_file_add</code> only.</dd>
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" title="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
   <dd>Guess encoding of <var class="Ar" title="Ar">name</var> (default).</dd>
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_ENC_UTF_8"><code class="Dv" title="Dv" id="ZIP_FL_ENC_UTF_8">ZIP_FL_ENC_UTF_8</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_UTF_8"><code class="Dv" title="Dv" id="ZIP_FL_ENC_UTF_8">ZIP_FL_ENC_UTF_8</code></a></dt>
   <dd>Interpret <var class="Ar" title="Ar">name</var> as UTF-8.</dd>
-  <dt style="margin-left: -27.00ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -27.00ex;"><a class="permalink" href="#ZIP_FL_ENC_CP437"><code class="Dv" title="Dv" id="ZIP_FL_ENC_CP437">ZIP_FL_ENC_CP437</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_FL_ENC_CP437"><code class="Dv" title="Dv" id="ZIP_FL_ENC_CP437">ZIP_FL_ENC_CP437</code></a></dt>
   <dd>Interpret <var class="Ar" title="Ar">name</var> as code page 437
     (CP-437).</dd>
 </dl>
@@ -126,7 +126,7 @@ Upon successful completion, <code class="Fn" title="Fn">zip_file_add</code>()
   is returned and the error code in <var class="Ar" title="Ar">archive</var> is
   set to indicate the error.
 <h1 class="Sh" title="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
-<div class="Bd" style="margin-left: 5.00ex;">
+<div class="Bd Bd-indent">
 <pre class="Li">
 zip_source_t *s; 
 const char *buf=&quot;teststring&quot;; 
@@ -141,28 +141,28 @@ if ((s=zip_source_buffer(archive, buf, sizeof(buf), 0)) == NULL ||
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_file_add</code>() and
   <code class="Fn" title="Fn">zip_file_replace</code>() fail if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_EXISTS"><code class="Er" title="Er" id="ZIP_ER_EXISTS">ZIP_ER_EXISTS</code></a>]</dt>
   <dd>There is already a file called <var class="Ar" title="Ar">name</var> in
       the archive. (Only applies to
       <code class="Fn" title="Fn">zip_file_add</code>(), and only if
       <code class="Dv" title="Dv">ZIP_FL_OVERWRITE</code> is not provided).</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd><var class="Ar" title="Ar">source</var> or
       <var class="Ar" title="Ar">name</var> are
       <code class="Dv" title="Dv">NULL</code>, or
       <var class="Ar" title="Ar">index</var> is invalid.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er" title="Er" id="ZIP_ER_MEMORY">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_RDONLY"><code class="Er" title="Er" id="ZIP_ER_RDONLY">ZIP_ER_RDONLY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_RDONLY"><code class="Er" title="Er" id="ZIP_ER_RDONLY">ZIP_ER_RDONLY</code></a>]</dt>
   <dd>Archive was opened in read-only mode.</dd>
 </dl>
 <h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -181,7 +181,7 @@ if ((s=zip_source_buffer(archive, buf, sizeof(buf), 0)) == NULL ||
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

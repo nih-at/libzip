@@ -75,24 +75,24 @@ The <code class="Fn" title="Fn">zip_set_file_compression</code>() function sets
   <a class="Xr" title="Xr" href="zip_stat.html">zip_stat(3)</a>. For the
   <var class="Ar" title="Ar">comp</var> argument, currently only the following
   values are supported:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_CM_DEFAULT"><code class="Dv" title="Dv" id="ZIP_CM_DEFAULT">ZIP_CM_DEFAULT</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_CM_DEFAULT"><code class="Dv" title="Dv" id="ZIP_CM_DEFAULT">ZIP_CM_DEFAULT</code></a></dt>
   <dd>default compression; currently the same as
       <code class="Dv" title="Dv">ZIP_CM_DEFLATE</code>.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_CM_STORE"><code class="Dv" title="Dv" id="ZIP_CM_STORE">ZIP_CM_STORE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_CM_STORE"><code class="Dv" title="Dv" id="ZIP_CM_STORE">ZIP_CM_STORE</code></a></dt>
   <dd>Store the file uncompressed.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_CM_BZIP2"><code class="Dv" title="Dv" id="ZIP_CM_BZIP2">ZIP_CM_BZIP2</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_CM_BZIP2"><code class="Dv" title="Dv" id="ZIP_CM_BZIP2">ZIP_CM_BZIP2</code></a></dt>
   <dd>Compress the file using the
       <a class="Xr" title="Xr" href="bzip2.html">bzip2(1)</a> algorithm.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;"><a class="permalink" href="#ZIP_CM_DEFLATE"><code class="Dv" title="Dv" id="ZIP_CM_DEFLATE">ZIP_CM_DEFLATE</code></a></dt>
+  <dt><a class="permalink" href="#ZIP_CM_DEFLATE"><code class="Dv" title="Dv" id="ZIP_CM_DEFLATE">ZIP_CM_DEFLATE</code></a></dt>
   <dd>Deflate the file with the
       <a class="Xr" title="Xr" href="zlib.html">zlib(3)</a> algorithm and
       default options</dd>
@@ -115,20 +115,20 @@ Upon successful completion 0 is returned. Otherwise, -1 is returned and the
   indicate the error.
 <h1 class="Sh" title="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <code class="Fn" title="Fn">zip_set_file_compression</code>() fails if:
-<dl class="Bl-tag" style="margin-left: 23.40ex;">
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+<dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_COMPNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_COMPNOTSUPP">ZIP_ER_COMPNOTSUPP</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_COMPNOTSUPP"><code class="Er" title="Er" id="ZIP_ER_COMPNOTSUPP">ZIP_ER_COMPNOTSUPP</code></a>]</dt>
   <dd>Unsupported compression method requested.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er" title="Er" id="ZIP_ER_INVAL">ZIP_ER_INVAL</code></a>]</dt>
   <dd><var class="Ar" title="Ar">index</var> is not a valid file index in
       <var class="Ar" title="Ar">archive</var>, or the argument combination is
       invalid.</dd>
-  <dt style="margin-left: -23.40ex;">&#x00A0;</dt>
+  <dt>&#x00A0;</dt>
   <dd>&#x00A0;</dd>
-  <dt style="margin-left: -23.40ex;">[<a class="permalink" href="#ZIP_ER_RDONLY"><code class="Er" title="Er" id="ZIP_ER_RDONLY">ZIP_ER_RDONLY</code></a>]</dt>
+  <dt>[<a class="permalink" href="#ZIP_ER_RDONLY"><code class="Er" title="Er" id="ZIP_ER_RDONLY">ZIP_ER_RDONLY</code></a>]</dt>
   <dd>Read-only zip file, no changes allowed.</dd>
 </dl>
 <h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -146,7 +146,7 @@ Upon successful completion 0 is returned. Otherwise, -1 is returned and the
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.16</td>
+    <td class="foot-os">NetBSD 8.99.27</td>
   </tr>
 </table>
 </body>

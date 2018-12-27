@@ -520,11 +520,11 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 
 static int
 copy_data(zip_t *za, zip_uint64_t len) {
-    zip_uint8_t *buf;
+    DEFINE_BYTE_ARRAY(buf, BUFSIZE);
     size_t n;
     double total = (double)len;
 
-    if ((buf = malloc(BUFSIZE)) == NULL) {
+    if (!byte_array_init(buf, BUFSIZE)) {
 	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
@@ -532,12 +532,12 @@ copy_data(zip_t *za, zip_uint64_t len) {
     while (len > 0) {
 	n = len > BUFSIZE ? BUFSIZE : len;
 	if (_zip_read(za->src, buf, n, &za->error) < 0) {
-	    free(buf);
+	    byte_array_fini(buf);
 	    return -1;
 	}
 
 	if (_zip_write(za, buf, n) < 0) {
-	    free(buf);
+	    byte_array_fini(buf);
 	    return -1;
 	}
 
@@ -546,14 +546,14 @@ copy_data(zip_t *za, zip_uint64_t len) {
 	_zip_progress_update(za->progress, (total - (double)len) / total);
     }
 
-    free(buf);
+    byte_array_fini(buf);
     return 0;
 }
 
 
 static int
 copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
-    zip_uint8_t *buf;
+    DEFINE_BYTE_ARRAY(buf, BUFSIZE);
     zip_int64_t n, current;
     int ret;
 
@@ -562,7 +562,7 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
 	return -1;
     }
 
-    if ((buf = malloc(BUFSIZE)) == NULL) {
+    if (!byte_array_init(buf, BUFSIZE)) {
 	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
@@ -585,8 +585,9 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
 	ret = -1;
     }
 
+    byte_array_fini(buf);
+
     zip_source_close(src);
-    free(buf);
 
     return ret;
 }
