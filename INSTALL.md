@@ -49,6 +49,14 @@ CFLAGS=-DMY_CUSTOM_FLAG cmake ..
 If you are compiling on a system with a small stack size, add
 `-DZIP_ALLOCATE_BUFFER` to `CFLAGS`.
 
+If you are compiling on a system with rename() failing on existing
+destination files, add
+`-DRENAME_NEEDS_UNLINK` to `CFLAGS`.
+Note: in this case, your application also needs to take care of possibly
+remaining backup files (pattern `*.bak.NNNNNN`) that need to be reinstalled
+or removed manually. This may happen if the process gets killed or
+disconnected from the storage medium during the writeback.
+
 You can get verbose build output with by passing `VERBOSE=1` to
 `make`.
 

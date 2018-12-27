@@ -391,6 +391,42 @@ zip_int64_t static create_temp_output_cloning(struct read_file *ctx, zip_uint64_
 }
 #endif
 
+#if defined(RENAME_NEEDS_UNLINK)
+static int
+install_file(const char *fnew, const char *fname) {
+    struct stat st;
+    char *temp;
+    int tfd, terrno;
+
+    if (stat(fname, &st) < 0) {
+	return rename(fnew, fname);
+    }
+
+    if ((temp = (char *)malloc(strlen(fname) + 12)) == NULL) {
+	return -1;
+    }
+    sprintf(temp, "%s.bak.XXXXXX", fname);
+
+    if ((tfd = mkstemp(temp)) < 0 || close(tfd) < 0 || unlink(temp) < 0 || rename(fname, temp) < 0) {
+	free(temp);
+	return -1;
+    }
+
+    if (rename(fnew, fname) < 0) {
+	terrno = errno;
+	rename(temp, fname); // Note: if this fails, the temp file will need manual renaming
+	errno = terrno;
+	free(temp);
+	return -1;
+    }
+
+    unlink(temp); // Note: if this fails, the temp file will need manual removal
+    free(temp);
+    return 0;
+}
+#else
+#define install_file rename
+#endif
 
 static zip_int64_t
 read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
@@ -428,10 +464,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
 	}
 	ctx->fout = NULL;
-#if defined(RENAME_NEEDS_UNLINK)
-	unlink(ctx->fname);
-#endif
-	if (rename(ctx->tmpname, ctx->fname) < 0) {
+	if (install_file(ctx->tmpname, ctx->fname) < 0) {
 	    zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
 	    return -1;
 	}
