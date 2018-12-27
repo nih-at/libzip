@@ -80,6 +80,7 @@ typedef char bool;
 #ifdef _WIN32
 #if defined(HAVE__CHMOD)
 #define chmod _chmod
+#define HAVE_CHMOD
 #endif
 #if defined(HAVE__CLOSE)
 #define close _close
@@ -118,6 +119,7 @@ typedef char bool;
 #endif
 #if defined(HAVE__UMASK)
 #define umask _umask
+#define HAVE_UMASK
 #endif
 #if defined(HAVE__UNLINK)
 #define unlink _unlink
