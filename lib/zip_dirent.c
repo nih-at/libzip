@@ -1069,6 +1069,12 @@ _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate) {
     struct tm *tm;
 
     tm = localtime(&intime);
+    if (tm == NULL) {
+        /* if localtime() fails, return an arbitrary date (1980-01-01 00:00:00) */
+	*ddate = 1 << 5 + 1;
+	*dtime = 0;
+	return;
+    }
     if (tm->tm_year < 80) {
 	tm->tm_year = 80;
     }

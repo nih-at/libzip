@@ -563,8 +563,12 @@ zstat(int argc, char *argv[]) {
     if (sb.valid & ZIP_STAT_MTIME) {
 	struct tm *tpm;
 	tpm = localtime(&sb.mtime);
-	strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
-	printf("mtime: '%s'\n", buf);
+	if (tpm == NULL) {
+	    printf("mtime: <not valid>\n");
+	} else {
+	    strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
+	    printf("mtime: '%s'\n", buf);
+	}
     }
     if (sb.valid & ZIP_STAT_CRC)
 	printf("crc: '%0x'\n", sb.crc);
