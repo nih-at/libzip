@@ -60,7 +60,10 @@ argument, currently only the following values are supported:
 .Bl -tag -width ZIP_CM_DEFLATE_XX
 .It Dv ZIP_CM_DEFAULT
 default compression; currently the same as
-.Dv ZIP_CM_DEFLATE .
+.Dv ZIP_CM_DEFLATE ,
+but
+.Ar flags
+are ignored.
 .It Dv ZIP_CM_STORE
 Store the file uncompressed.
 .It Dv ZIP_CM_BZIP2
@@ -70,7 +73,7 @@ algorithm.
 .It Dv ZIP_CM_DEFLATE
 Deflate the file with the
 .Xr zlib 3
-algorithm and default options
+algorithm and default options.
 .El
 .Pp
 .Em NOTE :
