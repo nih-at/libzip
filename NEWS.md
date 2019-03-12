@@ -1,5 +1,6 @@
-1.5.2 [201X-XX-XX]
+1.5.2 [2019-XX-XX]
 ==================
+* Fix bug in AES encryption affecting certain file sizes
 * Support systems with small stack size.
 * Support mbed TLS as crypto backend.
 * Add nullability annotations.
