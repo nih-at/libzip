@@ -2,6 +2,7 @@
 ==================
 * Support systems with small stack size.
 * Support mbed TLS as crypto backend.
+* Add nullability annotations.
 
 1.5.1 [2018-04-11]
 ==================

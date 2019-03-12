@@ -15,6 +15,8 @@
 
 #cmakedefine ZIP_STATIC
 
+${ZIP_NULLABLE_DEFINES}
+
 ${LIBZIP_TYPES_INCLUDE}
 
 typedef ${ZIP_INT8_T} zip_int8_t;

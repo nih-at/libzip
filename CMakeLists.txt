@@ -194,6 +194,10 @@ CHECK_C_SOURCE_COMPILES("#include <sys/ioctl.h>
 #include <linux/fs.h>
 int main(int argc, char *argv[]) { unsigned long x = FICLONERANGE; }" HAVE_FICLONERANGE)
 
+CHECK_C_SOURCE_COMPILES("
+int foo(char * _Nullable bar);
+int main(int argc, char *argv[]) { }" HAVE_NULLABLE)
+
 TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
 
 FIND_PACKAGE(ZLIB REQUIRED)
@@ -385,6 +389,13 @@ ELSEIF(LONG_LIBZIP EQUAL 8)
   SET(ZIP_UINT64_T "unsigned long")
 ELSEIF(LONG_LONG_LIBZIP EQUAL 8)
   SET(ZIP_UINT64_T "unsigned long long")
+ENDIF()
+
+IF(HAVE_NULLABLE)
+  SET(ZIP_NULLABLE_DEFINES)
+ELSE()
+  SET(ZIP_NULLABLE_DEFINES "#define _Nullable
+#define _Nonnull")
 ENDIF()
 
 # write out config file

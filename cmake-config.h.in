@@ -31,6 +31,7 @@
 #cmakedefine HAVE_LIBBZ2
 #cmakedefine HAVE_MBEDTLS
 #cmakedefine HAVE_MKSTEMP
+#cmakedefine HAVE_NULLABLE
 #cmakedefine HAVE_OPEN
 #cmakedefine HAVE_OPENSSL
 #cmakedefine HAVE_SETMODE
