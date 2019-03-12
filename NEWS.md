@@ -1,4 +1,4 @@
-1.5.2 [2019-XX-XX]
+1.5.2 [2019-03-12]
 ==================
 * Fix bug in AES encryption affecting certain file sizes
 * Keep file permissions when modifying zip archives
