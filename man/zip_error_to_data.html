@@ -46,49 +46,62 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">zip_error_to_data</code> &#x2014;
-<div class="Nd" title="Nd">convert zip_error to return value suitable for
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm">zip_error_to_data</code> &#x2014;
+<div class="Nd">convert zip_error to return value suitable for
   ZIP_SOURCE_ERROR</div>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<code class="In" title="In">#include
-  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
-<div class="Pp"></div>
-<var class="Ft" title="Ft">zip_int64_t</var>
-<br/>
-<code class="Fn" title="Fn">zip_error_to_data</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">const
-  zip_error_t *ze</var>,
-  <var class="Fa" title="Fa" style="white-space: nowrap;">void *data</var>,
-  <var class="Fa" title="Fa" style="white-space: nowrap;">zip_uint64_t
-  len</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<code class="Fn" title="Fn">zip_error_to_data</code>() function converts the
-  zip_error <var class="Ar" title="Ar">ze</var> into data suitable as return
-  value for <code class="Dv" title="Dv">ZIP_SOURCE_ERROR</code>. The data is
-  written into the buffer <var class="Ar" title="Ar">data</var> of size
-  <var class="Ar" title="Ar">len</var>. If the buffer is not large enough to
-  hold 2 ints, an error is returned.
-<h1 class="Sh" title="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In">#include &lt;<a class="In">zip.h</a>&gt;</code>
+<p class="Pp"><var class="Ft">zip_int64_t</var>
+  <br/>
+  <code class="Fn">zip_error_to_data</code>(<var class="Fa" style="white-space: nowrap;">const
+    zip_error_t *ze</var>, <var class="Fa" style="white-space: nowrap;">void
+    *data</var>, <var class="Fa" style="white-space: nowrap;">zip_uint64_t
+    len</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<code class="Fn">zip_error_to_data</code>() function converts the zip_error
+  <var class="Ar">ze</var> into data suitable as return value for
+  <code class="Dv">ZIP_SOURCE_ERROR</code>. The data is written into the buffer
+  <var class="Ar">data</var> of size <var class="Ar">len</var>. If the buffer is
+  not large enough to hold 2 ints, an error is returned.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
   VALUES</a></h1>
-<code class="Fn" title="Fn">zip_error_to_data</code>() returns 2*(sizeof int) on
-  success, and -1 on error.
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+<code class="Fn">zip_error_to_data</code>() returns 2*(sizeof int) on success,
+  and -1 on error.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source_function.html">zip_source_function(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<code class="Fn" title="Fn">zip_error_to_data</code>() was added in libzip 1.0.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-<span class="An" title="An">Dieter Baron</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
-  and <span class="An" title="An">Thomas Klausner</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_source_function.html">zip_source_function(3)</a>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn">zip_error_to_data</code>() was added in libzip 1.0.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.27</td>
+    <td class="foot-os">NetBSD 8.99.35</td>
   </tr>
 </table>
 </body>

@@ -46,45 +46,57 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">zip_unchange_archive</code> &#x2014;
-<div class="Nd" title="Nd">undo global changes to zip archive</div>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm">zip_unchange_archive</code> &#x2014;
+<div class="Nd">undo global changes to zip archive</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<code class="In" title="In">#include
-  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
-<div class="Pp"></div>
-<var class="Ft" title="Ft">int</var>
-<br/>
-<code class="Fn" title="Fn">zip_unchange_archive</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_t
-  *archive</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-Revert all global changes to the archive
-  <var class="Ar" title="Ar">archive</var>. This reverts changes to the archive
-  comment and global flags.
-<h1 class="Sh" title="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In">#include &lt;<a class="In">zip.h</a>&gt;</code>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">zip_unchange_archive</code>(<var class="Fa" style="white-space: nowrap;">zip_t
+    *archive</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+Revert all global changes to the archive <var class="Ar">archive</var>. This
+  reverts changes to the archive comment and global flags.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
   VALUES</a></h1>
 Upon successful completion 0 is returned. Otherwise, -1 is returned and the
-  error code in <var class="Ar" title="Ar">archive</var> is set to indicate the
-  error.
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  error code in <var class="Ar">archive</var> is set to indicate the error.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_unchange.html">zip_unchange(3)</a>,
-  <a class="Xr" title="Xr" href="zip_unchange_all.html">zip_unchange_all(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<code class="Fn" title="Fn">zip_unchange_archive</code>() was added in libzip
-  0.7.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-<span class="An" title="An">Dieter Baron</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
-  and <span class="An" title="An">Thomas Klausner</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_unchange.html">zip_unchange(3)</a>,
+  <a class="Xr" href="zip_unchange_all.html">zip_unchange_all(3)</a>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn">zip_unchange_archive</code>() was added in libzip 0.7.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.27</td>
+    <td class="foot-os">NetBSD 8.99.35</td>
   </tr>
 </table>
 </body>

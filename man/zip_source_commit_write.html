@@ -46,49 +46,63 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">zip_source_commit_write</code> &#x2014;
-<div class="Nd" title="Nd">finalize changes to zip source</div>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm">zip_source_commit_write</code> &#x2014;
+<div class="Nd">finalize changes to zip source</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<code class="In" title="In">#include
-  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
-<div class="Pp"></div>
-<var class="Ft" title="Ft">int</var>
-<br/>
-<code class="Fn" title="Fn">zip_source_commit_write</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_source_t
-  *source</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-The function <code class="Fn" title="Fn">zip_source_commit_write</code>()
-  finishes writing data to <var class="Fa" title="Fa">source</var> and replaces
-  the original with the newly written data.
-<h1 class="Sh" title="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In">#include &lt;<a class="In">zip.h</a>&gt;</code>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">zip_source_commit_write</code>(<var class="Fa" style="white-space: nowrap;">zip_source_t
+    *source</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The function <code class="Fn">zip_source_commit_write</code>() finishes writing
+  data to <var class="Fa">source</var> and replaces the original with the newly
+  written data.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
   VALUES</a></h1>
 Upon successful completion 0 is returned. Otherwise, -1 is returned and the
-  error information in <var class="Ar" title="Ar">source</var> is set to
-  indicate the error.
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  error information in <var class="Ar">source</var> is set to indicate the
+  error.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source.html">zip_source(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source_begin_write.html">zip_source_begin_write(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source_rollback_write.html">zip_source_rollback_write(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source_seek_write.html">zip_source_seek_write(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source_tell_write.html">zip_source_tell_write(3)</a>,
-  <a class="Xr" title="Xr" href="zip_source_write.html">zip_source_write(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<code class="Fn" title="Fn">zip_source_commit_write</code>() was added in libzip
-  1.0.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-<span class="An" title="An">Dieter Baron</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
-  and <span class="An" title="An">Thomas Klausner</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_source.html">zip_source(3)</a>,
+  <a class="Xr" href="zip_source_begin_write.html">zip_source_begin_write(3)</a>,
+  <a class="Xr" href="zip_source_rollback_write.html">zip_source_rollback_write(3)</a>,
+  <a class="Xr" href="zip_source_seek_write.html">zip_source_seek_write(3)</a>,
+  <a class="Xr" href="zip_source_tell_write.html">zip_source_tell_write(3)</a>,
+  <a class="Xr" href="zip_source_write.html">zip_source_write(3)</a>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn">zip_source_commit_write</code>() was added in libzip 1.0.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.27</td>
+    <td class="foot-os">NetBSD 8.99.35</td>
   </tr>
 </table>
 </body>

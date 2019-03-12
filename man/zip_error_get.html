@@ -46,103 +46,104 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">zip_error_get</code>,
-  <code class="Nm" title="Nm">zip_file_error_get</code> &#x2014;
-<div class="Nd" title="Nd">get error codes for archive or file (obsolete
-  interface)</div>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm">zip_error_get</code>,
+  <code class="Nm">zip_file_error_get</code> &#x2014;
+<div class="Nd">get error codes for archive or file (obsolete interface)</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<code class="In" title="In">#include
-  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
-<div class="Pp"></div>
-<var class="Ft" title="Ft">void</var>
-<br/>
-<code class="Fn" title="Fn">zip_error_get</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_t
-  *archive</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
-  *zep</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
-  *sep</var>);
-<div class="Pp"></div>
-<var class="Ft" title="Ft">void</var>
-<br/>
-<code class="Fn" title="Fn">zip_file_error_get</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_file_t
-  *file</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
-  *zep</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">int
-  *sep</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-The functions <code class="Fn" title="Fn">zip_error_get</code>() and
-  <code class="Fn" title="Fn">zip_file_error_get</code>() are deprecated. Use
-  <a class="Xr" title="Xr" href="zip_error_code_system.html">zip_error_code_system(3)</a>,
-  <a class="Xr" title="Xr" href="zip_error_code_zip.html">zip_error_code_zip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_file_get_error.html">zip_file_get_error(3)</a>,
-  and <a class="Xr" title="Xr" href="zip_get_error.html">zip_get_error(3)</a>
-  instead.
-<div class="Pp"></div>
-For <code class="Fn" title="Fn">zip_error_get</code>(), replace
-<div class="Pp"></div>
-<div class="Bd Bd-indent">
-<pre class="Li">
-int ze, se; 
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In">#include &lt;<a class="In">zip.h</a>&gt;</code>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">zip_error_get</code>(<var class="Fa" style="white-space: nowrap;">zip_t
+    *archive</var>, <var class="Fa" style="white-space: nowrap;">int *zep</var>,
+    <var class="Fa" style="white-space: nowrap;">int *sep</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">zip_file_error_get</code>(<var class="Fa" style="white-space: nowrap;">zip_file_t
+    *file</var>, <var class="Fa" style="white-space: nowrap;">int *zep</var>,
+    <var class="Fa" style="white-space: nowrap;">int *sep</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The functions <code class="Fn">zip_error_get</code>() and
+  <code class="Fn">zip_file_error_get</code>() are deprecated. Use
+  <a class="Xr" href="zip_error_code_system.html">zip_error_code_system(3)</a>,
+  <a class="Xr" href="zip_error_code_zip.html">zip_error_code_zip(3)</a>,
+  <a class="Xr" href="zip_file_get_error.html">zip_file_get_error(3)</a>, and
+  <a class="Xr" href="zip_get_error.html">zip_get_error(3)</a> instead.
+<p class="Pp">For <code class="Fn">zip_error_get</code>(), replace</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+int ze, se;
 zip_error_get(za, &amp;ze, &amp;se);
 </pre>
 </div>
 with
-<div class="Pp"></div>
-<div class="Bd Bd-indent">
-<pre class="Li">
-int ze, se; 
-zip_error_t *error = zip_get_error(za); 
-ze = zip_error_code_zip(error); 
+<div class="Bd Pp Bd-indent">
+<pre>
+int ze, se;
+zip_error_t *error = zip_get_error(za);
+ze = zip_error_code_zip(error);
 se = zip_error_code_system(error);
 </pre>
 </div>
-For <code class="Fn" title="Fn">zip_file_error_get</code>(), replace
-<div class="Pp"></div>
-<div class="Bd Bd-indent">
-<pre class="Li">
-int ze, se; 
+For <code class="Fn">zip_file_error_get</code>(), replace
+<div class="Bd Pp Bd-indent">
+<pre>
+int ze, se;
 zip_file_error_get(zf, &amp;ze, &amp;se);
 </pre>
 </div>
 with
-<div class="Pp"></div>
-<div class="Bd Bd-indent">
-<pre class="Li">
-int ze, se; 
-zip_error_t *error = zip_file_get_error(zf); 
-ze = zip_error_code_zip(error); 
+<div class="Bd Pp Bd-indent">
+<pre>
+int ze, se;
+zip_error_t *error = zip_file_get_error(zf);
+ze = zip_error_code_zip(error);
 se = zip_error_code_system(error);
 </pre>
 </div>
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_error_code_system.html">zip_error_code_system(3)</a>,
-  <a class="Xr" title="Xr" href="zip_error_code_zip.html">zip_error_code_zip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_file_get_error.html">zip_file_get_error(3)</a>,
-  <a class="Xr" title="Xr" href="zip_get_error.html">zip_get_error(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<code class="Fn" title="Fn">zip_error_get</code>() was added in libzip 0.6. It
-  was deprecated in libzip 1.0, use
-  <code class="Fn" title="Fn">zip_get_error</code>(),
-  <code class="Fn" title="Fn">zip_error_code_zip</code>(), /
-  <code class="Fn" title="Fn">zip_error_code_system</code>() instead.
-<div class="Pp"></div>
-<code class="Fn" title="Fn">zip_file_error_get</code>() was added in libzip 0.6.
-  It was deprecated in libzip 1.0, use
-  <code class="Fn" title="Fn">zip_file_get_error</code>(),
-  <code class="Fn" title="Fn">zip_error_code_zip</code>(), /
-  <code class="Fn" title="Fn">zip_error_code_system</code>() instead.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-<span class="An" title="An">Dieter Baron</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
-  and <span class="An" title="An">Thomas Klausner</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_error_code_system.html">zip_error_code_system(3)</a>,
+  <a class="Xr" href="zip_error_code_zip.html">zip_error_code_zip(3)</a>,
+  <a class="Xr" href="zip_file_get_error.html">zip_file_get_error(3)</a>,
+  <a class="Xr" href="zip_get_error.html">zip_get_error(3)</a>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn">zip_error_get</code>() was added in libzip 0.6. It was
+  deprecated in libzip 1.0, use <code class="Fn">zip_get_error</code>(),
+  <code class="Fn">zip_error_code_zip</code>(), /
+  <code class="Fn">zip_error_code_system</code>() instead.
+<p class="Pp"><code class="Fn">zip_file_error_get</code>() was added in libzip
+    0.6. It was deprecated in libzip 1.0, use
+    <code class="Fn">zip_file_get_error</code>(),
+    <code class="Fn">zip_error_code_zip</code>(), /
+    <code class="Fn">zip_error_code_system</code>() instead.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.27</td>
+    <td class="foot-os">NetBSD 8.99.35</td>
   </tr>
 </table>
 </body>

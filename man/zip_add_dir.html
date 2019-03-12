@@ -46,47 +46,56 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">zip_add_dir</code> &#x2014;
-<div class="Nd" title="Nd">add directory to zip archive (obsolete
-  interface)</div>
-<h1 class="Sh" title="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm">zip_add_dir</code> &#x2014;
+<div class="Nd">add directory to zip archive (obsolete interface)</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
 libzip (-lzip)
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<code class="In" title="In">#include
-  &lt;<a class="In" title="In">zip.h</a>&gt;</code>
-<div class="Pp"></div>
-<var class="Ft" title="Ft">zip_int64_t</var>
-<br/>
-<code class="Fn" title="Fn">zip_add_dir</code>(<var class="Fa" title="Fa" style="white-space: nowrap;">zip_t
-  *archive</var>, <var class="Fa" title="Fa" style="white-space: nowrap;">const
-  char *name</var>);
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-The function <code class="Fn" title="Fn">zip_add_dir</code>() is the obsolete
-  version of
-  <a class="Xr" title="Xr" href="zip_dir_add.html">zip_dir_add(3)</a>. It is the
-  same as calling
-  <a class="Xr" title="Xr" href="zip_dir_add.html">zip_dir_add(3)</a> with an
-  empty flags argument.
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<code class="In">#include &lt;<a class="In">zip.h</a>&gt;</code>
+<p class="Pp"><var class="Ft">zip_int64_t</var>
+  <br/>
+  <code class="Fn">zip_add_dir</code>(<var class="Fa" style="white-space: nowrap;">zip_t
+    *archive</var>, <var class="Fa" style="white-space: nowrap;">const char
+    *name</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The function <code class="Fn">zip_add_dir</code>() is the obsolete version of
+  <a class="Xr" href="zip_dir_add.html">zip_dir_add(3)</a>. It is the same as
+  calling <a class="Xr" href="zip_dir_add.html">zip_dir_add(3)</a> with an empty
+  flags argument.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr" href="libzip.html">libzip(3)</a>,
-  <a class="Xr" title="Xr" href="zip_dir_add.html">zip_dir_add(3)</a>
-<h1 class="Sh" title="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<code class="Fn" title="Fn">zip_add_dir</code>() was added in libzip 0.8. In
-  libzip 0.10 the return type was changed from
-  <var class="Vt" title="Vt">int</var> to
-  <var class="Vt" title="Vt">zip_int64_t</var>. It was deprecated in libzip
-  0.11, use <code class="Fn" title="Fn">zip_dir_add</code>() instead.
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-<span class="An" title="An">Dieter Baron</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt;
-  and <span class="An" title="An">Thomas Klausner</span>
-  &lt;<a class="Mt" title="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;</div>
+<a class="Xr" href="libzip.html">libzip(3)</a>,
+  <a class="Xr" href="zip_dir_add.html">zip_dir_add(3)</a>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<code class="Fn">zip_add_dir</code>() was added in libzip 0.8. In libzip 0.10
+  the return type was changed from <var class="Vt">int</var> to
+  <var class="Vt">zip_int64_t</var>. It was deprecated in libzip 0.11, use
+  <code class="Fn">zip_dir_add</code>() instead.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<span class="An">Dieter Baron</span>
+  &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
+  <span class="An">Thomas Klausner</span>
+  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.27</td>
+    <td class="foot-os">NetBSD 8.99.35</td>
   </tr>
 </table>
 </body>
