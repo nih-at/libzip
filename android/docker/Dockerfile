@@ -45,7 +45,7 @@ FROM ubuntu:18.04
 ##              Configure here
 # ---------------------------------------------------------------------
 # ---------------------------------------------------------------------
-# Here you can speciofy exactly what boost, android ndk (and sdk) version you want to use.
+# Here you can speciofy exactly what android ndk (and sdk) version you want to use.
 
 
 
