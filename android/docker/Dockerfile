@@ -9,7 +9,8 @@
 
 
 # Usage: 
-#------
+#---------
+# download the libzip repository
 # > git clone https://github.com/dec1/libzip.git
 # > cd libzip
 #
@@ -26,14 +27,14 @@
 # Build from running docker container. 
 # $./do.sh
 #
-# Exit container, when build is finsihed,
-# $ exit
-#
 # "./build" dir contains required build, but owned by root. chown to your username/group
-# > sudo chown -R <username>:<group> ./build
+# > sudo chown -R <userid>:<groupid> ./build
+# > sudo chown -R <userid>:<groupid> ./install
+#
+# Exit container, when build is finsihed.
+# $ exit
 # 
-# Note: If you want to edit the boost source you can download it to this host dir and set doIt.sh to use this instead of the boost version downloaded by the image
-# This is necessary for boost version 1.70.0, which seems to contain a bug. Workaround here: https://github.com/boostorg/build/issues/385
+
 
 
 
@@ -119,11 +120,3 @@ RUN sdkmanager "platform-tools" $ANDROID_SDK_PLATFORM_VERS
 RUN wget ${NDK_URL_BASE}/$NDK_FILE
 RUN unzip $NDK_FILE 
 
-
-
-
-
-#RUN tar xvzf $BOOST_FILE -C $BOOST_SRC_DIR --strip-components 1
- # tar xvzf /home/android/boost_1_70_0.tar.gz -C /home/docker-share/boost/src/1.70.0 --strip-components 1
-
-#RUN echo $BOOST_SRC_DIR
