@@ -14,7 +14,9 @@ HunterGate(
     SHA1 "5d68bcca78eee347239ca5f4d34f4b6c12683154"
 )
 
-PROJECT(libzip C)
+PROJECT(libzip
+  LANGUAGES C
+  VERSION "1.5.2")
 
 OPTION(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
 OPTION(ENABLE_GNUTLS "Enable use of GnuTLS" ON)
@@ -308,6 +310,52 @@ ENDIF()
 
 # Testing
 ENABLE_TESTING()
+
+IF(HUNTER_ENABLED)
+####
+# Installation (https://github.com/forexample/package-example) {
+
+set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
+set(INCLUDE_INSTALL_DIR "include")
+
+set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+# Configuration
+set(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+set(PROJECT_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+set(NAMESPACE "${PROJECT_NAME}::")
+
+# Include module with fuction 'write_basic_package_version_file'
+include(CMakePackageConfigHelpers)
+
+# Note: PROJECT_VERSION is used as a VERSION
+write_basic_package_version_file(
+    "${VERSION_CONFIG}" COMPATIBILITY SameMajorVersion
+)
+
+# Use variables:
+#   * TARGETS_EXPORT_NAME
+#   * PROJECT_NAME
+configure_package_config_file(
+    "cmake/Config.cmake.in"
+    "${PROJECT_CONFIG}"
+    INSTALL_DESTINATION "${CONFIG_INSTALL_DIR}"
+)
+
+install(
+    FILES "${PROJECT_CONFIG}" "${VERSION_CONFIG}"
+    DESTINATION "${CONFIG_INSTALL_DIR}"
+)
+
+install(
+    EXPORT "${TARGETS_EXPORT_NAME}"
+    NAMESPACE "${NAMESPACE}"
+    DESTINATION "${CONFIG_INSTALL_DIR}"
+)
+
+# }
+ENDIF()
 
 # Targets
 ADD_SUBDIRECTORY(lib)
