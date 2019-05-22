@@ -5,6 +5,15 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
 
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Toggles the use of the hunter package manager
+option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
+
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.171.tar.gz"
+    SHA1 "5d68bcca78eee347239ca5f4d34f4b6c12683154"
+)
+
 PROJECT(libzip C)
 
 OPTION(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
