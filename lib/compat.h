@@ -116,9 +116,6 @@ typedef char bool;
 #if !defined(HAVE_STRTOULL) && defined(HAVE__STRTOUI64)
 #define strtoull _strtoui64
 #endif
-#if defined(HAVE__UMASK)
-#define umask _umask
-#endif
 #if defined(HAVE__UNLINK)
 #define unlink _unlink
 #endif
