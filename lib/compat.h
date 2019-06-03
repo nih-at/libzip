@@ -129,11 +129,6 @@ typedef char bool;
 #define ftello(s) ((long)ftell((s)))
 #endif
 
-#ifndef HAVE_MKSTEMP
-int _zip_mkstemp(char *);
-#define mkstemp _zip_mkstemp
-#endif
-
 #if !defined(HAVE_STRCASECMP)
 #if defined(HAVE__STRICMP)
 #define strcasecmp _stricmp
