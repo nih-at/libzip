@@ -36,7 +36,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
+#include "zipint.h"
 
 /*
  * create temporary file with same permissions as previous one;
@@ -46,21 +47,14 @@ int
 _zip_mkstempm(char *path, int mode) {
     int fd;
     char *start, *end, *xs;
-    struct stat sbuf;
 
-    srandom(time(NULL));
-
-     /* To guarantee multiple calls generate unique names even if
-       the file is not created. 676 different possibilities with 7
-       or more X's, 26 with 6 or less. */
-    static char xtra[2] = "aa";
     int xcnt = 0;
 
     end = path + strlen(path);
-    xs = end - 1;
-    while (xs >= path && *xs == 'X') {
+    start = end - 1;
+    while (start >= path && *start == 'X') {
 	xcnt++;
-	xs--;
+	start--;
     }
 
     if (xcnt == 0) {
@@ -68,60 +62,30 @@ _zip_mkstempm(char *path, int mode) {
 	return -1;
     }
 
-    /*
-     * check the target directory; if you have six X's and it
-     * doesn't exist this runs for a *very* long time.
-     */
-    for (start = end -1; start >= path; --start) {
-	if (*start == '/') {
-	    *start = '\0';
-	    if (stat(path, &sbuf) < 0) {
-		return -1;
-	    }
-	    if (!S_ISDIR(sbuf.st_mode)) {
-		errno = ENOTDIR;
-		return -1;
-	    }
-	    *start = '/';
-	    break;
-	}
-    }
-
-    xs++;
-
-    /* Use at least one from xtra.  Use 2 if more than 6 X's. */
-    *(xs++) = xtra[0];
-    if (xcnt > 6) {
-	*(xs++) = xtra[1];
-    }
-
-    start = xs;
-
-    /* update xtra for next call. */
-    if (xtra[0] != 'z')
-	xtra[0]++;
-    else {
-	xtra[0] = 'a';
-	if (xtra[1] != 'z')
-	    xtra[1]++;
-	else
-	    xtra[1] = 'a';
-    }
+    start++;
 
     for (;;) {
-	int value = random();
+        zip_uint32_t value;
+        
+        zip_random((zip_uint8_t *)&value, sizeof(value));
 
 	xs = start;
 
 	while (xs < end) {
-	    *(xs++) = (value % 10) + '0';
-	    value /= 10;
+            char digit = value % 36;
+            if (digit < 10) {
+                *(xs++) = digit + '0';
+            }
+            else {
+                *(xs++) = digit - 10 + 'a';
+            }
+	    value /= 36;
 	}
 
 	if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
 	    if (mode != -1) {
 		/* open() honors umask(), which we don't want in this case */
-		chmod(path, mode);
+		chmod(path, (mode_t)mode);
 	    }
 	    return fd;
 	}
@@ -129,5 +93,4 @@ _zip_mkstempm(char *path, int mode) {
 	    return -1;
 	}
     }
-    /*NOTREACHED*/
 }
