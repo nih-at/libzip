@@ -31,6 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,6 +78,7 @@ static int create_temp_output(struct read_file *ctx);
 #ifdef CAN_CLONE
 static zip_int64_t create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset);
 #endif
+static FILE *_zip_fopen(const char *name, bool writeable);
 static int _zip_fseek_u(FILE *f, zip_uint64_t offset, int whence, zip_error_t *error);
 static int _zip_fseek(FILE *f, zip_int64_t offset, int whence, zip_error_t *error);
 
@@ -292,7 +294,7 @@ zip_int64_t static create_temp_output_cloning(struct read_file *ctx, zip_uint64_
 	free(temp);
 	return -1;
     }
-    if ((tfp = fopen(temp, "r+b")) == NULL) {
+    if ((tfp = _zip_fopen(temp, true)) == NULL) {
 	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
 	(void)remove(temp);
 	free(temp);
@@ -423,7 +425,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 
     case ZIP_SOURCE_OPEN:
 	if (ctx->fname) {
-	    if ((ctx->f = fopen(ctx->fname, "rb")) == NULL) {
+	    if ((ctx->f = _zip_fopen(ctx->fname, false)) == NULL) {
 		zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
 		return -1;
 	    }
@@ -619,4 +621,34 @@ _zip_fseek(FILE *f, zip_int64_t offset, int whence, zip_error_t *error) {
 	return -1;
     }
     return 0;
+}
+
+
+/*
+ * fopen replacement that sets the close-on-exec flag
+ * some implementations support an fopen 'e' flag for that,
+ * but e.g. macOS doesn't.
+ */
+static FILE *
+_zip_fopen(const char *name, bool writeable)
+{
+    int fd;
+    int flags;
+    FILE *fp;
+
+    flags = O_CLOEXEC;
+    if (writeable) {
+	flags |= O_RDWR;
+    }
+    else {
+	flags |= O_RDONLY;
+    }
+
+    if ((fd = open(name, flags)) < 0) {
+	return NULL;
+    }
+    if ((fp = fdopen(fd, writeable ? "r+b" : "rb")) == NULL) {
+	return NULL;
+    }
+    return fp;
 }
