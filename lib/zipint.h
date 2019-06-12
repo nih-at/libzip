@@ -534,6 +534,7 @@ void _zip_progress_start(zip_progress_t *progress);
 void _zip_progress_subrange(zip_progress_t *progress, double start, double end);
 void _zip_progress_update(zip_progress_t *progress, double value);
 
+/* this symbol is extern so it can be overridden for regression testing */
 ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
 zip_uint32_t zip_random_uint32(void);
 
