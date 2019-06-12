@@ -189,6 +189,7 @@
 		4B51DDC11FDAE25B00C5CA85 /* ziptool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BACD57C15BC2AEF00920691 /* ziptool.c */; };
 		4B51DDC21FDAE25F00C5CA85 /* ziptool_regress.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B51DDB31FDAE1DB00C5CA85 /* ziptool_regress.c */; };
 		4B51DDC31FDAE26600C5CA85 /* source_hole.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6CB5C19E6A5D900710654 /* source_hole.c */; };
+		4B542C2C22B12E3900960B38 /* zip_random_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = 736ED9B81E3D688C00C36873 /* zip_random_unix.c */; };
 		4B69E6EE2032F18B0001EEE7 /* zip_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */; };
 		4B69E6EF2032F18E0001EEE7 /* zip_winzip_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */; };
 		4B82CED419915F360097BC18 /* zip_file_set_mtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B82CED319915F360097BC18 /* zip_file_set_mtime.c */; };
@@ -2093,6 +2094,7 @@
 				4B01D6D415B2F46B002D5007 /* zip_open.c in Sources */,
 				4B01D6D515B2F46B002D5007 /* zip_rename.c in Sources */,
 				4BCF302E199A2F820064207B /* zip_source_tell.c in Sources */,
+				4B542C2C22B12E3900960B38 /* zip_random_unix.c in Sources */,
 				4B972050188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */,
 				4B01D6D615B2F46B002D5007 /* zip_replace.c in Sources */,
 				4B01D6D715B2F46B002D5007 /* zip_set_archive_comment.c in Sources */,

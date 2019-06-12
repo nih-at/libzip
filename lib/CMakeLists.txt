@@ -177,6 +177,7 @@ ELSE(WIN32)
   SET(LIBZIP_OPSYS_FILES
     zip_mkstempm.c
     zip_source_file.c
+    zip_random_unix.c
   )
 ENDIF(WIN32)
 

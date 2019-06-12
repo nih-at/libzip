@@ -83,7 +83,7 @@ zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 static int
 encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     zip_uint16_t salt_length = SALT_LENGTH(ctx->encryption_method);
-    if (!zip_random(ctx->data, salt_length)) {
+    if (!zip_secure_random(ctx->data, salt_length)) {
 	zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }

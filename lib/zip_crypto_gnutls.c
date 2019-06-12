@@ -130,6 +130,6 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
 
 
 ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return gnutls_rnd(GNUTLS_RND_KEY, buffer, length) == 0;
 }

@@ -34,6 +34,8 @@
 #ifndef HAD_ZIP_CRYPTO_MBEDTLS_H
 #define HAD_ZIP_CRYPTO_MBEDTLS_H
 
+#define HAVE_SECURE_RANDOM
+
 #include <mbedtls/aes.h>
 #include <mbedtls/md.h>
 

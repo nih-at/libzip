@@ -65,9 +65,7 @@ _zip_mkstempm(char *path, int mode) {
     start++;
 
     for (;;) {
-        zip_uint32_t value;
-        
-        zip_random((zip_uint8_t *)&value, sizeof(value));
+        zip_uint32_t value = zip_random_uint32();
 
 	xs = start;
 

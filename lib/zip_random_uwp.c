@@ -31,15 +31,22 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "zipint.h"
+
+#ifdef HAVE_CRYPTO
+#include "zip_crypto.h"
+#endif
+
+#ifndef HAVE_SECURE_RANDOM
+
 #include <bcrypt.h>
 #include <ntstatus.h>
 #include <windows.h>
 
-#include "zipint.h"
 #include "zipwin32.h"
 
 ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     BCRYPT_ALG_HANDLE hAlg = NULL;
     NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
     if (hr != STATUS_SUCCESS || hAlg == NULL) {
@@ -52,3 +59,26 @@ zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
     }
     return true;
 }
+
+#endif
+
+#ifndef HAVE_RANODM_UINT32
+#include <stdlib.h>
+
+zip_uint32_t
+zip_random_uint32(void) {
+    static bool seeded = false;
+    
+    zip_uint32_t value;
+    
+    if (zip_secure_random((zip_uint8_t *)&value, sizeof(value))) {
+        return value;
+    }
+    
+    if (!seeded) {
+        srandom((unsigned int)time(NULL));
+    }
+    
+    return (zip_uint32_t)random();
+}
+#endif

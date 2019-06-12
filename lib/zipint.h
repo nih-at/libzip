@@ -534,7 +534,8 @@ void _zip_progress_start(zip_progress_t *progress);
 void _zip_progress_subrange(zip_progress_t *progress, double start, double end);
 void _zip_progress_update(zip_progress_t *progress, double value);
 
-ZIP_EXTERN bool zip_random(zip_uint8_t *buffer, zip_uint16_t length);
+ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
+zip_uint32_t zip_random_uint32(void);
 
 int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);
