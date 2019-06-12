@@ -58,7 +58,7 @@ zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
 }
 #endif
 
-#ifndef HAVE_RANODM_UINT32
+#ifndef HAVE_RANDOM_UINT32
 #include <stdlib.h>
 
 zip_uint32_t
