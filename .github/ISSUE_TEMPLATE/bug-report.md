@@ -2,7 +2,7 @@
 name: Bug Report
 about: Report where libzip didn't behave like you expected.
 title: ''
-labels: ''
+labels: bug
 assignees: ''
 
 ---
