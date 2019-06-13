@@ -2,7 +2,7 @@
 name: Compile Error
 about: Report when libzip does not compile.
 title: ''
-labels: ''
+labels: compile
 assignees: ''
 
 ---
