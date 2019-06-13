@@ -10,6 +10,9 @@ assignees: ''
 **Compiler Error**
 Output from the compiler, including exact and complete error message, file name and line number.
 
+**libzip Version**
+Version of libzip or revision repository used.
+
 **Operating System and Compiler**
 The operating system and compiler used, including version number.
 

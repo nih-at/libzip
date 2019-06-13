@@ -10,6 +10,8 @@ assignees: ''
 **Description**
 A clear and concise description of what you want to achieve, why the current features are insufficient, and why you think it is generally useful.
 
+ALso, have you checked wether the feature is already mentioned in TODO.md? If so, only submit a new issue if you expand on it. 
+
 **Solution**
 A clear and concise description of what you want to happen.
 

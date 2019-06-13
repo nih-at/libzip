@@ -19,8 +19,11 @@ A clear and concise description of what actually happened.
 **To Reproduce**
 Short program or code snippet that reproduces the problem.
 
+**libzip Version**
+Version of libzip or revision repository used.
+
 **Operating System**
-Operationg system and version, used compiler.
+Operating system and version, used compiler.
 
 **Test Files**
 If applicable, attach and describe zip archives that trigger the problem.
