@@ -205,13 +205,11 @@ INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../lib ${CMAKE_CURRENT_SO
 
 ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND})
 
-enable_language(CXX)
-
-IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT (CLANG_VERSION_MAJOR LESS 6) )
+IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND NOT (CLANG_VERSION_MAJOR LESS 6) )
+	ENABLE_LANGUAGE(CXX)
     ADD_EXECUTABLE(fuzz_target zip_read_fuzzer.cc)
-
     TARGET_COMPILE_OPTIONS(fuzz_target PRIVATE -g -O1 -fsanitize=fuzzer)
-    TARGET_LINK_LIBRARIES(fuzz_target zip -fsanitize=fuzzer)
+    TARGET_LINK_LIBRARIES(fuzz_target PUBLIC zip PRIVATE -fsanitize=fuzzer)
 ELSE()
     message(AUTHOR_WARNING "Can't build fuzz target with this compiler")
 ENDIF()
