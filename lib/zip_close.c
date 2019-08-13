@@ -524,10 +524,12 @@ copy_data(zip_t *za, zip_uint64_t len) {
     size_t n;
     double total = (double)len;
 
+#ifdef ZIP_ALLOCATE_BUFFER
     if (!byte_array_init(buf, BUFSIZE)) {
 	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
+#endif /* ZIP_ALLOCATE_BUFFER */
 
     while (len > 0) {
 	n = len > BUFSIZE ? BUFSIZE : len;
@@ -562,11 +564,13 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
 	return -1;
     }
 
+#ifdef ZIP_ALLOCATE_BUFFER
     if (!byte_array_init(buf, BUFSIZE)) {
 	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
-
+#endif /* #ifdef ZIP_ALLOCATE_BUFFER */
+    
     ret = 0;
     current = 0;
     while ((n = zip_source_read(src, buf, BUFSIZE)) > 0) {

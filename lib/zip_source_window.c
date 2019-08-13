@@ -155,11 +155,13 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 	if (!ctx->needs_seek) {
 	    DEFINE_BYTE_ARRAY(b, BUFSIZE);
 
+#ifdef ZIP_ALLOCATE_BUFFER
 	    if (!byte_array_init(b, BUFSIZE)) {
 		zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
 		return -1;
 	    }
-
+#endif /* ZIP_ALLOCATE_BUFFER */
+            
 	    for (n = 0; n < ctx->start; n += (zip_uint64_t)ret) {
 		i = (ctx->start - n > BUFSIZE ? BUFSIZE : ctx->start - n);
 		if ((ret = zip_source_read(src, b, i)) < 0) {

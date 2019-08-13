@@ -55,10 +55,12 @@ _zip_filerange_crc(zip_source_t *src, zip_uint64_t start, zip_uint64_t len, uLon
 	return -1;
     }
 
+#ifdef ZIP_ALLOCATE_BUFFER
     if (!byte_array_init(buf, BUFSIZE)) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return -1;
     }
+#endif /* ZIP_ALLOCATE_BUFFER */
 
     while (len > 0) {
 	n = (zip_int64_t)(len > BUFSIZE ? BUFSIZE : len);
