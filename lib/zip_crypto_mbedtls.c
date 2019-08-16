@@ -136,7 +136,7 @@ typedef struct {
 } zip_random_context_t;
 
 ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     static zip_random_context_t *ctx = NULL;
     const unsigned char *pers = "zip_crypto_mbedtls";
 

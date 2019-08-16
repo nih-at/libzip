@@ -34,6 +34,8 @@
 #ifndef HAD_ZIP_CRYPTO_OPENSSL_H
 #define HAD_ZIP_CRYPTO_OPENSSL_H
 
+#define HAVE_SECURE_RANDOM
+
 #include <openssl/aes.h>
 #include <openssl/hmac.h>
 

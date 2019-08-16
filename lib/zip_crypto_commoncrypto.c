@@ -108,21 +108,3 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 
     return hmac;
 }
-
-
-ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
-    int fd;
-
-    if ((fd = open("/dev/urandom", O_RDONLY)) < 0) {
-	return false;
-    }
-
-    if (read(fd, buffer, length) != length) {
-	close(fd);
-	return false;
-    }
-
-    close(fd);
-    return true;
-}

@@ -116,9 +116,6 @@ typedef char bool;
 #if !defined(HAVE_STRTOULL) && defined(HAVE__STRTOUI64)
 #define strtoull _strtoui64
 #endif
-#if defined(HAVE__UMASK)
-#define umask _umask
-#endif
 #if defined(HAVE__UNLINK)
 #define unlink _unlink
 #endif
@@ -130,11 +127,6 @@ typedef char bool;
 
 #ifndef HAVE_FTELLO
 #define ftello(s) ((long)ftell((s)))
-#endif
-
-#ifndef HAVE_MKSTEMP
-int _zip_mkstemp(char *);
-#define mkstemp _zip_mkstemp
 #endif
 
 #if !defined(HAVE_STRCASECMP)

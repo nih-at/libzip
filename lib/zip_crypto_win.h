@@ -34,6 +34,8 @@
 #ifndef HAD_ZIP_CRYPTO_WIN_H
 #define HAD_ZIP_CRYPTO_WIN_H
 
+#define HAVE_SECURE_RANDOM
+
 typedef struct _zip_crypto_aes_s _zip_crypto_aes_t;
 typedef struct _zip_crypto_hmac_s _zip_crypto_hmac_t;
 

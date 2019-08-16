@@ -523,6 +523,8 @@ zip_hash_t *_zip_hash_new(zip_error_t *error);
 bool _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t *error);
 bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error);
 
+int _zip_mkstempm(char *path, int mode);
+
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 
 void _zip_progress_end(zip_progress_t *progress);
@@ -532,7 +534,9 @@ void _zip_progress_start(zip_progress_t *progress);
 void _zip_progress_subrange(zip_progress_t *progress, double start, double end);
 void _zip_progress_update(zip_progress_t *progress, double value);
 
-ZIP_EXTERN bool zip_random(zip_uint8_t *buffer, zip_uint16_t length);
+/* this symbol is extern so it can be overridden for regression testing */
+ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
+zip_uint32_t zip_random_uint32(void);
 
 int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);

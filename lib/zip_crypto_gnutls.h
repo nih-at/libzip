@@ -34,6 +34,8 @@
 #ifndef HAD_ZIP_CRYPTO_GNUTLS_H
 #define HAD_ZIP_CRYPTO_GNUTLS_H
 
+#define HAVE_SECURE_RANDOM
+
 #include <nettle/aes.h>
 #include <nettle/pbkdf2.h>
 

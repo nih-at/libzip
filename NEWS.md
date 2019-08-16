@@ -1,3 +1,9 @@
+1.X.X [20XX-XX-XX]
+==================
+
+* Avoid using umask() since it's not thread-safe.
+* Set close-on-exec flag when opening files.
+
 1.5.2 [2019-03-12]
 ==================
 * Fix bug in AES encryption affecting certain file sizes
