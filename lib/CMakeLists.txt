@@ -110,6 +110,7 @@ SET(LIBZIP_SOURCES
   zip_name_locate.c
   zip_new.c
   zip_open.c
+  zip_pkware.c
   zip_progress.c
   zip_rename.c
   zip_replace.c
@@ -136,7 +137,8 @@ SET(LIBZIP_SOURCES
   zip_source_is_deleted.c
   zip_source_layered.c
   zip_source_open.c
-  zip_source_pkware.c
+  zip_source_pkware_encode.c
+  zip_source_pkware_decode.c
   zip_source_read.c
   zip_source_remove.c
   zip_source_rollback_write.c

@@ -170,7 +170,9 @@ zip_source_t *zip_source_crc(zip_t *, zip_source_t *, int);
 zip_source_t *zip_source_decompress(zip_t *za, zip_source_t *src, zip_int32_t cm);
 zip_source_t *zip_source_layered(zip_t *, zip_source_t *, zip_source_layered_callback, void *);
 zip_source_t *zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error);
-zip_source_t *zip_source_pkware(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
+zip_source_t *zip_source_pkware_decode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
+zip_source_t *zip_source_pkware_encode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
+int zip_source_pkware_calc_crc(zip_t *za, zip_source_t *src, void *ud);
 int zip_source_remove(zip_source_t *);
 zip_int64_t zip_source_supports(zip_source_t *src);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
@@ -414,6 +416,9 @@ typedef struct zip_filelist zip_filelist_t;
 struct _zip_winzip_aes;
 typedef struct _zip_winzip_aes zip_winzip_aes_t;
 
+struct _zip_trad_pkware;
+typedef struct _zip_trad_pkware zip_trad_pkware_t;
+
 extern const char *const _zip_err_str[];
 extern const int _zip_nerr_str;
 extern const int _zip_err_type[];
@@ -575,6 +580,13 @@ bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint6
 bool _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac);
 void _zip_winzip_aes_free(zip_winzip_aes_t *ctx);
 zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, const zip_uint8_t *salt, zip_uint16_t key_size, zip_uint8_t *password_verify, zip_error_t *error);
+
+void update_keys(zip_trad_pkware_t *ctx, Bytef b);
+Bytef decrypt_byte(zip_trad_pkware_t *ctx);
+void encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only);
+void decrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only);
+zip_trad_pkware_t *_zip_pkware_new(zip_error_t *error);
+void _zip_pkware_free(zip_trad_pkware_t *ctx);
 
 int _zip_changed(const zip_t *, zip_uint64_t *);
 const char *_zip_get_name(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *);

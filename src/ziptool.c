@@ -663,6 +663,8 @@ static zip_uint16_t
 get_encryption_method(const char *arg) {
     if (strcmp(arg, "none") == 0)
 	return ZIP_EM_NONE;
+    else if (strcmp(arg, "TRAD-PKWARE") == 0)
+	return ZIP_EM_TRAD_PKWARE;
     else if (strcmp(arg, "AES-128") == 0)
 	return ZIP_EM_AES_128;
     else if (strcmp(arg, "AES-192") == 0)
@@ -834,6 +836,7 @@ usage(const char *progname, const char *reason) {
 		 "\tstore\n");
     fprintf(out, "\nSupported compression methods are:\n"
 		 "\tnone\n"
+		 "\tTRAD-PKWARE\n"
 		 "\tAES-128\n"
 		 "\tAES-192\n"
 		 "\tAES-256\n");

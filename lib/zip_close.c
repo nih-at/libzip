@@ -453,6 +453,14 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 	    zip_source_free(src_final);
 	    return -1;
 	}
+        if (de->encryption_method == ZIP_EM_TRAD_PKWARE && !(flags & ZIP_GPBF_DATA_DESCRIPTOR)) {
+            // calculate crc from src in advance for Traditional PKWARE Encryption.
+            if (zip_source_pkware_calc_crc(za, src, src_tmp->ud) < 0) {
+                zip_source_free(src_tmp);
+                zip_source_free(src_final);
+                return -1;
+            }
+        }
 
 	zip_source_free(src_final);
 	src_final = src_tmp;
