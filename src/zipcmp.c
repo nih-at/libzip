@@ -1,6 +1,6 @@
 /*
   zipcmp.c -- compare zip files
-  Copyright (C) 2003-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -240,9 +240,18 @@ compare_zip(char *const zn[]) {
 	}
     }
 
-    for (i = 0; i < 2; i++)
-	if (a[i].za)
+    for (i = 0; i < 2; i++) {
+	int j;
+
+	if (a[i].za) {
 	    zip_close(a[i].za);
+	}
+	for (j = 0; j < a[i].nentry; j++) {
+	    free(a[i].entry[j].name);
+	    free(a[i].entry[j].extra_fields);
+	}
+	free(a[i].entry);
+    }
 
     switch (res) {
     case 0:

@@ -1,6 +1,6 @@
 /*
   fseek.c -- test tool for seeking in zip archives
-  Copyright (C) 2016-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2016-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -77,6 +77,7 @@ main(int argc, char *argv[]) {
 
     if (zip_fseek(zf, offset, SEEK_SET) < 0) {
 	fprintf(stderr, "%s: zip_fseek failed: %s\n", progname, zip_error_strerror(zip_file_get_error(zf)));
+	zip_fclose(zf);
 	zip_close(z);
 	return 1;
     }
@@ -86,7 +87,13 @@ main(int argc, char *argv[]) {
     }
     if (n < 0) {
 	fprintf(stderr, "%s: zip_fread failed: %s\n", progname, zip_error_strerror(zip_file_get_error(zf)));
+	zip_fclose(zf);
 	zip_close(z);
+	return 1;
+    }
+
+    if (zip_fclose(zf) == -1) {
+	fprintf(stderr, "%s: can't close zip archive entry %" PRIu64 " in '%s': %s\n", progname, index, archive, zip_strerror(z));
 	return 1;
     }
 
