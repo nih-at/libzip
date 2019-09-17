@@ -46,7 +46,7 @@ zip_source_accept_empty(zip_source_t *src) {
 	return true;
     }
 
-    ret = _zip_source_call(src, NULL, 0, ZIP_SOURCE_ACCEPT_EMPTY);
+    ret = (int)_zip_source_call(src, NULL, 0, ZIP_SOURCE_ACCEPT_EMPTY);
 
     return ret != 0;
 }
