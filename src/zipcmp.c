@@ -233,8 +233,8 @@ compare_zip(char *const zn[]) {
     if (paranoid) {
 	if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
 	    if (verbose) {
-		printf("--- archive comment (%ld)\n", a[0].comment_length);
-		printf("+++ archive comment (%ld)\n", a[1].comment_length);
+		printf("--- archive comment (%zd)\n", a[0].comment_length);
+		printf("+++ archive comment (%zd)\n", a[1].comment_length);
 	    }
 	    res = 1;
 	}
