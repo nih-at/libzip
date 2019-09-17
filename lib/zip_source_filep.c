@@ -379,11 +379,15 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	return 0;
 
     case ZIP_SOURCE_BEGIN_WRITE:
+#ifdef _WIN32
+	return -1;
+#else
 	if (ctx->fname == NULL) {
 	    zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
 	    return -1;
 	}
 	return create_temp_output(ctx);
+#endif
 
 #ifdef CAN_CLONE
     case ZIP_SOURCE_BEGIN_WRITE_CLONING:
