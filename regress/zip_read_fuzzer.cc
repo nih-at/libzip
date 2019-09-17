@@ -1,7 +1,11 @@
 #include "../lib/zip.h"
 
-extern "C" int
-LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+
+#ifdef __cplusplus
+extern "C"
+#endif
+int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+{
     zip_source_t *src;
     zip_t *za;
     zip_error_t error;
