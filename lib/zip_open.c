@@ -721,16 +721,19 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     eocd_disk = _zip_buffer_get_16(buffer);
     eocd_offset = _zip_buffer_get_64(buffer);
 
-    if (eocd_offset > ZIP_INT64_MAX || eocd_offset + EOCD64LEN < eocd_offset) {
+    /* valid seek value for start of EOCD */
+    if (eocd_offset > ZIP_INT64_MAX) {
 	zip_error_set(error, ZIP_ER_SEEK, EFBIG);
 	return NULL;
     }
 
+    /* does EOCD fit before EOCD locator? */
     if (eocd_offset + EOCD64LEN > eocdloc_offset + buf_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 	return NULL;
     }
 
+    /* make sure current position of buffer is beginning of EOCD */
     if (eocd_offset >= buf_offset && eocd_offset + EOCD64LEN <= buf_offset + _zip_buffer_size(buffer)) {
 	_zip_buffer_set_offset(buffer, eocd_offset - buf_offset);
 	free_buffer = false;
@@ -754,8 +757,10 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 	return NULL;
     }
 
+    /* size of EOCD */
     size = _zip_buffer_get_64(buffer);
 
+    /* is there a hole between EOCD and EOCD locator, or do they overlap? */
     if ((flags & ZIP_CHECKCONS) && size + eocd_offset + 12 != buf_offset + eocdloc_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 	if (free_buffer) {
@@ -807,6 +812,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     size = _zip_buffer_get_64(buffer);
     offset = _zip_buffer_get_64(buffer);
 
+    /* did we read past the end of the buffer? */
     if (!_zip_buffer_ok(buffer)) {
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	if (free_buffer) {
@@ -829,6 +835,11 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 	return NULL;
     }
     if ((flags & ZIP_CHECKCONS) && offset + size != buf_offset + eocd_offset) {
+	zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
+    if (nentry > size / CDENTRYSIZE) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 	return NULL;
     }
