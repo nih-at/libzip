@@ -547,6 +547,7 @@ int _zip_register_source(zip_t *za, zip_source_t *src);
 
 void _zip_set_open_error(int *zep, const zip_error_t *err, int ze);
 
+bool zip_source_accept_empty(zip_source_t *src);
 zip_int64_t _zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command);
 bool _zip_source_eof(zip_source_t *);
 zip_source_t *_zip_source_file_or_p(const char *, FILE *, zip_uint64_t, zip_int64_t, const zip_stat_t *, zip_error_t *error);

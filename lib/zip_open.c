@@ -43,8 +43,7 @@
 typedef enum {
     EXISTS_ERROR = -1,
     EXISTS_NOT = 0,
-    EXISTS_EMPTY,
-    EXISTS_NONEMPTY,
+    EXISTS_OK
 } exists_t;
 static zip_t *_zip_allocate_new(zip_source_t *src, unsigned int flags, zip_error_t *error);
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cdir, zip_error_t *error);
@@ -174,17 +173,14 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
     }
     len = st.size;
 
-    /* treat empty files as empty archives */
-    if (len == 0) {
-	if ((za = _zip_allocate_new(src, flags, error)) == NULL) {
-	    return NULL;
-	}
-
-	return za;
-    }
 
     if ((za = _zip_allocate_new(src, flags, error)) == NULL) {
 	return NULL;
+    }
+
+    /* treat empty files as empty archives */
+    if (len == 0 && zip_source_accept_empty(src)) {
+	return za;
     }
 
     if ((cdir = _zip_find_central_dir(za, len)) == NULL) {
@@ -540,7 +536,7 @@ _zip_file_exists(zip_source_t *src, zip_error_t *error) {
 	return EXISTS_ERROR;
     }
 
-    return (st.valid & ZIP_STAT_SIZE) && st.size == 0 ? EXISTS_EMPTY : EXISTS_NONEMPTY;
+    return EXISTS_OK;
 }
 
 

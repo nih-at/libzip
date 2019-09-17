@@ -229,7 +229,8 @@ enum zip_source_cmd {
     ZIP_SOURCE_SUPPORTS,              /* check whether source supports command */
     ZIP_SOURCE_REMOVE,                /* remove file */
     ZIP_SOURCE_GET_COMPRESSION_FLAGS, /* get compression flags, internal only */
-    ZIP_SOURCE_BEGIN_WRITE_CLONING    /* like ZIP_SOURCE_BEGIN_WRITE, but keep part of original file */
+    ZIP_SOURCE_BEGIN_WRITE_CLONING,   /* like ZIP_SOURCE_BEGIN_WRITE, but keep part of original file */
+    ZIP_SOURCE_ACCEPT_EMPTY           /* whether empty files are valid archives */
 };
 typedef enum zip_source_cmd zip_source_cmd_t;
 

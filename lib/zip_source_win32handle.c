@@ -127,6 +127,8 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 	ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
     }
 
+    ctx->supports |= ZIP_SOURCE_ACCEPT_EMPTY;
+
     if ((zs = zip_source_function_create(_win32_read_file, ctx, error)) == NULL) {
 	free(ctx->fname);
 	free(ctx);
@@ -148,6 +150,9 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
     buf = (char *)data;
 
     switch (cmd) {
+    case ZIP_SOURCE_ACCEPT_EMPTY:
+	return 0;
+
     case ZIP_SOURCE_BEGIN_WRITE:
 	if (ctx->fname == NULL) {
 	    zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);

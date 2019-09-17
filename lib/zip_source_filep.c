@@ -205,6 +205,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 	}
     }
 
+    ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_ACCEPT_EMPTY);
 #ifdef CAN_CLONE
     if (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE)) {
 	ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE_CLONING);
@@ -374,6 +375,9 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     buf = (char *)data;
 
     switch (cmd) {
+    case ZIP_SOURCE_ACCEPT_EMPTY:
+	return 0;
+
     case ZIP_SOURCE_BEGIN_WRITE:
 	if (ctx->fname == NULL) {
 	    zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
@@ -390,6 +394,13 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	return create_temp_output_cloning(ctx, len);
 #endif
 
+    case ZIP_SOURCE_CLOSE:
+	if (ctx->fname) {
+	    fclose(ctx->f);
+	    ctx->f = NULL;
+	}
+	return 0;
+
     case ZIP_SOURCE_COMMIT_WRITE: {
 	if (fclose(ctx->fout) < 0) {
 	    ctx->fout = NULL;
@@ -404,13 +415,6 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	ctx->tmpname = NULL;
 	return 0;
     }
-
-    case ZIP_SOURCE_CLOSE:
-	if (ctx->fname) {
-	    fclose(ctx->f);
-	    ctx->f = NULL;
-	}
-	return 0;
 
     case ZIP_SOURCE_ERROR:
 	return zip_error_to_data(&ctx->error, data, len);
