@@ -77,6 +77,11 @@ typedef char bool;
 #define EOVERFLOW EFBIG
 #endif
 
+/* not supported on at least Windows */
+#ifndef O_CLOEXEC
+#define O_CLOEXEC 0
+#endif
+
 #ifdef _WIN32
 #if defined(HAVE__CHMOD)
 #define chmod _chmod
@@ -189,6 +194,10 @@ typedef char bool;
 
 #ifndef S_ISDIR
 #define S_ISDIR(mode) (((mode)&S_IFMT) == S_IFDIR)
+#endif
+
+#ifndef S_ISREG
+#define S_ISREG(mode) (((mode)&S_IFMT) == S_IFREG)
 #endif
 
 #endif /* compat.h */

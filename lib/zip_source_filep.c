@@ -644,7 +644,8 @@ _zip_fopen(const char *name, bool writeable)
 	flags |= O_RDONLY;
     }
 
-    if ((fd = open(name, flags)) < 0) {
+    /* mode argument needed on Windows */
+    if ((fd = open(name, flags, 0666)) < 0) {
 	return NULL;
     }
     if ((fp = fdopen(fd, writeable ? "r+b" : "rb")) == NULL) {
