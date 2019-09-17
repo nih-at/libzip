@@ -73,8 +73,10 @@ zip_close(zip_t *za) {
     if (survivors == 0) {
 	if ((za->open_flags & ZIP_TRUNCATE) || changed) {
 	    if (zip_source_remove(za->src) < 0) {
-		_zip_error_set_from_source(&za->error, za->src);
-		return -1;
+		if (!((zip_error_code_zip(zip_source_error(za->src)) == ZIP_ER_REMOVE) && (zip_error_code_system(zip_source_error(za->src)) == ENOENT))) {
+		    _zip_error_set_from_source(&za->error, za->src);
+		    return -1;
+		}
 	    }
 	}
 	zip_discard(za);
