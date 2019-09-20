@@ -30,6 +30,7 @@
 #cmakedefine HAVE_GETPROGNAME
 #cmakedefine HAVE_GNUTLS
 #cmakedefine HAVE_LIBBZ2
+#cmakedefine HAVE_LOCALTIME_R
 #cmakedefine HAVE_MBEDTLS
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_NULLABLE

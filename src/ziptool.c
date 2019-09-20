@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -561,11 +562,17 @@ zstat(int argc, char *argv[]) {
     if (sb.valid & ZIP_STAT_COMP_SIZE)
 	printf("compressed size: '%" PRIu64 "'\n", sb.comp_size);
     if (sb.valid & ZIP_STAT_MTIME) {
-	struct tm tpm;
-	if (localtime_r(&sb.mtime, &tpm) == NULL) {
+	struct tm *tpm;
+#ifdef HAVE_LOCALTIME_R
+	struct tm tm;
+	tpm = localtime_r(&sb.mtime, &tm);
+#else
+	tpm = localtime(&sb.mtime);
+#endif
+	if (tpm == NULL) {
 	    printf("mtime: <not valid>\n");
 	} else {
-	    strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", &tpm);
+	    strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
 	    printf("mtime: '%s'\n", buf);
 	}
     }

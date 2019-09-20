@@ -1066,21 +1066,26 @@ _zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *err
 
 void
 _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate) {
-    struct tm tm;
+    struct tm *tpm;
 
-    localtime_r(&intime, &tm);
-    if (localtime_r(&intime, &tm) == NULL) {
+#ifdef HAVE_LOCALTIME_R
+    struct tm tm;
+    tpm = localtime_r(&intime, &tm);
+#else
+    tpm = localtime(&intime);
+#endif
+    if (tpm == NULL) {
         /* if localtime() fails, return an arbitrary date (1980-01-01 00:00:00) */
 	*ddate = (1 << 5) + 1;
 	*dtime = 0;
 	return;
     }
-    if (tm.tm_year < 80) {
-	tm.tm_year = 80;
+    if (tpm->tm_year < 80) {
+	tpm->tm_year = 80;
     }
 
-    *ddate = (zip_uint16_t)(((tm.tm_year + 1900 - 1980) << 9) + ((tm.tm_mon + 1) << 5) + tm.tm_mday);
-    *dtime = (zip_uint16_t)(((tm.tm_hour) << 11) + ((tm.tm_min) << 5) + ((tm.tm_sec) >> 1));
+    *ddate = (zip_uint16_t)(((tpm->tm_year + 1900 - 1980) << 9) + ((tpm->tm_mon + 1) << 5) + tpm->tm_mday);
+    *dtime = (zip_uint16_t)(((tpm->tm_hour) << 11) + ((tpm->tm_min) << 5) + ((tpm->tm_sec) >> 1));
 
     return;
 }
