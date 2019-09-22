@@ -67,6 +67,16 @@ static struct implementation implementations[] = {
 #if defined(HAVE_LIBBZ2)
     {ZIP_CM_BZIP2, &zip_algorithm_bzip2_compress, &zip_algorithm_bzip2_decompress},
 #endif
+#if defined(HAVE_LIBLZMA)
+/*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
+    archives made this way - and vice versa.
+
+    {ZIP_CM_LZMA, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
+    {ZIP_CM_LZMA2, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
+*/
+    {ZIP_CM_XZ, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
+#endif
+
 };
 
 static size_t implementations_size = sizeof(implementations) / sizeof(implementations[0]);

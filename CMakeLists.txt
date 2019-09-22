@@ -14,6 +14,7 @@ OPTION(ENABLE_OPENSSL "Enable use of OpenSSL" ON)
 OPTION(ENABLE_WINDOWS_CRYPTO "Enable use of Windows cryptography libraries" ON)
 
 OPTION(ENABLE_BZIP2 "Enable use of BZip2" ON)
+OPTION(ENABLE_LZMA "Enable use of LZMA" ON)
 
 OPTION(BUILD_TOOLS "Build tools in the src directory (zipcmp, zipmerge, ziptool)" ON)
 OPTION(BUILD_REGRESS "Build regression tests" ON)
@@ -217,6 +218,19 @@ IF(ENABLE_BZIP2)
     MESSAGE(WARNING "-- bzip2 library not found; bzip2 support disabled")
   ENDIF(BZIP2_FOUND)
 ENDIF(ENABLE_BZIP2)
+
+IF(ENABLE_LZMA)
+  FIND_PACKAGE(LibLZMA)
+  IF(LIBLZMA_FOUND)
+    SET (HAVE_LIBLZMA 1)
+
+    INCLUDE_DIRECTORIES(${LIBLZMA_INCLUDE_DIR})
+    SET (OPTIONAL_LIBRARY ${OPTIONAL_LIBRARY} ${LIBLZMA_LIBRARY})
+  ELSE()
+    MESSAGE(WARNING "-- lzma library not found; lzma support disabled")
+  ENDIF(LIBLZMA_FOUND)
+ENDIF(ENABLE_LZMA)
+
 
 IF (COMMONCRYPTO_FOUND)
   SET (HAVE_CRYPTO 1)

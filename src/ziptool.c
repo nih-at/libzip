@@ -617,6 +617,19 @@ get_compression_method(const char *arg) {
     else if (strcmp(arg, "bzip2") == 0)
 	return ZIP_CM_BZIP2;
 #endif
+#if defined(HAVE_LIBLZMA)
+/*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
+    archives made this way - and vice versa.
+
+    else if (strcmp(arg, "lzma") == 0)
+      return ZIP_CM_LZMA;
+    else if (strcmp(arg, "lzma2") == 0)
+      return ZIP_CM_LZMA2;
+*/
+    else if (strcmp(arg, "xz") == 0)
+      return ZIP_CM_XZ;
+
+#endif
     else if (strcmp(arg, "unknown") == 0)
 	return 100;
     return 0; /* TODO: error handling */

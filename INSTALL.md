@@ -8,6 +8,9 @@ comes with most operating systems.
 For supporting bzip2-compressed zip archives, you need
 [bzip2](http://bzip.org/).
 
+For supporting xz-compressed zip archives, you need
+[liblzma](https://tukaani.org/xz/) which is part of xz.
+
 For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 

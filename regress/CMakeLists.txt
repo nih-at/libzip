@@ -178,7 +178,9 @@ SET(EXTRA_TESTS
 	set_compression_store_to_bzip2.test
 	set_compression_store_to_deflate.test
 	set_compression_store_to_store.test
+	set_compression_store_to_xz.test
 	set_compression_unknown.test
+	set_compression_xz_to_store.test
 	stat_index_cp437_guess.test
 	stat_index_cp437_raw.test
 	stat_index_cp437_strict.test
