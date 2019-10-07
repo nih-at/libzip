@@ -83,12 +83,12 @@ SET(EXTRA_TESTS
 	add_stored_in_memory.test
 	buffer-fragment-read.test
 	buffer-fragment-write.test
-        clone-buffer-add.test
-        clone-buffer-delete.test
-        clone-buffer-replace.test
-        clone-fs-add.test
-        clone-fs-delete.test
-        clone-fs-replace.test
+	clone-buffer-add.test
+	clone-buffer-delete.test
+	clone-buffer-replace.test
+	clone-fs-add.test
+	clone-fs-delete.test
+	clone-fs-replace.test
 	cm-default.test
 	count_entries.test
 	decrypt-correct-password-aes128.test
@@ -196,9 +196,17 @@ SET(EXTRA_TESTS
 	zip64_stored_creation.test
 )
 
+
+set(path "$<TARGET_FILE_DIR:zip>;$ENV{PATH}")
+if (TARGET zlib)
+  set(path "$<TARGET_FILE_DIR:zlib>;${path}")
+endif()
+string(REPLACE ";" "\\;" path "${path}")
+
 FOREACH(CASE ${EXTRA_TESTS})
-  ADD_TEST(${CASE} perl ${CMAKE_BINARY_DIR}/regress/runtest ${CMAKE_CURRENT_SOURCE_DIR}/${CASE})
+  ADD_TEST(NAME ${CASE} COMMAND perl ${CMAKE_CURRENT_BINARY_DIR}/runtest ${CMAKE_CURRENT_SOURCE_DIR}/${CASE})
   SET_TESTS_PROPERTIES(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
+  SET_TESTS_PROPERTIES(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
 ENDFOREACH()
 
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../lib ${CMAKE_CURRENT_SOURCE_DIR}/../src ${CMAKE_CURRENT_BINARY_DIR}/..)

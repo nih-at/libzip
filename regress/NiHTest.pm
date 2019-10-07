@@ -8,6 +8,7 @@ use File::Copy;
 use File::Path qw(mkpath remove_tree);
 use Getopt::Long qw(:config posix_default bundling no_ignore_case);
 use IPC::Open3;
+#use IPC::Cmd qw(run);
 use Storable qw(dclone);
 use Symbol 'gensym';
 use UNIVERSAL;
@@ -508,7 +509,8 @@ sub check_features_requirement() {
 sub comparator_zip {
 	my ($self, $got, $expected) = @_;
 
-	my @args = ($self->{zipcmp}, $self->{verbose} ? '-v' : '-q');
+	my $zipcmp = (-f $self->{zipcmp}) ? $self->{zipcmp} : $self->find_program('zipcmp');
+	my @args = ($zipcmp, $self->{verbose} ? '-v' : '-q');
 	push @args, $self->{zipcmp_flags} if ($self->{zipcmp_flags});
 	push @args, ($expected, $got);
 
@@ -739,7 +741,7 @@ sub find_file() {
 
 	for my $dir (('', "$self->{srcdir}/")) {
 		my $f = "$dir$fname";
-		$f = "../$f" if ($self->{in_sandbox} && $dir !~ m,^/,);
+		$f = "../$f" if ($self->{in_sandbox} && $dir !~ m,^(\w:)?/,);
 
 		return $f if (-f $f);
 	}
@@ -899,7 +901,7 @@ sub parse_case() {
 	my %test = ();
 
 	while (my $line = <TST>) {
-		chomp $line;
+		$line =~ s/(\n|\r)//g;
 
 		next if ($line =~ m/^\#/);
 
@@ -1090,9 +1092,9 @@ sub run_hook {
 
 	return $ok;
 }
+
+
 sub args_decode {
-
-
 	my ($str, $srcdir) = @_;
 
 	if ($str =~ m/\\/) {
@@ -1134,13 +1136,31 @@ sub run_precheck {
 }
 
 
+sub find_program() {
+	my ($self, $pname) = @_;
+
+	for my $up (('.', '..', '../..', '../../..', '../../../..')) {
+		for my $sub (('.', 'src')) {
+			for my $conf (('.', 'Debug', 'Release', 'Relwithdebinfo', 'Minsizerel')) {
+				for my $ext (('', '.exe')) {
+					my $f = "$up/$sub/$conf/$pname$ext";
+					return $f if (-f $f);
+				}
+			}
+		}
+	}
+
+	return undef;
+}
+
+
 sub run_program {
 	my ($self) = @_;
-	goto &pipein_win32 if $^O eq 'MSWin32' && $self->{test}->{pipein};
+	goto &pipein_win32 if (($^O eq 'MSWin32') or ($^O eq 'msys')) && $self->{test}->{pipein};
 	my ($stdin, $stdout, $stderr);
 	$stderr = gensym;
 
-	my @cmd = ('../' . $self->{test}->{program}, map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
+	my @cmd = ($self->find_program($self->{test}->{program}), map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
 
 	### TODO: catch errors?
 
@@ -1170,24 +1190,13 @@ sub run_program {
         }
 
 	while (my $line = <$stdout>) {
-		if ($^O eq 'MSWin32') {
-			$line =~ s/[\r\n]+$//;
-		}
-		else {
-			chomp $line;
-		}
+		$line =~ s/(\n|\r)//g;
 		push @{$self->{stdout}}, $line;
 	}
 	my $prg = $self->{test}->{program};
 	$prg =~ s,.*/,,;
 	while (my $line = <$stderr>) {
-		if ($^O eq 'MSWin32') {
-			$line =~ s/[\r\n]+$//;
-		}
-		else {
-			chomp $line;
-		}
-
+		$line =~ s/(\n|\r)//g;
 		$line =~ s/^[^: ]*$prg: //;
 		if (defined($self->{test}->{'stderr-replace'})) {
 			$line = $self->stderr_rewrite($self->{test}->{'stderr-replace'}, $line);
@@ -1203,7 +1212,9 @@ sub run_program {
 sub pipein_win32() {
 	my ($self) = @_;
 
-	my $cmd = "$self->{test}->{pipein}| ..\\$self->{test}->{program} " . join(' ', map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
+	# TODO this is currently broken, IPC::Cmd::run fails to load
+	my $program = $self->find_program($self->{test}->{program});
+	my $cmd = "$self->{test}->{pipein} | $program " . join(' ', map ({ args_decode($_, $self->{srcdir}); } @{$self->{test}->{args}}));
 	my ($success, $error_message, $full_buf, $stdout_buf, $stderr_buf) = IPC::Cmd::run(command => $cmd);
 	if (!$success) {
 		### TODO: catch errors?
@@ -1275,10 +1286,9 @@ sub sandbox_leave {
 sub sandbox_remove {
 	my ($self) = @_;
 
-	my $ok = 1;
 	remove_tree($self->{sandbox_dir});
 
-	return $ok;
+	return 1;
 }
 
 
