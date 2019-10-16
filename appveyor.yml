@@ -76,4 +76,6 @@ build_script:
 
 test_script:
   cmd: >-
+    set VERBOSE=yes
+
     ctest -C %CMAKE_CONFIG% --output-on-failure
