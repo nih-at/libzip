@@ -451,6 +451,7 @@ sub setup {
 	$self->run_precheck() if ($self->{test}->{precheck});
 
 	$self->end_test('SKIP') if ($self->{test}->{preload} && $^O eq 'darwin');
+	$self->end_test('SKIP') if (($self->{test}->{pipein} || $self->{test}->{pipefile}) && $^O eq 'MSWin32');
 }
 
 
@@ -1197,7 +1198,7 @@ sub run_program {
 	$prg =~ s,.*/,,;
 	while (my $line = <$stderr>) {
 		$line =~ s/(\n|\r)//g;
-		$line =~ s/^[^: ]*$prg: //;
+		$line =~ s/^[^: ]*$prg(\.exe)?: //;
 		if (defined($self->{test}->{'stderr-replace'})) {
 			$line = $self->stderr_rewrite($self->{test}->{'stderr-replace'}, $line);
 		}
@@ -1229,7 +1230,7 @@ sub pipein_win32() {
 	foreach my $line (@$stderr_buf) {
 		$line =~ s/[\r\n]+$//;
 
-		$line =~ s/^[^: ]*$prg: //;
+		$line =~ s/^[^: ]*$prg(\.exe)?: //;
 		if (defined($self->{test}->{'stderr-replace'})) {
 			$line = $self->stderr_rewrite($self->{test}->{'stderr-replace'}, $line);
 		}

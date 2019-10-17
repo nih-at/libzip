@@ -162,6 +162,7 @@ extern "C" {
 /* 15-17 - Reserved by PKWARE */
 #define ZIP_CM_TERSE 18   /* compressed using IBM TERSE (new) */
 #define ZIP_CM_LZ77 19    /* IBM LZ77 z Architecture (PFS) */
+#define ZIP_CM_LZMA2 33
 #define ZIP_CM_XZ 95      /* XZ compressed data */
 #define ZIP_CM_JPEG 96    /* Compressed Jpeg data */
 #define ZIP_CM_WAVPACK 97 /* WavPack compressed data */
