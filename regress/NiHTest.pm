@@ -450,6 +450,7 @@ sub setup {
 	$self->run_precheck() if ($self->{test}->{precheck});
 
 	$self->end_test('SKIP') if ($self->{test}->{preload} && $^O eq 'darwin');
+	$self->end_test('SKIP') if (($self->{test}->{pipein} || $self->{test}->{pipefile}) && $^O eq 'MSWin32');
 }
 
 
