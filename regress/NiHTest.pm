@@ -1188,7 +1188,7 @@ sub run_program {
 			chomp $line;
 		}
 
-		$line =~ s/^[^: ]*$prg: //;
+		$line =~ s/^[^: ]*$prg(\.exe)?: //;
 		if (defined($self->{test}->{'stderr-replace'})) {
 			$line = $self->stderr_rewrite($self->{test}->{'stderr-replace'}, $line);
 		}
@@ -1218,7 +1218,7 @@ sub pipein_win32() {
 	foreach my $line (@$stderr_buf) {
 		$line =~ s/[\r\n]+$//;
 
-		$line =~ s/^[^: ]*$prg: //;
+		$line =~ s/^[^: ]*$prg(\.exe)?: //;
 		if (defined($self->{test}->{'stderr-replace'})) {
 			$line = $self->stderr_rewrite($self->{test}->{'stderr-replace'}, $line);
 		}
