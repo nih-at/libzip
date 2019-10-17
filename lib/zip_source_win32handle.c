@@ -266,7 +266,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 
 	switch (args->whence) {
 	case SEEK_SET:
-	    new_current = args->offset;
+	    new_current = args->offset + ctx->start;
 	    break;
 
 	case SEEK_END:
