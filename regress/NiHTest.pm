@@ -8,7 +8,6 @@ use File::Copy;
 use File::Path qw(mkpath remove_tree);
 use Getopt::Long qw(:config posix_default bundling no_ignore_case);
 use IPC::Open3;
-#use IPC::Cmd qw(run);
 use Storable qw(dclone);
 use Symbol 'gensym';
 use UNIVERSAL;
@@ -152,6 +151,7 @@ sub new {
 	$self->{default_program} = $opts->{default_program};
 	$self->{zipcmp} = $opts->{zipcmp} // 'zipcmp';
 	$self->{zipcmp_flags} = $opts->{zipcmp_flags} // '-p';
+	$self->{build_type} = $opts->{build_type};
 
 	$self->{directives} = {
 		args => { type => 'string...', once => 1, required => 1 },
@@ -1140,9 +1140,9 @@ sub run_precheck {
 sub find_program() {
 	my ($self, $pname) = @_;
 
-	for my $up (('.', '..', '../..', '../../..', '../../../..')) {
+	for my $up (('.', '..', '../..', '../../..')) {
 		for my $sub (('.', 'src')) {
-			for my $conf (('.', 'Debug', 'Release', 'Relwithdebinfo', 'Minsizerel')) {
+			for my $conf (('.', $self->{build_type})) {
 				for my $ext (('', '.exe')) {
 					my $f = "$up/$sub/$conf/$pname$ext";
 					return $f if (-f $f);
