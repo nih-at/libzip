@@ -241,7 +241,7 @@ compare_zip(char *const zn[]) {
     }
 
     for (i = 0; i < 2; i++) {
-	int j;
+	zip_uint64_t j;
 
 	if (a[i].za) {
 	    zip_close(a[i].za);
