@@ -89,12 +89,12 @@ deallocate(void *ud) {
 
 static int
 compression_flags(void *ud) {
-    struct ctx *ctx = (struct ctx *)ud;
+    /* struct ctx *ctx = (struct ctx *)ud; */
     return 0;
 }
 
 static int
-map_error(int ret) {
+map_error(lzma_ret ret) {
     switch (ret) {
       case LZMA_UNSUPPORTED_CHECK:
         return ZIP_ER_COMPRESSED_DATA;
@@ -152,7 +152,6 @@ start(void *ud) {
 static bool
 end(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
-    int err;
 
     lzma_end(&ctx->zstr);
     return true;
