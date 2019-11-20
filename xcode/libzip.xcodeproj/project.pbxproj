@@ -588,6 +588,7 @@
 		4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_ftell.c; sourceTree = "<group>"; };
 		4B3FAE7F2385C5A300192D6A /* zip_algorithm_xz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_algorithm_xz.c; sourceTree = "<group>"; };
 		4B3FAE812385C79200192D6A /* liblzma.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblzma.5.dylib; path = ../../../../../../opt/pkg/lib/liblzma.5.dylib; sourceTree = "<group>"; };
+		4B3FAE832385C9E900192D6A /* README Xcode Project.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "README Xcode Project.md"; sourceTree = "<group>"; };
 		4B41A2651FE15E99005D8C91 /* clone-fs-add.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-fs-add.test"; sourceTree = "<group>"; };
 		4B41A2661FE15FCE005D8C91 /* clone-fs-delete.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-fs-delete.test"; sourceTree = "<group>"; };
 		4B41A2671FE1604E005D8C91 /* clone-fs-replace.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-fs-replace.test"; sourceTree = "<group>"; };
@@ -1318,6 +1319,7 @@
 		4BDC71BD15B181DA00236D3C = {
 			isa = PBXGroup;
 			children = (
+				4B3FAE832385C9E900192D6A /* README Xcode Project.md */,
 				4B28AA2815BAD4F800D0C17D /* info */,
 				4BDC71E415B182B200236D3C /* Supporting Files */,
 				3D7E353E1B33063600022624 /* examples */,
