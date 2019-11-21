@@ -93,9 +93,13 @@ ZIP_EXTERN zip_source_t *
 zip_source_buffer_create(const void *data, zip_uint64_t len, int freep, zip_error_t *error) {
     zip_buffer_fragment_t fragment;
 
-    if (data == NULL && len > 0) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+    if (data == NULL) {
+        if (len > 0) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return NULL;
+        }
+
+        return zip_source_buffer_fragment_create(NULL, 0, freep, error);
     }
 
     fragment.data = (zip_uint8_t *)data;
@@ -457,7 +461,7 @@ buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int 
 	}
 	buffer->nfragments = j;
 	buffer->first_owned_fragment = free_data ? 0 : buffer->nfragments;
-	buffer->fragment_offsets[nfragments] = offset;
+	buffer->fragment_offsets[buffer->nfragments] = offset;
 	buffer->size = offset;
     }
 
