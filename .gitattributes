@@ -8,4 +8,4 @@ man/make_zip_errors.sh export-ignore
 man/mkdocset.pl export-ignore
 man/nih-man.css export-ignore
 vstudio export-ignore
-xcode export-ignore
+developer-xcode export-ignore
