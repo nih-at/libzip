@@ -104,7 +104,9 @@ main(int argc, char *argv[]) {
     fail += do_read(z, "storedcrcerror", 0, WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "deflatecrcerror", 0, WHEN_READ, ZIP_ER_CRC, 0);
     fail += do_read(z, "deflatezliberror", 0, WHEN_READ, ZIP_ER_ZLIB, -3);
+#ifndef __clang_analyzer__ /* This test intentionally violates nullability. */
     fail += do_read(z, NULL, 0, WHEN_OPEN, ZIP_ER_INVAL, 0);
+#endif
     fail += do_read(z, "nosuchfile", 0, WHEN_OPEN, ZIP_ER_NOENT, 0);
     fail += do_read(z, "deflatezliberror", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
     fail += do_read(z, "deflatecrcerror", ZIP_FL_COMPRESSED, WHEN_NEVER, 0, 0);
