@@ -46,12 +46,11 @@
 
 #include "compat.h"
 #include "zip.h"
-
-const char *usage = "usage: %s [-cent] file\n\n"
-		    "\t-c\tcheck consistency\n"
-		    "\t-e\texclusively open archive\n"
-		    "\t-n\tcreate new file\n"
-		    "\t-t\ttruncate file to size 0\n";
+#define TRYOPEN_USAGE "usage: %s [-cent] file\n\n" \
+		      "\t-c\tcheck consistency\n" \
+		      "\t-e\texclusively open archive\n" \
+		      "\t-n\tcreate new file\n" \
+		      "\t-t\ttruncate file to size 0\n"
 
 
 int
@@ -80,7 +79,7 @@ main(int argc, char *argv[]) {
 	    break;
 
 	default:
-	    fprintf(stderr, usage, argv[0]);
+	    fprintf(stderr, TRYOPEN_USAGE, argv[0]);
 	    return 1;
 	}
     }
