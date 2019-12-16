@@ -137,7 +137,7 @@ _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx) {
 	return -1;
 
     DWORD attributes = GetFileAttributesW(ctx->fname);
-    if (!attributes)
+    if (INVALID_FILE_ATTRIBUTES == attributes)
 	return -1;
 
     if (FILE_ATTRIBUTE_TEMPORARY & attributes) {
