@@ -108,18 +108,17 @@ _win32_create_temp_a(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 
 
 static int
-_win32_rename_temp_a(_zip_source_win32_read_file_t *ctx)
-{
+_win32_rename_temp_a(_zip_source_win32_read_file_t *ctx) {
     if (!MoveFileExA(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING))
-        return -1;
+	return -1;
 
     DWORD attributes = GetFileAttributesA(ctx->fname);
     if (!attributes)
-        return -1;
+	return -1;
 
     if (FILE_ATTRIBUTE_TEMPORARY & attributes) {
-        if (!SetFileAttributesA(ctx->fname, attributes & ~FILE_ATTRIBUTE_TEMPORARY))
-            return -1;
+	if (!SetFileAttributesA(ctx->fname, attributes & ~FILE_ATTRIBUTE_TEMPORARY))
+	    return -1;
     }
 
     return 0;
