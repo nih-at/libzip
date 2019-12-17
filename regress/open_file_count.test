@@ -8,5 +8,5 @@ args incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-ov
 return 1
 stdout opening 'incons-file-count-high.zzip' returned error 21
 stdout opening 'incons-file-count-low.zzip' returned error 21
-stdout opening 'incons-file-count-overflow.zzip' returned error 14
+stdout opening 'incons-file-count-overflow.zzip' returned error 21
 stderr 3 errors

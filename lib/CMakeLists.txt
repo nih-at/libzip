@@ -1,6 +1,8 @@
 INCLUDE(CheckFunctionExists)
 
-INSTALL(FILES zip.h DESTINATION include)
+INSTALL(FILES zip.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+SET(CMAKE_C_VISIBILITY_PRESET hidden)
 
 # from http://www.cmake.org/Wiki/CMakeMacroLibtoolFile
 MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_value)
@@ -8,9 +10,9 @@ MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_valu
   IF(${_variable} STREQUAL NOTFOUND)
     SET(${_variable} ${_default_value})
   ENDIF()
-  
+
 ENDMACRO()
-  
+
 MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
   GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
   GET_TARGET_PROPERTY_WITH_DEFAULT(_target_static_lib ${_target} STATIC_LIB "")
@@ -49,13 +51,11 @@ MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
   FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${_install_DIR}'\n")
   INSTALL( FILES ${_laname} ${_soname} DESTINATION ${CMAKE_INSTALL_PREFIX}${_install_DIR})
 ENDMACRO()
- 
+
 SET(LIBZIP_SOURCES
-  gladman-fcrypt.c
   zip_add.c
   zip_add_dir.c
   zip_add_entry.c
-  zip_algorithm_bzip2.c
   zip_algorithm_deflate.c
   zip_buffer.c
   zip_close.c
@@ -119,6 +119,7 @@ SET(LIBZIP_SOURCES
   zip_set_file_comment.c
   zip_set_file_compression.c
   zip_set_name.c
+  zip_source_accept_empty.c
   zip_source_begin_write.c
   zip_source_begin_write_cloning.c
   zip_source_buffer.c
@@ -146,8 +147,6 @@ SET(LIBZIP_SOURCES
   zip_source_tell.c
   zip_source_tell_write.c
   zip_source_window.c
-  zip_source_winzip_aes_decode.c
-  zip_source_winzip_aes_encode.c
   zip_source_write.c
   zip_source_zip.c
   zip_source_zip_new.c
@@ -170,40 +169,65 @@ IF(WIN32)
     zip_source_win32w.c
   )
   IF(CMAKE_SYSTEM_NAME MATCHES WindowsPhone OR CMAKE_SYSTEM_NAME MATCHES WindowsStore)
-    SET(LIBZIP_OPSYS_FILES "${LIBZIP_OPSYS_FILES}"
-      zip_random_uwp.c
-    )
   ELSE()
     SET(LIBZIP_OPSYS_FILES "${LIBZIP_OPSYS_FILES}"
-      zip_random_win32.c
       zip_source_win32a.c
     )
   ENDIF()
 ELSE(WIN32)
   SET(LIBZIP_OPSYS_FILES
-    zip_random_unix.c
+    zip_mkstempm.c
     zip_source_file.c
+    zip_random_unix.c
   )
 ENDIF(WIN32)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/gladman-fcrypt
-  ${CMAKE_CURRENT_BINARY_DIR}/..)
+INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/..)
 
 ADD_CUSTOM_TARGET(update_zip_err_str
   COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/zip_err_str.c
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
 )
-CHECK_FUNCTION_EXISTS(mkstemp HAVE_MKSTEMP)
-IF(NOT HAVE_MKSTEMP)
-  SET(LIBZIP_EXTRA_FILES mkstemp.c)
-ENDIF(NOT HAVE_MKSTEMP)
+IF(HAVE_LIBBZ2)
+  SET(LIBZIP_OPTIONAL_FILES zip_algorithm_bzip2.c)
+ENDIF()
 
-ADD_LIBRARY(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
+IF(HAVE_LIBLZMA)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_algorithm_xz.c)
+ENDIF()
+
+IF(HAVE_COMMONCRYPTO)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_commoncrypto.c
+)
+ELSEIF(HAVE_WINDOWS_CRYPTO)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_win.c
+)
+ELSEIF(HAVE_GNUTLS)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_gnutls.c
+)
+ELSEIF(HAVE_OPENSSL)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_openssl.c
+)
+ELSEIF(HAVE_MBEDTLS)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_mbedtls.c
+)
+ENDIF()
+
+IF(HAVE_CRYPTO)
+  SET(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c
+)
+ENDIF()
+
+ADD_LIBRARY(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPTIONAL_FILES} ${LIBZIP_OPSYS_FILES})
+
+IF(SHARED_LIB_VERSIONNING)
 SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 5.0 SOVERSION 5)
-TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY} ${OPTIONAL_LIBRARY})
+ENDIF()
+
+
+TARGET_LINK_LIBRARIES(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
 INSTALL(TARGETS zip
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib)
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 #CREATE_LIBTOOL_FILE(zip lib)

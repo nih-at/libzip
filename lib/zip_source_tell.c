@@ -1,6 +1,6 @@
 /*
   zip_source_tell.c -- report current offset
-  Copyright (C) 2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 2014-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,15 +36,14 @@
 
 
 ZIP_EXTERN zip_int64_t
-zip_source_tell(zip_source_t *src)
-{
+zip_source_tell(zip_source_t *src) {
     if (src->source_closed) {
-        return -1;
+	return -1;
     }
     if (!ZIP_SOURCE_IS_OPEN_READING(src)) {
-        zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-        return -1;
+	zip_error_set(&src->error, ZIP_ER_INVAL, 0);
+	return -1;
     }
-    
+
     return _zip_source_call(src, NULL, 0, ZIP_SOURCE_TELL);
 }

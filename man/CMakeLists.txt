@@ -29,6 +29,7 @@ SET(MAN_PAGES
   zip_file_extra_fields_count.3
   zip_file_get_comment.3
   zip_file_get_error.3
+  zip_file_get_external_attributes.3
   zip_file_rename.3
   zip_file_set_comment.3
   zip_file_set_encryption.3
@@ -39,6 +40,7 @@ SET(MAN_PAGES
   zip_fopen_encrypted.3
   zip_fread.3
   zip_fseek.3
+  zip_ftell.3
   zip_get_archive_comment.3
   zip_get_archive_flag.3
   zip_get_error.3
@@ -57,6 +59,7 @@ SET(MAN_PAGES
   zip_set_default_password.3
   zip_set_file_comment.3
   zip_set_file_compression.3
+  zip_source.3
   zip_source_begin_write.3
   zip_source_buffer.3
   zip_source_buffer_fragment.3
@@ -94,15 +97,14 @@ SET(MAN_PAGES
   ziptool.1
 )
 
-IF(CMAKE_SYSTEM_NAME MATCHES BSD)
-  SET(MANFMT mdoc)
-ELSE()
-  SET(MANFMT man)
-ENDIF()
-
 FOREACH(MAN_PAGE ${MAN_PAGES})
-  STRING(REGEX REPLACE "[1-9]$" "${MANFMT}" SOURCE_FILE ${MAN_PAGE})
-  STRING(REGEX REPLACE ".*(.)$" "man\\1" SUBDIR ${MAN_PAGE})
+  STRING(REGEX REPLACE "[1-9]$" "${DOCUMENTATION_FORMAT}" SOURCE_FILE ${MAN_PAGE})
+  IF (DOCUMENTATION_FORMAT MATCHES "html")
+    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_DOCDIR} RENAME ${SOURCE_FILE})
+  ELSE()
+    STRING(REGEX REPLACE ".*(.)$" "man\\1" SUBDIR ${MAN_PAGE})
+    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_MANDIR}/${SUBDIR})
+  ENDIF()
   # CONFIGURE_FILE does not find out about updates to the sources, and it does not provide a target
   #CONFIGURE_FILE(${SOURCE_FILE} ${MAN_PAGE} COPYONLY)
   ADD_CUSTOM_COMMAND(OUTPUT ${MAN_PAGE}
@@ -110,7 +112,6 @@ FOREACH(MAN_PAGE ${MAN_PAGES})
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} ${CMAKE_CURRENT_BINARY_DIR}/${MAN_PAGE}
     COMMENT "Preparing ${MAN_PAGE}"
     )
-  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_MANDIR}/${SUBDIR})
 
   STRING(REGEX REPLACE "[1-9]$" "html" HTML_FILE ${MAN_PAGE})
   STRING(REGEX REPLACE "[1-9]$" "man" MAN_FILE ${MAN_PAGE})
@@ -137,7 +138,13 @@ ADD_CUSTOM_TARGET(update-html DEPENDS ${UPDATEHTML})
 FILE(STRINGS links MANPAGE_LINKS)
 FOREACH(LINKS_LINE ${MANPAGE_LINKS})
   IF(${LINKS_LINE} MATCHES "(.*) (.*)")
-    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_MATCH_1}.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 RENAME ${CMAKE_MATCH_2}.3)
+    SET(SOURCE ${CMAKE_MATCH_1})
+    SET(TARGET ${CMAKE_MATCH_2})
+    IF (DOCUMENTATION_FORMAT MATCHES "html")
+      INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${SOURCE}.3 DESTINATION ${CMAKE_INSTALL_DOCDIR} RENAME ${TARGET}.html)
+    ELSE()
+      INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${SOURCE}.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 RENAME ${TARGET}.3)
+    ENDIF()
   ENDIF()
 ENDFOREACH()
 

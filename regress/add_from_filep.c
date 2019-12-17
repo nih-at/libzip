@@ -1,6 +1,6 @@
 /*
   add_from_filep.c -- test case for adding file to archive
-  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,8 +42,7 @@
 static const char *prg;
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     const char *archive;
     const char *file;
     const char *name;
@@ -61,8 +60,8 @@ main(int argc, char *argv[])
 
     archive = argv[1];
     file = argv[2];
-    
-    if ((za=zip_open(archive, ZIP_CREATE, &err)) == NULL) {
+
+    if ((za = zip_open(archive, ZIP_CREATE, &err)) == NULL) {
 	zip_error_t error;
 	zip_error_init_with_code(&error, err);
 	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
@@ -70,31 +69,27 @@ main(int argc, char *argv[])
 	return 1;
     }
 
-    if ((fp=fopen(file, "r")) == NULL) {
-	fprintf(stderr, "%s: can't open input file '%s': %s\n", prg,
-		file, strerror(errno));
+    if ((fp = fopen(file, "r")) == NULL) {
+	fprintf(stderr, "%s: can't open input file '%s': %s\n", prg, file, strerror(errno));
 	return 1;
     }
 
-    if ((zs=zip_source_filep(za, fp, 0, -1)) == NULL) {
-	fprintf(stderr, "%s: error creating file source for '%s': %s\n", prg,
-		file, zip_strerror(za));
+    if ((zs = zip_source_filep(za, fp, 0, -1)) == NULL) {
+	fprintf(stderr, "%s: error creating file source for '%s': %s\n", prg, file, zip_strerror(za));
 	return 1;
     }
 
-    if ((name=strrchr(file, '/')) == NULL)
+    if ((name = strrchr(file, '/')) == NULL)
 	name = file;
 
     if (zip_add(za, name, zs) == -1) {
 	zip_source_free(zs);
-	fprintf(stderr, "%s: can't add file '%s': %s\n", prg,
-		file, zip_strerror(za));
+	fprintf(stderr, "%s: can't add file '%s': %s\n", prg, file, zip_strerror(za));
 	return 1;
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg,
-		archive, zip_strerror(za));
+	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(za));
 	return 1;
     }
 

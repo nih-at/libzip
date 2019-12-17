@@ -1,7 +1,7 @@
 /*
-  nonrandomopen.c -- override zip_random
+  nonrandomopen.c -- override zip_secure_random
 
-  Copyright (C) 2017 Dieter Baron and Thomas Klausner
+  Copyright (C) 2017-2018 Dieter Baron and Thomas Klausner
 
   This file is part of ckmame, a program to check rom sets for MAME.
   The authors can be contacted at <ckmame@nih.at>
@@ -33,14 +33,17 @@
 */
 
 #include <string.h>
-#include <unistd.h>
 
 #include "compat.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #include "zipint.h"
 
 bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length)
-{
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     memset(buffer, 0, length);
 
     return true;

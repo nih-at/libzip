@@ -19,14 +19,24 @@
 #cmakedefine HAVE__STRTOUI64
 #cmakedefine HAVE__UMASK
 #cmakedefine HAVE__UNLINK
+#cmakedefine HAVE_ARC4RANDOM
 #cmakedefine HAVE_CLONEFILE
+#cmakedefine HAVE_COMMONCRYPTO
+#cmakedefine HAVE_CRYPTO
+#cmakedefine HAVE_FICLONERANGE
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_GETPROGNAME
+#cmakedefine HAVE_GNUTLS
 #cmakedefine HAVE_LIBBZ2
-#cmakedefine HAVE_OPEN
+#cmakedefine HAVE_LIBLZMA
+#cmakedefine HAVE_LOCALTIME_R
+#cmakedefine HAVE_MBEDTLS
 #cmakedefine HAVE_MKSTEMP
+#cmakedefine HAVE_NULLABLE
+#cmakedefine HAVE_OPEN
+#cmakedefine HAVE_OPENSSL
 #cmakedefine HAVE_SETMODE
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_SSIZE_T_LIBZIP
@@ -39,6 +49,7 @@
 #cmakedefine HAVE_STDBOOL_H
 #cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
+#cmakedefine HAVE_WINDOWS_CRYPTO
 #cmakedefine __INT8_LIBZIP ${__INT8_LIBZIP}
 #cmakedefine INT8_T_LIBZIP ${INT8_T_LIBZIP}
 #cmakedefine UINT8_T_LIBZIP ${UINT8_T_LIBZIP}
@@ -51,6 +62,10 @@
 #cmakedefine __INT64_LIBZIP ${__INT64_LIBZIP}
 #cmakedefine INT64_T_LIBZIP ${INT64_T_LIBZIP}
 #cmakedefine UINT64_T_LIBZIP ${UINT64_T_LIBZIP}
+#cmakedefine SHORT_LIBZIP ${SHORT_LIBZIP}
+#cmakedefine INT_LIBZIP ${INT_LIBZIP}
+#cmakedefine LONG_LIBZIP ${LONG_LIBZIP}
+#cmakedefine LONG_LONG_LIBZIP ${LONG_LONG_LIBZIP}
 #cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
 #cmakedefine SIZE_T_LIBZIP ${SIZE_T_LIBZIP}
 #cmakedefine SSIZE_T_LIBZIP ${SSIZE_T_LIBZIP}

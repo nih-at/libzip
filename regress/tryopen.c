@@ -1,6 +1,6 @@
 /*
   tryopen.c -- tool for tests that try opening zip archives
-  Copyright (C) 1999-2017 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -46,17 +46,15 @@
 
 #include "compat.h"
 #include "zip.h"
-
-const char *usage = "usage: %s [-cent] file\n\n"
-    "\t-c\tcheck consistency\n"
-    "\t-e\texclusively open archive\n"
-    "\t-n\tcreate new file\n"
-    "\t-t\ttruncate file to size 0\n";
+#define TRYOPEN_USAGE "usage: %s [-cent] file\n\n" \
+		      "\t-c\tcheck consistency\n" \
+		      "\t-e\texclusively open archive\n" \
+		      "\t-n\tcreate new file\n" \
+		      "\t-t\ttruncate file to size 0\n"
 
 
 int
-main(int argc, char *argv[])
-{
+main(int argc, char *argv[]) {
     const char *fname;
     zip_t *z;
     int c, flags, ze;
@@ -65,7 +63,7 @@ main(int argc, char *argv[])
 
     flags = 0;
 
-    while ((c=getopt(argc, argv, "cent")) != -1) {
+    while ((c = getopt(argc, argv, "cent")) != -1) {
 	switch (c) {
 	case 'c':
 	    flags |= ZIP_CHECKCONS;
@@ -81,7 +79,7 @@ main(int argc, char *argv[])
 	    break;
 
 	default:
-	    fprintf(stderr, usage, argv[0]);
+	    fprintf(stderr, TRYOPEN_USAGE, argv[0]);
 	    return 1;
 	}
     }
@@ -91,13 +89,13 @@ main(int argc, char *argv[])
 	fname = argv[optind];
 	errno = 0;
 
-	if ((z=zip_open(fname, flags, &ze)) != NULL) {
+	if ((z = zip_open(fname, flags, &ze)) != NULL) {
 	    count = zip_get_num_entries(z, 0);
-	    printf("opening '%s' succeeded, %"PRIu64" entries\n", fname, count);
+	    printf("opening '%s' succeeded, %" PRIu64 " entries\n", fname, count);
 	    zip_close(z);
 	    continue;
 	}
-	
+
 	printf("opening '%s' returned error %d", fname, ze);
 	if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
 	    printf("/%d", errno);

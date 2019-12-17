@@ -3,7 +3,7 @@
 
 /*
   zipwin32.h -- internal declarations for Windows.
-  Copyright (C) 1999-2015 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -20,7 +20,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,7 +35,7 @@
 */
 
 /* 0x0501 => Windows XP; needs to be at least this value because of GetFileSizeEx */
-#ifndef MS_UWP
+#if !defined(MS_UWP) && !defined(_WIN32_WINNT)
 #define _WIN32_WINNT 0x0501
 #endif
 
@@ -46,24 +46,24 @@
 struct _zip_source_win32_file_ops;
 
 struct _zip_source_win32_read_file {
-    zip_error_t error;      /* last error information */
+    zip_error_t error; /* last error information */
     zip_int64_t supports;
 
     /* operations */
     struct _zip_source_win32_file_ops *ops;
 
     /* reading */
-    void *fname;            /* name of file to read from - ANSI (char *) or Unicode (wchar_t *) */
-    void *h;                /* HANDLE for file to read from */
-    int closep;             /* whether to close f on ZIP_CMD_FREE */
-    struct zip_stat st;     /* stat information passed in */
-    zip_uint64_t start;     /* start offset of data to read */
-    zip_uint64_t end;       /* end offset of data to read, 0 for up to EOF */
-    zip_uint64_t current;   /* current offset */
+    void *fname;          /* name of file to read from - ANSI (char *) or Unicode (wchar_t *) */
+    void *h;              /* HANDLE for file to read from */
+    int closep;           /* whether to close f on ZIP_CMD_FREE */
+    struct zip_stat st;   /* stat information passed in */
+    zip_uint64_t start;   /* start offset of data to read */
+    zip_uint64_t end;     /* end offset of data to read, 0 for up to EOF */
+    zip_uint64_t current; /* current offset */
 
     /* writing */
-    void *tmpname;          /* name of temp file - ANSI (char *) or Unicode (wchar_t *) */
-    void *hout;             /* HANDLE for output file */
+    void *tmpname; /* name of temp file - ANSI (char *) or Unicode (wchar_t *) */
+    void *hout;    /* HANDLE for output file */
 };
 
 typedef struct _zip_source_win32_read_file _zip_source_win32_read_file_t;

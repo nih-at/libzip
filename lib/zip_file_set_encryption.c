@@ -1,6 +1,6 @@
 /*
   zip_file_set_encryption.c -- set encryption for file in archive
-  Copyright (C) 2016-2017 Dieter Baron and Thomas Klausner
+  Copyright (C) 2016-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,8 +38,7 @@
 #include <string.h>
 
 ZIP_EXTERN int
-zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const char *password)
-{
+zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const char *password) {
     zip_entry_t *e;
     zip_uint16_t old_method;
 
@@ -58,10 +57,10 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
 	return -1;
     }
 
-    e = za->entry+idx;
-    
+    e = za->entry + idx;
+
     old_method = (e->orig == NULL ? ZIP_EM_NONE : e->orig->encryption_method);
-    
+
     if (method == old_method && password == NULL) {
 	if (e->changes) {
 	    if (e->changes->changed & ZIP_DIRENT_PASSWORD) {
@@ -69,7 +68,7 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
 		free(e->changes->password);
 		e->changes->password = (e->orig == NULL ? NULL : e->orig->password);
 	    }
-	    e->changes->changed &= ~(ZIP_DIRENT_ENCRYPTION_METHOD|ZIP_DIRENT_PASSWORD);
+	    e->changes->changed &= ~(ZIP_DIRENT_ENCRYPTION_METHOD | ZIP_DIRENT_PASSWORD);
 	    if (e->changes->changed == 0) {
 		_zip_dirent_free(e->changes);
 		e->changes = NULL;
@@ -85,20 +84,20 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
 		return -1;
 	    }
 	}
-	
-        if (e->changes == NULL) {
-            if ((e->changes=_zip_dirent_clone(e->orig)) == NULL) {
+
+	if (e->changes == NULL) {
+	    if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {
 		if (our_password) {
 		    _zip_crypto_clear(our_password, strlen(our_password));
 		}
 		free(our_password);
-                zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-                return -1;
-            }
-        }
+		zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+		return -1;
+	    }
+	}
 
-        e->changes->encryption_method = method;
-        e->changes->changed |= ZIP_DIRENT_ENCRYPTION_METHOD;
+	e->changes->encryption_method = method;
+	e->changes->changed |= ZIP_DIRENT_ENCRYPTION_METHOD;
 	if (password) {
 	    e->changes->password = our_password;
 	    e->changes->changed |= ZIP_DIRENT_PASSWORD;
@@ -112,6 +111,6 @@ zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const 
 	    }
 	}
     }
-    
+
     return 0;
 }

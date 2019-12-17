@@ -1,6 +1,6 @@
 /*
   zip_add.c -- add file via callback function
-  Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,13 +38,12 @@
 
 /*
   NOTE: Return type is signed so we can return -1 on error.
-        The index can not be larger than ZIP_INT64_MAX since the size
-        of the central directory cannot be larger than
-        ZIP_UINT64_MAX, and each entry is larger than 2 bytes.
+	The index can not be larger than ZIP_INT64_MAX since the size
+	of the central directory cannot be larger than
+	ZIP_UINT64_MAX, and each entry is larger than 2 bytes.
 */
 
 ZIP_EXTERN zip_int64_t
-zip_add(zip_t *za, const char *name, zip_source_t *source)
-{
+zip_add(zip_t *za, const char *name, zip_source_t *source) {
     return zip_file_add(za, name, source, 0);
 }

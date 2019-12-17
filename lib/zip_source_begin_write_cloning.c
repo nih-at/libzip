@@ -1,6 +1,6 @@
 /*
   zip_source_begin_write_cloning.c -- clone part of file for writing
-  Copyright (C) 2017 Dieter Baron and Thomas Klausner
+  Copyright (C) 2017-2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,18 +36,17 @@
 
 
 ZIP_EXTERN int
-zip_source_begin_write_cloning(zip_source_t *src, zip_uint64_t offset)
-{
+zip_source_begin_write_cloning(zip_source_t *src, zip_uint64_t offset) {
     if (ZIP_SOURCE_IS_OPEN_WRITING(src)) {
-        zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-        return -1;
+	zip_error_set(&src->error, ZIP_ER_INVAL, 0);
+	return -1;
     }
-    
+
     if (_zip_source_call(src, NULL, offset, ZIP_SOURCE_BEGIN_WRITE_CLONING) < 0) {
-        return -1;
+	return -1;
     }
 
     src->write_state = ZIP_SOURCE_WRITE_OPEN;
-    
+
     return 0;
 }

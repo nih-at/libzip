@@ -60,7 +60,7 @@ stdout opening 'incons-ef-local-size.zzip' returned error 21
 stdout opening 'incons-eocd-magic-bad.zzip' returned error 19
 stdout opening 'incons-file-count-high.zzip' returned error 21
 stdout opening 'incons-file-count-low.zzip' returned error 21
-stdout opening 'incons-file-count-overflow.zzip' returned error 14
+stdout opening 'incons-file-count-overflow.zzip' returned error 21
 stdout opening 'incons-local-compression-method.zzip' returned error 21
 stdout opening 'incons-local-compsize-larger.zzip' returned error 21
 stdout opening 'incons-local-compsize-smaller.zzip' returned error 21

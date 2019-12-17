@@ -1,41 +1,41 @@
 /*
-zip_source_win32file.c -- create data source from HANDLE (Win32)
-Copyright (C) 1999-2016 Dieter Baron and Thomas Klausner
+  zip_source_win32file.c -- create data source from HANDLE (Win32)
+  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
 
-This file is part of libzip, a library to manipulate ZIP archives.
-The authors can be contacted at <libzip@nih.at>
+  This file is part of libzip, a library to manipulate ZIP archives.
+  The authors can be contacted at <libzip@nih.at>
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-1. Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in
-the documentation and/or other materials provided with the
-distribution.
-3. The names of the authors may not be used to endorse or promote
-products derived from this software without specific prior
-written permission.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+  1. Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+  3. The names of the authors may not be used to endorse or promote
+  products derived from this software without specific prior
+  written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
-OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
+  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#include <wchar.h>
+#include <aclapi.h>
 #include <stdlib.h>
 #include <string.h>
-#include <aclapi.h>
+#include <wchar.h>
 
 #include "zipint.h"
 #include "zipwin32.h"
@@ -49,8 +49,7 @@ static int _zip_win32_error_to_errno(unsigned long win32err);
 static int _zip_stat_win32(void *h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx);
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len)
-{
+zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
 	return NULL;
 
@@ -59,8 +58,7 @@ zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len)
 
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zip_error_t *error)
-{
+zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (h == INVALID_HANDLE_VALUE || length < -1) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
@@ -71,8 +69,7 @@ zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, 
 
 
 zip_source_t *
-_zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, _zip_source_win32_file_ops_t *ops, zip_error_t *error)
-{
+_zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start, zip_int64_t len, int closep, const zip_stat_t *st, _zip_source_win32_file_ops_t *ops, zip_error_t *error) {
     _zip_source_win32_read_file_t *ctx;
     zip_source_t *zs;
 
@@ -130,6 +127,8 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 	ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
     }
 
+    ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_ACCEPT_EMPTY);
+
     if ((zs = zip_source_function_create(_win32_read_file, ctx, error)) == NULL) {
 	free(ctx->fname);
 	free(ctx);
@@ -141,8 +140,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 
 
 static zip_int64_t
-_win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
-{
+_win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     _zip_source_win32_read_file_t *ctx;
     char *buf;
     zip_uint64_t n;
@@ -152,6 +150,9 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
     buf = (char *)data;
 
     switch (cmd) {
+    case ZIP_SOURCE_ACCEPT_EMPTY:
+	return 0;
+
     case ZIP_SOURCE_BEGIN_WRITE:
 	if (ctx->fname == NULL) {
 	    zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
@@ -265,7 +266,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 
 	switch (args->whence) {
 	case SEEK_SET:
-	    new_current = args->offset;
+	    new_current = args->offset + ctx->start;
 	    break;
 
 	case SEEK_END:
@@ -348,8 +349,8 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 		if (h == INVALID_HANDLE_VALUE) {
 		    win32err = GetLastError();
 		    if (win32err == ERROR_FILE_NOT_FOUND || win32err == ERROR_PATH_NOT_FOUND) {
-		        zip_error_set(&ctx->error, ZIP_ER_READ, ENOENT);
-		        return -1;
+			zip_error_set(&ctx->error, ZIP_ER_READ, ENOENT);
+			return -1;
 		    }
 		}
 	    }
@@ -377,8 +378,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
     case ZIP_SOURCE_TELL:
 	return (zip_int64_t)ctx->current;
 
-    case ZIP_SOURCE_TELL_WRITE:
-    {
+    case ZIP_SOURCE_TELL_WRITE: {
 	LARGE_INTEGER zero;
 	LARGE_INTEGER offset;
 
@@ -391,8 +391,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	return offset.QuadPart;
     }
 
-    case ZIP_SOURCE_WRITE:
-    {
+    case ZIP_SOURCE_WRITE: {
 	DWORD ret;
 	if (!WriteFile(ctx->hout, data, (DWORD)len, &ret, NULL) || ret != len) {
 	    zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
@@ -410,8 +409,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 
 
 static int
-_win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
-{
+_win32_create_temp_file(_zip_source_win32_read_file_t *ctx) {
     zip_uint32_t value;
     /*
     Windows has GetTempFileName(), but it closes the file after
@@ -473,8 +471,7 @@ _win32_create_temp_file(_zip_source_win32_read_file_t *ctx)
 
 
 static int
-_zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error)
-{
+_zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error) {
     if (offset > ZIP_INT64_MAX) {
 	zip_error_set(error, ZIP_ER_SEEK, EOVERFLOW);
 	return -1;
@@ -484,8 +481,7 @@ _zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error)
 
 
 static int
-_zip_seek_win32(HANDLE h, zip_int64_t offset, int whence, zip_error_t *error)
-{
+_zip_seek_win32(HANDLE h, zip_int64_t offset, int whence, zip_error_t *error) {
     LARGE_INTEGER li;
     DWORD method;
 
@@ -515,8 +511,7 @@ _zip_seek_win32(HANDLE h, zip_int64_t offset, int whence, zip_error_t *error)
 
 
 static int
-_zip_win32_error_to_errno(DWORD win32err)
-{
+_zip_win32_error_to_errno(DWORD win32err) {
     /*
     Note: This list isn't exhaustive, but should cover common cases.
     */
@@ -542,8 +537,7 @@ _zip_win32_error_to_errno(DWORD win32err)
 
 
 static int
-_zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
-{
+_zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx) {
     FILETIME mtimeft;
     time_t mtime;
     LARGE_INTEGER size;
@@ -585,8 +579,7 @@ _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx)
 
 
 static int
-_zip_filetime_to_time_t(FILETIME ft, time_t *t)
-{
+_zip_filetime_to_time_t(FILETIME ft, time_t *t) {
     /*
     Inspired by http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux
     */
