@@ -131,12 +131,12 @@ _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **temp, zip_uint32
 
 static int
 _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx) {
-    DWORD attributes = GetFileAttributesW(ctx->fname);
+    DWORD attributes = GetFileAttributesW(ctx->tmpname);
     if (INVALID_FILE_ATTRIBUTES == attributes)
 	return -1;
 
     if (FILE_ATTRIBUTE_TEMPORARY & attributes) {
-	if (!SetFileAttributesW(ctx->fname, attributes & ~FILE_ATTRIBUTE_TEMPORARY))
+	if (!SetFileAttributesW(ctx->tmpname, attributes & ~FILE_ATTRIBUTE_TEMPORARY))
 	    return -1;
     }
 
