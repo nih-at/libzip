@@ -471,6 +471,7 @@ void _zip_cdir_free(zip_cdir_t *);
 bool _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error);
 zip_cdir_t *_zip_cdir_new(zip_uint64_t, zip_error_t *);
 zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors);
+time_t _zip_d2u_time(zip_uint16_t, zip_uint16_t);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);
 
 zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *);

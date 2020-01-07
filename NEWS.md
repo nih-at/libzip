@@ -6,6 +6,7 @@
 * Do not accept empty files as valid zip archives any longer.
 * Add support for XZ compressed files (using liblzma).
 * Add support for cancelling while closing zip archives.
+* Add support for setting the time in the on-disk format.
 
 1.5.2 [2019-03-12]
 ==================

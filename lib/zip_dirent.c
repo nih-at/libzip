@@ -41,7 +41,6 @@
 
 #include "zipint.h"
 
-static time_t _zip_d2u_time(zip_uint16_t, zip_uint16_t);
 static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str);
 static zip_extra_field_t *_zip_ef_utf8(zip_uint16_t, zip_string_t *, zip_error_t *);
 static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error);
@@ -978,7 +977,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 }
 
 
-static time_t
+time_t
 _zip_d2u_time(zip_uint16_t dtime, zip_uint16_t ddate) {
     struct tm tm;
 

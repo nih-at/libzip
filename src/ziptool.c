@@ -505,6 +505,22 @@ set_file_encryption(int argc, char *argv[]) {
 }
 
 static int
+set_file_dostime(int argc, char *argv[]) {
+    /* set file last modification time (mtime) directly */
+    time_t mtime;
+    zip_uint16_t dostime, dosdate;
+    zip_uint64_t idx;
+    idx = strtoull(argv[0], NULL, 10);
+    dostime = (time_t)strtoull(argv[1], NULL, 10);
+    dosdate = (time_t)strtoull(argv[2], NULL, 10);
+    if (zip_file_set_dostime(za, idx, dostime, dosdate, 0) < 0) {
+	fprintf(stderr, "can't set file dostime at index '%" PRIu64 "' to '%d'/'%d': %s\n", idx, (int)dostime, (int)dosdate, zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
 set_file_mtime(int argc, char *argv[]) {
     /* set file last modification time (mtime) */
     time_t mtime;
@@ -729,6 +745,7 @@ dispatch_table_t dispatch_table[] = {{"add", 2, "name content", "add file called
 				     {"set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra},
 				     {"set_file_comment", 2, "index comment", "set file comment", set_file_comment},
 				     {"set_file_compression", 3, "index method compression_flags", "set file compression method", set_file_compression},
+				     {"set_file_dostime", 3, "index time date", "set file modification time and date (DOS format)", set_file_dostime},
 				     {"set_file_encryption", 3, "index method password", "set file encryption method", set_file_encryption},
 				     {"set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime},
 				     {"set_file_mtime_all", 1, "timestamp", "set file modification time for all files", set_file_mtime_all},
