@@ -1,10 +1,11 @@
-1.X.X [20XX-XX-XX]
+1.6.0 [202X-XX-XX]
 ==================
 
 * Avoid using umask() since it's not thread-safe.
 * Set close-on-exec flag when opening files.
 * Do not accept empty files as valid zip archives any longer.
 * Add support for XZ compressed files (using liblzma).
+* Add support for cancelling while closing zip archives.
 
 1.5.2 [2019-03-12]
 ==================

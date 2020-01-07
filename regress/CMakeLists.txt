@@ -83,6 +83,8 @@ SET(EXTRA_TESTS
 	add_stored_in_memory.test
 	buffer-fragment-read.test
 	buffer-fragment-write.test
+	cancel_45.test
+	cancel_90.test
 	clone-buffer-add.test
 	clone-buffer-delete.test
 	clone-buffer-replace.test

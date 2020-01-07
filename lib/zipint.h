@@ -532,10 +532,9 @@ zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 
 void _zip_progress_end(zip_progress_t *progress);
 void _zip_progress_free(zip_progress_t *progress);
-zip_progress_t *_zip_progress_new(zip_t *za, double precision, zip_progress_callback callback, void (*ud_free)(void *), void *ud);
-void _zip_progress_start(zip_progress_t *progress);
-void _zip_progress_subrange(zip_progress_t *progress, double start, double end);
-void _zip_progress_update(zip_progress_t *progress, double value);
+int _zip_progress_start(zip_progress_t *progress);
+int _zip_progress_subrange(zip_progress_t *progress, double start, double end);
+int _zip_progress_update(zip_progress_t *progress, double value);
 
 /* this symbol is extern so it can be overridden for regression testing */
 ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);

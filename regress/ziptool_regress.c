@@ -10,6 +10,7 @@ source_type_t source_type = SOURCE_TYPE_NONE;
 zip_uint64_t fragment_size = 0;
 
 static int add_nul(int argc, char *argv[]);
+static int cancel(int argc, char *argv[]);
 static int unchange_all(int argc, char *argv[]);
 static int zin_close(int argc, char *argv[]);
 
@@ -29,7 +30,10 @@ static int zin_close(int argc, char *argv[]);
 	break;
 
 #define DISPATCH_REGRESS \
-    {"add_nul", 2, "name length", "add NUL bytes", add_nul}, {"unchange_all", 0, "", "revert all changes", unchange_all}, { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
+    {"add_nul", 2, "name length", "add NUL bytes", add_nul}, \
+    {"cancel", 1, "limit", "cancel writing archive when limit% have been written (calls print_progress)", cancel}, \
+    {"unchange_all", 0, "", "revert all changes", unchange_all}, \
+    { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
 
 
 zip_t *ziptool_open(const char *archive, int flags, zip_error_t *error, zip_uint64_t offset, zip_uint64_t len);
@@ -70,6 +74,31 @@ unchange_all(int argc, char *argv[]) {
 	fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
 	return -1;
     }
+    return 0;
+}
+
+static int
+cancel_callback(zip_t *archive, void *ud) {
+    if (progress_userdata.percentage >= progress_userdata.limit) {
+	return -1;
+    }
+    return 0;
+}
+
+static int
+cancel(int argc, char *argv[]) {
+    zip_int64_t percent;
+    percent = strtoll(argv[0], NULL, 10);
+    if (percent > 100 || percent < 0) {
+	fprintf(stderr, "invalid percentage '%" PRId64 "' for cancel (valid: 0 <= x <= 100)\n", percent);
+	return -1;
+    }
+    progress_userdata.limit = ((double)percent)/100;
+
+    zip_register_cancel_callback_with_state(za, cancel_callback, NULL, NULL);
+
+    /* needs the percentage updates from print_progress */
+    print_progress(argc, argv);
     return 0;
 }
 

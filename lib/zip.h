@@ -134,6 +134,7 @@ extern "C" {
 #define ZIP_ER_INUSE 29           /* N Resource still in use */
 #define ZIP_ER_TELL 30            /* S Tell error */
 #define ZIP_ER_COMPRESSED_DATA 31 /* N Compressed data invalid */
+#define ZIP_ER_CANCELLED 32       /* N Operation cancelled */
 
 /* type of system error value */
 
@@ -323,6 +324,7 @@ typedef zip_uint32_t zip_flags_t;
 
 typedef zip_int64_t (*zip_source_callback)(void * _Nullable, void * _Nullable, zip_uint64_t, zip_source_cmd_t);
 typedef void (*zip_progress_callback)(zip_t * _Nonnull, double, void * _Nullable);
+typedef int (*zip_cancel_callback)(zip_t * _Nonnull, void * _Nullable);
 
 #ifndef ZIP_DISABLE_DEPRECATED
 typedef void (*zip_progress_callback_t)(double);
@@ -395,6 +397,7 @@ ZIP_EXTERN zip_int64_t zip_name_locate(zip_t * _Nonnull, const char * _Nonnull, 
 ZIP_EXTERN zip_t * _Nullable zip_open(const char * _Nonnull, int, int * _Nullable);
 ZIP_EXTERN zip_t * _Nullable zip_open_from_source(zip_source_t * _Nonnull, int, zip_error_t * _Nullable);
 ZIP_EXTERN int zip_register_progress_callback_with_state(zip_t * _Nonnull, double, zip_progress_callback _Nullable, void (* _Nullable)(void * _Nullable), void * _Nullable);
+ZIP_EXTERN int zip_register_cancel_callback_with_state(zip_t * _Nonnull, zip_cancel_callback _Nullable, void (* _Nullable)(void * _Nullable), void * _Nullable);
 ZIP_EXTERN int zip_set_archive_comment(zip_t * _Nonnull, const char * _Nullable, zip_uint16_t);
 ZIP_EXTERN int zip_set_archive_flag(zip_t * _Nonnull, zip_flags_t, int);
 ZIP_EXTERN int zip_set_default_password(zip_t * _Nonnull, const char * _Nullable);
