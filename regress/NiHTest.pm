@@ -420,6 +420,7 @@ sub setup {
 	@ARGV = @argv;
 	my $ok = GetOptions(
 		'help|h' => \my $help,
+	        'bin-sub-directory=s' => \$self->{bin_sub_directory},
 		'keep-broken|k' => \$self->{keep_broken},
 		'no-cleanup' => \$self->{no_cleanup},
 		# 'run-gdb' => \$self->{run_gdb},
@@ -430,7 +431,7 @@ sub setup {
 	@ARGV = @save_argv;
 
 	if (!$ok || scalar(@argv) != 1 || $help) {
-		print STDERR "Usage: $0 [-hv] [--keep-broken] [--no-cleanup] [--setup-only] testcase\n";
+		print STDERR "Usage: $0 [-hv] [--bin-sub-directory DIR] [--keep-broken] [--no-cleanup] [--setup-only] testcase\n";
 		exit(1);
 	}
 
@@ -601,7 +602,7 @@ sub list_files {
 
 	while (scalar(@dirs) > 0) {
 		my $dir = shift @dirs;
-		
+
 		opendir($ls, $dir);
 		unless ($ls) {
 			# TODO: handle error
@@ -611,7 +612,7 @@ sub list_files {
 			if ($dir eq '.') {
 				$file = $entry;
 			}
-			
+
 			if (-f $file) {
 				push @files, "$file";
 			}
@@ -1138,13 +1139,18 @@ sub run_precheck {
 
 
 sub find_program() {
-	my ($self, $pname) = @_;
+        my ($self, $pname) = @_;
 
-	for my $up (('.', '..', '../..', '../../..', '../../../..')) {
+	my @directories = (".");
+	if ($self->{bin_sub_directory}) {
+	        push @directories, $self->{bin_sub_directory};
+	}
+
+	for my $up (('.', '..', '../..', '../../..')) {
 		for my $sub (('.', 'src')) {
-			for my $conf (('.', 'Debug', 'Release', 'Relwithdebinfo', 'Minsizerel')) {
+		        for my $dir (@directories) {
 				for my $ext (('', '.exe')) {
-					my $f = "$up/$sub/$conf/$pname$ext";
+					my $f = "$up/$sub/$dir/$pname$ext";
 					return $f if (-f $f);
 				}
 			}
