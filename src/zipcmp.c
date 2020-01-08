@@ -106,7 +106,7 @@ char help[] = "\n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2003-2018 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2003-2019 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVipqtv"
