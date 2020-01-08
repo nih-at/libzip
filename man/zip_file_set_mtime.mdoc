@@ -114,3 +114,11 @@ was added in libzip 1.6.
 .An Dieter Baron Aq Mt dillo@nih.at
 and
 .An Thomas Klausner Aq Mt tk@giga.or.at
+.Sh CAVEATS
+Following historical practice, the
+.Fn zip_file_set_mtime
+function translates the time from the zip archive into the local time
+zone.
+If you want to avoid this, use the
+.Fn zip_file_set_dostime
+function instead.
