@@ -2,7 +2,7 @@
 <html>
 <!-- This is an automatically generated file.  Do not edit.
    zip_source_function.mdoc -- create data source from function
-   Copyright (C) 2004-2018 Dieter Baron and Thomas Klausner
+   Copyright (C) 2004-2019 Dieter Baron and Thomas Klausner
   
    This file is part of libzip, a library to manipulate ZIP archives.
    The authors can be contacted at <libzip@nih.at>
@@ -117,6 +117,12 @@ The functions <code class="Fn">zip_source_function</code>() and
       <code class="Dv">ZIP_SOURCE_TELL_WRITE</code>, and
       <code class="Dv">ZIP_SOURCE_REMOVE</code>.</dd>
 </dl>
+<section class="Ss">
+<h2 class="Ss"><code class="Dv">ZIP_SOURCE_ACCEPT_EMPTY</code></h2>
+Return 1 if an empty source should be accepted as a valid zip archive. This is
+  the default if this command is not supported by a source. File system backed
+  sources should return 0.
+</section>
 <section class="Ss">
 <h2 class="Ss"><code class="Dv">ZIP_SOURCE_BEGIN_WRITE</code></h2>
 Prepare the source for writing. Use this to create any temporary file(s).
@@ -325,8 +331,8 @@ Upon successful completion, the created source is returned. Otherwise,
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.35</td>
+    <td class="foot-date">September 17, 2019</td>
+    <td class="foot-os">NetBSD 9.99.41</td>
   </tr>
 </table>
 </body>

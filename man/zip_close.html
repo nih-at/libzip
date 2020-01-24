@@ -2,7 +2,7 @@
 <html>
 <!-- This is an automatically generated file.  Do not edit.
    zip_close.mdoc -- close zip archive
-   Copyright (C) 2003-2018 Dieter Baron and Thomas Klausner
+   Copyright (C) 2003-2019 Dieter Baron and Thomas Klausner
   
    This file is part of libzip, a library to manipulate ZIP archives.
    The authors can be contacted at <libzip@nih.at>
@@ -68,8 +68,7 @@ libzip (-lzip)
 The <code class="Fn">zip_close</code>() function writes any changes made to
   <var class="Ar">archive</var> to disk. If <var class="Ar">archive</var>
   contains no files, the file is completely removed (no empty archive is
-  written). If successful, <var class="Ar">archive</var> is freed. If writing
-  fails, <code class="Fn">zip_close</code>() fails;
+  written). If successful, <var class="Ar">archive</var> is freed. Otherwise
   <var class="Ar">archive</var> is left unchanged and must still be freed.
 <p class="Pp">To close and free a zip archive without saving changes, use
     <a class="Xr" href="zip_discard.html">zip_discard(3)</a>.</p>
@@ -138,8 +137,8 @@ Additionally, any errors returned by the callback function for added or replaced
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
-    <td class="foot-os">NetBSD 8.99.35</td>
+    <td class="foot-date">September 17, 2019</td>
+    <td class="foot-os">NetBSD 9.99.41</td>
   </tr>
 </table>
 </body>
