@@ -1,6 +1,6 @@
 .\" Automatically generated from an mdoc input file.  Do not edit.
 .\" zip_source_stat.mdoc -- get information about zip source
-.\" Copyright (C) 2014-2017 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2014-2019 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -90,32 +90,32 @@ Check if the flag defined by the following defines are in
 before accessing the fields:
 .RS 6n
 .PD 0
-.TP 37n
-\fRZIP_SOURCE_STAT_NAME\fR
+.TP 30n
+\fRZIP_STAT_NAME\fR
 \fIname\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_INDEX\fR
+.TP 30n
+\fRZIP_STAT_INDEX\fR
 \fIindex\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_SIZE\fR
+.TP 30n
+\fRZIP_STAT_SIZE\fR
 \fIsize\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_COMP_SIZE\fR
+.TP 30n
+\fRZIP_STAT_COMP_SIZE\fR
 \fIcomp_size\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_MTIME\fR
+.TP 30n
+\fRZIP_STAT_MTIME\fR
 \fImtime\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_CRC\fR
+.TP 30n
+\fRZIP_STAT_CRC\fR
 \fIcrc\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_COMP_METHOD\fR
+.TP 30n
+\fRZIP_STAT_COMP_METHOD\fR
 \fIcomp_method\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_ENCRYPTION_METHOD\fR
+.TP 30n
+\fRZIP_STAT_ENCRYPTION_METHOD\fR
 \fIencryption_method\fR
-.TP 37n
-\fRZIP_SOURCE_STAT_FLAGS\fR
+.TP 30n
+\fRZIP_STAT_FLAGS\fR
 \fIflags\fR
 .RE
 .PD

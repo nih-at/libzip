@@ -1,6 +1,6 @@
 .\" Automatically generated from an mdoc input file.  Do not edit.
 .\" zip_close.mdoc -- close zip archive
-.\" Copyright (C) 2003-2018 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2003-2019 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_CLOSE" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_CLOSE" "3" "September 17, 2019" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -60,9 +60,7 @@ written).
 If successful,
 \fIarchive\fR
 is freed.
-If writing fails,
-\fBzip_close\fR()
-fails;
+Otherwise
 \fIarchive\fR
 is left unchanged and must still be freed.
 .PP
