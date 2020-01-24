@@ -1,4 +1,4 @@
-1.6.0 [202X-XX-XX]
+1.6.0 [2020-01-24]
 ==================
 
 * Avoid using umask() since it's not thread-safe.
