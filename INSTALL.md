@@ -53,7 +53,7 @@ If you are compiling on a system with a small stack size, add
 `-DZIP_ALLOCATE_BUFFER` to `CFLAGS`.
 
 If you are building on a 32-bit Linux system it might be necessary
-to define _FILE_OFFSET_BITS to 64. Your distro will need to provide
+to define `_FILE_OFFSET_BITS` to `64`. Your distro will need to provide
 a `fts.h` file that is new enough to support this, or the build
 will break in `zipcmp`.
 
