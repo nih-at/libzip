@@ -248,7 +248,6 @@ compare_zip(char *const zn[]) {
 	}
 	for (j = 0; j < a[i].nentry; j++) {
 	    free(a[i].entry[j].name);
-	    free(a[i].entry[j].extra_fields);
 	}
 	free(a[i].entry);
     }
