@@ -1,6 +1,7 @@
-1.x.x [202x-xx-xx]
+1.6.1 [2020-02-03]
 ==================
 
+* Bugfix for double-free in zipcmp(1) during cleanup.
 
 1.6.0 [2020-01-24]
 ==================
