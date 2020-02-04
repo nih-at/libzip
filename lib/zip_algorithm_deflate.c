@@ -220,7 +220,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
 }
 
-// clang-format off
+/* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_deflate_compress = {
     compress_allocate,
@@ -245,4 +245,4 @@ zip_compression_algorithm_t zip_algorithm_deflate_decompress = {
     process
 };
 
-// clang-format on
+/* clang-format on */

@@ -238,7 +238,7 @@ typedef enum zip_source_cmd zip_source_cmd_t;
 
 #define ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd) (((zip_int64_t)1) << (cmd))
 
-// clang-format off
+/* clang-format off */
 
 #define ZIP_SOURCE_SUPPORTS_READABLE	(ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_OPEN) \
                                          | ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_READ) \
@@ -261,7 +261,7 @@ typedef enum zip_source_cmd zip_source_cmd_t;
                                          | ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_TELL_WRITE) \
                                          | ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_REMOVE))
 
-// clang-format on
+/* clang-format on */
 
 /* for use by sources */
 struct zip_source_args_seek {

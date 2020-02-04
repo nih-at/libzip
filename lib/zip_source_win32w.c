@@ -44,7 +44,7 @@ static HANDLE _win32_create_temp_w(_zip_source_win32_read_file_t *ctx, void **te
 static int _win32_rename_temp_w(_zip_source_win32_read_file_t *ctx);
 static int _win32_remove_w(const void *fname);
 
-// clang-format off
+/* clang-format off */
 static _zip_source_win32_file_ops_t win32_ops_w = {
     _win32_strdup_w,
     _win32_open_w,
@@ -52,7 +52,7 @@ static _zip_source_win32_file_ops_t win32_ops_w = {
     _win32_rename_temp_w,
     _win32_remove_w
 };
-// clang-format on
+/* clang-format on */
 
 ZIP_EXTERN zip_source_t *
 zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64_t len) {

@@ -111,14 +111,14 @@ typedef zip_source_t *(*zip_encryption_implementation)(zip_t *, zip_source_t *, 
 
 zip_encryption_implementation _zip_get_encryption_implementation(zip_uint16_t method, int operation);
 
-// clang-format off
+/* clang-format off */
 enum zip_compression_status {
     ZIP_COMPRESSION_OK,
     ZIP_COMPRESSION_END,
     ZIP_COMPRESSION_ERROR,
     ZIP_COMPRESSION_NEED_DATA
 };
-// clang-format on
+/* clang-format on */
 typedef enum zip_compression_status zip_compression_status_t;
 
 struct zip_compression_algorithm {

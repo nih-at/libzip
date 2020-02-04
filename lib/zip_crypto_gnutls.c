@@ -106,7 +106,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
     }
 
     if ((ret = gnutls_hmac_init(hmac, GNUTLS_MAC_SHA1, secret, secret_length)) < 0) {
-	// TODO: set error
+	/* TODO: set error */
 	free(hmac);
 	return NULL;
     }
