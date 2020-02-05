@@ -449,6 +449,7 @@ ZIP_EXTERN int zip_unchange(zip_t * _Nonnull, zip_uint64_t);
 ZIP_EXTERN int zip_unchange_all(zip_t * _Nonnull);
 ZIP_EXTERN int zip_unchange_archive(zip_t * _Nonnull);
 ZIP_EXTERN zip_bool_t zip_compression_method_supported(zip_int32_t method, zip_bool_t compress);
+ZIP_EXTERN zip_bool_t zip_encryption_method_supported(zip_uint16_t method, zip_bool_t encode);
 
 #ifdef __cplusplus
 }

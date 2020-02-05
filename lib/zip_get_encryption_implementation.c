@@ -52,3 +52,8 @@ _zip_get_encryption_implementation(zip_uint16_t em, int operation) {
         return NULL;
     }
 }
+
+ZIP_EXTERN zip_bool_t
+zip_encryption_method_supported(zip_uint16_t method, zip_bool_t encode) {
+    return _zip_get_encryption_implementation(method, encode ? ZIP_CODEC_ENCODE : ZIP_CODEC_DECODE) != NULL;
+}
