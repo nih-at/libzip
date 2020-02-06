@@ -828,17 +828,26 @@ usage(const char *progname, const char *reason) {
 		 "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nSupported compression methods are:\n"
 		 "\tdefault\n"
-#if defined(HAVE_LIBBZ2)
-		 "\tbzip2\n"
-#endif
 		 "\tdeflate\n"
 		 "\tstore\n");
-    fprintf(out, "\nSupported compression methods are:\n"
+	if (zip_compression_method_supported(ZIP_CM_BZIP2, 1)) {
+		fprintf(out, "\tbzip2\n");
+	}
+	if (zip_compression_method_supported(ZIP_CM_XZ, 1)) {
+		fprintf(out, "\txz\n");
+	}
+	fprintf(out, "\nSupported encryption methods are:\n"
 		 "\tnone\n"
-		 "\tTRAD-PKWARE\n"
-		 "\tAES-128\n"
-		 "\tAES-192\n"
-		 "\tAES-256\n");
+		 "\tTRAD-PKWARE\n");
+	if (zip_encryption_method_supported(ZIP_EM_AES_128, 1)) {
+		fprintf(out, "\tAES-128\n");
+	}
+	if (zip_encryption_method_supported(ZIP_EM_AES_192, 1)) {
+		fprintf(out, "\tAES-192\n");
+	}
+	if (zip_encryption_method_supported(ZIP_EM_AES_256, 1)) {
+		fprintf(out, "\tAES-256\n");
+	}
     fprintf(out, "\nThe index is zero-based.\n");
     exit(0);
 }
