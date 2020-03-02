@@ -76,7 +76,7 @@ zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flag
     ctx->flags = flags;
 
     // initialize keys
-    encrypt(ctx->pkware_ctx, NULL, (const zip_uint8_t *) password, strlen(password), 1);
+    _zip_pkware_encrypt(ctx->pkware_ctx, NULL, (const zip_uint8_t *) password, strlen(password), 1);
 
     if ((s2 = zip_source_layered(za, src, pkware_encrypt, ctx)) == NULL) {
         trad_pkware_free(ctx);
@@ -161,7 +161,7 @@ encrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
         ctx->header[PKWARE_HEADERLEN - 1] = (zip_uint8_t) ((ctx->crc >> 24) & 0xff);
     }
 
-    encrypt(ctx->pkware_ctx, ctx->header, ctx->header, PKWARE_HEADERLEN, 0);
+    _zip_pkware_encrypt(ctx->pkware_ctx, ctx->header, ctx->header, PKWARE_HEADERLEN, 0);
     if ((ctx->buffer = _zip_buffer_new(ctx->header, PKWARE_HEADERLEN)) == NULL) {
         trad_pkware_free(ctx);
         zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
@@ -212,7 +212,7 @@ pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip
             return -1;
         }
 
-        encrypt(ctx->pkware_ctx, (zip_uint8_t *) data, (zip_uint8_t *) data, (zip_uint64_t) n, 0);
+        _zip_pkware_encrypt(ctx->pkware_ctx, (zip_uint8_t *) data, (zip_uint8_t *) data, (zip_uint64_t) n, 0);
 
         if ((zip_uint64_t) n < length) {
             ctx->eof = true;

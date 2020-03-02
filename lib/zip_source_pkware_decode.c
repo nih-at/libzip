@@ -69,7 +69,7 @@ zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flag
         return NULL;
     }
 
-    decrypt(ctx->pkware_ctx, NULL, (const zip_uint8_t *) password, strlen(password), 1);
+    _zip_pkware_decrypt(ctx->pkware_ctx, NULL, (const zip_uint8_t *) password, strlen(password), 1);
 
     if ((s2 = zip_source_layered(za, src, pkware_decrypt, ctx)) == NULL) {
         trad_pkware_free(ctx);
@@ -97,7 +97,7 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
         return -1;
     }
 
-    decrypt(ctx->pkware_ctx, header, header, PKWARE_HEADERLEN, 0);
+    _zip_pkware_decrypt(ctx->pkware_ctx, header, header, PKWARE_HEADERLEN, 0);
 
     if (zip_source_stat(src, &st) < 0) {
         /* stat failed, skip password validation */
@@ -135,7 +135,7 @@ pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_so
             return -1;
         }
 
-        decrypt(ctx->pkware_ctx, (zip_uint8_t *) data, (zip_uint8_t *) data, (zip_uint64_t) n, 0);
+        _zip_pkware_decrypt(ctx->pkware_ctx, (zip_uint8_t *) data, (zip_uint8_t *) data, (zip_uint64_t) n, 0);
         return n;
 
     case ZIP_SOURCE_CLOSE:

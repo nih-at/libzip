@@ -84,7 +84,7 @@ _zip_pkware_new(zip_error_t *error) {
 
 
 void
-encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only) {
+_zip_pkware_encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only) {
     zip_uint64_t i;
     Bytef b;
     Bytef tmp;
@@ -110,7 +110,7 @@ encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uin
 
 
 void
-decrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only) {
+_zip_pkware_decrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only) {
     zip_uint64_t i;
     Bytef b;
     Bytef tmp;

@@ -583,8 +583,8 @@ zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t 
 
 void update_keys(zip_trad_pkware_t *ctx, Bytef b);
 Bytef decrypt_byte(zip_trad_pkware_t *ctx);
-void encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only);
-void decrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only);
+void _zip_pkware_encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only);
+void _zip_pkware_decrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only);
 zip_trad_pkware_t *_zip_pkware_new(zip_error_t *error);
 void _zip_pkware_free(zip_trad_pkware_t *ctx);
 
