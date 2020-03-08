@@ -69,7 +69,7 @@ main(int argc, char *argv[]) {
 	return 1;
     }
 
-    if ((fp = fopen(file, "r")) == NULL) {
+    if ((fp = fopen(file, "rb")) == NULL) {
 	fprintf(stderr, "%s: can't open input file '%s': %s\n", prg, file, strerror(errno));
 	return 1;
     }

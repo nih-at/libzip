@@ -45,7 +45,7 @@ get_data(void **datap, size_t *sizep, const char *archive) {
     struct stat st;
     FILE *fp;
 
-    if ((fp = fopen(archive, "r")) == NULL) {
+    if ((fp = fopen(archive, "rb")) == NULL) {
 	if (errno != ENOENT) {
 	    fprintf(stderr, "can't open %s: %s\n", archive, strerror(errno));
 	    return -1;

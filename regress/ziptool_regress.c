@@ -151,7 +151,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 	return NULL;
     }
 
-    if ((fp = fopen(archive, "r")) == NULL) {
+    if ((fp = fopen(archive, "rb")) == NULL) {
 	if (errno == ENOENT) {
 	    src = zip_source_buffer_create(NULL, 0, 0, error);
 	}
