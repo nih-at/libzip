@@ -273,7 +273,7 @@ compute_crc(const char *fname) {
     Bytef buffer[8192];
 
 
-    if ((f = fopen(fname, "r")) == NULL) {
+    if ((f = fopen(fname, "rb")) == NULL) {
 	fprintf(stderr, "%s: can't open %s: %s\n", progname, fname, strerror(errno));
 	return -1;
     }
