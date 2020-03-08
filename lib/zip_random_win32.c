@@ -72,9 +72,9 @@ zip_random_uint32(void) {
     }
     
     if (!seeded) {
-        srandom((unsigned int)time(NULL));
+        srand((unsigned int)time(NULL));
     }
     
-    return (zip_uint32_t)random();
+    return (zip_uint32_t)rand();
 }
 #endif
