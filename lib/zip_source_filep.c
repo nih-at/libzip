@@ -74,7 +74,6 @@ struct read_file {
 };
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
-static int create_temp_output(struct read_file *ctx);
 #ifdef CAN_CLONE
 static zip_int64_t create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset);
 #endif
@@ -222,6 +221,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 }
 
 
+#ifndef _WIN32
 static int
 create_temp_output(struct read_file *ctx) {
     char *temp;
@@ -263,6 +263,7 @@ create_temp_output(struct read_file *ctx) {
 
     return 0;
 }
+#endif
 
 #ifdef CAN_CLONE
 zip_int64_t static create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset) {
