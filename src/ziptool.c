@@ -507,12 +507,11 @@ set_file_encryption(int argc, char *argv[]) {
 static int
 set_file_dostime(int argc, char *argv[]) {
     /* set file last modification time (mtime) directly */
-    time_t mtime;
     zip_uint16_t dostime, dosdate;
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    dostime = (time_t)strtoull(argv[1], NULL, 10);
-    dosdate = (time_t)strtoull(argv[2], NULL, 10);
+    dostime = (zip_uint16_t)strtoull(argv[1], NULL, 10);
+    dosdate = (zip_uint16_t)strtoull(argv[2], NULL, 10);
     if (zip_file_set_dostime(za, idx, dostime, dosdate, 0) < 0) {
 	fprintf(stderr, "can't set file dostime at index '%" PRIu64 "' to '%d'/'%d': %s\n", idx, (int)dostime, (int)dosdate, zip_strerror(za));
 	return -1;
