@@ -201,7 +201,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	    }
 	}
 
-	if (ctx->closep && ctx->start > 0) {
+	if (ctx->start > 0) {
 	    if (_zip_seek_win32_u(ctx->h, ctx->start, SEEK_SET, &ctx->error) < 0) {
 		return -1;
 	    }
