@@ -785,7 +785,7 @@ sub get_variable {
 		}
 		close ($fh);
 	}
-	if (!defined($self->{$name} || $self->{$name} eq '')) {
+	if (!defined($self->{$name}) || $self->{$name} eq '') {
 		$self->die("cannot get variable $name");
 	}
 }
