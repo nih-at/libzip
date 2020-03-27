@@ -37,7 +37,7 @@
 #define ZIP_CRYPTO_SHA1_LENGTH 20
 #define ZIP_CRYPTO_AES_BLOCK_LENGTH 16
 
-#define PKWARE_HEADERLEN 12
+#define ZIP_CRYPTO_PKWARE_HEADERLEN 12
 
 #if defined(HAVE_WINDOWS_CRYPTO)
 #include "zip_crypto_win.h"

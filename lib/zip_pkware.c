@@ -36,6 +36,7 @@
 #include <string.h>
 
 #include "zipint.h"
+
 #include "zip_crypto.h"
 
 
@@ -44,101 +45,71 @@
 #define PKWARE_KEY2 878082192
 
 
-struct _zip_trad_pkware {
-    zip_uint32_t key[3];
-};
-
-
-void
-update_keys(zip_trad_pkware_t *ctx, Bytef b) {
-    ctx->key[0] = (zip_uint32_t) crc32(ctx->key[0] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
-    ctx->key[1] = (ctx->key[1] + (ctx->key[0] & 0xff)) * 134775813 + 1;
-    b = (Bytef) (ctx->key[1] >> 24);
-    ctx->key[2] = (zip_uint32_t) crc32(ctx->key[2] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
+static void
+update_keys(zip_pkware_keys_t *keys, zip_uint8_t b) {
+    keys->key[0] = (zip_uint32_t)crc32(keys->key[0] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
+    keys->key[1] = (keys->key[1] + (keys->key[0] & 0xff)) * 134775813 + 1;
+    b = (zip_uint8_t)(keys->key[1] >> 24);
+    keys->key[2] = (zip_uint32_t)crc32(keys->key[2] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
 }
 
 
-Bytef
-decrypt_byte(zip_trad_pkware_t *ctx) {
+static zip_uint8_t
+crypt_byte(zip_pkware_keys_t *keys) {
     zip_uint16_t tmp;
-    tmp = (zip_uint16_t) (ctx->key[2] | 2);
-    tmp = (zip_uint16_t) (((zip_uint32_t) tmp * (tmp ^ 1)) >> 8);
-    return (Bytef)tmp;
-}
-
-
-zip_trad_pkware_t *
-_zip_pkware_new(zip_error_t *error) {
-    zip_trad_pkware_t *ctx;
-
-    if ((ctx = (zip_trad_pkware_t *) malloc(sizeof(*ctx))) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
-    }
-    ctx->key[0] = PKWARE_KEY0;
-    ctx->key[1] = PKWARE_KEY1;
-    ctx->key[2] = PKWARE_KEY2;
-
-    return ctx;
+    tmp = (zip_uint16_t)(keys->key[2] | 2);
+    tmp = (zip_uint16_t)(((zip_uint32_t)tmp * (tmp ^ 1)) >> 8);
+    return (zip_uint8_t)tmp;
 }
 
 
 void
-_zip_pkware_encrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only) {
+_zip_pkware_keys_reset(zip_pkware_keys_t *keys) {
+    keys->key[0] = PKWARE_KEY0;
+    keys->key[1] = PKWARE_KEY1;
+    keys->key[2] = PKWARE_KEY2;
+}
+
+
+void
+_zip_pkware_encrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len) {
     zip_uint64_t i;
-    Bytef b;
-    Bytef tmp;
+    zip_uint8_t b;
+    zip_uint8_t tmp;
 
     for (i = 0; i < len; i++) {
-        b = in[i];
+	b = in[i];
 
-        if (update_only) {
-            update_keys(ctx, b);
-        } else {
-            /* encrypt next byte */
-            tmp = decrypt_byte(ctx);
-            update_keys(ctx, b);
-            b ^= tmp;
-        }
-
-        /* store cleartext */
-        if (out) {
-            out[i] = b;
-        }
+	if (out != NULL) {
+	    tmp = crypt_byte(keys);
+	    update_keys(keys, b);
+	    b ^= tmp;
+	    out[i] = b;
+	}
+	else {
+	    /* during initialization, we're only interested in key updates */
+	    update_keys(keys, b);
+	}
     }
 }
 
 
 void
-_zip_pkware_decrypt(zip_trad_pkware_t *ctx, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len, int update_only) {
+_zip_pkware_decrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len) {
     zip_uint64_t i;
-    Bytef b;
-    Bytef tmp;
+    zip_uint8_t b;
+    zip_uint8_t tmp;
 
     for (i = 0; i < len; i++) {
-        b = in[i];
+	b = in[i];
 
-        if (!update_only) {
-            /* decrypt next byte */
-            tmp = decrypt_byte(ctx);
-            b ^= tmp;
-        }
+	/* during initialization, we're only interested in key updates */
+	if (out != NULL) {
+	    tmp = crypt_byte(keys);
+	    b ^= tmp;
+	    out[i] = b;
+	}
 
-        /* store cleartext */
-        if (out) {
-            out[i] = b;
-        }
-
-        update_keys(ctx, b);
+	update_keys(keys, b);
     }
-}
-
-
-void
-_zip_pkware_free(zip_trad_pkware_t *ctx) {
-    if (ctx == NULL) {
-        return;
-    }
-
-    free(ctx);
 }

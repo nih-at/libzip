@@ -55,6 +55,7 @@ static int add_data(zip_t *, zip_source_t *, zip_dirent_t *);
 static int copy_data(zip_t *, zip_uint64_t);
 static int copy_source(zip_t *, zip_source_t *, zip_int64_t);
 static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
+static int write_data_descriptor(zip_t *za, const zip_dirent_t *dirent, int is_zip64);
 
 ZIP_EXTERN int
 zip_close(zip_t *za) {
@@ -233,8 +234,11 @@ zip_close(zip_t *za) {
 	else {
 	    zip_uint64_t offset;
 
-	    /* when copying data, all sizes are known -> no data descriptor needed */
-	    de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
+	    if (de->encryption_method != ZIP_EM_TRAD_PKWARE) {
+                /* when copying data, all sizes are known -> no data descriptor needed */
+		/* except for PKWare encryption, where removing the data descriptor breaks password validation */
+		de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
+	    }
 	    if (_zip_dirent_write(za, de, ZIP_FL_LOCAL) < 0) {
 		error = 1;
 		break;
@@ -252,7 +256,15 @@ zip_close(zip_t *za) {
 		error = 1;
 		break;
 	    }
+
+	    if (de->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
+		if (write_data_descriptor(za, de, _zip_dirent_needs_zip64(de, 0)) < 0) {
+		    error = 1;
+		    break;
+		}
+	    }
 	}
+
     }
 
     if (!error) {
@@ -453,13 +465,8 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 	    zip_source_free(src_final);
 	    return -1;
 	}
-        if (de->encryption_method == ZIP_EM_TRAD_PKWARE && !(flags & ZIP_GPBF_DATA_DESCRIPTOR)) {
-            // calculate crc from src in advance for Traditional PKWARE Encryption.
-            if (zip_source_pkware_calc_crc(za, src, src_tmp->ud) < 0) {
-                zip_source_free(src_tmp);
-                zip_source_free(src_final);
-                return -1;
-            }
+        if (de->encryption_method == ZIP_EM_TRAD_PKWARE) {
+	    de->bitflags |= ZIP_GPBF_DATA_DESCRIPTOR;
         }
 
 	zip_source_free(src_final);
@@ -530,6 +537,12 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     if (zip_source_seek_write(za->src, offend, SEEK_SET) < 0) {
 	_zip_error_set_from_source(&za->error, za->src);
 	return -1;
+    }
+
+    if (de->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
+	if (write_data_descriptor(za, de, is_zip64) < 0) {
+	    return -1;
+	}
     }
 
     return 0;
@@ -663,4 +676,38 @@ _zip_changed(const zip_t *za, zip_uint64_t *survivorsp) {
     }
 
     return changed;
+}
+
+static int
+write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64) {
+    zip_buffer_t *buffer = _zip_buffer_new(NULL, MAX_DATA_DESCRIPTOR_LENGTH);
+    int ret = 0;
+
+    if (buffer == NULL) {
+	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+	return -1;
+    }
+
+    _zip_buffer_put(buffer, DATADES_MAGIC, 4);
+    _zip_buffer_put_32(buffer, de->crc);
+    if (is_zip64) {
+	_zip_buffer_put_64(buffer, de->comp_size);
+	_zip_buffer_put_64(buffer, de->uncomp_size);
+    }
+    else {
+	_zip_buffer_put_32(buffer, de->comp_size);
+	_zip_buffer_put_32(buffer, de->uncomp_size);
+    }
+
+    if (!_zip_buffer_ok(buffer)) {
+	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
+	ret = -1;
+    }
+    else {
+	ret = _zip_write(za, _zip_buffer_data(buffer), _zip_buffer_offset(buffer));
+    }
+
+    _zip_buffer_free(buffer);
+
+    return ret;
 }
