@@ -69,6 +69,7 @@
 #define BUFSIZE 8192
 #define EFZIP64SIZE 28
 #define EF_WINZIP_AES_SIZE 7
+#define MAX_DATA_DESCRIPTOR_LENGTH 24
 
 #define ZIP_CM_REPLACED_DEFAULT (-2)
 #define ZIP_CM_WINZIP_AES 99 /* Winzip AES encrypted */
@@ -170,7 +171,8 @@ zip_source_t *zip_source_crc(zip_t *, zip_source_t *, int);
 zip_source_t *zip_source_decompress(zip_t *za, zip_source_t *src, zip_int32_t cm);
 zip_source_t *zip_source_layered(zip_t *, zip_source_t *, zip_source_layered_callback, void *);
 zip_source_t *zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error);
-zip_source_t *zip_source_pkware(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
+zip_source_t *zip_source_pkware_decode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
+zip_source_t *zip_source_pkware_encode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 int zip_source_remove(zip_source_t *);
 zip_int64_t zip_source_supports(zip_source_t *src);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
@@ -414,6 +416,11 @@ typedef struct zip_filelist zip_filelist_t;
 struct _zip_winzip_aes;
 typedef struct _zip_winzip_aes zip_winzip_aes_t;
 
+struct _zip_pkware_keys {
+    zip_uint32_t key[3];
+};
+typedef struct _zip_pkware_keys zip_pkware_keys_t;
+
 extern const char *const _zip_err_str[];
 extern const int _zip_nerr_str;
 extern const int _zip_err_type[];
@@ -575,6 +582,12 @@ bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint6
 bool _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac);
 void _zip_winzip_aes_free(zip_winzip_aes_t *ctx);
 zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, const zip_uint8_t *salt, zip_uint16_t key_size, zip_uint8_t *password_verify, zip_error_t *error);
+
+void _zip_pkware_encrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len);
+void _zip_pkware_decrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len);
+zip_pkware_keys_t *_zip_pkware_keys_new(zip_error_t *error);
+void _zip_pkware_keys_free(zip_pkware_keys_t *keys);
+void _zip_pkware_keys_reset(zip_pkware_keys_t *keys);
 
 int _zip_changed(const zip_t *, zip_uint64_t *);
 const char *_zip_get_name(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *);
