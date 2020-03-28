@@ -63,7 +63,7 @@ zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flag
 	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
-    if (flags & ZIP_CODEC_DECODE) {
+    if (!(flags & ZIP_CODEC_ENCODE)) {
 	zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
 	return NULL;
     }
