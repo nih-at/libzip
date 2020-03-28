@@ -69,6 +69,15 @@
 		3D7E35481B33076C00022624 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7E35471B33076C00022624 /* libz.dylib */; };
 		3D7E35491B330AD500022624 /* zip_source_is_deleted.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */; };
 		3D9284821C309510001EABA7 /* zip_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9284801C309510001EABA7 /* zip_hash.c */; };
+		4B00CA24242F59D700E0B71C /* zip_source_pkware_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B00CA21242F59D700E0B71C /* zip_source_pkware_decode.c */; };
+		4B00CA25242F59D700E0B71C /* zip_pkware.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B00CA22242F59D700E0B71C /* zip_pkware.c */; };
+		4B00CA26242F59D700E0B71C /* zip_source_pkware_encode.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B00CA23242F59D700E0B71C /* zip_source_pkware_encode.c */; };
+		4B00CA2D242F5C2500E0B71C /* set_file_dostime.test in Resources */ = {isa = PBXBuildFile; fileRef = 4B00CA27242F5C2500E0B71C /* set_file_dostime.test */; };
+		4B00CA2E242F5C2500E0B71C /* cancel_45.test in Resources */ = {isa = PBXBuildFile; fileRef = 4B00CA28242F5C2500E0B71C /* cancel_45.test */; };
+		4B00CA2F242F5C2500E0B71C /* set_compression_store_to_xz.test in Resources */ = {isa = PBXBuildFile; fileRef = 4B00CA29242F5C2500E0B71C /* set_compression_store_to_xz.test */; };
+		4B00CA30242F5C2500E0B71C /* encryption-nonrandom-pkware.test in Resources */ = {isa = PBXBuildFile; fileRef = 4B00CA2A242F5C2500E0B71C /* encryption-nonrandom-pkware.test */; };
+		4B00CA31242F5C2500E0B71C /* cancel_90.test in Resources */ = {isa = PBXBuildFile; fileRef = 4B00CA2B242F5C2500E0B71C /* cancel_90.test */; };
+		4B00CA32242F5C2500E0B71C /* set_compression_xz_to_store.test in Resources */ = {isa = PBXBuildFile; fileRef = 4B00CA2C242F5C2500E0B71C /* set_compression_xz_to_store.test */; };
 		4B01D6A615B2F46B002D5007 /* zip_add_dir.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC71F115B1B25E00236D3C /* zip_add_dir.c */; };
 		4B01D6A715B2F46B002D5007 /* zip_add_entry.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC71F215B1B25E00236D3C /* zip_add_entry.c */; };
 		4B01D6A815B2F46B002D5007 /* zip_add.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC71F315B1B25E00236D3C /* zip_add.c */; };
@@ -133,7 +142,6 @@
 		4B01D6E515B2F46B002D5007 /* zip_source_function.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723015B1B25E00236D3C /* zip_source_function.c */; };
 		4B01D6E615B2F46B002D5007 /* zip_source_layered.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723115B1B25E00236D3C /* zip_source_layered.c */; };
 		4B01D6E715B2F46B002D5007 /* zip_source_open.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723215B1B25E00236D3C /* zip_source_open.c */; };
-		4B01D6E815B2F46B002D5007 /* zip_source_pkware.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723315B1B25E00236D3C /* zip_source_pkware.c */; };
 		4B01D6EA15B2F46B002D5007 /* zip_source_read.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723515B1B25E00236D3C /* zip_source_read.c */; };
 		4B01D6EB15B2F46B002D5007 /* zip_source_stat.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723615B1B25E00236D3C /* zip_source_stat.c */; };
 		4B01D6EC15B2F46B002D5007 /* zip_source_window.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC723715B1B25E00236D3C /* zip_source_window.c */; };
@@ -501,6 +509,15 @@
 		3D7E35421B33063600022624 /* windows-open.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "windows-open.c"; sourceTree = "<group>"; };
 		3D7E35471B33076C00022624 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		3D9284801C309510001EABA7 /* zip_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_hash.c; sourceTree = "<group>"; usesTabs = 1; };
+		4B00CA21242F59D700E0B71C /* zip_source_pkware_decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_pkware_decode.c; sourceTree = "<group>"; };
+		4B00CA22242F59D700E0B71C /* zip_pkware.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_pkware.c; sourceTree = "<group>"; };
+		4B00CA23242F59D700E0B71C /* zip_source_pkware_encode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_pkware_encode.c; sourceTree = "<group>"; };
+		4B00CA27242F5C2500E0B71C /* set_file_dostime.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_file_dostime.test; sourceTree = "<group>"; };
+		4B00CA28242F5C2500E0B71C /* cancel_45.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cancel_45.test; sourceTree = "<group>"; };
+		4B00CA29242F5C2500E0B71C /* set_compression_store_to_xz.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_store_to_xz.test; sourceTree = "<group>"; };
+		4B00CA2A242F5C2500E0B71C /* encryption-nonrandom-pkware.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "encryption-nonrandom-pkware.test"; sourceTree = "<group>"; };
+		4B00CA2B242F5C2500E0B71C /* cancel_90.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cancel_90.test; sourceTree = "<group>"; };
+		4B00CA2C242F5C2500E0B71C /* set_compression_xz_to_store.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = set_compression_xz_to_store.test; sourceTree = "<group>"; };
 		4B01D68B15B2F3F1002D5007 /* libzip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = libzip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D6FD15B2F4B1002D5007 /* zipmerge */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = zipmerge; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B01D70815B2F4CF002D5007 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
@@ -864,7 +881,6 @@
 		4BDC723015B1B25E00236D3C /* zip_source_function.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_function.c; path = ../lib/zip_source_function.c; sourceTree = "<group>"; };
 		4BDC723115B1B25E00236D3C /* zip_source_layered.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_layered.c; path = ../lib/zip_source_layered.c; sourceTree = "<group>"; };
 		4BDC723215B1B25E00236D3C /* zip_source_open.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_open.c; path = ../lib/zip_source_open.c; sourceTree = "<group>"; };
-		4BDC723315B1B25E00236D3C /* zip_source_pkware.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_pkware.c; path = ../lib/zip_source_pkware.c; sourceTree = "<group>"; };
 		4BDC723515B1B25E00236D3C /* zip_source_read.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_read.c; path = ../lib/zip_source_read.c; sourceTree = "<group>"; };
 		4BDC723615B1B25E00236D3C /* zip_source_stat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_stat.c; path = ../lib/zip_source_stat.c; sourceTree = "<group>"; };
 		4BDC723715B1B25E00236D3C /* zip_source_window.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_source_window.c; path = ../lib/zip_source_window.c; sourceTree = "<group>"; };
@@ -1200,6 +1216,8 @@
 				4BD35E4F1A33366200256CB7 /* add_stored.test */,
 				4BC03F8E1FDD55C4003C7B62 /* buffer-fragment-read.test */,
 				4BC03F941FDD55C5003C7B62 /* buffer-fragment-write.test */,
+				4B00CA28242F5C2500E0B71C /* cancel_45.test */,
+				4B00CA2B242F5C2500E0B71C /* cancel_90.test */,
 				4B77E61D1FDEDEA5006786BA /* clone-buffer-add.test */,
 				4B77E61B1FDEDEA4006786BA /* clone-buffer-delete.test */,
 				4B77E61C1FDEDEA5006786BA /* clone-buffer-replace.test */,
@@ -1227,6 +1245,7 @@
 				4BC03F8B1FDD55C3003C7B62 /* encryption-nonrandom-aes128.test */,
 				4BC03F7B1FDD55C1003C7B62 /* encryption-nonrandom-aes192.test */,
 				4BC03F831FDD55C2003C7B62 /* encryption-nonrandom-aes256.test */,
+				4B00CA2A242F5C2500E0B71C /* encryption-nonrandom-pkware.test */,
 				4BC03F881FDD55C3003C7B62 /* encryption-remove.test */,
 				4BD35E5C1A33366200256CB7 /* extra_add_multiple.test */,
 				4BD35E5D1A33366200256CB7 /* extra_add.test */,
@@ -1295,7 +1314,10 @@
 				4BC03F851FDD55C3003C7B62 /* set_compression_store_to_bzip2.test */,
 				4BD35EB01A33366200256CB7 /* set_compression_store_to_deflate.test */,
 				4BD35EB11A33366200256CB7 /* set_compression_store_to_store.test */,
+				4B00CA29242F5C2500E0B71C /* set_compression_store_to_xz.test */,
 				4BD35EB21A33366200256CB7 /* set_compression_unknown.test */,
+				4B00CA2C242F5C2500E0B71C /* set_compression_xz_to_store.test */,
+				4B00CA27242F5C2500E0B71C /* set_file_dostime.test */,
 				4BC03F981FDD55C5003C7B62 /* set_file_mtime.test */,
 				4BD35EB41A33366200256CB7 /* stat_index_cp437_guess.test */,
 				4BD35EB51A33366200256CB7 /* stat_index_cp437_raw.test */,
@@ -1438,6 +1460,7 @@
 				4BDC721D15B1B25E00236D3C /* zip_name_locate.c */,
 				4BDC721E15B1B25E00236D3C /* zip_new.c */,
 				4BDC721F15B1B25E00236D3C /* zip_open.c */,
+				4B00CA22242F59D700E0B71C /* zip_pkware.c */,
 				4BD708781EB1CF73003F351F /* zip_progress.c */,
 				736ED9B81E3D688C00C36873 /* zip_random_unix.c */,
 				4BDC722015B1B25E00236D3C /* zip_rename.c */,
@@ -1466,7 +1489,8 @@
 				4BE402AC19D94AE400298248 /* zip_source_is_deleted.c */,
 				4BDC723115B1B25E00236D3C /* zip_source_layered.c */,
 				4BDC723215B1B25E00236D3C /* zip_source_open.c */,
-				4BDC723315B1B25E00236D3C /* zip_source_pkware.c */,
+				4B00CA21242F59D700E0B71C /* zip_source_pkware_decode.c */,
+				4B00CA23242F59D700E0B71C /* zip_source_pkware_encode.c */,
 				4BDC723515B1B25E00236D3C /* zip_source_read.c */,
 				4BCF3031199ABD3A0064207B /* zip_source_remove.c */,
 				4BCF301C199A2F820064207B /* zip_source_rollback_write.c */,
@@ -1755,7 +1779,7 @@
 		4BDC71BF15B181DA00236D3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = NiH;
 				TargetAttributes = {
 					3D7E35361B3305FB00022624 = {
@@ -1765,11 +1789,11 @@
 			};
 			buildConfigurationList = 4BDC71C215B181DA00236D3C /* Build configuration list for PBXProject "libzip" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 4BDC71BD15B181DA00236D3C;
 			productRefGroup = 4BDC71C915B181DA00236D3C /* Products */;
@@ -1801,6 +1825,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B00CA32242F5C2500E0B71C /* set_compression_xz_to_store.test in Resources */,
+				4B00CA2E242F5C2500E0B71C /* cancel_45.test in Resources */,
+				4B00CA31242F5C2500E0B71C /* cancel_90.test in Resources */,
+				4B00CA2D242F5C2500E0B71C /* set_file_dostime.test in Resources */,
+				4B00CA30242F5C2500E0B71C /* encryption-nonrandom-pkware.test in Resources */,
+				4B00CA2F242F5C2500E0B71C /* set_compression_store_to_xz.test in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1864,8 +1894,10 @@
 				4B01D6AB15B2F46B002D5007 /* zip_dir_add.c in Sources */,
 				4BD7087A1EB1CF73003F351F /* zip_progress.c in Sources */,
 				4B01D6AC15B2F46B002D5007 /* zip_dirent.c in Sources */,
+				4B00CA24242F59D700E0B71C /* zip_source_pkware_decode.c in Sources */,
 				4B01D6AD15B2F46B002D5007 /* zip_discard.c in Sources */,
 				4B0454B81E8E3E02002FA1F9 /* zip_source_get_compression_flags.c in Sources */,
+				4B00CA25242F59D700E0B71C /* zip_pkware.c in Sources */,
 				4B01D6AE15B2F46B002D5007 /* zip_entry.c in Sources */,
 				4B01D6AF15B2F46B002D5007 /* zip_err_str.c in Sources */,
 				4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */,
@@ -1945,7 +1977,6 @@
 				4B01D6E615B2F46B002D5007 /* zip_source_layered.c in Sources */,
 				4B01D6E715B2F46B002D5007 /* zip_source_open.c in Sources */,
 				4B908F532385BE6D00886355 /* zip_libzip_version.c in Sources */,
-				4B01D6E815B2F46B002D5007 /* zip_source_pkware.c in Sources */,
 				4B01D6EA15B2F46B002D5007 /* zip_source_read.c in Sources */,
 				4BC03FA41FDD6B6F003C7B62 /* zip_source_begin_write_cloning.c in Sources */,
 				4B01D6EB15B2F46B002D5007 /* zip_source_stat.c in Sources */,
@@ -1965,6 +1996,7 @@
 				4BCF3037199ABDDA0064207B /* zip_source_seek_write.c in Sources */,
 				4B01D6F615B2F46B002D5007 /* zip_unchange_data.c in Sources */,
 				4B01D6F715B2F46B002D5007 /* zip_unchange.c in Sources */,
+				4B00CA26242F59D700E0B71C /* zip_source_pkware_encode.c in Sources */,
 				4B01D6F815B2F46B002D5007 /* zip_utf-8.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2180,6 +2212,7 @@
 		3D7E353B1B3305FB00022624 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2189,6 +2222,7 @@
 		3D7E353C1B3305FB00022624 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2269,6 +2303,7 @@
 			buildSettings = {
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -2288,6 +2323,7 @@
 			buildSettings = {
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -2306,6 +2342,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2318,6 +2355,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2345,6 +2383,7 @@
 		4B51DDBE1FDAE20A00C5CA85 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2356,6 +2395,7 @@
 		4B51DDBF1FDAE20A00C5CA85 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2383,6 +2423,7 @@
 		4BACD59115BC2CEA00920691 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2394,6 +2435,7 @@
 		4BACD59215BC2CEA00920691 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2421,6 +2463,7 @@
 		4BACD5BF15BC2DC900920691 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2432,6 +2475,7 @@
 		4BACD5C015BC2DC900920691 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2443,6 +2487,7 @@
 		4BACD5CE15BC2DF200920691 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2454,6 +2499,7 @@
 		4BACD5CF15BC2DF200920691 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2465,6 +2511,7 @@
 		4BACD5DD15BC2F3700920691 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2476,6 +2523,7 @@
 		4BACD5DE15BC2F3700920691 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2487,6 +2535,7 @@
 		4BACD64E15BC301300920691 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2498,6 +2547,7 @@
 		4BACD64F15BC301300920691 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2525,6 +2575,7 @@
 		4BD6CB6A19E71CD100710654 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2536,6 +2587,7 @@
 		4BD6CB6B19E71CD100710654 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2548,6 +2600,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -2607,6 +2660,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -2661,6 +2715,7 @@
 		4BFF2B4F1FE12FCA006EF3F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2672,6 +2727,7 @@
 		4BFF2B501FE12FCA006EF3F3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

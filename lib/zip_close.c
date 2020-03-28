@@ -695,8 +695,8 @@ write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64) {
 	_zip_buffer_put_64(buffer, de->uncomp_size);
     }
     else {
-	_zip_buffer_put_32(buffer, de->comp_size);
-	_zip_buffer_put_32(buffer, de->uncomp_size);
+	_zip_buffer_put_32(buffer, (zip_uint32_t)de->comp_size);
+	_zip_buffer_put_32(buffer, (zip_uint32_t)de->uncomp_size);
     }
 
     if (!_zip_buffer_ok(buffer)) {

@@ -124,7 +124,7 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
 	}
     }
 
-    if (!ok && (st.valid & (ZIP_STAT_MTIME | ZIP_STAT_CRC) != 0)) {
+    if (!ok && ((st.valid & (ZIP_STAT_MTIME | ZIP_STAT_CRC)) != 0)) {
 	zip_error_set(&ctx->error, ZIP_ER_WRONGPASSWD, 0);
 	return -1;
     }

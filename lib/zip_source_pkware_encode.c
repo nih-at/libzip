@@ -168,7 +168,7 @@ pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip
 	    ctx->eof = true;
 	}
 
-	return buffer_n + n;
+	return (zip_int64_t)buffer_n + n;
 
     case ZIP_SOURCE_CLOSE:
 	_zip_buffer_free(ctx->buffer);
