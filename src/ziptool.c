@@ -630,47 +630,47 @@ get_flags(const char *arg) {
 
 static zip_int32_t
 get_compression_method(const char *arg) {
-    if (strcmp(arg, "default") == 0)
+    if (strcasecmp(arg, "default") == 0)
 	return ZIP_CM_DEFAULT;
-    else if (strcmp(arg, "store") == 0)
+    else if (strcasecmp(arg, "store") == 0)
 	return ZIP_CM_STORE;
-    else if (strcmp(arg, "deflate") == 0)
+    else if (strcasecmp(arg, "deflate") == 0)
 	return ZIP_CM_DEFLATE;
 #if defined(HAVE_LIBBZ2)
-    else if (strcmp(arg, "bzip2") == 0)
+    else if (strcasecmp(arg, "bzip2") == 0)
 	return ZIP_CM_BZIP2;
 #endif
 #if defined(HAVE_LIBLZMA)
 /*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
     archives made this way - and vice versa.
 
-    else if (strcmp(arg, "lzma") == 0)
+    else if (strcasecmp(arg, "lzma") == 0)
       return ZIP_CM_LZMA;
-    else if (strcmp(arg, "lzma2") == 0)
+    else if (strcasecmp(arg, "lzma2") == 0)
       return ZIP_CM_LZMA2;
 */
-    else if (strcmp(arg, "xz") == 0)
+    else if (strcasecmp(arg, "xz") == 0)
       return ZIP_CM_XZ;
 
 #endif
-    else if (strcmp(arg, "unknown") == 0)
+    else if (strcasecmp(arg, "unknown") == 0)
 	return 100;
     return 0; /* TODO: error handling */
 }
 
 static zip_uint16_t
 get_encryption_method(const char *arg) {
-    if (strcmp(arg, "none") == 0)
+    if (strcasecmp(arg, "none") == 0)
 	return ZIP_EM_NONE;
-    else if (strcmp(arg, "TRAD-PKWARE") == 0)
+    else if (strcasecmp(arg, "PKWARE") == 0)
 	return ZIP_EM_TRAD_PKWARE;
-    else if (strcmp(arg, "AES-128") == 0)
+    else if (strcasecmp(arg, "AES-128") == 0)
 	return ZIP_EM_AES_128;
-    else if (strcmp(arg, "AES-192") == 0)
+    else if (strcasecmp(arg, "AES-192") == 0)
 	return ZIP_EM_AES_192;
-    else if (strcmp(arg, "AES-256") == 0)
+    else if (strcasecmp(arg, "AES-256") == 0)
 	return ZIP_EM_AES_256;
-    else if (strcmp(arg, "unknown") == 0)
+    else if (strcasecmp(arg, "unknown") == 0)
 	return 100;
     return (zip_uint16_t)-1; /* TODO: error handling */
 }
@@ -835,7 +835,7 @@ usage(const char *progname, const char *reason) {
 		 "\tstore\n");
     fprintf(out, "\nSupported compression methods are:\n"
 		 "\tnone\n"
-		 "\tTRAD-PKWARE\n"
+		 "\tPKWARE\n"
 		 "\tAES-128\n"
 		 "\tAES-192\n"
 		 "\tAES-256\n");
