@@ -37,9 +37,6 @@
 
 #include "zipint.h"
 
-#include "zip_crypto.h"
-
-
 struct trad_pkware {
     char *password;
     zip_pkware_keys_t keys;

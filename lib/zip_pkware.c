@@ -37,9 +37,6 @@
 
 #include "zipint.h"
 
-#include "zip_crypto.h"
-
-
 #define PKWARE_KEY0 305419896
 #define PKWARE_KEY1 591751049
 #define PKWARE_KEY2 878082192

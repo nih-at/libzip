@@ -71,6 +71,8 @@
 #define EF_WINZIP_AES_SIZE 7
 #define MAX_DATA_DESCRIPTOR_LENGTH 24
 
+#define ZIP_CRYPTO_PKWARE_HEADERLEN 12
+
 #define ZIP_CM_REPLACED_DEFAULT (-2)
 #define ZIP_CM_WINZIP_AES 99 /* Winzip AES encrypted */
 
