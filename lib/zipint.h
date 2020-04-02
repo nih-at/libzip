@@ -157,8 +157,6 @@ extern zip_compression_algorithm_t zip_algorithm_xz_compress;
 extern zip_compression_algorithm_t zip_algorithm_xz_decompress;
 
 
-bool zip_compression_method_supported(zip_int32_t method, bool compress);
-
 /* This API is not final yet, but we need it internally, so it's private for now. */
 
 const zip_uint8_t *zip_get_extra_field_by_id(zip_t *, int, int, zip_uint16_t, int, zip_uint16_t *);

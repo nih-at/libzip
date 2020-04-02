@@ -4,9 +4,11 @@ SET(MAN_PAGES
   zip_add.3
   zip_add_dir.3
   zip_close.3
+  zip_compression_method_supported.3
   zip_delete.3
   zip_dir_add.3
   zip_discard.3
+  zip_encryption_method_supported.3
   zip_error_clear.3
   zip_error_code_system.3
   zip_error_code_zip.3

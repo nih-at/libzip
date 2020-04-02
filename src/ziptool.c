@@ -820,25 +820,34 @@ usage(const char *progname, const char *reason) {
 	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
     }
     fprintf(out, "\nSupported flags are:\n"
-		 "\t0\t(no flags)\n"
-		 "\tC\tZIP_FL_NOCASE\n"
-		 "\tc\tZIP_FL_CENTRAL\n"
-		 "\td\tZIP_FL_NODIR\n"
-		 "\tl\tZIP_FL_LOCAL\n"
-		 "\tu\tZIP_FL_UNCHANGED\n");
+	    "\t0\t(no flags)\n"
+	    "\tC\tZIP_FL_NOCASE\n"
+	    "\tc\tZIP_FL_CENTRAL\n"
+	    "\td\tZIP_FL_NODIR\n"
+	    "\tl\tZIP_FL_LOCAL\n"
+	    "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nSupported compression methods are:\n"
-		 "\tdefault\n"
-#if defined(HAVE_LIBBZ2)
-		 "\tbzip2\n"
-#endif
-		 "\tdeflate\n"
-		 "\tstore\n");
-    fprintf(out, "\nSupported compression methods are:\n"
-		 "\tnone\n"
-		 "\tPKWARE\n"
-		 "\tAES-128\n"
-		 "\tAES-192\n"
-		 "\tAES-256\n");
+	    "\tdefault\n");
+    if (zip_compression_method_supported(ZIP_CM_BZIP2, 1)) {
+	fprintf(out, "\tbzip2\n");
+    }
+    fprintf(out, "\tdeflate\n"
+	    "\tstore\n");
+    if (zip_compression_method_supported(ZIP_CM_XZ, 1)) {
+	fprintf(out, "\txz\n");
+    }
+    fprintf(out, "\nSupported encryption methods are:\n"
+	    "\tnone\n");
+    if (zip_encryption_method_supported(ZIP_EM_AES_128, 1)) {
+	fprintf(out, "\tAES-128\n");
+    }
+    if (zip_encryption_method_supported(ZIP_EM_AES_192, 1)) {
+	fprintf(out, "\tAES-192\n");
+    }
+    if (zip_encryption_method_supported(ZIP_EM_AES_256, 1)) {
+	fprintf(out, "\tAES-256\n");
+    }
+    fprintf(out, "\tPKWARE\n");
     fprintf(out, "\nThe index is zero-based.\n");
     exit(0);
 }

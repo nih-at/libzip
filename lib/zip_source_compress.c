@@ -106,10 +106,10 @@ get_algorithm(zip_int32_t method, bool compress) {
     return NULL;
 }
 
-bool
-zip_compression_method_supported(zip_int32_t method, bool compress) {
+ZIP_EXTERN int
+zip_compression_method_supported(zip_int32_t method, int compress) {
     if (method == ZIP_CM_STORE) {
-	return true;
+	return 1;
     }
     return get_algorithm(method, compress) != NULL;
 }
