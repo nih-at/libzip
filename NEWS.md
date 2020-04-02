@@ -205,7 +205,7 @@
 0.9 [2008-07-25]
 ==================
 
-* on Windows, explictly set dllimport/dllexport
+* on Windows, explicitly set dllimport/dllexport
 * remove erroneous references to GPL
 * add support for torrentzip
 * new functions: zip_get_archive_flag, zip_set_archive_flag

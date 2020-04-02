@@ -8,7 +8,7 @@
 # www.silverglint.com
 
 
-# Usage: 
+# Usage:
 #---------
 # download the libzip repository
 # > git clone https://github.com/dec1/libzip.git
@@ -24,23 +24,23 @@
 # $ cd /home/docker-share/libzip/android
 #
 # Modify ./do.sh (on host), to match the boost and android ndk versions/paths in the "Configure here" section below
-# Build from running docker container. 
+# Build from running docker container.
 # $./do.sh
 #
 # "./build" dir contains required build, but owned by root. chown to your username/group
 # > sudo chown -R <userid>:<groupid> ./build
 # > sudo chown -R <userid>:<groupid> ./install
 #
-# Exit container, when build is finsihed.
+# Exit container, when build is finished.
 # $ exit
-# 
+#
 
 
 
 
 FROM ubuntu:18.04
- 
- 
+
+
 ## --------------------------------------------------------------------
 ##              Configure here
 # ---------------------------------------------------------------------
@@ -54,7 +54,7 @@ FROM ubuntu:18.04
 ARG SDK_URL_BASE=https://dl.google.com/android/repository
 ARG SDK_FILE=sdk-tools-linux-4333796.zip
 
-# the sdk plaform to use 
+# the sdk platform to use
 # https://developer.android.com/guide/topics/manifest/uses-sdk-element
 ARG ANDROID_SDK_PLATFORM_VERS="platforms;android-28"
 
@@ -75,13 +75,13 @@ RUN apt-get -y dist-upgrade
 RUN apt-get -y install wget
 
 # for unzipping downloaded android archives
-RUN apt-get -y install zip 
+RUN apt-get -y install zip
 RUN apt-get -y install cmake
 
 RUN apt-get -y install lib32z1
 
 
-# need this this to install some (32 bit) prerequisites for android builds 
+# need this this to install some (32 bit) prerequisites for android builds
 RUN dpkg --add-architecture i386
 RUN apt-get update
 RUN apt-get -y dist-upgrade
@@ -89,7 +89,7 @@ RUN apt-get install -y  libc6:i386 libncurses5:i386 libstdc++6:i386 libbz2-1.0:i
 
 
 # need c compiler to set up create boost build system (before building boost with it and android toolchain)
-RUN apt-get -y install build-essential 
+RUN apt-get -y install build-essential
 RUN apt-get -y install libc6-dev-i386
 RUN apt-get -y install clang
 
@@ -104,7 +104,7 @@ WORKDIR ${ANDROID_HOME}
 # ----
 # download android sdk command line tools
 RUN wget ${SDK_URL_BASE}/$SDK_FILE
-RUN unzip $SDK_FILE 
+RUN unzip $SDK_FILE
 
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
@@ -112,11 +112,11 @@ ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}
 RUN yes | sdkmanager --licenses
 
 RUN sdkmanager "platform-tools" $ANDROID_SDK_PLATFORM_VERS
-#RUN sdkmanager "platform-tools" "platforms;android-28" 
+#RUN sdkmanager "platform-tools" "platforms;android-28"
 
 
 # NDK
 # ----
 RUN wget ${NDK_URL_BASE}/$NDK_FILE
-RUN unzip $NDK_FILE 
+RUN unzip $NDK_FILE
 

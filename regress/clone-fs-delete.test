@@ -1,4 +1,4 @@
-# test cloning archive from filesystem, deleteing a file
+# test cloning archive from filesystem, deleting a file
 precheck ./can_clone_file
 return 0
 args test.zzip  delete 2

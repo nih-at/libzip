@@ -552,7 +552,7 @@ int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_err
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);
 zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error);
 int _zip_read_local_ef(zip_t *, zip_uint64_t);
-zip_string_t *_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t lenght, bool nulp, zip_error_t *error);
+zip_string_t *_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t length, bool nulp, zip_error_t *error);
 int _zip_register_source(zip_t *za, zip_source_t *src);
 
 void _zip_set_open_error(int *zep, const zip_error_t *err, int ze);
