@@ -1,9 +1,9 @@
 # Soon
 
 * review guidelines/community standards
-  - (Linux Foundation Core Infrastructure Initiative Best Practices)[https://bestpractices.coreinfrastructure.org/]
-  - (Readme Maturity Level)[https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md]
-  - (Github Community Profile)[https://github.com/nih-at/libzip/community]
+  - [Linux Foundation Core Infrastructure Initiative Best Practices](https://bestpractices.coreinfrastructure.org/)
+  - [Readme Maturity Level](https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md)
+  - [Github Community Profile](https://github.com/nih-at/libzip/community)
 
 * test different crypto backends with TravisCI.
 
