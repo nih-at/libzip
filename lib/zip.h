@@ -230,9 +230,10 @@ enum zip_source_cmd {
     ZIP_SOURCE_TELL_WRITE,            /* get write position */
     ZIP_SOURCE_SUPPORTS,              /* check whether source supports command */
     ZIP_SOURCE_REMOVE,                /* remove file */
-    ZIP_SOURCE_GET_COMPRESSION_FLAGS, /* get compression flags, internal only */
+    ZIP_SOURCE_RESERVED_1,            /* previously used internally */
     ZIP_SOURCE_BEGIN_WRITE_CLONING,   /* like ZIP_SOURCE_BEGIN_WRITE, but keep part of original file */
-    ZIP_SOURCE_ACCEPT_EMPTY           /* whether empty files are valid archives */
+    ZIP_SOURCE_ACCEPT_EMPTY,          /* whether empty files are valid archives */
+    ZIP_SOURCE_GET_FILE_ATTRIBUTES    /* get additional file attributes */
 };
 typedef enum zip_source_cmd zip_source_cmd_t;
 
@@ -309,6 +310,23 @@ struct zip_buffer_fragment {
     zip_uint64_t length;
 };
 
+struct zip_file_attributes {
+    zip_uint64_t valid;                     /* which fields have valid values */
+    zip_uint8_t version;                    /* version of this struct, currently 1 */
+    zip_uint8_t host_system;                /* host system on which file was created */
+    zip_uint8_t ascii;                      /* flag whether file is ASCII text */
+    zip_uint8_t version_needed;             /* minimum version needed to extract file */
+    zip_uint32_t external_file_attributes;  /* external file attributes (host-system specific) */
+    zip_uint16_t general_purpose_bit_flags; /* general purpose big flags, only some bits are honored */
+    zip_uint16_t general_purpose_bit_mask;  /* which bits in general_purpose_bit_flags are valid */
+};
+
+#define ZIP_FILE_ATTRIBUTES_HOST_SYSTEM 0x0001u
+#define ZIP_FILE_ATTRIBUTES_ASCII 0x0002u
+#define ZIP_FILE_ATTRIBUTES_VERSION_NEEDED 0x0004u
+#define ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES 0x0008u
+#define ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS 0x0010u
+
 struct zip;
 struct zip_file;
 struct zip_source;
@@ -316,6 +334,7 @@ struct zip_source;
 typedef struct zip zip_t;
 typedef struct zip_error zip_error_t;
 typedef struct zip_file zip_file_t;
+typedef struct zip_file_attributes zip_file_attributes_t;
 typedef struct zip_source zip_source_t;
 typedef struct zip_stat zip_stat_t;
 typedef struct zip_buffer_fragment zip_buffer_fragment_t;
@@ -363,6 +382,7 @@ ZIP_EXTERN zip_int64_t zip_error_to_data(const zip_error_t * _Nonnull, void * _N
 ZIP_EXTERN int zip_fclose(zip_file_t * _Nonnull);
 ZIP_EXTERN zip_t * _Nullable zip_fdopen(int, int, int * _Nullable);
 ZIP_EXTERN zip_int64_t zip_file_add(zip_t * _Nonnull, const char * _Nonnull, zip_source_t * _Nonnull, zip_flags_t);
+ZIP_EXTERN void zip_file_attributes_init(zip_file_attributes_t * _Nonnull);
 ZIP_EXTERN void zip_file_error_clear(zip_file_t * _Nonnull);
 ZIP_EXTERN int zip_file_extra_field_delete(zip_t * _Nonnull, zip_uint64_t, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_extra_field_delete_by_id(zip_t * _Nonnull, zip_uint64_t, zip_uint16_t, zip_uint16_t, zip_flags_t);
@@ -419,6 +439,7 @@ ZIP_EXTERN zip_source_t * _Nullable zip_source_filep_create(FILE * _Nonnull, zip
 ZIP_EXTERN void zip_source_free(zip_source_t * _Nullable);
 ZIP_EXTERN zip_source_t * _Nullable zip_source_function(zip_t * _Nonnull, zip_source_callback _Nonnull , void * _Nullable);
 ZIP_EXTERN zip_source_t * _Nullable zip_source_function_create(zip_source_callback _Nonnull , void * _Nullable, zip_error_t * _Nullable);
+ZIP_EXTERN int zip_source_get_file_attributes(zip_source_t * _Nonnull, zip_file_attributes_t * _Nonnull);
 ZIP_EXTERN int zip_source_is_deleted(zip_source_t * _Nonnull);
 ZIP_EXTERN void zip_source_keep(zip_source_t * _Nonnull);
 ZIP_EXTERN zip_int64_t zip_source_make_command_bitmap(zip_source_cmd_t, ...);

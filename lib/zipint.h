@@ -98,6 +98,7 @@
 /* according to unzip-6.0's zipinfo.c, this corresponds to a directory with rwx permissions for everyone */
 #define ZIP_EXT_ATTRIB_DEFAULT_DIR (0040777u << 16)
 
+#define ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS_ALLOWED_MASK 0x0836
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -131,7 +132,7 @@ struct zip_compression_algorithm {
     void (*deallocate)(void *ctx);
 
     /* get compression specific general purpose bitflags */
-    int (*compression_flags)(void *ctx);
+    zip_uint16_t (*general_purpose_bit_flags)(void *ctx);
 
     /* start processing */
     bool (*start)(void *ctx);
@@ -178,7 +179,7 @@ zip_int64_t zip_source_supports(zip_source_t *src);
 zip_source_t *zip_source_window(zip_t *, zip_source_t *, zip_uint64_t, zip_uint64_t);
 zip_source_t *zip_source_winzip_aes_decode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
 zip_source_t *zip_source_winzip_aes_encode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
-
+zip_source_t *zip_source_buffer_with_attributes(zip_t *za, const void *data, zip_uint64_t len, int freep, zip_file_attributes_t *attributes);
 
 /* error source for layered sources */
 
@@ -481,6 +482,7 @@ zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint6
 time_t _zip_d2u_time(zip_uint16_t, zip_uint16_t);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);
 
+void _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool, zip_uint32_t);
 zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *);
 void _zip_dirent_free(zip_dirent_t *);
 void _zip_dirent_finalize(zip_dirent_t *);
@@ -561,12 +563,11 @@ bool zip_source_accept_empty(zip_source_t *src);
 zip_int64_t _zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command);
 bool _zip_source_eof(zip_source_t *);
 zip_source_t *_zip_source_file_or_p(const char *, FILE *, zip_uint64_t, zip_int64_t, const zip_stat_t *, zip_error_t *error);
-zip_int8_t zip_source_get_compression_flags(zip_source_t *);
 bool _zip_source_had_error(zip_source_t *);
 void _zip_source_invalidate(zip_source_t *src);
 zip_source_t *_zip_source_new(zip_error_t *error);
 int _zip_source_set_source_archive(zip_source_t *, zip_t *);
-zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_int8_t compression_flags, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error);
+zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_uint64_t length, zip_stat_t *st, zip_file_attributes_t *attributes, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error);
 zip_source_t *_zip_source_zip_new(zip_t *, zip_t *, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_uint64_t, const char *);
 
 int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error);

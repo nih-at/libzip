@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd September 17, 2019
+.Dd April 17, 2020
 .Dt ZIP_SOURCE_FUNCTION 3
 .Os
 .Sh NAME
@@ -153,6 +153,62 @@ Otherwise, return 2 * sizeof(int).
 Clean up and free all resources, including
 .Ar userdata .
 The callback function will not be called again.
+.Ss Dv ZIP_SOURCE_GET_FILE_ATTRIBUTES
+Provide information about various data.
+Then the data should be put in the appropriate entry in the passed
+.Vt zip_file_attributes_t
+argument, and the appropriate
+.Dv ZIP_FILE_ATTRIBUTES_*
+value must be or'ed into the
+.Ar valid
+member to denote that the corresponding data has been provided.
+A
+.Vt zip_file_attributes_t
+structure can be initialized using
+.Xr zip_file_attributes_init 3 .
+.Bl -tag -width 10n
+.It ASCII mode
+If a file is a plaintext file in ASCII.
+Can be used by extraction tools to automatically convert line endings
+(part of the interal file attributes).
+Member
+.Ar ascii ,
+flag
+.Dv ZIP_FILE_ATTRIBUTES_ASCII .
+.It General Purpose Bit Flags (limited to Compression Flags)
+The general purpose bit flag in the zip in the local and central
+directory headers contain information about the compression method.
+Member
+.Ar general_purpose_bit_flags
+and
+.Ar general_purpose_bit_mask
+to denote which members have been set;
+flag
+.Dv ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS .
+.It External File Attributes
+The external file attributes (usually operating system-specific).
+Member
+.Ar external_file_attributes ,
+flag
+.Dv ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES .
+.It Version Needed
+A minimum version needed required to unpack this entry (in the usual
+"major * 10 + minor" format).
+Member
+.Ar version_needed ,
+flag
+.Dv ZIP_FILE_ATTRIBUTES_VERSION_NEEDED .
+.It Operating System
+One of the operating systems as defined by the
+.Dv ZIP_OPSYS_*
+variables (see
+.Pa zip.h ) .
+This value affects the interpretation of the external file attributes.
+Member
+.Ar host_system ,
+flag
+.Dv ZIP_FILE_ATTRIBUTES_HOST_SYSTEM .
+.El
 .Ss Dv ZIP_SOURCE_OPEN
 Prepare for reading.
 .Ss Dv ZIP_SOURCE_READ
@@ -280,6 +336,9 @@ or
 .Dv ZIP_SOURCE_ROLLBACK_WRITE
 will be called.
 .Pp
+.Dv ZIP_SOURCE_ACCEPT_EMPTY ,
+.Dv ZIP_SOURCE_GET_FILE_ATTRIBUTES ,
+and
 .Dv ZIP_SOURCE_STAT
 can be issued at any time.
 .Pp
@@ -324,6 +383,7 @@ Required memory could not be allocated.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_file_add 3 ,
+.Xr zip_file_attributes_init 3 ,
 .Xr zip_file_replace 3 ,
 .Xr zip_source 3 ,
 .Xr zip_stat_init 3

@@ -51,7 +51,7 @@ struct ctx {
 static void *
 allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t method) {
     struct ctx *ctx;
-    
+
     if (compression_flags < 0) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
@@ -92,8 +92,8 @@ deallocate(void *ud) {
 }
 
 
-static int
-compression_flags(void *ud) {
+static zip_uint16_t
+general_purpose_bit_flags(void *ud) {
     /* struct ctx *ctx = (struct ctx *)ud; */
     return 0;
 }
@@ -222,7 +222,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 zip_compression_algorithm_t zip_algorithm_xz_compress = {
     compress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
     start,
     end,
     input,
@@ -234,7 +234,7 @@ zip_compression_algorithm_t zip_algorithm_xz_compress = {
 zip_compression_algorithm_t zip_algorithm_xz_decompress = {
     decompress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
     start,
     end,
     input,

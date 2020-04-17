@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_FILE_SET_ENCRYPTION" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_FILE_SET_ENCRYPTION" "3" "April 2, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -75,6 +75,12 @@ Winzip AES-192 encryption.
 .TP 19n
 \fRZIP_EM_AES_256\fR
 Winzip AES-256 encryption.
+.TP 19n
+\fRZIP_EM_TRAD_PKWARE\fR
+.br
+Traditional PKWare encryption.
+Do not use this method, it is not secure.
+It is only provided for backwards compatibility.
 .PP
 If
 \fIpassword\fR
@@ -112,6 +118,9 @@ Required memory could not be allocated.
 Read-only zip file, no changes allowed.
 .SH "SEE ALSO"
 libzip(3),
+zip_encryption_method_supported(3),
+zip_fopen_encrypted(3),
+zip_fopen_index_encrypted(3),
 zip_set_default_password(3),
 zip_stat(3)
 .SH "HISTORY"

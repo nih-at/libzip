@@ -1,8 +1,8 @@
 .\" Automatically generated from an mdoc input file.  Do not edit.
-.\" zip_error_set.mdoc -- set zip_error
-.\" Copyright (C) 2014-2017 Dieter Baron and Thomas Klausner
+.\" zip_compression_method_supported.mdoc -- return if compression method is supported
+.\" Copyright (C) 2020 Dieter Baron and Thomas Klausner
 .\"
-.\" This file is part of libzip, a library to manipulate ZIP archives.
+.\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
 .\"
 .\" Redistribution and use in source and binary forms, with or without
@@ -30,44 +30,40 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_ERROR_SET" "3" "April 2, 2020" "NiH" "Library Functions Manual"
+.TH "ZIP_COMPRESSION_METHOD_SUPPORTED" "3" "April 2, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_error_set\fR
-\- fill in zip_error structure
+\fBzip_compression_method_supported\fR
+\- return if a compression method is supported
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIvoid\fR
+\fIint\fR
 .br
 .PD 0
 .HP 4n
-\fBzip_error_set\fR(\fIzip_error_t\ *ze\fR, \fIint\ le\fR, \fIint\ se\fR);
+\fBzip_compression_method_supported\fR(\fIzip_int32_t\ method\fR, \fIint\ compress\fR);
 .PD
 .SH "DESCRIPTION"
 The
-\fBzip_error_set\fR()
-function sets the zip_error pointed to by
-\fIze\fR
-to the libzip error code
-\fIle\fR
-and the system error code
-\fIse\fR.
-.PP
-\fIze\fR
-must be allocated and initialized with
-zip_error_init(3)
-before calling
-\fBzip_error\fR(\fIset\fR).
+\fBzip_compression_method_supported\fR()
+returns if the compression method
+\fImethod\fR
+is supported for compression (if
+\fIcompress\fR
+is zero) or decompression (otherwise).
+.SH "RETURN VALUES"
+Returns 1 if the method is supported, 0 otherwise.
 .SH "SEE ALSO"
 libzip(3),
-zip_error_init(3)
+zip_encryption_method_supported(3),
+zip_set_file_compression(3)
 .SH "HISTORY"
-\fBzip_error_set\fR()
-was added in libzip 1.0.
+\fBzip_compression_method_supported\fR()
+was added in libzip 1.7.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

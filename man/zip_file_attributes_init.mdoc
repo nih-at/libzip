@@ -1,8 +1,7 @@
-.\" Automatically generated from an mdoc input file.  Do not edit.
-.\" zip_error_set.mdoc -- set zip_error
-.\" Copyright (C) 2014-2017 Dieter Baron and Thomas Klausner
+.\" zip_file_attributes_init.mdoc -- initialize attributes structure
+.\" Copyright (C) 2020 Dieter Baron and Thomas Klausner
 .\"
-.\" This file is part of libzip, a library to manipulate ZIP archives.
+.\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
 .\"
 .\" Redistribution and use in source and binary forms, with or without
@@ -30,45 +29,33 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_ERROR_SET" "3" "April 2, 2020" "NiH" "Library Functions Manual"
-.nh
-.if n .ad l
-.SH "NAME"
-\fBzip_error_set\fR
-\- fill in zip_error structure
-.SH "LIBRARY"
+.Dd April 17, 2020
+.Dt ZIP_FILE_ATTRIBUTES_INIT
+.Os
+.Sh NAME
+.Nm zip_file_attributes_init
+.Nd initialize zip file attributes structure
+.Sh LIBRARY
 libzip (-lzip)
-.SH "SYNOPSIS"
-\fB#include <zip.h>\fR
-.sp
-\fIvoid\fR
-.br
-.PD 0
-.HP 4n
-\fBzip_error_set\fR(\fIzip_error_t\ *ze\fR, \fIint\ le\fR, \fIint\ se\fR);
-.PD
-.SH "DESCRIPTION"
+.Sh SYNOPSIS
+.In zip.h
+.Ft void
+.Fn zip_file_attributes_init "zip_file_attributes_t *attributes"
+.Sh DESCRIPTION
 The
-\fBzip_error_set\fR()
-function sets the zip_error pointed to by
-\fIze\fR
-to the libzip error code
-\fIle\fR
-and the system error code
-\fIse\fR.
-.PP
-\fIze\fR
-must be allocated and initialized with
-zip_error_init(3)
-before calling
-\fBzip_error\fR(\fIset\fR).
-.SH "SEE ALSO"
-libzip(3),
-zip_error_init(3)
-.SH "HISTORY"
-\fBzip_error_set\fR()
-was added in libzip 1.0.
-.SH "AUTHORS"
-Dieter Baron <\fIdillo@nih.at\fR>
+.Fn zip_file_attributes_init
+initializes a
+.Vt zip_file_attributes_t
+structure with default values.
+It must be called before modifying such a structure for the first time.
+.Sh SEE ALSO
+.Xr libzip 3 ,
+.Xr zip_source_function 3
+.Sh HISTORY
+.Fn zip_file_attributes_init
+was added in libzip 1.7.0.
+.Sh AUTHORS
+.An -nosplit
+.An Dieter Baron Aq Mt dillo@nih.at
 and
-Thomas Klausner <\fItk@giga.or.at\fR>
+.An Thomas Klausner Aq Mt tk@giga.or.at

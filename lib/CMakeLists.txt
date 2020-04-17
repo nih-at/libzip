@@ -133,12 +133,12 @@ SET(LIBZIP_SOURCES
   zip_source_filep.c
   zip_source_free.c
   zip_source_function.c
-  zip_source_get_compression_flags.c
+  zip_source_get_file_attributes.c
   zip_source_is_deleted.c
   zip_source_layered.c
   zip_source_open.c
-  zip_source_pkware_encode.c
   zip_source_pkware_decode.c
+  zip_source_pkware_encode.c
   zip_source_read.c
   zip_source_remove.c
   zip_source_rollback_write.c

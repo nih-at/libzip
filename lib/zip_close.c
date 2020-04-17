@@ -51,7 +51,7 @@
 #endif
 
 
-static int add_data(zip_t *, zip_source_t *, zip_dirent_t *);
+static int add_data(zip_t *, zip_source_t *, zip_dirent_t *, zip_uint32_t);
 static int copy_data(zip_t *, zip_uint64_t);
 static int copy_source(zip_t *, zip_source_t *, zip_int64_t);
 static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
@@ -222,7 +222,7 @@ zip_close(zip_t *za) {
 	    }
 
 	    /* add_data writes dirent */
-	    if (add_data(za, zs ? zs : entry->source, de) < 0) {
+	    if (add_data(za, zs ? zs : entry->source, de, entry->changes ? entry->changes->changed : 0) < 0) {
 		error = 1;
 		if (zs)
 		    zip_source_free(zs);
@@ -294,14 +294,14 @@ zip_close(zip_t *za) {
 
 
 static int
-add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
+add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     zip_int64_t offstart, offdata, offend, data_length;
-    struct zip_stat st;
+    zip_stat_t st;
+    zip_file_attributes_t attributes;
     zip_source_t *src_final, *src_tmp;
     int ret;
     int is_zip64;
     zip_flags_t flags;
-    zip_int8_t compression_flags;
     bool needs_recompress, needs_decompress, needs_crc, needs_compress, needs_reencrypt, needs_decrypt, needs_encrypt;
 
     if (zip_source_stat(src, &st) < 0) {
@@ -486,7 +486,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 	ret = -1;
     }
 
-    if ((compression_flags = zip_source_get_compression_flags(src_final)) < 0) {
+    if (zip_source_get_file_attributes(src_final, &attributes) != 0) {
 	_zip_error_set_from_source(&za->error, src_final);
 	ret = -1;
     }
@@ -522,8 +522,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     de->crc = st.crc;
     de->uncomp_size = st.size;
     de->comp_size = (zip_uint64_t)(offend - offdata);
-    de->bitflags = (zip_uint16_t)((de->bitflags & (zip_uint16_t)~6) | ((zip_uint8_t)compression_flags << 1));
-    _zip_dirent_set_version_needed(de, (flags & ZIP_FL_FORCE_ZIP64) != 0);
+    _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0, changed);
 
     if ((ret = _zip_dirent_write(za, de, flags)) < 0)
 	return -1;

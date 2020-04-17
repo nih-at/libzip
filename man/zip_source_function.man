@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_FUNCTION" "3" "September 17, 2019" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "April 17, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -163,6 +163,65 @@ Otherwise, return 2 * sizeof(int).
 Clean up and free all resources, including
 \fIuserdata\fR.
 The callback function will not be called again.
+.SS "\fRZIP_SOURCE_GET_FILE_ATTRIBUTES\fR"
+Provide information about various data.
+Then the data should be put in the appropriate entry in the passed
+\fIzip_file_attributes_t\fR
+argument, and the appropriate
+\fRZIP_FILE_ATTRIBUTES_*\fR
+value must be or'ed into the
+\fIvalid\fR
+member to denote that the corresponding data has been provided.
+A
+\fIzip_file_attributes_t\fR
+structure can be initialized using
+zip_file_attributes_init(3).
+.TP 12n
+ASCII mode
+If a file is a plaintext file in ASCII.
+Can be used by extraction tools to automatically convert line endings
+(part of the interal file attributes).
+Member
+\fIascii\fR,
+flag
+\fRZIP_FILE_ATTRIBUTES_ASCII\fR.
+.TP 12n
+General Purpose Bit Flags (limited to Compression Flags)
+The general purpose bit flag in the zip in the local and central
+directory headers contain information about the compression method.
+Member
+\fIgeneral_purpose_bit_flags\fR
+and
+\fIgeneral_purpose_bit_mask\fR
+to denote which members have been set;
+flag
+\fRZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS\fR.
+.TP 12n
+External File Attributes
+The external file attributes (usually operating system-specific).
+Member
+\fIexternal_file_attributes\fR,
+flag
+\fRZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES\fR.
+.TP 12n
+Version Needed
+A minimum version needed required to unpack this entry (in the usual
+"major * 10 + minor" format).
+Member
+\fIversion_needed\fR,
+flag
+\fRZIP_FILE_ATTRIBUTES_VERSION_NEEDED\fR.
+.TP 12n
+Operating System
+One of the operating systems as defined by the
+\fRZIP_OPSYS_*\fR
+variables (see
+\fIzip.h\fR).
+This value affects the interpretation of the external file attributes.
+Member
+\fIhost_system\fR,
+flag
+\fRZIP_FILE_ATTRIBUTES_HOST_SYSTEM\fR.
 .SS "\fRZIP_SOURCE_OPEN\fR"
 Prepare for reading.
 .SS "\fRZIP_SOURCE_READ\fR"
@@ -293,6 +352,9 @@ or
 \fRZIP_SOURCE_ROLLBACK_WRITE\fR
 will be called.
 .PP
+\fRZIP_SOURCE_ACCEPT_EMPTY\fR,
+\fRZIP_SOURCE_GET_FILE_ATTRIBUTES\fR,
+and
 \fRZIP_SOURCE_STAT\fR
 can be issued at any time.
 .PP
@@ -336,6 +398,7 @@ Required memory could not be allocated.
 .SH "SEE ALSO"
 libzip(3),
 zip_file_add(3),
+zip_file_attributes_init(3),
 zip_file_replace(3),
 zip_source(3),
 zip_stat_init(3)

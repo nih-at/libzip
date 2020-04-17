@@ -25,6 +25,7 @@ SET(MAN_PAGES
   zip_fclose.3
   zip_fdopen.3
   zip_file_add.3
+  zip_file_attributes_init.3
   zip_file_extra_field_delete.3
   zip_file_extra_field_get.3
   zip_file_extra_field_set.3

@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SET_FILE_COMPRESSION" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_SET_FILE_COMPRESSION" "3" "April 2, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -121,6 +121,7 @@ or the argument combination is invalid.
 Read-only zip file, no changes allowed.
 .SH "SEE ALSO"
 libzip(3),
+zip_compression_method_supported(3),
 zip_stat(3)
 .SH "HISTORY"
 \fBzip_set_file_compression\fR()

@@ -62,7 +62,8 @@ struct read_file {
     /* reading */
     char *fname;            /* name of file to read from */
     FILE *f;                /* file to read from */
-    struct zip_stat st;     /* stat information passed in */
+    zip_stat_t st;          /* stat information passed in */
+    zip_file_attributes_t attributes; /* additional file attributes */
     zip_error_t stat_error; /* error returned for stat */
     zip_uint64_t start;     /* start offset of data to read */
     zip_uint64_t end;       /* end offset of data to read relative to start, 0 for up to EOF */
@@ -159,6 +160,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
     ctx->fout = NULL;
 
     zip_error_init(&ctx->error);
+    zip_file_attributes_init(&ctx->attributes);
 
     ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1);
 
@@ -202,6 +204,14 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 		}
 	    }
 	}
+
+	/* We're using UNIX file API, even on Windows; thus, we supply external file attributes with Unix values. */
+	/* TODO: This could be improved on Windows by providing Windows-specific file attributes */
+	ctx->attributes.valid = ZIP_FILE_ATTRIBUTES_HOST_SYSTEM | ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES;
+	ctx->attributes.host_system = ZIP_OPSYS_UNIX;
+	ctx->attributes.external_file_attributes = sb.st_mode << 8;
+
+	ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_GET_FILE_ATTRIBUTES);
     }
 
     ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_ACCEPT_EMPTY);
@@ -431,6 +441,13 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    fclose(ctx->f);
 	free(ctx);
 	return 0;
+
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES:
+	if (len < sizeof(ctx->attributes))
+	    return -1;
+
+	memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
+	return sizeof(ctx->attributes);
 
     case ZIP_SOURCE_OPEN:
 	if (ctx->fname) {

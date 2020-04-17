@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "January 7, 2020" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "April 17, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -118,6 +118,12 @@ zip_close(3)
 \fB\(bu\fR
 zip_stat(3)
 .PD 0
+.TP 4n
+\fB\(bu\fR
+zip_compression_method_supported(3)
+.TP 4n
+\fB\(bu\fR
+zip_encryption_method_supported(3)
 .TP 4n
 \fB\(bu\fR
 zip_file_get_comment(3)
@@ -249,8 +255,11 @@ zip_discard(3)
 .SS "miscellaneous (writing)"
 .TP 4n
 \fB\(bu\fR
-zip_libzip_version(3)
+zip_file_attributes_init(3)
 .PD 0
+.TP 4n
+\fB\(bu\fR
+zip_libzip_version(3)
 .TP 4n
 \fB\(bu\fR
 zip_register_progress_callback_with_state(3)

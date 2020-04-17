@@ -357,9 +357,6 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
     }
 	return 0;
 
-    case ZIP_SOURCE_GET_COMPRESSION_FLAGS:
-	return ctx->is_stored ? 0 : ctx->algorithm->compression_flags(ctx->ud);
-
     case ZIP_SOURCE_ERROR:
 	return zip_error_to_data(&ctx->error, data, len);
 
@@ -367,8 +364,22 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 	context_free(ctx);
 	return 0;
 
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
+	zip_file_attributes_t *attributes = (zip_file_attributes_t *)data;
+
+	if (len < sizeof(*attributes)) {
+	    return -1;
+	}
+
+	attributes->valid |= ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
+	attributes->general_purpose_bit_mask = ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS_ALLOWED_MASK;
+	attributes->general_purpose_bit_flags = (ctx->is_stored ? 0 : ctx->algorithm->general_purpose_bit_flags(ctx->ud));
+
+	return sizeof(*attributes);
+    }
+
     case ZIP_SOURCE_SUPPORTS:
-	return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_COMPRESSION_FLAGS, -1);
+	return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, -1);
 
     default:
 	zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);

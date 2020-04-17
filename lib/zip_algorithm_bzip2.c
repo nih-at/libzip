@@ -90,8 +90,8 @@ deallocate(void *ud) {
 }
 
 
-static int
-compression_flags(void *ud) {
+static zip_uint16_t
+general_purpose_bit_flags(void *ud) {
     return 0;
 }
 
@@ -247,7 +247,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
     compress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
     start,
     end,
     input,
@@ -259,7 +259,7 @@ zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
 zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
     decompress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
     start,
     end,
     input,
