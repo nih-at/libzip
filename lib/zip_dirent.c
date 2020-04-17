@@ -1099,6 +1099,11 @@ _zip_dirent_set_version_needed(zip_dirent_t *de, bool force_zip64) {
 	return;
     }
 
+    if (de->encryption_method == ZIP_EM_AES_128 || de->encryption_method == ZIP_EM_AES_192 || de->encryption_method == ZIP_EM_AES_256) {
+	de->version_needed = 51;
+	return;
+    }
+
     if (de->comp_method == ZIP_CM_BZIP2) {
 	de->version_needed = 46;
 	return;
