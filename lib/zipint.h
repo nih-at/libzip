@@ -133,6 +133,8 @@ struct zip_compression_algorithm {
 
     /* get compression specific general purpose bitflags */
     zip_uint16_t (*general_purpose_bit_flags)(void *ctx);
+    /* minimum version needed when using this algorithm */
+    zip_uint8_t version_needed;
 
     /* start processing */
     bool (*start)(void *ctx);
