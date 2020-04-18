@@ -1074,7 +1074,7 @@ _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate) {
     tpm = localtime(&intime);
 #endif
     if (tpm == NULL) {
-        /* if localtime() fails, return an arbitrary date (1980-01-01 00:00:00) */
+	/* if localtime() fails, return an arbitrary date (1980-01-01 00:00:00) */
 	*ddate = (1 << 5) + 1;
 	*dtime = 0;
 	return;
@@ -1091,8 +1091,7 @@ _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate) {
 
 
 void
-_zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes, bool force_zip64, zip_uint32_t changed)
-{
+_zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes, bool force_zip64, zip_uint32_t changed) {
     zip_uint16_t length;
 
     if (attributes->valid & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS) {

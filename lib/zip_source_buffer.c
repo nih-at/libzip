@@ -104,12 +104,12 @@ zip_source_buffer_with_attributes_create(const void *data, zip_uint64_t len, int
     zip_buffer_fragment_t fragment;
 
     if (data == NULL) {
-        if (len > 0) {
-            zip_error_set(error, ZIP_ER_INVAL, 0);
-            return NULL;
-        }
+	if (len > 0) {
+	    zip_error_set(error, ZIP_ER_INVAL, 0);
+	    return NULL;
+	}
 
-        return zip_source_buffer_fragment_create(NULL, 0, freep, error);
+	return zip_source_buffer_fragment_create(NULL, 0, freep, error);
     }
 
     fragment.data = (zip_uint8_t *)data;

@@ -235,7 +235,7 @@ zip_close(zip_t *za) {
 	    zip_uint64_t offset;
 
 	    if (de->encryption_method != ZIP_EM_TRAD_PKWARE) {
-                /* when copying data, all sizes are known -> no data descriptor needed */
+		/* when copying data, all sizes are known -> no data descriptor needed */
 		/* except for PKWare encryption, where removing the data descriptor breaks password validation */
 		de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
 	    }
@@ -264,7 +264,6 @@ zip_close(zip_t *za) {
 		}
 	    }
 	}
-
     }
 
     if (!error) {
@@ -465,9 +464,9 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 	    zip_source_free(src_final);
 	    return -1;
 	}
-        if (de->encryption_method == ZIP_EM_TRAD_PKWARE) {
+	if (de->encryption_method == ZIP_EM_TRAD_PKWARE) {
 	    de->bitflags |= ZIP_GPBF_DATA_DESCRIPTOR;
-        }
+	}
 
 	zip_source_free(src_final);
 	src_final = src_tmp;

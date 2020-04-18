@@ -210,7 +210,7 @@ _zip_progress_update(zip_progress_t *progress, double sub_current) {
 ZIP_EXTERN int
 zip_register_progress_callback_with_state(zip_t *za, double precision, zip_progress_callback callback, void (*ud_free)(void *), void *ud) {
     if (callback != NULL) {
-        if (za->progress == NULL) {
+	if (za->progress == NULL) {
 	    if ((za->progress = _zip_progress_new(za)) == NULL) {
 		return -1;
 	    }
@@ -237,7 +237,7 @@ zip_register_progress_callback_with_state(zip_t *za, double precision, zip_progr
 ZIP_EXTERN int
 zip_register_cancel_callback_with_state(zip_t *za, zip_cancel_callback callback, void (*ud_free)(void *), void *ud) {
     if (callback != NULL) {
-        if (za->progress == NULL) {
+	if (za->progress == NULL) {
 	    if ((za->progress = _zip_progress_new(za)) == NULL) {
 		return -1;
 	    }

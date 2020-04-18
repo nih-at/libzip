@@ -35,8 +35,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "zipint.h"
 
@@ -60,14 +60,14 @@ struct read_file {
     zip_int64_t supports;
 
     /* reading */
-    char *fname;            /* name of file to read from */
-    FILE *f;                /* file to read from */
-    zip_stat_t st;          /* stat information passed in */
+    char *fname;                      /* name of file to read from */
+    FILE *f;                          /* file to read from */
+    zip_stat_t st;                    /* stat information passed in */
     zip_file_attributes_t attributes; /* additional file attributes */
-    zip_error_t stat_error; /* error returned for stat */
-    zip_uint64_t start;     /* start offset of data to read */
-    zip_uint64_t end;       /* end offset of data to read relative to start, 0 for up to EOF */
-    zip_uint64_t current;   /* current offset relative to start (0 is beginning of part we read) */
+    zip_error_t stat_error;           /* error returned for stat */
+    zip_uint64_t start;               /* start offset of data to read */
+    zip_uint64_t end;                 /* end offset of data to read relative to start, 0 for up to EOF */
+    zip_uint64_t current;             /* current offset relative to start (0 is beginning of part we read) */
 
     /* writing */
     char *tmpname;
@@ -656,8 +656,7 @@ _zip_fseek(FILE *f, zip_int64_t offset, int whence, zip_error_t *error) {
  * but e.g. macOS doesn't.
  */
 static FILE *
-_zip_fopen(const char *name, bool writeable)
-{
+_zip_fopen(const char *name, bool writeable) {
     int fd;
     int flags;
     FILE *fp;

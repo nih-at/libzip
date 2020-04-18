@@ -40,6 +40,7 @@
 #define NOCRYPT
 
 #include <windows.h>
+
 #include <bcrypt.h>
 
 #pragma comment(lib, "bcrypt.lib")
@@ -216,7 +217,7 @@ hmacCalculate(PRF_CTX *pContext, PUCHAR pbData, DWORD cbData, PUCHAR pbDigest) {
 }
 
 static void
-xor(LPBYTE ptr1, LPBYTE ptr2, DWORD dwLen) {
+myxor(LPBYTE ptr1, LPBYTE ptr2, DWORD dwLen) {
     while (dwLen--)
 	*ptr1++ ^= *ptr2++;
 }
@@ -267,7 +268,7 @@ pbkdf2(PUCHAR pbPassword, ULONG cbPassword, PUCHAR pbSalt, ULONG cbSalt, DWORD c
 		goto PBKDF2_end;
 	    }
 
-	    xor(Ti, V, DIGEST_SIZE);
+	    myxor(Ti, V, DIGEST_SIZE);
 	}
 
 	if (i != l) {

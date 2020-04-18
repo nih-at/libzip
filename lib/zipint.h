@@ -384,13 +384,13 @@ struct zip_string {
    for those, use malloc()/free() */
 
 #ifdef ZIP_ALLOCATE_BUFFER
-#define DEFINE_BYTE_ARRAY(buf, size)	zip_uint8_t *buf
-#define byte_array_init(buf, size)	(((buf) = (zip_uint8_t *)malloc(size)) != NULL)
-#define byte_array_fini(buf)	(free(buf))
+#define DEFINE_BYTE_ARRAY(buf, size) zip_uint8_t *buf
+#define byte_array_init(buf, size) (((buf) = (zip_uint8_t *)malloc(size)) != NULL)
+#define byte_array_fini(buf) (free(buf))
 #else
-#define DEFINE_BYTE_ARRAY(buf, size)	zip_uint8_t buf[size]
-#define byte_array_init(buf, size)	(1)
-#define byte_array_fini(buf)	((void)0)
+#define DEFINE_BYTE_ARRAY(buf, size) zip_uint8_t buf[size]
+#define byte_array_init(buf, size) (1)
+#define byte_array_fini(buf) ((void)0)
 #endif
 
 

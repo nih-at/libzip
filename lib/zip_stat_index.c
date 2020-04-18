@@ -48,7 +48,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
 
 
     if ((flags & ZIP_FL_UNCHANGED) == 0 && ZIP_ENTRY_DATA_CHANGED(za->entry + index)) {
-	zip_entry_t *entry = za->entry+index;
+	zip_entry_t *entry = za->entry + index;
 
 	if (zip_source_stat(entry->source, st) < 0) {
 	    zip_error_set(&za->error, ZIP_ER_CHANGED, 0);

@@ -31,11 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <sys/stat.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "zipint.h"
 
@@ -65,18 +65,18 @@ _zip_mkstempm(char *path, int mode) {
     start++;
 
     for (;;) {
-        zip_uint32_t value = zip_random_uint32();
+	zip_uint32_t value = zip_random_uint32();
 
 	xs = start;
 
 	while (xs < end) {
-            char digit = value % 36;
-            if (digit < 10) {
-                *(xs++) = digit + '0';
-            }
-            else {
-                *(xs++) = digit - 10 + 'a';
-            }
+	    char digit = value % 36;
+	    if (digit < 10) {
+		*(xs++) = digit + '0';
+	    }
+	    else {
+		*(xs++) = digit - 10 + 'a';
+	    }
 	    value /= 36;
 	}
 

@@ -178,7 +178,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 		    return -1;
 		}
 	    }
-	    
+
 	    byte_array_fini(b);
 	}
 
