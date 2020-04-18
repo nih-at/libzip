@@ -374,7 +374,7 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 
         attributes->valid |= ZIP_FILE_ATTRIBUTES_VERSION_NEEDED |
         ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
-        attributes->version = ctx->algorithm->version_needed;
+        attributes->version_needed = ctx->algorithm->version_needed;
 	attributes->general_purpose_bit_mask = ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS_ALLOWED_MASK;
 	attributes->general_purpose_bit_flags = (ctx->is_stored ? 0 : ctx->algorithm->general_purpose_bit_flags(ctx->ud));
 
