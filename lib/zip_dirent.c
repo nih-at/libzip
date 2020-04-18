@@ -867,9 +867,9 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     _zip_buffer_put(buffer, (flags & ZIP_FL_LOCAL) ? LOCAL_MAGIC : CENTRAL_MAGIC, 4);
 
     if ((flags & ZIP_FL_LOCAL) == 0) {
-	_zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_madeby));
+	_zip_buffer_put_16(buffer, de->version_madeby);
     }
-    _zip_buffer_put_16(buffer, (zip_uint16_t)(is_really_zip64 ? 45 : de->version_needed));
+    _zip_buffer_put_16(buffer, ZIP_MAX(is_really_zip64 ? 45 : 0, de->version_needed));
     _zip_buffer_put_16(buffer, de->bitflags);
     if (is_winzip_aes) {
 	_zip_buffer_put_16(buffer, ZIP_CM_WINZIP_AES);
@@ -1129,9 +1129,7 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
     }
 
     if (attributes->valid & ZIP_FILE_ATTRIBUTES_VERSION_NEEDED) {
-	if (attributes->version_needed > de->version_needed) {
-	    de->version_needed = attributes->version_needed;
-	}
+        de->version_needed = ZIP_MAX(de->version_needed, attributes->version_needed);
     }
 
     if ((changed & ZIP_DIRENT_ATTRIBUTES) == 0 && (attributes->valid & ZIP_FILE_ATTRIBUTES_HOST_SYSTEM)) {
