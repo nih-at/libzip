@@ -1132,7 +1132,8 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
         de->version_needed = ZIP_MAX(de->version_needed, attributes->version_needed);
     }
 
+    de->version_madeby = 63 | (de->version_madeby & 0xff00);
     if ((changed & ZIP_DIRENT_ATTRIBUTES) == 0 && (attributes->valid & ZIP_FILE_ATTRIBUTES_HOST_SYSTEM)) {
-	de->version_madeby = 63 | (zip_uint16_t)(attributes->host_system << 8);
+	de->version_madeby = (de->version_madeby & 0xff) | (zip_uint16_t)(attributes->host_system << 8);
     }
 }
