@@ -368,6 +368,7 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 	zip_file_attributes_t *attributes = (zip_file_attributes_t *)data;
 
 	if (len < sizeof(*attributes)) {
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
 	    return -1;
 	}
 

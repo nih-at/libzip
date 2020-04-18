@@ -185,9 +185,21 @@ pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip
 
 	return 0;
     }
+            
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
+        zip_file_attributes_t *attributes = (zip_file_attributes_t *)data;
+        if (length < sizeof(*attributes)) {
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
+        attributes->valid |= ZIP_FILE_ATTRIBUTES_VERSION_NEEDED;
+        attributes->version_needed = 20;
+        
+        return 0;
+    }
 
     case ZIP_SOURCE_SUPPORTS:
-	return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, -1);
+	return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_GET_FILE_ATTRIBUTES, -1);
 
     case ZIP_SOURCE_ERROR:
 	return zip_error_to_data(&ctx->error, data, length);

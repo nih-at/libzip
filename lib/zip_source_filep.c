@@ -209,7 +209,7 @@ _zip_source_file_or_p(const char *fname, FILE *file, zip_uint64_t start, zip_int
 	/* TODO: This could be improved on Windows by providing Windows-specific file attributes */
 	ctx->attributes.valid = ZIP_FILE_ATTRIBUTES_HOST_SYSTEM | ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES;
 	ctx->attributes.host_system = ZIP_OPSYS_UNIX;
-	ctx->attributes.external_file_attributes = sb.st_mode << 8;
+	ctx->attributes.external_file_attributes = (((zip_uint32_t)sb.st_mode) << 16) | ((sb.st_mode & S_IWUSR) ? 0 : 1);
 
 	ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_GET_FILE_ATTRIBUTES);
     }
@@ -443,9 +443,10 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	return 0;
 
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES:
-	if (len < sizeof(ctx->attributes))
+	if (len < sizeof(ctx->attributes)) {
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
 	    return -1;
-
+	}
 	memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
 	return sizeof(ctx->attributes);
 

@@ -2642,6 +2642,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/opt/pkg/include,
+					/usr/local/include,
 					../lib,
 					.,
 					../src,
@@ -2698,6 +2699,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/opt/pkg/include,
+					/usr/local/include,
 					../lib,
 					.,
 					../src,

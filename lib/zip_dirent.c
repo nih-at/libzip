@@ -1135,6 +1135,6 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
     }
 
     if ((changed & ZIP_DIRENT_ATTRIBUTES) == 0 && (attributes->valid & ZIP_FILE_ATTRIBUTES_HOST_SYSTEM)) {
-	de->version_madeby = 63 | (attributes->host_system << 8);
+	de->version_madeby = 63 | (zip_uint16_t)(attributes->host_system << 8);
     }
 }

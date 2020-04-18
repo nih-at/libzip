@@ -237,8 +237,10 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
     }
 
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES:
-	if (len < sizeof(ctx->attributes))
-	    return -1;
+        if (len < sizeof(ctx->attributes)) {
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
 
 	memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
 	return sizeof(ctx->attributes);
