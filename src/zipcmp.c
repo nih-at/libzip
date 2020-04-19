@@ -53,6 +53,8 @@
 
 #include "zip.h"
 
+#include "compat.h"
+
 struct archive {
     const char *name;
     zip_t *za;

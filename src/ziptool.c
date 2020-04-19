@@ -55,6 +55,8 @@ extern int optopt;
 
 #include "zip.h"
 
+#include "compat.h"
+
 typedef struct dispatch_table_s {
     const char *cmdline_name;
     int argument_count;
