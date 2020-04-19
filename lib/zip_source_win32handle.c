@@ -95,7 +95,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
     ctx->ops = ops;
     ctx->h = h;
     ctx->start = start;
-    ctx->end = (len < 0 ? 0 : start + (zip_uint64_t)len);
+    ctx->end = (len <= 0 ? 0 : start + (zip_uint64_t)len);
     ctx->closep = ctx->fname ? 1 : closep;
     if (st) {
 	memcpy(&ctx->st, st, sizeof(ctx->st));
