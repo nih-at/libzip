@@ -46,6 +46,9 @@
 #elif defined(HAVE_FICLONERANGE)
 #include <linux/fs.h>
 #include <sys/ioctl.h>
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #endif
 
