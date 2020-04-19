@@ -39,6 +39,9 @@
 #include <sys/attr.h>
 #include <sys/mount.h>
 #include <sys/param.h>
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #elif defined(HAVE_FICLONERANGE)
 #include <linux/fs.h>
