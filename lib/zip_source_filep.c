@@ -55,6 +55,12 @@
 #define CAN_CLONE
 #endif
 
+#ifdef _WIN32
+#  ifndef S_IWUSR
+#    define S_IWUSR _S_IWRITE
+#  endif
+#endif
+
 struct read_file {
     zip_error_t error; /* last error information */
     zip_int64_t supports;
