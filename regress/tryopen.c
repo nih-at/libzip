@@ -35,16 +35,11 @@
 
 #include <errno.h>
 #include <stdio.h>
-#include <stdlib.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 #ifndef HAVE_GETOPT
 #include "getopt.h"
 #endif
 
-#include "compat.h"
 #include "zip.h"
 #define TRYOPEN_USAGE "usage: %s [-cent] file\n\n" \
 		      "\t-c\tcheck consistency\n" \

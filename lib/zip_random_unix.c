@@ -37,7 +37,6 @@
 #include "zip_crypto.h"
 #endif
 
-
 #ifdef HAVE_ARC4RANDOM
 
 #include <stdlib.h>

@@ -36,7 +36,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <time.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -54,7 +53,6 @@
 #endif
 extern int optopt;
 
-#include "compat.h"
 #include "zip.h"
 
 typedef struct dispatch_table_s {

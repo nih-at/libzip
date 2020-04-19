@@ -42,9 +42,6 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #ifdef HAVE_FTS_H
 #include <fts.h>
 #endif
@@ -54,7 +51,6 @@
 #include "getopt.h"
 #endif
 
-#include "compat.h"
 #include "zip.h"
 
 struct archive {

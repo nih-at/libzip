@@ -33,7 +33,6 @@
 
 
 #include "zipint.h"
-#include <stdio.h>
 
 ZIP_EXTERN zip_int64_t
 zip_ftell(zip_file_t *zf) {

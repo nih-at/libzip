@@ -31,8 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "compat.h"
-
 #include <stdlib.h>
 
 #include "zip.h"

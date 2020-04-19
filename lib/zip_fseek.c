@@ -33,7 +33,6 @@
 
 
 #include "zipint.h"
-#include <stdio.h>
 
 ZIP_EXTERN zip_int8_t
 zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence) {

@@ -32,8 +32,6 @@
 */
 
 
-#include <stdio.h>
-
 #include "zipint.h"
 
 

@@ -40,15 +40,10 @@
 
 #include "config.h"
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #ifndef HAVE_GETOPT
 #include "getopt.h"
 #endif
 
-#include "compat.h"
 #include "zip.h"
 
 char *progname;

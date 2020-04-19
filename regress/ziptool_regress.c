@@ -1,5 +1,7 @@
 #include "zip.h"
 
+#include <sys/stat.h>
+
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))
 
 #define FOR_REGRESS
