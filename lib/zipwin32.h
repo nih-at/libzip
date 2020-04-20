@@ -58,8 +58,8 @@ struct _zip_source_win32_read_file {
     int closep;           /* whether to close f on ZIP_CMD_FREE */
     struct zip_stat st;   /* stat information passed in */
     zip_uint64_t start;   /* start offset of data to read */
-    zip_uint64_t end;     /* end offset of data to read, 0 for up to EOF */
-    zip_uint64_t current; /* current offset */
+    zip_uint64_t end;     /* end offset of data to read relative to start, 0 for up to EOF */
+    zip_uint64_t current; /* current offset relative to start (0 is beginning of part we read) */
 
     /* writing */
     void *tmpname; /* name of temp file - ANSI (char *) or Unicode (wchar_t *) */

@@ -78,6 +78,15 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 	return NULL;
     }
 
+    if (len < 0) {
+	len = 0;
+    }
+
+    if (start > ZIP_INT64_MAX || start + (zip_uint64_t)len < start) {
+	zip_error_set(error, ZIP_ER_INVAL, 0);
+	return NULL;
+    }
+
     if ((ctx = (_zip_source_win32_read_file_t *)malloc(sizeof(_zip_source_win32_read_file_t))) == NULL) {
 	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
@@ -95,7 +104,7 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
     ctx->ops = ops;
     ctx->h = h;
     ctx->start = start;
-    ctx->end = (len <= 0 ? 0 : start + (zip_uint64_t)len);
+    ctx->end = (zip_uint64_t)len;
     ctx->closep = ctx->fname ? 1 : closep;
     if (st) {
 	memcpy(&ctx->st, st, sizeof(ctx->st));
@@ -104,6 +113,11 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
     }
     else {
 	zip_stat_init(&ctx->st);
+    }
+
+    if (ctx->end > 0) {
+	ctx->st.size = ctx->end;
+	ctx->st.valid |= ZIP_STAT_SIZE;
     }
 
     ctx->tmpname = NULL;
@@ -139,6 +153,68 @@ _zip_source_win32_handle_or_name(const void *fname, HANDLE h, zip_uint64_t start
 }
 
 
+static int
+_win32_create_temp_file(_zip_source_win32_read_file_t *ctx) {
+    zip_uint32_t value;
+    /*
+    Windows has GetTempFileName(), but it closes the file after
+    creation, leaving it open to a horrible race condition. So
+    we reinvent the wheel.
+    */
+    int i;
+    HANDLE th = INVALID_HANDLE_VALUE;
+    void *temp = NULL;
+    PSECURITY_DESCRIPTOR psd = NULL;
+    PSECURITY_ATTRIBUTES psa = NULL;
+    SECURITY_ATTRIBUTES sa;
+    SECURITY_INFORMATION si;
+    DWORD success;
+    PACL dacl = NULL;
+
+    /*
+    Read the DACL from the original file, so we can copy it to the temp file.
+    If there is no original file, or if we can't read the DACL, we'll use the
+    default security descriptor.
+    */
+    if (ctx->h != INVALID_HANDLE_VALUE && GetFileType(ctx->h) == FILE_TYPE_DISK) {
+	si = DACL_SECURITY_INFORMATION | UNPROTECTED_DACL_SECURITY_INFORMATION;
+	success = GetSecurityInfo(ctx->h, SE_FILE_OBJECT, si, NULL, NULL, &dacl, NULL, &psd);
+	if (success == ERROR_SUCCESS) {
+	    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	    sa.bInheritHandle = FALSE;
+	    sa.lpSecurityDescriptor = psd;
+	    psa = &sa;
+	}
+    }
+
+
+#ifndef MS_UWP
+    value = GetTickCount();
+#else
+    value = (zip_uint32_t)GetTickCount64();
+#endif
+
+    for (i = 0; i < 1024 && th == INVALID_HANDLE_VALUE; i++) {
+	th = ctx->ops->op_create_temp(ctx, &temp, value + i, psa);
+	if (th == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_EXISTS)
+	    break;
+    }
+
+    if (th == INVALID_HANDLE_VALUE) {
+	free(temp);
+	LocalFree(psd);
+	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, _zip_win32_error_to_errno(GetLastError()));
+	return -1;
+    }
+
+    LocalFree(psd);
+    ctx->hout = th;
+    ctx->tmpname = temp;
+
+    return 0;
+}
+
+
 static zip_int64_t
 _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     _zip_source_win32_read_file_t *ctx;
@@ -160,6 +236,13 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	}
 	return _win32_create_temp_file(ctx);
 
+    case ZIP_SOURCE_CLOSE:
+	if (ctx->fname) {
+	    CloseHandle(ctx->h);
+	    ctx->h = INVALID_HANDLE_VALUE;
+	}
+	return 0;
+
     case ZIP_SOURCE_COMMIT_WRITE: {
 	if (!CloseHandle(ctx->hout)) {
 	    ctx->hout = INVALID_HANDLE_VALUE;
@@ -174,13 +257,6 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	ctx->tmpname = NULL;
 	return 0;
     }
-
-    case ZIP_SOURCE_CLOSE:
-	if (ctx->fname) {
-	    CloseHandle(ctx->h);
-	    ctx->h = INVALID_HANDLE_VALUE;
-	}
-	return 0;
 
     case ZIP_SOURCE_ERROR:
 	return zip_error_to_data(&ctx->error, data, len);
@@ -206,7 +282,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 		return -1;
 	    }
 	}
-	ctx->current = ctx->start;
+	ctx->current = 0;
 	return 0;
 
     case ZIP_SOURCE_READ:
@@ -266,7 +342,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 
 	switch (args->whence) {
 	case SEEK_SET:
-	    new_current = args->offset + ctx->start;
+	    new_current = args->offset;
 	    break;
 
 	case SEEK_END:
@@ -283,12 +359,14 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 		    return -1;
 		}
 		new_current = new_offset.QuadPart;
+		new_current -= (zip_int64_t)ctx->start;
 		need_seek = 0;
 	    }
 	    else {
 		new_current = (zip_int64_t)ctx->end + args->offset;
 	    }
 	    break;
+
 	case SEEK_CUR:
 	    new_current = (zip_int64_t)ctx->current + args->offset;
 	    break;
@@ -298,7 +376,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	    return -1;
 	}
 
-	if (new_current < 0 || (zip_uint64_t)new_current < ctx->start || (ctx->end != 0 && (zip_uint64_t)new_current > ctx->end)) {
+	if (new_current < 0 || (ctx->end != 0 && (zip_uint64_t)new_current > ctx->end) || (zip_uint64_t)new_current + ctx->start < ctx->start) {
 	    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
 	    return -1;
 	}
@@ -306,7 +384,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	ctx->current = (zip_uint64_t)new_current;
 
 	if (need_seek) {
-	    if (_zip_seek_win32_u(ctx->h, ctx->current, SEEK_SET, &ctx->error) < 0) {
+	    if (_zip_seek_win32_u(ctx->h, ctx->current + ctx->start, SEEK_SET, &ctx->error) < 0) {
 		return -1;
 	    }
 	}
@@ -409,68 +487,6 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 
 
 static int
-_win32_create_temp_file(_zip_source_win32_read_file_t *ctx) {
-    zip_uint32_t value;
-    /*
-    Windows has GetTempFileName(), but it closes the file after
-    creation, leaving it open to a horrible race condition. So
-    we reinvent the wheel.
-    */
-    int i;
-    HANDLE th = INVALID_HANDLE_VALUE;
-    void *temp = NULL;
-    PSECURITY_DESCRIPTOR psd = NULL;
-    PSECURITY_ATTRIBUTES psa = NULL;
-    SECURITY_ATTRIBUTES sa;
-    SECURITY_INFORMATION si;
-    DWORD success;
-    PACL dacl = NULL;
-
-    /*
-    Read the DACL from the original file, so we can copy it to the temp file.
-    If there is no original file, or if we can't read the DACL, we'll use the
-    default security descriptor.
-    */
-    if (ctx->h != INVALID_HANDLE_VALUE && GetFileType(ctx->h) == FILE_TYPE_DISK) {
-	si = DACL_SECURITY_INFORMATION | UNPROTECTED_DACL_SECURITY_INFORMATION;
-	success = GetSecurityInfo(ctx->h, SE_FILE_OBJECT, si, NULL, NULL, &dacl, NULL, &psd);
-	if (success == ERROR_SUCCESS) {
-	    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-	    sa.bInheritHandle = FALSE;
-	    sa.lpSecurityDescriptor = psd;
-	    psa = &sa;
-	}
-    }
-
-
-#ifndef MS_UWP
-    value = GetTickCount();
-#else
-    value = (zip_uint32_t)GetTickCount64();
-#endif
-
-    for (i = 0; i < 1024 && th == INVALID_HANDLE_VALUE; i++) {
-	th = ctx->ops->op_create_temp(ctx, &temp, value + i, psa);
-	if (th == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_EXISTS)
-	    break;
-    }
-
-    if (th == INVALID_HANDLE_VALUE) {
-	free(temp);
-	LocalFree(psd);
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, _zip_win32_error_to_errno(GetLastError()));
-	return -1;
-    }
-
-    LocalFree(psd);
-    ctx->hout = th;
-    ctx->tmpname = temp;
-
-    return 0;
-}
-
-
-static int
 _zip_seek_win32_u(HANDLE h, zip_uint64_t offset, int whence, zip_error_t *error) {
     if (offset > ZIP_INT64_MAX) {
 	zip_error_set(error, ZIP_ER_SEEK, EOVERFLOW);
@@ -566,7 +582,7 @@ _zip_stat_win32(HANDLE h, zip_stat_t *st, _zip_source_win32_read_file_t *ctx) {
     st->mtime = mtime;
     st->valid |= ZIP_STAT_MTIME;
     if (ctx->end != 0) {
-	st->size = ctx->end - ctx->start;
+	st->size = ctx->end;
 	st->valid |= ZIP_STAT_SIZE;
     }
     else if (regularp) {
