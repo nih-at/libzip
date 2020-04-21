@@ -4,7 +4,7 @@
 * Add support for encrypting using traditional PKWare encryption.
 * Add `zip_compression_method_supported()`.
 * Add `zip_encryption_method_supported()`.
-* Add the `ZIP_SOURCE_GET_FILE_ATTRIBUTES` source command
+* Add the `ZIP_SOURCE_GET_FILE_ATTRIBUTES` source command.
 
 1.6.1 [2020-02-03]
 ==================
