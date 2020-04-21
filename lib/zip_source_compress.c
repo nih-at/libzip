@@ -63,8 +63,6 @@ struct implementation {
 
 static struct implementation implementations[] = {
     {ZIP_CM_DEFLATE, &zip_algorithm_deflate_compress, &zip_algorithm_deflate_decompress},
-    {ZIP_CM_DEFLATE64, NULL, &zip_algorithm_deflate_decompress},
-
 #if defined(HAVE_LIBBZ2)
     {ZIP_CM_BZIP2, &zip_algorithm_bzip2_compress, &zip_algorithm_bzip2_decompress},
 #endif
