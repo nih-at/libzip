@@ -50,9 +50,10 @@ The argument
 specifies the zip archive to which the directory should be added.
 .Ar name
 is the directory's name in the zip archive.
-.Pp This function adds an entry to the archive.
-It does not check wether a directory with that name exists in the file system,
-nor does it add its contents if it does.
+.Pp
+This function adds an entry to the archive. It does not check whether
+a directory with that name exists in the file system, nor does it add
+its contents if it does.
 The
 .Ar flags
 argument can be any of:
@@ -105,7 +106,3 @@ was added in libzip 0.11.
 .An Dieter Baron Aq Mt dillo@nih.at
 and
 .An Thomas Klausner Aq Mt tk@giga.or.at
-.Sh CAVEATS
-.Fn zip_dir_add
-does not look in the file system, it just creates one entry in the
-archive for the provided name.
