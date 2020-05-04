@@ -109,7 +109,7 @@ zip_source_buffer_with_attributes_create(const void *data, zip_uint64_t len, int
 	    return NULL;
 	}
 
-	return zip_source_buffer_fragment_create(NULL, 0, freep, error);
+	return zip_source_buffer_fragment_with_attributes_create(NULL, 0, freep, attributes, error);
     }
 
     fragment.data = (zip_uint8_t *)data;
@@ -219,6 +219,17 @@ read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	buffer_free(ctx->out);
 	free(ctx);
 	return 0;
+            
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
+        if (len < sizeof(ctx->attributes)) {
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
+
+        memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
+
+        return sizeof(ctx->attributes);
+    }
 
     case ZIP_SOURCE_OPEN:
 	ctx->in->offset = 0;
@@ -276,7 +287,7 @@ read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     }
 
     case ZIP_SOURCE_SUPPORTS:
-	return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_BEGIN_WRITE_CLONING, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, -1);
+	return zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_BEGIN_WRITE_CLONING, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, -1);
 
     case ZIP_SOURCE_TELL:
 	if (ctx->in->offset > ZIP_INT64_MAX) {
