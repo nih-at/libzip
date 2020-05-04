@@ -537,7 +537,12 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 		    zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
 		    return -1;
 		}
-		new_current -= (zip_int64_t)ctx->start;
+		if (new_current < (zip_int64_t)ctx->start) {
+                    new_current = 0;
+                }
+                else {
+                    new_current -= (zip_int64_t)ctx->start;
+                }
 		need_seek = 0;
 	    }
 	    else {
