@@ -338,7 +338,7 @@ _win32_read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd
 	if (args == NULL)
 	    return -1;
 
-	need_seek = ctx->closep;
+	need_seek = 1;
 
 	switch (args->whence) {
 	case SEEK_SET:
