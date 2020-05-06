@@ -130,7 +130,8 @@ SET(LIBZIP_SOURCES
   zip_source_compress.c
   zip_source_crc.c
   zip_source_error.c
-  zip_source_filep.c
+  zip_source_file_common.c
+  zip_source_file_stdio.c
   zip_source_free.c
   zip_source_function.c
   zip_source_get_file_attributes.c
@@ -183,7 +184,7 @@ IF(WIN32)
 ELSE(WIN32)
   SET(LIBZIP_OPSYS_FILES
     zip_mkstempm.c
-    zip_source_file.c
+    zip_source_file_stdio_write.c
     zip_random_unix.c
   )
 ENDIF(WIN32)
