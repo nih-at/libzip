@@ -250,7 +250,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	}
 
 	if (ctx->start > 0) {
-	    if (ctx->ops->seek(ctx, ctx->f, ctx->start, SEEK_SET) == false) {
+	    if (ctx->ops->seek(ctx, ctx->f, (zip_int64_t)ctx->start, SEEK_SET) == false) {
 		/* TODO: skip by reading */
 		return -1;
 	    }
@@ -273,7 +273,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    zip_error_set(&ctx->error, ZIP_ER_READ, errno);
 	    return -1;
 	}
-	ctx->offset += i;
+	ctx->offset += (zip_uint64_t)i;
 
 	return i;
     }
@@ -297,7 +297,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 
 	ctx->offset = (zip_uint64_t)new_offset;
 
-	if (ctx->ops->seek(ctx, ctx->f, ctx->offset + ctx->start, SEEK_SET) == false) {
+	if (ctx->ops->seek(ctx, ctx->f, (zip_int64_t)(ctx->offset + ctx->start), SEEK_SET) == false) {
 	    return -1;
 	}
 	return 0;

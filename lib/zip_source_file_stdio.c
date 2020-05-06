@@ -146,7 +146,7 @@ _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
 	return false;
     }
 
-    st->size = sb.st_size;
+    st->size = (zip_uint64_t)sb.st_size;
     st->mtime = sb.st_mtime;
 
     st->regular_file = S_ISREG(sb.st_mode);

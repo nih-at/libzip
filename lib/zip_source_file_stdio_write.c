@@ -42,7 +42,7 @@
 static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx);
 #ifdef CAN_CLONE
-static zip_int64_t _zip_stdio_op_create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset);
+static zip_int64_t _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uint64_t offset);
 #endif
 static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx);
 static void _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx);
@@ -147,7 +147,7 @@ _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx) {
 
 #ifdef CAN_CLONE
 static zip_int64_t
-_zip_stdio_op_create_temp_output_cloning(struct read_file *ctx, zip_uint64_t offset) {
+_zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uint64_t offset) {
     char *temp;
     FILE *tfp;
 
@@ -265,7 +265,7 @@ _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx) {
 
 static zip_int64_t
 _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len) {
-    off_t ret;
+    size_t ret;
 
     clearerr((FILE *)ctx->fout);
     ret = fwrite(data, 1, len, (FILE *)ctx->fout);
