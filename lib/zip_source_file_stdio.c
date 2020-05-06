@@ -151,9 +151,6 @@ _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
 
     st->regular_file = S_ISREG(sb.st_mode);
     st->exists = true;
-#ifdef CAN_CLONE
-    st->can_clone = true;
-#endif
 
     /* We're using UNIX file API, even on Windows; thus, we supply external file attributes with Unix values. */
     /* TODO: This could be improved on Windows by providing Windows-specific file attributes */

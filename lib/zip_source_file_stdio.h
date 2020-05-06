@@ -31,20 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "config.h"
-
 #include <stdio.h>
-
-#ifdef HAVE_CLONEFILE
-#include <sys/attr.h>
-#include <sys/clonefile.h>
-#define CAN_CLONE
-#endif
-#ifdef HAVE_FICLONERANGE
-#include <linux/fs.h>
-#include <sys/ioctl.h>
-#define CAN_CLONE
-#endif
 
 void _zip_stdio_op_close(zip_source_file_context_t *ctx);
 bool _zip_stdio_op_open(zip_source_file_context_t *ctx);

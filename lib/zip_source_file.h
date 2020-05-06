@@ -36,7 +36,6 @@ struct zip_source_file_stat {
     time_t mtime;
     bool exists;
     bool regular_file;
-    bool can_clone;
 };
 
 typedef struct zip_source_file_context zip_source_file_context_t;

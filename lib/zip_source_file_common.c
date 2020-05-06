@@ -46,7 +46,6 @@ zip_source_file_stat_init(zip_source_file_stat_t *st) {
     st->size = 0;
     st->mtime = time(NULL);
     st->exists = false;
-    st->can_clone = false;
     st->regular_file = false;
 }
 
@@ -160,7 +159,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     }
 
     ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_ACCEPT_EMPTY);
-    if (sb.can_clone) {
+    if (ops->create_temp_output_cloning != NULL) {
 	if (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE)) {
 	    ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_BEGIN_WRITE_CLONING);
 	}

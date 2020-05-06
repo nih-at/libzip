@@ -39,6 +39,17 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 
+#ifdef HAVE_CLONEFILE
+#include <sys/attr.h>
+#include <sys/clonefile.h>
+#define CAN_CLONE
+#endif
+#ifdef HAVE_FICLONERANGE
+#include <linux/fs.h>
+#include <sys/ioctl.h>
+#define CAN_CLONE
+#endif
+
 static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx);
 #ifdef CAN_CLONE
