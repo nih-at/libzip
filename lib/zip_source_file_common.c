@@ -294,6 +294,12 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    return -1;
 	}
 
+        /* The actual offset inside the file must be representable as zip_int64_t. */
+        if (new_offset > ZIP_INT64_MAX - (zip_int64_t)ctx->start) {
+            zip_error_set(&ctx->error, ZIP_ER_SEEK, EOVERFLOW);
+            return -1;
+        }
+
 	ctx->offset = (zip_uint64_t)new_offset;
 
 	if (ctx->ops->seek(ctx, ctx->f, (zip_int64_t)(ctx->offset + ctx->start), SEEK_SET) == false) {
