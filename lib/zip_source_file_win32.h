@@ -41,6 +41,10 @@
 
 #include <windows.h>
 
+#include <aclapi.h>
+
+#include "zip_source_file.h"
+
 struct zip_source_file_win32_write_operations {
     char *(*allocate_tempname)(const char *name, size_t extra_chars),
     HANDLE (*create_file)(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file),
