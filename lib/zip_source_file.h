@@ -33,9 +33,9 @@
 
 struct zip_source_file_stat {
     zip_uint64_t size;    /* must be valid for regular files */
-    time_t mtime;
-    bool exists;
-    bool regular_file;
+    time_t mtime;         /* must always be valid, is initialized to current time */
+    bool exists;          /* must always be vaild */
+    bool regular_file;    /* must always be valid */
 };
 
 typedef struct zip_source_file_context zip_source_file_context_t;
@@ -62,6 +62,13 @@ struct zip_source_file_context {
 
     zip_source_file_operations_t *ops;
 };
+
+
+/* The following methods must be implemented to support each feature:
+   - close, read, seek, and stat must always be implemented.
+   - To support specifying the file by name, open, and strupd must be implemented.
+   - For write support, the file must be specified by name and close, commit_write, create_temp_output, remove, rollback_write, and tell must be implemented.
+   - create_temp_output_cloning is always optional. */
 
 struct zip_source_file_operations {
     void (*close)(zip_source_file_context_t *ctx);
