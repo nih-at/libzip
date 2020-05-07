@@ -34,6 +34,28 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* 0x0501 => Windows XP; needs to be at least this value because of GetFileSizeEx */
+#if !defined(MS_UWP) && !defined(_WIN32_WINNT)
+#define _WIN32_WINNT 0x0501
+#endif
+
+#include <windows.h>
+
+struct zip_source_file_win32_write_operations {
+    char *(*allocate_tempname)(const char *name, size_t extra_chars),
+    HANDLE (*create_file)(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file),
+    bool (*delete_file)(const char *name),
+    DWORD (*get_file_attributes)(const char *name),
+    void (*make_tempname)(char *buf, size_t len, const char *name, int i),
+    bool (*move_file)(const char *from, const char *to),
+    bool (*set_file_attributes)(const char *name, DWORD attributes),
+    char *(*strdup)(const char *string)
+};
+
+typedef struct zip_source_file_win32_write_operations zip_source_file_win32_write_operations_t;
+
+zip_source_file_operations_t zip_source_file_win32_write_operations;
+
 zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len);
 bool _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence);
 zip_int64_t _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f);

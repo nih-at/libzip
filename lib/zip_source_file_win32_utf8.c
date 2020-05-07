@@ -1,6 +1,6 @@
 /*
-  zip_source_win32utf8.c -- create data source from Windows file (UTF-8)
-  Copyright (C) 1999-2019 Dieter Baron and Thomas Klausner
+  zip_source_file_win32_ansi.c -- read/write Windows UTF-8 file source implementation
+  Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,12 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <stdlib.h>
-
-#include "zipint.h"
-#include "zipwin32.h"
-
+#include "zip_source_file_win32.h"
 
 ZIP_EXTERN zip_source_t *
 zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
