@@ -1,5 +1,5 @@
 /*
-  zip_source_file_stdio_write.c -- implementation of stdio backend with write support
+  zip_source_file_stdio_write.c -- read/write stdio file source implementation
   Copyright (C) 2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -55,6 +55,7 @@ static zip_int64_t _zip_stdio_op_create_temp_output(zip_source_file_context_t *c
 #ifdef CAN_CLONE
 static zip_int64_t _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uint64_t offset);
 #endif
+static bool _zip_stdio_op_open(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx);
 static void _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
@@ -255,6 +256,16 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
     return 0;
 }
 #endif
+
+static bool
+_zip_stdio_op_open(zip_source_file_context_t *ctx) {
+    if ((ctx->f = _zip_fopen_close_on_exec(ctx->fname, false)) == NULL) {
+    zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
+    return false;
+    }
+    return true;
+}
+
 
 static zip_int64_t
 _zip_stdio_op_remove(zip_source_file_context_t *ctx) {

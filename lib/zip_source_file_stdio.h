@@ -1,3 +1,6 @@
+#ifndef _HAD_ZIP_SOURCE_FILE_STDIO_H
+#define _HAD_ZIP_SOURCE_FILE_STDIO_H
+
 /*
   zip_source_file_stdio.h -- common header for stdio file implementation
   Copyright (C) 2020 Dieter Baron and Thomas Klausner
@@ -34,10 +37,11 @@
 #include <stdio.h>
 
 void _zip_stdio_op_close(zip_source_file_context_t *ctx);
-bool _zip_stdio_op_open(zip_source_file_context_t *ctx);
 zip_int64_t _zip_stdio_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len);
 bool _zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence);
 bool _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st);
 zip_int64_t _zip_stdio_op_tell(zip_source_file_context_t *ctx, void *f);
 
 FILE *_zip_fopen_close_on_exec(const char *name, bool writeable);
+
+#endif /* _HAD_ZIP_SOURCE_FILE_STDIO_H */

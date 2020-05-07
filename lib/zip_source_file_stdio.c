@@ -1,5 +1,5 @@
 /*
-  zip_source_file_stdio.c -- Common file operations using stdio
+  zip_source_file_stdio.c -- read-only stdio file source implementation
   Copyright (C) 2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -52,7 +52,7 @@ zip_source_file_operations_t ops_stdio_read = {
     NULL,
     NULL,
     NULL,
-    _zip_stdio_op_open,
+    NULL,
     _zip_stdio_op_read,
     NULL,
     NULL,
@@ -88,16 +88,6 @@ zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_
 void
 _zip_stdio_op_close(zip_source_file_context_t *ctx) {
     fclose((FILE *)ctx->f);
-}
-
-
-bool
-_zip_stdio_op_open(zip_source_file_context_t *ctx) {
-    if ((ctx->f = _zip_fopen_close_on_exec(ctx->fname, false)) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
-	return false;
-    }
-    return true;
 }
 
 
