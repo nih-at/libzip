@@ -167,9 +167,10 @@ SET(LIBZIP_SOURCES
 
 IF(WIN32)
   SET(LIBZIP_OPSYS_FILES
-    zip_source_win32handle.c
-    zip_source_win32utf8.c
-    zip_source_win32w.c
+    zip_source_file_win32.c
+    zip_source_file_win32_write.c
+    zip_source_file_win32_utf16.c
+    zip_source_file_win32_utf8.c
   )
   IF(CMAKE_SYSTEM_NAME MATCHES WindowsPhone OR CMAKE_SYSTEM_NAME MATCHES WindowsStore)
     SET(LIBZIP_OPSYS_FILES "${LIBZIP_OPSYS_FILES}"
@@ -177,7 +178,7 @@ IF(WIN32)
     )
   ELSE()
     SET(LIBZIP_OPSYS_FILES "${LIBZIP_OPSYS_FILES}"
-      zip_source_win32a.c
+      zip_source_file_win32_ansi.c
       zip_random_win32.c
     )
   ENDIF()
