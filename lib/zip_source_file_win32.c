@@ -204,6 +204,8 @@ _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HAND
 
         st->size = size;
     }
+    
+    /* TODO: fill in ctx->attributes */
 
     return true;
 }
