@@ -367,13 +367,12 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 	zip_file_attributes_t *attributes = (zip_file_attributes_t *)data;
 
 	if (len < sizeof(*attributes)) {
-            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+	    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
 	    return -1;
 	}
 
-        attributes->valid |= ZIP_FILE_ATTRIBUTES_VERSION_NEEDED |
-        ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
-        attributes->version_needed = ctx->algorithm->version_needed;
+	attributes->valid |= ZIP_FILE_ATTRIBUTES_VERSION_NEEDED | ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
+	attributes->version_needed = ctx->algorithm->version_needed;
 	attributes->general_purpose_bit_mask = ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS_ALLOWED_MASK;
 	attributes->general_purpose_bit_flags = (ctx->is_stored ? 0 : ctx->algorithm->general_purpose_bit_flags(ctx->ud));
 

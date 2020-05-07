@@ -219,16 +219,16 @@ read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	buffer_free(ctx->out);
 	free(ctx);
 	return 0;
-            
+
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
-        if (len < sizeof(ctx->attributes)) {
-            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
-            return -1;
-        }
+	if (len < sizeof(ctx->attributes)) {
+	    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+	    return -1;
+	}
 
-        memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
+	memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
 
-        return sizeof(ctx->attributes);
+	return sizeof(ctx->attributes);
     }
 
     case ZIP_SOURCE_OPEN:

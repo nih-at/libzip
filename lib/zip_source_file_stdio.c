@@ -42,11 +42,12 @@
 #include <sys/stat.h>
 
 #ifdef _WIN32
-#  ifndef S_IWUSR
-#    define S_IWUSR _S_IWRITE
-#  endif
+#ifndef S_IWUSR
+#define S_IWUSR _S_IWRITE
+#endif
 #endif
 
+/* clang-format off */
 zip_source_file_operations_t ops_stdio_read = {
     _zip_stdio_op_close,
     NULL,
@@ -62,6 +63,7 @@ zip_source_file_operations_t ops_stdio_read = {
     _zip_stdio_op_tell,
     NULL
 };
+/* clang-format on */
 
 
 ZIP_EXTERN zip_source_t *
@@ -172,9 +174,6 @@ _zip_stdio_op_tell(zip_source_file_context_t *ctx, void *f) {
 }
 
 
-
-
-
 /*
  * fopen replacement that sets the close-on-exec flag
  * some implementations support an fopen 'e' flag for that,
@@ -203,4 +202,3 @@ _zip_fopen_close_on_exec(const char *name, bool writeable) {
     }
     return fp;
 }
-

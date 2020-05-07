@@ -60,26 +60,26 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 	zip_error_set(error, ZIP_ER_INVAL, 0);
 	return NULL;
     }
-    
+
     if (ops->close == NULL || ops->read == NULL || ops->seek == NULL || ops->stat == NULL) {
-        zip_error_set(error, ZIP_ER_INTERNAL, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_INTERNAL, 0);
+	return NULL;
     }
-    
+
     if (ops->write != NULL && (ops->commit_write == NULL || ops->create_temp_output == NULL || ops->remove == NULL || ops->rollback_write == NULL || ops->tell == NULL)) {
-        zip_error_set(error, ZIP_ER_INTERNAL, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_INTERNAL, 0);
+	return NULL;
     }
-    
+
     if (fname != NULL) {
-        if (ops->close == NULL || ops->open == NULL || ops->strdup == NULL) {
-            zip_error_set(error, ZIP_ER_INTERNAL, 0);
-            return NULL;
-        }
+	if (ops->close == NULL || ops->open == NULL || ops->strdup == NULL) {
+	    zip_error_set(error, ZIP_ER_INTERNAL, 0);
+	    return NULL;
+	}
     }
     else if (file == NULL) {
-        zip_error_set(error, ZIP_ER_INVAL, 0);
-        return NULL;
+	zip_error_set(error, ZIP_ER_INVAL, 0);
+	return NULL;
     }
 
     if (len < 0) {
@@ -136,17 +136,17 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     stat_valid = ops->stat(ctx, &sb);
 
     if (ctx->fname && !stat_valid && ctx->start == 0 && ctx->len == 0 && ops->write != NULL) {
-        ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
+	ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
     }
 
     if (!stat_valid) {
-        zip_error_set(&ctx->stat_error, ZIP_ER_READ, errno);
+	zip_error_set(&ctx->stat_error, ZIP_ER_READ, errno);
     }
     else {
-        if ((ctx->st.valid & ZIP_STAT_MTIME) == 0) {
-            ctx->st.mtime = sb.mtime;
+	if ((ctx->st.valid & ZIP_STAT_MTIME) == 0) {
+	    ctx->st.mtime = sb.mtime;
 	    ctx->st.valid |= ZIP_STAT_MTIME;
-        }
+	}
 	if (sb.regular_file) {
 	    ctx->supports = ZIP_SOURCE_SUPPORTS_SEEKABLE;
 
@@ -187,7 +187,6 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 
     return zs;
 }
-
 
 
 static zip_int64_t
@@ -249,7 +248,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES:
 	if (len < sizeof(ctx->attributes)) {
-            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+	    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
 	    return -1;
 	}
 	memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
@@ -308,11 +307,11 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 	    return -1;
 	}
 
-        /* The actual offset inside the file must be representable as zip_int64_t. */
-        if (new_offset > ZIP_INT64_MAX - (zip_int64_t)ctx->start) {
-            zip_error_set(&ctx->error, ZIP_ER_SEEK, EOVERFLOW);
-            return -1;
-        }
+	/* The actual offset inside the file must be representable as zip_int64_t. */
+	if (new_offset > ZIP_INT64_MAX - (zip_int64_t)ctx->start) {
+	    zip_error_set(&ctx->error, ZIP_ER_SEEK, EOVERFLOW);
+	    return -1;
+	}
 
 	ctx->offset = (zip_uint64_t)new_offset;
 

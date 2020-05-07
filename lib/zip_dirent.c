@@ -521,56 +521,54 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	    return -1;
 	}
 
-        if (zde->uncomp_size == ZIP_UINT32_MAX) {
+	if (zde->uncomp_size == ZIP_UINT32_MAX) {
 	    zde->uncomp_size = _zip_buffer_get_64(ef_buffer);
-        }
+	}
 	else if (local) {
 	    /* From appnote.txt: This entry in the Local header MUST
 	       include BOTH original and compressed file size fields. */
 	    (void)_zip_buffer_skip(ef_buffer, 8); /* error is caught by _zip_buffer_eof() call */
 	}
-        if (zde->comp_size == ZIP_UINT32_MAX) {
+	if (zde->comp_size == ZIP_UINT32_MAX) {
 	    zde->comp_size = _zip_buffer_get_64(ef_buffer);
-        }
+	}
 	if (!local) {
-            if (zde->offset == ZIP_UINT32_MAX) {
+	    if (zde->offset == ZIP_UINT32_MAX) {
 		zde->offset = _zip_buffer_get_64(ef_buffer);
-            }
-            if (zde->disk_number == ZIP_UINT16_MAX) {
+	    }
+	    if (zde->disk_number == ZIP_UINT16_MAX) {
 		zde->disk_number = _zip_buffer_get_32(ef_buffer);
-            }
+	    }
 	}
 
 	if (!_zip_buffer_eof(ef_buffer)) {
-            /* accept additional fields if values match */
-            bool ok = true;
-            switch (got_len) {
-                case 28:
-                    _zip_buffer_set_offset(ef_buffer, 24);
-                    if (zde->disk_number != _zip_buffer_get_32(ef_buffer)) {
-                        ok = false;
-                    }
-                    /* fallthrough */
-                case 24:
-                    _zip_buffer_set_offset(ef_buffer, 0);
-                    if ((zde->uncomp_size != _zip_buffer_get_64(ef_buffer))
-                        || (zde->comp_size != _zip_buffer_get_64(ef_buffer))
-                        || (zde->offset != _zip_buffer_get_64(ef_buffer))) {
-                        ok = false;
-                    }
-                    break;
-                    
-                default:
-                    ok = false;
-            }
-            if (!ok) {
-                zip_error_set(error, ZIP_ER_INCONS, 0);
-                _zip_buffer_free(ef_buffer);
-                if (!from_buffer) {
-                    _zip_buffer_free(buffer);
-                }
-                return -1;
-            }
+	    /* accept additional fields if values match */
+	    bool ok = true;
+	    switch (got_len) {
+	    case 28:
+		_zip_buffer_set_offset(ef_buffer, 24);
+		if (zde->disk_number != _zip_buffer_get_32(ef_buffer)) {
+		    ok = false;
+		}
+		/* fallthrough */
+	    case 24:
+		_zip_buffer_set_offset(ef_buffer, 0);
+		if ((zde->uncomp_size != _zip_buffer_get_64(ef_buffer)) || (zde->comp_size != _zip_buffer_get_64(ef_buffer)) || (zde->offset != _zip_buffer_get_64(ef_buffer))) {
+		    ok = false;
+		}
+		break;
+
+	    default:
+		ok = false;
+	    }
+	    if (!ok) {
+		zip_error_set(error, ZIP_ER_INCONS, 0);
+		_zip_buffer_free(ef_buffer);
+		if (!from_buffer) {
+		    _zip_buffer_free(buffer);
+		}
+		return -1;
+	    }
 	}
 	_zip_buffer_free(ef_buffer);
     }
@@ -1155,7 +1153,7 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
     }
 
     if (attributes->valid & ZIP_FILE_ATTRIBUTES_VERSION_NEEDED) {
-        de->version_needed = ZIP_MAX(de->version_needed, attributes->version_needed);
+	de->version_needed = ZIP_MAX(de->version_needed, attributes->version_needed);
     }
 
     de->version_madeby = 63 | (de->version_madeby & 0xff00);

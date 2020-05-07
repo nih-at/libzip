@@ -36,8 +36,8 @@
 #include "zip_source_file.h"
 #include "zip_source_file_stdio.h"
 
-#include <sys/stat.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 #ifdef HAVE_CLONEFILE
 #include <sys/attr.h>
@@ -60,6 +60,7 @@ static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx);
 static void _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
 
+/* clang-format off */
 zip_source_file_operations_t ops_stdio_write = {
     _zip_stdio_op_close,
     _zip_stdio_op_commit_write,
@@ -79,6 +80,7 @@ zip_source_file_operations_t ops_stdio_write = {
     _zip_stdio_op_tell,
     _zip_stdio_op_write
 };
+/* clang-format on */
 
 ZIP_EXTERN zip_source_t *
 zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
@@ -260,8 +262,8 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
 static bool
 _zip_stdio_op_open(zip_source_file_context_t *ctx) {
     if ((ctx->f = _zip_fopen_close_on_exec(ctx->fname, false)) == NULL) {
-    zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
-    return false;
+	zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
+	return false;
     }
     return true;
 }
@@ -298,4 +300,3 @@ _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64
 
     return (zip_int64_t)ret;
 }
-
