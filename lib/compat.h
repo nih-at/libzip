@@ -99,10 +99,6 @@ typedef char bool;
 #if !defined(HAVE_FILENO) && defined(HAVE__FILENO)
 #define fileno _fileno
 #endif
-/* Windows' open() doesn't understand Unix permissions */
-#if defined(HAVE__OPEN)
-#define open(a, b, c) _open((a), (b))
-#endif
 #if defined(HAVE__SNPRINTF)
 #define snprintf _snprintf
 #endif
