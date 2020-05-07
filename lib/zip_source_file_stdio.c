@@ -41,6 +41,12 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#ifdef _WIN32
+#  ifndef S_IWUSR
+#    define S_IWUSR _S_IWRITE
+#  endif
+#endif
+
 zip_source_file_operations_t ops_stdio_read = {
     _zip_stdio_op_close,
     NULL,
