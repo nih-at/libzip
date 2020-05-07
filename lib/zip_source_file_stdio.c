@@ -48,7 +48,7 @@
 #endif
 
 /* clang-format off */
-zip_source_file_operations_t ops_stdio_read = {
+static zip_source_file_operations_t ops_stdio_read = {
     _zip_stdio_op_close,
     NULL,
     NULL,
@@ -83,7 +83,7 @@ zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_
 	return NULL;
     }
 
-    return zip_source_file_common_new(NULL, file, start, length, NULL, &ops_stdio_read, error);
+    return zip_source_file_common_new(NULL, file, start, length, NULL, &ops_stdio_read, NULL, error);
 }
 
 

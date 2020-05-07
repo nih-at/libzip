@@ -50,7 +50,7 @@ zip_source_file_stat_init(zip_source_file_stat_t *st) {
 }
 
 zip_source_t *
-zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_source_file_operations_t *ops, zip_error_t *error) {
+zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_source_file_operations_t *ops, void *ops_userdata, zip_error_t *error) {
     zip_source_file_context_t *ctx;
     zip_source_t *zs;
     zip_source_file_stat_t sb;
@@ -97,6 +97,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     }
 
     ctx->ops = ops;
+    ctx->ops_userdata = ops_userdata;
     ctx->fname = NULL;
     if (fname) {
 	if ((ctx->fname = ops->strdup(fname)) == NULL) {

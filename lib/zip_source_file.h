@@ -61,6 +61,7 @@ struct zip_source_file_context {
     void *fout;
 
     zip_source_file_operations_t *ops;
+    void *ops_userdata;
 };
 
 
@@ -86,4 +87,4 @@ struct zip_source_file_operations {
     zip_int64_t (*write)(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
 };
 
-zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_source_file_operations_t *ops, zip_error_t *error);
+zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_source_file_operations_t *ops, void *ops_userdata, zip_error_t *error);
