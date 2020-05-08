@@ -100,7 +100,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     ctx->ops_userdata = ops_userdata;
     ctx->fname = NULL;
     if (fname) {
-	if ((ctx->fname = ops->string_duplicate(fname)) == NULL) {
+	if ((ctx->fname = ops->string_duplicate(ctx, fname)) == NULL) {
 	    zip_error_set(error, ZIP_ER_MEMORY, 0);
 	    free(ctx);
 	    return NULL;

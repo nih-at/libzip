@@ -59,7 +59,7 @@ static zip_source_file_operations_t ops_stdio_read = {
     NULL,
     _zip_stdio_op_seek,
     _zip_stdio_op_stat,
-    strdup,
+    NULL,
     _zip_stdio_op_tell,
     NULL
 };

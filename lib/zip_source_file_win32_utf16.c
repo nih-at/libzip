@@ -35,11 +35,11 @@
 
 static char *utf16_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
-static bool utf16_delete_file(const char *name);
+static BOOL utf16_delete_file(const char *name);
 static DWORD utf16_get_file_attributes(const char *name);
 static void utf16_make_tempname(char *buf, size_t len, const char *name, int i);
-static bool utf16_move_file(const char *from, const char *to, DWORD flags);
-static bool utf16_set_file_attributes(const char *name, DWORD attributes);
+static BOOL utf16_move_file(const char *from, const char *to, DWORD flags);
+static BOOL utf16_set_file_attributes(const char *name, DWORD attributes);
 static char *utf16_strdup(const char *string);
 
 zip_source_file_win32_write_operations_t ops_utf16 = {
@@ -98,13 +98,13 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
 }
 
 
-bool
+static BOOL
 utf16_delete_file(const char *name) {
     return DeleteFileW((const wchar_t *)name);
 }
 
 
-DWORD
+static DWORD
 utf16_get_file_attributes(const char *name) {
     return GetFileAttributesW((const wchar_t *)name);
 }
@@ -115,13 +115,13 @@ utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
     _snwprintf((wchar_t *)buf, len, L"%s.%08x", (const wchar_t *)name, i);
 }
 
-static
-bool utf16_move_file(const char *from, const char *to, DWORD flags) {
+static BOOL
+utf16_move_file(const char *from, const char *to, DWORD flags) {
     return MoveFileExW((const wchar_t *)from, (const wchar_t *)to, flags);
 }
 
 
-static bool
+static BOOL
 utf16_set_file_attributes(const char *name, DWORD attributes) {
     return SetFileAttributesW((const wchar_t *)name, attributes);
 }

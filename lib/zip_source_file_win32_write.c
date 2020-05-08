@@ -40,7 +40,7 @@ static bool _zip_win32_write_op_open(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_win32_write_op_remove(zip_source_file_context_t *ctx);
 static void _zip_win32_write_op_rollback_write(zip_source_file_context_t *ctx);
 static bool _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st);
-static char *_zip_win32_write_strdup(const char *string);
+static char *_zip_win32_write_strdup(zip_source_file_context_t *ctx, const char *string);
 
 static HANDLE win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporary, PSECURITY_ATTRIBUTES security_attributes);
 
