@@ -83,9 +83,6 @@ typedef char bool;
 #endif
 
 #ifdef _WIN32
-#if defined(HAVE__CHMOD)
-#define chmod _chmod
-#endif
 #if defined(HAVE__CLOSE)
 #define close _close
 #endif
