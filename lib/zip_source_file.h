@@ -82,7 +82,7 @@ struct zip_source_file_operations {
     void (*rollback_write)(zip_source_file_context_t *ctx);
     bool (*seek)(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence);
     bool (*stat)(zip_source_file_context_t *ctx, zip_source_file_stat_t *st);
-    char *(*strdup)(const char *);
+    char *(*string_duplicate)(const char *);
     zip_int64_t (*tell)(zip_source_file_context_t *ctx, void *f);
     zip_int64_t (*write)(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
 };

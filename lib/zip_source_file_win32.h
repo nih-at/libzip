@@ -48,14 +48,14 @@
 #include "zip_source_file.h"
 
 struct zip_source_file_win32_write_operations {
-    char *(*allocate_tempname)(const char *name, int extra_chars);
+    char *(*allocate_tempname)(const char *name, size_t extra_chars);
     HANDLE (*create_file)(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
     bool (*delete_file)(const char *name);
-    int (*get_file_attributes)(const char *name);
+    DWORD (*get_file_attributes)(const char *name);
     void (*make_tempname)(char *buf, size_t len, const char *name, int i);
-    bool (*move_file)(const char *from, const char *to);
-    bool (*set_file_attributes)(const char *name, int attributes);
-    char *(*strdup)(const char *string);
+    bool (*move_file)(const char *from, const char *to, DWORD flags);
+    bool (*set_file_attributes)(const char *name, DWORD attributes);
+    char *(*string_duplicate)(const char *string);
 };
 
 typedef struct zip_source_file_win32_write_operations zip_source_file_win32_write_operations_t;

@@ -147,6 +147,7 @@ _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f) {
     LARGE_INTEGER zero;
     LARGE_INTEGER new_offset;
     
+    zero.QuadPart = 0;
     if (!SetFilePointerEx((HANDLE)ctx->f, zero, &new_offset, FILE_CURRENT)) {
         zip_error_set(&ctx->error, ZIP_ER_SEEK, _zip_win32_error_to_errno(GetLastError()));
         return -1;
@@ -185,7 +186,6 @@ _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HAND
     FILETIME mtimeft;
     time_t mtime;
     LARGE_INTEGER size;
-    int regularp;
 
     if (!GetFileTime(h, NULL, NULL, &mtimeft)) {
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));

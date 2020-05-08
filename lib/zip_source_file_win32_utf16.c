@@ -38,7 +38,7 @@ static HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode
 static bool utf16_delete_file(const char *name);
 static DWORD utf16_get_file_attributes(const char *name);
 static void utf16_make_tempname(char *buf, size_t len, const char *name, int i);
-static bool utf16_move_file(const char *from, const char *to);
+static bool utf16_move_file(const char *from, const char *to, DWORD flags);
 static bool utf16_set_file_attributes(const char *name, DWORD attributes);
 static char *utf16_strdup(const char *string);
 
@@ -113,6 +113,12 @@ static void
 utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
     _snwprintf((wchar_t *)buf, len, L"%s.%08x", (const wchar_t *)name, i);
 }
+
+static
+bool utf16_move_file(const char *from, const char *to, DWORD flags) {
+    return MoveFileW((const wchar_t *)from, (const wchar_t *)to, flags);
+}
+
 
 static bool
 utf16_set_file_attributes(const char *name, DWORD attributes) {

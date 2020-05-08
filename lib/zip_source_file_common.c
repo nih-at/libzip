@@ -72,7 +72,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     }
 
     if (fname != NULL) {
-	if (ops->close == NULL || ops->open == NULL || ops->strdup == NULL) {
+	if (ops->close == NULL || ops->open == NULL || ops->string_duplicate == NULL) {
 	    zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	    return NULL;
 	}
@@ -100,7 +100,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     ctx->ops_userdata = ops_userdata;
     ctx->fname = NULL;
     if (fname) {
-	if ((ctx->fname = ops->strdup(fname)) == NULL) {
+	if ((ctx->fname = ops->string_duplicate(fname)) == NULL) {
 	    zip_error_set(error, ZIP_ER_MEMORY, 0);
 	    free(ctx);
 	    return NULL;

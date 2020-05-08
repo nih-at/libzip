@@ -40,9 +40,10 @@ static bool _zip_win32_write_op_open(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_win32_write_op_remove(zip_source_file_context_t *ctx);
 static void _zip_win32_write_op_rollback_write(zip_source_file_context_t *ctx);
 static bool _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st);
+static char *_zip_win32_write_strdup(const char *string);
 
-static HANDLE win32_write_open(zip_source_file_context_t *ctx);
-
+static HANDLE win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporary, PSECURITY_ATTRIBUTES security_attributes);
+¬
 /* clang-format off */
 zip_source_file_operations_t zip_source_file_win32_write_operations = {
     _zip_win32_op_close,
@@ -55,7 +56,7 @@ zip_source_file_operations_t zip_source_file_win32_write_operations = {
     _zip_win32_write_op_rollback_write,
     _zip_win32_op_seek,
     _zip_win32_write_op_stat,
-    strdup,
+    _zip_win32_write_strdup,
     _zip_win32_op_tell,
     _zip_win32_op_write
 };
@@ -202,6 +203,15 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 }
 
 
+static char *
+_zip_win32_write_strdup(const char *string) {
+    zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
+
+    return write_ops->string_duplicate(string);
+}
+
+
+
 static HANDLE
 win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporary, PSECURITY_ATTRIBUTES security_attributes) {
     zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
@@ -218,7 +228,7 @@ win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporar
         file_attributes |= FILE_ATTRIBUTE_TEMPORARY;
     }
 
-    HANDLE h = write_ops->create_file(name, access, share_mode, security_attributes, creation_disposition, file_attributes);
+    HANDLE h = write_ops->create_file(name, access, share_mode, security_attributes, creation_disposition, file_attributes, NULL);
     
     if (h == INVALID_HANDLE_VALUE) {
         zip_error_set(&ctx->error, ZIP_ER_OPEN, _zip_win32_error_to_errno(GetLastError()));
