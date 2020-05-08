@@ -63,7 +63,7 @@ zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t leng
     return NULL;
     }
 
-    printf("creating ansi source: ")
+    printf("creating ansi source: ");
     printf("ops=%p, close=%p, read=%p, seek=%p, stat=%p, write=%p\n", &_zip_source_file_win32_write_ops, _zip_source_file_win32_write_ops.close, _zip_source_file_win32_write_ops.read, _zip_source_file_win32_write_ops.seek, _zip_source_file_win32_write_ops.stat, _zip_source_file_win32_write_ops.write);
     return zip_source_file_common_new(fname, NULL, start, length, NULL, &_zip_source_file_win32_write_ops, &ops_ansi, error);
 }

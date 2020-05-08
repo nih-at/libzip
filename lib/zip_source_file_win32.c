@@ -71,7 +71,7 @@ zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, 
         return NULL;
     }
 
-    printf("creating handle source: ")
+    printf("creating handle source: ");
     printf("ops=%p, close=%p, read=%p, seek=%p, stat=%p, write=%p\n", &ops_win32_read, ops_win32_read.close, ops_win32_read.read, ops_win32_read.seek, ops_win32_read.stat, ops_win32_read.write);
     return zip_source_file_common_new(NULL, h, start, length, NULL, &ops_win32_read, NULL, error);
 }
