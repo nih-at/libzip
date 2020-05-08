@@ -58,6 +58,7 @@ static zip_int64_t _zip_stdio_op_create_temp_output_cloning(zip_source_file_cont
 static bool _zip_stdio_op_open(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx);
 static void _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx);
+static char *_zip_stdio_op_strdup(zip_source_file_context_t *ctx, const char *string);
 static zip_int64_t _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
 
 /* clang-format off */
@@ -76,7 +77,7 @@ static zip_source_file_operations_t ops_stdio_write = {
     _zip_stdio_op_rollback_write,
     _zip_stdio_op_seek,
     _zip_stdio_op_stat,
-    strdup,
+    _zip_stdio_op_strdup,
     _zip_stdio_op_tell,
     _zip_stdio_op_write
 };
@@ -286,6 +287,12 @@ _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx) {
     }
     (void)remove(ctx->tmpname);
 }
+
+static char *
+_zip_stdio_op_strdup(zip_source_file_context_t *ctx, const char *string) {
+    return strdup(string);
+}
+
 
 static zip_int64_t
 _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len) {

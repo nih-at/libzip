@@ -43,7 +43,7 @@ static bool _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_
 static char *_zip_win32_write_strdup(const char *string);
 
 static HANDLE win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporary, PSECURITY_ATTRIBUTES security_attributes);
-¬
+
 /* clang-format off */
 zip_source_file_operations_t zip_source_file_win32_write_operations = {
     _zip_win32_op_close,
@@ -204,7 +204,7 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 
 
 static char *
-_zip_win32_write_strdup(const char *string) {
+_zip_win32_write_strdup(zip_source_file_context_t *ctx, const char *string) {
     zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
 
     return write_ops->string_duplicate(string);

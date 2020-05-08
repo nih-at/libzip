@@ -33,7 +33,7 @@
 
 #include "zip_source_file_win32.h"
 
-static char *ansi_allocate_tempname(const char *name, size_t extra_chars);
+static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static void ansi_make_tempname(char *buf, size_t len, const char *name, int i);
 
 zip_source_file_win32_write_operations_t ops_ansi = {
@@ -42,7 +42,7 @@ zip_source_file_win32_write_operations_t ops_ansi = {
     DeleteFileA,
     GetFileAttributesA,
     ansi_make_tempname,
-    MoveFileA,
+    MoveFileExA,
     SetFileAttributesA,
     strdup
 };
@@ -68,8 +68,9 @@ zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t leng
 
 
 static char *
-ansi_allocate_tempname(const char *name, size_t extra_chars) {
-    return (char *)malloc(strlen(name) + extra_chars);
+ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp) {
+    *lengthp = strlen(name) + extra_chars;
+    return (char *)malloc(*lengthp);
 }
 
 

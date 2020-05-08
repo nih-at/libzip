@@ -33,7 +33,7 @@
 
 #include "zip_source_file_win32.h"
 
-static char *utf16_allocate_tempname(const char *name, size_t extra_chars);
+static char *utf16_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
 static bool utf16_delete_file(const char *name);
 static DWORD utf16_get_file_attributes(const char *name);
@@ -74,8 +74,9 @@ zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t l
 
 
 static char *
-utf16_allocate_tempname(const char *name, size_t extra_chars) {
-    return (char *)malloc((wcslen((const wchar_t *)name) + extra_chars) * sizeof(wchar_t));
+utf16_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp) {
+    *lengthp = wcslen((const wchar_t *)name) + extra_chars;
+    return (char *)malloc(*lengthp * sizeof(wchar_t));
 }
 
 
@@ -116,7 +117,7 @@ utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
 
 static
 bool utf16_move_file(const char *from, const char *to, DWORD flags) {
-    return MoveFileW((const wchar_t *)from, (const wchar_t *)to, flags);
+    return MoveFileExW((const wchar_t *)from, (const wchar_t *)to, flags);
 }
 
 
