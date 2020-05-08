@@ -69,6 +69,8 @@ zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t l
     return NULL;
     }
 
+    printf("creating utf16 source: ")
+    printf("ops=%p, close=%p, read=%p, seek=%p, stat=%p, write=%p\n", &_zip_source_file_win32_write_ops, _zip_source_file_win32_write_ops.close, _zip_source_file_win32_write_ops.read, _zip_source_file_win32_write_ops.seek, _zip_source_file_win32_write_ops.stat, _zip_source_file_win32_write_ops.write);
     return zip_source_file_common_new((const char *)fname, NULL, start, length, NULL, &_zip_source_file_win32_write_ops, &ops_utf16, error);
 }
 
