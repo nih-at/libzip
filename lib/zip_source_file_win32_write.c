@@ -45,7 +45,7 @@ static char *_zip_win32_write_strdup(zip_source_file_context_t *ctx, const char 
 static HANDLE win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporary, PSECURITY_ATTRIBUTES security_attributes);
 
 /* clang-format off */
-zip_source_file_operations_t zip_source_file_win32_write_operations = {
+zip_source_file_operations_t _zip_source_file_win32_write_ops = {
     _zip_win32_op_close,
     _zip_win32_write_op_commit_write,
     _zip_win32_write_op_create_temp_output,

@@ -64,6 +64,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     if (ops->close == NULL || ops->read == NULL || ops->seek == NULL || ops->stat == NULL) {
 #ifdef _WIN32
         printf("invalid case 1\n");
+        printf("ops=%p, close=%p (%d), read=%p (%d), seek=%p (%d), stat=%p (%d)\n", ops, ops->close, ops->close == NULL, ops->read, ops->read == NULL, ops->seek, ops->seek == NULL, ops->stat, ops->stat == NULL);
 #endif
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	return NULL;

@@ -69,7 +69,7 @@ zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t l
     return NULL;
     }
 
-    return zip_source_file_common_new((const char *)fname, NULL, start, length, NULL, &zip_source_file_win32_write_operations, &ops_utf16, error);
+    return zip_source_file_common_new((const char *)fname, NULL, start, length, NULL, &_zip_source_file_win32_write_ops, &ops_utf16, error);
 }
 
 
