@@ -109,7 +109,7 @@ _zip_win32_write_op_create_temp_output(zip_source_file_context_t *ctx) {
 
      if ((HANDLE)ctx->f != INVALID_HANDLE_VALUE && GetFileType((HANDLE)ctx->f) == FILE_TYPE_DISK) {
          si = DACL_SECURITY_INFORMATION | UNPROTECTED_DACL_SECURITY_INFORMATION;
-         success = GetSecurityInfo(ctx->h, SE_FILE_OBJECT, si, NULL, NULL, &dacl, NULL, &psd);
+         success = GetSecurityInfo((HANDLE)ctx->f, SE_FILE_OBJECT, si, NULL, NULL, &dacl, NULL, &psd);
          if (success == ERROR_SUCCESS) {
              sa.nLength = sizeof(SECURITY_ATTRIBUTES);
              sa.bInheritHandle = FALSE;
@@ -125,7 +125,7 @@ _zip_win32_write_op_create_temp_output(zip_source_file_context_t *ctx) {
 #endif
     
     if ((tempname = write_ops->allocate_tempname(ctx->fname, 10, &tempname_size)) == NULL) {
-        zip_error_set(&ctx->error, ZIP_ER_NOMEM, 0);
+        zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
         return -1;
     }
         
@@ -203,6 +203,8 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 
 static HANDLE
 win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporary, PSECURITY_ATTRIBUTES security_attributes) {
+    zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
+
     DWORD access = GENERIC_READ;
     DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE;
     DWORD creation_disposition = OPEN_EXISTING;

@@ -638,6 +638,7 @@
 		4B93996224643F5700AEBDA4 /* zip_source_file_win32_utf8.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_file_win32_utf8.c; sourceTree = "<group>"; };
 		4B9399632464401300AEBDA4 /* zip_source_file_win32_utf16.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_file_win32_utf16.c; sourceTree = "<group>"; };
 		4B93996424644E7E00AEBDA4 /* zip_source_file_win32_write.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_file_win32_write.c; sourceTree = "<group>"; };
+		4B939965246553FD00AEBDA4 /* appveyor.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = appveyor.yml; sourceTree = "<group>"; };
 		4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_get_external_attributes.c; sourceTree = "<group>"; };
 		4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_external_attributes.c; sourceTree = "<group>"; };
 		4BACD57715BC2AEF00920691 /* add_from_filep.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = add_from_filep.c; path = ../regress/add_from_filep.c; sourceTree = "<group>"; };
@@ -1168,6 +1169,7 @@
 		4B28AA2815BAD4F800D0C17D /* info */ = {
 			isa = PBXGroup;
 			children = (
+				4B939965246553FD00AEBDA4 /* appveyor.yml */,
 				4B28AA2215BAD4E200D0C17D /* API-CHANGES.md */,
 				4B28AA2315BAD4E200D0C17D /* AUTHORS */,
 				4B28AA2415BAD4E200D0C17D /* NEWS.md */,

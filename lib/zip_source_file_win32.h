@@ -49,7 +49,7 @@
 
 struct zip_source_file_win32_write_operations {
     char *(*allocate_tempname)(const char *name, size_t extra_chars),
-    void *(*create_file)(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, void *template_file),
+    void *(*create_file)(const char *, DWORD, DWORD, PSECURITY_ATTRIBUTES, DWORD, DWORD, void *),
     bool (*delete_file)(const char *name),
     DWORD (*get_file_attributes)(const char *name),
     void (*make_tempname)(char *buf, size_t len, const char *name, int i),
