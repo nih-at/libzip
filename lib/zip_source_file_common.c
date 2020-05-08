@@ -61,7 +61,6 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 	return NULL;
     }
 
-#ifndef _WIN32
     if (ops->close == NULL || ops->read == NULL || ops->seek == NULL || ops->stat == NULL) {
 #ifdef _WIN32
         printf("invalid case 1\n");
@@ -70,9 +69,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	return NULL;
     }
-#endif
 
-#ifndef _WIN32
     if (ops->write != NULL && (ops->commit_write == NULL || ops->create_temp_output == NULL || ops->remove == NULL || ops->rollback_write == NULL || ops->tell == NULL)) {
         #ifdef _WIN32
                 printf("invalid case 2\n");
@@ -80,10 +77,8 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	return NULL;
     }
-#endif
 
     if (fname != NULL) {
-#ifndef _WIN32
 	if (ops->open == NULL || ops->string_duplicate == NULL) {
             #ifdef _WIN32
                     printf("invalid case 3\n");
@@ -91,7 +86,6 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 	    zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	    return NULL;
 	}
-#endif
     }
     else if (file == NULL) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);

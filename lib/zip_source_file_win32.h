@@ -60,7 +60,7 @@ struct zip_source_file_win32_write_operations {
 
 typedef struct zip_source_file_win32_write_operations zip_source_file_win32_write_operations_t;
 
-zip_source_file_operations_t _zip_source_file_win32_write_ops;
+extern zip_source_file_operations_t _zip_source_file_win32_write_ops;
 
 void _zip_win32_op_close(zip_source_file_context_t *ctx);
 zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len);
