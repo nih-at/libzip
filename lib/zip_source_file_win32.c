@@ -76,7 +76,7 @@ zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, 
 
 
 void
-zip_win32_op_close(zip_source_file_context_t *ctx) {
+_zip_win32_op_close(zip_source_file_context_t *ctx) {
     CloseHandle((HANDLE)ctx->f);
 }
 
