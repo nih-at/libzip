@@ -5,7 +5,6 @@
 #endif
 /* BEGIN DEFINES */
 #cmakedefine HAVE___PROGNAME
-#cmakedefine HAVE__CHMOD
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
 #cmakedefine HAVE__FDOPEN
