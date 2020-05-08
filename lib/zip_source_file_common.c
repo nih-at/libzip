@@ -62,17 +62,26 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     }
 
     if (ops->close == NULL || ops->read == NULL || ops->seek == NULL || ops->stat == NULL) {
+#ifdef _WIN32
+        printf("invalid case 1\n");
+#endif
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	return NULL;
     }
 
     if (ops->write != NULL && (ops->commit_write == NULL || ops->create_temp_output == NULL || ops->remove == NULL || ops->rollback_write == NULL || ops->tell == NULL)) {
+        #ifdef _WIN32
+                printf("invalid case 2\n");
+        #endif
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	return NULL;
     }
 
     if (fname != NULL) {
-	if (ops->close == NULL || ops->open == NULL || ops->string_duplicate == NULL) {
+	if (ops->open == NULL || ops->string_duplicate == NULL) {
+            #ifdef _WIN32
+                    printf("invalid case 3\n");
+            #endif
 	    zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	    return NULL;
 	}
