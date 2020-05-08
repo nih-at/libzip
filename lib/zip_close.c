@@ -81,9 +81,6 @@ zip_close(zip_t *za) {
     }
 
     if (survivors > za->nentry) {
-#ifdef _WIN32
-        printf("invalid case close-1\n");
-#endif
 	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }
@@ -103,9 +100,6 @@ zip_close(zip_t *za) {
 
 	if (j >= survivors) {
 	    free(filelist);
-#ifdef _WIN32
-            printf("invalid case close-2\n");
-#endif
 	    zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	    return -1;
 	}
@@ -115,9 +109,6 @@ zip_close(zip_t *za) {
     }
     if (j < survivors) {
 	free(filelist);
-#ifdef _WIN32
-        printf("invalid case close-3\n");
-#endif
 	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }
@@ -507,9 +498,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     }
 
     if ((st.valid & (ZIP_STAT_COMP_METHOD | ZIP_STAT_CRC | ZIP_STAT_SIZE)) != (ZIP_STAT_COMP_METHOD | ZIP_STAT_CRC | ZIP_STAT_SIZE)) {
-#ifdef _WIN32
-        printf("invalid case close-4\n");
-#endif
 	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }
@@ -531,9 +519,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 
     if (is_zip64 != ret) {
 	/* Zip64 mismatch between preliminary file header written before data and final file header written afterwards */
-#ifdef _WIN32
-        printf("invalid case close-5\n");
-#endif
 	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	return -1;
     }
@@ -704,9 +689,6 @@ write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64) {
     }
 
     if (!_zip_buffer_ok(buffer)) {
-#ifdef _WIN32
-        printf("invalid case close-6\n");
-#endif
 	zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
 	ret = -1;
     }
