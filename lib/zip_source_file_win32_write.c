@@ -67,7 +67,7 @@ _zip_win32_write_op_commit_write(zip_source_file_context_t *ctx) {
     
     if (!CloseHandle((HANDLE)ctx->fout)) {
         zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
-        return -1
+        return -1;
     }
     
     DWORD attributes = write_ops->get_file_attributes(ctx->tmpname);
@@ -95,6 +95,7 @@ static zip_int64_t
 _zip_win32_write_op_create_temp_output(zip_source_file_context_t *ctx) {
     zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
 
+    int value;
     int i;
     HANDLE th = INVALID_HANDLE_VALUE;
     void *temp = NULL;
@@ -121,7 +122,7 @@ _zip_win32_write_op_create_temp_output(zip_source_file_context_t *ctx) {
  #ifndef MS_UWP
     value = GetTickCount();
 #else
-    value = (zip_uint32_t)GetTickCount64();
+    value = GetTickCount64();
 #endif
     
     if ((tempname = write_ops->allocate_tempname(ctx->fname, 10, &tempname_size)) == NULL) {

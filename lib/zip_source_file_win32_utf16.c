@@ -42,7 +42,7 @@ static bool utf16_move_file(const char *from, const char *to);
 static bool utf16_set_file_attributes(const char *name, DWORD attributes);
 static char *utf16_strdup(const char *string);
 
-zip_source_file_win32_write_operations_t ops_utf16 {
+zip_source_file_win32_write_operations_t ops_utf16 = {
     utf16_allocate_tempname,
     utf16_create_file,
     utf16_delete_file,
@@ -54,7 +54,7 @@ zip_source_file_win32_write_operations_t ops_utf16 {
 };
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32w(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
+zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
     return NULL;
 
@@ -63,23 +63,24 @@ zip_source_win32w(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t 
 
 
 ZIP_EXTERN zip_source_t *
-zip_source_win32w_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
+zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (fname == NULL || length < -1) {
     zip_error_set(error, ZIP_ER_INVAL, 0);
     return NULL;
     }
 
-    return zip_source_file_common_new(fname, NULL, start, length, NULL, &zip_source_file_win32_write_operations, &ops_utf16, error);
+    return zip_source_file_common_new((const char *)fname, NULL, start, length, NULL, &zip_source_file_win32_write_operations, &ops_utf16, error);
 }
 
 
 static char *
 utf16_allocate_tempname(const char *name, size_t extra_chars) {
-    return (char *)malloc((wcslen(name) + extra_chars) * sizeof(wchar_t));
+    return (char *)malloc((wcslen((const wchar_t *)name) + extra_chars) * sizeof(wchar_t));
 }
 
 
-HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file) {
+HANDLE
+utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file) {
 #ifdef MS_UWP
     CREATEFILE2_EXTENDED_PARAMETERS extParams = {0};
     extParams.dwFileAttributes = file_attributes;
@@ -96,19 +97,21 @@ HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECU
 }
 
 
-bool utf16_delete_file(const char *name) {
+bool
+utf16_delete_file(const char *name) {
     return DeleteFileW((const wchar_t *)name);
 }
 
 
-DWORD utf16_get_file_attributes(const char *name) {
-    return GetFileAttributesW((const wchar_t *)name)
+DWORD
+utf16_get_file_attributes(const char *name) {
+    return GetFileAttributesW((const wchar_t *)name);
 }
 
 
 static void
 utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
-    _snwprintf((wchar_t *)*buf, len, L"%s.%08x", (const wchar_t *)name, i);
+    _snwprintf((wchar_t *)buf, len, L"%s.%08x", (const wchar_t *)name, i);
 }
 
 static bool

@@ -47,9 +47,15 @@
 
 #include "zip_source_file.h"
 
+extern size_t test_size_t;
+extern HANDLE test_handle;
+extern DWORD test_dword;
+extern PSECURITY_ATTRIBUTES test_security;
+
+
 struct zip_source_file_win32_write_operations {
-    char *(*allocate_tempname)(const char *name, size_t extra_chars),
-    void *(*create_file)(const char *, int, int, void *, int, int, void *),
+    char *(*allocate_tempname)(const char *name, int extra_chars),
+    void *(*create_file)(void),
     bool (*delete_file)(const char *name),
     int (*get_file_attributes)(const char *name),
     void (*make_tempname)(char *buf, size_t len, const char *name, int i),
@@ -57,6 +63,8 @@ struct zip_source_file_win32_write_operations {
     bool (*set_file_attributes)(const char *name, int attributes),
     char *(*strdup)(const char *string)
 };
+
+// void *(*create_file)(const char *, int, int, void *, int, int, void *),
 
 struct test_compiler {
     DWORD (*dword_return)(void);
@@ -68,6 +76,7 @@ typedef struct zip_source_file_win32_write_operations zip_source_file_win32_writ
 
 zip_source_file_operations_t zip_source_file_win32_write_operations;
 
+void zip_win32_op_close(zip_source_file_context_t *ctx);
 zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len);
 bool _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence);
 zip_int64_t _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f);

@@ -71,7 +71,7 @@ zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, 
         return NULL;
     }
 
-    return zip_source_file_common_new(NULL, h, start, length, NULL, ops_win32_read, NULL, error);
+    return zip_source_file_common_new(NULL, h, start, length, NULL, &ops_win32_read, NULL, error);
 }
 
 

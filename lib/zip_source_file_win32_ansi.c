@@ -36,7 +36,7 @@
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars);
 static void ansi_make_tempname(char *buf, size_t len, const char *name, int i);
 
-zip_source_file_win32_write_operations_t ops_ansi {
+zip_source_file_win32_write_operations_t ops_ansi = {
     ansi_allocate_tempname,
     CreateFileA,
     DeleteFileA,
