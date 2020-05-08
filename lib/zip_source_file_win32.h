@@ -43,6 +43,8 @@
 
 #include <aclapi.h>
 
+#include "zipint.h"
+
 #include "zip_source_file.h"
 
 struct zip_source_file_win32_write_operations {
