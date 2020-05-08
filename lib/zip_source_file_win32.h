@@ -49,13 +49,19 @@
 
 struct zip_source_file_win32_write_operations {
     char *(*allocate_tempname)(const char *name, size_t extra_chars),
-    void *(*create_file)(const char *, DWORD, DWORD, PSECURITY_ATTRIBUTES, DWORD, DWORD, void *),
+    void *(*create_file)(const char *, int, int, void *, int, int, void *),
     bool (*delete_file)(const char *name),
-    DWORD (*get_file_attributes)(const char *name),
+    int (*get_file_attributes)(const char *name),
     void (*make_tempname)(char *buf, size_t len, const char *name, int i),
     bool (*move_file)(const char *from, const char *to),
-    bool (*set_file_attributes)(const char *name, DWORD attributes),
+    bool (*set_file_attributes)(const char *name, int attributes),
     char *(*strdup)(const char *string)
+};
+
+struct test_compiler {
+    DWORD (*dword_return)(void);
+    
+    void (*dword_argument)(DWORD x);
 };
 
 typedef struct zip_source_file_win32_write_operations zip_source_file_win32_write_operations_t;
