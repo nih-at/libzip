@@ -92,10 +92,9 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
         extParams.hTemplateFile = template_file;
         extParams.lpSecurityAttributes = security_attributes;
 
-        printf("CreateFile2(name, %d, %d, %d, %d, {%d})\n", (int)access, (int)share_mode, (int)creation_disposition, (int)file_attributes)
         return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
     #else
-        printf("CreateFileW(name, %d, %d, %d, %d, sa, %d)\n", (int)access, (int)share_mode, (int)creation_disposition, (int)file_attributes)
+        wprintf(L"CreateFileW(\"%s\", %d, %d, %d, %p, %d)\n", (const wchar_t *)name, (int)access, (int)share_mode, (int)creation_disposition, sa, (int)file_attributes)
         return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
     #endif
 }
@@ -120,6 +119,7 @@ utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
 
 static BOOL
 utf16_move_file(const char *from, const char *to, DWORD flags) {
+    wprintf(L"MoveFileExW(\"%s\", \"%s\", %d)\n", (const wchar_t *)from, (const wchar_t *)to, (int)flags);
     return MoveFileExW((const wchar_t *)from, (const wchar_t *)to, flags);
 }
 
