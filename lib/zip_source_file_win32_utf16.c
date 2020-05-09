@@ -37,7 +37,7 @@ static char *utf16_allocate_tempname(const char *name, size_t extra_chars, size_
 static HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
 static BOOL utf16_delete_file(const char *name);
 static DWORD utf16_get_file_attributes(const char *name);
-static BOOL utf16_get_file_attributes(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
+static BOOL utf16_get_file_attributes_ex(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
 static void utf16_make_tempname(char *buf, size_t len, const char *name, int i);
 static BOOL utf16_move_file(const char *from, const char *to, DWORD flags);
 static BOOL utf16_set_file_attributes(const char *name, DWORD attributes);
@@ -115,7 +115,7 @@ utf16_get_file_attributes(const char *name) {
 
 
 static BOOL
-utf16_get_file_attributes(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information) {
+utf16_get_file_attributes_ex(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information) {
     return GetFeilAttributesExW((const wchar_t *)name, info_level, information);
 }
 

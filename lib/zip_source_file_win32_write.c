@@ -204,12 +204,12 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
     
     st->exists = true;
     st->regular_file = true; /* TODO: Is this always right? How to determine without a HANDLE? */
-    if (!_zip_filetime_to_time_t(file_attributes->ftLastWriteTime, &st->mtime)) {
+    if (!_zip_filetime_to_time_t(file_attributes.ftLastWriteTime, &st->mtime)) {
         printf("filetime_to_time_t failed\n");
         zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
         return false;
     }
-    st->size = ((zip_uint64_t)file_attributes->nFileSizeHigh << 32) | file_attributes->nFileSizeLow;
+    st->size = ((zip_uint64_t)file_attributes.nFileSizeHigh << 32) | file_attributes.nFileSizeLow;
     
     return true;
 }
