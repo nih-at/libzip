@@ -116,7 +116,7 @@ utf16_get_file_attributes(const char *name) {
 
 static BOOL
 utf16_get_file_attributes_ex(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information) {
-    return GetFeilAttributesExW((const wchar_t *)name, info_level, information);
+    return GetFileAttributesExW((const wchar_t *)name, info_level, information);
 }
 
 
