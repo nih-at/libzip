@@ -194,12 +194,18 @@ _zip_win32_write_op_rollback_write(zip_source_file_context_t *ctx) {
 static bool
 _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
     HANDLE h = win32_write_open(ctx, ctx->fname, false, NULL);
+    bool ok;
     
     if (h == INVALID_HANDLE_VALUE) {
+        printf("open in stat failed\n");
         return false;
     }
 
-    return _zip_stat_win32(ctx, st, h);
+    ok = _zip_stat_win32(ctx, st, h);
+    
+    CloseHandle(h);
+    
+    return ok;
 }
 
 
