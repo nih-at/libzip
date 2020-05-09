@@ -71,8 +71,6 @@ zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, 
         return NULL;
     }
 
-    printf("creating handle source: ");
-    printf("ops=%p, close=%p, read=%p, seek=%p, stat=%p, write=%p\n", &ops_win32_read, ops_win32_read.close, ops_win32_read.read, ops_win32_read.seek, ops_win32_read.stat, ops_win32_read.write);
     return zip_source_file_common_new(NULL, h, start, length, NULL, &ops_win32_read, NULL, error);
 }
 
@@ -87,7 +85,9 @@ zip_int64_t
 _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
     DWORD i;
 
+    /* TODO: cap len to "DWORD_MAX" */
     if (!ReadFile((HANDLE)ctx->f, buf, (DWORD)len, &i, NULL)) {
+        printf("win32 read error: %d\n", (int)GetLastError());
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
@@ -178,7 +178,7 @@ _zip_win32_error_to_errno(DWORD win32err) {
     case ERROR_DISK_FULL:
         return ENOSPC;
     default:
-        return 0; /* TODO: better default error code */
+        return 10000 + win32err;
     }
 }
 

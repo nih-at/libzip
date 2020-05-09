@@ -89,12 +89,14 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
         extParams.dwFileFlags = FILE_FLAG_RANDOM_ACCESS;
         extParams.dwSecurityQosFlags = SECURITY_ANONYMOUS;
         extParams.dwSize = sizeof(extParams);
-        extParams.hTemplateFile = NULL;
+        extParams.hTemplateFile = template_file;
         extParams.lpSecurityAttributes = security_attributes;
 
+        printf("CreateFile2(name, %d, %d, %d, %d, {%d})\n", (int)access, (int)share_mode, (int)creation_disposition, (int)file_attributes)
         return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
     #else
-        return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, NULL);
+        printf("CreateFileW(name, %d, %d, %d, %d, sa, %d)\n", (int)access, (int)share_mode, (int)creation_disposition, (int)file_attributes)
+        return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
     #endif
 }
 
