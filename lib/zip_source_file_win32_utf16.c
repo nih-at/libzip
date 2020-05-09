@@ -86,17 +86,17 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
 #ifdef MS_UWP
     CREATEFILE2_EXTENDED_PARAMETERS extParams = {0};
     extParams.dwFileAttributes = file_attributes;
-        extParams.dwFileFlags = FILE_FLAG_RANDOM_ACCESS;
-        extParams.dwSecurityQosFlags = SECURITY_ANONYMOUS;
-        extParams.dwSize = sizeof(extParams);
-        extParams.hTemplateFile = template_file;
-        extParams.lpSecurityAttributes = security_attributes;
-
-        return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
-    #else
-        wprintf(L"CreateFileW(\"%s\", %d, %d, %d, %p, %d)\n", (const wchar_t *)name, (int)access, (int)share_mode, (int)creation_disposition, sa, (int)file_attributes)
-        return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
-    #endif
+    extParams.dwFileFlags = FILE_FLAG_RANDOM_ACCESS;
+    extParams.dwSecurityQosFlags = SECURITY_ANONYMOUS;
+    extParams.dwSize = sizeof(extParams);
+    extParams.hTemplateFile = template_file;
+    extParams.lpSecurityAttributes = security_attributes;
+    
+    return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
+#else
+    wprintf(L"CreateFileW(\"%s\", %d, %d, %d, %p, %d)\n", (const wchar_t *)name, (int)access, (int)share_mode, (int)creation_disposition, security_attributes, (int)file_attributes);
+    return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
+#endif
 }
 
 
