@@ -234,9 +234,10 @@ _zip_filetime_to_time_t(FILETIME ft, time_t *t) {
     secs = (li.QuadPart / WINDOWS_TICK - SEC_TO_UNIX_EPOCH);
 
     temp = (time_t)secs;
-    if (secs != (zip_int64_t)temp)
-    return -1;
+    if (secs != (zip_int64_t)temp) {
+        return false;
+    }
 
     *t = temp;
-    return 0;
+    return true;
 }

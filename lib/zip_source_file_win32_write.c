@@ -212,6 +212,8 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
     }
     st->size = ((zip_uint64_t)file_attributes.nFileSizeHigh << 32) | file_attributes.nFileSizeLow;
 
+    /* TODO: fill in ctx->attributes */
+
     printf("stat succeded: size: %llu\n", st->size);
     return true;
 }
