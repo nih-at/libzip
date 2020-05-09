@@ -203,7 +203,7 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 
     ok = _zip_stat_win32(ctx, st, h);
     
-    CloseHandle(h);
+    // CloseHandle(h);
     
     return ok;
 }
@@ -228,10 +228,10 @@ win32_write_open(zip_source_file_context_t *ctx, const char *name, bool temporar
     DWORD file_attributes = FILE_ATTRIBUTE_NORMAL;
     
     if (temporary) {
-        access |= GENERIC_WRITE;
+        access = GENERIC_READ | GENERIC_WRITE;
         share_mode = FILE_SHARE_READ;
         creation_disposition = CREATE_NEW;
-        file_attributes |= FILE_ATTRIBUTE_TEMPORARY;
+        file_attributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY;
     }
 
     HANDLE h = write_ops->create_file(name, access, share_mode, security_attributes, creation_disposition, file_attributes, NULL);

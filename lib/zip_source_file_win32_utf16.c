@@ -94,7 +94,7 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
     
     return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
 #else
-    // wprintf(L"CreateFileW(\"%s\", %d, %d, %d, %p, %d)\n", (const wchar_t *)name, (int)access, (int)share_mode, (int)creation_disposition, security_attributes, (int)file_attributes);
+    wprintf(L"CreateFileW(\"%s\", %x, %x, %x, %p, %x)\n", (const wchar_t *)name, access, share_mode, creation_disposition, security_attributes, file_attributes);
     return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
 #endif
 }
