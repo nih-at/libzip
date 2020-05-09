@@ -41,6 +41,7 @@ zip_source_file_win32_write_operations_t ops_ansi = {
     CreateFileA,
     DeleteFileA,
     GetFileAttributesA,
+    GetFileAttributesExA,
     ansi_make_tempname,
     MoveFileExA,
     SetFileAttributesA,

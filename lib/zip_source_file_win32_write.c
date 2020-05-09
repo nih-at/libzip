@@ -193,19 +193,25 @@ _zip_win32_write_op_rollback_write(zip_source_file_context_t *ctx) {
 
 static bool
 _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
-    HANDLE h = win32_write_open(ctx, ctx->fname, false, NULL);
-    bool ok;
+    zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
     
-    if (h == INVALID_HANDLE_VALUE) {
-        printf("open in stat failed\n");
+    WIN32_FILE_ATTRIBUTE_DATA file_attributes;
+
+    if (!write_ops->get_file_attributes_ex(ctx->fname, GetFileExInfoStandard, &file_attributes)) {
+        zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
         return false;
     }
-
-    ok = _zip_stat_win32(ctx, st, h);
     
-    // CloseHandle(h);
+    st->exists = true;
+    st->regular_file = true; /* TODO: Is this always right? How to determine without a HANDLE? */
+    if (!_zip_filetime_to_time_t(file_attributes->ftLastWriteTime, &st->mtime)) {
+        printf("filetime_to_time_t failed\n");
+        zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
+        return false;
+    }
+    st->size = ((zip_uint64_t)file_attributes->nFileSizeHigh << 32) | file_attributes->nFileSizeLow;
     
-    return ok;
+    return true;
 }
 
 

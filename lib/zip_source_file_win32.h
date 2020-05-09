@@ -52,6 +52,7 @@ struct zip_source_file_win32_write_operations {
     HANDLE (*create_file)(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
     BOOL (*delete_file)(const char *name);
     DWORD (*get_file_attributes)(const char *name);
+    BOOL (*get_file_attributes_ex)(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
     void (*make_tempname)(char *buf, size_t len, const char *name, int i);
     BOOL (*move_file)(const char *from, const char *to, DWORD flags);
     BOOL (*set_file_attributes)(const char *name, DWORD attributes);
@@ -68,7 +69,7 @@ bool _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t off
 zip_int64_t _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f);
 zip_int64_t _zip_win32_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
 
-bool _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HANDLE h);
+bool _zip_filetime_to_time_t(FILETIME ft, time_t *t);
 int _zip_win32_error_to_errno(DWORD win32err);
 
 #endif /* _HAD_ZIP_SOURCE_FILE_WIN32_H */

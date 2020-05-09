@@ -37,6 +37,7 @@ static char *utf16_allocate_tempname(const char *name, size_t extra_chars, size_
 static HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
 static BOOL utf16_delete_file(const char *name);
 static DWORD utf16_get_file_attributes(const char *name);
+static BOOL utf16_get_file_attributes(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
 static void utf16_make_tempname(char *buf, size_t len, const char *name, int i);
 static BOOL utf16_move_file(const char *from, const char *to, DWORD flags);
 static BOOL utf16_set_file_attributes(const char *name, DWORD attributes);
@@ -47,6 +48,7 @@ zip_source_file_win32_write_operations_t ops_utf16 = {
     utf16_create_file,
     utf16_delete_file,
     utf16_get_file_attributes,
+    utf16_get_file_attributes_ex,
     utf16_make_tempname,
     utf16_move_file,
     utf16_set_file_attributes,
@@ -94,7 +96,7 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
     
     return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
 #else
-    wprintf(L"CreateFileW(\"%s\", %x, %x, %x, %p, %x)\n", (const wchar_t *)name, access, share_mode, creation_disposition, security_attributes, file_attributes);
+    // wprintf(L"CreateFileW(\"%s\", %x, %x, %x, %p, %x)\n", (const wchar_t *)name, access, share_mode, creation_disposition, security_attributes, file_attributes);
     return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
 #endif
 }
@@ -110,6 +112,13 @@ static DWORD
 utf16_get_file_attributes(const char *name) {
     return GetFileAttributesW((const wchar_t *)name);
 }
+
+
+static BOOL
+utf16_get_file_attributes(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information) {
+    return GetFeilAttributesExW((const wchar_t *)name, info_level, information);
+}
+
 
 
 static void

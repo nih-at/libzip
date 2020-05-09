@@ -35,7 +35,7 @@
 
 static bool _zip_win32_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st);
 
-static int _zip_filetime_to_time_t(FILETIME ft, time_t *t);
+static bool _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HANDLE h);
 
 static zip_source_file_operations_t ops_win32_read = {
     _zip_win32_op_close,
@@ -183,7 +183,7 @@ _zip_win32_error_to_errno(DWORD win32err) {
 }
 
 
-bool
+static bool
 _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HANDLE h) {
     FILETIME mtimeft;
     time_t mtime;
@@ -218,7 +218,7 @@ _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HAND
 }
 
 
-static int
+bool
 _zip_filetime_to_time_t(FILETIME ft, time_t *t) {
     /*
     Inspired by http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux
