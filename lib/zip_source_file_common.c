@@ -134,14 +134,25 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1);
 
     zip_source_file_stat_init(&sb);
-    stat_valid = ops->stat(ctx, &sb);
-
-    if (ctx->fname && !stat_valid && ctx->start == 0 && ctx->len == 0 && ops->write != NULL) {
-	ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
+    if (!ops->stat(ctx, &sb)) {
+        _zip_error_copy(error, &ctx->error);
+        free(ctx->fname);
+        free(ctx);
+        return NULL;
     }
 
-    if (!stat_valid) {
-	zip_error_set(&ctx->stat_error, ZIP_ER_READ, errno);
+    if (!sb.exists) {
+        if (ctx->fname && ctx->start == 0 && ctx->len == 0 && ops->write != NULL) {
+            ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
+            /* zip_open_from_source checks for this to detect non-existing files */
+            zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
+        }
+        else {
+            zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
+            free(ctx->fname);
+            free(ctx);
+            return NULL;
+        }
     }
     else {
 	if ((ctx->st.valid & ZIP_STAT_MTIME) == 0) {

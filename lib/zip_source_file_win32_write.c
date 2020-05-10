@@ -198,8 +198,13 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
     WIN32_FILE_ATTRIBUTE_DATA file_attributes;
 
     if (!write_ops->get_file_attributes_ex(ctx->fname, GetFileExInfoStandard, &file_attributes)) {
-        printf("get_file_attributes_ex failed: %d\n", (int)GetLastError());
-        zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
+        DWORD error = GetLastError();
+        if (error == ERROR_FILE_NOT_FOUND) {
+            st->exists = false;
+            return true;
+        }
+        printf("get_file_attributes_ex failed: %u / %d\n", error, _zip_win32_error_to_errno(error));
+        zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(error));
         return false;
     }
     
@@ -214,7 +219,6 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 
     /* TODO: fill in ctx->attributes */
 
-    printf("stat succeded: size: %llu\n", st->size);
     return true;
 }
 
