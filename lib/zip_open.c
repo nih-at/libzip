@@ -278,9 +278,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     if (cd->offset + cd->size > buf_offset + eocd_offset) {
 	/* cdir spans past EOCD record */
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 1\n");
-#endif
 	_zip_cdir_free(cd);
 	return NULL;
     }
@@ -293,9 +290,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
 	if (tail_len < comment_len || ((za->open_flags & ZIP_CHECKCONS) && tail_len != comment_len)) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	    printf("open inconsistency 2\n");
-#endif
 	    _zip_cdir_free(cd);
 	    return NULL;
 	}
@@ -315,9 +309,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
 	if ((data = _zip_buffer_get(buffer, cd->size)) == NULL) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	    printf("open inconsistency 3\n");
-#endif
 	    _zip_cdir_free(cd);
 	    return NULL;
 	}
@@ -369,9 +360,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 	if ((cd->entry[i].orig = _zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, error)) < 0) {
 	    if (grown && zip_error_code_zip(error) == ZIP_ER_NOZIP) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-		printf("open inconsistency 4\n");
-#endif
 	    }
 	    _zip_cdir_free(cd);
 	    _zip_buffer_free(cd_buffer);
@@ -383,9 +371,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
     if (i != cd->nentry || left > 0) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 5: i = %llu, nentry = %llu, left = %llu, size = %llu\n", i, cd->nentry, left, cd->size);
-#endif
 	_zip_buffer_free(cd_buffer);
 	_zip_cdir_free(cd);
 	return NULL;
@@ -410,9 +395,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
 	if (!ok) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	    printf("open inconsistency 6\n");
-#endif
 	    _zip_buffer_free(cd_buffer);
 	    _zip_cdir_free(cd);
 	    return NULL;
@@ -472,9 +454,6 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
 
 	if (_zip_headercomp(cd->entry[i].orig, &temp) != 0) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	    printf("open inconsistency 7\n");
-#endif
 	    _zip_dirent_finalize(&temp);
 	    return -1;
 	}
@@ -666,9 +645,6 @@ _zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags
 
     if (_zip_buffer_left(buffer) < EOCDLEN) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 8\n");
-#endif
 	return NULL;
     }
 
@@ -702,17 +678,11 @@ _zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags
     if (offset + size > buf_offset + eocd_offset) {
 	/* cdir spans past EOCD record */
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 9\n");
-#endif
 	return NULL;
     }
 
     if ((flags & ZIP_CHECKCONS) && offset + size != buf_offset + eocd_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 10\n");
-#endif
 	return NULL;
     }
 
@@ -754,9 +724,6 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     /* does EOCD fit before EOCD locator? */
     if (eocd_offset + EOCD64LEN > eocdloc_offset + buf_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 11\n");
-#endif
 	return NULL;
     }
 
@@ -778,9 +745,6 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 
     if (memcmp(_zip_buffer_get(buffer, 4), EOCD64_MAGIC, 4) != 0) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 12\n");
-#endif
 	if (free_buffer) {
 	    _zip_buffer_free(buffer);
 	}
@@ -793,9 +757,6 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     /* is there a hole between EOCD and EOCD locator, or do they overlap? */
     if ((flags & ZIP_CHECKCONS) && size + eocd_offset + 12 != buf_offset + eocdloc_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 13\n");
-#endif
 	if (free_buffer) {
 	    _zip_buffer_free(buffer);
 	}
@@ -818,9 +779,6 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     }
     if ((flags & ZIP_CHECKCONS) && (eocd_disk != eocd_disk64 || num_disks != num_disks64)) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-	printf("open inconsistency 14\n");
-#endif
 	if (free_buffer) {
 	    _zip_buffer_free(buffer);
 	}

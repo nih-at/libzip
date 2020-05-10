@@ -422,9 +422,6 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     if (from_buffer) {
 	if (_zip_buffer_left(buffer) < variable_size) {
 	    zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-            printf("dirent inconsistency 1\n");
-#endif
 	    return -1;
 	}
     }
@@ -441,9 +438,6 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	if (!zde->filename) {
 	    if (zip_error_code_zip(error) == ZIP_ER_EOF) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-                printf("dirent inconsistency 2\n");
-#endif
 	    }
 	    if (!from_buffer) {
 		_zip_buffer_free(buffer);
@@ -454,9 +448,6 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	if (zde->bitflags & ZIP_GPBF_ENCODING_UTF_8) {
 	    if (_zip_guess_encoding(zde->filename, ZIP_ENCODING_UTF8_KNOWN) == ZIP_ENCODING_ERROR) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-                printf("dirent inconsistency 3\n");
-#endif
 		if (!from_buffer) {
 		    _zip_buffer_free(buffer);
 		}
@@ -497,9 +488,6 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	if (zde->bitflags & ZIP_GPBF_ENCODING_UTF_8) {
 	    if (_zip_guess_encoding(zde->comment, ZIP_ENCODING_UTF8_KNOWN) == ZIP_ENCODING_ERROR) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-                printf("dirent inconsistency 4\n");
-#endif
 		if (!from_buffer) {
 		    _zip_buffer_free(buffer);
 		}
@@ -575,9 +563,6 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 	    }
 	    if (!ok) {
 		zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-                printf("dirent inconsistency 5\n");
-#endif
 		_zip_buffer_free(ef_buffer);
 		if (!from_buffer) {
 		    _zip_buffer_free(buffer);
@@ -667,9 +652,6 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
 
     if (ef == NULL || ef_len < 7) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-        printf("dirent inconsistency 6\n");
-#endif
 	return false;
     }
 
@@ -723,9 +705,6 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
 
     if (ef_len != 7) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
-#ifdef _WIN32
-        printf("dirent inconsistency 7\n");
-#endif
 	_zip_buffer_free(buffer);
 	return false;
     }

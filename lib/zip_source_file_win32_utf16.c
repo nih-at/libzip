@@ -96,7 +96,6 @@ utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_AT
     
     return CreateFile2((const wchar_t *)name, access, share_mode, creation_disposition, &extParams);
 #else
-    // wprintf(L"CreateFileW(\"%s\", %x, %x, %x, %p, %x)\n", (const wchar_t *)name, access, share_mode, creation_disposition, security_attributes, file_attributes);
     return CreateFileW((const wchar_t *)name, access, share_mode, security_attributes, creation_disposition, file_attributes, template_file);
 #endif
 }
@@ -128,7 +127,6 @@ utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
 
 static BOOL
 utf16_move_file(const char *from, const char *to, DWORD flags) {
-    // wprintf(L"MoveFileExW(\"%s\", \"%s\", %d)\n", (const wchar_t *)from, (const wchar_t *)to, (int)flags);
     return MoveFileExW((const wchar_t *)from, (const wchar_t *)to, flags);
 }
 

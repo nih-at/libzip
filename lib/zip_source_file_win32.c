@@ -87,7 +87,6 @@ _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) 
 
     /* TODO: cap len to "DWORD_MAX" */
     if (!ReadFile((HANDLE)ctx->f, buf, (DWORD)len, &i, NULL)) {
-        printf("win32 read error: %d\n", (int)GetLastError());
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
