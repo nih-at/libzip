@@ -191,11 +191,17 @@ zip_close(zip_t *za) {
 	de = entry->changes;
 
 	if (_zip_read_local_ef(za, i) < 0) {
+#ifdef _WIN32
+            printf("close error case 1\n");
+#endif
 	    error = 1;
 	    break;
 	}
 
 	if ((off = zip_source_tell_write(za->src)) < 0) {
+#ifdef _WIN32
+            printf("close error case 2\n");
+#endif
 	    error = 1;
 	    break;
 	}
@@ -207,6 +213,9 @@ zip_close(zip_t *za) {
 	    zs = NULL;
 	    if (!ZIP_ENTRY_DATA_CHANGED(entry)) {
 		if ((zs = _zip_source_zip_new(za, za, i, ZIP_FL_UNCHANGED, 0, 0, NULL)) == NULL) {
+#ifdef _WIN32
+                    printf("close error case 3\n");
+#endif
 		    error = 1;
 		    break;
 		}
@@ -214,6 +223,9 @@ zip_close(zip_t *za) {
 
 	    /* add_data writes dirent */
 	    if (add_data(za, zs ? zs : entry->source, de, entry->changes ? entry->changes->changed : 0) < 0) {
+#ifdef _WIN32
+                printf("close error case 4\n");
+#endif
 		error = 1;
 		if (zs)
 		    zip_source_free(zs);
@@ -231,25 +243,40 @@ zip_close(zip_t *za) {
 		de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
 	    }
 	    if (_zip_dirent_write(za, de, ZIP_FL_LOCAL) < 0) {
+#ifdef _WIN32
+                printf("close error case 5\n");
+#endif
 		error = 1;
 		break;
 	    }
 	    if ((offset = _zip_file_get_offset(za, i, &za->error)) == 0) {
+#ifdef _WIN32
+                printf("close error case 6\n");
+#endif
 		error = 1;
 		break;
 	    }
 	    if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
 		_zip_error_set_from_source(&za->error, za->src);
-		error = 1;
+#ifdef _WIN32
+                printf("close error case 7\n");
+#endif
+                error = 1;
 		break;
 	    }
 	    if (copy_data(za, de->comp_size) < 0) {
-		error = 1;
+#ifdef _WIN32
+                printf("close error case 8\n");
+#endif
+ 		error = 1;
 		break;
 	    }
 
 	    if (de->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
 		if (write_data_descriptor(za, de, _zip_dirent_needs_zip64(de, 0)) < 0) {
+#ifdef _WIN32
+                    printf("close error case 9\n");
+#endif
 		    error = 1;
 		    break;
 		}
