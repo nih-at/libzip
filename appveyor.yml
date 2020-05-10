@@ -15,7 +15,7 @@ environment:
       TRIPLET: x64-uwp
       CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0"
       CMAKE_CONFIG: Release
-   - GENERATOR: "Visual Studio 15 2017"
+    - GENERATOR: "Visual Studio 15 2017"
       TRIPLET: x86-windows
       CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
       CMAKE_CONFIG: Release
