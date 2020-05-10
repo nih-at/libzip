@@ -384,7 +384,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     if (i != cd->nentry || left > 0) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 #ifdef _WIN32
-	printf("open inconsistency 5: i = %llu, nentry = %llu, left = %llu\n, size = %llu", i, cd->nentry, left, cd->size);
+	printf("open inconsistency 5: i = %llu, nentry = %llu, left = %llu, size = %llu\n", i, cd->nentry, left, cd->size);
 #endif
 	_zip_buffer_free(cd_buffer);
 	_zip_cdir_free(cd);

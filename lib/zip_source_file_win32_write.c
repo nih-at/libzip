@@ -219,7 +219,7 @@ _zip_win32_write_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 
     /* TODO: fill in ctx->attributes */
 
-    wprintf(L"stat(%s) = { size = %llu }\n", (wchar_t *)ctx->fname, st->size);
+    //wprintf(L"stat(%s) = { size = %llu }\n", (wchar_t *)ctx->fname, st->size);
     return true;
 }
 

@@ -202,6 +202,7 @@ zip_close(zip_t *za) {
 #ifdef _WIN32
             printf("close error case 2: off = %llu\n", off);
 #endif
+            _zip_error_set_from_source(&za->error, za->src);
 	    error = 1;
 	    break;
 	}

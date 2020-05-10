@@ -150,13 +150,11 @@ _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f) {
     LARGE_INTEGER new_offset;
     
     zero.QuadPart = 0;
-    if (!SetFilePointerEx((HANDLE)ctx->f, zero, &new_offset, FILE_CURRENT)) {
-        printf("SetFilePointerEx failed\n");
+    if (!SetFilePointerEx((HANDLE)f, zero, &new_offset, FILE_CURRENT)) {
         zip_error_set(&ctx->error, ZIP_ER_SEEK, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
     
-    printf("SetFilePointerEx returned %llu\n", new_offset.QuadPart);
     return (zip_int64_t)new_offset.QuadPart;
 }
 
