@@ -121,7 +121,7 @@ utf16_get_file_attributes_ex(const char *name, GET_FILEEX_INFO_LEVELS info_level
 
 
 static void
-utf16_make_tempname(char *buf, size_t len, const char *name, int i) {
+utf16_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i) {
     _snwprintf((wchar_t *)buf, len, L"%s.%08x", (const wchar_t *)name, i);
 }
 

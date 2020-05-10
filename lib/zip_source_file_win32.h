@@ -53,7 +53,7 @@ struct zip_source_file_win32_write_operations {
     BOOL (*delete_file)(const char *name);
     DWORD (*get_file_attributes)(const char *name);
     BOOL (*get_file_attributes_ex)(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
-    void (*make_tempname)(char *buf, size_t len, const char *name, int i);
+    void (*make_tempname)(char *buf, size_t len, const char *name, zip_uint32_t i);
     BOOL (*move_file)(const char *from, const char *to, DWORD flags);
     BOOL (*set_file_attributes)(const char *name, DWORD attributes);
     char *(*string_duplicate)(const char *string);

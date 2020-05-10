@@ -96,8 +96,7 @@ static zip_int64_t
 _zip_win32_write_op_create_temp_output(zip_source_file_context_t *ctx) {
     zip_source_file_win32_write_operations_t *write_ops = (zip_source_file_win32_write_operations_t *)ctx->ops_userdata;
 
-    int value;
-    int i;
+    zip_uint32_t value, i;
     HANDLE th = INVALID_HANDLE_VALUE;
     void *temp = NULL;
     PSECURITY_DESCRIPTOR psd = NULL;
@@ -123,7 +122,7 @@ _zip_win32_write_op_create_temp_output(zip_source_file_context_t *ctx) {
  #ifndef MS_UWP
     value = GetTickCount();
 #else
-    value = GetTickCount64();
+    value = (zip_uint32_t)(GetTickCount64() & 0xffffffff);
 #endif
     
     if ((tempname = write_ops->allocate_tempname(ctx->fname, 10, &tempname_size)) == NULL) {
