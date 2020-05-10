@@ -117,8 +117,8 @@ _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
     }
 
     li.QuadPart = (LONGLONG)offset;
-    if (!SetFilePointerEx((HANDLE)ctx->f, li, NULL, method)) {
-    zip_error_set(&ctx->error, ZIP_ER_SEEK, _zip_win32_error_to_errno(GetLastError()));
+    if (!SetFilePointerEx((HANDLE)f, li, NULL, method)) {
+        zip_error_set(&ctx->error, ZIP_ER_SEEK, _zip_win32_error_to_errno(GetLastError()));
         return false;
     }
 
