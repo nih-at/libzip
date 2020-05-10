@@ -877,7 +877,7 @@
 		4BDC721C15B1B25E00236D3C /* zip_memdup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_memdup.c; path = ../lib/zip_memdup.c; sourceTree = "<group>"; };
 		4BDC721D15B1B25E00236D3C /* zip_name_locate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_name_locate.c; path = ../lib/zip_name_locate.c; sourceTree = "<group>"; };
 		4BDC721E15B1B25E00236D3C /* zip_new.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_new.c; path = ../lib/zip_new.c; sourceTree = "<group>"; };
-		4BDC721F15B1B25E00236D3C /* zip_open.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_open.c; path = ../lib/zip_open.c; sourceTree = "<group>"; usesTabs = 1; };
+		4BDC721F15B1B25E00236D3C /* zip_open.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_open.c; path = ../lib/zip_open.c; sourceTree = "<group>"; tabWidth = 8; usesTabs = 1; };
 		4BDC722015B1B25E00236D3C /* zip_rename.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_rename.c; path = ../lib/zip_rename.c; sourceTree = "<group>"; };
 		4BDC722115B1B25E00236D3C /* zip_replace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_replace.c; path = ../lib/zip_replace.c; sourceTree = "<group>"; };
 		4BDC722215B1B25E00236D3C /* zip_set_archive_comment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip_set_archive_comment.c; path = ../lib/zip_set_archive_comment.c; sourceTree = "<group>"; };
