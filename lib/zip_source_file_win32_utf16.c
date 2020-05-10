@@ -38,7 +38,7 @@ static HANDLE utf16_create_file(const char *name, DWORD access, DWORD share_mode
 static BOOL utf16_delete_file(const char *name);
 static DWORD utf16_get_file_attributes(const char *name);
 static BOOL utf16_get_file_attributes_ex(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
-static void utf16_make_tempname(char *buf, size_t len, const char *name, int i);
+static void utf16_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 static BOOL utf16_move_file(const char *from, const char *to, DWORD flags);
 static BOOL utf16_set_file_attributes(const char *name, DWORD attributes);
 static char *utf16_strdup(const char *string);

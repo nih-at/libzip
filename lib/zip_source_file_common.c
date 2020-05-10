@@ -54,7 +54,6 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     zip_source_file_context_t *ctx;
     zip_source_t *zs;
     zip_source_file_stat_t sb;
-    bool stat_valid;
 
     if (ops == NULL) {
 	zip_error_set(error, ZIP_ER_INVAL, 0);

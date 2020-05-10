@@ -34,7 +34,7 @@
 #include "zip_source_file_win32.h"
 
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
-static void ansi_make_tempname(char *buf, size_t len, const char *name, int i);
+static void ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 
 zip_source_file_win32_write_operations_t ops_ansi = {
     ansi_allocate_tempname,
