@@ -49,13 +49,13 @@
 
 struct zip_source_file_win32_write_operations {
     char *(*allocate_tempname)(const char *name, size_t extra_chars, size_t *lengthp);
-    HANDLE (*create_file)(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
-    BOOL (*delete_file)(const char *name);
-    DWORD (*get_file_attributes)(const char *name);
-    BOOL (*get_file_attributes_ex)(const char *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
+    HANDLE (__stdcall *create_file)(const void *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
+    BOOL (__stdcall *delete_file)(const void *name);
+    DWORD (__stdcall *get_file_attributes)(const void *name);
+    BOOL (__stdcall *get_file_attributes_ex)(const void *name, GET_FILEEX_INFO_LEVELS info_level, void *information);
     void (*make_tempname)(char *buf, size_t len, const char *name, zip_uint32_t i);
-    BOOL (*move_file)(const char *from, const char *to, DWORD flags);
-    BOOL (*set_file_attributes)(const char *name, DWORD attributes);
+    BOOL (__stdcall *move_file)(const void *from, const void *to, DWORD flags);
+    BOOL (__stdcall *set_file_attributes)(const void *name, DWORD attributes);
     char *(*string_duplicate)(const char *string);
 };
 
