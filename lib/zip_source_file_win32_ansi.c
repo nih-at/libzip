@@ -49,7 +49,7 @@ struct test test_w = {
 };
 
 static
-DWORD __stdcall *get_file_attributes_own(const void *name) {
+DWORD __stdcall get_file_attributes_own(const void *name) {
     return 0;
 }
 
