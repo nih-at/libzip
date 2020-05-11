@@ -36,6 +36,27 @@
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static void ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 
+struct test {
+    DWORD (__stdcall *get_file_attributes)(const void *name);
+};
+
+struct test test_a = {
+    GetFileAttributesA
+};
+
+struct test test_w = {
+    GetFileAttributesW
+};
+
+static
+DWORD __stdcall *get_file_attributes_own(const void *name) {
+    return 0;
+}
+
+struct test test_own = {
+    get_file_attributes_own
+};
+
 zip_source_file_win32_write_operations_t ops_ansi = {
     ansi_allocate_tempname,
     CreateFileA,

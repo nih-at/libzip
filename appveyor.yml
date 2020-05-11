@@ -7,10 +7,10 @@ environment:
       TRIPLET: x64-windows
       CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
       CMAKE_CONFIG: Release
-    - GENERATOR: "Visual Studio 15 2017 Win64"
-      TRIPLET: x64-windows
-      CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
-      CMAKE_CONFIG: Debug
+#    - GENERATOR: "Visual Studio 15 2017 Win64"
+#      TRIPLET: x64-windows
+#      CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
+#      CMAKE_CONFIG: Debug
     - GENERATOR: "Visual Studio 15 2017 Win64"
       TRIPLET: x64-uwp
       CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0"
@@ -19,10 +19,10 @@ environment:
       TRIPLET: x86-windows
       CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
       CMAKE_CONFIG: Release
-    - GENERATOR: "Visual Studio 15 2017"
-      TRIPLET: x86-windows
-      CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
-      CMAKE_CONFIG: Debug
+#    - GENERATOR: "Visual Studio 15 2017"
+#      TRIPLET: x86-windows
+#      CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
+#      CMAKE_CONFIG: Debug
     - GENERATOR: "Visual Studio 15 2017"
       TRIPLET: x86-uwp
       CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0"
