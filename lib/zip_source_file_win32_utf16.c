@@ -78,7 +78,7 @@ utf16_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp) {
 }
 
 
-HANDLE
+HANDLE __stdcall
 utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file) {
 #ifdef MS_UWP
     CREATEFILE2_EXTENDED_PARAMETERS extParams = {0};
