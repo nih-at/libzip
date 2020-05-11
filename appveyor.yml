@@ -64,7 +64,7 @@ before_build:
 
     .\vcpkg integrate install
 
-    .\vcpkg install zlib:%TRIPLET% bzip2:%TRIPLET%
+    .\vcpkg install zlib:%TRIPLET% bzip2:%TRIPLET% liblzma:%TRIPLET%
 
     cd ..
 
