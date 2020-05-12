@@ -168,7 +168,7 @@ SET(LIBZIP_SOURCES
 IF(WIN32)
   SET(LIBZIP_OPSYS_FILES
     zip_source_file_win32.c
-    zip_source_file_win32_write.c
+    zip_source_file_win32_named.c
     zip_source_file_win32_utf16.c
     zip_source_file_win32_utf8.c
   )
@@ -185,7 +185,7 @@ IF(WIN32)
 ELSE(WIN32)
   SET(LIBZIP_OPSYS_FILES
     zip_mkstempm.c
-    zip_source_file_stdio_write.c
+    zip_source_file_stdio_named.c
     zip_random_unix.c
   )
 ENDIF(WIN32)
