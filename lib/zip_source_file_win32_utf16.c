@@ -1,5 +1,5 @@
 /*
-  zip_source_file_win32_utf16.c -- Windows file source write operations for UTF-16 interface
+  zip_source_file_win32_utf16.c -- source for Windows file opened by UTF-16 name
   Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -38,7 +38,7 @@ static HANDLE __stdcall utf16_create_file(const void *name, DWORD access, DWORD 
 static void utf16_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 static char *utf16_strdup(const char *string);
 
-zip_source_file_win32_write_operations_t ops_utf16 = {
+zip_win32_file_operations_t ops_utf16 = {
     utf16_allocate_tempname,
     utf16_create_file,
     DeleteFileW,
@@ -67,7 +67,7 @@ zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t l
     }
 
 
-    return zip_source_file_common_new((const char *)fname, NULL, start, length, NULL, &_zip_source_file_win32_write_ops, &ops_utf16, error);
+    return zip_source_file_common_new((const char *)fname, NULL, start, length, NULL, &_zip_source_file_win32_named_ops, &ops_utf16, error);
 }
 
 

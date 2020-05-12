@@ -1,5 +1,5 @@
 /*
-  zip_source_file_win32_ansi.c -- Windows file source write operations for ANSI interface
+  zip_source_file_win32_ansi.c -- source for Windows file opened by ANSI name
   Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -36,7 +36,7 @@
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static void ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 
-zip_source_file_win32_write_operations_t ops_ansi = {
+zip_win32_file_operations_t ops_ansi = {
     ansi_allocate_tempname,
     CreateFileA,
     DeleteFileA,
@@ -64,7 +64,7 @@ zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t leng
     return NULL;
     }
 
-    return zip_source_file_common_new(fname, NULL, start, length, NULL, &_zip_source_file_win32_write_ops, &ops_ansi, error);
+    return zip_source_file_common_new(fname, NULL, start, length, NULL, &_zip_source_file_win32_named_ops, &ops_ansi, error);
 }
 
 

@@ -1,6 +1,6 @@
 /*
-  zip_source_file_stdio_write.c -- read/write stdio file source implementation
-  Copyright (C) 2020 Dieter Baron and Thomas Klausner
+  zip_source_file_stdio_named.c -- source for stdio file opened by name
+  Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -62,7 +62,7 @@ static char *_zip_stdio_op_strdup(zip_source_file_context_t *ctx, const char *st
 static zip_int64_t _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len);
 
 /* clang-format off */
-static zip_source_file_operations_t ops_stdio_write = {
+static zip_source_file_operations_t ops_stdio_named = {
     _zip_stdio_op_close,
     _zip_stdio_op_commit_write,
     _zip_stdio_op_create_temp_output,
@@ -99,7 +99,7 @@ zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length
 	return NULL;
     }
 
-    return zip_source_file_common_new(fname, NULL, start, length, NULL, &ops_stdio_write, NULL, error);
+    return zip_source_file_common_new(fname, NULL, start, length, NULL, &ops_stdio_named, NULL, error);
 }
 
 

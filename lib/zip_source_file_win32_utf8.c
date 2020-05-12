@@ -1,5 +1,5 @@
 /*
-  zip_source_file_win32_ansi.c -- read/write Windows UTF-8 file source implementation
+  zip_source_file_win32_ansi.c -- source for Windows file opened by UTF-8 name
   Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
