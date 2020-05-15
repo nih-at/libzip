@@ -639,6 +639,8 @@
 		4B9399632464401300AEBDA4 /* zip_source_file_win32_utf16.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_file_win32_utf16.c; sourceTree = "<group>"; };
 		4B93996424644E7E00AEBDA4 /* zip_source_file_win32_named.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_file_win32_named.c; sourceTree = "<group>"; };
 		4B939965246553FD00AEBDA4 /* appveyor.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = appveyor.yml; sourceTree = "<group>"; };
+		4B939966246E842200AEBDA4 /* zip_random_win32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_random_win32.c; sourceTree = "<group>"; };
+		4B939967246E842200AEBDA4 /* zip_random_uwp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_random_uwp.c; sourceTree = "<group>"; };
 		4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_get_external_attributes.c; sourceTree = "<group>"; };
 		4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_file_set_external_attributes.c; sourceTree = "<group>"; };
 		4BACD57715BC2AEF00920691 /* add_from_filep.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = add_from_filep.c; path = ../regress/add_from_filep.c; sourceTree = "<group>"; };
@@ -1472,6 +1474,8 @@
 				4B00CA22242F59D700E0B71C /* zip_pkware.c */,
 				4BD708781EB1CF73003F351F /* zip_progress.c */,
 				736ED9B81E3D688C00C36873 /* zip_random_unix.c */,
+				4B939967246E842200AEBDA4 /* zip_random_uwp.c */,
+				4B939966246E842200AEBDA4 /* zip_random_win32.c */,
 				4BDC722015B1B25E00236D3C /* zip_rename.c */,
 				4BDC722115B1B25E00236D3C /* zip_replace.c */,
 				4BDC722215B1B25E00236D3C /* zip_set_archive_comment.c */,
@@ -1494,11 +1498,11 @@
 				4B93995524631B3D00AEBDA4 /* zip_source_file_stdio_named.c */,
 				4B93995724631B3E00AEBDA4 /* zip_source_file_stdio.c */,
 				4B93995824631B3E00AEBDA4 /* zip_source_file_stdio.h */,
-				4B93996024640B1700AEBDA4 /* zip_source_file_win32.c */,
 				4B93996124641D5700AEBDA4 /* zip_source_file_win32_ansi.c */,
 				4B93996424644E7E00AEBDA4 /* zip_source_file_win32_named.c */,
-				4B9399632464401300AEBDA4 /* zip_source_file_win32_utf16.c */,
 				4B93996224643F5700AEBDA4 /* zip_source_file_win32_utf8.c */,
+				4B9399632464401300AEBDA4 /* zip_source_file_win32_utf16.c */,
+				4B93996024640B1700AEBDA4 /* zip_source_file_win32.c */,
 				4B93995F24640B1700AEBDA4 /* zip_source_file_win32.h */,
 				4B93995924631B3E00AEBDA4 /* zip_source_file.h */,
 				4BDC722F15B1B25E00236D3C /* zip_source_free.c */,

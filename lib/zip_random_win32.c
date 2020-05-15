@@ -32,11 +32,12 @@
 */
 
 #include "zipint.h"
-#include "zipwin32.h"
 
 #ifdef HAVE_CRYPTO
 #include "zip_crypto.h"
 #endif
+
+#include <windows.h>
 
 #ifndef HAVE_SECURE_RANDOM
 
