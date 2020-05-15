@@ -718,10 +718,6 @@
 		4BC386531A1BE04700CDCAAC /* nih-man.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "nih-man.css"; sourceTree = "<group>"; };
 		4BC972001A0A1D85003A2981 /* zip_error_to_data.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_error_to_data.mdoc; sourceTree = "<group>"; };
 		4BCB434119E9347E0067FAA3 /* zip_buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_buffer.c; sourceTree = "<group>"; };
-		4BCD54C41AB05AA90003D379 /* zip_source_win32a.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32a.c; sourceTree = "<group>"; };
-		4BCD54C61AB05AA90003D379 /* zip_source_win32utf8.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32utf8.c; sourceTree = "<group>"; };
-		4BCD54C71AB05AA90003D379 /* zip_source_win32w.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_source_win32w.c; sourceTree = "<group>"; };
-		4BCD54C81AB05AA90003D379 /* zipwin32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zipwin32.h; sourceTree = "<group>"; };
 		4BCD77A71A14E404001A9F55 /* zip_file_get_error.mdoc */ = {isa = PBXFileReference; lastKnownFileType = text; path = zip_file_get_error.mdoc; sourceTree = "<group>"; };
 		4BCD77A81A14E921001A9F55 /* zip_source_seek_compute_offset.mdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zip_source_seek_compute_offset.mdoc; sourceTree = "<group>"; };
 		4BCD77A91A14ED5C001A9F55 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -921,7 +917,6 @@
 		4BE92AAB20346B1900509BC8 /* zip_crypto_openssl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_crypto_openssl.c; sourceTree = "<group>"; };
 		4BE92AB0203597D700509BC8 /* zip_crypto_commoncrypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip_crypto_commoncrypto.h; sourceTree = "<group>"; };
 		4BE92AB1203597D700509BC8 /* zip_crypto_commoncrypto.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip_crypto_commoncrypto.c; sourceTree = "<group>"; };
-		4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_win32handle.c; sourceTree = "<group>"; };
 		4BFF2B341FDEEF8B006EF3F3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		4BFF2B351FDEF277006EF3F3 /* cmake-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cmake-config.h.in"; sourceTree = "<group>"; };
 		4BFF2B361FDEF277006EF3F3 /* cmake-zipconf.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "cmake-zipconf.h.in"; sourceTree = "<group>"; };
@@ -1523,10 +1518,6 @@
 				4BCF301E199A2F820064207B /* zip_source_supports.c */,
 				4BCF3035199ABDDA0064207B /* zip_source_tell_write.c */,
 				4BCF301F199A2F820064207B /* zip_source_tell.c */,
-				4BCD54C41AB05AA90003D379 /* zip_source_win32a.c */,
-				4BEF35C31AF4D92D00974F28 /* zip_source_win32handle.c */,
-				4BCD54C61AB05AA90003D379 /* zip_source_win32utf8.c */,
-				4BCD54C71AB05AA90003D379 /* zip_source_win32w.c */,
 				4BDC723715B1B25E00236D3C /* zip_source_window.c */,
 				736ED9B91E3D688C00C36873 /* zip_source_winzip_aes_decode.c */,
 				736ED9BA1E3D688C00C36873 /* zip_source_winzip_aes_encode.c */,
@@ -1547,7 +1538,6 @@
 				4BDC729815B1B2A600236D3C /* zip.h */,
 				4BDC729E15B1B4E900236D3C /* zipconf.h */,
 				4BDC729915B1B2A600236D3C /* zipint.h */,
-				4BCD54C81AB05AA90003D379 /* zipwin32.h */,
 			);
 			name = libzip;
 			path = ../lib;
