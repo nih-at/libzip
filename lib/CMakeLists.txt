@@ -196,7 +196,7 @@ string(REGEX MATCHALL "#define ZIP_ER_([A-Z_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z ']*
 set(zip_err_str [=[
 /*
    This file was generated automatically by CMake
-   from zip.h; make changes there.
+   from zip.h\; make changes there.
  */
 
 #include "zipint.h"
