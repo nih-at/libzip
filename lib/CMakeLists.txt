@@ -64,7 +64,6 @@ SET(LIBZIP_SOURCES
   zip_dirent.c
   zip_discard.c
   zip_entry.c
-  zip_err_str.c
   zip_error.c
   zip_error_clear.c
   zip_error_get.c
@@ -192,10 +191,40 @@ ENDIF(WIN32)
 
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/..)
 
-ADD_CUSTOM_TARGET(update_zip_err_str
-  COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/zip_err_str.c
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/zip.h ${CMAKE_CURRENT_SOURCE_DIR}/make_zip_err_str.sh
-)
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/zip.h zip_h)
+string(REGEX MATCHALL "#define ZIP_ER_([A-Z_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z ']*)/" zip_h_err ${zip_h})
+set(zip_err_str [=[
+/*
+   This file was generated automatically by CMake
+   from zip.h; make changes there.
+ */
+
+#include "zipint.h"
+
+const char * const _zip_err_str[] = {
+]=])
+set(zip_err_type)
+foreach(errln ${zip_h_err})
+  string(REGEX MATCH "#define ZIP_ER_([A-Z_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z ']*)/" err_t_tt ${errln})
+  string(REGEX MATCH "([N|S|Z]+) ([-0-9a-zA-Z ']*)" err_t_tt "${CMAKE_MATCH_3}")
+  string(APPEND zip_err_type "    ${CMAKE_MATCH_1},\n")
+  string(STRIP "${CMAKE_MATCH_2}" err_t_tt)
+  string(APPEND zip_err_str "    \"${err_t_tt}\",\n")
+endforeach()
+string(APPEND zip_err_str [=[}\;
+
+const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0])\;
+
+#define N ZIP_ET_NONE
+#define S ZIP_ET_SYS
+#define Z ZIP_ET_ZLIB
+
+const int _zip_err_type[] = {
+]=])
+string(APPEND zip_err_str "${zip_err_type}}\;\n")
+file(WRITE ${CMAKE_BINARY_DIR}/zip_err_str.c ${zip_err_str})
+list(APPEND LIBZIP_SOURCES ${CMAKE_BINARY_DIR}/zip_err_str.c)
+
 IF(HAVE_LIBBZ2)
   SET(LIBZIP_OPTIONAL_FILES zip_algorithm_bzip2.c)
 ENDIF()
