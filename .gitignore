@@ -5,3 +5,5 @@
 *~
 *.tar.gz
 *.tar.xz
+/.clangd
+/compile_commands.json
