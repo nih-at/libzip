@@ -85,12 +85,6 @@ SET(EXTRA_TESTS
 	buffer-fragment-write.test
 	cancel_45.test
 	cancel_90.test
-	clone-buffer-add.test
-	clone-buffer-delete.test
-	clone-buffer-replace.test
-	clone-fs-add.test
-	clone-fs-delete.test
-	clone-fs-replace.test
 	cm-default.test
 	count_entries.test
 	decrypt-correct-password-aes128.test
@@ -109,10 +103,6 @@ SET(EXTRA_TESTS
 	delete_multiple_partial.test
 	delete_renamed_rename.test
 	encrypt.test
-	encryption-nonrandom-aes128.test
-	encryption-nonrandom-aes192.test
-	encryption-nonrandom-aes256.test
-	encryption-nonrandom-pkware.test
 	encryption-remove.test
 	extra_add.test
 	extra_add_multiple.test
@@ -127,7 +117,6 @@ SET(EXTRA_TESTS
 	extra_set.test
 	extra_set_modify_c.test
 	extra_set_modify_l.test
-	fdopen_ok.test
 	file_comment_encmismatch.test
 	fopen_unchanged.test
 	fread.test
@@ -161,7 +150,6 @@ SET(EXTRA_TESTS
 	open_truncate.test
 	open_zip64_3mf.test
 	open_zip64_ok.test
-	preload.test
 	progress.test
 	rename_ascii.test
 	rename_cp437.test
@@ -201,11 +189,30 @@ SET(EXTRA_TESTS
 	zip64_creation.test
 	zip64_stored_creation.test
 )
-
+if(NOT WIN32)
+  list(APPEND EXTRA_TESTS
+	clone-buffer-add.test
+	clone-buffer-delete.test
+	clone-buffer-replace.test
+	clone-fs-add.test
+	clone-fs-delete.test
+	clone-fs-replace.test
+	fdopen_ok.test
+	encryption-nonrandom-aes128.test
+	encryption-nonrandom-aes192.test
+	encryption-nonrandom-aes256.test
+	encryption-nonrandom-pkware.test
+	preload.test
+  )
+endif()
 
 set(path "$<TARGET_FILE_DIR:zip>;$ENV{PATH}")
 if (TARGET zlib)
   set(path "$<TARGET_FILE_DIR:zlib>;${path}")
+endif()
+if(WIN32)
+  get_filename_component(PERL_DIR ${PERL_EXECUTABLE} DIRECTORY)
+  set(path "${PERL_DIR};${path}")
 endif()
 string(REPLACE ";" "\\;" path "${path}")
 
