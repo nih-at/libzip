@@ -63,7 +63,6 @@ ENDIF()
 
 OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-
 OPTION(SHARED_LIB_VERSIONNING "Add SO version in .so build" ON)
 
 FIND_PROGRAM(MDOCTOOL NAMES mandoc groff)
@@ -313,7 +312,12 @@ ADD_SUBDIRECTORY(man)
 ENDIF()
 
 IF(BUILD_TOOLS)
-ADD_SUBDIRECTORY(src)
+  ADD_SUBDIRECTORY(src)
+ELSE(BUILD_TOOLS)
+  IF(BUILD_REGRESS)
+    MESSAGE(WARNING "-- tools build has been disabled, but they are needed for regression tests; regression testing disabled")
+    SET(BUILD_REGRESS OFF)
+  ENDIF(BUILD_REGRESS)
 ENDIF()
 
 INCLUDE(FindPerl)
