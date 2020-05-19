@@ -323,6 +323,11 @@ MESSAGE(WARNING "-- perl not found, regression testing disabled")
 SET(BUILD_REGRESS OFF)
 ENDIF()
 
+IF(NOT BUILD_TOOLS AND BUILD_REGRESS)
+MESSAGE(WARNING "-- tool zipcmp not enabled, regression testing disabled")
+SET(BUILD_REGRESS OFF)
+ENDIF()
+
 IF(BUILD_REGRESS)
 ADD_SUBDIRECTORY(regress)
 ENDIF()
