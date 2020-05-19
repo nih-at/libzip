@@ -451,7 +451,7 @@ sub setup {
 	$self->check_features_requirement() if ($self->{test}->{features});
 	$self->run_precheck() if ($self->{test}->{precheck});
 
-	$self->end_test('SKIP') if ($self->{test}->{preload} && ($^O eq 'darwin' || $^O eq 'MSWin32');
+	$self->end_test('SKIP') if ($self->{test}->{preload} && ($^O eq 'darwin' || $^O eq 'MSWin32'));
 	$self->end_test('SKIP') if (($self->{test}->{pipein} || $self->{test}->{pipefile}) && $^O eq 'MSWin32');
 }
 
