@@ -8,10 +8,7 @@
    based on ../cmake-zipconf.h.in.
  */
 
-#cmakedefine LIBZIP_VERSION "@PACKAGE_VERSION@"
-#cmakedefine LIBZIP_VERSION_MAJOR @PACKAGE_VERSION_MAJOR@
-#cmakedefine LIBZIP_VERSION_MINOR @PACKAGE_VERSION_MINOR@
-#cmakedefine LIBZIP_VERSION_MICRO @PACKAGE_VERSION_MICRO@
+#define LIBZIP_VERSION "${libzip_VERSION}"
 
 #cmakedefine ZIP_STATIC
 
