@@ -163,6 +163,45 @@ Clean up and free all resources, including <var class="Ar">userdata</var>. The
   callback function will not be called again.
 </section>
 <section class="Ss">
+<h2 class="Ss"><code class="Dv">ZIP_SOURCE_GET_FILE_ATTRIBUTES</code></h2>
+Provide information about various data. Then the data should be put in the
+  appropriate entry in the passed <var class="Vt">zip_file_attributes_t</var>
+  argument, and the appropriate <code class="Dv">ZIP_FILE_ATTRIBUTES_*</code>
+  value must be or'ed into the <var class="Ar">valid</var> member to denote that
+  the corresponding data has been provided. A
+  <var class="Vt">zip_file_attributes_t</var> structure can be initialized using
+  <a class="Xr" href="zip_file_attributes_init.html">zip_file_attributes_init(3)</a>.
+<dl class="Bl-tag">
+  <dt>ASCII mode</dt>
+  <dd>If a file is a plaintext file in ASCII. Can be used by extraction tools to
+      automatically convert line endings (part of the interal file attributes).
+      Member <var class="Ar">ascii</var>, flag
+      <code class="Dv">ZIP_FILE_ATTRIBUTES_ASCII</code>.</dd>
+  <dt>General Purpose Bit Flags (limited to Compression Flags)</dt>
+  <dd>The general purpose bit flag in the zip in the local and central directory
+      headers contain information about the compression method. Member
+      <var class="Ar">general_purpose_bit_flags</var> and
+      <var class="Ar">general_purpose_bit_mask</var> to denote which members
+      have been set; flag
+      <code class="Dv">ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS</code>.</dd>
+  <dt>External File Attributes</dt>
+  <dd>The external file attributes (usually operating system-specific). Member
+      <var class="Ar">external_file_attributes</var>, flag
+      <code class="Dv">ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES</code>.</dd>
+  <dt>Version Needed</dt>
+  <dd>A minimum version needed required to unpack this entry (in the usual
+      &quot;major * 10 + minor&quot; format). Member
+      <var class="Ar">version_needed</var>, flag
+      <code class="Dv">ZIP_FILE_ATTRIBUTES_VERSION_NEEDED</code>.</dd>
+  <dt>Operating System</dt>
+  <dd>One of the operating systems as defined by the
+      <code class="Dv">ZIP_OPSYS_*</code> variables (see
+      <span class="Pa">zip.h</span>). This value affects the interpretation of
+      the external file attributes. Member <var class="Ar">host_system</var>,
+      flag <code class="Dv">ZIP_FILE_ATTRIBUTES_HOST_SYSTEM</code>.</dd>
+</dl>
+</section>
+<section class="Ss">
 <h2 class="Ss"><code class="Dv">ZIP_SOURCE_OPEN</code></h2>
 Prepare for reading.
 </section>
@@ -277,8 +316,9 @@ The library will always issue <code class="Dv">ZIP_SOURCE_OPEN</code> before
     <code class="Dv">ZIP_SOURCE_TELL_WRITE</code>. When writing is complete,
     either <code class="Dv">ZIP_SOURCE_COMMIT_WRITE</code> or
     <code class="Dv">ZIP_SOURCE_ROLLBACK_WRITE</code> will be called.</p>
-<p class="Pp"><code class="Dv">ZIP_SOURCE_STAT</code> can be issued at any
-  time.</p>
+<p class="Pp"><code class="Dv">ZIP_SOURCE_ACCEPT_EMPTY</code>,
+    <code class="Dv">ZIP_SOURCE_GET_FILE_ATTRIBUTES</code>, and
+    <code class="Dv">ZIP_SOURCE_STAT</code> can be issued at any time.</p>
 <p class="Pp"><code class="Dv">ZIP_SOURCE_ERROR</code> will only be issued in
     response to the function returning -1.</p>
 <p class="Pp"><code class="Dv">ZIP_SOURCE_FREE</code> will be the last command
@@ -312,6 +352,7 @@ Upon successful completion, the created source is returned. Otherwise,
   ALSO</a></h1>
 <a class="Xr" href="libzip.html">libzip(3)</a>,
   <a class="Xr" href="zip_file_add.html">zip_file_add(3)</a>,
+  <a class="Xr" href="zip_file_attributes_init.html">zip_file_attributes_init(3)</a>,
   <a class="Xr" href="zip_file_replace.html">zip_file_replace(3)</a>,
   <a class="Xr" href="zip_source.html">zip_source(3)</a>,
   <a class="Xr" href="zip_stat_init.html">zip_stat_init(3)</a>
@@ -331,8 +372,8 @@ Upon successful completion, the created source is returned. Otherwise,
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 17, 2019</td>
-    <td class="foot-os">NetBSD 9.99.41</td>
+    <td class="foot-date">April 17, 2020</td>
+    <td class="foot-os">NetBSD 9.99.63</td>
   </tr>
 </table>
 </body>

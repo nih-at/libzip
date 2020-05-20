@@ -1,6 +1,6 @@
 .\" Automatically generated from an mdoc input file.  Do not edit.
 .\" zip_dir_add.mdoc -- add directory to zip archive
-.\" Copyright (C) 2006-2019 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2006-2020 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_DIR_ADD" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_DIR_ADD" "3" "April 25, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -56,6 +56,10 @@ The argument
 specifies the zip archive to which the directory should be added.
 \fIname\fR
 is the directory's name in the zip archive.
+.PP
+This function adds an entry to the archive. It does not check whether
+a directory with that name exists in the file system, nor does it add
+its contents if it does.
 The
 \fIflags\fR
 argument can be any of:
@@ -109,7 +113,3 @@ was added in libzip 0.11.
 Dieter Baron <\fIdillo@nih.at\fR>
 and
 Thomas Klausner <\fItk@giga.or.at\fR>
-.SH "CAVEATS"
-\fBzip_dir_add\fR()
-does not look in the file system, it just creates one entry in the
-archive for the provided name.
