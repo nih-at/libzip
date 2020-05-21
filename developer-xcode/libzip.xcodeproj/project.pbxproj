@@ -615,6 +615,7 @@
 		4B51DDB21FDADEDF00C5CA85 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
 		4B51DDB31FDAE1DB00C5CA85 /* ziptool_regress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ziptool_regress.c; sourceTree = "<group>"; };
 		4B51DDC01FDAE20A00C5CA85 /* ziptool_regress */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptool_regress; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B55D93F2475274B00CE8C38 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		4B5D0CD4244B154E006C2E93 /* zip_source_get_file_attributes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_source_get_file_attributes.c; sourceTree = "<group>"; };
 		4B69E6ED2032F1870001EEE7 /* zip_winzip_aes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_winzip_aes.c; sourceTree = "<group>"; };
 		4B69E6F020330D460001EEE7 /* zip_crypto_gnutls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_crypto_gnutls.c; sourceTree = "<group>"; };
@@ -1054,6 +1055,7 @@
 		4B01D72015B2F54C002D5007 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				4B55D93F2475274B00CE8C38 /* CMakeLists.txt */,
 				4B01D72115B2F572002D5007 /* zipcmp.c */,
 				4B01D72215B2F572002D5007 /* zipmerge.c */,
 				4BACD57C15BC2AEF00920691 /* ziptool.c */,
