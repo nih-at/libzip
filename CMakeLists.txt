@@ -4,8 +4,6 @@ LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
 PROJECT(libzip
   VERSION 1.6.1.1
-  DESCRIPTION "zip archive library"
-  HOMEPAGE_URL "https://libzip.org/"
   LANGUAGES C)
 
 OPTION(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
