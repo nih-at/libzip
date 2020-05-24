@@ -8,7 +8,7 @@ zipcmp=@bindir@/zipcmp
 
 Name: libzip
 Description: library for handling zip archives
-Version: @VERSION@
+Version: @PROJECT_VERSION@
 Libs: @PKG_CONFIG_RPATH@ -L${libdir} -lzip
 Libs.private: @LIBS@
 Cflags: -I${includedir}
