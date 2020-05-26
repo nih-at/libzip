@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+# Provide all our library targets to users.
+include("@PACKAGE_CMAKE_INSTALL_LIBDIR@/cmake/libzip/libzip-targets.cmake")
+
+get_filename_component(LIBZIP_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(LIBZIP_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+
+set(LIBZIP_LIBRARIES zip)
+set(ZIPCMP_EXECUTABLE zipcmp)
+#set_and_check(ZIPCMP_EXECUTABLE "@PACKAGE_CMAKE_INSTALL_BINDIR@/zipcmp")
+check_required_components(libzip)
+
