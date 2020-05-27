@@ -475,7 +475,7 @@ INSTALL(EXPORT ${PROJECT_NAME}-targets
   )
 
 # Add targets to the build-tree export set
-EXPORT(TARGETS zip zipcmp
+EXPORT(TARGETS zip
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake")
 
 # installation
