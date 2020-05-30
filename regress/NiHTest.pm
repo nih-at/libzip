@@ -79,12 +79,6 @@ use UNIVERSAL;
 #	mkdir MODE NAME
 #	    create directory NAME with permissions MODE.
 #
-#	pipefile FILE
-#	    pipe FILE to program's stdin.
-#
-#	stdin TEST
-#	    Provide TEXT to program's stdin.
-#
 #   precheck COMMAND ARGS ...
 #		if COMMAND exits with non-zero status, skip test.
 #
@@ -107,6 +101,12 @@ use UNIVERSAL;
 #
 #       stderr-replace REGEX REPLACEMENT
 #           run regex replacement over expected and got stderr output.
+#
+#	stdin TEST
+#	    Provide TEXT to program's stdin.
+#
+#	stdin-file FILE
+#	    pipe FILE to program's stdin.
 #
 #	stdout TEXT
 #	    program is expected to print TEXT to stdout.  If multiple
@@ -161,7 +161,6 @@ sub new {
 		'file-del' => { type => 'string string' },
 		'file-new' => { type => 'string string' },
 		mkdir => { type => 'string string' },
-		pipefile => { type => 'string', once => 1 },
 		precheck => { type => 'string...' },
 		preload => { type => 'string', once => 1 },
 		program => { type => 'string', once => 1 },
@@ -170,6 +169,7 @@ sub new {
 		stderr => { type => 'string' },
 		'stderr-replace' => { type => 'string string' },
 		stdin => { type => 'string' },
+		'stdin-file' => { type => 'string', once => 1 },
 		stdout => { type => 'string' },
 		touch => { type => 'int string' },
 		ulimit => { type => 'char string' }
@@ -456,7 +456,7 @@ sub setup {
 	$self->run_precheck() if ($self->{test}->{precheck});
 
 	$self->end_test('SKIP') if ($self->{test}->{preload} && ($^O eq 'darwin' || $^O eq 'MSWin32'));
-	$self->end_test('SKIP') if ($self->{test}->{stdin} || $self->{test}->{pipefile} && $^O eq 'MSWin32');
+	$self->end_test('SKIP') if ($self->{test}->{stdin} || $self->{test}->{'stdin-file'} && $^O eq 'MSWin32');
 }
 
 
@@ -956,8 +956,8 @@ sub parse_case() {
 		}
 	}
 
-	if ($test{pipefile} && $test{stdin}) {
-		$self->warn_file("both pipefile and stdin provided, choose one");
+	if ($test{'stdin-file'} && $test{stdin}) {
+		$self->warn_file("both stdin-file and stdin provided, choose one");
 		$ok = 0;
 	}
 
@@ -1175,8 +1175,8 @@ sub run_program {
 	### TODO: catch errors?
 
 	my $pid;
-        if ($self->{test}->{pipefile}) {
-                open(SPLAT, '<', $self->{test}->{pipefile});
+        if ($self->{test}->{'stdin-file'}) {
+                open(SPLAT, '<', $self->{test}->{'stdin-file'});
 	        my $is_marked = eof SPLAT; # mark used
 		$pid = open3("<&SPLAT", $stdout, $stderr, @cmd);
 	}

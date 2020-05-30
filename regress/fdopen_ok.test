@@ -1,7 +1,7 @@
 # zip_fdopen: stdin opens fine
 program ../src/ziptool
 args /dev/stdin stat 0
-pipefile test.zip
+stdin-file test.zip
 return 0
 file test.zip test.zip test.zip
 stdout name: 'test'
