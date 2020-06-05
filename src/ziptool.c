@@ -396,7 +396,7 @@ struct progress_userdata_s progress_userdata;
 
 static void
 progress_callback(zip_t *archive, double percentage, void *ud) {
-    printf("%.1lf%% done\n", percentage * 100);
+    printf("%.1f%% done\n", percentage * 100);
     progress_userdata.percentage = percentage;
 }
 
