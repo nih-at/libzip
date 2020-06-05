@@ -596,7 +596,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 
     zde->extra_fields = _zip_ef_remove_internal(zde->extra_fields);
 
-    return (zip_int64_t)(size + variable_size);
+    return (zip_int64_t)size + (zip_int64_t)variable_size;
 }
 
 

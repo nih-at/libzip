@@ -642,9 +642,9 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 		header_done = 1;
 	    }
 	    printf("---                     %s  ", e1->name);
-	    printf("comment %d\n", e1->comment_length);
+	    printf("comment %" PRIu32 "\n", e1->comment_length);
 	    printf("+++                     %s  ", e1->name);
-	    printf("comment %d\n", e2->comment_length);
+	    printf("comment %" PRIu32 "\n", e2->comment_length);
 	}
 	ret = 1;
     }
