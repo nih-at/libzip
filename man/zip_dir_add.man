@@ -57,9 +57,9 @@ specifies the zip archive to which the directory should be added.
 \fIname\fR
 is the directory's name in the zip archive.
 .PP
-This function adds an entry to the archive. It does not check whether
-a directory with that name exists in the file system, nor does it add
-its contents if it does.
+This function adds an entry to the archive.
+It does not check whether a directory with that name exists in the
+file system, nor does it add its contents if it does.
 The
 \fIflags\fR
 argument can be any of:
