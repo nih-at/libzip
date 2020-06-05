@@ -206,6 +206,7 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
 
 	if (fstat(fileno(ctx->f), &st) < 0) {
 	    zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+	    free(temp);
 	    return -1;
 	}
 
