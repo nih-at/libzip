@@ -9,9 +9,9 @@
  */
 
 #define LIBZIP_VERSION "${libzip_VERSION}"
-#define LIBZIP_VERSION_MAJOR "${libzip_VERSION_MAJOR}"
-#define LIBZIP_VERSION_MINOR "${libzip_VERSION_MINOR}"
-#define LIBZIP_VERSION_MICRO "${libzip_VERSION_PATCH}"
+#define LIBZIP_VERSION_MAJOR ${libzip_VERSION_MAJOR}
+#define LIBZIP_VERSION_MINOR ${libzip_VERSION_MINOR}
+#define LIBZIP_VERSION_MICRO ${libzip_VERSION_PATCH}
 
 #cmakedefine ZIP_STATIC
 
