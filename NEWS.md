@@ -1,4 +1,4 @@
-1.7.0 [2020-xx-xx]
+1.7.0 [2020-06-05]
 ==================
 
 * Add support for encrypting using traditional PKWare encryption.
@@ -6,6 +6,7 @@
 * Add `zip_encryption_method_supported()`.
 * Add the `ZIP_SOURCE_GET_FILE_ATTRIBUTES` source command.
 * Refactor stdio file backend.
+* Add CMake find_project() support.
 
 1.6.1 [2020-02-03]
 ==================
