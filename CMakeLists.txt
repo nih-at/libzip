@@ -78,12 +78,15 @@ ENDIF()
 
 SET(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION})
 
+IF(NOT TARGET dist)
 ADD_CUSTOM_TARGET(dist
   COMMAND git config tar.tar.xz.command "xz -c"
   COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.gz HEAD
   COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.xz HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )
+ENDIF()
+IF(NOT TARGET distcheck)
 ADD_CUSTOM_TARGET(distcheck
   COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest 2>/dev/null || true
   COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
@@ -104,6 +107,7 @@ ADD_CUSTOM_TARGET(distcheck
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )
 ADD_DEPENDENCIES(distcheck dist)
+ENDIF()
 
 #ADD_CUSTOM_TARGET(uninstall
 #  COMMAND cat ${PROJECT_BINARY_DIR}/install_manifest.txt | xargs rm
