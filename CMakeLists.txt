@@ -78,35 +78,33 @@ ENDIF()
 
 SET(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION})
 
-IF(NOT TARGET dist)
-ADD_CUSTOM_TARGET(dist
-  COMMAND git config tar.tar.xz.command "xz -c"
-  COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.gz HEAD
-  COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.xz HEAD
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  )
-ENDIF()
-IF(NOT TARGET distcheck)
-ADD_CUSTOM_TARGET(distcheck
-  COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest 2>/dev/null || true
-  COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
-  COMMAND ${CMAKE_COMMAND} -E tar xf ${ARCHIVE_NAME}.tar.gz
-  COMMAND chmod -R u-w ${ARCHIVE_NAME}
-  COMMAND mkdir ${ARCHIVE_NAME}-build
-  COMMAND mkdir ${ARCHIVE_NAME}-dest
-  COMMAND ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${ARCHIVE_NAME}-dest ${ARCHIVE_NAME} -B ${ARCHIVE_NAME}-build
-  COMMAND make -C ${ARCHIVE_NAME}-build -j4
-  COMMAND make -C ${ARCHIVE_NAME}-build test
-  COMMAND make -C ${ARCHIVE_NAME}-build install
-#  COMMAND make -C ${ARCHIVE_NAME}-build uninstall
-#  COMMAND if [ `find ${ARCHIVE_NAME}-dest ! -type d | wc -l` -ne 0 ]; then echo leftover files in ${ARCHIVE_NAME}-dest; false; fi
-  COMMAND make -C ${ARCHIVE_NAME}-build clean
-  COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
-  COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
-  COMMAND echo "${ARCHIVE_NAME}.tar.gz is ready for distribution."
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  )
-ADD_DEPENDENCIES(distcheck dist)
+IF(NOT TARGET dist AND NOT TARGET distcheck)
+  ADD_CUSTOM_TARGET(dist
+    COMMAND git config tar.tar.xz.command "xz -c"
+    COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.gz HEAD
+    COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${ARCHIVE_NAME}.tar.xz HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+  ADD_CUSTOM_TARGET(distcheck
+    COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest 2>/dev/null || true
+    COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
+    COMMAND ${CMAKE_COMMAND} -E tar xf ${ARCHIVE_NAME}.tar.gz
+    COMMAND chmod -R u-w ${ARCHIVE_NAME}
+    COMMAND mkdir ${ARCHIVE_NAME}-build
+    COMMAND mkdir ${ARCHIVE_NAME}-dest
+    COMMAND ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${ARCHIVE_NAME}-dest ${ARCHIVE_NAME} -B ${ARCHIVE_NAME}-build
+    COMMAND make -C ${ARCHIVE_NAME}-build -j4
+    COMMAND make -C ${ARCHIVE_NAME}-build test
+    COMMAND make -C ${ARCHIVE_NAME}-build install
+    #  COMMAND make -C ${ARCHIVE_NAME}-build uninstall
+    #  COMMAND if [ `find ${ARCHIVE_NAME}-dest ! -type d | wc -l` -ne 0 ]; then echo leftover files in ${ARCHIVE_NAME}-dest; false; fi
+    COMMAND make -C ${ARCHIVE_NAME}-build clean
+    COMMAND chmod -R u+w ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
+    COMMAND rm -rf ${ARCHIVE_NAME} ${ARCHIVE_NAME}-build ${ARCHIVE_NAME}-dest
+    COMMAND echo "${ARCHIVE_NAME}.tar.gz is ready for distribution."
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+  ADD_DEPENDENCIES(distcheck dist)
 ENDIF()
 
 #ADD_CUSTOM_TARGET(uninstall
