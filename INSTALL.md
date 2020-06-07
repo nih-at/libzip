@@ -42,6 +42,9 @@ Some useful parameters you can pass to `cmake` with `-Dparameter=value`:
 - `DOCUMENTATION_FORMAT`: choose one of 'man', 'mdoc', and 'html' for
   the installed documentation (default: decided by cmake depending on
   available tools)
+- `LIBZIP_DO_INSTALL`: If you include libzip as a subproject, link it
+  statically and do not want to let it install its files, set this
+  variable to `OFF`. Defaults to `ON`.
   
 If you want to compile with custom `CFLAGS`, set them in the environment
 before running `cmake`:
