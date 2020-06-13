@@ -1,3 +1,11 @@
+1.7.1 [2020-06-13]
+==================
+
+* Restore `LIBZIP_VERSION_{MAJOR,MINOR,MICRO}` symbols.
+* Fixes warnings reported by PVS-Studio.
+* Add `LIBZIP_DO_INSTALL` build setting to make it easier to use
+  libzip as subproject.
+
 1.7.0 [2020-06-05]
 ==================
 
