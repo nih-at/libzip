@@ -29,6 +29,7 @@
 #cmakedefine HAVE_GNUTLS
 #cmakedefine HAVE_LIBBZ2
 #cmakedefine HAVE_LIBLZMA
+#cmakedefine HAVE_LIBZSTD
 #cmakedefine HAVE_LOCALTIME_R
 #cmakedefine HAVE_MBEDTLS
 #cmakedefine HAVE_MKSTEMP
