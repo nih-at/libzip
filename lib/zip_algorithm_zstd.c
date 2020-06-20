@@ -181,13 +181,13 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 	zip_error_set(ctx->error, ZIP_ER_ZSTD, (int)ret);
 	return ZIP_COMPRESSION_ERROR;
     }
+    *length = ctx->out.pos;
     if (ctx->out.pos == 0) {
 	return ZIP_COMPRESSION_NEED_DATA;
     }
     if (ctx->in.size == 0) {
 	return ZIP_COMPRESSION_END;
     }
-    *length = ctx->out.pos;
     return ZIP_COMPRESSION_OK;
 }
 
