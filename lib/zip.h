@@ -135,6 +135,7 @@ extern "C" {
 #define ZIP_ER_TELL 30            /* S Tell error */
 #define ZIP_ER_COMPRESSED_DATA 31 /* N Compressed data invalid */
 #define ZIP_ER_CANCELLED 32       /* N Operation cancelled */
+#define ZIP_ER_ZSTD 33            /*Z Zstd error */
 
 /* type of system error value */
 
@@ -164,6 +165,7 @@ extern "C" {
 #define ZIP_CM_TERSE 18 /* compressed using IBM TERSE (new) */
 #define ZIP_CM_LZ77 19  /* IBM LZ77 z Architecture (PFS) */
 #define ZIP_CM_LZMA2 33
+#define ZIP_CM_ZSTD 93    /* WinZip zstd but APPNOTE.TXT update */
 #define ZIP_CM_XZ 95      /* XZ compressed data */
 #define ZIP_CM_JPEG 96    /* Compressed Jpeg data */
 #define ZIP_CM_WAVPACK 97 /* WavPack compressed data */
