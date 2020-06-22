@@ -472,7 +472,7 @@ target_include_directories(zip
 
 # create package config file
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file("${PROJECT_BINARY_DIR}/libzip-version.cmake"
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
   COMPATIBILITY AnyNewerVersion)
 
 configure_package_config_file("${PROJECT_NAME}.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
@@ -494,7 +494,7 @@ export(TARGETS zip
 # installation
 if(LIBZIP_DO_INSTALL)
   install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-  install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-version.cmake
+  install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
 endif()
