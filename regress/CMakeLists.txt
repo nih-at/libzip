@@ -1,52 +1,52 @@
-CHECK_FUNCTION_EXISTS(getopt HAVE_GETOPT)
-IF(NOT HAVE_GETOPT)
-  SET(SRC_EXTRA_FILES ../src/getopt.c)
-ENDIF()
+check_function_exists(getopt HAVE_GETOPT)
+if(NOT HAVE_GETOPT)
+  set(SRC_EXTRA_FILES ../src/getopt.c)
+endif()
 
-SET(TEST_PROGRAMS
+set(TEST_PROGRAMS
   add_from_filep
   fopen_unchanged
   fseek
   nonrandomopentest
 )
 
-SET(GETOPT_USERS
+set(GETOPT_USERS
   fread
   tryopen
 )
 
-ADD_EXECUTABLE(can_clone_file can_clone_file.c)
+add_executable(can_clone_file can_clone_file.c)
 
-SET(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
-FOREACH(PROGRAM ${TEST_PROGRAMS})
-  ADD_EXECUTABLE(${PROGRAM} ${PROGRAM}.c)
-  TARGET_LINK_LIBRARIES(${PROGRAM} zip)
-ENDFOREACH()
+set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
+foreach(PROGRAM ${TEST_PROGRAMS})
+  add_executable(${PROGRAM} ${PROGRAM}.c)
+  target_link_libraries(${PROGRAM} zip)
+endforeach()
 
-ADD_EXECUTABLE(hole hole.c ${SRC_EXTRA_FILES} source_hole.c)
-TARGET_LINK_LIBRARIES(hole zip)
+add_executable(hole hole.c ${SRC_EXTRA_FILES} source_hole.c)
+target_link_libraries(hole zip)
 
-ADD_EXECUTABLE(ziptool_regress ziptool_regress.c ${SRC_EXTRA_FILES} source_hole.c)
-TARGET_LINK_LIBRARIES(ziptool_regress zip)
+add_executable(ziptool_regress ziptool_regress.c ${SRC_EXTRA_FILES} source_hole.c)
+target_link_libraries(ziptool_regress zip)
 
-#ADD_LIBRARY(malloc MODULE malloc.c)
-#TARGET_LINK_LIBRARIES(malloc ${CMAKE_DL_LIBS})
-ADD_LIBRARY(nonrandomopen MODULE nonrandomopen.c)
-TARGET_LINK_LIBRARIES(nonrandomopen ${CMAKE_DL_LIBS})
+#add_library(malloc MODULE malloc.c)
+#target_link_LIBRARIES(malloc ${CMAKE_DL_LIBS})
+add_library(nonrandomopen MODULE nonrandomopen.c)
+target_link_libraries(nonrandomopen ${CMAKE_DL_LIBS})
 
-FOREACH(PROGRAM ${GETOPT_USERS})
-  ADD_EXECUTABLE(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES})
-  TARGET_LINK_LIBRARIES(${PROGRAM} zip)
-ENDFOREACH()
+foreach(PROGRAM ${GETOPT_USERS})
+  add_executable(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES})
+  target_link_libraries(${PROGRAM} zip)
+endforeach()
 
 # for appveyor builds
-#SET(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;C:/projects/libzip/vstudio/zlib/installed/lib;C:/projects/libzip/build/lib/Release)
+#set(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;C:/projects/libzip/vstudio/zlib/installed/lib;C:/projects/libzip/build/lib/Release)
 
-ADD_CUSTOM_TARGET(cleanup
+add_custom_target(cleanup
     COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/cleanup.cmake
     )
 
-ADD_CUSTOM_TARGET(testinput
+add_custom_target(testinput
   ALL
   VERBATIM
   COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/manyfiles-zip.zip
@@ -54,7 +54,7 @@ ADD_CUSTOM_TARGET(testinput
   DEPENDS ${PROJECT_SOURCE_DIR}/regress/manyfiles-zip.zip ${PROJECT_SOURCE_DIR}/regress/bigzero-zip.zip
 )
 
-SET_PROPERTY(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
   bigzero.zip
   manyfiles-133000.zip
   manyfiles-65536.zip
@@ -65,7 +65,7 @@ SET_PROPERTY(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
   manyfiles.zip
 )
 
-SET(EXTRA_TESTS
+set(EXTRA_TESTS
 	add_dir.test
 	add_from_buffer.test
 	add_from_file.test
@@ -209,15 +209,15 @@ if (TARGET zlib)
 endif()
 string(REPLACE ";" "\\;" path "${path}")
 
-FOREACH(CASE ${EXTRA_TESTS})
-  ADD_TEST(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
-  SET_TESTS_PROPERTIES(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
-  SET_TESTS_PROPERTIES(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
-ENDFOREACH()
+foreach(CASE ${EXTRA_TESTS})
+  add_test(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
+  set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
+  set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
+endforeach()
 
-INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 
-ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
-ADD_EXECUTABLE(fuzz_main fuzz_main.c)
-TARGET_LINK_LIBRARIES(fuzz_main zip)
+add_executable(fuzz_main fuzz_main.c)
+target_link_libraries(fuzz_main zip)
