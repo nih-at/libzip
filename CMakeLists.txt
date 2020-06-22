@@ -488,7 +488,7 @@ if(LIBZIP_DO_INSTALL)
 endif()
 
 # Add targets to the build-tree export set
-EXPORT(TARGETS zip
+export(TARGETS zip
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake")
 
 # installation
