@@ -481,6 +481,7 @@ configure_package_config_file("${PROJECT_NAME}.cmake.in" "${PROJECT_BINARY_DIR}/
 
 if(LIBZIP_DO_INSTALL)
   install(EXPORT ${PROJECT_NAME}-targets
+    NAMESPACE libzip::
     FILE ${PROJECT_NAME}-targets.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
