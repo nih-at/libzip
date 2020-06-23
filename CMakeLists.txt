@@ -467,14 +467,6 @@ write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-v
 configure_package_config_file("${PROJECT_NAME}-config.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
   INSTALL_DESTINATION lib/cmake/libzip)
 
-if(LIBZIP_DO_INSTALL)
-  install(EXPORT ${PROJECT_NAME}-targets
-    NAMESPACE libzip::
-    FILE ${PROJECT_NAME}-targets.cmake
-    DESTINATION lib/cmake/${PROJECT_NAME}
-    )
-endif()
-
 # Add targets to the build-tree export set
 export(TARGETS zip
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake")
@@ -483,6 +475,9 @@ export(TARGETS zip
 if(LIBZIP_DO_INSTALL)
   install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION include)
   install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+    DESTINATION lib/cmake/${PROJECT_NAME}
+    )
+  install(EXPORT ${PROJECT_NAME}-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-targets.cmake
     DESTINATION lib/cmake/${PROJECT_NAME}
     )
 endif()
