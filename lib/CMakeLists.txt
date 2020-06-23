@@ -219,6 +219,7 @@ target_include_directories(zip
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+	$<INSTALL_INTERFACE:include>
 )
 
 if(LIBZIP_DO_INSTALL)
