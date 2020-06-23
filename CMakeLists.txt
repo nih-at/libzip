@@ -211,7 +211,6 @@ test_big_endian(WORDS_BIGENDIAN)
 
 find_package(ZLIB 1.1.2 REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
-set(CMAKE_REQUIRED_INCLUDES ${ZLIB_INCLUDE_DIR})
 
 if(ENABLE_BZIP2)
   find_package(BZip2)
@@ -280,8 +279,6 @@ if(WIN32)
     set(OPTIONAL_LIBRARY ${OPTIONAL_LIBRARY} advapi32)
   endif(CMAKE_SYSTEM_NAME MATCHES WindowsPhone OR CMAKE_SYSTEM_NAME MATCHES WindowsStore)
 endif(WIN32)
-
-ADD_DEFINITIONS("-DHAVE_CONFIG_H")
 
 # rpath handling: use rpath in installed binaries
 if(NOT CMAKE_SYSTEM_NAME MATCHES Linux)

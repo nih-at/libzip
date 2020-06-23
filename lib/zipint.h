@@ -34,10 +34,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
-
 #include "compat.h"
 
 #ifdef ZIP_ALLOCATE_BUFFER
