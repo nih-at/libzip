@@ -29,7 +29,6 @@ include(CheckCSourceRuns)
 include(CheckCSourceCompiles)
 include(CheckStructHasMember)
 include(TestBigEndian)
-include(GNUInstallDirs)
 if(ENABLE_COMMONCRYPTO)
   check_include_files(CommonCrypto/CommonCrypto.h COMMONCRYPTO_FOUND)
 else()
@@ -347,7 +346,7 @@ foreach(LIB ${LIBS_PRIVATE})
 endforeach()
 configure_file(libzip.pc.in libzip.pc @ONLY)
 if(LIBZIP_DO_INSTALL)
-  install(FILES ${PROJECT_BINARY_DIR}/libzip.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+  install(FILES ${PROJECT_BINARY_DIR}/libzip.pc DESTINATION lib/pkgconfig)
 endif()
 
 # fixed size integral types
@@ -476,14 +475,14 @@ write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-v
   COMPATIBILITY AnyNewerVersion)
 
 configure_package_config_file("${PROJECT_NAME}.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libzip
+  INSTALL_DESTINATION lib/cmake/libzip
   PATH_VARS CMAKE_INSTALL_BINDIR CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
 
 if(LIBZIP_DO_INSTALL)
   install(EXPORT ${PROJECT_NAME}-targets
     NAMESPACE libzip::
     FILE ${PROJECT_NAME}-targets.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    DESTINATION lib/cmake/${PROJECT_NAME}
     )
 endif()
 
@@ -493,9 +492,9 @@ export(TARGETS zip
 
 # installation
 if(LIBZIP_DO_INSTALL)
-  install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION include)
   install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    DESTINATION lib/cmake/${PROJECT_NAME}
     )
 endif()
 
