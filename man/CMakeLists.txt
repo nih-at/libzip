@@ -1,4 +1,4 @@
-SET(MAN_PAGES
+set(MAN_PAGES
   ZIP_SOURCE_GET_ARGS.3
   libzip.3
   zip_add.3
@@ -100,62 +100,62 @@ SET(MAN_PAGES
   ziptool.1
 )
 
-FOREACH(MAN_PAGE ${MAN_PAGES})
-  STRING(REGEX REPLACE "[1-9]$" "${DOCUMENTATION_FORMAT}" SOURCE_FILE ${MAN_PAGE})
-  IF(LIBZIP_DO_INSTALL)
-    IF (DOCUMENTATION_FORMAT MATCHES "html")
-      INSTALL(FILES ${PROJECT_BINARY_DIR}/man/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_DOCDIR} RENAME ${SOURCE_FILE})
-    ELSE()
-      STRING(REGEX REPLACE ".*(.)$" "man\\1" SUBDIR ${MAN_PAGE})
-      INSTALL(FILES ${PROJECT_BINARY_DIR}/man/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_MANDIR}/${SUBDIR})
-    ENDIF()
-  ENDIF()
-  # CONFIGURE_FILE does not find out about updates to the sources, and it does not provide a target
-  #CONFIGURE_FILE(${SOURCE_FILE} ${MAN_PAGE} COPYONLY)
-  ADD_CUSTOM_COMMAND(OUTPUT ${MAN_PAGE}
+foreach(MAN_PAGE ${MAN_PAGES})
+  string(REGEX REPLACE "[1-9]$" "${DOCUMENTATION_FORMAT}" SOURCE_FILE ${MAN_PAGE})
+  if(LIBZIP_DO_INSTALL)
+    if (DOCUMENTATION_FORMAT MATCHES "html")
+      install(FILES ${PROJECT_BINARY_DIR}/man/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_DOCDIR} RENAME ${SOURCE_FILE})
+    else()
+      string(REGEX REPLACE ".*(.)$" "man\\1" SUBDIR ${MAN_PAGE})
+      install(FILES ${PROJECT_BINARY_DIR}/man/${MAN_PAGE} DESTINATION ${CMAKE_INSTALL_MANDIR}/${SUBDIR})
+    endif()
+  endif()
+  # configure_file does not find out about updates to the sources, and it does not provide a target
+  #configure_file(${SOURCE_FILE} ${MAN_PAGE} COPYONLY)
+  add_custom_command(OUTPUT ${MAN_PAGE}
     DEPENDS ${SOURCE_FILE}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_SOURCE_DIR}/man/${SOURCE_FILE} ${PROJECT_BINARY_DIR}/man/${MAN_PAGE}
     COMMENT "Preparing ${MAN_PAGE}"
     )
 
-  STRING(REGEX REPLACE "[1-9]$" "html" HTML_FILE ${MAN_PAGE})
-  STRING(REGEX REPLACE "[1-9]$" "man" MAN_FILE ${MAN_PAGE})
-  STRING(REGEX REPLACE "[1-9]$" "mdoc" MDOC_FILE ${MAN_PAGE})
+  string(REGEX REPLACE "[1-9]$" "html" HTML_FILE ${MAN_PAGE})
+  string(REGEX REPLACE "[1-9]$" "man" MAN_FILE ${MAN_PAGE})
+  string(REGEX REPLACE "[1-9]$" "mdoc" MDOC_FILE ${MAN_PAGE})
 
   # html re-generation
-  ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_SOURCE_DIR}/man/${HTML_FILE}
+  add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/man/${HTML_FILE}
     DEPENDS ${MDOC_FILE}
     COMMAND ${CMAKE_COMMAND} -DIN=${MDOC_FILE} -DOUT=${HTML_FILE} -DDIR=${PROJECT_SOURCE_DIR}/man -P ${PROJECT_SOURCE_DIR}/man/update-html.cmake
     )
-  LIST(APPEND UPDATEHTML ${PROJECT_SOURCE_DIR}/man/${HTML_FILE})
+  list(APPEND UPDATEHTML ${PROJECT_SOURCE_DIR}/man/${HTML_FILE})
 
   # man re-generation
-  ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_SOURCE_DIR}/man/${MAN_FILE}
+  add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/man/${MAN_FILE}
     DEPENDS ${MDOC_FILE}
     COMMAND ${CMAKE_COMMAND} -DIN=${MDOC_FILE} -DOUT=${MAN_FILE} -DDIR=${PROJECT_SOURCE_DIR}/man -P ${PROJECT_SOURCE_DIR}/man/update-man.cmake
     )
-  LIST(APPEND UPDATEMAN ${PROJECT_SOURCE_DIR}/man/${MAN_FILE})
-ENDFOREACH()
-ADD_CUSTOM_TARGET(man ALL DEPENDS ${MAN_PAGES})
-ADD_CUSTOM_TARGET(update-man DEPENDS ${UPDATEMAN})
-ADD_CUSTOM_TARGET(update-html DEPENDS ${UPDATEHTML})
+  list(APPEND UPDATEMAN ${PROJECT_SOURCE_DIR}/man/${MAN_FILE})
+endforeach()
+add_custom_target(man ALL DEPENDS ${MAN_PAGES})
+add_custom_target(update-man DEPENDS ${UPDATEMAN})
+add_custom_target(update-html DEPENDS ${UPDATEHTML})
 
-FILE(STRINGS links MANPAGE_LINKS)
-FOREACH(LINKS_LINE ${MANPAGE_LINKS})
-  IF(${LINKS_LINE} MATCHES "(.*) (.*)")
-    SET(SOURCE ${CMAKE_MATCH_1})
-    SET(TARGET ${CMAKE_MATCH_2})
-    IF(LIBZIP_DO_INSTALL)
-      IF (DOCUMENTATION_FORMAT MATCHES "html")
+file(STRINGS links MANPAGE_LINKS)
+foreach(LINKS_LINE ${MANPAGE_LINKS})
+  if(${LINKS_LINE} MATCHES "(.*) (.*)")
+    set(SOURCE ${CMAKE_MATCH_1})
+    set(TARGET ${CMAKE_MATCH_2})
+    if(LIBZIP_DO_INSTALL)
+      if (DOCUMENTATION_FORMAT MATCHES "html")
 	INSTALL(FILES ${PROJECT_BINARY_DIR}/man/${SOURCE}.3 DESTINATION ${CMAKE_INSTALL_DOCDIR} RENAME ${TARGET}.html)
-      ELSE()
+      else()
 	INSTALL(FILES ${PROJECT_BINARY_DIR}/man/${SOURCE}.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 RENAME ${TARGET}.3)
-      ENDIF()
-    ENDIF()
-  ENDIF()
-ENDFOREACH()
+      endif()
+    endif()
+  endif()
+endforeach()
 
-ADD_CUSTOM_TARGET(update_zip_errors
+add_custom_target(update_zip_errors
   COMMAND sh ${PROJECT_SOURCE_DIR}/man/make_zip_errors.sh ${CMAKE_SOURCE_DIR}/lib/zip.h ${PROJECT_SOURCE_DIR}/man/zip_errors.mdoc
   DEPENDS ${CMAKE_SOURCE_DIR}/lib/zip.h ${PROJECT_SOURCE_DIR}/man/zip_errors.mdoc
 )

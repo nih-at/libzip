@@ -1,3 +1,9 @@
+1.7.2 [2020-xx-xx]
+==================
+
+* Fixes for the CMake find_project() files.
+* libzip moved to the CMake libzip:: NAMESPACE.
+
 1.7.1 [2020-06-13]
 ==================
 
