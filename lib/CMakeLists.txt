@@ -143,8 +143,6 @@ else(WIN32)
   )
 endif(WIN32)
 
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
-
 file(READ ${PROJECT_SOURCE_DIR}/lib/zip.h zip_h)
 string(REGEX MATCHALL "#define ZIP_ER_([A-Z_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z ']*)/" zip_h_err ${zip_h})
 set(zip_err_str [=[
@@ -216,6 +214,7 @@ if(SHARED_LIB_VERSIONNING)
 endif()
 
 target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
+target_include_directories(zip BEFORE PRIVATE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zip
