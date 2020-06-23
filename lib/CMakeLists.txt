@@ -208,6 +208,7 @@ if(HAVE_CRYPTO)
 endif()
 
 add_library(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPTIONAL_FILES} ${LIBZIP_OPSYS_FILES})
+add_library(libzip::zip ALIAS zip)
 
 if(SHARED_LIB_VERSIONNING)
   set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)

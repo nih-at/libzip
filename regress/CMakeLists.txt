@@ -7,7 +7,13 @@ set(TEST_PROGRAMS
   add_from_filep
   fopen_unchanged
   fseek
+  fuzz_main
   nonrandomopentest
+)
+
+set(DL_USERS
+  # malloc
+  nonrandomopen
 )
 
 set(GETOPT_USERS
@@ -15,32 +21,38 @@ set(GETOPT_USERS
   tryopen
 )
 
+set(HOLE_USERS
+  hole
+  ziptool_regress
+)
+
+set(ALL_PROGRAMS ${TEST_PROGRAMS} ${DL_USERS} ${GETOPT_USERS} ${HOLE_USERS})
 add_executable(can_clone_file can_clone_file.c)
 
 set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
-foreach(PROGRAM ${TEST_PROGRAMS})
+foreach(PROGRAM IN LISTS TEST_PROGRAMS)
   add_executable(${PROGRAM} ${PROGRAM}.c)
   target_link_libraries(${PROGRAM} zip)
 endforeach()
 
-add_executable(hole hole.c ${SRC_EXTRA_FILES} source_hole.c)
-target_link_libraries(hole zip)
+foreach(PROGRAM IN LISTS DL_USERS)
+  add_library(${PROGRAM} MODULE ${PROGRAM}.c)
+  target_link_libraries(${PROGRAM} ${CMAKE_DL_LIBS})
+endforeach()
 
-add_executable(ziptool_regress ziptool_regress.c ${SRC_EXTRA_FILES} source_hole.c)
-target_link_libraries(ziptool_regress zip)
-
-#add_library(malloc MODULE malloc.c)
-#target_link_LIBRARIES(malloc ${CMAKE_DL_LIBS})
-add_library(nonrandomopen MODULE nonrandomopen.c)
-target_link_libraries(nonrandomopen ${CMAKE_DL_LIBS})
-
-foreach(PROGRAM ${GETOPT_USERS})
+foreach(PROGRAM IN LISTS GETOPT_USERS)
   add_executable(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES})
   target_link_libraries(${PROGRAM} zip)
 endforeach()
 
-# for appveyor builds
-#set(CMAKE_MSVCIDE_RUN_PATH C:/projects/libzip/vstudio/zlib/installed/bin;C:/projects/libzip/vstudio/zlib/installed/lib;C:/projects/libzip/build/lib/Release)
+foreach(PROGRAM IN LISTS HOLE_USERS)
+  add_executable(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES} source_hole.c)
+  target_link_libraries(${PROGRAM} zip)
+endforeach()
+
+foreach(PROGRAM IN LISTS ALL_PROGRAMS)
+  include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+endforeach()
 
 add_custom_target(cleanup
     COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/cleanup.cmake
@@ -209,15 +221,10 @@ if (TARGET zlib)
 endif()
 string(REPLACE ";" "\\;" path "${path}")
 
-foreach(CASE ${EXTRA_TESTS})
+foreach(CASE IN LISTS EXTRA_TESTS)
   add_test(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
   set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
   set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
 endforeach()
 
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
-
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-
-add_executable(fuzz_main fuzz_main.c)
-target_link_libraries(fuzz_main zip)
