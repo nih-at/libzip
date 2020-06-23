@@ -285,7 +285,7 @@ ADD_DEFINITIONS("-DHAVE_CONFIG_H")
 
 # rpath handling: use rpath in installed binaries
 if(NOT CMAKE_SYSTEM_NAME MATCHES Linux)
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+  set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
@@ -330,9 +330,9 @@ endif()
 # pkgconfig file
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix \${prefix})
-set(bindir \${exec_prefix}/${CMAKE_INSTALL_BINDIR})
-set(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
-set(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+set(bindir \${exec_prefix}/bin)
+set(libdir \${exec_prefix}/lib)
+set(includedir \${prefix}/include)
 if(CMAKE_SYSTEM_NAME MATCHES BSD)
   set(PKG_CONFIG_RPATH "-Wl,-R\${libdir}")
 endif(CMAKE_SYSTEM_NAME MATCHES BSD)
@@ -462,21 +462,13 @@ file(COPY ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest
   FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
   )
 
-target_include_directories(zip
-    PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDE_DIR}>
-)
-
 # create package config file
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
   COMPATIBILITY AnyNewerVersion)
 
 configure_package_config_file("${PROJECT_NAME}.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-  INSTALL_DESTINATION lib/cmake/libzip
-  PATH_VARS CMAKE_INSTALL_BINDIR CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+  INSTALL_DESTINATION lib/cmake/libzip)
 
 if(LIBZIP_DO_INSTALL)
   install(EXPORT ${PROJECT_NAME}-targets

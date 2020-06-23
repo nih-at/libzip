@@ -215,7 +215,11 @@ if(SHARED_LIB_VERSIONNING)
 endif()
 
 target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
-target_include_directories(zip BEFORE PRIVATE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
+target_include_directories(zip
+    PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+)
 
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zip
