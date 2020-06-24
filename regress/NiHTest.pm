@@ -456,7 +456,7 @@ sub setup {
 	$self->run_precheck() if ($self->{test}->{precheck});
 
 	$self->end_test('SKIP') if ($self->{test}->{preload} && ($^O eq 'darwin' || $^O eq 'MSWin32'));
-	$self->end_test('SKIP') if ($self->{test}->{stdin} || $self->{test}->{'stdin-file'} && $^O eq 'MSWin32');
+	$self->end_test('SKIP') if (($self->{test}->{stdin} || $self->{test}->{'stdin-file'}) && $^O eq 'MSWin32');
 }
 
 
