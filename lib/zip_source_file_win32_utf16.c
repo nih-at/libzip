@@ -34,7 +34,7 @@
 #include "zip_source_file_win32.h"
 
 static char *utf16_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
-static HANDLE __stdcall utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file) {
+static HANDLE __stdcall utf16_create_file(const char *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
 static void utf16_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 static char *utf16_strdup(const char *string);
 
