@@ -1,7 +1,4 @@
 check_function_exists(getopt HAVE_GETOPT)
-if(NOT HAVE_GETOPT)
-  set(SRC_EXTRA_FILES ../src/getopt.c)
-endif()
 
 set(TEST_PROGRAMS
   add_from_filep
@@ -41,14 +38,21 @@ foreach(PROGRAM IN LISTS DL_USERS)
 endforeach()
 
 foreach(PROGRAM IN LISTS GETOPT_USERS)
-  add_executable(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES})
+  add_executable(${PROGRAM} ${PROGRAM}.c)
   target_link_libraries(${PROGRAM} zip)
+  if(NOT HAVE_GETOPT)
+    target_sources(${PROGRAM} PRIVATE getopt.c)
+  endif(NOT HAVE_GETOPT)
 endforeach()
 
 foreach(PROGRAM IN LISTS HOLE_USERS)
-  add_executable(${PROGRAM} ${PROGRAM}.c ${SRC_EXTRA_FILES} source_hole.c)
+  add_executable(${PROGRAM} ${PROGRAM}.c source_hole.c)
   target_link_libraries(${PROGRAM} zip)
 endforeach()
+# hole needs getopt() too.
+if(NOT HAVE_GETOPT)
+  target_sources(hole PRIVATE getopt.c)
+endif(NOT HAVE_GETOPT)
 
 foreach(PROGRAM IN LISTS ALL_PROGRAMS)
   include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
