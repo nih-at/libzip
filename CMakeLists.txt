@@ -221,7 +221,7 @@ if(ENABLE_BZIP2)
 endif(ENABLE_BZIP2)
 
 if(ENABLE_LZMA)
-  find_package(LibLZMA)
+  find_package(LibLZMA 5.2)
   if(LIBLZMA_FOUND)
     set(HAVE_LIBLZMA 1)
   else()
