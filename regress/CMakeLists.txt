@@ -38,7 +38,8 @@ foreach(PROGRAM IN LISTS DL_USERS)
   target_link_libraries(${PROGRAM} ${CMAKE_DL_LIBS})
 endforeach()
 
-foreach(PROGRAM IN LISTS GETOPT_USERS)
+# both programs using source_hole.c also use getopt
+foreach(PROGRAM IN LISTS GETOPT_USERS HOLE_USERS)
   add_executable(${PROGRAM} ${PROGRAM}.c)
   target_link_libraries(${PROGRAM} zip)
   if(NOT HAVE_GETOPT)
@@ -50,10 +51,6 @@ foreach(PROGRAM IN LISTS HOLE_USERS)
   add_executable(${PROGRAM} ${PROGRAM}.c source_hole.c)
   target_link_libraries(${PROGRAM} zip)
 endforeach()
-# hole needs getopt() too.
-if(NOT HAVE_GETOPT)
-  target_sources(hole PRIVATE ../src/getopt.c)
-endif(NOT HAVE_GETOPT)
 
 foreach(PROGRAM IN LISTS ALL_PROGRAMS)
   target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
