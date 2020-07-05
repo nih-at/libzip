@@ -41,7 +41,7 @@ foreach(PROGRAM IN LISTS GETOPT_USERS)
   add_executable(${PROGRAM} ${PROGRAM}.c)
   target_link_libraries(${PROGRAM} zip)
   if(NOT HAVE_GETOPT)
-    target_sources(${PROGRAM} PRIVATE getopt.c)
+    target_sources(${PROGRAM} PRIVATE ../src/getopt.c)
   endif(NOT HAVE_GETOPT)
 endforeach()
 
@@ -51,11 +51,11 @@ foreach(PROGRAM IN LISTS HOLE_USERS)
 endforeach()
 # hole needs getopt() too.
 if(NOT HAVE_GETOPT)
-  target_sources(hole PRIVATE getopt.c)
+  target_sources(hole PRIVATE ../src/getopt.c)
 endif(NOT HAVE_GETOPT)
 
 foreach(PROGRAM IN LISTS ALL_PROGRAMS)
-  include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 endforeach()
 
 add_custom_target(cleanup
