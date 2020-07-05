@@ -25,6 +25,7 @@ set(HOLE_USERS
 
 set(ALL_PROGRAMS ${TEST_PROGRAMS} ${DL_USERS} ${GETOPT_USERS} ${HOLE_USERS})
 add_executable(can_clone_file can_clone_file.c)
+target_include_directories(can_clone_file PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 
 set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 foreach(PROGRAM IN LISTS TEST_PROGRAMS)
