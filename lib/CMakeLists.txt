@@ -1,9 +1,5 @@
 include(CheckFunctionExists)
 
-if(LIBZIP_DO_INSTALL)
-  install(FILES zip.h DESTINATION include)
-endif()
-
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 
 add_library(zip
@@ -131,6 +127,7 @@ if(WIN32)
     target_sources(zip PRIVATE zip_random_uwp.c)
   else()
     target_sources(zip PRIVATE zip_source_file_win32_ansi.c zip_random_win32.c)
+    target_link_libraries(zip PRIVATE advapi32)
   endif()
 else(WIN32)
   target_sources(zip PRIVATE
@@ -140,6 +137,61 @@ else(WIN32)
     )
 endif(WIN32)
 
+if(HAVE_LIBBZ2)
+  target_sources(zip PRIVATE zip_algorithm_bzip2.c)
+  target_link_libraries(zip PRIVATE BZip2::BZip2)
+endif()
+
+if(HAVE_LIBLZMA)
+  target_sources(zip PRIVATE zip_algorithm_xz.c)
+  target_link_libraries(zip PRIVATE LibLZMA::LibLZMA)
+endif()
+
+if(HAVE_COMMONCRYPTO)
+  target_sources(zip PRIVATE zip_crypto_commoncrypto.c)
+elseif(HAVE_WINDOWS_CRYPTO)
+  target_sources(zip PRIVATE zip_crypto_win.c)
+  target_link_libraries(zip PRIVATE bcrypt)
+elseif(HAVE_GNUTLS)
+  target_sources(zip PRIVATE zip_crypto_gnutls.c)
+  target_include_directories(zip PRIVATE ${NETTLE_INCLUDE_DIR})
+  target_link_libraries(zip PRIVATE GnuTLS::GnuTLS ${NETTLE_LIBRARY})
+elseif(HAVE_OPENSSL)
+  target_sources(zip PRIVATE zip_crypto_openssl.c)
+  target_link_libraries(zip PRIVATE OpenSSL::Crypto)
+elseif(HAVE_MBEDTLS)
+  target_sources(zip PRIVATE zip_crypto_mbedtls.c)
+  target_include_directories(zip PRIVATE ${MBEDTLS_INCLUDE_DIR})
+  target_link_libraries(zip PRIVATE ${MBEDTLS_LIBRARIES})
+endif()
+
+if(HAVE_CRYPTO)
+  target_sources(zip PRIVATE zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c)
+endif()
+
+if(SHARED_LIB_VERSIONNING)
+  set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)
+endif()
+
+target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
+target_include_directories(zip
+  PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:include>
+  )
+
+if(LIBZIP_DO_INSTALL)
+  install(TARGETS zip
+    EXPORT ${PROJECT_NAME}-targets
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    INCLUDES DESTINATION include
+    LIBRARY DESTINATION lib)
+  install(FILES zip.h DESTINATION include)
+endif()
+
+# create zip_err_str.h from zip.h
 file(READ ${PROJECT_SOURCE_DIR}/lib/zip.h zip_h)
 string(REGEX MATCHALL "#define ZIP_ER_([A-Z_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z ']*)/" zip_h_err ${zip_h})
 set(zip_err_str [=[
@@ -172,48 +224,3 @@ const int _zip_err_type[] = {
 ]=])
 string(APPEND zip_err_str "${zip_err_type}}\;\n")
 file(WRITE ${CMAKE_BINARY_DIR}/zip_err_str.c ${zip_err_str})
-
-if(HAVE_LIBBZ2)
-  target_sources(zip PRIVATE zip_algorithm_bzip2.c)
-endif()
-
-if(HAVE_LIBLZMA)
-  target_sources(zip PRIVATE zip_algorithm_xz.c)
-endif()
-
-if(HAVE_COMMONCRYPTO)
-  target_sources(zip PRIVATE zip_crypto_commoncrypto.c)
-elseif(HAVE_WINDOWS_CRYPTO)
-  target_sources(zip PRIVATE zip_crypto_win.c)
-elseif(HAVE_GNUTLS)
-  target_sources(zip PRIVATE zip_crypto_gnutls.c)
-elseif(HAVE_OPENSSL)
-  target_sources(zip PRIVATE zip_crypto_openssl.c)
-elseif(HAVE_MBEDTLS)
-  target_sources(zip PRIVATE zip_crypto_mbedtls.c)
-endif()
-
-if(HAVE_CRYPTO)
-  target_sources(zip PRIVATE zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c)
-endif()
-
-if(SHARED_LIB_VERSIONNING)
-  set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)
-endif()
-
-target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
-target_include_directories(zip
-  PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
-  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-  $<INSTALL_INTERFACE:include>
-  )
-
-if(LIBZIP_DO_INSTALL)
-  install(TARGETS zip
-    EXPORT ${PROJECT_NAME}-targets
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    INCLUDES DESTINATION include
-    LIBRARY DESTINATION lib)
-endif()
