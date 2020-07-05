@@ -90,7 +90,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * test different crypto backends with TravisCI.
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 * rewrite `make_zip_errors.sh` in cmake
-* rewrite `make_zip_err_str.sh` in cmake
 * script to check if all exported symbols are marked with `ZIP_EXTERN`, add to make distcheck
 
 ## macOS / iOS framework

@@ -196,8 +196,7 @@ check_type_size("int" INT_LIBZIP)
 check_type_size("long" LONG_LIBZIP)
 check_type_size("long long" LONG_LONG_LIBZIP)
 check_type_size("off_t" SIZEOF_OFF_T)
-check_type_size("size_t" SIZE_T_LIBZIP)
-check_type_size("ssize_t" SSIZE_T_LIBZIP)
+check_type_size("size_t" SIZEOF_SIZE_T)
 
 check_c_source_compiles("#include <sys/ioctl.h>
 #include <linux/fs.h>
