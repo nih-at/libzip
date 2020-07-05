@@ -173,7 +173,7 @@ if(SHARED_LIB_VERSIONNING)
   set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)
 endif()
 
-target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
+target_link_libraries(zip PRIVATE ZLIB::ZLIB)
 target_include_directories(zip
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
