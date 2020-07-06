@@ -54,10 +54,22 @@ find_library(Nettle_LIBRARY
   PATHS ${PC_Nettle_LIBRARY_DIRS}
 )
 
-#TODO
-#If you have a good way of getting the version (from a header file, for example), you can use that information to set Nettle_VERSION (although note that find modules have traditionally used Nettle_VERSION_STRING, so you may want to set both). Otherwise, attempt to use the information from pkg-config
-# nettle/version.h defines NETTLE_VERSION_MAJOR and NETTLE_VERSION_MINOR
-set(Nettle_VERSION ${PC_Nettle_VERSION})
+# Extract version information from the header file
+if(Nettle_INCLUDE_DIR)
+    file(STRINGS ${Nettle_INCLUDE_DIR}/nettle/version.h _ver_major_line
+         REGEX "^#define NETTLE_VERSION_MAJOR  *[0-9]+"
+         LIMIT_COUNT 1)
+    string(REGEX MATCH "[0-9]+"
+           Nettle_MAJOR_VERSION "${_ver_major_line}")
+    file(STRINGS ${Nettle_INCLUDE_DIR}/nettle/version.h _ver_minor_line
+         REGEX "^#define NETTLE_VERSION_MINOR  *[0-9]+"
+         LIMIT_COUNT 1)
+    string(REGEX MATCH "[0-9]+"
+           Nettle_MINOR_VERSION "${_ver_minor_line}")
+    set(Nettle_VERSION "${Nettle_MAJOR_VERSION}.${Nettle_MINOR_VERSION}")
+    unset(_ver_major_line)
+    unset(_ver_minor_line)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Nettle
