@@ -56,6 +56,8 @@ find_library(Nettle_LIBRARY
 
 # Extract version information from the header file
 if(Nettle_INCLUDE_DIR)
+  # This file only exists in nettle>=3.0
+  if(EXISTS ${Nettle_INCLUDE_DIR}/nettle/version.h)
     file(STRINGS ${Nettle_INCLUDE_DIR}/nettle/version.h _ver_major_line
          REGEX "^#define NETTLE_VERSION_MAJOR  *[0-9]+"
          LIMIT_COUNT 1)
@@ -69,6 +71,13 @@ if(Nettle_INCLUDE_DIR)
     set(Nettle_VERSION "${Nettle_MAJOR_VERSION}.${Nettle_MINOR_VERSION}")
     unset(_ver_major_line)
     unset(_ver_minor_line)
+  else()
+    if(PC_Nettle_VERSION)
+      set(Nettle_VERSION ${PC_Nettle_VERSION})
+    else()
+      set(Nettle_VERSION "1.0")
+    endif()
+  endif()
 endif()
 
 include(FindPackageHandleStandardArgs)
