@@ -2,15 +2,11 @@ check_function_exists(getopt HAVE_GETOPT)
 
 set(TEST_PROGRAMS
   add_from_filep
+  can_clone_file
   fopen_unchanged
   fseek
   fuzz_main
   nonrandomopentest
-)
-
-set(DL_USERS
-  # malloc
-  nonrandomopen
 )
 
 set(GETOPT_USERS
@@ -23,37 +19,38 @@ set(HOLE_USERS
   ziptool_regress
 )
 
-set(ALL_PROGRAMS ${TEST_PROGRAMS} ${DL_USERS} ${GETOPT_USERS} ${HOLE_USERS})
-add_executable(can_clone_file can_clone_file.c)
-target_include_directories(can_clone_file PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS})
 
-set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
-foreach(PROGRAM IN LISTS TEST_PROGRAMS)
+foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   add_executable(${PROGRAM} ${PROGRAM}.c)
+  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
   target_link_libraries(${PROGRAM} zip)
 endforeach()
+
+# both programs using source_hole.c also use getopt
+if(NOT HAVE_GETOPT)
+  foreach(PROGRAM IN LISTS GETOPT_USERS HOLE_USERS)
+    target_sources(${PROGRAM} PRIVATE ../src/getopt.c)
+    target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
+  endforeach()
+endif(NOT HAVE_GETOPT)
+
+foreach(PROGRAM IN LISTS HOLE_USERS)
+  target_sources(${PROGRAM} PRIVATE source_hole.c)
+endforeach()
+
+# for including ziptool.c
+target_include_directories(ziptool_regress PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
+
+set(DL_USERS
+  # malloc
+  nonrandomopen
+)
 
 foreach(PROGRAM IN LISTS DL_USERS)
   add_library(${PROGRAM} MODULE ${PROGRAM}.c)
   target_link_libraries(${PROGRAM} ${CMAKE_DL_LIBS})
-endforeach()
-
-# both programs using source_hole.c also use getopt
-foreach(PROGRAM IN LISTS GETOPT_USERS HOLE_USERS)
-  add_executable(${PROGRAM} ${PROGRAM}.c)
-  target_link_libraries(${PROGRAM} zip)
-  if(NOT HAVE_GETOPT)
-    target_sources(${PROGRAM} PRIVATE ../src/getopt.c)
-  endif(NOT HAVE_GETOPT)
-endforeach()
-
-foreach(PROGRAM IN LISTS HOLE_USERS)
-  add_executable(${PROGRAM} ${PROGRAM}.c source_hole.c)
-  target_link_libraries(${PROGRAM} zip)
-endforeach()
-
-foreach(PROGRAM IN LISTS ALL_PROGRAMS)
-  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 endforeach()
 
 add_custom_target(cleanup
@@ -222,6 +219,8 @@ if (TARGET zlib)
   set(path "$<TARGET_FILE_DIR:zlib>;${path}")
 endif()
 string(REPLACE ";" "\\;" path "${path}")
+
+set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
 foreach(CASE IN LISTS EXTRA_TESTS)
   add_test(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
