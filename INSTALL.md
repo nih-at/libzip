@@ -9,13 +9,13 @@ For supporting bzip2-compressed zip archives, you need
 [bzip2](http://bzip.org/).
 
 For supporting xz-compressed zip archives, you need
-[liblzma](https://tukaani.org/xz/) which is part of xz.
+[liblzma](https://tukaani.org/xz/) which is part of xz, at least version 5.2.
 
 For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 
 - Apple's CommonCrypto (available on macOS and iOS)
-- [GnuTLS](https://www.gnutls.org/)
+- [GnuTLS](https://www.gnutls.org/) and [Nettle](https://www.lysator.liu.se/~nisse/nettle/) (at least nettle 3.0)
 - [mbed TLS](https://tls.mbed.org/)
 - [OpenSSL](https://www.openssl.org/) >= 1.0.
 - Microsoft Windows Cryptography Framework
