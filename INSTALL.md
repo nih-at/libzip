@@ -39,7 +39,7 @@ Some useful parameters you can pass to `cmake` with `-Dparameter=value`:
 - `BUILD_SHARED_LIBS`: set to `ON` or `OFF` to enable/disable building
   of shared libraries, defaults to `ON`
 - `CMAKE_INSTALL_PREFIX`: for setting the installation path
-- `DOCUMENTATION_FORMAT`: choose one of 'man', 'mdoc', and 'html' for
+- `DOCUMENTATION_FORMAT`: choose one of `man`, `mdoc`, and `html` for
   the installed documentation (default: decided by cmake depending on
   available tools)
 - `LIBZIP_DO_INSTALL`: If you include libzip as a subproject, link it
