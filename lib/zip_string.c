@@ -34,9 +34,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "zipint.h"
-
 
 zip_uint32_t
 _zip_string_crc32(const zip_string_t *s) {

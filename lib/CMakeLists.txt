@@ -37,7 +37,6 @@ add_library(zip
   zip_file_set_external_attributes.c
   zip_file_set_mtime.c
   zip_file_strerror.c
-  zip_filerange_crc.c
   zip_fopen.c
   zip_fopen_encrypted.c
   zip_fopen_index.c
