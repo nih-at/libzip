@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 project(libzip
   VERSION 1.7.1.1
@@ -35,7 +35,7 @@ else()
   set(COMMONCRYPTO_FOUND FALSE)
 endif()
 if(ENABLE_GNUTLS)
-  include(FindNettle)
+  include(FindNettle 3.0)
   include(FindGnuTLS)
 else()
   set(GNUTLS_FOUND FALSE)
