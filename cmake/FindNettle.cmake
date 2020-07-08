@@ -64,7 +64,7 @@ Cache Variables
 The following cache variables may also be set:
 
 ``Nettle_INCLUDE_DIR``
-  The directory containing ``foo.h``.
+  The directory containing ``nettle/aes.h``.
 ``Nettle_LIBRARY``
   The path to the Nettle library.
 
@@ -76,7 +76,6 @@ pkg_check_modules(PC_Nettle QUIET nettle)
 find_path(Nettle_INCLUDE_DIR
   NAMES nettle/aes.h nettle/md5.h nettle/pbkdf2.h nettle/ripemd160.h nettle/sha.h
   PATHS ${PC_Nettle_INCLUDE_DIRS}
-  PATH_SUFFIXES Nettle
 )
 find_library(Nettle_LIBRARY
   NAMES nettle
