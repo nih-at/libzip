@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0.2)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 project(libzip
-  VERSION 1.7.1.1
+  VERSION 1.7.2
   LANGUAGES C)
 
 option(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
