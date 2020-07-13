@@ -32,6 +32,7 @@ include(CheckCSourceRuns)
 include(CheckCSourceCompiles)
 include(CheckStructHasMember)
 include(TestBigEndian)
+include(GNUInstallDirs)
 if(ENABLE_COMMONCRYPTO)
   check_include_files(CommonCrypto/CommonCrypto.h COMMONCRYPTO_FOUND)
 else()
@@ -237,7 +238,7 @@ endif(WIN32)
 
 # rpath handling: use rpath in installed binaries
 if(NOT CMAKE_SYSTEM_NAME MATCHES Linux)
-  set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+  set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
@@ -282,9 +283,9 @@ endif()
 # pkgconfig file
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix \${prefix})
-set(bindir \${exec_prefix}/bin)
-set(libdir \${exec_prefix}/lib)
-set(includedir \${prefix}/include)
+SET(bindir \${exec_prefix}/${CMAKE_INSTALL_BINDIR})
+SET(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
+SET(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
 if(CMAKE_SYSTEM_NAME MATCHES BSD)
   set(PKG_CONFIG_RPATH "-Wl,-R\${libdir}")
 endif(CMAKE_SYSTEM_NAME MATCHES BSD)
@@ -304,7 +305,7 @@ string(REGEX REPLACE "-lGnuTLS::GnuTLS" "-lgnutls" LIBS ${LIBS})
 string(REGEX REPLACE "-lNettle::Nettle" "-lnettle" LIBS ${LIBS})
 configure_file(libzip.pc.in libzip.pc @ONLY)
 if(LIBZIP_DO_INSTALL)
-  install(FILES ${PROJECT_BINARY_DIR}/libzip.pc DESTINATION lib/pkgconfig)
+  install(FILES ${PROJECT_BINARY_DIR}/libzip.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif()
 
 # fixed size integral types
@@ -426,7 +427,7 @@ write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-v
   COMPATIBILITY AnyNewerVersion)
 
 configure_package_config_file("${PROJECT_NAME}-config.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-  INSTALL_DESTINATION lib/cmake/libzip)
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libzip)
 
 # Add targets to the build-tree export set
 export(TARGETS zip
@@ -436,10 +437,10 @@ export(TARGETS zip
 if(LIBZIP_DO_INSTALL)
   install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION include)
   install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-    DESTINATION lib/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
   install(EXPORT ${PROJECT_NAME}-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-targets.cmake
-    DESTINATION lib/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
 endif()
 
