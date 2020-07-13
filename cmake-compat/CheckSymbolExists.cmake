@@ -58,7 +58,10 @@ For example:
   check_symbol_exists(fopen "stdio.h" HAVE_FOPEN)
 #]=======================================================================]
 
-include_guard(GLOBAL)
+if(__CheckSymbolExists_cmake__)
+  return()
+endif()
+set(__CheckSymbolExists_cmake__ TRUE)
 
 cmake_policy(PUSH)
 cmake_policy(SET CMP0054 NEW) # if() quoted variables not dereferenced

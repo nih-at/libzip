@@ -35,7 +35,10 @@ the way the check is run:
   CMAKE_REQUIRED_QUIET = execute quietly without messages
 #]=======================================================================]
 
-include_guard(GLOBAL)
+if(__CheckLibraryExists_cmake__)
+  return()
+endif()
+set(__CheckLibraryExists_cmake__ TRUE)
 
 macro(CHECK_LIBRARY_EXISTS LIBRARY FUNCTION LOCATION VARIABLE)
   if(NOT DEFINED "${VARIABLE}")
