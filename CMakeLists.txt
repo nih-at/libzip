@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+if (${CMAKE_VERSION} VERSION_LESS "3.17.0")
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake-compat)
+endif()
 
 project(libzip
   VERSION 1.7.2.1
