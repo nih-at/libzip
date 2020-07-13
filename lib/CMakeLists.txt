@@ -138,12 +138,12 @@ endif(WIN32)
 
 if(HAVE_LIBBZ2)
   target_sources(zip PRIVATE zip_algorithm_bzip2.c)
-  target_link_libraries(zip PRIVATE BZip2::BZip2)
+  target_link_libraries(zip PRIVATE ${BZIP2_LIBRARIES})
 endif()
 
 if(HAVE_LIBLZMA)
   target_sources(zip PRIVATE zip_algorithm_xz.c)
-  target_link_libraries(zip PRIVATE LibLZMA::LibLZMA)
+  target_link_libraries(zip PRIVATE ${LIBLZMA_LIBRARY})
 endif()
 
 if(HAVE_COMMONCRYPTO)
@@ -153,13 +153,13 @@ elseif(HAVE_WINDOWS_CRYPTO)
   target_link_libraries(zip PRIVATE bcrypt)
 elseif(HAVE_GNUTLS)
   target_sources(zip PRIVATE zip_crypto_gnutls.c)
-  target_link_libraries(zip PRIVATE GnuTLS::GnuTLS Nettle::Nettle)
+  target_link_libraries(zip PRIVATE ${GNUTLS_LIBRARY} ${NETTLE_LIBRARY})
 elseif(HAVE_OPENSSL)
   target_sources(zip PRIVATE zip_crypto_openssl.c)
-  target_link_libraries(zip PRIVATE OpenSSL::Crypto)
+  target_link_libraries(zip PRIVATE ${OPENSSL_LIBRARIES})
 elseif(HAVE_MBEDTLS)
   target_sources(zip PRIVATE zip_crypto_mbedtls.c)
-  target_link_libraries(zip PRIVATE MbedTLS::MbedTLS)
+  target_link_libraries(zip PRIVATE ${MBEDTLS_LIBRARIES})
 endif()
 
 if(HAVE_CRYPTO)
@@ -170,7 +170,7 @@ if(SHARED_LIB_VERSIONNING)
   set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)
 endif()
 
-target_link_libraries(zip PRIVATE ZLIB::ZLIB)
+target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES})
 target_include_directories(zip
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
