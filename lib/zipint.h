@@ -34,17 +34,12 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
-
 #include "compat.h"
 
 #ifdef ZIP_ALLOCATE_BUFFER
 #include <stdlib.h>
 #endif
-
-#include <zlib.h>
 
 #ifndef _ZIP_COMPILING_DEPRECATED
 #define ZIP_DISABLE_DEPRECATED
@@ -478,7 +473,6 @@ int _zip_buffer_skip(zip_buffer_t *buffer, zip_uint64_t length);
 int _zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset);
 zip_uint64_t _zip_buffer_size(zip_buffer_t *buffer);
 
-int _zip_cdir_compute_crc(zip_t *, uLong *);
 void _zip_cdir_free(zip_cdir_t *);
 bool _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error);
 zip_cdir_t *_zip_cdir_new(zip_uint64_t, zip_error_t *);
@@ -524,8 +518,6 @@ int _zip_file_extra_field_prepare_for_change(zip_t *, zip_uint64_t);
 int _zip_file_fillbuf(void *, size_t, zip_file_t *);
 zip_uint64_t _zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t *error);
 zip_uint64_t _zip_file_get_offset(const zip_t *, zip_uint64_t, zip_error_t *);
-
-int _zip_filerange_crc(zip_source_t *src, zip_uint64_t offset, zip_uint64_t length, uLong *crcp, zip_error_t *error);
 
 zip_dirent_t *_zip_get_dirent(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *);
 

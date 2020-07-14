@@ -38,6 +38,9 @@
 
 #include <stdlib.h>
 #include <sys/stat.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 #ifdef HAVE_CLONEFILE
 #include <sys/attr.h>

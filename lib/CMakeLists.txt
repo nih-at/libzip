@@ -1,12 +1,8 @@
 include(CheckFunctionExists)
 
-if(LIBZIP_DO_INSTALL)
-  install(FILES zip.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-endif()
-
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 
-set(LIBZIP_SOURCES
+add_library(zip
   zip_add.c
   zip_add_dir.c
   zip_add_entry.c
@@ -41,7 +37,6 @@ set(LIBZIP_SOURCES
   zip_file_set_external_attributes.c
   zip_file_set_mtime.c
   zip_file_strerror.c
-  zip_filerange_crc.c
   zip_fopen.c
   zip_fopen_encrypted.c
   zip_fopen_index.c
@@ -116,42 +111,96 @@ set(LIBZIP_SOURCES
   zip_unchange_archive.c
   zip_unchange_data.c
   zip_utf-8.c
-)
+  ${CMAKE_BINARY_DIR}/zip_err_str.c
+  )
+add_library(libzip::zip ALIAS zip)
 
 if(WIN32)
-  set(LIBZIP_OPSYS_FILES
+  target_sources(zip PRIVATE
     zip_source_file_win32.c
     zip_source_file_win32_named.c
     zip_source_file_win32_utf16.c
     zip_source_file_win32_utf8.c
-  )
+    )
   if(CMAKE_SYSTEM_NAME MATCHES WindowsPhone OR CMAKE_SYSTEM_NAME MATCHES WindowsStore)
-    set(LIBZIP_OPSYS_FILES "${LIBZIP_OPSYS_FILES}"
-      zip_random_uwp.c
-    )
+    target_sources(zip PRIVATE zip_random_uwp.c)
   else()
-    set(LIBZIP_OPSYS_FILES "${LIBZIP_OPSYS_FILES}"
-      zip_source_file_win32_ansi.c
-      zip_random_win32.c
-    )
+    target_sources(zip PRIVATE zip_source_file_win32_ansi.c zip_random_win32.c)
+    target_link_libraries(zip PRIVATE advapi32)
   endif()
 else(WIN32)
-  set(LIBZIP_OPSYS_FILES
+  target_sources(zip PRIVATE
     zip_mkstempm.c
     zip_source_file_stdio_named.c
     zip_random_unix.c
-  )
+    )
 endif(WIN32)
 
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
+if(HAVE_LIBBZ2)
+  target_sources(zip PRIVATE zip_algorithm_bzip2.c)
+  target_link_libraries(zip PRIVATE BZip2::BZip2)
+endif()
 
+if(HAVE_LIBLZMA)
+  target_sources(zip PRIVATE zip_algorithm_xz.c)
+  target_link_libraries(zip PRIVATE LibLZMA::LibLZMA)
+endif()
+
+if(HAVE_LIBZSTD)
+  target_sources(zip PRIVATE zip_algorithm_zstd.c)
+  target_link_libraries(zip PRIVATE LibZSTD::LibZSTD)
+endif()
+
+if(HAVE_COMMONCRYPTO)
+  target_sources(zip PRIVATE zip_crypto_commoncrypto.c)
+elseif(HAVE_WINDOWS_CRYPTO)
+  target_sources(zip PRIVATE zip_crypto_win.c)
+  target_link_libraries(zip PRIVATE bcrypt)
+elseif(HAVE_GNUTLS)
+  target_sources(zip PRIVATE zip_crypto_gnutls.c)
+  target_link_libraries(zip PRIVATE GnuTLS::GnuTLS Nettle::Nettle)
+elseif(HAVE_OPENSSL)
+  target_sources(zip PRIVATE zip_crypto_openssl.c)
+  target_link_libraries(zip PRIVATE OpenSSL::Crypto)
+elseif(HAVE_MBEDTLS)
+  target_sources(zip PRIVATE zip_crypto_mbedtls.c)
+  target_link_libraries(zip PRIVATE MbedTLS::MbedTLS)
+endif()
+
+if(HAVE_CRYPTO)
+  target_sources(zip PRIVATE zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c)
+endif()
+
+if(SHARED_LIB_VERSIONNING)
+  set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)
+endif()
+
+target_link_libraries(zip PRIVATE ZLIB::ZLIB)
+target_include_directories(zip
+  PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:include>
+  )
+
+if(LIBZIP_DO_INSTALL)
+  install(TARGETS zip
+    EXPORT ${PROJECT_NAME}-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(FILES zip.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+
+# create zip_err_str.h from zip.h
 file(READ ${PROJECT_SOURCE_DIR}/lib/zip.h zip_h)
 string(REGEX MATCHALL "#define ZIP_ER_([A-Z_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z ']*)/" zip_h_err ${zip_h})
 set(zip_err_str [=[
 /*
-   This file was generated automatically by CMake
-   from zip.h\; make changes there.
- */
+  This file was generated automatically by CMake
+  from zip.h\; make changes there.
+*/
 
 #include "zipint.h"
 
@@ -177,55 +226,3 @@ const int _zip_err_type[] = {
 ]=])
 string(APPEND zip_err_str "${zip_err_type}}\;\n")
 file(WRITE ${CMAKE_BINARY_DIR}/zip_err_str.c ${zip_err_str})
-list(APPEND LIBZIP_SOURCES ${CMAKE_BINARY_DIR}/zip_err_str.c)
-
-if(HAVE_LIBBZ2)
-  set(LIBZIP_OPTIONAL_FILES zip_algorithm_bzip2.c)
-endif()
-
-if(HAVE_LIBLZMA)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_algorithm_xz.c)
-endif()
-
-if(HAVE_LIBZSTD)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_algorithm_zstd.c)
-endif()
-
-if(HAVE_COMMONCRYPTO)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_commoncrypto.c
-)
-elseif(HAVE_WINDOWS_CRYPTO)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_win.c
-)
-elseif(HAVE_GNUTLS)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_gnutls.c
-)
-elseif(HAVE_OPENSSL)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_openssl.c
-)
-elseif(HAVE_MBEDTLS)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_crypto_mbedtls.c
-)
-endif()
-
-if(HAVE_CRYPTO)
-  set(LIBZIP_OPTIONAL_FILES ${LIBZIP_OPTIONAL_FILES} zip_winzip_aes.c zip_source_winzip_aes_decode.c zip_source_winzip_aes_encode.c
-)
-endif()
-
-add_library(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPTIONAL_FILES} ${LIBZIP_OPSYS_FILES})
-
-if(SHARED_LIB_VERSIONNING)
-  set_target_properties(zip PROPERTIES VERSION 5.3 SOVERSION 5)
-endif()
-
-target_link_libraries(zip PRIVATE ${ZLIB_LIBRARIES} ${OPTIONAL_LIBRARY})
-
-if(LIBZIP_DO_INSTALL)
-  install(TARGETS zip
-    EXPORT ${PROJECT_NAME}-targets
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif()

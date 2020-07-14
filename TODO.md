@@ -65,7 +65,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Cleanup
 
-* drop _LIBZIP suffixes in cmake defines (no longer needed since they no longer appear in zipconf.h)
 * go over cdir parser and rename various offset/size variables to make it clearer
 * use bool
 * use `ZIP_SOURCE_SUPPORTS_{READABLE,SEEKABLE,WRITABLE}`
@@ -90,8 +89,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * test different crypto backends with TravisCI.
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 * rewrite `make_zip_errors.sh` in cmake
-* rewrite `make_zip_err_str.sh` in cmake
-* script to check if all exported symbols are marked with `ZIP_EXTERN`, add to make distcheck
+* script to check if all exported symbols are marked with `ZIP_EXTERN`, add to `make distcheck`
 
 ## macOS / iOS framework
 
@@ -134,7 +132,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * add test case to change values for newly added files (name, compression method, comment, mtime, . . .)
 * `zip_open()` file less than `EOCDLEN` bytes long
 * test calls against old API
-* run regression tests also from CMake framework
 * rename file to dir/ and vice versa (fails)
 * fix comment test to be newline insensitive
 * check if http://bugs.python.org/issue20078 provides ideas for new tests
