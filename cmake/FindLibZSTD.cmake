@@ -29,13 +29,11 @@ include(SelectLibraryConfigurations)
 SELECT_LIBRARY_CONFIGURATIONS(ZSTD)
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(
-    ZSTD DEFAULT_MSG
-    ZSTD_LIBRARY ZSTD_INCLUDE_DIR
+find_package_handle_standard_args(LibZSTD
+    FOUND_VAR LIBZSTD_FOUND
+    REQUIRED_VARS 
+      ZSTD_LIBRARY ZSTD_INCLUDE_DIR
+    VERSION_VAR ZSTD_VERSION
 )
-
-if (ZSTD_FOUND)
-    message(STATUS "Found Zstd: ${ZSTD_LIBRARY}")
-endif()
 
 mark_as_advanced(ZSTD_INCLUDE_DIR ZSTD_LIBRARY)
