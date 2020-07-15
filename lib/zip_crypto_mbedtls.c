@@ -41,6 +41,7 @@
 #include <mbedtls/entropy.h>
 #include <mbedtls/pkcs5.h>
 
+#include <limits.h>
 
 _zip_crypto_aes_t *
 _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
