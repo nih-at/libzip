@@ -193,8 +193,10 @@ set(EXTRA_TESTS
 	set_compression_store_to_deflate.test
 	set_compression_store_to_store.test
 	set_compression_store_to_xz.test
+	set_compression_store_to_zstd.test
 	set_compression_unknown.test
 	set_compression_xz_to_store.test
+	set_compression_zstd_to_store.test
 	set_file_dostime.test
 	stat_index_cp437_guess.test
 	stat_index_cp437_raw.test
