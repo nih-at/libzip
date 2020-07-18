@@ -1,6 +1,6 @@
 /*
   zip_algorithm_zstd.c -- zstd (de)compression routines
-  Copyright (C) 2017-2019 Dieter Baron and Thomas Klausner
+  Copyright (C) 2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -34,6 +34,7 @@
 #include "zipint.h"
 
 #include <zstd.h>
+#include <zstd_errors.h>
 #include <limits.h>
 #include <stdlib.h>
 
@@ -99,7 +100,25 @@ general_purpose_bit_flags(void *ud) {
 
 static int
 map_error(size_t ret) {
-    return 0;
+    switch (ret) {
+    case ZSTD_error_no_error:
+	return ZIP_ER_OK;
+    case ZSTD_error_memory_allocation:
+	return ZIP_ER_MEMORY;
+
+    case ZSTD_error_parameter_unsupported:
+    case ZSTD_error_parameter_outOfBound:
+	return ZIP_ER_INVAL;
+
+    case ZSTD_error_corruption_detected:
+    case ZSTD_error_checksum_wrong:
+    case ZSTD_error_dictionary_corrupted:
+    case ZSTD_error_dictionary_wrong:
+	return ZIP_ER_COMPRESSED_DATA;
+
+    default:
+	return ZIP_ER_INTERNAL;
+    }
 }
 
 
@@ -178,7 +197,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 	ret = ZSTD_decompressStream(ctx->zdstream, &ctx->out, &ctx->in);
     }
     if (ZSTD_isError(ret)) {
-	zip_error_set(ctx->error, ZIP_ER_ZSTD, (int)ret);
+	zip_error_set(ctx->error, map_error(ret), 0);
 	return ZIP_COMPRESSION_ERROR;
     }
     *length = ctx->out.pos;
