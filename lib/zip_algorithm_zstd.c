@@ -224,9 +224,19 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
     *length = ctx->out.pos;
     if (ctx->out.pos == 0) {
-	return ZIP_COMPRESSION_NEED_DATA;
+	if (ctx->compress) {
+	    /* TODO: this is a test hack */
+	    ret = ZSTD_flushStream(ctx->zcstream, &ctx->out);
+	    if (ZSTD_isError(ret)) {
+		zip_error_set(ctx->error, map_error(ret), 0);
+		return ZIP_COMPRESSION_ERROR;
+	    }
+	}
+	if (ctx->out.pos == 0) {
+	    return ZIP_COMPRESSION_NEED_DATA;
+	}
     }
-    if (ctx->in.size == 0) {
+    if (ctx->in.pos == ctx->in.size) {
 	return ZIP_COMPRESSION_END;
     }
     return ZIP_COMPRESSION_OK;
