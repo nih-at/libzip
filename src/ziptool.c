@@ -841,6 +841,9 @@ usage(const char *progname, const char *reason) {
     if (zip_compression_method_supported(ZIP_CM_XZ, 1)) {
 	fprintf(out, "\txz\n");
     }
+    if (zip_compression_method_supported(ZIP_CM_ZSTD, 1)) {
+	fprintf(out, "\tzstd\n");
+    }
     fprintf(out, "\nSupported encryption methods are:\n"
 	    "\tnone\n");
     if (zip_encryption_method_supported(ZIP_EM_AES_128, 1)) {
