@@ -54,13 +54,12 @@ static void *
 allocate(bool compress, int compression_flags, zip_error_t *error) {
     struct ctx *ctx;
 
-    if (compression_flags < 0 || compression_flags > INT_MAX) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+    /* 0: let zstd choose */
+    if (compression_flags < 0 || compression_flags > 9) {
+	compression_flags = 0;
     }
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
 	return NULL;
     }
 
@@ -142,14 +141,22 @@ start(void *ud) {
     ctx->out.pos = 0;
     ctx->out.size = 0;
     if (ctx->compress) {
+	size_t ret;
 	ctx->zcstream = ZSTD_createCStream();
 	if (ctx->zcstream == NULL) {
+	    zip_error_set(ctx->error, ZIP_ER_MEMORY, 0);
+	    return false;
+	}
+	ret = ZSTD_initCStream(ctx->zcstream, ctx->compression_flags);
+	if (ZSTD_isError(ret)) {
+	    zip_error_set(ctx->error, ZIP_ER_ZLIB, map_error(ret));
 	    return false;
 	}
     }
     else {
 	ctx->zdstream = ZSTD_createDStream();
 	if (ctx->zdstream == NULL) {
+	    zip_error_set(ctx->error, ZIP_ER_MEMORY, 0);
 	    return false;
 	}
     }
