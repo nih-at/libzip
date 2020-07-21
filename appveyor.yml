@@ -56,7 +56,7 @@ environment:
 
 before_build:
   cmd: >-
-    vcpkg install zlib:%TRIPLET% bzip2:%TRIPLET% liblzma:%TRIPLET%
+    vcpkg install zlib:%TRIPLET% bzip2:%TRIPLET% liblzma:%TRIPLET% zstd:%TRIPLET%
 
     mkdir build
 
