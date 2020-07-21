@@ -153,6 +153,8 @@ extern zip_compression_algorithm_t zip_algorithm_deflate_compress;
 extern zip_compression_algorithm_t zip_algorithm_deflate_decompress;
 extern zip_compression_algorithm_t zip_algorithm_xz_compress;
 extern zip_compression_algorithm_t zip_algorithm_xz_decompress;
+extern zip_compression_algorithm_t zip_algorithm_zstd_compress;
+extern zip_compression_algorithm_t zip_algorithm_zstd_decompress;
 
 
 /* This API is not final yet, but we need it internally, so it's private for now. */

@@ -146,6 +146,11 @@ if(HAVE_LIBLZMA)
   target_link_libraries(zip PRIVATE LibLZMA::LibLZMA)
 endif()
 
+if(HAVE_LIBZSTD)
+  target_sources(zip PRIVATE zip_algorithm_zstd.c)
+  target_link_libraries(zip PRIVATE Zstd::Zstd)
+endif()
+
 if(HAVE_COMMONCRYPTO)
   target_sources(zip PRIVATE zip_crypto_commoncrypto.c)
 elseif(HAVE_WINDOWS_CRYPTO)

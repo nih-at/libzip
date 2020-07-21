@@ -653,6 +653,11 @@ get_compression_method(const char *arg) {
       return ZIP_CM_XZ;
 
 #endif
+#if defined(HAVE_LIBZSTD)
+    else if (strcasecmp(arg, "zstd") == 0)
+      return ZIP_CM_ZSTD;
+
+#endif
     else if (strcasecmp(arg, "unknown") == 0)
 	return 100;
     return 0; /* TODO: error handling */
@@ -835,6 +840,9 @@ usage(const char *progname, const char *reason) {
 	    "\tstore\n");
     if (zip_compression_method_supported(ZIP_CM_XZ, 1)) {
 	fprintf(out, "\txz\n");
+    }
+    if (zip_compression_method_supported(ZIP_CM_ZSTD, 1)) {
+	fprintf(out, "\tzstd\n");
     }
     fprintf(out, "\nSupported encryption methods are:\n"
 	    "\tnone\n");

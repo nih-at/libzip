@@ -17,6 +17,7 @@ option(ENABLE_WINDOWS_CRYPTO "Enable use of Windows cryptography libraries" ON)
 
 option(ENABLE_BZIP2 "Enable use of BZip2" ON)
 option(ENABLE_LZMA "Enable use of LZMA" ON)
+option(ENABLE_ZSTD "Enable use of Zstandard" ON)
 
 option(BUILD_TOOLS "Build tools in the src directory (zipcmp, zipmerge, ziptool)" ON)
 option(BUILD_REGRESS "Build regression tests" ON)
@@ -203,6 +204,14 @@ if(ENABLE_LZMA)
   endif(LIBLZMA_FOUND)
 endif(ENABLE_LZMA)
 
+if(ENABLE_ZSTD)
+  find_package(Zstd)
+  if(Zstd_FOUND)
+    set(HAVE_LIBZSTD 1)
+  else()
+    message(WARNING "-- zstd library not found; zstandard support disabled")
+  endif(Zstd_FOUND)
+endif(ENABLE_ZSTD)
 
 if (COMMONCRYPTO_FOUND)
   set(HAVE_CRYPTO 1)

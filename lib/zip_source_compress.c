@@ -75,6 +75,9 @@ static struct implementation implementations[] = {
     */
     {ZIP_CM_XZ, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
 #endif
+#if defined(HAVE_LIBZSTD)
+    {ZIP_CM_ZSTD, &zip_algorithm_zstd_compress, &zip_algorithm_zstd_decompress},
+#endif
 
 };
 

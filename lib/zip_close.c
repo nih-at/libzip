@@ -359,8 +359,10 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 		flags |= ZIP_FL_FORCE_ZIP64;
 	    }
 	}
-	else
+	else {
 	    de->comp_size = st.comp_size;
+	    data_length = (zip_int64_t)st.comp_size;
+	}
     }
 
     if ((offstart = zip_source_tell_write(za->src)) < 0) {
