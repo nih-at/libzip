@@ -353,6 +353,7 @@ struct zip_source {
     unsigned int refcount;
     bool eof;            /* EOF reached */
     bool had_read_error; /* a previous ZIP_SOURCE_READ reported an error */
+    zip_uint64_t bytes_read; /* for sources that don't support ZIP_SOURCE_TELL. */
 };
 
 #define ZIP_SOURCE_IS_OPEN_READING(src) ((src)->open_count > 0)
