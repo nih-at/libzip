@@ -378,6 +378,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 
     needs_recompress = st.comp_method != ZIP_CM_ACTUAL(de->comp_method);
     needs_decompress = needs_recompress && (st.comp_method != ZIP_CM_STORE);
+    /* in these cases we can compute the CRC ourselves, so we do */
     needs_crc = (st.comp_method == ZIP_CM_STORE) || needs_decompress;
     needs_compress = needs_recompress && (de->comp_method != ZIP_CM_STORE);
 
