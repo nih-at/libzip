@@ -46,11 +46,12 @@ struct ctx {
 };
 
 
-static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
+static zip_uint64_t
+maximum_compressed_size(zip_uint64_t uncompressed_size) {
     zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.006);
 
     if (compressed_size < uncompressed_size) {
-        return ZIP_UINT64_MAX;
+	return ZIP_UINT64_MAX;
     }
     return compressed_size;
 }

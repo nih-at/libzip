@@ -352,8 +352,8 @@ struct zip_source {
     bool source_closed;                   /* set if source archive is closed */
     zip_t *source_archive;                /* zip archive we're reading from, NULL if not from archive */
     unsigned int refcount;
-    bool eof;            /* EOF reached */
-    bool had_read_error; /* a previous ZIP_SOURCE_READ reported an error */
+    bool eof;                /* EOF reached */
+    bool had_read_error;     /* a previous ZIP_SOURCE_READ reported an error */
     zip_uint64_t bytes_read; /* for sources that don't support ZIP_SOURCE_TELL. */
 };
 

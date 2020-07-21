@@ -41,11 +41,12 @@
 #endif
 
 #include "zip.h"
-#define TRYOPEN_USAGE "usage: %s [-cent] file\n\n" \
-		      "\t-c\tcheck consistency\n" \
-		      "\t-e\texclusively open archive\n" \
-		      "\t-n\tcreate new file\n" \
-		      "\t-t\ttruncate file to size 0\n"
+#define TRYOPEN_USAGE                  \
+    "usage: %s [-cent] file\n\n"       \
+    "\t-c\tcheck consistency\n"        \
+    "\t-e\texclusively open archive\n" \
+    "\t-n\tcreate new file\n"          \
+    "\t-t\ttruncate file to size 0\n"
 
 
 int

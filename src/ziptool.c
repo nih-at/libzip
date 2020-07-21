@@ -388,8 +388,8 @@ name_locate(int argc, char *argv[]) {
 }
 
 struct progress_userdata_s {
-  double percentage;
-  double limit;
+    double percentage;
+    double limit;
 };
 
 struct progress_userdata_s progress_userdata;
@@ -594,7 +594,8 @@ zstat(int argc, char *argv[]) {
 #endif
 	if (tpm == NULL) {
 	    printf("mtime: <not valid>\n");
-	} else {
+	}
+	else {
 	    strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
 	    printf("mtime: '%s'\n", buf);
 	}
@@ -641,21 +642,21 @@ get_compression_method(const char *arg) {
 	return ZIP_CM_BZIP2;
 #endif
 #if defined(HAVE_LIBLZMA)
-/*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
-    archives made this way - and vice versa.
+    /*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
+	archives made this way - and vice versa.
 
-    else if (strcasecmp(arg, "lzma") == 0)
-      return ZIP_CM_LZMA;
-    else if (strcasecmp(arg, "lzma2") == 0)
-      return ZIP_CM_LZMA2;
-*/
+	else if (strcasecmp(arg, "lzma") == 0)
+	  return ZIP_CM_LZMA;
+	else if (strcasecmp(arg, "lzma2") == 0)
+	  return ZIP_CM_LZMA2;
+    */
     else if (strcasecmp(arg, "xz") == 0)
-      return ZIP_CM_XZ;
+	return ZIP_CM_XZ;
 
 #endif
 #if defined(HAVE_LIBZSTD)
     else if (strcasecmp(arg, "zstd") == 0)
-      return ZIP_CM_ZSTD;
+	return ZIP_CM_ZSTD;
 
 #endif
     else if (strcasecmp(arg, "unknown") == 0)
@@ -825,19 +826,19 @@ usage(const char *progname, const char *reason) {
 	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
     }
     fprintf(out, "\nSupported flags are:\n"
-	    "\t0\t(no flags)\n"
-	    "\tC\tZIP_FL_NOCASE\n"
-	    "\tc\tZIP_FL_CENTRAL\n"
-	    "\td\tZIP_FL_NODIR\n"
-	    "\tl\tZIP_FL_LOCAL\n"
-	    "\tu\tZIP_FL_UNCHANGED\n");
+		 "\t0\t(no flags)\n"
+		 "\tC\tZIP_FL_NOCASE\n"
+		 "\tc\tZIP_FL_CENTRAL\n"
+		 "\td\tZIP_FL_NODIR\n"
+		 "\tl\tZIP_FL_LOCAL\n"
+		 "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nSupported compression methods are:\n"
-	    "\tdefault\n");
+		 "\tdefault\n");
     if (zip_compression_method_supported(ZIP_CM_BZIP2, 1)) {
 	fprintf(out, "\tbzip2\n");
     }
     fprintf(out, "\tdeflate\n"
-	    "\tstore\n");
+		 "\tstore\n");
     if (zip_compression_method_supported(ZIP_CM_XZ, 1)) {
 	fprintf(out, "\txz\n");
     }
@@ -845,7 +846,7 @@ usage(const char *progname, const char *reason) {
 	fprintf(out, "\tzstd\n");
     }
     fprintf(out, "\nSupported encryption methods are:\n"
-	    "\tnone\n");
+		 "\tnone\n");
     if (zip_encryption_method_supported(ZIP_EM_AES_128, 1)) {
 	fprintf(out, "\tAES-128\n");
     }

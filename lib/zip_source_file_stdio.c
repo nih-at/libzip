@@ -142,10 +142,10 @@ _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
     }
 
     if (ret < 0) {
-        if (errno == ENOENT) {
-            st->exists = false;
-            return true;
-        }
+	if (errno == ENOENT) {
+	    st->exists = false;
+	    return true;
+	}
 	zip_error_set(&ctx->error, ZIP_ER_READ, errno);
 	return false;
     }

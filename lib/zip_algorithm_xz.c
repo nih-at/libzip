@@ -49,7 +49,8 @@ struct ctx {
 };
 
 
-static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
+static zip_uint64_t
+maximum_compressed_size(zip_uint64_t uncompressed_size) {
     /*
      According to https://sourceforge.net/p/sevenzip/discussion/45797/thread/b6bd62f8/
 
@@ -62,7 +63,7 @@ static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
     zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.1) + 64 * 1024;
 
     if (compressed_size < uncompressed_size) {
-        return ZIP_UINT64_MAX;
+	return ZIP_UINT64_MAX;
     }
     return compressed_size;
 }

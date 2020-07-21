@@ -196,7 +196,7 @@ zip_close(zip_t *za) {
 	}
 
 	if ((off = zip_source_tell_write(za->src)) < 0) {
-            _zip_error_set_from_source(&za->error, za->src);
+	    _zip_error_set_from_source(&za->error, za->src);
 	    error = 1;
 	    break;
 	}
@@ -241,11 +241,11 @@ zip_close(zip_t *za) {
 	    }
 	    if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
 		_zip_error_set_from_source(&za->error, za->src);
-                error = 1;
+		error = 1;
 		break;
 	    }
 	    if (copy_data(za, de->comp_size) < 0) {
- 		error = 1;
+		error = 1;
 		break;
 	    }
 
@@ -334,22 +334,22 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 
 	if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
 	    zip_uint64_t max_compressed_size;
-            zip_uint16_t compression_method = ZIP_CM_ACTUAL(de->comp_method);
+	    zip_uint16_t compression_method = ZIP_CM_ACTUAL(de->comp_method);
 
-            if (compression_method == ZIP_CM_STORE) {
-                max_compressed_size = st.size;
-            }
-            else {
-                zip_compression_algorithm_t *algorithm = _zip_get_compression_algorithm(compression_method, true);
-                if (algorithm == NULL) {
-                    max_compressed_size = ZIP_UINT64_MAX;
-                }
-                else {
-                    max_compressed_size = algorithm->maximum_compressed_size(st.size);
-                }
-            }
+	    if (compression_method == ZIP_CM_STORE) {
+		max_compressed_size = st.size;
+	    }
+	    else {
+		zip_compression_algorithm_t *algorithm = _zip_get_compression_algorithm(compression_method, true);
+		if (algorithm == NULL) {
+		    max_compressed_size = ZIP_UINT64_MAX;
+		}
+		else {
+		    max_compressed_size = algorithm->maximum_compressed_size(st.size);
+		}
+	    }
 
-            if (max_compressed_size > 0xffffffffu) {
+	    if (max_compressed_size > 0xffffffffu) {
 		flags |= ZIP_FL_FORCE_ZIP64;
 	    }
 	}

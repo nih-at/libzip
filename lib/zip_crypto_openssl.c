@@ -37,8 +37,8 @@
 
 #include "zip_crypto.h"
 
-#include <openssl/rand.h>
 #include <limits.h>
+#include <openssl/rand.h>
 
 #if OPENSSL_VERSION_NUMBER < 0x1010000fL || defined(LIBRESSL_VERSION_NUMBER)
 #define USE_OPENSSL_1_0_API

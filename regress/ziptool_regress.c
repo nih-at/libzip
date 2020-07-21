@@ -99,7 +99,7 @@ cancel(int argc, char *argv[]) {
 	fprintf(stderr, "invalid percentage '%" PRId64 "' for cancel (valid: 0 <= x <= 100)\n", percent);
 	return -1;
     }
-    progress_userdata.limit = ((double)percent)/100;
+    progress_userdata.limit = ((double)percent) / 100;
 
     zip_register_cancel_callback_with_state(za, cancel_callback, NULL, NULL);
 
@@ -206,10 +206,10 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 		left = ZIP_MIN(fragment_size, (size_t)st.st_size - i * fragment_size);
 		if ((fragments[i].data = malloc(left)) == NULL) {
 #ifndef __clang_analyzer__
-                    /* fragments is initialized up to i - 1*/
+		    /* fragments is initialized up to i - 1*/
 		    while (--i > 0) {
 			free(fragments[i].data);
-                    }
+		    }
 #endif
 		    free(fragments);
 		    fclose(fp);
@@ -219,7 +219,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 		fragments[i].length = left;
 		if (fread(fragments[i].data, left, 1, fp) < 1) {
 #ifndef __clang_analyzer__
-                    /* fragments is initialized up to i - 1*/
+		    /* fragments is initialized up to i - 1*/
 		    while (--i > 0) {
 			free(fragments[i].data);
 		    }
@@ -239,7 +239,7 @@ read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t 
 		fclose(fp);
 		return NULL;
 	    }
-            free(fragments);
+	    free(fragments);
 	}
 	fclose(fp);
     }

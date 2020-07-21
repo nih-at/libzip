@@ -49,7 +49,8 @@ struct ctx {
     ZSTD_inBuffer in;
 };
 
-static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
+static zip_uint64_t
+maximum_compressed_size(zip_uint64_t uncompressed_size) {
     return ZSTD_compressBound(uncompressed_size);
 }
 

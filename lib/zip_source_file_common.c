@@ -134,24 +134,24 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 
     zip_source_file_stat_init(&sb);
     if (!ops->stat(ctx, &sb)) {
-        _zip_error_copy(error, &ctx->error);
-        free(ctx->fname);
-        free(ctx);
-        return NULL;
+	_zip_error_copy(error, &ctx->error);
+	free(ctx->fname);
+	free(ctx);
+	return NULL;
     }
 
     if (!sb.exists) {
-        if (ctx->fname && ctx->start == 0 && ctx->len == 0 && ops->write != NULL) {
-            ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
-            /* zip_open_from_source checks for this to detect non-existing files */
-            zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
-        }
-        else {
-            zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
-            free(ctx->fname);
-            free(ctx);
-            return NULL;
-        }
+	if (ctx->fname && ctx->start == 0 && ctx->len == 0 && ops->write != NULL) {
+	    ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
+	    /* zip_open_from_source checks for this to detect non-existing files */
+	    zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
+	}
+	else {
+	    zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
+	    free(ctx->fname);
+	    free(ctx);
+	    return NULL;
+	}
     }
     else {
 	if ((ctx->st.valid & ZIP_STAT_MTIME) == 0) {

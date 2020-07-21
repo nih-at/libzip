@@ -36,19 +36,19 @@
 #include "config.h"
 
 #ifdef HAVE_CLONEFILE
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/attr.h>
 #include <sys/mount.h>
 #include <sys/param.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 #elif defined(HAVE_FICLONERANGE)
-#include <linux/fs.h>
-#include <sys/ioctl.h>
 #include <errno.h>
+#include <linux/fs.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 #endif
 
