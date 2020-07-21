@@ -1,3 +1,8 @@
+1.8.0 [2020-xx-xx]
+==================
+
+* Add support for zstd (Zstandard) compression.
+
 1.7.3 [2020-07-15]
 ==================
 
