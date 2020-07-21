@@ -31,11 +31,15 @@ static int zin_close(int argc, char *argv[]);
 	fragment_size = strtoull(optarg, NULL, 10); \
 	break;
 
+/* clang-format off */
+
 #define DISPATCH_REGRESS \
     {"add_nul", 2, "name length", "add NUL bytes", add_nul}, \
     {"cancel", 1, "limit", "cancel writing archive when limit% have been written (calls print_progress)", cancel}, \
     {"unchange_all", 0, "", "revert all changes", unchange_all}, \
     { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
+
+/* clang-format on */
 
 
 zip_t *ziptool_open(const char *archive, int flags, zip_error_t *error, zip_uint64_t offset, zip_uint64_t len);

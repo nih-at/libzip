@@ -38,6 +38,8 @@ static HANDLE __stdcall utf16_create_file(const char *name, DWORD access, DWORD 
 static void utf16_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 static char *utf16_strdup(const char *string);
 
+/* clang-format off */
+
 zip_win32_file_operations_t ops_utf16 = {
     utf16_allocate_tempname,
     utf16_create_file,
@@ -49,6 +51,8 @@ zip_win32_file_operations_t ops_utf16 = {
     SetFileAttributesW,
     utf16_strdup
 };
+
+/* clang-format on */
 
 ZIP_EXTERN zip_source_t *
 zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64_t len) {

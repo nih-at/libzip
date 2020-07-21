@@ -35,6 +35,7 @@
 */
 
 #include "config.h"
+
 #include "compat.h"
 
 #ifdef ZIP_ALLOCATE_BUFFER

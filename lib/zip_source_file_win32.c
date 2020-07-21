@@ -37,6 +37,8 @@ static bool _zip_win32_op_stat(zip_source_file_context_t *ctx, zip_source_file_s
 
 static bool _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HANDLE h);
 
+/* clang-format off */
+
 static zip_source_file_operations_t ops_win32_read = {
     _zip_win32_op_close,
     NULL,
@@ -53,6 +55,7 @@ static zip_source_file_operations_t ops_win32_read = {
     NULL
 };
 
+/* clang-format on */
 
 ZIP_EXTERN zip_source_t *
 zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len) {
