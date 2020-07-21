@@ -225,7 +225,7 @@ string(REPLACE ";" "\\;" path "${path}")
 set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
 foreach(CASE IN LISTS EXTRA_TESTS)
-  add_test(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
+  add_test(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest -v --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
   set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
   set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
 endforeach()
