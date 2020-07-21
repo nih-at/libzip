@@ -49,39 +49,39 @@ _zip_unchange(zip_t *za, zip_uint64_t idx, int allow_duplicates) {
     const char *orig_name, *changed_name;
 
     if (idx >= za->nentry) {
-	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return -1;
+        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+        return -1;
     }
 
     if (!allow_duplicates && za->entry[idx].changes && (za->entry[idx].changes->changed & ZIP_DIRENT_FILENAME)) {
-	if (za->entry[idx].orig != NULL) {
-	    if ((orig_name = _zip_get_name(za, idx, ZIP_FL_UNCHANGED, &za->error)) == NULL) {
-		return -1;
-	    }
+        if (za->entry[idx].orig != NULL) {
+            if ((orig_name = _zip_get_name(za, idx, ZIP_FL_UNCHANGED, &za->error)) == NULL) {
+                return -1;
+            }
 
-	    i = _zip_name_locate(za, orig_name, 0, NULL);
-	    if (i >= 0 && (zip_uint64_t)i != idx) {
-		zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
-		return -1;
-	    }
-	}
-	else {
-	    orig_name = NULL;
-	}
+            i = _zip_name_locate(za, orig_name, 0, NULL);
+            if (i >= 0 && (zip_uint64_t)i != idx) {
+                zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
+                return -1;
+            }
+        }
+        else {
+            orig_name = NULL;
+        }
 
-	if ((changed_name = _zip_get_name(za, idx, 0, &za->error)) == NULL) {
-	    return -1;
-	}
+        if ((changed_name = _zip_get_name(za, idx, 0, &za->error)) == NULL) {
+            return -1;
+        }
 
-	if (orig_name) {
-	    if (_zip_hash_add(za->names, (const zip_uint8_t *)orig_name, idx, 0, &za->error) == false) {
-		return -1;
-	    }
-	}
-	if (_zip_hash_delete(za->names, (const zip_uint8_t *)changed_name, &za->error) == false) {
-	    _zip_hash_delete(za->names, (const zip_uint8_t *)orig_name, NULL);
-	    return -1;
-	}
+        if (orig_name) {
+            if (_zip_hash_add(za->names, (const zip_uint8_t *)orig_name, idx, 0, &za->error) == false) {
+                return -1;
+            }
+        }
+        if (_zip_hash_delete(za->names, (const zip_uint8_t *)changed_name, &za->error) == false) {
+            _zip_hash_delete(za->names, (const zip_uint8_t *)orig_name, NULL);
+            return -1;
+        }
     }
 
     _zip_dirent_free(za->entry[idx].changes);

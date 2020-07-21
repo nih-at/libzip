@@ -47,13 +47,13 @@ _zip_new(zip_error_t *error) {
 
     za = (zip_t *)malloc(sizeof(struct zip));
     if (!za) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     if ((za->names = _zip_hash_new(error)) == NULL) {
-	free(za);
-	return NULL;
+        free(za);
+        return NULL;
     }
 
     za->src = NULL;

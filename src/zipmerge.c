@@ -97,43 +97,43 @@ main(int argc, char *argv[]) {
     name_flags = 0;
 
     while ((c = getopt(argc, argv, OPTIONS)) != -1) {
-	switch (c) {
-	case 'D':
-	    name_flags |= ZIP_FL_NODIR;
-	    break;
-	case 'i':
-	    confirm &= ~CONFIRM_ALL_YES;
-	    break;
-	case 'I':
-	    name_flags |= ZIP_FL_NOCASE;
-	    break;
-	case 's':
-	    confirm &= ~CONFIRM_SAME_NO;
-	    confirm |= CONFIRM_SAME_YES;
-	    break;
-	case 'S':
-	    confirm &= ~CONFIRM_SAME_YES;
-	    confirm |= CONFIRM_SAME_NO;
-	    break;
+        switch (c) {
+        case 'D':
+            name_flags |= ZIP_FL_NODIR;
+            break;
+        case 'i':
+            confirm &= ~CONFIRM_ALL_YES;
+            break;
+        case 'I':
+            name_flags |= ZIP_FL_NOCASE;
+            break;
+        case 's':
+            confirm &= ~CONFIRM_SAME_NO;
+            confirm |= CONFIRM_SAME_YES;
+            break;
+        case 'S':
+            confirm &= ~CONFIRM_SAME_YES;
+            confirm |= CONFIRM_SAME_NO;
+            break;
 
-	case 'h':
-	    fputs(help_head, stdout);
-	    printf(USAGE, progname);
-	    fputs(help, stdout);
-	    exit(0);
-	case 'V':
-	    fputs(version_string, stdout);
-	    exit(0);
+        case 'h':
+            fputs(help_head, stdout);
+            printf(USAGE, progname);
+            fputs(help, stdout);
+            exit(0);
+        case 'V':
+            fputs(version_string, stdout);
+            exit(0);
 
-	default:
-	    fprintf(stderr, USAGE, progname);
-	    exit(2);
-	}
+        default:
+            fprintf(stderr, USAGE, progname);
+            exit(2);
+        }
     }
 
     if (argc < optind + 2) {
-	fprintf(stderr, USAGE, progname);
-	exit(2);
+        fprintf(stderr, USAGE, progname);
+        exit(2);
     }
 
     tname = argv[optind++];
@@ -141,30 +141,30 @@ main(int argc, char *argv[]) {
 
     n = (unsigned int)(argc - optind);
     if ((zs = (zip_t **)malloc(sizeof(zs[0]) * n)) == NULL) {
-	fprintf(stderr, "%s: out of memory\n", progname);
-	exit(1);
+        fprintf(stderr, "%s: out of memory\n", progname);
+        exit(1);
     }
 
     if ((za = zip_open(tname, ZIP_CREATE, &err)) == NULL) {
-	zip_error_t error;
-	zip_error_init_with_code(&error, err);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", progname, tname, zip_error_strerror(&error));
-	zip_error_fini(&error);
-	exit(1);
+        zip_error_t error;
+        zip_error_init_with_code(&error, err);
+        fprintf(stderr, "%s: can't open zip archive '%s': %s\n", progname, tname, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        exit(1);
     }
 
     for (i = 0; i < n; i++) {
-	if ((zs[i] = merge_zip(za, tname, argv[i])) == NULL)
-	    exit(1);
+        if ((zs[i] = merge_zip(za, tname, argv[i])) == NULL)
+            exit(1);
     }
 
     if (zip_close(za) < 0) {
-	fprintf(stderr, "%s: cannot write zip archive '%s': %s\n", progname, tname, zip_strerror(za));
-	exit(1);
+        fprintf(stderr, "%s: cannot write zip archive '%s': %s\n", progname, tname, zip_strerror(za));
+        exit(1);
     }
 
     for (i = 0; i < n; i++)
-	zip_close(zs[i]);
+        zip_close(zs[i]);
 
     exit(0);
 }
@@ -176,38 +176,38 @@ confirm_replace(zip_t *za, const char *tname, zip_uint64_t it, zip_t *zs, const 
     struct zip_stat st, ss;
 
     if (confirm & CONFIRM_ALL_YES)
-	return 1;
+        return 1;
     else if (confirm & CONFIRM_ALL_NO)
-	return 0;
+        return 0;
 
     if (zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st) < 0) {
-	fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, it, tname, zip_strerror(za));
-	return -1;
+        fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, it, tname, zip_strerror(za));
+        return -1;
     }
     if (zip_stat_index(zs, is, 0, &ss) < 0) {
-	fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, is, sname, zip_strerror(zs));
-	return -1;
+        fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, is, sname, zip_strerror(zs));
+        return -1;
     }
 
     if (st.size == ss.size && st.crc == ss.crc) {
-	if (confirm & CONFIRM_SAME_YES)
-	    return 1;
-	else if (confirm & CONFIRM_SAME_NO)
-	    return 0;
+        if (confirm & CONFIRM_SAME_YES)
+            return 1;
+        else if (confirm & CONFIRM_SAME_NO)
+            return 0;
     }
 
     printf("replace '%s' (%" PRIu64 " / %08x) in `%s'\n"
-	   "   with '%s' (%" PRIu64 " / %08x) from `%s'? ",
-	   st.name, st.size, st.crc, tname, ss.name, ss.size, ss.crc, sname);
+           "   with '%s' (%" PRIu64 " / %08x) from `%s'? ",
+           st.name, st.size, st.crc, tname, ss.name, ss.size, ss.crc, sname);
     fflush(stdout);
 
     if (fgets(line, sizeof(line), stdin) == NULL) {
-	fprintf(stderr, "%s: read error from stdin: %s\n", progname, strerror(errno));
-	return -1;
+        fprintf(stderr, "%s: read error from stdin: %s\n", progname, strerror(errno));
+        return -1;
     }
 
     if (tolower((unsigned char)line[0]) == 'y')
-	return 1;
+        return 1;
 
     return 0;
 }
@@ -223,56 +223,56 @@ merge_zip(zip_t *za, const char *tname, const char *sname) {
     const char *fname;
 
     if ((zs = zip_open(sname, 0, &err)) == NULL) {
-	zip_error_t error;
-	zip_error_init_with_code(&error, err);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", progname, sname, zip_error_strerror(&error));
-	zip_error_fini(&error);
-	return NULL;
+        zip_error_t error;
+        zip_error_init_with_code(&error, err);
+        fprintf(stderr, "%s: can't open zip archive '%s': %s\n", progname, sname, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return NULL;
     }
 
     ret = zip_get_num_entries(zs, 0);
     if (ret < 0) {
-	fprintf(stderr, "%s: cannot get number of entries for '%s': %s\n", progname, sname, zip_strerror(za));
-	return NULL;
+        fprintf(stderr, "%s: cannot get number of entries for '%s': %s\n", progname, sname, zip_strerror(za));
+        return NULL;
     }
     for (i = 0; i < (zip_uint64_t)ret; i++) {
-	fname = zip_get_name(zs, i, 0);
+        fname = zip_get_name(zs, i, 0);
 
-	if ((idx = zip_name_locate(za, fname, name_flags)) >= 0) {
-	    switch (confirm_replace(za, tname, (zip_uint64_t)idx, zs, sname, i)) {
-	    case 0:
-		break;
+        if ((idx = zip_name_locate(za, fname, name_flags)) >= 0) {
+            switch (confirm_replace(za, tname, (zip_uint64_t)idx, zs, sname, i)) {
+            case 0:
+                break;
 
-	    case 1:
-		if ((source = zip_source_zip(za, zs, i, 0, 0, 0)) == NULL || zip_replace(za, (zip_uint64_t)idx, source) < 0) {
-		    zip_source_free(source);
-		    fprintf(stderr, "%s: cannot replace '%s' in `%s': %s\n", progname, fname, tname, zip_strerror(za));
-		    zip_close(zs);
-		    return NULL;
-		}
-		break;
+            case 1:
+                if ((source = zip_source_zip(za, zs, i, 0, 0, 0)) == NULL || zip_replace(za, (zip_uint64_t)idx, source) < 0) {
+                    zip_source_free(source);
+                    fprintf(stderr, "%s: cannot replace '%s' in `%s': %s\n", progname, fname, tname, zip_strerror(za));
+                    zip_close(zs);
+                    return NULL;
+                }
+                break;
 
-	    case -1:
-		zip_close(zs);
-		return NULL;
+            case -1:
+                zip_close(zs);
+                return NULL;
 
-	    default:
-		fprintf(stderr,
-			"%s: internal error: "
-			"unexpected return code from confirm (%d)\n",
-			progname, err);
-		zip_close(zs);
-		return NULL;
-	    }
-	}
-	else {
-	    if ((source = zip_source_zip(za, zs, i, 0, 0, 0)) == NULL || zip_add(za, fname, source) < 0) {
-		zip_source_free(source);
-		fprintf(stderr, "%s: cannot add '%s' to `%s': %s\n", progname, fname, tname, zip_strerror(za));
-		zip_close(zs);
-		return NULL;
-	    }
-	}
+            default:
+                fprintf(stderr,
+                        "%s: internal error: "
+                        "unexpected return code from confirm (%d)\n",
+                        progname, err);
+                zip_close(zs);
+                return NULL;
+            }
+        }
+        else {
+            if ((source = zip_source_zip(za, zs, i, 0, 0, 0)) == NULL || zip_add(za, fname, source) < 0) {
+                zip_source_free(source);
+                fprintf(stderr, "%s: cannot add '%s' to `%s': %s\n", progname, fname, tname, zip_strerror(za));
+                zip_close(zs);
+                return NULL;
+            }
+        }
     }
 
     return zs;

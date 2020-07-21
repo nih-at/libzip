@@ -57,7 +57,7 @@ zip_win32_file_operations_t ops_utf16 = {
 ZIP_EXTERN zip_source_t *
 zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
-	return NULL;
+        return NULL;
 
     return zip_source_win32w_create(fname, start, len, &za->error);
 }
@@ -66,8 +66,8 @@ zip_source_win32w(zip_t *za, const wchar_t *fname, zip_uint64_t start, zip_int64
 ZIP_EXTERN zip_source_t *
 zip_source_win32w_create(const wchar_t *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (fname == NULL || length < -1) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
 

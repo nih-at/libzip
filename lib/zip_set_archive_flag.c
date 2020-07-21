@@ -40,23 +40,23 @@ zip_set_archive_flag(zip_t *za, zip_flags_t flag, int value) {
     unsigned int new_flags;
 
     if (value)
-	new_flags = za->ch_flags | flag;
+        new_flags = za->ch_flags | flag;
     else
-	new_flags = za->ch_flags & ~flag;
+        new_flags = za->ch_flags & ~flag;
 
     if (new_flags == za->ch_flags)
-	return 0;
+        return 0;
 
     if (ZIP_IS_RDONLY(za)) {
-	zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-	return -1;
+        zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
+        return -1;
     }
 
     if ((flag & ZIP_AFL_RDONLY) && value && (za->ch_flags & ZIP_AFL_RDONLY) == 0) {
-	if (_zip_changed(za, NULL)) {
-	    zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
-	    return -1;
-	}
+        if (_zip_changed(za, NULL)) {
+            zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
+            return -1;
+        }
     }
 
     za->ch_flags = new_flags;

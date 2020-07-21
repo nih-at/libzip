@@ -53,11 +53,11 @@ zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...) {
 
     va_start(ap, cmd0);
     for (;;) {
-	int cmd = va_arg(ap, int);
-	if (cmd < 0) {
-	    break;
-	}
-	bitmap |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd);
+        int cmd = va_arg(ap, int);
+        if (cmd < 0) {
+            break;
+        }
+        bitmap |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd);
     }
     va_end(ap);
 

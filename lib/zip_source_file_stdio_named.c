@@ -89,7 +89,7 @@ static zip_source_file_operations_t ops_stdio_named = {
 ZIP_EXTERN zip_source_t *
 zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
-	return NULL;
+        return NULL;
 
     return zip_source_file_create(fname, start, len, &za->error);
 }
@@ -98,8 +98,8 @@ zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t le
 ZIP_EXTERN zip_source_t *
 zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (fname == NULL || length < -1) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
     return zip_source_file_common_new(fname, NULL, start, length, NULL, &ops_stdio_named, NULL, error);
@@ -109,12 +109,12 @@ zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length
 static zip_int64_t
 _zip_stdio_op_commit_write(zip_source_file_context_t *ctx) {
     if (fclose(ctx->fout) < 0) {
-	zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
+        return -1;
     }
     if (rename(ctx->tmpname, ctx->fname) < 0) {
-	zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+        return -1;
     }
 
     return 0;
@@ -130,31 +130,31 @@ _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx) {
     struct stat st;
 
     if ((temp = (char *)malloc(strlen(ctx->fname) + 8)) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
+        return -1;
     }
 
     if (stat(ctx->fname, &st) == 0) {
-	mode = st.st_mode;
+        mode = st.st_mode;
     }
     else {
-	mode = -1;
+        mode = -1;
     }
 
     sprintf(temp, "%s.XXXXXX", ctx->fname);
 
     if ((tfd = _zip_mkstempm(temp, mode)) == -1) {
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	free(temp);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        free(temp);
+        return -1;
     }
 
     if ((tfp = fdopen(tfd, "r+b")) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	close(tfd);
-	(void)remove(temp);
-	free(temp);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        close(tfd);
+        (void)remove(temp);
+        free(temp);
+        return -1;
     }
 
     ctx->fout = tfp;
@@ -170,13 +170,13 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
     FILE *tfp;
 
     if (offset > ZIP_OFF_MAX) {
-	zip_error_set(&ctx->error, ZIP_ER_SEEK, E2BIG);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_SEEK, E2BIG);
+        return -1;
     }
 
     if ((temp = (char *)malloc(strlen(ctx->fname) + 8)) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
+        return -1;
     }
     sprintf(temp, "%s.XXXXXX", ctx->fname);
 
@@ -184,77 +184,77 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
 #ifndef __clang_analyzer__
     /* we can't use mkstemp, since clonefile insists on creating the file */
     if (mktemp(temp) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	free(temp);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        free(temp);
+        return -1;
     }
 #endif
 
     if (clonefile(ctx->fname, temp, 0) < 0) {
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	free(temp);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        free(temp);
+        return -1;
     }
     if ((tfp = _zip_fopen_close_on_exec(temp, true)) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	(void)remove(temp);
-	free(temp);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        (void)remove(temp);
+        free(temp);
+        return -1;
     }
 #else
     {
-	int fd;
-	struct file_clone_range range;
-	struct stat st;
+        int fd;
+        struct file_clone_range range;
+        struct stat st;
 
-	if (fstat(fileno(ctx->f), &st) < 0) {
-	    zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	    free(temp);
-	    return -1;
-	}
+        if (fstat(fileno(ctx->f), &st) < 0) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            free(temp);
+            return -1;
+        }
 
-	if ((fd = mkstemp(temp)) < 0) {
-	    zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	    free(temp);
-	    return -1;
-	}
+        if ((fd = mkstemp(temp)) < 0) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            free(temp);
+            return -1;
+        }
 
-	range.src_fd = fileno(ctx->f);
-	range.src_offset = 0;
-	range.src_length = ((offset + st.st_blksize - 1) / st.st_blksize) * st.st_blksize;
-	if (range.src_length > st.st_size) {
-	    range.src_length = 0;
-	}
-	range.dest_offset = 0;
-	if (ioctl(fd, FICLONERANGE, &range) < 0) {
-	    zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	    (void)close(fd);
-	    (void)remove(temp);
-	    free(temp);
-	    return -1;
-	}
+        range.src_fd = fileno(ctx->f);
+        range.src_offset = 0;
+        range.src_length = ((offset + st.st_blksize - 1) / st.st_blksize) * st.st_blksize;
+        if (range.src_length > st.st_size) {
+            range.src_length = 0;
+        }
+        range.dest_offset = 0;
+        if (ioctl(fd, FICLONERANGE, &range) < 0) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            (void)close(fd);
+            (void)remove(temp);
+            free(temp);
+            return -1;
+        }
 
-	if ((tfp = fdopen(fd, "r+b")) == NULL) {
-	    zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
-	    (void)close(fd);
-	    (void)remove(temp);
-	    free(temp);
-	    return -1;
-	}
+        if ((tfp = fdopen(fd, "r+b")) == NULL) {
+            zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+            (void)close(fd);
+            (void)remove(temp);
+            free(temp);
+            return -1;
+        }
     }
 #endif
 
     if (ftruncate(fileno(tfp), (off_t)offset) < 0) {
-	(void)fclose(tfp);
-	(void)remove(temp);
-	free(temp);
-	return -1;
+        (void)fclose(tfp);
+        (void)remove(temp);
+        free(temp);
+        return -1;
     }
     if (fseeko(tfp, (off_t)offset, SEEK_SET) < 0) {
-	(void)fclose(tfp);
-	(void)remove(temp);
-	free(temp);
-	zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        (void)fclose(tfp);
+        (void)remove(temp);
+        free(temp);
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
     }
 
     ctx->fout = tfp;
@@ -267,8 +267,8 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
 static bool
 _zip_stdio_op_open(zip_source_file_context_t *ctx) {
     if ((ctx->f = _zip_fopen_close_on_exec(ctx->fname, false)) == NULL) {
-	zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
-	return false;
+        zip_error_set(&ctx->error, ZIP_ER_OPEN, errno);
+        return false;
     }
     return true;
 }
@@ -277,8 +277,8 @@ _zip_stdio_op_open(zip_source_file_context_t *ctx) {
 static zip_int64_t
 _zip_stdio_op_remove(zip_source_file_context_t *ctx) {
     if (remove(ctx->fname) < 0) {
-	zip_error_set(&ctx->error, ZIP_ER_REMOVE, errno);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_REMOVE, errno);
+        return -1;
     }
     return 0;
 }
@@ -287,7 +287,7 @@ _zip_stdio_op_remove(zip_source_file_context_t *ctx) {
 static void
 _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx) {
     if (ctx->fout) {
-	fclose(ctx->fout);
+        fclose(ctx->fout);
     }
     (void)remove(ctx->tmpname);
 }
@@ -305,8 +305,8 @@ _zip_stdio_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64
     clearerr((FILE *)ctx->fout);
     ret = fwrite(data, 1, len, (FILE *)ctx->fout);
     if (ret != len || ferror((FILE *)ctx->fout)) {
-	zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
-	return -1;
+        zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
+        return -1;
     }
 
     return (zip_int64_t)ret;

@@ -47,13 +47,13 @@ ZIP_EXTERN bool
 zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     HCRYPTPROV hprov;
     if (!CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT | CRYPT_SILENT)) {
-	return false;
+        return false;
     }
     if (!CryptGenRandom(hprov, length, buffer)) {
-	return false;
+        return false;
     }
     if (!CryptReleaseContext(hprov, 0)) {
-	return false;
+        return false;
     }
     return true;
 }
@@ -69,11 +69,11 @@ zip_random_uint32(void) {
     zip_uint32_t value;
 
     if (zip_secure_random((zip_uint8_t *)&value, sizeof(value))) {
-	return value;
+        return value;
     }
 
     if (!seeded) {
-	srand((unsigned int)time(NULL));
+        srand((unsigned int)time(NULL));
     }
 
     return (zip_uint32_t)rand();

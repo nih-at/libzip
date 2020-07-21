@@ -60,47 +60,47 @@ main(int argc, char *argv[]) {
     flags = 0;
 
     while ((c = getopt(argc, argv, "cent")) != -1) {
-	switch (c) {
-	case 'c':
-	    flags |= ZIP_CHECKCONS;
-	    break;
-	case 'e':
-	    flags |= ZIP_EXCL;
-	    break;
-	case 'n':
-	    flags |= ZIP_CREATE;
-	    break;
-	case 't':
-	    flags |= ZIP_TRUNCATE;
-	    break;
+        switch (c) {
+        case 'c':
+            flags |= ZIP_CHECKCONS;
+            break;
+        case 'e':
+            flags |= ZIP_EXCL;
+            break;
+        case 'n':
+            flags |= ZIP_CREATE;
+            break;
+        case 't':
+            flags |= ZIP_TRUNCATE;
+            break;
 
-	default:
-	    fprintf(stderr, TRYOPEN_USAGE, argv[0]);
-	    return 1;
-	}
+        default:
+            fprintf(stderr, TRYOPEN_USAGE, argv[0]);
+            return 1;
+        }
     }
 
     error = 0;
     for (; optind < argc; optind++) {
-	fname = argv[optind];
-	errno = 0;
+        fname = argv[optind];
+        errno = 0;
 
-	if ((z = zip_open(fname, flags, &ze)) != NULL) {
-	    count = zip_get_num_entries(z, 0);
-	    printf("opening '%s' succeeded, %" PRIu64 " entries\n", fname, count);
-	    zip_close(z);
-	    continue;
-	}
+        if ((z = zip_open(fname, flags, &ze)) != NULL) {
+            count = zip_get_num_entries(z, 0);
+            printf("opening '%s' succeeded, %" PRIu64 " entries\n", fname, count);
+            zip_close(z);
+            continue;
+        }
 
-	printf("opening '%s' returned error %d", fname, ze);
-	if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
-	    printf("/%d", errno);
-	printf("\n");
-	error++;
+        printf("opening '%s' returned error %d", fname, ze);
+        if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
+            printf("/%d", errno);
+        printf("\n");
+        error++;
     }
 
     if (error > 0)
-	fprintf(stderr, "%d errors\n", error);
+        fprintf(stderr, "%d errors\n", error);
 
     return error ? 1 : 0;
 }

@@ -53,43 +53,43 @@ main(int argc, char *argv[]) {
     prg = argv[0];
 
     if (argc != 3) {
-	fprintf(stderr, "usage: %s archive file\n", prg);
-	return 1;
+        fprintf(stderr, "usage: %s archive file\n", prg);
+        return 1;
     }
 
     archive = argv[1];
     file = argv[2];
 
     if ((za = zip_open(archive, ZIP_CREATE, &err)) == NULL) {
-	zip_error_t error;
-	zip_error_init_with_code(&error, err);
-	fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
-	zip_error_fini(&error);
-	return 1;
+        zip_error_t error;
+        zip_error_init_with_code(&error, err);
+        fprintf(stderr, "%s: can't open zip archive '%s': %s\n", prg, archive, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return 1;
     }
 
     if ((fp = fopen(file, "rb")) == NULL) {
-	fprintf(stderr, "%s: can't open input file '%s': %s\n", prg, file, strerror(errno));
-	return 1;
+        fprintf(stderr, "%s: can't open input file '%s': %s\n", prg, file, strerror(errno));
+        return 1;
     }
 
     if ((zs = zip_source_filep(za, fp, 0, -1)) == NULL) {
-	fprintf(stderr, "%s: error creating file source for '%s': %s\n", prg, file, zip_strerror(za));
-	return 1;
+        fprintf(stderr, "%s: error creating file source for '%s': %s\n", prg, file, zip_strerror(za));
+        return 1;
     }
 
     if ((name = strrchr(file, '/')) == NULL)
-	name = file;
+        name = file;
 
     if (zip_add(za, name, zs) == -1) {
-	zip_source_free(zs);
-	fprintf(stderr, "%s: can't add file '%s': %s\n", prg, file, zip_strerror(za));
-	return 1;
+        zip_source_free(zs);
+        fprintf(stderr, "%s: can't add file '%s': %s\n", prg, file, zip_strerror(za));
+        return 1;
     }
 
     if (zip_close(za) == -1) {
-	fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(za));
-	return 1;
+        fprintf(stderr, "%s: can't close zip archive '%s': %s\n", prg, archive, zip_strerror(za));
+        return 1;
     }
 
     return 0;

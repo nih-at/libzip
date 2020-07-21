@@ -42,8 +42,8 @@ zip_get_file_comment(zip_t *za, zip_uint64_t idx, int *lenp, int flags) {
     const char *s;
 
     if ((s = zip_file_get_comment(za, idx, &len, (zip_flags_t)flags)) != NULL) {
-	if (lenp)
-	    *lenp = (int)len;
+        if (lenp)
+            *lenp = (int)len;
     }
 
     return s;

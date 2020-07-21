@@ -8,5 +8,5 @@ BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true
 AlignEscapedNewlines: Left
-UseTab: ForContinuationAndIndentation
+UseTab: Never
 #PPDirectiveIndentStyle: AfterHash

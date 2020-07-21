@@ -46,11 +46,11 @@ zip_discard(zip_t *za) {
     zip_uint64_t i;
 
     if (za == NULL)
-	return;
+        return;
 
     if (za->src) {
-	zip_source_close(za->src);
-	zip_source_free(za->src);
+        zip_source_close(za->src);
+        zip_source_free(za->src);
     }
 
     free(za->default_password);
@@ -60,13 +60,13 @@ zip_discard(zip_t *za) {
     _zip_hash_free(za->names);
 
     if (za->entry) {
-	for (i = 0; i < za->nentry; i++)
-	    _zip_entry_finalize(za->entry + i);
-	free(za->entry);
+        for (i = 0; i < za->nentry; i++)
+            _zip_entry_finalize(za->entry + i);
+        free(za->entry);
     }
 
     for (i = 0; i < za->nopen_source; i++) {
-	_zip_source_invalidate(za->open_source[i]);
+        _zip_source_invalidate(za->open_source[i]);
     }
     free(za->open_source);
 

@@ -40,7 +40,7 @@
 ZIP_EXTERN zip_source_t *
 zip_source_function(zip_t *za, zip_source_callback zcb, void *ud) {
     if (za == NULL) {
-	return NULL;
+        return NULL;
     }
 
     return zip_source_function_create(zcb, ud, &za->error);
@@ -52,14 +52,14 @@ zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error
     zip_source_t *zs;
 
     if ((zs = _zip_source_new(error)) == NULL)
-	return NULL;
+        return NULL;
 
     zs->cb.f = zcb;
     zs->ud = ud;
 
     zs->supports = zcb(ud, NULL, 0, ZIP_SOURCE_SUPPORTS);
     if (zs->supports < 0) {
-	zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
+        zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
     }
 
     return zs;
@@ -77,8 +77,8 @@ _zip_source_new(zip_error_t *error) {
     zip_source_t *src;
 
     if ((src = (zip_source_t *)malloc(sizeof(*src))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     src->src = NULL;

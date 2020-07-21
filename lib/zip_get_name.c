@@ -49,10 +49,10 @@ _zip_get_name(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *error
     const zip_uint8_t *str;
 
     if ((de = _zip_get_dirent(za, idx, flags, error)) == NULL)
-	return NULL;
+        return NULL;
 
     if ((str = _zip_string_get(de->filename, NULL, flags, error)) == NULL)
-	return NULL;
+        return NULL;
 
     return (const char *)str;
 }

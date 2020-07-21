@@ -68,12 +68,12 @@ zip_error_init_with_code(zip_error_t *error, int ze) {
     error->zip_err = ze;
     switch (zip_error_system_type(error)) {
     case ZIP_ET_SYS:
-	error->sys_err = errno;
-	break;
+        error->sys_err = errno;
+        break;
 
     default:
-	error->sys_err = 0;
-	break;
+        error->sys_err = 0;
+        break;
     }
 }
 
@@ -81,7 +81,7 @@ zip_error_init_with_code(zip_error_t *error, int ze) {
 ZIP_EXTERN int
 zip_error_system_type(const zip_error_t *error) {
     if (error->zip_err < 0 || error->zip_err >= _zip_nerr_str)
-	return ZIP_ET_NONE;
+        return ZIP_ET_NONE;
 
     return _zip_err_type[error->zip_err];
 }
@@ -90,7 +90,7 @@ zip_error_system_type(const zip_error_t *error) {
 void
 _zip_error_clear(zip_error_t *err) {
     if (err == NULL)
-	return;
+        return;
 
     err->zip_err = ZIP_ER_OK;
     err->sys_err = 0;
@@ -100,7 +100,7 @@ _zip_error_clear(zip_error_t *err) {
 void
 _zip_error_copy(zip_error_t *dst, const zip_error_t *src) {
     if (dst == NULL) {
-	return;
+        return;
     }
 
     dst->zip_err = src->zip_err;
@@ -111,12 +111,12 @@ _zip_error_copy(zip_error_t *dst, const zip_error_t *src) {
 void
 _zip_error_get(const zip_error_t *err, int *zep, int *sep) {
     if (zep)
-	*zep = err->zip_err;
+        *zep = err->zip_err;
     if (sep) {
-	if (zip_error_system_type(err) != ZIP_ET_NONE)
-	    *sep = err->sys_err;
-	else
-	    *sep = 0;
+        if (zip_error_system_type(err) != ZIP_ET_NONE)
+            *sep = err->sys_err;
+        else
+            *sep = 0;
     }
 }
 
@@ -124,8 +124,8 @@ _zip_error_get(const zip_error_t *err, int *zep, int *sep) {
 void
 zip_error_set(zip_error_t *err, int ze, int se) {
     if (err) {
-	err->zip_err = ze;
-	err->sys_err = se;
+        err->zip_err = ze;
+        err->sys_err = se;
     }
 }
 
@@ -141,7 +141,7 @@ zip_error_to_data(const zip_error_t *error, void *data, zip_uint64_t length) {
     int *e = (int *)data;
 
     if (length < sizeof(int) * 2) {
-	return -1;
+        return -1;
     }
 
     e[0] = zip_error_code_zip(error);

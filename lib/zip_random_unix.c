@@ -67,12 +67,12 @@ zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     int fd;
 
     if ((fd = open("/dev/urandom", O_RDONLY)) < 0) {
-	return false;
+        return false;
     }
 
     if (read(fd, buffer, length) != length) {
-	close(fd);
-	return false;
+        close(fd);
+        return false;
     }
 
     close(fd);
@@ -90,11 +90,11 @@ zip_random_uint32(void) {
     zip_uint32_t value;
 
     if (zip_secure_random((zip_uint8_t *)&value, sizeof(value))) {
-	return value;
+        return value;
     }
 
     if (!seeded) {
-	srandom((unsigned int)time(NULL));
+        srandom((unsigned int)time(NULL));
     }
 
     return (zip_uint32_t)random();

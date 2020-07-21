@@ -145,41 +145,41 @@ main(int argc, char *const argv[]) {
     verbose = 1;
 
     while ((c = getopt(argc, argv, OPTIONS)) != -1) {
-	switch (c) {
-	case 'i':
-	    ignore_case = 1;
-	    break;
-	case 'p':
-	    paranoid = 1;
-	    break;
-	case 'q':
-	    verbose = 0;
-	    break;
-	case 't':
-	    test_files = 1;
-	    break;
-	case 'v':
-	    verbose = 1;
-	    break;
+        switch (c) {
+        case 'i':
+            ignore_case = 1;
+            break;
+        case 'p':
+            paranoid = 1;
+            break;
+        case 'q':
+            verbose = 0;
+            break;
+        case 't':
+            test_files = 1;
+            break;
+        case 'v':
+            verbose = 1;
+            break;
 
-	case 'h':
-	    fputs(help_head, stdout);
-	    printf(USAGE, progname);
-	    fputs(help, stdout);
-	    exit(0);
-	case 'V':
-	    fputs(version_string, stdout);
-	    exit(0);
+        case 'h':
+            fputs(help_head, stdout);
+            printf(USAGE, progname);
+            fputs(help, stdout);
+            exit(0);
+        case 'V':
+            fputs(version_string, stdout);
+            exit(0);
 
-	default:
-	    fprintf(stderr, USAGE, progname);
-	    exit(2);
-	}
+        default:
+            fprintf(stderr, USAGE, progname);
+            exit(2);
+        }
     }
 
     if (argc != optind + 2) {
-	fprintf(stderr, USAGE, progname);
-	exit(2);
+        fprintf(stderr, USAGE, progname);
+        exit(2);
     }
 
     exit((compare_zip(argv + optind) == 0) ? 0 : 1);
@@ -195,29 +195,29 @@ compare_zip(char *const zn[]) {
     int res;
 
     for (i = 0; i < 2; i++) {
-	a[i].name = zn[i];
-	a[i].entry = NULL;
-	a[i].nentry = 0;
-	a[i].za = NULL;
-	a[i].comment = NULL;
-	a[i].comment_length = 0;
+        a[i].name = zn[i];
+        a[i].entry = NULL;
+        a[i].nentry = 0;
+        a[i].za = NULL;
+        a[i].comment = NULL;
+        a[i].comment_length = 0;
 
-	if (is_directory(zn[i])) {
+        if (is_directory(zn[i])) {
 #ifndef HAVE_FTS_H
-	    fprintf(stderr, "%s: reading directories not supported\n", progname);
-	    exit(2);
+            fprintf(stderr, "%s: reading directories not supported\n", progname);
+            exit(2);
 #else
-	    if (list_directory(zn[i], a + i) < 0)
-		exit(2);
-	    paranoid = 0; /* paranoid checks make no sense for directories, since they compare zip metadata */
+            if (list_directory(zn[i], a + i) < 0)
+                exit(2);
+            paranoid = 0; /* paranoid checks make no sense for directories, since they compare zip metadata */
 #endif
-	}
-	else {
-	    if (list_zip(zn[i], a + i) < 0)
-		exit(2);
-	}
-	if (a[i].nentry > 0)
-	    qsort(a[i].entry, a[i].nentry, sizeof(a[i].entry[0]), entry_cmp);
+        }
+        else {
+            if (list_zip(zn[i], a + i) < 0)
+                exit(2);
+        }
+        if (a[i].nentry > 0)
+            qsort(a[i].entry, a[i].nentry, sizeof(a[i].entry[0]), entry_cmp);
     }
 
     header_done = 0;
@@ -229,36 +229,36 @@ compare_zip(char *const zn[]) {
     res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]), entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print);
 
     if (paranoid) {
-	if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
-	    if (verbose) {
-		printf("--- archive comment (%zu)\n", a[0].comment_length);
-		printf("+++ archive comment (%zu)\n", a[1].comment_length);
-	    }
-	    res = 1;
-	}
+        if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
+            if (verbose) {
+                printf("--- archive comment (%zu)\n", a[0].comment_length);
+                printf("+++ archive comment (%zu)\n", a[1].comment_length);
+            }
+            res = 1;
+        }
     }
 
     for (i = 0; i < 2; i++) {
-	zip_uint64_t j;
+        zip_uint64_t j;
 
-	if (a[i].za) {
-	    zip_close(a[i].za);
-	}
-	for (j = 0; j < a[i].nentry; j++) {
-	    free(a[i].entry[j].name);
-	}
-	free(a[i].entry);
+        if (a[i].za) {
+            zip_close(a[i].za);
+        }
+        for (j = 0; j < a[i].nentry; j++) {
+            free(a[i].entry[j].name);
+        }
+        free(a[i].entry);
     }
 
     switch (res) {
     case 0:
-	exit(0);
+        exit(0);
 
     case 1:
-	exit(1);
+        exit(1);
 
     default:
-	exit(2);
+        exit(2);
     }
 }
 
@@ -272,18 +272,18 @@ compute_crc(const char *fname) {
 
 
     if ((f = fopen(fname, "rb")) == NULL) {
-	fprintf(stderr, "%s: can't open %s: %s\n", progname, fname, strerror(errno));
-	return -1;
+        fprintf(stderr, "%s: can't open %s: %s\n", progname, fname, strerror(errno));
+        return -1;
     }
 
     while ((n = fread(buffer, 1, sizeof(buffer), f)) > 0) {
-	crc = crc32(crc, buffer, (unsigned int)n);
+        crc = crc32(crc, buffer, (unsigned int)n);
     }
 
     if (ferror(f)) {
-	fprintf(stderr, "%s: read error on %s: %s\n", progname, fname, strerror(errno));
-	fclose(f);
-	return -1;
+        fprintf(stderr, "%s: read error on %s: %s\n", progname, fname, strerror(errno));
+        fclose(f);
+        return -1;
     }
 
     fclose(f);
@@ -298,7 +298,7 @@ is_directory(const char *name) {
     struct stat st;
 
     if (stat(name, &st) < 0)
-	return 0;
+        return 0;
 
     return S_ISDIR(st.st_mode);
 }
@@ -316,64 +316,64 @@ list_directory(const char *name, struct archive *a) {
 
 
     if ((fts = fts_open(names, FTS_NOCHDIR | FTS_LOGICAL, NULL)) == NULL) {
-	fprintf(stderr, "%s: can't open directory '%s': %s\n", progname, name, strerror(errno));
-	return -1;
+        fprintf(stderr, "%s: can't open directory '%s': %s\n", progname, name, strerror(errno));
+        return -1;
     }
     prefix_length = strlen(name) + 1;
 
     nalloc = 0;
 
     while ((ent = fts_read(fts))) {
-	zip_int64_t crc;
+        zip_int64_t crc;
 
-	switch (ent->fts_info) {
-	case FTS_D:
-	case FTS_DOT:
-	case FTS_DP:
-	case FTS_DEFAULT:
-	case FTS_SL:
-	case FTS_NSOK:
-	    break;
+        switch (ent->fts_info) {
+        case FTS_D:
+        case FTS_DOT:
+        case FTS_DP:
+        case FTS_DEFAULT:
+        case FTS_SL:
+        case FTS_NSOK:
+            break;
 
-	case FTS_DC:
-	case FTS_DNR:
-	case FTS_ERR:
-	case FTS_NS:
-	case FTS_SLNONE:
-	    /* TODO: error */
-	    fts_close(fts);
-	    return -1;
+        case FTS_DC:
+        case FTS_DNR:
+        case FTS_ERR:
+        case FTS_NS:
+        case FTS_SLNONE:
+            /* TODO: error */
+            fts_close(fts);
+            return -1;
 
-	case FTS_F:
-	    if (a->nentry >= nalloc) {
-		nalloc += 16;
-		if (nalloc > SIZE_MAX / sizeof(a->entry[0])) {
-		    fprintf(stderr, "%s: malloc failure\n", progname);
-		    exit(1);
-		}
-		a->entry = realloc(a->entry, sizeof(a->entry[0]) * nalloc);
-		if (a->entry == NULL) {
-		    fprintf(stderr, "%s: malloc failure\n", progname);
-		    exit(1);
-		}
-	    }
+        case FTS_F:
+            if (a->nentry >= nalloc) {
+                nalloc += 16;
+                if (nalloc > SIZE_MAX / sizeof(a->entry[0])) {
+                    fprintf(stderr, "%s: malloc failure\n", progname);
+                    exit(1);
+                }
+                a->entry = realloc(a->entry, sizeof(a->entry[0]) * nalloc);
+                if (a->entry == NULL) {
+                    fprintf(stderr, "%s: malloc failure\n", progname);
+                    exit(1);
+                }
+            }
 
-	    a->entry[a->nentry].name = strdup(ent->fts_path + prefix_length);
-	    a->entry[a->nentry].size = (zip_uint64_t)ent->fts_statp->st_size;
-	    if ((crc = compute_crc(ent->fts_accpath)) < 0) {
-		fts_close(fts);
-		return -1;
-	    }
+            a->entry[a->nentry].name = strdup(ent->fts_path + prefix_length);
+            a->entry[a->nentry].size = (zip_uint64_t)ent->fts_statp->st_size;
+            if ((crc = compute_crc(ent->fts_accpath)) < 0) {
+                fts_close(fts);
+                return -1;
+            }
 
-	    a->entry[a->nentry].crc = (zip_uint32_t)crc;
-	    a->nentry++;
-	    break;
-	}
+            a->entry[a->nentry].crc = (zip_uint32_t)crc;
+            a->nentry++;
+            break;
+        }
     }
 
     if (fts_close(fts)) {
-	fprintf(stderr, "%s: error closing directory '%s': %s\n", progname, a->name, strerror(errno));
-	return -1;
+        fprintf(stderr, "%s: error closing directory '%s': %s\n", progname, a->name, strerror(errno));
+        return -1;
     }
 
     return 0;
@@ -389,51 +389,51 @@ list_zip(const char *name, struct archive *a) {
     unsigned int i;
 
     if ((za = zip_open(name, paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
-	zip_error_t error;
-	zip_error_init_with_code(&error, err);
-	fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", progname, name, zip_error_strerror(&error));
-	zip_error_fini(&error);
-	return -1;
+        zip_error_t error;
+        zip_error_init_with_code(&error, err);
+        fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", progname, name, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return -1;
     }
 
     a->za = za;
     a->nentry = (zip_uint64_t)zip_get_num_entries(za, 0);
 
     if (a->nentry == 0)
-	a->entry = NULL;
+        a->entry = NULL;
     else {
-	if ((a->nentry > SIZE_MAX / sizeof(a->entry[0])) || (a->entry = (struct entry *)malloc(sizeof(a->entry[0]) * a->nentry)) == NULL) {
-	    fprintf(stderr, "%s: malloc failure\n", progname);
-	    exit(1);
-	}
+        if ((a->nentry > SIZE_MAX / sizeof(a->entry[0])) || (a->entry = (struct entry *)malloc(sizeof(a->entry[0]) * a->nentry)) == NULL) {
+            fprintf(stderr, "%s: malloc failure\n", progname);
+            exit(1);
+        }
 
-	for (i = 0; i < a->nentry; i++) {
-	    zip_stat_index(za, i, 0, &st);
-	    a->entry[i].name = strdup(st.name);
-	    a->entry[i].size = st.size;
-	    a->entry[i].crc = st.crc;
-	    if (test_files)
-		test_file(za, i, st.size, st.crc);
-	    if (paranoid) {
-		a->entry[i].comp_method = st.comp_method;
-		ef_read(za, i, a->entry + i);
-		a->entry[i].comment = zip_file_get_comment(za, i, &a->entry[i].comment_length, 0);
-	    }
-	    else {
-		a->entry[i].comp_method = 0;
-		a->entry[i].n_extra_fields = 0;
-	    }
-	}
+        for (i = 0; i < a->nentry; i++) {
+            zip_stat_index(za, i, 0, &st);
+            a->entry[i].name = strdup(st.name);
+            a->entry[i].size = st.size;
+            a->entry[i].crc = st.crc;
+            if (test_files)
+                test_file(za, i, st.size, st.crc);
+            if (paranoid) {
+                a->entry[i].comp_method = st.comp_method;
+                ef_read(za, i, a->entry + i);
+                a->entry[i].comment = zip_file_get_comment(za, i, &a->entry[i].comment_length, 0);
+            }
+            else {
+                a->entry[i].comp_method = 0;
+                a->entry[i].n_extra_fields = 0;
+            }
+        }
 
-	if (paranoid) {
-	    int length;
-	    a->comment = zip_get_archive_comment(za, &length, 0);
-	    a->comment_length = (size_t)length;
-	}
-	else {
-	    a->comment = NULL;
-	    a->comment_length = 0;
-	}
+        if (paranoid) {
+            int length;
+            a->comment = zip_get_archive_comment(za, &length, 0);
+            a->comment_length = (size_t)length;
+        }
+        else {
+            a->comment = NULL;
+            a->comment_length = 0;
+        }
     }
 
     return 0;
@@ -443,13 +443,13 @@ list_zip(const char *name, struct archive *a) {
 static int
 comment_compare(const char *c1, size_t l1, const char *c2, size_t l2) {
     if (l1 != l2)
-	return 1;
+        return 1;
 
     if (l1 == 0)
-	return 0;
+        return 0;
 
     if (c1 == NULL || c2 == NULL)
-	return c1 == c2;
+        return c1 == c2;
 
     return memcmp(c1, c2, (size_t)l2);
 }
@@ -464,43 +464,43 @@ compare_list(char *const name[2], const void *l[2], const zip_uint64_t n[2], int
 #define INC(k) (i[k]++, l[k] = ((const char *)l[k]) + size)
 #define PRINT(k)                                          \
     do {                                                  \
-	if (header_done == 0 && verbose) {                \
-	    printf("--- %s\n+++ %s\n", name[0], name[1]); \
-	    header_done = 1;                              \
-	}                                                 \
-	if (verbose) {                                    \
-	    printf("%c ", (k) ? '+' : '-');               \
-	    print(l[k]);                                  \
-	}                                                 \
-	diff = 1;                                         \
+        if (header_done == 0 && verbose) {                \
+            printf("--- %s\n+++ %s\n", name[0], name[1]); \
+            header_done = 1;                              \
+        }                                                 \
+        if (verbose) {                                    \
+            printf("%c ", (k) ? '+' : '-');               \
+            print(l[k]);                                  \
+        }                                                 \
+        diff = 1;                                         \
     } while (0)
 
     i[0] = i[1] = 0;
     diff = 0;
     while (i[0] < n[0] && i[1] < n[1]) {
-	c = cmp(l[0], l[1]);
+        c = cmp(l[0], l[1]);
 
-	if (c == 0) {
-	    if (check)
-		diff |= check(name, l[0], l[1]);
-	    INC(0);
-	    INC(1);
-	}
-	else if (c < 0) {
-	    PRINT(0);
-	    INC(0);
-	}
-	else {
-	    PRINT(1);
-	    INC(1);
-	}
+        if (c == 0) {
+            if (check)
+                diff |= check(name, l[0], l[1]);
+            INC(0);
+            INC(1);
+        }
+        else if (c < 0) {
+            PRINT(0);
+            INC(0);
+        }
+        else {
+            PRINT(1);
+            INC(1);
+        }
     }
 
     for (j = 0; j < 2; j++) {
-	while (i[j] < n[j]) {
-	    PRINT(j);
-	    INC(j);
-	}
+        while (i[j] < n[j]) {
+            PRINT(j);
+            INC(j);
+        }
     }
 
     return diff;
@@ -513,27 +513,27 @@ ef_read(zip_t *za, zip_uint64_t idx, struct entry *e) {
     zip_uint16_t i;
 
     if ((n_local = zip_file_extra_fields_count(za, idx, ZIP_FL_LOCAL)) < 0 || (n_central = zip_file_extra_fields_count(za, idx, ZIP_FL_CENTRAL)) < 0) {
-	return -1;
+        return -1;
     }
 
     e->n_extra_fields = (zip_uint16_t)(n_local + n_central);
 
     if ((e->extra_fields = (struct ef *)malloc(sizeof(e->extra_fields[0]) * e->n_extra_fields)) == NULL)
-	return -1;
+        return -1;
 
     for (i = 0; i < n_local; i++) {
-	e->extra_fields[i].name = e->name;
-	e->extra_fields[i].data = zip_file_extra_field_get(za, idx, i, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_LOCAL);
-	if (e->extra_fields[i].data == NULL)
-	    return -1;
-	e->extra_fields[i].flags = ZIP_FL_LOCAL;
+        e->extra_fields[i].name = e->name;
+        e->extra_fields[i].data = zip_file_extra_field_get(za, idx, i, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_LOCAL);
+        if (e->extra_fields[i].data == NULL)
+            return -1;
+        e->extra_fields[i].flags = ZIP_FL_LOCAL;
     }
     for (; i < e->n_extra_fields; i++) {
-	e->extra_fields[i].name = e->name;
-	e->extra_fields[i].data = zip_file_extra_field_get(za, idx, (zip_uint16_t)(i - n_local), &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_CENTRAL);
-	if (e->extra_fields[i].data == NULL)
-	    return -1;
-	e->extra_fields[i].flags = ZIP_FL_CENTRAL;
+        e->extra_fields[i].name = e->name;
+        e->extra_fields[i].data = zip_file_extra_field_get(za, idx, (zip_uint16_t)(i - n_local), &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_CENTRAL);
+        if (e->extra_fields[i].data == NULL)
+            return -1;
+        e->extra_fields[i].flags = ZIP_FL_CENTRAL;
     }
 
     qsort(e->extra_fields, e->n_extra_fields, sizeof(e->extra_fields[0]), ef_order);
@@ -564,11 +564,11 @@ ef_order(const void *ap, const void *bp) {
     b = (struct ef *)bp;
 
     if (a->flags != b->flags)
-	return a->flags - b->flags;
+        return a->flags - b->flags;
     if (a->id != b->id)
-	return a->id - b->id;
+        return a->id - b->id;
     if (a->size != b->size)
-	return a->size - b->size;
+        return a->size - b->size;
     return memcmp(a->data, b->data, a->size);
 }
 
@@ -581,7 +581,7 @@ ef_print(const void *p) {
     printf("                    %s  ", ef->name);
     printf("%04x %c <", ef->id, ef->flags == ZIP_FL_LOCAL ? 'l' : 'c');
     for (i = 0; i < ef->size; i++)
-	printf("%s%02x", i ? " " : "", ef->data[i]);
+        printf("%s%02x", i ? " " : "", ef->data[i]);
     printf(">\n");
 }
 
@@ -595,15 +595,15 @@ entry_cmp(const void *p1, const void *p2) {
     e2 = (struct entry *)p2;
 
     if ((c = (ignore_case ? strcasecmp : strcmp)(e1->name, e2->name)) != 0)
-	return c;
+        return c;
     if (e1->size != e2->size) {
-	if (e1->size > e2->size)
-	    return 1;
-	else
-	    return -1;
+        if (e1->size > e2->size)
+            return 1;
+        else
+            return -1;
     }
     if (e1->crc != e2->crc)
-	return (int)e1->crc - (int)e2->crc;
+        return (int)e1->crc - (int)e2->crc;
 
     return 0;
 }
@@ -620,33 +620,33 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
     ret = 0;
 
     if (ef_compare(name, e1, e2) != 0)
-	ret = 1;
+        ret = 1;
 
     if (e1->comp_method != e2->comp_method) {
-	if (verbose) {
-	    if (header_done == 0) {
-		printf("--- %s\n+++ %s\n", name[0], name[1]);
-		header_done = 1;
-	    }
-	    printf("---                     %s  ", e1->name);
-	    printf("method %u\n", e1->comp_method);
-	    printf("+++                     %s  ", e1->name);
-	    printf("method %u\n", e2->comp_method);
-	}
-	ret = 1;
+        if (verbose) {
+            if (header_done == 0) {
+                printf("--- %s\n+++ %s\n", name[0], name[1]);
+                header_done = 1;
+            }
+            printf("---                     %s  ", e1->name);
+            printf("method %u\n", e1->comp_method);
+            printf("+++                     %s  ", e1->name);
+            printf("method %u\n", e2->comp_method);
+        }
+        ret = 1;
     }
     if (comment_compare(e1->comment, e1->comment_length, e2->comment, e2->comment_length) != 0) {
-	if (verbose) {
-	    if (header_done == 0) {
-		printf("--- %s\n+++ %s\n", name[0], name[1]);
-		header_done = 1;
-	    }
-	    printf("---                     %s  ", e1->name);
-	    printf("comment %" PRIu32 "\n", e1->comment_length);
-	    printf("+++                     %s  ", e1->name);
-	    printf("comment %" PRIu32 "\n", e2->comment_length);
-	}
-	ret = 1;
+        if (verbose) {
+            if (header_done == 0) {
+                printf("--- %s\n+++ %s\n", name[0], name[1]);
+                header_done = 1;
+            }
+            printf("---                     %s  ", e1->name);
+            printf("comment %" PRIu32 "\n", e1->comment_length);
+            printf("+++                     %s  ", e1->name);
+            printf("comment %" PRIu32 "\n", e2->comment_length);
+        }
+        ret = 1;
     }
 
     return ret;
@@ -673,33 +673,33 @@ test_file(zip_t *za, zip_uint64_t idx, zip_uint64_t size, zip_uint32_t crc) {
     zip_uint32_t ncrc;
 
     if ((zf = zip_fopen_index(za, idx, 0)) == NULL) {
-	fprintf(stderr, "%s: cannot open file %" PRIu64 " in archive: %s\n", progname, idx, zip_strerror(za));
-	return -1;
+        fprintf(stderr, "%s: cannot open file %" PRIu64 " in archive: %s\n", progname, idx, zip_strerror(za));
+        return -1;
     }
 
     ncrc = (zip_uint32_t)crc32(0, NULL, 0);
     nsize = 0;
 
     while ((n = zip_fread(zf, buf, sizeof(buf))) > 0) {
-	nsize += (zip_uint64_t)n;
-	ncrc = (zip_uint32_t)crc32(ncrc, (const Bytef *)buf, (unsigned int)n);
+        nsize += (zip_uint64_t)n;
+        ncrc = (zip_uint32_t)crc32(ncrc, (const Bytef *)buf, (unsigned int)n);
     }
 
     if (n < 0) {
-	fprintf(stderr, "%s: error reading file %" PRIu64 " in archive: %s\n", progname, idx, zip_file_strerror(zf));
-	zip_fclose(zf);
-	return -1;
+        fprintf(stderr, "%s: error reading file %" PRIu64 " in archive: %s\n", progname, idx, zip_file_strerror(zf));
+        zip_fclose(zf);
+        return -1;
     }
 
     zip_fclose(zf);
 
     if (nsize != size) {
-	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %" PRId64 " (should be %" PRId64 ")\n", progname, idx, nsize, size);
-	return -2;
+        fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %" PRId64 " (should be %" PRId64 ")\n", progname, idx, nsize, size);
+        return -2;
     }
     if (ncrc != crc) {
-	fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %x (should be %x)\n", progname, idx, ncrc, crc);
-	return -2;
+        fprintf(stderr, "%s: file %" PRIu64 ": unexpected length %x (should be %x)\n", progname, idx, ncrc, crc);
+        return -2;
     }
 
     return 0;

@@ -55,38 +55,38 @@ copy_source(zip_source_t *from, zip_source_t *to) {
     zip_int64_t n;
 
     if (zip_source_open(from) < 0) {
-	fprintf(stderr, "%s: can't open source for reading: %s\n", progname, zip_error_strerror(zip_source_error(from)));
-	return -1;
+        fprintf(stderr, "%s: can't open source for reading: %s\n", progname, zip_error_strerror(zip_source_error(from)));
+        return -1;
     }
 
     if (zip_source_begin_write(to) < 0) {
-	fprintf(stderr, "%s: can't open source for writing: %s\n", progname, zip_error_strerror(zip_source_error(to)));
-	zip_source_close(from);
-	return -1;
+        fprintf(stderr, "%s: can't open source for writing: %s\n", progname, zip_error_strerror(zip_source_error(to)));
+        zip_source_close(from);
+        return -1;
     }
 
     while ((n = zip_source_read(from, buf, sizeof(buf))) > 0) {
-	if (zip_source_write(to, buf, (zip_uint64_t)n) != n) {
-	    fprintf(stderr, "%s: can't write to source: %s\n", progname, zip_error_strerror(zip_source_error(to)));
-	    zip_source_close(from);
-	    zip_source_rollback_write(to);
-	    return -1;
-	}
+        if (zip_source_write(to, buf, (zip_uint64_t)n) != n) {
+            fprintf(stderr, "%s: can't write to source: %s\n", progname, zip_error_strerror(zip_source_error(to)));
+            zip_source_close(from);
+            zip_source_rollback_write(to);
+            return -1;
+        }
     }
 
     if (n < 0) {
-	fprintf(stderr, "%s: can't read from source: %s\n", progname, zip_error_strerror(zip_source_error(from)));
-	zip_source_close(from);
-	zip_source_rollback_write(to);
-	return -1;
+        fprintf(stderr, "%s: can't read from source: %s\n", progname, zip_error_strerror(zip_source_error(from)));
+        zip_source_close(from);
+        zip_source_rollback_write(to);
+        return -1;
     }
 
     zip_source_close(from);
 
     if (zip_source_commit_write(to) < 0) {
-	fprintf(stderr, "%s: can't commit source: %s\n", progname, zip_error_strerror(zip_source_error(to)));
-	zip_source_rollback_write(to);
-	return -1;
+        fprintf(stderr, "%s: can't commit source: %s\n", progname, zip_error_strerror(zip_source_error(to)));
+        zip_source_rollback_write(to);
+        return -1;
     }
 
     return 0;
@@ -101,9 +101,9 @@ open_compressed(const char *fname, int flags) {
     zip_error_init(&error);
 
     if ((src = source_hole_create(fname, flags, &error)) == NULL) {
-	fprintf(stderr, "%s: can't open compressed file %s: %s\n", progname, fname, zip_error_strerror(&error));
-	zip_error_fini(&error);
-	exit(1);
+        fprintf(stderr, "%s: can't open compressed file %s: %s\n", progname, fname, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        exit(1);
     }
 
     return src;
@@ -118,9 +118,9 @@ open_file(const char *fname) {
     zip_error_init(&error);
 
     if ((src = zip_source_file_create(fname, 0, 0, &error)) == NULL) {
-	fprintf(stderr, "%s: can't open file %s: %s\n", progname, fname, zip_error_strerror(&error));
-	zip_error_fini(&error);
-	exit(1);
+        fprintf(stderr, "%s: can't open file %s: %s\n", progname, fname, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        exit(1);
     }
 
     return src;
@@ -146,39 +146,39 @@ main(int argc, char **argv) {
     progname = argv[0];
 
     while ((c = getopt(argc, argv, "du")) != -1) {
-	switch (c) {
-	case 'd':
-	    compress = 0;
-	    decompress = 1;
-	    break;
+        switch (c) {
+        case 'd':
+            compress = 0;
+            decompress = 1;
+            break;
 
-	case 'u':
-	    compress = 1;
-	    decompress = 1;
-	    break;
+        case 'u':
+            compress = 1;
+            decompress = 1;
+            break;
 
-	default:
-	    usage();
-	    break;
-	}
+        default:
+            usage();
+            break;
+        }
     }
 
     if (optind + 2 != argc) {
-	usage();
+        usage();
     }
 
     if (decompress) {
-	from = open_compressed(argv[optind], 0);
+        from = open_compressed(argv[optind], 0);
     }
     else {
-	from = open_file(argv[optind]);
+        from = open_file(argv[optind]);
     }
 
     if (compress) {
-	to = open_compressed(argv[optind + 1], ZIP_CREATE);
+        to = open_compressed(argv[optind + 1], ZIP_CREATE);
     }
     else {
-	to = open_file(argv[optind + 1]);
+        to = open_file(argv[optind + 1]);
     }
 
     err = copy_source(from, to);

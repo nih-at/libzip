@@ -44,15 +44,15 @@ zip_get_archive_comment(zip_t *za, int *lenp, zip_flags_t flags) {
     const zip_uint8_t *str;
 
     if ((flags & ZIP_FL_UNCHANGED) || (za->comment_changes == NULL))
-	comment = za->comment_orig;
+        comment = za->comment_orig;
     else
-	comment = za->comment_changes;
+        comment = za->comment_changes;
 
     if ((str = _zip_string_get(comment, &len, flags, &za->error)) == NULL)
-	return NULL;
+        return NULL;
 
     if (lenp)
-	*lenp = (int)len;
+        *lenp = (int)len;
 
     return (const char *)str;
 }

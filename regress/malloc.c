@@ -81,20 +81,20 @@ init(void) {
     char *foo;
     myname = getprogname();
     if (!myname)
-	myname = "(unknown)";
+        myname = "(unknown)";
     if ((foo = getenv("MALLOC_MAX_COUNT")) != NULL)
-	max_count = strtoul(foo, NULL, 0);
+        max_count = strtoul(foo, NULL, 0);
     if ((foo = getenv("MALLOC_MIN_SIZE")) != NULL)
-	min_size = strtoul(foo, NULL, 0);
+        min_size = strtoul(foo, NULL, 0);
     real_calloc = dlsym(RTLD_NEXT, "calloc");
     if (!real_calloc)
-	abort();
+        abort();
     real_malloc = dlsym(RTLD_NEXT, "malloc");
     if (!real_malloc)
-	abort();
+        abort();
     real_realloc = dlsym(RTLD_NEXT, "realloc");
     if (!real_realloc)
-	abort();
+        abort();
     inited = 1;
 }
 
@@ -103,17 +103,17 @@ calloc(size_t number, size_t size) {
     void *ret;
 
     if (!inited) {
-	init();
+        init();
     }
 
     if (number >= min_size / size && count >= max_count) {
-	errno = ENOMEM;
-	return NULL;
+        errno = ENOMEM;
+        return NULL;
     }
 
     ret = real_calloc(number, size);
     if (size >= min_size) {
-	count++;
+        count++;
     }
 
     return ret;
@@ -124,17 +124,17 @@ malloc(size_t size) {
     void *ret;
 
     if (!inited) {
-	init();
+        init();
     }
 
     if (size >= min_size && count >= max_count) {
-	errno = ENOMEM;
-	return NULL;
+        errno = ENOMEM;
+        return NULL;
     }
 
     ret = real_malloc(size);
     if (size >= min_size) {
-	count++;
+        count++;
     }
 
     return ret;
@@ -145,17 +145,17 @@ realloc(void *ptr, size_t size) {
     void *ret;
 
     if (!inited) {
-	init();
+        init();
     }
 
     if (size >= min_size && count >= max_count) {
-	errno = ENOMEM;
-	return NULL;
+        errno = ENOMEM;
+        return NULL;
     }
 
     ret = real_realloc(ptr, size);
     if (size >= min_size) {
-	count++;
+        count++;
     }
 
     return ret;

@@ -52,42 +52,42 @@ _zip_mkstempm(char *path, int mode) {
     end = path + strlen(path);
     start = end - 1;
     while (start >= path && *start == 'X') {
-	xcnt++;
-	start--;
+        xcnt++;
+        start--;
     }
 
     if (xcnt == 0) {
-	errno = EINVAL;
-	return -1;
+        errno = EINVAL;
+        return -1;
     }
 
     start++;
 
     for (;;) {
-	zip_uint32_t value = zip_random_uint32();
+        zip_uint32_t value = zip_random_uint32();
 
-	xs = start;
+        xs = start;
 
-	while (xs < end) {
-	    char digit = value % 36;
-	    if (digit < 10) {
-		*(xs++) = digit + '0';
-	    }
-	    else {
-		*(xs++) = digit - 10 + 'a';
-	    }
-	    value /= 36;
-	}
+        while (xs < end) {
+            char digit = value % 36;
+            if (digit < 10) {
+                *(xs++) = digit + '0';
+            }
+            else {
+                *(xs++) = digit - 10 + 'a';
+            }
+            value /= 36;
+        }
 
-	if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
-	    if (mode != -1) {
-		/* open() honors umask(), which we don't want in this case */
-		(void)chmod(path, (mode_t)mode);
-	    }
-	    return fd;
-	}
-	if (errno != EEXIST) {
-	    return -1;
-	}
+        if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
+            if (mode != -1) {
+                /* open() honors umask(), which we don't want in this case */
+                (void)chmod(path, (mode_t)mode);
+            }
+            return fd;
+        }
+        if (errno != EEXIST) {
+            return -1;
+        }
     }
 }

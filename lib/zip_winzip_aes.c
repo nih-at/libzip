@@ -55,19 +55,19 @@ aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
     zip_uint64_t i, j;
 
     for (i = 0; i < length; i++) {
-	if (ctx->pad_offset == AES_BLOCK_SIZE) {
-	    for (j = 0; j < 8; j++) {
-		ctx->counter[j]++;
-		if (ctx->counter[j] != 0) {
-		    break;
-		}
-	    }
-	    if (!_zip_crypto_aes_encrypt_block(ctx->aes, ctx->counter, ctx->pad)) {
-		return false;
-	    }
-	    ctx->pad_offset = 0;
-	}
-	data[i] ^= ctx->pad[ctx->pad_offset++];
+        if (ctx->pad_offset == AES_BLOCK_SIZE) {
+            for (j = 0; j < 8; j++) {
+                ctx->counter[j]++;
+                if (ctx->counter[j] != 0) {
+                    break;
+                }
+            }
+            if (!_zip_crypto_aes_encrypt_block(ctx->aes, ctx->counter, ctx->pad)) {
+                return false;
+            }
+            ctx->pad_offset = 0;
+        }
+        data[i] ^= ctx->pad[ctx->pad_offset++];
     }
 
     return true;
@@ -83,49 +83,49 @@ _zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, c
 
     switch (encryption_method) {
     case ZIP_EM_AES_128:
-	key_size = 128;
-	break;
+        key_size = 128;
+        break;
     case ZIP_EM_AES_192:
-	key_size = 192;
-	break;
+        key_size = 192;
+        break;
     case ZIP_EM_AES_256:
-	key_size = 256;
-	break;
+        key_size = 256;
+        break;
     }
 
     if (key_size == 0 || salt == NULL || password == NULL || password_length == 0) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
     key_length = key_size / 8;
 
     if ((ctx = (zip_winzip_aes_t *)malloc(sizeof(*ctx))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     memset(ctx->counter, 0, sizeof(ctx->counter));
     ctx->pad_offset = ZIP_CRYPTO_AES_BLOCK_LENGTH;
 
     if (!_zip_crypto_pbkdf2(password, password_length, salt, key_length / 2, PBKDF2_ITERATIONS, buffer, 2 * key_length + WINZIP_AES_PASSWORD_VERIFY_LENGTH)) {
-	free(ctx);
-	return NULL;
+        free(ctx);
+        return NULL;
     }
 
     if ((ctx->aes = _zip_crypto_aes_new(buffer, key_size, error)) == NULL) {
-	_zip_crypto_clear(ctx, sizeof(*ctx));
-	free(ctx);
-	return NULL;
+        _zip_crypto_clear(ctx, sizeof(*ctx));
+        free(ctx);
+        return NULL;
     }
     if ((ctx->hmac = _zip_crypto_hmac_new(buffer + key_length, key_length, error)) == NULL) {
-	_zip_crypto_aes_free(ctx->aes);
-	free(ctx);
-	return NULL;
+        _zip_crypto_aes_free(ctx->aes);
+        free(ctx);
+        return NULL;
     }
 
     if (password_verify) {
-	memcpy(password_verify, buffer + (2 * key_size / 8), WINZIP_AES_PASSWORD_VERIFY_LENGTH);
+        memcpy(password_verify, buffer + (2 * key_size / 8), WINZIP_AES_PASSWORD_VERIFY_LENGTH);
     }
 
     return ctx;
@@ -153,7 +153,7 @@ _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac) {
 void
 _zip_winzip_aes_free(zip_winzip_aes_t *ctx) {
     if (ctx == NULL) {
-	return;
+        return;
     }
 
     _zip_crypto_aes_free(ctx->aes);

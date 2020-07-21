@@ -40,7 +40,7 @@
 zip_source_t *
 zip_source_layered(zip_t *za, zip_source_t *src, zip_source_layered_callback cb, void *ud) {
     if (za == NULL)
-	return NULL;
+        return NULL;
 
     return zip_source_layered_create(src, cb, ud, &za->error);
 }
@@ -51,7 +51,7 @@ zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, voi
     zip_source_t *zs;
 
     if ((zs = _zip_source_new(error)) == NULL)
-	return NULL;
+        return NULL;
 
     zip_source_keep(src);
     zs->src = src;
@@ -60,7 +60,7 @@ zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, voi
 
     zs->supports = cb(src, ud, NULL, 0, ZIP_SOURCE_SUPPORTS);
     if (zs->supports < 0) {
-	zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
+        zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
     }
 
     return zs;

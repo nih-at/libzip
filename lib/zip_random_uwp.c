@@ -48,12 +48,12 @@ zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     BCRYPT_ALG_HANDLE hAlg = NULL;
     NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
     if (hr != STATUS_SUCCESS || hAlg == NULL) {
-	return false;
+        return false;
     }
     hr = BCryptGenRandom(&hAlg, buffer, length, 0);
     BCryptCloseAlgorithmProvider(&hAlg, 0);
     if (hr != STATUS_SUCCESS) {
-	return false;
+        return false;
     }
     return true;
 }
@@ -70,11 +70,11 @@ zip_random_uint32(void) {
     zip_uint32_t value;
 
     if (zip_secure_random((zip_uint8_t *)&value, sizeof(value))) {
-	return value;
+        return value;
     }
 
     if (!seeded) {
-	srand((unsigned int)time(NULL));
+        srand((unsigned int)time(NULL));
     }
 
     return (zip_uint32_t)rand();

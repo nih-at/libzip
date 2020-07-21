@@ -341,8 +341,8 @@ typedef enum zip_source_write_state zip_source_write_state_t;
 struct zip_source {
     zip_source_t *src;
     union {
-	zip_source_callback f;
-	zip_source_layered_callback l;
+        zip_source_callback f;
+        zip_source_layered_callback l;
     } cb;
     void *ud;
     zip_error_t error;

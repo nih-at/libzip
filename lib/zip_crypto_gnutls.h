@@ -45,9 +45,9 @@
 
 typedef struct {
     union {
-	struct aes128_ctx ctx_128;
-	struct aes192_ctx ctx_192;
-	struct aes256_ctx ctx_256;
+        struct aes128_ctx ctx_128;
+        struct aes192_ctx ctx_192;
+        struct aes256_ctx ctx_256;
     } ctx;
     zip_uint16_t key_size;
 } _zip_crypto_aes_t;

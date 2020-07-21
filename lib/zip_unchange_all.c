@@ -41,12 +41,12 @@ zip_unchange_all(zip_t *za) {
     zip_uint64_t i;
 
     if (!_zip_hash_revert(za->names, &za->error)) {
-	return -1;
+        return -1;
     }
 
     ret = 0;
     for (i = 0; i < za->nentry; i++)
-	ret |= _zip_unchange(za, i, 1);
+        ret |= _zip_unchange(za, i, 1);
 
     ret |= zip_unchange_archive(za);
 

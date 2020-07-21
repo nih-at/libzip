@@ -42,17 +42,17 @@ windows_open(const wchar_t *name, int flags) {
     zip_error_init(&error);
     /* create source from buffer */
     if ((src = zip_source_win32w_create(name, 0, -1, &error)) == NULL) {
-	fprintf(stderr, "can't create source: %s\n", zip_error_strerror(&error));
-	zip_error_fini(&error);
-	return NULL;
+        fprintf(stderr, "can't create source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return NULL;
     }
 
     /* open zip archive from source */
     if ((za = zip_open_from_source(src, flags, &error)) == NULL) {
-	fprintf(stderr, "can't open zip from source: %s\n", zip_error_strerror(&error));
-	zip_source_free(src);
-	zip_error_fini(&error);
-	return NULL;
+        fprintf(stderr, "can't open zip from source: %s\n", zip_error_strerror(&error));
+        zip_source_free(src);
+        zip_error_fini(&error);
+        return NULL;
     }
     zip_error_fini(&error);
 
