@@ -333,29 +333,23 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 	data_length = (zip_int64_t)st.size;
 
 	if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
-	    zip_uint64_t max_size;
+	    zip_uint64_t max_compressed_size;
+            zip_uint16_t compression_method = ZIP_CM_ACTUAL(de->comp_method);
 
-	    switch (ZIP_CM_ACTUAL(de->comp_method)) {
-	    case ZIP_CM_BZIP2:
-		/* computed by looking at increase of 10 random files of size 1MB when
-		 * compressed with bzip2, rounded up: 1.006 */
-		max_size = 4269351188u;
-		break;
+            if (compression_method == ZIP_CM_STORE) {
+                max_compressed_size = st.size;
+            }
+            else {
+                zip_compression_algorithm_t *algorithm = _zip_get_compression_algorithm(compression_method, true);
+                if (algorithm == NULL) {
+                    max_compressed_size = ZIP_UINT64_MAX;
+                }
+                else {
+                    max_compressed_size = algorithm->maximum_compressed_size(st.size);
+                }
+            }
 
-	    case ZIP_CM_DEFLATE:
-		/* max deflate size increase: size + ceil(size/16k)*5+6 */
-		max_size = 4293656963u;
-		break;
-
-	    case ZIP_CM_STORE:
-		max_size = 0xffffffffu;
-		break;
-
-	    default:
-		max_size = 0;
-	    }
-
-	    if (st.size > max_size) {
+            if (max_compressed_size > 0xffffffffu) {
 		flags |= ZIP_FL_FORCE_ZIP64;
 	    }
 	}

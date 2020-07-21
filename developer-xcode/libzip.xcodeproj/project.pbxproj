@@ -189,6 +189,7 @@
 		4B93995E24631B3E00AEBDA4 /* zip_source_file.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B93995924631B3E00AEBDA4 /* zip_source_file.h */; };
 		4B972050188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
 		4B972052188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */; };
+		4B9E577C24C7202000CEE0D6 /* zip_algorithm_zstd.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E577A24C7026B00CEE0D6 /* zip_algorithm_zstd.c */; };
 		4BACD59315BC2CFA00920691 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
 		4BACD59415BC2D0800920691 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
 		4BACD5BB15BC2DC900920691 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
@@ -1979,6 +1980,7 @@
 				4B01D6D015B2F46B002D5007 /* zip_get_num_files.c in Sources */,
 				4B01D6D115B2F46B002D5007 /* zip_memdup.c in Sources */,
 				4B01D6D215B2F46B002D5007 /* zip_name_locate.c in Sources */,
+				4B9E577C24C7202000CEE0D6 /* zip_algorithm_zstd.c in Sources */,
 				4B01D6D315B2F46B002D5007 /* zip_new.c in Sources */,
 				4B01D6D415B2F46B002D5007 /* zip_open.c in Sources */,
 				4B01D6D515B2F46B002D5007 /* zip_rename.c in Sources */,

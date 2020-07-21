@@ -121,6 +121,9 @@ enum zip_compression_status {
 typedef enum zip_compression_status zip_compression_status_t;
 
 struct zip_compression_algorithm {
+    /* Return maxiumum compressed size for uncompressed data of given size. */
+    zip_uint64_t (*maximum_compressed_size)(zip_uint64_t uncompressed_size);
+
     /* called once to create new context */
     void *(*allocate)(zip_uint16_t method, int compression_flags, zip_error_t *error);
     /* called once to free context */
@@ -156,6 +159,7 @@ extern zip_compression_algorithm_t zip_algorithm_xz_decompress;
 extern zip_compression_algorithm_t zip_algorithm_zstd_compress;
 extern zip_compression_algorithm_t zip_algorithm_zstd_decompress;
 
+zip_compression_algorithm_t *_zip_get_compression_algorithm(zip_int32_t method, bool compress);
 
 /* This API is not final yet, but we need it internally, so it's private for now. */
 

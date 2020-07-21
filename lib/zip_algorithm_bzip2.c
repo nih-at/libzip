@@ -46,6 +46,16 @@ struct ctx {
 };
 
 
+static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
+    zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.006);
+
+    if (compressed_size < uncompressed_size) {
+        return ZIP_UINT64_MAX;
+    }
+    return compressed_size;
+}
+
+
 static void *
 allocate(bool compress, int compression_flags, zip_error_t *error) {
     struct ctx *ctx;
@@ -245,6 +255,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 /* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
+    maximum_compressed_size,
     compress_allocate,
     deallocate,
     general_purpose_bit_flags,
@@ -258,6 +269,7 @@ zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
 
 
 zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
+    maximum_compressed_size,
     decompress_allocate,
     deallocate,
     general_purpose_bit_flags,

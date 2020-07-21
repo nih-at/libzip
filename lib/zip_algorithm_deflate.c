@@ -34,6 +34,7 @@
 #include "zipint.h"
 
 #include <limits.h>
+#include <math.h>
 #include <stdlib.h>
 #include <zlib.h>
 
@@ -44,6 +45,18 @@ struct ctx {
     bool end_of_input;
     z_stream zstr;
 };
+
+
+static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
+    /* max deflate size increase: size + ceil(size/16k)*5+6 */
+
+    zip_uint64_t compressed_size = uncompressed_size + (zip_uint64_t)ceil((double)uncompressed_size/(16*1024) * 5) + 6;
+
+    if (compressed_size < uncompressed_size) {
+        return ZIP_UINT64_MAX;
+    }
+    return compressed_size;
+}
 
 
 static void *
@@ -223,6 +236,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 /* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_deflate_compress = {
+    maximum_compressed_size,
     compress_allocate,
     deallocate,
     general_purpose_bit_flags,
@@ -236,6 +250,7 @@ zip_compression_algorithm_t zip_algorithm_deflate_compress = {
 
 
 zip_compression_algorithm_t zip_algorithm_deflate_decompress = {
+    maximum_compressed_size,
     decompress_allocate,
     deallocate,
     general_purpose_bit_flags,

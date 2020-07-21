@@ -89,8 +89,8 @@ static void context_free(struct context *ctx);
 static struct context *context_new(zip_int32_t method, bool compress, int compression_flags, zip_compression_algorithm_t *algorithm);
 static zip_int64_t compress_read(zip_source_t *, struct context *, void *, zip_uint64_t);
 
-static zip_compression_algorithm_t *
-get_algorithm(zip_int32_t method, bool compress) {
+zip_compression_algorithm_t *
+_zip_get_compression_algorithm(zip_int32_t method, bool compress) {
     size_t i;
     zip_uint16_t real_method = ZIP_CM_ACTUAL(method);
 
@@ -113,7 +113,7 @@ zip_compression_method_supported(zip_int32_t method, int compress) {
     if (method == ZIP_CM_STORE) {
 	return 1;
     }
-    return get_algorithm(method, compress) != NULL;
+    return _zip_get_compression_algorithm(method, compress) != NULL;
 }
 
 zip_source_t *
@@ -138,7 +138,7 @@ compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool co
 	return NULL;
     }
 
-    if ((algorithm = get_algorithm(method, compress)) == NULL) {
+    if ((algorithm = _zip_get_compression_algorithm(method, compress)) == NULL) {
 	zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
 	return NULL;
     }

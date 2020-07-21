@@ -49,6 +49,25 @@ struct ctx {
 };
 
 
+static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
+    /*
+     According to https://sourceforge.net/p/sevenzip/discussion/45797/thread/b6bd62f8/
+
+     1) you can use
+     outSize = 1.10 * originalSize + 64 KB.
+     in most cases outSize is less then 1.02 from originalSize.
+     2) You can try LZMA2, where
+     outSize can be = 1.001 * originalSize + 1 KB.
+     */
+    zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.1) + 64 * 1024;
+
+    if (compressed_size < uncompressed_size) {
+        return ZIP_UINT64_MAX;
+    }
+    return compressed_size;
+}
+
+
 static void *
 allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t method) {
     struct ctx *ctx;
@@ -222,6 +241,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 /* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_xz_compress = {
+    maximum_compressed_size,
     compress_allocate,
     deallocate,
     general_purpose_bit_flags,
@@ -235,6 +255,7 @@ zip_compression_algorithm_t zip_algorithm_xz_compress = {
 
 
 zip_compression_algorithm_t zip_algorithm_xz_decompress = {
+    maximum_compressed_size,
     decompress_allocate,
     deallocate,
     general_purpose_bit_flags,
