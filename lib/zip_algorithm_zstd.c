@@ -33,10 +33,10 @@
 
 #include "zipint.h"
 
-#include <zstd.h>
-#include <zstd_errors.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <zstd.h>
+#include <zstd_errors.h>
 
 struct ctx {
     zip_error_t *error;
@@ -176,6 +176,7 @@ end(void *ud) {
 	zip_error_set(ctx->error, map_error(ret), 0);
 	return false;
     }
+
     return true;
 }
 
@@ -183,7 +184,7 @@ end(void *ud) {
 static bool
 input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
     struct ctx *ctx = (struct ctx *)ud;
-    if (length > SIZE_MAX || (ctx->in.pos != 0 && ctx->in.pos != ctx->in.size)) {
+    if (length > SIZE_MAX || ctx->in.pos != ctx->in.size) {
 	zip_error_set(ctx->error, ZIP_ER_INVAL, 0);
 	return false;
     }
@@ -208,12 +209,26 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 
     size_t ret;
 
+    if (ctx->in.pos == ctx->in.size && !ctx->end_of_input) {
+	*length = 0;
+	return ZIP_COMPRESSION_NEED_DATA;
+    }
+
     ctx->out.dst = data;
     ctx->out.pos = 0;
     ctx->out.size = ZIP_MIN(SIZE_MAX, *length);
 
     if (ctx->compress) {
-	ret = ZSTD_compressStream(ctx->zcstream, &ctx->out, &ctx->in);
+	if (ctx->in.pos == ctx->in.size && ctx->end_of_input) {
+	    ret = ZSTD_endStream(ctx->zcstream, &ctx->out);
+	    if (ret == 0) {
+		*length = ctx->out.pos;
+		return ZIP_COMPRESSION_END;
+	    }
+	}
+	else {
+	    ret = ZSTD_compressStream(ctx->zcstream, &ctx->out, &ctx->in);
+	}
     }
     else {
 	ret = ZSTD_decompressStream(ctx->zdstream, &ctx->out, &ctx->in);
@@ -222,23 +237,12 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
 	zip_error_set(ctx->error, map_error(ret), 0);
 	return ZIP_COMPRESSION_ERROR;
     }
+
     *length = ctx->out.pos;
-    if (ctx->out.pos == 0) {
-	if (ctx->compress) {
-	    /* TODO: this is a test hack */
-	    ret = ZSTD_flushStream(ctx->zcstream, &ctx->out);
-	    if (ZSTD_isError(ret)) {
-		zip_error_set(ctx->error, map_error(ret), 0);
-		return ZIP_COMPRESSION_ERROR;
-	    }
-	}
-	if (ctx->out.pos == 0) {
-	    return ZIP_COMPRESSION_NEED_DATA;
-	}
-    }
     if (ctx->in.pos == ctx->in.size) {
-	return ZIP_COMPRESSION_END;
+	return ZIP_COMPRESSION_NEED_DATA;
     }
+
     return ZIP_COMPRESSION_OK;
 }
 
