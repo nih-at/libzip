@@ -11,6 +11,9 @@ For supporting bzip2-compressed zip archives, you need
 For supporting xz-compressed zip archives, you need
 [liblzma](https://tukaani.org/xz/) which is part of xz, at least version 5.2.
 
+For supporting zstd-compressed zip archives, you need
+[zstd](https://github.com/facebook/zstd/).
+
 For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 
