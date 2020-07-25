@@ -645,14 +645,13 @@ get_compression_method(const char *arg) {
     /*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
         archives made this way - and vice versa.
 
-        else if (strcasecmp(arg, "lzma") == 0)
-          return ZIP_CM_LZMA;
         else if (strcasecmp(arg, "lzma2") == 0)
           return ZIP_CM_LZMA2;
     */
+    else if (strcasecmp(arg, "lzma") == 0)
+	return ZIP_CM_LZMA;
     else if (strcasecmp(arg, "xz") == 0)
         return ZIP_CM_XZ;
-
 #endif
 #if defined(HAVE_LIBZSTD)
     else if (strcasecmp(arg, "zstd") == 0)

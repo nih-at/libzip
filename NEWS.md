@@ -2,6 +2,7 @@
 ==================
 
 * Add support for zstd (Zstandard) compression.
+* Add support for lzma (ID 14) compression.
 
 1.7.3 [2020-07-15]
 ==================

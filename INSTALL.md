@@ -8,7 +8,7 @@ comes with most operating systems.
 For supporting bzip2-compressed zip archives, you need
 [bzip2](http://bzip.org/).
 
-For supporting xz-compressed zip archives, you need
+For supporting lzma- and xz-compressed zip archives, you need
 [liblzma](https://tukaani.org/xz/) which is part of xz, at least version 5.2.
 
 For supporting zstd-compressed zip archives, you need
