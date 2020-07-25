@@ -124,9 +124,10 @@ allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t 
     memset(ctx->header, 0, sizeof(ctx->header));
     ctx->header_bytes_offset = 0;
     if (ZIP_CM_LZMA) {
-	ctx->header_state = INCOMPLETE;
-    } else {
-	ctx->header_state = DONE;
+        ctx->header_state = INCOMPLETE;
+    }
+    else {
+        ctx->header_state = DONE;
     }
     memset(&ctx->zstr, 0, sizeof(ctx->zstr));
     ctx->method = method;
@@ -237,38 +238,38 @@ input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
 
     /* For decompression of LZMA1: Have we read the full "lzma alone" header yet? */
     if (ctx->method == ZIP_CM_LZMA && !ctx->compress && ctx->header_state == INCOMPLETE) {
-	/* if not, get more of the data */
-	zip_uint8_t got = ZIP_MIN(HEADER_BYTES_ZIP - ctx->header_bytes_offset, length);
-	memcpy(ctx->header + ctx->header_bytes_offset, data, got);
-	ctx->header_bytes_offset += got;
-	length -= got;
-	data += got;
-	/* Do we have a complete header now? */
-	if (ctx->header_bytes_offset == HEADER_BYTES_ZIP) {
-	    Bytef buffer[1];
-	    /* check magic */
-	    if (ctx->header[HEADER_MAGIC2_OFFSET] != 0x05 || ctx->header[HEADER_MAGIC2_OFFSET+1] != 0x00) {
-		/* magic does not match */
-		zip_error_set(ctx->error, ZIP_ER_COMPRESSED_DATA, 0);
-		return false;
-	    }
-	    /* set size of uncompressed data in "lzma alone" header to "unknown" */
-	    memset(ctx->header + HEADER_SIZE_OFFSET, 0xff, HEADER_SIZE_LENGTH);
-	    /* Feed header into "lzma alone" decoder, for
-	     * initialization; this should not produce output. */
-	    ctx->zstr.next_in = (void*)(ctx->header + HEADER_MAGIC_LENGTH);
-	    ctx->zstr.avail_in = HEADER_LZMA_ALONE_LENGTH;
-	    ctx->zstr.total_in = 0;
-	    ctx->zstr.next_out = buffer;
-	    ctx->zstr.avail_out = sizeof(*buffer);
-	    ctx->zstr.total_out = 0;
-	    /* this just initializes the decoder and does not produce output, so it consumes the complete header */
-	    if (lzma_code(&ctx->zstr, LZMA_RUN) != LZMA_OK || ctx->zstr.total_out > 0) {
-		zip_error_set(ctx->error, ZIP_ER_COMPRESSED_DATA, 0);
-		return false;
-	    }
-	    ctx->header_state = DONE;
-	}
+        /* if not, get more of the data */
+        zip_uint8_t got = ZIP_MIN(HEADER_BYTES_ZIP - ctx->header_bytes_offset, length);
+        memcpy(ctx->header + ctx->header_bytes_offset, data, got);
+        ctx->header_bytes_offset += got;
+        length -= got;
+        data += got;
+        /* Do we have a complete header now? */
+        if (ctx->header_bytes_offset == HEADER_BYTES_ZIP) {
+            Bytef buffer[1];
+            /* check magic */
+            if (ctx->header[HEADER_MAGIC2_OFFSET] != 0x05 || ctx->header[HEADER_MAGIC2_OFFSET + 1] != 0x00) {
+                /* magic does not match */
+                zip_error_set(ctx->error, ZIP_ER_COMPRESSED_DATA, 0);
+                return false;
+            }
+            /* set size of uncompressed data in "lzma alone" header to "unknown" */
+            memset(ctx->header + HEADER_SIZE_OFFSET, 0xff, HEADER_SIZE_LENGTH);
+            /* Feed header into "lzma alone" decoder, for
+             * initialization; this should not produce output. */
+            ctx->zstr.next_in = (void *)(ctx->header + HEADER_MAGIC_LENGTH);
+            ctx->zstr.avail_in = HEADER_LZMA_ALONE_LENGTH;
+            ctx->zstr.total_in = 0;
+            ctx->zstr.next_out = buffer;
+            ctx->zstr.avail_out = sizeof(*buffer);
+            ctx->zstr.total_out = 0;
+            /* this just initializes the decoder and does not produce output, so it consumes the complete header */
+            if (lzma_code(&ctx->zstr, LZMA_RUN) != LZMA_OK || ctx->zstr.total_out > 0) {
+                zip_error_set(ctx->error, ZIP_ER_COMPRESSED_DATA, 0);
+                return false;
+            }
+            ctx->header_state = DONE;
+        }
     }
     ctx->zstr.avail_in = (uInt)length;
     ctx->zstr.next_in = (Bytef *)data;
@@ -291,33 +292,33 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     lzma_ret ret;
     /* for compression of LZMA1 */
     if (ctx->method == ZIP_CM_LZMA && ctx->compress) {
-	if (ctx->header_state == INCOMPLETE) {
-	    /* write magic to output buffer */
-	    ctx->header[0] = 0x09;
-	    ctx->header[1] = 0x14;
-	    ctx->header[2] = 0x05;
-	    ctx->header[3] = 0x00;
-	    /* generate lzma parameters into output buffer */
-	    ctx->zstr.avail_out = HEADER_LZMA_ALONE_LENGTH;
-	    ctx->zstr.next_out = ctx->header + HEADER_MAGIC_LENGTH;
-	    ret = lzma_code(&ctx->zstr, LZMA_RUN);
-	    if (ret != LZMA_OK || ctx->zstr.avail_out != 0) {
-		/* assume that the whole header will be provided with the first call to lzma_code */
-		return ZIP_COMPRESSION_ERROR;
-	    }
-	    ctx->header_state = OUTPUT;
-	}
-	if (ctx->header_state == OUTPUT) {
-	    /* write header */
-	    zip_uint8_t write_len = ZIP_MIN(HEADER_BYTES_ZIP - ctx->header_bytes_offset, *length);
-	    memcpy(data, ctx->header + ctx->header_bytes_offset, write_len);
-	    ctx->header_bytes_offset += write_len;
-	    *length = write_len;
-	    if (ctx->header_bytes_offset == HEADER_BYTES_ZIP) {
-		ctx->header_state = DONE;
-	    }
-	    return ZIP_COMPRESSION_OK;
-	}
+        if (ctx->header_state == INCOMPLETE) {
+            /* write magic to output buffer */
+            ctx->header[0] = 0x09;
+            ctx->header[1] = 0x14;
+            ctx->header[2] = 0x05;
+            ctx->header[3] = 0x00;
+            /* generate lzma parameters into output buffer */
+            ctx->zstr.avail_out = HEADER_LZMA_ALONE_LENGTH;
+            ctx->zstr.next_out = ctx->header + HEADER_MAGIC_LENGTH;
+            ret = lzma_code(&ctx->zstr, LZMA_RUN);
+            if (ret != LZMA_OK || ctx->zstr.avail_out != 0) {
+                /* assume that the whole header will be provided with the first call to lzma_code */
+                return ZIP_COMPRESSION_ERROR;
+            }
+            ctx->header_state = OUTPUT;
+        }
+        if (ctx->header_state == OUTPUT) {
+            /* write header */
+            zip_uint8_t write_len = ZIP_MIN(HEADER_BYTES_ZIP - ctx->header_bytes_offset, *length);
+            memcpy(data, ctx->header + ctx->header_bytes_offset, write_len);
+            ctx->header_bytes_offset += write_len;
+            *length = write_len;
+            if (ctx->header_bytes_offset == HEADER_BYTES_ZIP) {
+                ctx->header_state = DONE;
+            }
+            return ZIP_COMPRESSION_OK;
+        }
     }
 
     ctx->zstr.avail_out = (uInt)ZIP_MIN(UINT_MAX, *length);
