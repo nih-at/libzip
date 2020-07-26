@@ -156,7 +156,17 @@ deallocate(void *ud) {
 
 static zip_uint16_t
 general_purpose_bit_flags(void *ud) {
-    /* struct ctx *ctx = (struct ctx *)ud; */
+    struct ctx *ctx = (struct ctx *)ud;
+
+    if (!ctx->compress) {
+        return 0;
+    }
+
+    if (ctx->method == ZIP_CM_LZMA) {
+        /* liblzma always returns an EOS/EOPM marker, see
+	 * https://sourceforge.net/p/lzmautils/discussion/708858/thread/84c5dbb9/#a5e4/3764 */
+	return 1 << 1;
+    }
     return 0;
 }
 
