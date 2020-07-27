@@ -73,11 +73,12 @@ struct ctx {
      * we read the data into a header of the form
      * 4 bytes magic
      * 5 bytes lzma parameters
-     * 8 bytes uncompressed size (always 0xffffffffffffffff)
+     * 8 bytes uncompressed size
      */
     zip_uint8_t header[HEADER_MAGIC_LENGTH + HEADER_LZMA_ALONE_LENGTH];
     zip_uint8_t header_bytes_offset;
     enum header_state header_state;
+    zip_uint64_t uncompresssed_size;
 };
 
 
@@ -190,7 +191,7 @@ map_error(lzma_ret ret) {
 
 
 static bool
-start(void *ud) {
+start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     struct ctx *ctx = (struct ctx *)ud;
     lzma_ret ret;
 
@@ -222,6 +223,14 @@ start(void *ud) {
     if (ret != LZMA_OK) {
         zip_error_set(ctx->error, map_error(ret), 0);
         return false;
+    }
+    
+    /* If general purpose bits 1 & 2 are both zero, write real uncompressed size in header. */
+    if ((attributes->valid & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS) && (attributes->general_purpose_bit_mask & 0x6) == 0x6 && (attributes->general_purpose_bit_flags & 0x06) == 0 && (st->valid & ZIP_STAT_SIZE)) {
+        ctx->uncompresssed_size = st->size;
+    }
+    else {
+        ctx->uncompresssed_size = ZIP_UINT64_MAX;
     }
 
     return true;
@@ -256,7 +265,8 @@ input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
         data += got;
         /* Do we have a complete header now? */
         if (ctx->header_bytes_offset == HEADER_BYTES_ZIP) {
-            Bytef buffer[1];
+            Bytef empty_buffer[1];
+            zip_buffer_t *buffer;
             /* check magic */
             if (ctx->header[HEADER_MAGIC2_OFFSET] != 0x05 || ctx->header[HEADER_MAGIC2_OFFSET + 1] != 0x00) {
                 /* magic does not match */
@@ -264,14 +274,19 @@ input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
                 return false;
             }
             /* set size of uncompressed data in "lzma alone" header to "unknown" */
-            memset(ctx->header + HEADER_SIZE_OFFSET, 0xff, HEADER_SIZE_LENGTH);
+            if ((buffer = _zip_buffer_new(ctx->header + HEADER_SIZE_OFFSET, HEADER_SIZE_LENGTH)) == NULL) {
+                zip_error_set(ctx->error, ZIP_ER_MEMORY, 0);
+                return false;
+            }
+            _zip_buffer_put_64(buffer, ctx->uncompresssed_size);
+            _zip_buffer_free(buffer);
             /* Feed header into "lzma alone" decoder, for
              * initialization; this should not produce output. */
             ctx->zstr.next_in = (void *)(ctx->header + HEADER_MAGIC_LENGTH);
             ctx->zstr.avail_in = HEADER_LZMA_ALONE_LENGTH;
             ctx->zstr.total_in = 0;
-            ctx->zstr.next_out = buffer;
-            ctx->zstr.avail_out = sizeof(*buffer);
+            ctx->zstr.next_out = empty_buffer;
+            ctx->zstr.avail_out = sizeof(*empty_buffer);
             ctx->zstr.total_out = 0;
             /* this just initializes the decoder and does not produce output, so it consumes the complete header */
             if (lzma_code(&ctx->zstr, LZMA_RUN) != LZMA_OK || ctx->zstr.total_out > 0) {

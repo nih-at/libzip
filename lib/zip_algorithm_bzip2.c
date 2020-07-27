@@ -140,7 +140,7 @@ map_error(int ret) {
 }
 
 static bool
-start(void *ud) {
+start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     struct ctx *ctx = (struct ctx *)ud;
     int ret;
 

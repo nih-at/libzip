@@ -308,18 +308,27 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
     ctx = (struct context *)ud;
 
     switch (cmd) {
-    case ZIP_SOURCE_OPEN:
+    case ZIP_SOURCE_OPEN: {
+        zip_stat_t st;
+        zip_file_attributes_t attributes;
+        
         ctx->size = 0;
         ctx->end_of_input = false;
         ctx->end_of_stream = false;
         ctx->is_stored = false;
         ctx->first_read = -1;
+        
+        if (zip_source_stat(src, &st) < 0 || zip_source_get_file_attributes(src, &attributes) < 0) {
+            _zip_error_set_from_source(&ctx->error, src);
+            return -1;
+        }
 
-        if (!ctx->algorithm->start(ctx->ud)) {
+        if (!ctx->algorithm->start(ctx->ud, &st, &attributes)) {
             return -1;
         }
 
         return 0;
+    }
 
     case ZIP_SOURCE_READ:
         return compress_read(src, ctx, data, len);
