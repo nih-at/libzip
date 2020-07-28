@@ -361,9 +361,6 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
                 st->size = ctx->size;
                 st->valid |= ZIP_STAT_SIZE;
             }
-            else {
-                st->valid &= ~ZIP_STAT_SIZE;
-            }
         }
     }
         return 0;
