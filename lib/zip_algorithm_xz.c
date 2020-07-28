@@ -371,6 +371,10 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
 }
 
+/* Version Required should be set to 63 (6.3) because this compression
+   method was only defined in appnote.txt version 6.3.8, but Winzip
+   does not unpack it if the value is not 20. */
+
 /* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_xz_compress = {
@@ -378,7 +382,7 @@ zip_compression_algorithm_t zip_algorithm_xz_compress = {
     compress_allocate,
     deallocate,
     general_purpose_bit_flags,
-    63,
+    20,
     start,
     end,
     input,
@@ -392,7 +396,7 @@ zip_compression_algorithm_t zip_algorithm_xz_decompress = {
     decompress_allocate,
     deallocate,
     general_purpose_bit_flags,
-    63,
+    20,
     start,
     end,
     input,
