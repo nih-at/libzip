@@ -8,7 +8,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Compression
 
-* add lzma support
+* add lzma2 support
 * add deflate64 support (https://github.com/madler/zlib/blob/master/contrib/infback9/infback9.h)
 
 ## API Issues
