@@ -190,6 +190,7 @@ set(EXTRA_TESTS
 	set_compression_deflate_to_deflate.test
 	set_compression_deflate_to_store.test
 	set_compression_lzma_to_store.test
+	set_compression_lzma_no_eos_to_store.test
 	set_compression_store_to_bzip2.test
 	set_compression_store_to_deflate.test
 	set_compression_store_to_lzma.test
