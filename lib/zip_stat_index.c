@@ -55,7 +55,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
             return -1;
         }
 
-        if (entry->changes->changed & ZIP_DIRENT_LAST_MOD) {
+        if (entry->changes != NULL && entry->changes->changed & ZIP_DIRENT_LAST_MOD) {
             st->mtime = de->last_mod;
             st->valid |= ZIP_STAT_MTIME;
         }
