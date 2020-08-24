@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_FTELL" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_FTELL" "3" "July 21, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -51,10 +51,6 @@ libzip (-lzip)
 The
 \fBzip_ftell\fR()
 function reports the current offset in the file.
-.PP
-\fBzip_ftell\fR
-only works on uncompressed (stored) data.
-When called on compressed data it will return an error.
 .SH "RETURN VALUES"
 If successful,
 \fBzip_ftell\fR

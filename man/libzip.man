@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "April 17, 2020" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "July 23, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -284,6 +284,9 @@ zip_strerror(3)
 .TP 4n
 \fB\(bu\fR
 zip_file_strerror(3)
+.TP 4n
+\fB\(bu\fR
+zip_file_get_error(3)
 .TP 4n
 \fB\(bu\fR
 zip_get_error(3)
