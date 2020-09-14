@@ -108,11 +108,13 @@ set(EXTRA_TESTS
 	decrypt-correct-password-aes192.test
 	decrypt-correct-password-aes256.test
 	decrypt-correct-password-pkware.test
+	decrypt-correct-password-pkware-2.test
 	decrypt-no-password-aes256.test
 	decrypt-wrong-password-aes128.test
 	decrypt-wrong-password-aes192.test
 	decrypt-wrong-password-aes256.test
 	decrypt-wrong-password-pkware.test
+	decrypt-wrong-password-pkware-2.test
 	delete_add_same.test
 	delete_invalid.test
 	delete_last.test
