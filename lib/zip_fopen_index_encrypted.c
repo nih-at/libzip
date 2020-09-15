@@ -45,6 +45,10 @@ zip_fopen_index_encrypted(zip_t *za, zip_uint64_t index, zip_flags_t flags, cons
     zip_file_t *zf;
     zip_source_t *src;
 
+    if (password != NULL && password[0] == '\0') {
+        password = NULL;
+    }
+    
     if ((src = _zip_source_zip_new(za, za, index, flags, 0, 0, password)) == NULL)
         return NULL;
 

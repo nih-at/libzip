@@ -45,7 +45,7 @@ zip_set_default_password(zip_t *za, const char *passwd) {
 
     free(za->default_password);
 
-    if (passwd) {
+    if (passwd && passwd[0] != '\0') {
         if ((za->default_password = strdup(passwd)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             return -1;
