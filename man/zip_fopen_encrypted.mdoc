@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd September 14, 2020
+.Dd September 15, 2020
 .Dt ZIP_FOPEN_ENCRYPTED 3
 .Os
 .Sh NAME
@@ -54,6 +54,12 @@ in
 using the password given in the
 .Ar password
 argument.
+If
+.Ar password
+is
+.Dv NULL
+or the empty string, the default password is used (see
+.Xr zip_set_default_password 3 ) .
 The
 .Ar flags
 argument are the same as for
