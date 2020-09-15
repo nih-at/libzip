@@ -65,13 +65,14 @@ zip_source_file_operations_t _zip_source_file_win32_named_ops = {
 static zip_int64_t
 _zip_win32_named_op_commit_write(zip_source_file_context_t *ctx) {
     zip_win32_file_operations_t *file_ops = (zip_win32_file_operations_t *)ctx->ops_userdata;
+    DWORD attributes;
 
     if (!CloseHandle((HANDLE)ctx->fout)) {
         zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
 
-    DWORD attributes = file_ops->get_file_attributes(ctx->tmpname);
+    attributes = file_ops->get_file_attributes(ctx->tmpname);
     if (attributes == INVALID_FILE_ATTRIBUTES) {
         zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_win32_error_to_errno(GetLastError()));
         return -1;
@@ -248,6 +249,7 @@ win32_named_open(zip_source_file_context_t *ctx, const char *name, bool temporar
     DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE;
     DWORD creation_disposition = OPEN_EXISTING;
     DWORD file_attributes = FILE_ATTRIBUTE_NORMAL;
+    HANDLE h;
 
     if (temporary) {
         access = GENERIC_READ | GENERIC_WRITE;
@@ -256,7 +258,7 @@ win32_named_open(zip_source_file_context_t *ctx, const char *name, bool temporar
         file_attributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY;
     }
 
-    HANDLE h = file_ops->create_file(name, access, share_mode, security_attributes, creation_disposition, file_attributes, NULL);
+    h = file_ops->create_file(name, access, share_mode, security_attributes, creation_disposition, file_attributes, NULL);
 
     if (h == INVALID_HANDLE_VALUE) {
         zip_error_set(&ctx->error, ZIP_ER_OPEN, _zip_win32_error_to_errno(GetLastError()));

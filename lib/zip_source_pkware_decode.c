@@ -82,6 +82,7 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
     zip_uint8_t header[ZIP_CRYPTO_PKWARE_HEADERLEN];
     struct zip_stat st;
     zip_int64_t n;
+    bool ok = false;
 
     if ((n = zip_source_read(src, header, ZIP_CRYPTO_PKWARE_HEADERLEN)) < 0) {
         _zip_error_set_from_source(&ctx->error, src);
@@ -104,8 +105,6 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
      *  mtime - InfoZIP way, to avoid computing complete CRC before encrypting data
      *  CRC - old PKWare way
      */
-
-    bool ok = false;
 
     if (st.valid & ZIP_STAT_MTIME) {
         unsigned short dostime, dosdate;
