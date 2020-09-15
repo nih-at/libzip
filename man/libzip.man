@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "July 23, 2020" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "September 15, 2020" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -66,6 +66,19 @@ zip archive atomically.
 .PP
 Below there are two sections listing functions: one for how to read
 from zip archives and one for how to create/modify them.
+.SS "THREAD SAFETY"
+In general, different zip archives opened by
+\fBlibzip\fR
+are independent of each other and can be used by parallel-running
+threads without locking.
+If you want to use an archive from multiple threads, you have to
+synchronize access to it yourself.
+If you use an archive as a source for
+zip_file_add(3)
+or
+zip_file_replace(3),
+access to the target archive must be synchronized with access to the
+source archive as well.
 .SH "READING ZIP ARCHIVES"
 .SS "open archive"
 .TP 4n

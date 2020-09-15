@@ -75,6 +75,18 @@ libzip (-lzip)
     original zip archive atomically.</p>
 <p class="Pp">Below there are two sections listing functions: one for how to
     read from zip archives and one for how to create/modify them.</p>
+<section class="Ss">
+<h2 class="Ss" id="THREAD_SAFETY"><a class="permalink" href="#THREAD_SAFETY">THREAD
+  SAFETY</a></h2>
+In general, different zip archives opened by <code class="Nm">libzip</code> are
+  independent of each other and can be used by parallel-running threads without
+  locking. If you want to use an archive from multiple threads, you have to
+  synchronize access to it yourself. If you use an archive as a source for
+  <a class="Xr" href="zip_file_add.html">zip_file_add(3)</a> or
+  <a class="Xr" href="zip_file_replace.html">zip_file_replace(3)</a>, access to
+  the target archive must be synchronized with access to the source archive as
+  well.
+</section>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="READING_ZIP_ARCHIVES"><a class="permalink" href="#READING_ZIP_ARCHIVES">READING
@@ -245,7 +257,7 @@ libzip (-lzip)
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">July 23, 2020</td>
+    <td class="foot-date">September 15, 2020</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
