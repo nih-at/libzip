@@ -208,7 +208,14 @@ _zip_win32_named_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
     }
 
     st->exists = true;
-    st->regular_file = true; /* TODO: Is this always right? How to determine without a HANDLE? */
+    st->regular_file = false;
+
+    if (file_attributes.dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
+        if ((file_attributes.dwFileAttributes & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_DEVICE | FILE_ATTRIBUTE_REPARSE_POINT)) == 0) {
+            st->regular_file = true;
+        }
+    }
+
     if (!_zip_filetime_to_time_t(file_attributes.ftLastWriteTime, &st->mtime)) {
         zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
         return false;
