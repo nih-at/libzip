@@ -111,7 +111,7 @@ add_library(zip
   zip_unchange_archive.c
   zip_unchange_data.c
   zip_utf-8.c
-  ${CMAKE_BINARY_DIR}/zip_err_str.c
+  ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
   )
 add_library(libzip::zip ALIAS zip)
 
@@ -225,4 +225,4 @@ const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0])\;
 const int _zip_err_type[] = {
 ]=])
 string(APPEND zip_err_str "${zip_err_type}}\;\n")
-file(WRITE ${CMAKE_BINARY_DIR}/zip_err_str.c ${zip_err_str})
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c ${zip_err_str})
