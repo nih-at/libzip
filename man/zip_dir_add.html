@@ -77,7 +77,8 @@ The function <code class="Fn">zip_dir_add</code>() adds a directory to a zip
     any of:</p>
 <dl class="Bl-tag">
   <dt><a class="permalink" href="#ZIP_FL_ENC_GUESS"><code class="Dv" id="ZIP_FL_ENC_GUESS">ZIP_FL_ENC_GUESS</code></a></dt>
-  <dd>Guess encoding of <var class="Ar">name</var> (default).</dd>
+  <dd>Guess encoding of <var class="Ar">name</var> (default). (Only CP-437 and
+      UTF-8 are recognized.)</dd>
   <dt><a class="permalink" href="#ZIP_FL_ENC_UTF_8"><code class="Dv" id="ZIP_FL_ENC_UTF_8">ZIP_FL_ENC_UTF_8</code></a></dt>
   <dd>Interpret <var class="Ar">name</var> as UTF-8.</dd>
   <dt><a class="permalink" href="#ZIP_FL_ENC_CP437"><code class="Dv" id="ZIP_FL_ENC_CP437">ZIP_FL_ENC_CP437</code></a></dt>
@@ -125,7 +126,7 @@ Upon successful completion, the index of the new entry in the archive is
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 25, 2020</td>
+    <td class="foot-date">September 20, 2020</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
