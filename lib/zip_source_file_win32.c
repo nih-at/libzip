@@ -156,6 +156,7 @@ _zip_win32_error_to_errno(DWORD win32err) {
     case ERROR_INVALID_PARAMETER:
         return EINVAL;
     case ERROR_FILE_NOT_FOUND:
+    case ERROR_PATH_NOT_FOUND:
         return ENOENT;
     case ERROR_INVALID_HANDLE:
         return EBADF;
