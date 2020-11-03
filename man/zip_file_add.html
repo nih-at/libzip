@@ -120,7 +120,7 @@ Upon successful completion, <code class="Fn">zip_file_add</code>() returns the
 <div class="Bd Bd-indent">
 <pre>
 zip_source_t *s;
-const char *buf=&quot;teststring&quot;;
+const char buf[]=&quot;teststring&quot;;
 
 if ((s=zip_source_buffer(archive, buf, sizeof(buf), 0)) == NULL ||
     zip_file_add(archive, name, s, ZIP_FL_ENC_UTF_8) &lt; 0) {

@@ -35,7 +35,7 @@
 .if n .ad l
 .SH "NAME"
 \fBzip_source_close\fR
-\- open zip_source (which was open for reading)
+\- close zip_source (which was open for reading)
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
