@@ -43,6 +43,8 @@
 
 #include <aclapi.h>
 
+#include <stdlib.h>
+
 #include "zipint.h"
 
 #include "zip_source_file.h"
