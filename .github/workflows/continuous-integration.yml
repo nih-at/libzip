@@ -4,13 +4,13 @@ on: [push]
 jobs:
   all:
 #    runs-on: [ ubuntu-latest, windows-latest, macos-latest ]
-    runs-on: ubuntu-latest
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: checkout
         uses: actions/checkout@v2
       - name: install dependencies
         run: |
-          sudo apt-get update -m && sudo apt-get install libzstd-dev
+          sudo apt-get install libzstd-dev
       - name: prepare build directory
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
