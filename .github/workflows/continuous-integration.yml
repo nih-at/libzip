@@ -12,17 +12,17 @@ jobs:
         run: |
           sudo apt-get update -m && sudo apt-get install libzstd-dev
       - name: prepare build directory
-        run:
-          - cmake -E make_directory ${{runner.workspace}}/build
+        run: |
+          cmake -E make_directory ${{runner.workspace}}/build
       - name: configure
         working-directory: ${{runner.workspace}}/build
-        run:
-          - cmake ${{runner.workspace}}
+        run: |
+          cmake ${{runner.workspace}}
       - name: build
         working-directory: ${{runner.workspace}}/build
-        run:
-          - cmake --build .
+        run: |
+          cmake --build .
       - name: test
         working-directory: ${{runner.workspace}}/build
-        run:
-          - ctest -v
+        run: |
+          ctest -v
