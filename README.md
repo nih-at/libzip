@@ -34,7 +34,7 @@ to libzip-discuss at nih.at. Use this for bug reports or questions.
 
 If you want to reach the authors in private, use <libzip@nih.at>.
 
-![Github Actions Build Status](https://github.com/nih-at/libzip/workflows/continuous-integration/badge.svg)
+[![Github Actions Build Status](https://github.com/nih-at/libzip/workflows/continuous-integration/badge.svg)](https://github.com/nih-at/libzip/actions?query=workflow%3Acontinuous-integration)
 [![Travis Build Status](https://api.travis-ci.org/nih-at/libzip.svg?branch=master)](https://travis-ci.org/nih-at/libzip)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/f1bqqt9djvf22f5g?svg=true)](https://ci.appveyor.com/project/nih-at/libzip)
 [![Coverity Status](https://scan.coverity.com/projects/127/badge.svg)](https://scan.coverity.com/projects/libzip)
