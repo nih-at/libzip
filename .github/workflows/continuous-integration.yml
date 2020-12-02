@@ -6,5 +6,10 @@ jobs:
 #    runs-on: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: lukka/run-cmake@v3
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          sudo apt-get update -m && sudo apt-get install libzstd-dev
+      - name: build
+        uses: lukka/run-cmake@v3
