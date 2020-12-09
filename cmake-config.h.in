@@ -36,7 +36,6 @@
 #cmakedefine HAVE_NULLABLE
 #cmakedefine HAVE_OPENSSL
 #cmakedefine HAVE_SETMODE
-#cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_STRCASECMP
 #cmakedefine HAVE_STRDUP
 #cmakedefine HAVE_STRICMP
