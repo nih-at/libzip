@@ -38,7 +38,6 @@
 #define HAVE_OPEN
 /* #undef HAVE_OPENSSL */
 #define HAVE_SETMODE
-#define HAVE_SNPRINTF
 #define HAVE_SSIZE_T_LIBZIP
 #define HAVE_STRCASECMP
 #define HAVE_STRDUP
