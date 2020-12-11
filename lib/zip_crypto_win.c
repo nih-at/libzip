@@ -89,12 +89,13 @@ There is no #ifdef to control that, because this is working for all supported OS
 bool
 _zip_crypto_pbkdf2(const zip_uint8_t *key, zip_uint64_t key_length, const zip_uint8_t *salt, zip_uint16_t salt_length, zip_uint16_t iterations, zip_uint8_t *output, zip_uint16_t output_length) {
     BCRYPT_ALG_HANDLE hAlgorithm = NULL;
+    bool result;
 
     if (!BCRYPT_SUCCESS(BCryptOpenAlgorithmProvider(&hAlgorithm, BCRYPT_SHA1_ALGORITHM, NULL, BCRYPT_ALG_HANDLE_HMAC_FLAG))) {
         return false;
     }
 
-    bool result = BCRYPT_SUCCESS(BCryptDeriveKeyPBKDF2(hAlgorithm, (PUCHAR)key, (ULONG)key_length, (PUCHAR)salt, salt_length, iterations, output, output_length, 0));
+    result = BCRYPT_SUCCESS(BCryptDeriveKeyPBKDF2(hAlgorithm, (PUCHAR)key, (ULONG)key_length, (PUCHAR)salt, salt_length, iterations, output, output_length, 0));
 
     BCryptCloseAlgorithmProvider(hAlgorithm, 0);
 
