@@ -82,6 +82,7 @@ set(EXTRA_TESTS
 	add_from_file.test
 	add_from_file_duplicate.test
 	add_from_file_twice_duplicate.test
+	add_from_file_unchange.test
 	add_from_filep.test
 	add_from_stdin.test
 	add_from_zip_closed.test

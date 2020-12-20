@@ -120,7 +120,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   * support testing on macOS
 * add test cases for lots of files (including too many)
 * add test cases for holes (between files, between files and cdir, between cdir and eocd, + zip64 where appropriate)
-* unchange on added file
 * test seek in `zip_source_crc()`
 * test cases for `set_extra*`, `delete_extra*`, `*extra_field*`
 * test cases for in memory archives
