@@ -13,6 +13,7 @@ zip_uint64_t fragment_size = 0;
 
 static int add_nul(int argc, char *argv[]);
 static int cancel(int argc, char *argv[]);
+static int unchange_one(int argc, char *argv[]);
 static int unchange_all(int argc, char *argv[]);
 static int zin_close(int argc, char *argv[]);
 
@@ -36,6 +37,7 @@ static int zin_close(int argc, char *argv[]);
 #define DISPATCH_REGRESS \
     {"add_nul", 2, "name length", "add NUL bytes", add_nul}, \
     {"cancel", 1, "limit", "cancel writing archive when limit% have been written (calls print_progress)", cancel}, \
+    {"unchange", 1, "index", "revert changes for entry", unchange_one}, \
     {"unchange_all", 0, "", "revert all changes", unchange_all}, \
     { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
 
@@ -82,6 +84,22 @@ unchange_all(int argc, char *argv[]) {
     }
     return 0;
 }
+
+
+static int
+unchange_one(int argc, char *argv[]) {
+    zip_uint64_t idx;
+
+    idx = strtoull(argv[0], NULL, 10);
+
+    if (zip_unchange(za, idx) < 0) {
+	fprintf(stderr, "can't revert changes for entry %" PRIu64 ": %s", idx, zip_strerror(za));
+	return -1;
+    }
+
+    return 0;
+}
+
 
 static int
 cancel_callback(zip_t *archive, void *ud) {
