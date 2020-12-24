@@ -128,6 +128,7 @@ set(EXTRA_TESTS
 	encryption-nonrandom-aes256.test
 	encryption-nonrandom-pkware.test
 	encryption-remove.test
+	encryption-stat.test
 	extra_add.test
 	extra_add_multiple.test
 	extra_count.test
