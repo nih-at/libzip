@@ -205,6 +205,7 @@ set(EXTRA_TESTS
 	set_compression_xz_to_store.test
 	set_compression_zstd_to_store.test
 	set_file_dostime.test
+	set_file_mtime.test
 	stat_index_cp437_guess.test
 	stat_index_cp437_raw.test
 	stat_index_cp437_strict.test
