@@ -1,0 +1,6 @@
+# compare zip with directory
+program zipcmp
+mkdir 0777 dir-with-file
+args zipcmp_zip_dir.zip  dir-with-file
+file zipcmp_zip_dir.zip zipcmp_zip_dir.zip zipcmp_zip_dir.zip
+return 0
