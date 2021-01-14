@@ -364,11 +364,15 @@ list_directory(const char *name, struct archive *a) {
                 if (ent->fts_info == FTS_D) {
                     char *dir_name;
                     
-                    if (ent->fts_path[prefix_length] == '\0') {
-                        continue;
+                    if (ent->fts_path[prefix_length - 1] == '\0') {
+                        break;
                     }
                     
                     dir_name = malloc(strlen(ent->fts_path + prefix_length) + 2);
+                    if (dir_name == NULL) {
+                        fprintf(stderr, "%s: malloc failure\n", progname);
+                        exit(1);
+                    }
                     sprintf(dir_name, "%s/", ent->fts_path + prefix_length);
                     a->entry[a->nentry].name = dir_name;
                     a->entry[a->nentry].size = 0;
