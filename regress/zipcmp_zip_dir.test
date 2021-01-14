@@ -1,6 +1,14 @@
 # compare zip with directory
 program zipcmp
-mkdir 0777 dir-with-file
-args zipcmp_zip_dir.zip  dir-with-file
+mkdir 0777 a
+mkdir 0777 a/dir-with-file
+mkdir 0777 a/empty-dir-in-dir
+args zipcmp_zip_dir.zip  a
 file zipcmp_zip_dir.zip zipcmp_zip_dir.zip zipcmp_zip_dir.zip
-return 0
+return 1
+stdout --- zipcmp_zip_dir.zip
+stdout +++ a
+stdout -          0 00000000 00-empty-dir/
+stdout -          1 e8b7be43 dir-with-file/a
+stdout +          0 00000000 empty-dir-in-dir/
+stdout -          0 00000000 empty-dir/

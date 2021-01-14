@@ -113,13 +113,14 @@ Copyright (C) 2003-2020 Dieter Baron and Thomas Klausner\n\
 #define BOTH_ARE_ZIPS(a) (a[0].za && a[1].za)
 
 static int comment_compare(const char *c1, size_t l1, const char *c2, size_t l2);
-static int compare_list(char *const name[], const void *l[], const zip_uint64_t n[], int size, int (*cmp)(const void *, const void *), int (*checks)(char *const name[2], const void *, const void *), void (*print)(const void *));
+static int compare_list(char *const name[], const void *l[], const zip_uint64_t n[], int size, int (*cmp)(const void *, const void *), int (*ignore)(const void *l, int last, const void *o), int (*checks)(char *const name[2], const void *, const void *), void (*print)(const void *));
 static int compare_zip(char *const zn[]);
 static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
 static int ef_order(const void *a, const void *b);
 static void ef_print(const void *p);
 static int ef_read(zip_t *za, zip_uint64_t idx, struct entry *e);
 static int entry_cmp(const void *p1, const void *p2);
+static int entry_ignore(const void *p1, int last, const void *o);
 static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
 static void entry_print(const void *p);
 static int is_directory(const char *name);
@@ -129,7 +130,7 @@ static int list_directory(const char *name, struct archive *a);
 static int list_zip(const char *name, struct archive *a);
 static int test_file(zip_t *za, zip_uint64_t idx, const char *zipname, const char *filename, zip_uint64_t size, zip_uint32_t crc);
 
-int ignore_case, test_files, paranoid, verbose;
+int ignore_case, test_files, paranoid, verbose, have_directory;
 int header_done;
 
 
@@ -142,6 +143,7 @@ main(int argc, char *const argv[]) {
     ignore_case = 0;
     test_files = 0;
     paranoid = 0;
+    have_directory = 0;
     verbose = 1;
 
     while ((c = getopt(argc, argv, OPTIONS)) != -1) {
@@ -209,6 +211,7 @@ compare_zip(char *const zn[]) {
 #else
             if (list_directory(zn[i], a + i) < 0)
                 exit(2);
+            have_directory = 1;
             paranoid = 0; /* paranoid checks make no sense for directories, since they compare zip metadata */
 #endif
         }
@@ -226,7 +229,7 @@ compare_zip(char *const zn[]) {
     e[1] = a[1].entry;
     n[0] = a[0].nentry;
     n[1] = a[1].nentry;
-    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]), entry_cmp, paranoid ? entry_paranoia_checks : NULL, entry_print);
+    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]), entry_cmp, have_directory ? entry_ignore : NULL, paranoid ? entry_paranoia_checks : NULL, entry_print);
 
     if (paranoid) {
         if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
@@ -327,47 +330,62 @@ list_directory(const char *name, struct archive *a) {
         zip_int64_t crc;
 
         switch (ent->fts_info) {
-        case FTS_D:
-        case FTS_DOT:
-        case FTS_DP:
-        case FTS_DEFAULT:
-        case FTS_SL:
-        case FTS_NSOK:
-            break;
+            case FTS_DOT:
+            case FTS_DP:
+            case FTS_DEFAULT:
+            case FTS_SL:
+            case FTS_NSOK:
+                break;
 
-        case FTS_DC:
-        case FTS_DNR:
-        case FTS_ERR:
-        case FTS_NS:
-        case FTS_SLNONE:
-            /* TODO: error */
-            fts_close(fts);
-            return -1;
-
-        case FTS_F:
-            if (a->nentry >= nalloc) {
-                nalloc += 16;
-                if (nalloc > SIZE_MAX / sizeof(a->entry[0])) {
-                    fprintf(stderr, "%s: malloc failure\n", progname);
-                    exit(1);
-                }
-                a->entry = realloc(a->entry, sizeof(a->entry[0]) * nalloc);
-                if (a->entry == NULL) {
-                    fprintf(stderr, "%s: malloc failure\n", progname);
-                    exit(1);
-                }
-            }
-
-            a->entry[a->nentry].name = strdup(ent->fts_path + prefix_length);
-            a->entry[a->nentry].size = (zip_uint64_t)ent->fts_statp->st_size;
-            if ((crc = compute_crc(ent->fts_accpath)) < 0) {
+            case FTS_DC:
+            case FTS_DNR:
+            case FTS_ERR:
+            case FTS_NS:
+            case FTS_SLNONE:
+                /* TODO: error */
                 fts_close(fts);
                 return -1;
-            }
 
-            a->entry[a->nentry].crc = (zip_uint32_t)crc;
-            a->nentry++;
-            break;
+            case FTS_D:
+            case FTS_F:
+                if (a->nentry >= nalloc) {
+                    nalloc += 16;
+                    if (nalloc > SIZE_MAX / sizeof(a->entry[0])) {
+                        fprintf(stderr, "%s: malloc failure\n", progname);
+                        exit(1);
+                    }
+                    a->entry = realloc(a->entry, sizeof(a->entry[0]) * nalloc);
+                    if (a->entry == NULL) {
+                        fprintf(stderr, "%s: malloc failure\n", progname);
+                        exit(1);
+                    }
+                }
+                
+                if (ent->fts_info == FTS_D) {
+                    char *dir_name;
+                    
+                    if (ent->fts_path[prefix_length] == '\0') {
+                        continue;
+                    }
+                    
+                    dir_name = malloc(strlen(ent->fts_path + prefix_length) + 2);
+                    sprintf(dir_name, "%s/", ent->fts_path + prefix_length);
+                    a->entry[a->nentry].name = dir_name;
+                    a->entry[a->nentry].size = 0;
+                    a->entry[a->nentry].crc = 0;
+                }
+                else {
+                    a->entry[a->nentry].name = strdup(ent->fts_path + prefix_length);
+                    a->entry[a->nentry].size = (zip_uint64_t)ent->fts_statp->st_size;
+                    if ((crc = compute_crc(ent->fts_accpath)) < 0) {
+                        fts_close(fts);
+                        return -1;
+                    }
+                
+                    a->entry[a->nentry].crc = (zip_uint32_t)crc;
+                }
+                a->nentry++;
+                break;
         }
     }
 
@@ -456,7 +474,7 @@ comment_compare(const char *c1, size_t l1, const char *c2, size_t l2) {
 
 
 static int
-compare_list(char *const name[2], const void *l[2], const zip_uint64_t n[2], int size, int (*cmp)(const void *, const void *), int (*check)(char *const name[2], const void *, const void *), void (*print)(const void *)) {
+compare_list(char *const name[2], const void *l[2], const zip_uint64_t n[2], int size, int (*cmp)(const void *, const void *), int (*ignore)(const void *l, int last, const void *o), int (*check)(char *const name[2], const void *, const void *), void (*print)(const void *)) {
     unsigned int i[2];
     int j, c;
     int diff;
@@ -464,6 +482,9 @@ compare_list(char *const name[2], const void *l[2], const zip_uint64_t n[2], int
 #define INC(k) (i[k]++, l[k] = ((const char *)l[k]) + size)
 #define PRINT(k)                                          \
     do {                                                  \
+        if (ignore && ignore(l[k], i[k] >= n[k] - 1, i[1-k] < n[1-k] ? l[1-k] : NULL)) {   \
+            break;                                        \
+        }                                                 \
         if (header_done == 0 && verbose) {                \
             printf("--- %s\n+++ %s\n", name[0], name[1]); \
             header_done = 1;                              \
@@ -552,7 +573,7 @@ ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2) 
     n[0] = e1->n_extra_fields;
     n[1] = e2->n_extra_fields;
 
-    return compare_list(name, (const void **)ef, n, sizeof(struct ef), ef_order, NULL, ef_print);
+    return compare_list(name, (const void **)ef, n, sizeof(struct ef), ef_order, NULL, NULL, ef_print);
 }
 
 
@@ -606,6 +627,33 @@ entry_cmp(const void *p1, const void *p2) {
         return (int)e1->crc - (int)e2->crc;
 
     return 0;
+}
+
+
+static int
+entry_ignore(const void *p, int last, const void *o) {
+    const struct entry *e = (const struct entry *)p;
+    const struct entry *other = (const struct entry *)o;
+    
+    size_t length = strlen(e[0].name);
+    
+    if (length == 0 || e[0].name[length - 1] != '/') {
+        /* not a directory */
+        return 0;
+    }
+    
+    if (other != NULL && strlen(other->name) > length && strncmp(other->name, e[0].name, length) == 0) {
+        /* not empty in other archive */
+        return 1;
+    }
+    
+    if (last || (strlen(e[1].name) < length || strncmp(e[0].name, e[1].name, length) != 0)) {
+        /* empty in this archive */
+        return 0;
+    }
+    
+    /* not empty in this archive */
+    return 1;
 }
 
 
