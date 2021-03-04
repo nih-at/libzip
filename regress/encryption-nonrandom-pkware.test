@@ -1,4 +1,5 @@
 features CRYPTO
+precheck liboverride-test
 description encrypt file by Traditional PKWARE
 return 0
 preload nonrandomopen.so

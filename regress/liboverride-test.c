@@ -37,12 +37,6 @@
 
 #include "zip.h"
 
-#define DEBUG 1
-
-#ifdef DEBUG
-#include <stdio.h>
-#endif
-
 /*
  Some systems bind functions called and defined within a shared library, so the override doesn't work. This program calls zip_open and checks whether the override worked.
  */
@@ -54,30 +48,18 @@ main(int argc, const char *argv[]) {
     if (getenv("LIBOVERRIDE_SET") == NULL) {
         setenv("LIBOVERRIDE_SET", "1", 1);
         setenv("LD_PRELOAD", "libliboverride.so", 1);
-#ifdef DEBUG
-        printf("setting LD_PRELOAD and calling us again\n");
-#endif
         execv(argv[0], (void *)argv);
         exit(2);
     }
     
     if (zip_open("nosuchfile", 0, &error_code) != NULL) {
-#ifdef DEBUG
-        printf("zip_open() succeeded\n");
-#endif
         /* We expect failure. */
         exit(1);
     }
     if (error_code != 32000) {
-#ifdef DEBUG
-        printf("got wrong error code %d\n", error_code);
-#endif
         /* Override didn't take, we didn't get its magic error code. */
         exit(1);
     }
     
-#ifdef DEBUG
-    printf("override worked\n");
-#endif
     exit(0);
 }
