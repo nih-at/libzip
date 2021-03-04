@@ -97,6 +97,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Test Case Issues
 
+* `incons-local-filename-short.zzip` doesn't test short filename, since extra fields fail to parse.
 * test error cases with special source
   - tell it which command should fail
   - use it both as source for `zip_add` and `zip_open_from_source`
