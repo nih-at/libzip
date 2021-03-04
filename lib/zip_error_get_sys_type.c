@@ -37,8 +37,9 @@
 
 ZIP_EXTERN int
 zip_error_get_sys_type(int ze) {
-    if (ze < 0 || ze >= _zip_nerr_str)
+    if (ze < 0 || ze >= _zip_err_str_count) {
         return 0;
+    }
 
-    return _zip_err_type[ze];
+    return _zip_err_str[ze].type;
 }

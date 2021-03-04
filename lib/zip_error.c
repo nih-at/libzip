@@ -81,10 +81,10 @@ zip_error_init_with_code(zip_error_t *error, int ze) {
 
 ZIP_EXTERN int
 zip_error_system_type(const zip_error_t *error) {
-    if (error->zip_err < 0 || error->zip_err >= _zip_nerr_str)
+    if (error->zip_err < 0 || error->zip_err >= _zip_err_str_count)
         return ZIP_ET_NONE;
 
-    return _zip_err_type[error->zip_err];
+    return _zip_err_str[error->zip_err].type;
 }
 
 

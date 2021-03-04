@@ -46,16 +46,16 @@ zip_error_strerror(zip_error_t *err) {
 
     zip_error_fini(err);
 
-    if (err->zip_err < 0 || err->zip_err >= _zip_nerr_str) {
+    if (err->zip_err < 0 || err->zip_err >= _zip_err_str_count) {
         snprintf(buf, sizeof(buf), "Unknown error %d", err->zip_err);
         buf[sizeof(buf) - 1] = '\0'; /* make sure string is NUL-terminated */
         zip_error_string = NULL;
         system_error_string = buf;
     }
     else {
-        zip_error_string = _zip_err_str[err->zip_err];
+        zip_error_string = _zip_err_str[err->zip_err].description;
 
-        switch (_zip_err_type[err->zip_err]) {
+        switch (_zip_err_str[err->zip_err].type) {
             case ZIP_ET_SYS:
                 system_error_string = strerror(err->sys_err);
                 break;
@@ -76,7 +76,7 @@ zip_error_strerror(zip_error_t *err) {
                     buf[sizeof(buf) - 1] = '\0'; /* make sure string is NUL-terminated */
                     system_error_string = buf;
                 }
-                else if (_zip_err_details[error].has_index && index < MAX_DETAIL_INDEX) {
+                else if (_zip_err_details[error].type == ZIP_DETAIL_ET_ENTRY && index < MAX_DETAIL_INDEX) {
                     snprintf(buf, sizeof(buf), "entry %d: %s", index, _zip_err_details[error].description);
                     buf[sizeof(buf) - 1] = '\0'; /* make sure string is NUL-terminated */
                     system_error_string = buf;
@@ -97,7 +97,7 @@ zip_error_strerror(zip_error_t *err) {
     }
     else {
         if ((s = (char *)malloc(strlen(system_error_string) + (zip_error_string ? strlen(zip_error_string) + 2 : 0) + 1)) == NULL) {
-            return _zip_err_str[ZIP_ER_MEMORY];
+            return _zip_err_str[ZIP_ER_MEMORY].description;
         }
 
         sprintf(s, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);

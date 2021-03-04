@@ -206,34 +206,28 @@ set(zip_err_str [=[
 
 #include "zipint.h"
 
-const char * const _zip_err_str[] = {
-]=])
-set(zip_err_type)
-foreach(errln ${zip_h_err})
-  string(REGEX MATCH "#define ZIP_ER_([A-Z0-9_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z, ']*)/" err_t_tt ${errln})
-  string(REGEX MATCH "([L|N|S|Z]+) ([-0-9a-zA-Z,, ']*)" err_t_tt "${CMAKE_MATCH_3}")
-  string(APPEND zip_err_type "    ${CMAKE_MATCH_1},\n")
-  string(STRIP "${CMAKE_MATCH_2}" err_t_tt)
-  string(APPEND zip_err_str "    \"${err_t_tt}\",\n")
-endforeach()
-string(APPEND zip_err_str [=[}\;
-
-const int _zip_nerr_str = sizeof(_zip_err_str)/sizeof(_zip_err_str[0])\;
-
 #define L ZIP_ET_LIBZIP
 #define N ZIP_ET_NONE
 #define S ZIP_ET_SYS
 #define Z ZIP_ET_ZLIB
 
-#define E true
-#define G false
+#define E ZIP_DETAIL_ET_ENTRY
+#define G ZIP_DETAIL_ET_GLOBAL
 
-const int _zip_err_type[] = {
+const struct _zip_err_info _zip_err_str[] = {
 ]=])
-string(APPEND zip_err_str "${zip_err_type}}\;\n")
-string(APPEND zip_err_str [=[
+set(zip_err_type)
+foreach(errln ${zip_h_err})
+  string(REGEX MATCH "#define ZIP_ER_([A-Z0-9_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z, ']*)/" err_t_tt ${errln})
+  string(REGEX MATCH "([L|N|S|Z]+) ([-0-9a-zA-Z,, ']*)" err_t_tt "${CMAKE_MATCH_3}")
+  string(STRIP "${CMAKE_MATCH_2}" err_t_tt)
+  string(APPEND zip_err_str "    { ${CMAKE_MATCH_1}, \"${err_t_tt}\" },\n")
+endforeach()
+string(APPEND zip_err_str [=[}\;
 
-const struct _zip_err_detail _zip_err_details[] = {
+const int _zip_err_str_count = sizeof(_zip_err_str)/sizeof(_zip_err_str[0])\;
+
+const struct _zip_err_info _zip_err_details[] = {
 ]=])
 foreach(errln ${zipint_h_err})
   string(REGEX MATCH "#define ZIP_ER_DETAIL_([A-Z0-9_]+) ([0-9]+)[ \t]+/([-*0-9a-zA-Z, ']*)/" err_t_tt ${errln})

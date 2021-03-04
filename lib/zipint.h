@@ -189,12 +189,17 @@ zip_source_t *zip_source_buffer_with_attributes(zip_t *za, const void *data, zip
 
 enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 
-struct _zip_err_detail {
-    bool has_index;
+#define ZIP_DETAIL_ET_GLOBAL 0
+#define ZIP_DETAIL_ET_ENTRY  1
+
+struct _zip_err_info {
+    int type;
     const char *description;
 };
 
-extern const struct _zip_err_detail _zip_err_details[];
+extern const struct _zip_err_info _zip_err_str[];
+extern const int _zip_err_str_count;
+extern const struct _zip_err_info _zip_err_details[];
 extern const int _zip_err_details_count;
 
 /* macros for libzip-internal errors */
@@ -463,10 +468,6 @@ struct _zip_pkware_keys {
     zip_uint32_t key[3];
 };
 typedef struct _zip_pkware_keys zip_pkware_keys_t;
-
-extern const char *const _zip_err_str[];
-extern const int _zip_nerr_str;
-extern const int _zip_err_type[];
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))
