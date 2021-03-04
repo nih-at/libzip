@@ -149,7 +149,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             }
             if (ctx->end + offset < ctx->end) {
                 /* zip archive data claims end of data past zip64 limits */
-                zip_error_set(&ctx->error, ZIP_ER_INCONS, 0);
+                zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, ctx->source_index));
                 return -1;
             }
             ctx->start += offset;

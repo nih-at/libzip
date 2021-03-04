@@ -93,8 +93,15 @@ main(int argc, char *argv[]) {
         }
 
         printf("opening '%s' returned error %d", fname, ze);
-        if (zip_error_get_sys_type(ze) == ZIP_ET_SYS)
-            printf("/%d", errno);
+        switch (zip_error_get_sys_type(ze)) {
+            case ZIP_ET_SYS:
+            case ZIP_ET_LIBZIP:
+                printf("/%d", errno);
+                break;
+                
+            default:
+                break;
+        }
         printf("\n");
         error++;
     }

@@ -112,7 +112,8 @@ crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source
                         return -1;
                     }
                     if ((st.valid & ZIP_STAT_SIZE) && st.size != ctx->size) {
-                        zip_error_set(&ctx->error, ZIP_ER_INCONS, 0);
+                        /* We don't have the index here, but the caller should know which file they are reading from. */
+                        zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_INVALID_FILE_LENGTH, MAX_DETAIL_INDEX));
                         return -1;
                     }
                 }

@@ -164,6 +164,8 @@
 		4B0454BA1E8E3E08002FA1F9 /* zip_source_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B61E8E3DF7002FA1F9 /* zip_source_compress.c */; };
 		4B0454BC1E8E3E24002FA1F9 /* zip_algorithm_bzip2.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B41E8E3DF7002FA1F9 /* zip_algorithm_bzip2.c */; };
 		4B0454BD1E8E3E24002FA1F9 /* zip_algorithm_deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B0454B51E8E3DF7002FA1F9 /* zip_algorithm_deflate.c */; };
+		4B30B50225F11684002CE070 /* zip_algorithm_zstd.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E577A24C7026B00CEE0D6 /* zip_algorithm_zstd.c */; };
+		4B30B53425F117C4002CE070 /* libzstd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B30B53325F117C4002CE070 /* libzstd.dylib */; };
 		4B3A5F521DF96EB4005A53A1 /* zip_fseek.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */; };
 		4B3A5F531DF96EB4005A53A1 /* zip_ftell.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */; };
 		4B3FAE802385C5CC00192D6A /* zip_algorithm_xz.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3FAE7F2385C5A300192D6A /* zip_algorithm_xz.c */; };
@@ -187,8 +189,6 @@
 		4B93995E24631B3E00AEBDA4 /* zip_source_file.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B93995924631B3E00AEBDA4 /* zip_source_file.h */; };
 		4B972050188EBE85002FAFAD /* zip_file_get_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204D188EBE85002FAFAD /* zip_file_get_external_attributes.c */; };
 		4B972052188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B97204E188EBE85002FAFAD /* zip_file_set_external_attributes.c */; };
-		4B9E577C24C7202000CEE0D6 /* zip_algorithm_zstd.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E577A24C7026B00CEE0D6 /* zip_algorithm_zstd.c */; };
-		4B9E578824C9770C00CEE0D6 /* libzstd.1.4.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9E578724C9770C00CEE0D6 /* libzstd.1.4.5.dylib */; };
 		4B9E578A24C9779900CEE0D6 /* zip_err_str.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E578924C9779900CEE0D6 /* zip_err_str.c */; };
 		4BACD59315BC2CFA00920691 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
 		4BACD59415BC2D0800920691 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
@@ -607,6 +607,7 @@
 		4B30B4BF25F0ECC8002CE070 /* liboverride.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = liboverride.c; sourceTree = "<group>"; };
 		4B30B4D025F0ECF7002CE070 /* fuzz_main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fuzz_main.c; sourceTree = "<group>"; };
 		4B30B4D125F0EE6D002CE070 /* liboverride-test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "liboverride-test.c"; sourceTree = "<group>"; };
+		4B30B53325F117C4002CE070 /* libzstd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libzstd.dylib; path = /usr/local/lib/libzstd.dylib; sourceTree = "<group>"; };
 		4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_fseek.c; sourceTree = "<group>"; };
 		4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_ftell.c; sourceTree = "<group>"; };
 		4B3FAE7F2385C5A300192D6A /* zip_algorithm_xz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_algorithm_xz.c; sourceTree = "<group>"; };
@@ -955,7 +956,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B9E578824C9770C00CEE0D6 /* libzstd.1.4.5.dylib in Frameworks */,
+				4B30B53425F117C4002CE070 /* libzstd.dylib in Frameworks */,
 				4BE92AA720345E3800509BC8 /* libbz2.tbd in Frameworks */,
 				4B01D73C15B2F6AF002D5007 /* libz.dylib in Frameworks */,
 				4B3FAE822385C79200192D6A /* liblzma.5.dylib in Frameworks */,
@@ -1405,6 +1406,7 @@
 		4BDC71CA15B181DA00236D3C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B30B53325F117C4002CE070 /* libzstd.dylib */,
 				4B9E578724C9770C00CEE0D6 /* libzstd.1.4.5.dylib */,
 				4B3FAE812385C79200192D6A /* liblzma.5.dylib */,
 				4BE92AA820345E5500509BC8 /* libnettle.6.dylib */,
@@ -1820,7 +1822,7 @@
 		4BDC71BF15B181DA00236D3C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = NiH;
 				TargetAttributes = {
 					3D7E35361B3305FB00022624 = {
@@ -1924,6 +1926,7 @@
 				3D7E35491B330AD500022624 /* zip_source_is_deleted.c in Sources */,
 				4BCF3039199ABDDA0064207B /* zip_source_tell_write.c in Sources */,
 				4B01D6A615B2F46B002D5007 /* zip_add_dir.c in Sources */,
+				4B30B50225F11684002CE070 /* zip_algorithm_zstd.c in Sources */,
 				4B972052188EBE85002FAFAD /* zip_file_set_external_attributes.c in Sources */,
 				4B0454BA1E8E3E08002FA1F9 /* zip_source_compress.c in Sources */,
 				4B3FAE802385C5CC00192D6A /* zip_algorithm_xz.c in Sources */,
@@ -1994,7 +1997,6 @@
 				4B01D6D015B2F46B002D5007 /* zip_get_num_files.c in Sources */,
 				4B01D6D115B2F46B002D5007 /* zip_memdup.c in Sources */,
 				4B01D6D215B2F46B002D5007 /* zip_name_locate.c in Sources */,
-				4B9E577C24C7202000CEE0D6 /* zip_algorithm_zstd.c in Sources */,
 				4B01D6D315B2F46B002D5007 /* zip_new.c in Sources */,
 				4B01D6D415B2F46B002D5007 /* zip_open.c in Sources */,
 				4B01D6D515B2F46B002D5007 /* zip_rename.c in Sources */,
@@ -2292,10 +2294,7 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@rpath";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/zstd/1.4.5/lib,
-				);
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/zstd/1.4.9/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = "at.nih.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2327,10 +2326,7 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@rpath";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/zstd/1.4.5/lib,
-				);
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/zstd/1.4.9/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = "at.nih.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2656,6 +2652,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
@@ -2683,13 +2680,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include,
-					../lib,
 					.,
+					../lib,
 					../src,
+					/usr/local/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				SDKROOT = macosx;
@@ -2716,6 +2714,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
@@ -2739,13 +2738,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include,
-					../lib,
 					.,
+					../lib,
 					../src,
+					/usr/local/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
 				SDKROOT = macosx;
 				USE_HEADERMAP = NO;

@@ -364,8 +364,11 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         }
 
         if ((cd->entry[i].orig = _zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, error)) < 0) {
-            if (grown && zip_error_code_zip(error) == ZIP_ER_NOZIP) {
-                zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(i, ZIP_ER_DETAIL_CDIR_ENTRY_INVALID));
+	    if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
+		zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), i));
+	    }
+	    else if (grown && zip_error_code_zip(error) == ZIP_ER_NOZIP) {
+                zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, i));
             }
             _zip_cdir_free(cd);
             _zip_buffer_free(cd_buffer);
@@ -454,6 +457,9 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
         }
 
         if (_zip_dirent_read(&temp, za->src, NULL, true, error) == -1) {
+	    if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
+		zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), i));
+	    }
             _zip_dirent_finalize(&temp);
             return -1;
         }

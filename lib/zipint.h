@@ -199,9 +199,11 @@ extern const int _zip_err_details_count;
 
 /* macros for libzip-internal errors */
 #define MAX_DETAIL_INDEX 0xffffff
-#define MAKE_DETAIL_WITH_INDEX(error, index) ((((index) > MAX_DETAIL_INDEX) ? MAX_DETAIL_INDEX : (index)) << 8 | (error))
+#define MAKE_DETAIL_WITH_INDEX(error, index) ((((index) > MAX_DETAIL_INDEX) ? MAX_DETAIL_INDEX : (int)(index)) << 8 | (error))
 #define GET_INDEX_FROM_DETAIL(error) (((error) >> 8) & MAX_DETAIL_INDEX)
 #define GET_ERROR_FROM_DETAIL(error) ((error) & 0xff)
+#define ADD_INDEX_TO_DETAIL(error, index) MAKE_DETAIL_WITH_INDEX(GET_ERROR_FROM_DETAIL(error), (index))
+
 /* error code for libzip-internal errors */
 #define ZIP_ER_DETAIL_NO_DETAIL 0   /* G no detail */
 #define ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD 1  /* G central directory overlaps EOCD, or there is space between them */
@@ -215,6 +217,14 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_EOCD64_WRONG_MAGIC 9  /* G EOCD64 magic incorrect */
 #define ZIP_ER_DETAIL_EOCD64_MISMATCH 10  /* G EOCD64 and EOCD do not match */
 #define ZIP_ER_DETAIL_CDIR_INVALID 11  /* G invalid value in central directory */
+#define ZIP_ER_DETAIL_VARIABLE_SIZE_OVERFLOW 12 /* E variable size fields overflow header */
+#define ZIP_ER_DETAIL_INVALID_UTF8_IN_FILENAME 13 /* E invalid UTF-8 in filename */
+#define ZIP_ER_DETAIL_INVALID_UTF8_IN_COMMENT 13 /* E invalid UTF-8 in comment */
+#define ZIP_ER_DETAIL_INVALID_ZIP64_EF 14 /* E invalid Zip64 extra field */
+#define ZIP_ER_DETAIL_INVALID_WINZIPAES_EF 14 /* E invalid WinZip AES extra field */
+#define ZIP_ER_DETAIL_EF_TRAILING_GARBAGE 15 /* E garbage at end of extra fields */
+#define ZIP_ER_DETAIL_INVALID_EF_LENGTH 16 /* E extra field length is invalid */
+#define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 17 /* E file length in header doesn't match actual file length */
 
 /* directory entry: general purpose bit flags */
 
