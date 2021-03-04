@@ -604,6 +604,9 @@
 		4B28AA2515BAD4E200D0C17D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4B28AA2615BAD4E200D0C17D /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
 		4B28AA2715BAD4E200D0C17D /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		4B30B4BF25F0ECC8002CE070 /* liboverride.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = liboverride.c; sourceTree = "<group>"; };
+		4B30B4D025F0ECF7002CE070 /* fuzz_main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fuzz_main.c; sourceTree = "<group>"; };
+		4B30B4D125F0EE6D002CE070 /* liboverride-test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "liboverride-test.c"; sourceTree = "<group>"; };
 		4B3A5F4D1DF96D83005A53A1 /* zip_fseek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_fseek.c; sourceTree = "<group>"; };
 		4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_ftell.c; sourceTree = "<group>"; };
 		4B3FAE7F2385C5A300192D6A /* zip_algorithm_xz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_algorithm_xz.c; sourceTree = "<group>"; };
@@ -1202,7 +1205,10 @@
 				4BACD57A15BC2AEF00920691 /* fopen_unchanged.c */,
 				4BACD57B15BC2AEF00920691 /* fread.c */,
 				4BC03F9A1FDD5617003C7B62 /* fseek.c */,
+				4B30B4D025F0ECF7002CE070 /* fuzz_main.c */,
 				4BD6CB5E19E71B3B00710654 /* hole.c */,
+				4B30B4BF25F0ECC8002CE070 /* liboverride.c */,
+				4B30B4D125F0EE6D002CE070 /* liboverride-test.c */,
 				4BC03F9C1FDD5617003C7B62 /* malloc.c */,
 				4B4CB5572483D7B7005C5428 /* nihtest.conf.in */,
 				4BD155CE191CD28D0046F012 /* NiHTest.pm */,

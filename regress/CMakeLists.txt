@@ -7,6 +7,7 @@ set(TEST_PROGRAMS
   fseek
   fuzz_main
   nonrandomopentest
+  liboverride-test
 )
 
 set(GETOPT_USERS
@@ -45,6 +46,7 @@ target_include_directories(ziptool_regress PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/
 set(DL_USERS
   # malloc
   nonrandomopen
+  liboverride
 )
 
 foreach(PROGRAM IN LISTS DL_USERS)
