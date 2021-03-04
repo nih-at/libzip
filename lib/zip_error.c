@@ -67,13 +67,14 @@ zip_error_init_with_code(zip_error_t *error, int ze) {
     zip_error_init(error);
     error->zip_err = ze;
     switch (zip_error_system_type(error)) {
-    case ZIP_ET_SYS:
-        error->sys_err = errno;
-        break;
-
-    default:
-        error->sys_err = 0;
-        break;
+        case ZIP_ET_SYS:
+        case ZIP_ET_LIBZIP:
+            error->sys_err = errno;
+            break;
+            
+        default:
+            error->sys_err = 0;
+            break;
     }
 }
 

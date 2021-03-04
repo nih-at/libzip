@@ -189,6 +189,33 @@ zip_source_t *zip_source_buffer_with_attributes(zip_t *za, const void *data, zip
 
 enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
 
+struct _zip_err_detail {
+    bool has_index;
+    const char *description;
+};
+
+extern const struct _zip_err_detail _zip_err_details[];
+extern const int _zip_err_details_count;
+
+/* macros for libzip-internal errors */
+#define MAX_DETAIL_INDEX 0xffffff
+#define MAKE_DETAIL_WITH_INDEX(error, index) ((((index) > MAX_DETAIL_INDEX) ? MAX_DETAIL_INDEX : (index)) << 8 | (error))
+#define GET_INDEX_FROM_DETAIL(error) (((error) >> 8) & MAX_DETAIL_INDEX)
+#define GET_ERROR_FROM_DETAIL(error) ((error) & 0xff)
+/* error code for libzip-internal errors */
+#define ZIP_ER_DETAIL_NO_DETAIL 0   /* G no detail */
+#define ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD 1  /* G central directory overlaps EOCD, or there is space between them */
+#define ZIP_ER_DETAIL_COMMENT_LENGTH_INVALID 2  /* G archive comment length incorrect */
+#define ZIP_ER_DETAIL_CDIR_LENGTH_INVALID 3  /* G central directory length invalid */
+#define ZIP_ER_DETAIL_CDIR_ENTRY_INVALID 4  /* E central header invalid */
+#define ZIP_ER_DETAIL_CDIR_WRONG_ENTRIES_COUNT 5  /* G central directory count of entries is incorrect */
+#define ZIP_ER_DETAIL_ENTRY_HEADER_MISMATCH 6  /* E local and central headers do not match */
+#define ZIP_ER_DETAIL_EOCD_LENGTH_INVALID 7  /* G wrong EOCD length */
+#define ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD 8  /* G EOCD64 overlaps EOCD, or there is space between them */
+#define ZIP_ER_DETAIL_EOCD64_WRONG_MAGIC 9  /* G EOCD64 magic incorrect */
+#define ZIP_ER_DETAIL_EOCD64_MISMATCH 10  /* G EOCD64 and EOCD do not match */
+#define ZIP_ER_DETAIL_CDIR_INVALID 11  /* G invalid value in central directory */
+
 /* directory entry: general purpose bit flags */
 
 #define ZIP_GPBF_ENCRYPTED 0x0001u         /* is encrypted */

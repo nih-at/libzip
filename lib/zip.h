@@ -123,7 +123,7 @@ extern "C" {
 #define ZIP_ER_INVAL 18           /* N Invalid argument */
 #define ZIP_ER_NOZIP 19           /* N Not a zip archive */
 #define ZIP_ER_INTERNAL 20        /* N Internal error */
-#define ZIP_ER_INCONS 21          /* N Zip archive inconsistent */
+#define ZIP_ER_INCONS 21          /* L Zip archive inconsistent */
 #define ZIP_ER_REMOVE 22          /* S Can't remove file */
 #define ZIP_ER_DELETED 23         /* N Entry has been deleted */
 #define ZIP_ER_ENCRNOTSUPP 24     /* N Encryption method not supported */
@@ -138,9 +138,10 @@ extern "C" {
 
 /* type of system error value */
 
-#define ZIP_ET_NONE 0 /* sys_err unused */
-#define ZIP_ET_SYS 1  /* sys_err is errno */
-#define ZIP_ET_ZLIB 2 /* sys_err is zlib error code */
+#define ZIP_ET_NONE 0   /* sys_err unused */
+#define ZIP_ET_SYS 1    /* sys_err is errno */
+#define ZIP_ET_ZLIB 2   /* sys_err is zlib error code */
+#define ZIP_ET_LIBZIP 3 /* sys_err is libzip error code */
 
 /* compression methods */
 

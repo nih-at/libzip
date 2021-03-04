@@ -224,8 +224,14 @@ void
 _zip_set_open_error(int *zep, const zip_error_t *err, int ze) {
     if (err) {
         ze = zip_error_code_zip(err);
-        if (zip_error_system_type(err) == ZIP_ET_SYS) {
-            errno = zip_error_code_system(err);
+	switch (zip_error_system_type(err)) {
+	    case ZIP_ET_SYS:
+	    case ZIP_ET_LIBZIP:
+		errno = zip_error_code_system(err);
+		break;
+		
+	    default:
+		break;
         }
     }
 
@@ -277,7 +283,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
     if (cd->offset + cd->size > buf_offset + eocd_offset) {
         /* cdir spans past EOCD record */
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD);
         _zip_cdir_free(cd);
         return NULL;
     }
@@ -289,7 +295,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         tail_len = _zip_buffer_left(buffer);
 
         if (tail_len < comment_len || ((za->open_flags & ZIP_CHECKCONS) && tail_len != comment_len)) {
-            zip_error_set(error, ZIP_ER_INCONS, 0);
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_COMMENT_LENGTH_INVALID);
             _zip_cdir_free(cd);
             return NULL;
         }
@@ -308,7 +314,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         _zip_buffer_set_offset(buffer, cd->offset - buf_offset);
 
         if ((data = _zip_buffer_get(buffer, cd->size)) == NULL) {
-            zip_error_set(error, ZIP_ER_INCONS, 0);
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_LENGTH_INVALID);
             _zip_cdir_free(cd);
             return NULL;
         }
@@ -359,7 +365,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
 
         if ((cd->entry[i].orig = _zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, error)) < 0) {
             if (grown && zip_error_code_zip(error) == ZIP_ER_NOZIP) {
-                zip_error_set(error, ZIP_ER_INCONS, 0);
+                zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(i, ZIP_ER_DETAIL_CDIR_ENTRY_INVALID));
             }
             _zip_cdir_free(cd);
             _zip_buffer_free(cd_buffer);
@@ -370,7 +376,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
     }
 
     if (i != cd->nentry || left > 0) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_WRONG_ENTRIES_COUNT);
         _zip_buffer_free(cd_buffer);
         _zip_cdir_free(cd);
         return NULL;
@@ -394,7 +400,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         }
 
         if (!ok) {
-            zip_error_set(error, ZIP_ER_INCONS, 0);
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_LENGTH_INVALID);
             _zip_buffer_free(cd_buffer);
             _zip_cdir_free(cd);
             return NULL;
@@ -453,7 +459,7 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
         }
 
         if (_zip_headercomp(cd->entry[i].orig, &temp) != 0) {
-            zip_error_set(error, ZIP_ER_INCONS, 0);
+            zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_HEADER_MISMATCH, i));
             _zip_dirent_finalize(&temp);
             return -1;
         }
@@ -644,7 +650,7 @@ _zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags
     zip_uint64_t i, nentry, size, offset, eocd_offset;
 
     if (_zip_buffer_left(buffer) < EOCDLEN) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD_LENGTH_INVALID);
         return NULL;
     }
 
@@ -677,12 +683,12 @@ _zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags
 
     if (offset + size > buf_offset + eocd_offset) {
         /* cdir spans past EOCD record */
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD);
         return NULL;
     }
 
     if ((flags & ZIP_CHECKCONS) && offset + size != buf_offset + eocd_offset) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_LENGTH_INVALID);
         return NULL;
     }
 
@@ -723,7 +729,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 
     /* does EOCD fit before EOCD locator? */
     if (eocd_offset + EOCD64LEN > eocdloc_offset + buf_offset) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD);
         return NULL;
     }
 
@@ -744,7 +750,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     }
 
     if (memcmp(_zip_buffer_get(buffer, 4), EOCD64_MAGIC, 4) != 0) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_WRONG_MAGIC);
         if (free_buffer) {
             _zip_buffer_free(buffer);
         }
@@ -756,7 +762,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 
     /* is there a hole between EOCD and EOCD locator, or do they overlap? */
     if ((flags & ZIP_CHECKCONS) && size + eocd_offset + 12 != buf_offset + eocdloc_offset) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD);
         if (free_buffer) {
             _zip_buffer_free(buffer);
         }
@@ -778,7 +784,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
         eocd_disk = eocd_disk64;
     }
     if ((flags & ZIP_CHECKCONS) && (eocd_disk != eocd_disk64 || num_disks != num_disks64)) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_MISMATCH);
         if (free_buffer) {
             _zip_buffer_free(buffer);
         }
@@ -825,16 +831,16 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     }
     if (offset + size > buf_offset + eocd_offset) {
         /* cdir spans past EOCD record */
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD);
         return NULL;
     }
     if ((flags & ZIP_CHECKCONS) && offset + size != buf_offset + eocd_offset) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD);
         return NULL;
     }
 
     if (nentry > size / CDENTRYSIZE) {
-        zip_error_set(error, ZIP_ER_INCONS, 0);
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_INVALID);
         return NULL;
     }
 
