@@ -94,6 +94,7 @@ char help_head[] = PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n
 
 char help[] = "\n\
   -h       display this help message\n\
+  -C       check archive consistencies\n\
   -i       compare names ignoring case distinctions\n\
   -p       compare as many details as possible\n\
   -q       be quiet\n\
@@ -107,7 +108,7 @@ char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
 Copyright (C) 2003-2020 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
-#define OPTIONS "hVipqtv"
+#define OPTIONS "hVCipqtv"
 
 
 #define BOTH_ARE_ZIPS(a) (a[0].za && a[1].za)
@@ -130,7 +131,7 @@ static int list_directory(const char *name, struct archive *a);
 static int list_zip(const char *name, struct archive *a);
 static int test_file(zip_t *za, zip_uint64_t idx, const char *zipname, const char *filename, zip_uint64_t size, zip_uint32_t crc);
 
-int ignore_case, test_files, paranoid, verbose, have_directory;
+int ignore_case, test_files, paranoid, verbose, have_directory, check_consistency;
 int header_done;
 
 
@@ -142,40 +143,43 @@ main(int argc, char *const argv[]) {
 
     ignore_case = 0;
     test_files = 0;
+    check_consistency = 0;
     paranoid = 0;
     have_directory = 0;
     verbose = 1;
 
     while ((c = getopt(argc, argv, OPTIONS)) != -1) {
         switch (c) {
-        case 'i':
-            ignore_case = 1;
-            break;
-        case 'p':
-            paranoid = 1;
-            break;
-        case 'q':
-            verbose = 0;
-            break;
-        case 't':
-            test_files = 1;
-            break;
-        case 'v':
-            verbose = 1;
-            break;
-
-        case 'h':
-            fputs(help_head, stdout);
-            printf(USAGE, progname);
-            fputs(help, stdout);
-            exit(0);
-        case 'V':
-            fputs(version_string, stdout);
-            exit(0);
-
-        default:
-            fprintf(stderr, USAGE, progname);
-            exit(2);
+            case 'C':
+                check_consistency = 1;
+            case 'i':
+                ignore_case = 1;
+                break;
+            case 'p':
+                paranoid = 1;
+                break;
+            case 'q':
+                verbose = 0;
+                break;
+            case 't':
+                test_files = 1;
+                break;
+            case 'v':
+                verbose = 1;
+                break;
+                
+            case 'h':
+                fputs(help_head, stdout);
+                printf(USAGE, progname);
+                fputs(help, stdout);
+                exit(0);
+            case 'V':
+                fputs(version_string, stdout);
+                exit(0);
+                
+            default:
+                fprintf(stderr, USAGE, progname);
+                exit(2);
         }
     }
 
@@ -410,7 +414,7 @@ list_zip(const char *name, struct archive *a) {
     struct zip_stat st;
     unsigned int i;
 
-    if ((za = zip_open(name, paranoid ? ZIP_CHECKCONS : 0, &err)) == NULL) {
+    if ((za = zip_open(name, check_consistency ? ZIP_CHECKCONS : 0, &err)) == NULL) {
         zip_error_t error;
         zip_error_init_with_code(&error, err);
         fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", progname, name, zip_error_strerror(&error));
