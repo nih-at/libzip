@@ -1,5 +1,5 @@
 features CRYPTO
-precheck liboverride-test
+precheck ./liboverride-test
 description encrypt file without entropy, to make results repeatable
 return 0
 preload nonrandomopen.so
