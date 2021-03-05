@@ -152,6 +152,7 @@ main(int argc, char *const argv[]) {
         switch (c) {
             case 'C':
                 check_consistency = 1;
+                break;
             case 'i':
                 ignore_case = 1;
                 break;
