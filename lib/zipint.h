@@ -203,7 +203,7 @@ extern const struct _zip_err_info _zip_err_details[];
 extern const int _zip_err_details_count;
 
 /* macros for libzip-internal errors */
-#define MAX_DETAIL_INDEX 0xffffff
+#define MAX_DETAIL_INDEX 0x7fffff
 #define MAKE_DETAIL_WITH_INDEX(error, index) ((((index) > MAX_DETAIL_INDEX) ? MAX_DETAIL_INDEX : (int)(index)) << 8 | (error))
 #define GET_INDEX_FROM_DETAIL(error) (((error) >> 8) & MAX_DETAIL_INDEX)
 #define GET_ERROR_FROM_DETAIL(error) ((error) & 0xff)
