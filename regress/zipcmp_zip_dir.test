@@ -8,7 +8,7 @@ file zipcmp_zip_dir.zip zipcmp_zip_dir.zip zipcmp_zip_dir.zip
 return 1
 stdout --- zipcmp_zip_dir.zip
 stdout +++ a
-stdout -          0 00000000 00-empty-dir/
-stdout -          1 e8b7be43 dir-with-file/a
-stdout +          0 00000000 empty-dir-in-dir/
-stdout -          0 00000000 empty-dir/
+stdout - file '00-empty-dir/', size 0, crc 00000000
+stdout - file 'dir-with-file/a', size 1, crc e8b7be43
+stdout + file 'empty-dir-in-dir/', size 0, crc 00000000
+stdout - file 'empty-dir/', size 0, crc 00000000

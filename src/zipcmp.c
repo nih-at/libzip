@@ -55,6 +55,8 @@
 
 #include "compat.h"
 
+#include "diff_output.h"
+
 struct archive {
     const char *name;
     zip_t *za;
@@ -81,6 +83,100 @@ struct entry {
     zip_uint16_t n_extra_fields;
     const char *comment;
     zip_uint32_t comment_length;
+};
+
+
+typedef struct {
+    uint32_t value;
+    const char * const name;
+} enum_map_t;
+
+const enum_map_t comp_methods[] = {
+    { 0, "Stored (no compression)" },
+    { 1, "Shrunk" },
+    { 2, "Reduced with compression factor 1" },
+    { 3, "Reduced with compression factor 2" },
+    { 4, "Reduced with compression factor 3" },
+    { 5, "Reduced with compression factor 4" },
+    { 6, "Imploded" },
+    { 7, "Reserved for Tokenizing compression algorithm" },
+    { 8, "Deflated" },
+    { 9, "Enhanced Deflating using Deflate64(tm)" },
+    { 10, "PKWARE Data Compression Library Imploding (old IBM TERSE)" },
+    { 11, "11 (Reserved by PKWARE)" },
+    { 12, "BZIP2" },
+    { 13, "13 (Reserved by PKWARE)" },
+    { 14, "LZMA (EFS)" },
+    { 15, "15 (Reserved by PKWARE)" },
+    { 16, "16 (Reserved by PKWARE)" },
+    { 17, "17 (Reserved by PKWARE)" },
+    { 18, "IBM TERSE (new)" },
+    { 19, "IBM LZ77 z Architecture (PFS)" },
+    { 20, "Zstandard compressed data (obsolete)" },
+    { 93, "Zstandard compressed data" },
+    { 95, "XZ compressed data" },
+    { 97, "WavPack compressed data" },
+    { 98, "PPMd version I, Rev 1" },
+    { 99, "WinZIP AES Encryption" },
+    { UINT32_MAX, NULL }
+};
+
+const enum_map_t extra_fields[] = {
+    /* PKWARE defined */
+    { 0x0001, "Zip64 extended information Extra field" },
+    { 0x0007, "AV Info" },
+    { 0x0008, "Reserved for extended language encoding data (PFS)" },
+    { 0x0009, "OS/2" },
+    { 0x000a, "NTFS" },
+    { 0x000c, "OpenVMS" },
+    { 0x000d, "UNIX" },
+    { 0x000e, "Reserved for file stream and fork descriptors" },
+    { 0x000f, "Patch Descriptor" },
+    { 0x0014, "PKCS#7 Store for X.509 Certificates" },
+    { 0x0015, "X.509 Certificate ID and Signature for individual file" },
+    { 0x0016, "X.509 Certificate ID for Central Directory" },
+    { 0x0017, "Strong Encryption Header" },
+    { 0x0018, "Record Management Controls" },
+    { 0x0019, "PKCS#7 Encryption Recipient Certificate List" },
+    { 0x0065, "IBM S/390 (Z390), AS/400 (I400) attributes - uncompressed" },
+    { 0x0066, "Reserved for IBM S/390 (Z390), AS/400 (I400) attributes - compressed" },
+    { 0x4690, "POSZIP 4690 (reserved)" },
+
+    /* Third-Party defined; see InfoZIP unzip sources proginfo/extrafld.txt */
+    { 0x07c8, "Info-ZIP Macintosh (old)" },
+    { 0x2605, "ZipIt Macintosh (first version)" },
+    { 0x2705, "ZipIt Macintosh 1.3.5+ (w/o full filename)" },
+    { 0x2805, "ZipIt Macintosh 1.3.5+" },
+    { 0x334d, "Info-ZIP Macintosh (new)" },
+    { 0x4154, "Tandem NSK" },
+    { 0x4341, "Acorn/SparkFS" },
+    { 0x4453, "Windows NT security descriptor" },
+    { 0x4704, "VM/CMS" },
+    { 0x470f, "MVS" },
+    { 0x4854, "Theos, old inofficial port" },
+    { 0x4b46, "FWKCS MD5" },
+    { 0x4c41, "OS/2 access control list (text ACL)" },
+    { 0x4d49, "Info-ZIP OpenVMS (obsolete)" },
+    { 0x4d63, "Macintosh SmartZIP" },
+    { 0x4f4c, "Xceed original location extra field" },
+    { 0x5356, "AOS/VS (ACL)" },
+    { 0x5455, "extended timestamp" },
+    { 0x554e, "Xceed unicode extra field" },
+    { 0x5855, "Info-ZIP UNIX (original)" },
+    { 0x6375, "Info-ZIP UTF-8 comment field" },
+    { 0x6542, "BeOS (BeBox, PowerMac, etc.)" },
+    { 0x6854, "Theos" },
+    { 0x7075, "Info-ZIP UTF-8 name field" },
+    { 0x7441, "AtheOS (AtheOS/Syllable attributes)" },
+    { 0x756e, "ASi UNIX" },
+    { 0x7855, "Info-ZIP UNIX" },
+    { 0x7875, "Info-ZIP UNIX 3rd generation" },
+    { 0x9901, "WinZIP AES encryption" },
+    { 0xa220, "Microsoft Open Packaging Growth Hint" },
+    { 0xcafe, "executable Java JAR file" },
+    { 0xfb4a, "SMS/QDOS" }, /* per InfoZIP extrafld.txt */
+    { 0xfd4a, "SMS/QDOS" }, /* per appnote.txt */
+    { UINT32_MAX, NULL }
 };
 
 
@@ -114,16 +210,19 @@ Copyright (C) 2003-2020 Dieter Baron and Thomas Klausner\n\
 #define BOTH_ARE_ZIPS(a) (a[0].za && a[1].za)
 
 static int comment_compare(const char *c1, size_t l1, const char *c2, size_t l2);
-static int compare_list(char *const name[], const void *l[], const zip_uint64_t n[], int size, int (*cmp)(const void *, const void *), int (*ignore)(const void *l, int last, const void *o), int (*checks)(char *const name[2], const void *, const void *), void (*print)(const void *));
+static int compare_list(char *const name[2], const void *list[2], const zip_uint64_t list_length[2], int element_size, int (*cmp)(const void *a, const void *b), int (*ignore)(const void *list, int last, const void *other), int (*check)(char *const name[2], const void *a, const void *b), void (*print)(char side, const void *element), void (*start_file)(const void *element));
 static int compare_zip(char *const zn[]);
 static int ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2);
 static int ef_order(const void *a, const void *b);
-static void ef_print(const void *p);
+static void ef_print(char side, const void *p);
 static int ef_read(zip_t *za, zip_uint64_t idx, struct entry *e);
 static int entry_cmp(const void *p1, const void *p2);
 static int entry_ignore(const void *p1, int last, const void *o);
 static int entry_paranoia_checks(char *const name[2], const void *p1, const void *p2);
-static void entry_print(const void *p);
+static void entry_print(char side, const void *p);
+static void entry_start_file(const void *p);
+static const char *map_enum(const enum_map_t *map, uint32_t value);
+
 static int is_directory(const char *name);
 #ifdef HAVE_FTS_H
 static int list_directory(const char *name, struct archive *a);
@@ -132,7 +231,8 @@ static int list_zip(const char *name, struct archive *a);
 static int test_file(zip_t *za, zip_uint64_t idx, const char *zipname, const char *filename, zip_uint64_t size, zip_uint32_t crc);
 
 int ignore_case, test_files, paranoid, verbose, have_directory, check_consistency;
-int header_done;
+
+diff_output_t output;
 
 
 int
@@ -228,19 +328,21 @@ compare_zip(char *const zn[]) {
             qsort(a[i].entry, a[i].nentry, sizeof(a[i].entry[0]), entry_cmp);
     }
 
-    header_done = 0;
+    diff_output_init(&output, verbose, zn);
 
     e[0] = a[0].entry;
     e[1] = a[1].entry;
     n[0] = a[0].nentry;
     n[1] = a[1].nentry;
-    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]), entry_cmp, have_directory ? entry_ignore : NULL, paranoid ? entry_paranoia_checks : NULL, entry_print);
+    res = compare_list(zn, (const void **)e, n, sizeof(e[i][0]), entry_cmp, have_directory ? entry_ignore : NULL, paranoid ? entry_paranoia_checks : NULL, entry_print, entry_start_file);
 
     if (paranoid) {
         if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
-            if (verbose) {
-                printf("--- archive comment (%zu)\n", a[0].comment_length);
-                printf("+++ archive comment (%zu)\n", a[1].comment_length);
+            if (a[0].comment_length > 0) {
+                diff_output_data(&output, '-', (const zip_uint8_t *)a[0].comment, a[0].comment_length, "archive comment");
+            }
+            if (a[1].comment_length > 0) {
+                diff_output_data(&output, '+', (const zip_uint8_t *)a[1].comment, a[1].comment_length, "archive comment");
             }
             res = 1;
         }
@@ -482,37 +584,36 @@ comment_compare(const char *c1, size_t l1, const char *c2, size_t l2) {
 }
 
 
-static int
-compare_list(char *const name[2], const void *l[2], const zip_uint64_t n[2], int size, int (*cmp)(const void *, const void *), int (*ignore)(const void *l, int last, const void *o), int (*check)(char *const name[2], const void *, const void *), void (*print)(const void *)) {
+static int compare_list(char *const name[2], const void *list[2], const zip_uint64_t list_length[2], int element_size, int (*cmp)(const void *a, const void *b), int (*ignore)(const void *list, int last, const void *other), int (*check)(char *const name[2], const void *a, const void *b), void (*print)(char side, const void *element), void (*start_file)(const void *element)) {
     unsigned int i[2];
-    int j, c;
+    int j;
     int diff;
 
-#define INC(k) (i[k]++, l[k] = ((const char *)l[k]) + size)
+#define INC(k) (i[k]++, list[k] = ((const char *)list[k]) + element_size)
 #define PRINT(k)                                          \
     do {                                                  \
-        if (ignore && ignore(l[k], i[k] >= n[k] - 1, i[1-k] < n[1-k] ? l[1-k] : NULL)) {   \
+        if (ignore && ignore(list[k], i[k] >= list_length[k] - 1, i[1-k] < list_length[1-k] ? list[1-k] : NULL)) {   \
             break;                                        \
         }                                                 \
-        if (header_done == 0 && verbose) {                \
-            printf("--- %s\n+++ %s\n", name[0], name[1]); \
-            header_done = 1;                              \
-        }                                                 \
-        if (verbose) {                                    \
-            printf("%c ", (k) ? '+' : '-');               \
-            print(l[k]);                                  \
-        }                                                 \
+        print((k) ? '+' : '-', list[k]);                  \
         diff = 1;                                         \
     } while (0)
 
     i[0] = i[1] = 0;
     diff = 0;
-    while (i[0] < n[0] && i[1] < n[1]) {
-        c = cmp(l[0], l[1]);
+    while (i[0] < list_length[0] && i[1] < list_length[1]) {
+        int c = cmp(list[0], list[1]);
 
         if (c == 0) {
-            if (check)
-                diff |= check(name, l[0], l[1]);
+            if (check) {
+                if (start_file) {
+                    start_file(list[0]);
+                }
+                diff |= check(name, list[0], list[1]);
+                if (start_file) {
+                    diff_output_end_file(&output);
+                }
+            }
             INC(0);
             INC(1);
         }
@@ -527,7 +628,7 @@ compare_list(char *const name[2], const void *l[2], const zip_uint64_t n[2], int
     }
 
     for (j = 0; j < 2; j++) {
-        while (i[j] < n[j]) {
+        while (i[j] < list_length[j]) {
             PRINT(j);
             INC(j);
         }
@@ -582,7 +683,7 @@ ef_compare(char *const name[2], const struct entry *e1, const struct entry *e2) 
     n[0] = e1->n_extra_fields;
     n[1] = e2->n_extra_fields;
 
-    return compare_list(name, (const void **)ef, n, sizeof(struct ef), ef_order, NULL, NULL, ef_print);
+    return compare_list(name, (const void **)ef, n, sizeof(struct ef), ef_order, NULL, NULL, ef_print, NULL);
 }
 
 
@@ -604,15 +705,10 @@ ef_order(const void *ap, const void *bp) {
 
 
 static void
-ef_print(const void *p) {
+ef_print(char side, const void *p) {
     const struct ef *ef = (struct ef *)p;
-    int i;
 
-    printf("                    %s  ", ef->name);
-    printf("%04x %c <", ef->id, ef->flags == ZIP_FL_LOCAL ? 'l' : 'c');
-    for (i = 0; i < ef->size; i++)
-        printf("%s%02x", i ? " " : "", ef->data[i]);
-    printf(">\n");
+    diff_output_data(&output, side, ef->data, ef->size, "  %s extra field %s", ef->flags == ZIP_FL_LOCAL ? "local" : "central", map_enum(extra_fields, ef->id));
 }
 
 
@@ -676,33 +772,19 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 
     ret = 0;
 
-    if (ef_compare(name, e1, e2) != 0)
-        ret = 1;
-
     if (e1->comp_method != e2->comp_method) {
-        if (verbose) {
-            if (header_done == 0) {
-                printf("--- %s\n+++ %s\n", name[0], name[1]);
-                header_done = 1;
-            }
-            printf("---                     %s  ", e1->name);
-            printf("method %u\n", e1->comp_method);
-            printf("+++                     %s  ", e1->name);
-            printf("method %u\n", e2->comp_method);
-        }
+        diff_output(&output, '-', "  compression method %s", map_enum(comp_methods, e1->comp_method));
+        diff_output(&output, '+', "  compression method %s", map_enum(comp_methods, e2->comp_method));
         ret = 1;
     }
+
+    if (ef_compare(name, e1, e2) != 0) {
+        ret = 1;
+    }
+
     if (comment_compare(e1->comment, e1->comment_length, e2->comment, e2->comment_length) != 0) {
-        if (verbose) {
-            if (header_done == 0) {
-                printf("--- %s\n+++ %s\n", name[0], name[1]);
-                header_done = 1;
-            }
-            printf("---                     %s  ", e1->name);
-            printf("comment %" PRIu32 "\n", e1->comment_length);
-            printf("+++                     %s  ", e1->name);
-            printf("comment %" PRIu32 "\n", e2->comment_length);
-        }
+        diff_output_data(&output, '-', (const zip_uint8_t *)e1->comment, e1->comment_length, "  comment");
+        diff_output_data(&output, '+', (const zip_uint8_t *)e2->comment, e2->comment_length, "  comment");
         ret = 1;
     }
 
@@ -710,14 +792,17 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 }
 
 
-static void
-entry_print(const void *p) {
-    const struct entry *e;
+static void entry_print(char side, const void *p) {
+    const struct entry *e = (struct entry *)p;
 
-    e = (struct entry *)p;
+    diff_output_file(&output, side, e->name, e->size, e->crc);
+}
 
-    /* TODO PRId64 */
-    printf("%10lu %08x %s\n", (unsigned long)e->size, e->crc, e->name);
+
+static void entry_start_file(const void *p) {
+    const struct entry *e = (struct entry *)p;
+    
+    diff_output_start_file(&output, e->name, e->size, e->crc);
 }
 
 
@@ -760,4 +845,22 @@ test_file(zip_t *za, zip_uint64_t idx, const char *zipname, const char *filename
     }
 
     return 0;
+}
+
+
+static const char *map_enum(const enum_map_t *map, uint32_t value) {
+    static char unknown[16];
+    size_t i = 0;
+    
+    while (map[i].value < UINT32_MAX) {
+        if (map[i].value == value) {
+            return map[i].name;
+        }
+        i++;
+    }
+    
+    snprintf(unknown, sizeof(unknown), "unknown (%u)", value);
+    unknown[sizeof(unknown) - 1] = '\0';
+    
+    return unknown;
 }
