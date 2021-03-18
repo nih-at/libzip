@@ -619,17 +619,15 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
 
 static int
 write_cdir(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors) {
-    zip_int64_t cd_start, end, size;
-
-    if ((cd_start = zip_source_tell_write(za->src)) < 0) {
+    if (zip_source_tell_write(za->src) < 0) {
         return -1;
     }
 
-    if ((size = _zip_cdir_write(za, filelist, survivors)) < 0) {
+    if (_zip_cdir_write(za, filelist, survivors) < 0) {
         return -1;
     }
 
-    if ((end = zip_source_tell_write(za->src)) < 0) {
+    if (zip_source_tell_write(za->src) < 0) {
         return -1;
     }
 
