@@ -98,15 +98,14 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
 _zip_crypto_hmac_t *
 _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
     _zip_crypto_hmac_t *hmac;
-    int ret;
 
     if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
 
-    if ((ret = gnutls_hmac_init(hmac, GNUTLS_MAC_SHA1, secret, secret_length)) < 0) {
-        /* TODO: set error */
+    if (gnutls_hmac_init(hmac, GNUTLS_MAC_SHA1, secret, secret_length) < 0) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
         free(hmac);
         return NULL;
     }
