@@ -123,18 +123,20 @@ foreach(MAN_PAGE ${MAN_PAGES})
   string(REGEX REPLACE "[1-9]$" "mdoc" MDOC_FILE ${MAN_PAGE})
 
   # html re-generation
-  add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/man/${HTML_FILE}
+  add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/man/${HTML_FILE}
     DEPENDS ${MDOC_FILE}
-    COMMAND ${CMAKE_COMMAND} -DIN=${MDOC_FILE} -DOUT=${HTML_FILE} -DDIR=${PROJECT_SOURCE_DIR}/man -P ${PROJECT_SOURCE_DIR}/man/update-html.cmake
+    COMMAND ${CMAKE_COMMAND} -DIN=${PROJECT_SOURCE_DIR}/man/${MDOC_FILE} -DOUT=${PROJECT_BINARY_DIR}/man/${HTML_FILE} -P ${PROJECT_SOURCE_DIR}/man/update-html.cmake
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_BINARY_DIR}/man/${HTML_FILE} ${PROJECT_SOURCE_DIR}/man/${HTML_FILE}
     )
-  list(APPEND UPDATEHTML ${PROJECT_SOURCE_DIR}/man/${HTML_FILE})
+  list(APPEND UPDATEHTML ${PROJECT_BINARY_DIR}/man/${HTML_FILE})
 
   # man re-generation
-  add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/man/${MAN_FILE}
+  add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/man/${MAN_FILE}
     DEPENDS ${MDOC_FILE}
-    COMMAND ${CMAKE_COMMAND} -DIN=${MDOC_FILE} -DOUT=${MAN_FILE} -DDIR=${PROJECT_SOURCE_DIR}/man -P ${PROJECT_SOURCE_DIR}/man/update-man.cmake
+    COMMAND ${CMAKE_COMMAND} -DIN=${PROJECT_SOURCE_DIR}/man/${MDOC_FILE} -DOUT=${PROJECT_BINARY_DIR}/man/${MAN_FILE} -P ${PROJECT_SOURCE_DIR}/man/update-man.cmake
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_BINARY_DIR}/man/${MAN_FILE} ${PROJECT_SOURCE_DIR}/man/${MAN_FILE}
     )
-  list(APPEND UPDATEMAN ${PROJECT_SOURCE_DIR}/man/${MAN_FILE})
+  list(APPEND UPDATEMAN ${PROJECT_BINARY_DIR}/man/${MAN_FILE})
 endforeach()
 add_custom_target(man ALL DEPENDS ${MAN_PAGES})
 add_custom_target(update-man DEPENDS ${UPDATEMAN})
