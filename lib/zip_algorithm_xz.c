@@ -107,11 +107,6 @@ static void *
 allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t method) {
     struct ctx *ctx;
 
-    if (compression_flags < 0) {
-        zip_error_set(error, ZIP_ER_INVAL, 0);
-        return NULL;
-    }
-
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
@@ -119,6 +114,9 @@ allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t 
 
     ctx->error = error;
     ctx->compress = compress;
+    if (ctx->compression_flags < 0 || ctx->compression_flags > 9) {
+        ctx->compression_flags = 6; /* default value */
+    }
     ctx->compression_flags = (zip_uint32_t)compression_flags;
     ctx->compression_flags |= LZMA_PRESET_EXTREME;
     ctx->end_of_input = false;

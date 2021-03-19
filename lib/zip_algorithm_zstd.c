@@ -60,7 +60,7 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
     struct ctx *ctx;
 
     /* 0: let zstd choose */
-    if (compression_flags < 0 || compression_flags > 9) {
+    if (compression_flags < ZSTD_minCLevel() || compression_flags > ZSTD_maxCLevel()) {
         compression_flags = 0;
     }
 
