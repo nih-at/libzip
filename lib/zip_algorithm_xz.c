@@ -114,10 +114,11 @@ allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t 
 
     ctx->error = error;
     ctx->compress = compress;
-    if (ctx->compression_flags < 0 || ctx->compression_flags > 9) {
+    if (compression_flags < 0 || compression_flags > 9) {
         ctx->compression_flags = 6; /* default value */
+    } else {
+	ctx->compression_flags = (zip_uint32_t)compression_flags;
     }
-    ctx->compression_flags = (zip_uint32_t)compression_flags;
     ctx->compression_flags |= LZMA_PRESET_EXTREME;
     ctx->end_of_input = false;
     memset(ctx->header, 0, sizeof(ctx->header));
@@ -222,7 +223,7 @@ start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
         zip_error_set(ctx->error, map_error(ret), 0);
         return false;
     }
-    
+
     /* If general purpose bits 1 & 2 are both zero, write real uncompressed size in header. */
     if ((attributes->valid & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS) && (attributes->general_purpose_bit_mask & 0x6) == 0x6 && (attributes->general_purpose_bit_flags & 0x06) == 0 && (st->valid & ZIP_STAT_SIZE)) {
         ctx->uncompresssed_size = st->size;
