@@ -21,6 +21,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Features
 
+* add flag `ZIP_FL_SUPPORT_MULTIPLE_OPENS` and allow zip_fopen (perhaps other functions) on added/replaced files with such sources
 * add seek support for AES-encrypted files
 * consistently use `_zip_crypto_clear()` for passwords
 * support setting extra fields from `zip_source`
