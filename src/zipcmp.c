@@ -123,7 +123,7 @@ const enum_map_t comp_methods[] = {
 
 const enum_map_t extra_fields[] = {
     /* PKWARE defined */
-    { 0x0001, "Zip64 extended information Extra field" },
+    { 0x0001, "Zip64 extended information" },
     { 0x0007, "AV Info" },
     { 0x0008, "Reserved for extended language encoding data (PFS)" },
     { 0x0009, "OS/2" },
