@@ -465,6 +465,7 @@ ZIP_EXTERN zip_source_t *zip_source_win32w_create(const wchar_t *, zip_uint64_t,
 #endif
 ZIP_EXTERN zip_int64_t zip_source_write(zip_source_t *_Nonnull, const void *_Nullable, zip_uint64_t);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_zip(zip_t *_Nonnull, zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_int64_t);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_zip_create(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
 ZIP_EXTERN int zip_stat(zip_t *_Nonnull, const char *_Nonnull, zip_flags_t, zip_stat_t *_Nonnull);
 ZIP_EXTERN int zip_stat_index(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_stat_t *_Nonnull);
 ZIP_EXTERN void zip_stat_init(zip_stat_t *_Nonnull);

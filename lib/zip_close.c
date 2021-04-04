@@ -207,7 +207,7 @@ zip_close(zip_t *za) {
 
             zs = NULL;
             if (!ZIP_ENTRY_DATA_CHANGED(entry)) {
-                if ((zs = _zip_source_zip_new(za, za, i, ZIP_FL_UNCHANGED, 0, 0, NULL)) == NULL) {
+                if ((zs = _zip_source_zip_new(za, i, ZIP_FL_UNCHANGED, 0, 0, NULL, &za->error)) == NULL) {
                     error = 1;
                     break;
                 }
@@ -412,7 +412,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     }
 
     if (needs_crc) {
-        if ((src_tmp = zip_source_crc(za, src_final, 0)) == NULL) {
+        if ((src_tmp = zip_source_crc_create(src_final, 0, &za->error)) == NULL) {
             zip_source_free(src_final);
             return -1;
         }
