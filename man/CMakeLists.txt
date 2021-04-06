@@ -54,6 +54,7 @@ set(MAN_PAGES
   zip_libzip_version.3
   zip_name_locate.3
   zip_open.3
+  zip_register_cancel_callback_with_state.3
   zip_register_progress_callback.3
   zip_register_progress_callback_with_state.3
   zip_rename.3

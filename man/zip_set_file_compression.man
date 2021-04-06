@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SET_FILE_COMPRESSION" "3" "April 2, 2020" "NiH" "Library Functions Manual"
+.TH "ZIP_SET_FILE_COMPRESSION" "3" "March 19, 2021" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -83,6 +83,16 @@ algorithm.
 Deflate the file with the
 zlib(3)
 algorithm and default options.
+.TP 19n
+\fRZIP_CM_XZ\fR
+Use the
+xz(1)
+algorithm for compression
+.TP 19n
+\fRZIP_CM_ZSTD\fR
+Use the
+zstd(1)
+algorithm for compression
 .PP
 \fINOTE\fR:
 Only the deflate and store methods can be assumed to be universally
@@ -90,10 +100,23 @@ supported.
 .PP
 The
 \fIcomp_flags\fR
-argument defines the compression level, 1 being fastest compression
-and 9 highest.
-Allowed values are 0 (which uses the default compression for the
-algorithm) and 1-9, other values are undefined.
+argument defines the compression level.
+This value is dependent on the compression algorithm.
+In general, lower numbers mean faster de/compression and higher
+numbers mean slower de/compression.
+For
+\fRZIP_CM_BZIP\fR,
+\fRZIP_CM_DEFLATE\fR,
+and
+\fRZIP_CM_XZ\fR
+1 is the fastest compression and 9 the best, 0 chooses the default.
+For
+\fRZIP_CM_ZSTD\fR
+the value go from
+ZSTD_minCLevel(3)
+to
+ZSTD_maxCLevel(3).
+.PP
 Further compression method specific flags might be added over time.
 .PP
 The current compression method for a file in a zip archive can be

@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "September 15, 2020" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "April 6, 2021" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -273,6 +273,9 @@ zip_file_attributes_init(3)
 .TP 4n
 \fB\(bu\fR
 zip_libzip_version(3)
+.TP 4n
+\fB\(bu\fR
+zip_register_cancel_callback_with_state(3)
 .TP 4n
 \fB\(bu\fR
 zip_register_progress_callback_with_state(3)
