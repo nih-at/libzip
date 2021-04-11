@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "compat.h"
 
@@ -62,7 +63,12 @@ void diff_output_file(diff_output_t *output, char side, const char *name, zip_ui
     
     ensure_header(output);
     
-    printf("%c file '%s', size %" PRIu64 ", crc %08x\n", side, name, size, crc);
+    if (size == 0 && crc == 0 && name[0] != '\0' && name[strlen(name) - 1] == '/') {
+        printf("%c directory '%s'\n", side, name);
+    }
+    else {
+        printf("%c file '%s', size %" PRIu64 ", crc %08x\n", side, name, size, crc);
+    }
 }
 
 #define MAX_BYTES 64
