@@ -1,3 +1,7 @@
+## Before next release
+
+reconsider zip_source_zip (uncompressed data for whole file not easy to get)
+
 ## Prefixes
 
 For example for adding extractors for self-extracting zip archives.
