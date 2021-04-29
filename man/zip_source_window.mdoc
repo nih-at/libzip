@@ -45,13 +45,13 @@ libzip (-lzip)
 The
 .Fn zip_source_window_create
 function create a zip source from an underlying zip source,
-restricting access to a particular window starting a byte
+restricting access to a particular window starting at byte
 .Ar start
 and having size
 .Ar len .
-A size
+If
 .Ar len
-of \-1 means "until end of file".
+is \-1, the window spans to the end of the underlying source.
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
 Otherwise,
