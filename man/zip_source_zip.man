@@ -30,11 +30,12 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_ZIP" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_ZIP" "3" "April 4, 2021" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_source_zip\fR
+\fBzip_source_zip\fR,
+\fBzip_source_zip_create\fR
 \- create data source from zip file
 .SH "LIBRARY"
 libzip (-lzip)
@@ -47,10 +48,19 @@ libzip (-lzip)
 .HP 4n
 \fBzip_source_zip\fR(\fIzip_t\ *archive\fR, \fIzip_t\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
 .PD
+.PP
+\fIzip_source_t *\fR
+.br
+.PD 0
+.HP 4n
+\fBzip_source_zip_create\fR(\fIzip_t\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
+.PD
 .SH "DESCRIPTION"
-The function
+The functions
 \fBzip_source_zip\fR()
-creates a zip source from a file in a zip archive.
+and
+\fBzip_source_zip_create\fR()
+create a zip source from a file in a zip archive.
 The
 \fIsrcarchive\fR
 argument is the (open) zip archive containing the source zip file
@@ -90,10 +100,14 @@ Otherwise,
 \fRNULL\fR
 is returned and the error code in
 \fIarchive\fR
+or
+\fIerror\fR
 is set to indicate the error.
 .SH "ERRORS"
 \fBzip_source_zip\fR()
-fails if:
+and
+\fBzip_source_zip_create\fR()
+fail if:
 .TP 19n
 [\fRZIP_ER_CHANGED\fR]
 Unchanged data was requested, but it is not available.
@@ -123,6 +137,8 @@ zip_source(3)
 .SH "HISTORY"
 \fBzip_source_zip\fR()
 was added in libzip 1.0.
+\fBzip_source_zip_create\fR()
+was added in libzip 1.8.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

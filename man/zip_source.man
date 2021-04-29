@@ -58,6 +58,7 @@ zip_source_filep(3),
 zip_source_filep_create(3),
 zip_source_function(3),
 zip_source_function_create(3),
+zip_source_window(3),
 or
 zip_source_zip(3).
 \fIzip_source_t\fR
@@ -82,6 +83,7 @@ zip_source_file(3),
 zip_source_filep(3),
 zip_source_free(3),
 zip_source_function(3),
+zip_source_window(3),
 zip_source_zip(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>

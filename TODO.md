@@ -80,7 +80,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Documentation
 
-* document `zip_source_window_create()`
 * document: `zip_source_write()`: length can't be > `ZIP_INT64_MAX`
 * document: `ZIP_SOURCE_CLOSE` implementation can't return error
 * keep error codes in man pages in sync
