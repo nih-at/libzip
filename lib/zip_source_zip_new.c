@@ -45,7 +45,7 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
     zip_dirent_t *de;
     bool partial_data, needs_crc, needs_decrypt, needs_decompress;
 
-    if (srcza == NULL || srcidx >= srcza->nentry) {
+    if (srcza == NULL || srcidx >= srcza->nentry || len > ZIP_INT64_MAX) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
@@ -113,12 +113,16 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
         st2.mtime = st.mtime;
         st2.valid = ZIP_STAT_SIZE | ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD | ZIP_STAT_MTIME;
 
-        if ((src = _zip_source_window_new(srcza->src, start, len, &st2, &attributes, srcza, srcidx, error)) == NULL) {
+        if ((src = _zip_source_window_new(srcza->src, start, (zip_int64_t)len, &st2, &attributes, srcza, srcidx, error)) == NULL) {
             return NULL;
         }
     }
     else {
-        if ((src =  _zip_source_window_new(srcza->src, 0, st.comp_size, &st, &attributes, srcza, srcidx, error)) == NULL) {
+        if (st.comp_size > ZIP_INT64_MAX) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return NULL;
+        }
+        if ((src =  _zip_source_window_new(srcza->src, 0, (zip_int64_t)st.comp_size, &st, &attributes, srcza, srcidx, error)) == NULL) {
             return NULL;
         }
     }
@@ -163,7 +167,7 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
     }
 
     if (partial_data && (needs_decrypt || needs_decompress)) {
-        s2 = zip_source_window_create(src, start, len, error);
+        s2 = zip_source_window_create(src, start, (zip_int64_t)len, error);
         zip_source_free(src);
         if (s2 == NULL) {
             return NULL;
