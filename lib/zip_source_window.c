@@ -251,7 +251,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
                 }
                 if ((zip_uint64_t)new_offset < ctx->start) {
                     zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
-                    zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET);
+                    (void)zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET);
                     return -1;
                 }
                 ctx->offset = (zip_uint64_t)new_offset;
