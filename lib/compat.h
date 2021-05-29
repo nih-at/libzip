@@ -94,7 +94,7 @@ typedef char bool;
 #if !defined(HAVE_FILENO) && defined(HAVE__FILENO)
 #define fileno _fileno
 #endif
-#if defined(HAVE__SNPRINTF)
+#if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
 #define snprintf _snprintf
 #endif
 #if defined(HAVE__STRDUP)
