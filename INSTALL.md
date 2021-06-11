@@ -66,4 +66,4 @@ will break in `zipcmp`.
 You can get verbose build output with by passing `VERBOSE=1` to
 `make`.
 
-You can also check the [cmake FAQ](https://cmake.org/Wiki/CMake_FAQ).
+You can also check the [cmake FAQ](https://gitlab.kitware.com/cmake/community/-/wikis/FAQ).
