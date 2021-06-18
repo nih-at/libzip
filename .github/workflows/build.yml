@@ -11,11 +11,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: install dependencies
+      - name: install dependencies (Linux)
+        if: ${{ runner.os == 'Linux' }}
         run: |
-          if [ "$RUNNER_OS" = "Linux" ]; then
-              sudo apt-get install libzstd-dev
-          fi
+          sudo apt-get install libzstd-dev
       - name: prepare build directory
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
