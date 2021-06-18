@@ -43,4 +43,4 @@ jobs:
       - name: test
         working-directory: ${{runner.workspace}}/build
         run: |
-          ctest -v --config Release
+          ctest -v -C Release
