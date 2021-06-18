@@ -35,7 +35,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         working-directory: ${{runner.workspace}}/build
         run: |
-          cmake -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/vcpkg.cmake ${{github.workspace}}
+          cmake -DCMAKE_TOOLCHAIN_FILE=${{Env:VCPKG_ROOT}}/vcpkg.cmake ${{github.workspace}}
       - name: build
         working-directory: ${{runner.workspace}}/build
         run: |
