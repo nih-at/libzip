@@ -98,11 +98,9 @@ void diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, 
     hexdata[offset] = '\0';
     
     va_start(ap, fmt);
-    vsnprintf(&prefix, sizeof(prefix), fmt, ap);
+    vsnprintf(prefix, sizeof(prefix), fmt, ap);
     va_end(ap);
     prefix[sizeof(prefix) - 1] = '\0';
     
     diff_output(output, side, "%s, length %" PRIu64 ", data %s", prefix, data_length, hexdata);
-    
-    free(prefix);
 }
