@@ -21,8 +21,6 @@ jobs:
       - name: configure
         working-directory: ${{runner.workspace}}/build
         run: |
-          echo running .....cmake ${{github.workspace}} .....
-          echo working directory ${{runner.workspace}}/build
           cmake ${{github.workspace}}
       - name: build
         working-directory: ${{runner.workspace}}/build
