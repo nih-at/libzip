@@ -15,14 +15,18 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt-get install libzstd-dev
-      - name: install dependencies (Windows)
+      - name: install vcpkg (Windows)
         if: ${{ runner.os == 'Windows' }}
         uses: lukka/run-vcpkg@v6
-        id: runvcpkg
         with:
-          vcpkgGitCommitId: 5568f110b509a9fd90711978a7cb76bae75bb092
+          setupOnly: true
           vcpkgTriplet: x64-windows
-          vcpkgArguments: zlib bzip2 liblzma zstd
+      - name: install dependencies (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          $VCPKG_ROOT/vcpkg update
+          $VCPKG_ROOT/vcpkg install zlib bzip2 liblzma zstd
+        shell: bash
       - name: prepare build directory
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
