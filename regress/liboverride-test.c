@@ -33,6 +33,14 @@
 */
 
 #include <stdlib.h>
+
+#ifdef _WIN32
+int main(int argc, const char *argv[]) {
+    /* Symbol override is not supported on Windows. */
+    exit(1);
+}
+#else
+
 #include <unistd.h>
 
 #include "zip.h"
@@ -63,3 +71,5 @@ main(int argc, const char *argv[]) {
     
     exit(0);
 }
+
+#endif /* not Windows */

@@ -73,10 +73,10 @@ void diff_output_file(diff_output_t *output, char side, const char *name, zip_ui
 
 #define MAX_BYTES 64
 void diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, zip_uint64_t data_length, const char *fmt, ...) {
+    char prefix[1024];
     char hexdata[MAX_BYTES * 3 + 6];
     size_t i, offset;
     va_list ap;
-    char *prefix;
 
     if (!output->verbose) {
         return;
@@ -98,8 +98,9 @@ void diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, 
     hexdata[offset] = '\0';
     
     va_start(ap, fmt);
-    vasprintf(&prefix, fmt, ap);
+    vsnprintf(&prefix, sizeof(prefix), fmt, ap);
     va_end(ap);
+    prefix[sizeof(prefix) - 1] = '\0';
     
     diff_output(output, side, "%s, length %" PRIu64 ", data %s", prefix, data_length, hexdata);
     
