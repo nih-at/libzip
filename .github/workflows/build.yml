@@ -21,7 +21,8 @@ jobs:
       - name: configure
         working-directory: ${{runner.workspace}}/build
         run: |
-          cmake ${{ env.GITHUB_WORKSPACE }}
+          echo running .....cmake $GITHUB_WORKSPACE .....
+          cmake $GITHUB_WORKSPACE
       - name: build
         working-directory: ${{runner.workspace}}/build
         run: |
