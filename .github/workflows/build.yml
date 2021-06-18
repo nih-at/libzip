@@ -15,6 +15,13 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt-get install libzstd-dev
+      - name: install dependencies (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        uses: lukka/run-vcpkg@v6
+        id: runvcpkg
+        with:
+          vcpkgTriplet: x64-windows
+          vcpkgArguments: zlib
       - name: prepare build directory
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
