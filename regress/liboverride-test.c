@@ -32,7 +32,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef _WIN32
 int main(int argc, const char *argv[]) {
@@ -46,7 +48,6 @@ int main(int argc, const char *argv[]) {
 
 #include <errno.h>
 #include <unistd.h>
-#include <string.h>
 
 #include "zip.h"
 
