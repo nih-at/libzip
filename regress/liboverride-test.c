@@ -37,11 +37,16 @@
 #ifdef _WIN32
 int main(int argc, const char *argv[]) {
     /* Symbol override is not supported on Windows. */
+    if (argc > 1 && strcmp(argv[1], "-v") == 0) {
+        printf("not supported on Windows\n");
+    }
     exit(1);
 }
 #else
 
+#include <errno.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "zip.h"
 
@@ -51,24 +56,41 @@ int main(int argc, const char *argv[]) {
 
 int
 main(int argc, const char *argv[]) {
+    int verbose = 0;
     int error_code;
+    
+    if (argc > 1 && strcmp(argv[1], "-v") == 0) {
+        verbose = 1;
+    }
     
     if (getenv("LIBOVERRIDE_SET") == NULL) {
         setenv("LIBOVERRIDE_SET", "1", 1);
         setenv("LD_PRELOAD", "libliboverride.so", 1);
         execv(argv[0], (void *)argv);
+        if (verbose) {
+            printf("exec failed: %s\n", strerror(errno));
+        }
         exit(2);
     }
     
     if (zip_open("nosuchfile", 0, &error_code) != NULL) {
         /* We expect failure. */
+        if (verbose) {
+            printf("open succeded\n");
+        }
         exit(1);
     }
     if (error_code != 32000) {
         /* Override didn't take, we didn't get its magic error code. */
+        if (verbose) {
+            printf("got unexpected error %d\n", error_code);
+        }
         exit(1);
     }
     
+    if (verbose) {
+        printf("success\n");
+    }
     exit(0);
 }
 
