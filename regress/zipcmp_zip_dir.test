@@ -1,4 +1,5 @@
 # compare zip with directory
+features FTS_H
 program zipcmp
 mkdir 0777 a
 mkdir 0777 a/dir-with-file
