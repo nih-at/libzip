@@ -26,10 +26,16 @@ jobs:
       - name: prepare build directory
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
-      - name: configure
+      - name: configure (Unix)
+        if: ${{ runner.os != 'Windows' }}
         working-directory: ${{runner.workspace}}/build
         run: |
           cmake ${{github.workspace}}
+      - name: configure (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        working-directory: ${{runner.workspace}}/build
+        run: |
+          cmake -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/vcpkg.cmake ${{github.workspace}}
       - name: build
         working-directory: ${{runner.workspace}}/build
         run: |
