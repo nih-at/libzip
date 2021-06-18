@@ -1,6 +1,6 @@
 .\" Automatically generated from an mdoc input file.  Do not edit.
 .\" zip_set_file_compression.mdoc -- set compression method and its flags
-.\" Copyright (C) 2012-2020 Dieter Baron and Thomas Klausner
+.\" Copyright (C) 2012-2021 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP files.
 .\" The authors can be contacted at <libzip@nih.at>
@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SET_FILE_COMPRESSION" "3" "March 19, 2021" "NiH" "Library Functions Manual"
+.TH "ZIP_SET_FILE_COMPRESSION" "3" "June 18, 2021" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -112,7 +112,7 @@ and
 1 is the fastest compression and 9 the best, 0 chooses the default.
 For
 \fRZIP_CM_ZSTD\fR
-the value go from
+possible values are
 ZSTD_minCLevel(3)
 to
 ZSTD_maxCLevel(3).

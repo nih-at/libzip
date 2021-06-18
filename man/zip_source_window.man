@@ -51,13 +51,13 @@ libzip (-lzip)
 The
 \fBzip_source_window_create\fR()
 function create a zip source from an underlying zip source,
-restricting access to a particular window starting a byte
+restricting access to a particular window starting at byte
 \fIstart\fR
 and having size
 \fIlen\fR.
-A size
+If
 \fIlen\fR
-of \-1 means "until end of file".
+is \-1, the window spans to the end of the underlying source.
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,
