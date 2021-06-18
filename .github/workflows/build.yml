@@ -35,18 +35,12 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         working-directory: ${{runner.workspace}}/build
         run: |
-          cmake -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake --config Release ${{github.workspace}}
+          cmake -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
       - name: build
         working-directory: ${{runner.workspace}}/build
         run: |
-          cmake --build .
-      - name: test (Unix)
-        if: ${{ runner.os != 'Windows' }}
-        working-directory: ${{runner.workspace}}/build
-        run: |
-          ctest -v
-      - name: test (Windows)
-        if: ${{ runner.os == 'Windows' }}
+          cmake --build . --config Release
+      - name: test
         working-directory: ${{runner.workspace}}/build
         run: |
           ctest -v --config Release
