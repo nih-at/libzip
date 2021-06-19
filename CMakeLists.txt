@@ -196,7 +196,7 @@ if(ENABLE_LZMA)
 endif(ENABLE_LZMA)
 
 if(ENABLE_ZSTD)
-  find_package(Zstd)
+  find_package(Zstd 1.5)
   if(Zstd_FOUND)
     set(HAVE_LIBZSTD 1)
   else()
