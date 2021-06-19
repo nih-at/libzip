@@ -67,6 +67,12 @@ main(int argc, const char *argv[]) {
     if (getenv("LIBOVERRIDE_SET") == NULL) {
         char *cwd = getcwd(NULL, 0);
         char *so = (char *)malloc(strlen(cwd) + 64);
+        if (so == NULL) {
+            if (verbose) {
+                printf("malloc failed\n");
+            }
+            exit(2);
+        }
         sprintf(so, "%s/libliboverride.so", cwd);
         setenv("LIBOVERRIDE_SET", "1", 1);
         setenv("LD_PRELOAD", so, 1);
