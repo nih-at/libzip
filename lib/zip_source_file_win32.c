@@ -115,7 +115,7 @@ _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
         break;
     default:
         zip_error_set(&ctx->error, ZIP_ER_SEEK, EINVAL);
-        return -1;
+        return false;
     }
 
     li.QuadPart = (LONGLONG)offset;
