@@ -281,11 +281,12 @@ endif()
 
 
 # pkgconfig file
-set(prefix ${CMAKE_INSTALL_PREFIX})
-set(exec_prefix \${prefix})
-SET(bindir ${CMAKE_INSTALL_FULL_BINDIR})
-SET(libdir ${CMAKE_INSTALL_FULL_LIBDIR})
-SET(includedir ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+file(RELATIVE_PATH pc_relative_bindir ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_FULL_BINDIR})
+set(bindir "\${prefix}/${pc_relative_bindir}")
+file(RELATIVE_PATH pc_relative_libdir ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_FULL_LIBDIR})
+set(libdir "\${prefix)/${pc_relative_libdir}")
+file(RELATIVE_PATH pc_relative_includedir ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+set(includedir "\${prefix}/${pc_relative_includedir}")
 if(CMAKE_SYSTEM_NAME MATCHES BSD)
   set(PKG_CONFIG_RPATH "-Wl,-R\${libdir}")
 endif(CMAKE_SYSTEM_NAME MATCHES BSD)
