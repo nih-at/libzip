@@ -17,10 +17,10 @@ jobs:
           sudo apt-get install libzstd-dev
       - name: install dependencies (Windows)
         if: ${{ runner.os == 'Windows' }}
-        uses: lukka/run-vcpkg@v6
+        uses: lukka/run-vcpkg@v7
         id: runvcpkg
         with:
-          vcpkgGitCommitId: 0bf3923f9fab4001c00f0f429682a0853b5749e0
+          vcpkgGitCommitId: 5568f110b509a9fd90711978a7cb76bae75bb092
           vcpkgTriplet: x64-windows
           vcpkgArguments: zlib bzip2 liblzma zstd
       - name: prepare build directory
