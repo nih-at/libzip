@@ -20,7 +20,7 @@ jobs:
         uses: lukka/run-vcpkg@v7
         id: runvcpkg
         with:
-          vcpkgGitCommitId: 0bf3923f9fab4001c00f0f429682a0853b5749e0
+          vcpkgGitCommitId: 8bb3f9e4a08a5b71ee93a6f1bcdd7a258bb48392
           vcpkgTriplet: x64-windows
           vcpkgArguments: zlib bzip2 liblzma zstd
       - name: prepare build directory
