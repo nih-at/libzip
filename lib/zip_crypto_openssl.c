@@ -48,13 +48,45 @@
 _zip_crypto_aes_t *
 _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
     _zip_crypto_aes_t *aes;
+    const EVP_CIPHER* cipher_type;
 
+    switch (key_size) {
+    case 128:
+        cipher_type = EVP_aes_128_ecb();
+        break;
+    case 192:
+        cipher_type = EVP_aes_192_ecb();
+        break;
+    case 256:
+        cipher_type = EVP_aes_256_ecb();
+        break;
+    default:
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        return NULL;
+    }
+
+#ifdef USE_OPENSSL_1_0_API
     if ((aes = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
+    memset(aes, 0, sizeof(*aes));
+#else
+    if ((aes = EVP_CIPHER_CTX_new()) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
+    }
+#endif
 
-    AES_set_encrypt_key(key, key_size, aes);
+    if (EVP_EncryptInit_ex(aes, cipher_type, NULL, key, NULL) != 1) {
+#ifdef USE_OPENSSL_1_0_API
+        free(aes);
+#else
+        EVP_CIPHER_CTX_free(aes);
+#endif
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        return NULL;
+    }
 
     return aes;
 }
@@ -65,8 +97,23 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
         return;
     }
 
+#ifdef USE_OPENSSL_1_0_API
+    EVP_CIPHER_CTX_cleanup(aes);
     _zip_crypto_clear(aes, sizeof(*aes));
     free(aes);
+#else
+    EVP_CIPHER_CTX_free(aes);
+#endif
+}
+
+
+bool
+_zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
+    int len;
+    if (EVP_EncryptUpdate(aes, out, &len, in, ZIP_CRYPTO_AES_BLOCK_LENGTH) != 1) {
+        return false;
+    }
+    return true;
 }
 
 
