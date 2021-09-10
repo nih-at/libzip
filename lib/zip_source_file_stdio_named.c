@@ -255,6 +255,7 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
         (void)remove(temp);
         free(temp);
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+        return -1;
     }
 
     ctx->fout = tfp;
