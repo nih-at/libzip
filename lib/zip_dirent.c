@@ -664,19 +664,18 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
 
     crc_valid = true;
     switch (_zip_buffer_get_16(buffer)) {
-    case 1:
-        break;
+        case 1:
+            break;
 
-    case 2:
-        if (de->uncomp_size < 20 /* TODO: constant */) {
+        case 2:
             crc_valid = false;
-        }
-        break;
-
-    default:
-        zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
-        _zip_buffer_free(buffer);
-        return false;
+            /* TODO: When checking consistency, check that crc is 0. */
+            break;
+            
+        default:
+            zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
+            _zip_buffer_free(buffer);
+            return false;
     }
 
     /* vendor */
