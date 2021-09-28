@@ -82,7 +82,11 @@ _zip_mkstempm(char *path, int mode) {
         if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
             if (mode != -1) {
                 /* open() honors umask(), which we don't want in this case */
+#ifdef HAVE_FCHMOD
+                (void)fchmod(fd, (mode_t)mode);
+#else
                 (void)chmod(path, (mode_t)mode);
+#endif
             }
             return fd;
         }
