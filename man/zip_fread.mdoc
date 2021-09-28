@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd December 18, 2017
+.Dd September 28, 2021
 .Dt ZIP_FREAD 3
 .Os
 .Sh NAME
@@ -44,7 +44,7 @@ libzip (-lzip)
 .Sh DESCRIPTION
 The
 .Fn zip_fread
-function reads at most
+function reads up to
 .Ar nbytes
 bytes from
 .Ar file
@@ -52,7 +52,10 @@ into
 .Ar buf .
 .Sh RETURN VALUES
 If successful, the number of bytes actually read is returned.
-Otherwise, \-1 is returned.
+When
+.Fn zip_fread
+is called after reaching the end of the file, 0 is returned.
+In case of error, \-1 is returned.
 .Sh SEE ALSO
 .Xr libzip 3 ,
 .Xr zip_fclose 3 ,
