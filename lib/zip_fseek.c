@@ -49,3 +49,13 @@ zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence) {
 
     return 0;
 }
+
+
+ZIP_EXTERN int
+zip_file_is_seekable(zip_file_t *zfile) {
+    if (!zfile) {
+        return -1;
+    }
+    
+    return (zip_source_supports(zfile->src) & ZIP_SOURCE_SEEK) != 0;
+}

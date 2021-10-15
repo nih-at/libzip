@@ -1,3 +1,9 @@
+1.9.0 [202x-xx-xx]
+==================
+
+* Add `zip_source_is_seekable()`.
+* Improve compatibility with WinAES.
+
 1.8.0 [2021-06-18]
 ==================
 

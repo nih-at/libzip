@@ -172,7 +172,7 @@ if(HAVE_CRYPTO)
 endif()
 
 if(SHARED_LIB_VERSIONNING)
-  set_target_properties(zip PROPERTIES VERSION 5.4 SOVERSION 5)
+  set_target_properties(zip PROPERTIES VERSION 5.5 SOVERSION 5)
 endif()
 
 target_link_libraries(zip PRIVATE ZLIB::ZLIB)
