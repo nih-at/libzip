@@ -184,7 +184,7 @@ _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HAND
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
         return false;
     }
-    if (_zip_filetime_to_time_t(mtimeft, &mtime) < 0) {
+    if (!_zip_filetime_to_time_t(mtimeft, &mtime)) {
         zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
         return false;
     }
