@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "April 6, 2021" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "October 15, 2021" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -112,12 +112,14 @@ zip_fopen_index_encrypted(3)
 zip_fread(3)
 .TP 4n
 \fB\(bu\fR
+zip_file_is_seekable(3)
+.TP 4n
+\fB\(bu\fR
 zip_fseek(3)
 (uncompressed files only)
 .TP 4n
 \fB\(bu\fR
 zip_ftell(3)
-(uncompressed files only)
 .TP 4n
 \fB\(bu\fR
 zip_fclose(3)

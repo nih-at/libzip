@@ -77,9 +77,10 @@ The function <code class="Fn">zip_source_read</code>() reads up to
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
   VALUES</a></h1>
-Upon successful completion the number of bytes read is returned. Upon reading
-  end-of-file, zero is returned. Otherwise, -1 is returned and the error
-  information in <var class="Ar">source</var> is set to indicate the error.
+Upon successful completion the number of bytes read is returned. When
+  <code class="Fn">zip_source_read</code>() is called after reaching the end of
+  the file, 0 is returned. Otherwise, -1 is returned and the error information
+  in <var class="Ar">source</var> is set to indicate the error.
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -104,7 +105,7 @@ Upon successful completion the number of bytes read is returned. Upon reading
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-date">September 28, 2021</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
