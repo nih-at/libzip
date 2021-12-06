@@ -129,7 +129,7 @@ _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx) {
     FILE *tfp;
     struct stat st;
 
-    if ((temp = (char *)malloc(strlen(ctx->fname) + 8)) == NULL) {
+    if ((temp = (char *)malloc(strlen(ctx->fname) + 13)) == NULL) {
         zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
         return -1;
     }
@@ -141,9 +141,9 @@ _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx) {
         mode = -1;
     }
 
-    sprintf(temp, "%s.XXXXXX", ctx->fname);
+    sprintf(temp, "%s.XXXXXX.part", ctx->fname);
 
-    if ((tfd = _zip_mkstempm(temp, mode)) == -1) {
+    if ((tfd = _zip_mkstempm(temp, mode, 2)) == -1) {
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
         free(temp);
         return -1;
@@ -182,8 +182,8 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
 
 #ifdef HAVE_CLONEFILE
 #ifndef __clang_analyzer__
-    /* we can't use mkstemp, since clonefile insists on creating the file */
-    if (mktemp(temp) == NULL) {
+    /* we can't use mkstemp (flag = 0), since clonefile insists on creating the file */
+    if (_zip_mkstempm(temp, -1, 1) == -1) {
         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
         free(temp);
         return -1;
@@ -213,7 +213,7 @@ _zip_stdio_op_create_temp_output_cloning(zip_source_file_context_t *ctx, zip_uin
             return -1;
         }
 
-        if ((fd = mkstemp(temp)) < 0) {
+        if ((fd = _zip_mkstempm(temp, -1, 0)) < 0) {
             zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
             free(temp);
             return -1;

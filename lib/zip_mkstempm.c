@@ -41,16 +41,34 @@
 /*
  * create temporary file with same permissions as previous one;
  * or default permissions if there is no previous file
+ *
+ * @param path File path
+ * @param mode File permission
+ * @param flag 0 - Default mode      (mkstemp)
+ *             1 - Fill in name only (mktemp)
+ *             2 - Fill in name only, but with a custom suffix
  */
 int
-_zip_mkstempm(char *path, int mode) {
+_zip_mkstempm(char *path, int mode, unsigned int flag) {
+    if (flag == 0) {
+        return mkstemp(path);
+    } else if (flag == 1) {
+        return mktemp(path) != NULL ? 1 : -1;
+    }
+
     int fd;
     char *start, *end, *xs;
 
-    int xcnt = 0;
+    int xcnt = 0, pos = 0;
 
     end = path + strlen(path);
     start = end - 1;
+
+    while (start >= path && *start != 'X') {
+        start--;
+        pos++;
+    }
+
     while (start >= path && *start == 'X') {
         xcnt++;
         start--;
@@ -68,7 +86,7 @@ _zip_mkstempm(char *path, int mode) {
 
         xs = start;
 
-        while (xs < end) {
+        while (xs < end - pos) {
             char digit = value % 36;
             if (digit < 10) {
                 *(xs++) = digit + '0';
