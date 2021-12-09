@@ -291,6 +291,7 @@ static int create_temp_file(zip_source_file_context_t *ctx, bool create_file) {
     int mode;
     struct stat st;
     int fd;
+    const char *file_name;
     char *start, *end;
     
     if (stat(ctx->fname, &st) == 0) {
@@ -300,11 +301,20 @@ static int create_temp_file(zip_source_file_context_t *ctx, bool create_file) {
         mode = -1;
     }
     
-    if ((temp = (char *)malloc(strlen(ctx->fname) + 13)) == NULL) {
+    if ((temp = (char *)malloc(strlen(ctx->fname) + 14)) == NULL) {
         zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
         return -1;
     }
-    sprintf(temp, "%s.XXXXXX.part", ctx->fname);
+    
+    file_name = strrchr(ctx->fname, '/');
+    if (file_name == NULL) {
+        file_name = ctx->fname;
+    }
+    else {
+        file_name += 1;
+    }
+    sprintf(temp, "%.*s.%s.XXXXXX.part", (int)(file_name - ctx->fname), ctx->fname, file_name);
+    
     end = temp + strlen(temp) - 5;
     start = end - 6;
     
