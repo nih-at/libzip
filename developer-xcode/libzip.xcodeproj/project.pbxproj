@@ -171,7 +171,6 @@
 		4B3A5F531DF96EB4005A53A1 /* zip_ftell.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A5F4E1DF96D83005A53A1 /* zip_ftell.c */; };
 		4B3FAE802385C5CC00192D6A /* zip_algorithm_xz.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B3FAE7F2385C5A300192D6A /* zip_algorithm_xz.c */; };
 		4B3FAE822385C79200192D6A /* liblzma.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B3FAE812385C79200192D6A /* liblzma.5.dylib */; };
-		4B5169A822A7993E00AA4340 /* zip_mkstempm.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B5169A722A7993D00AA4340 /* zip_mkstempm.c */; };
 		4B51DDBA1FDAE20A00C5CA85 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D70815B2F4CF002D5007 /* libz.dylib */; };
 		4B51DDBB1FDAE20A00C5CA85 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B01D68B15B2F3F1002D5007 /* libzip.framework */; };
 		4B51DDC11FDAE25B00C5CA85 /* ziptool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BACD57C15BC2AEF00920691 /* ziptool.c */; };
@@ -2015,7 +2014,6 @@
 				4BCF302A199A2F820064207B /* zip_source_seek.c in Sources */,
 				4B01D6C515B2F46B002D5007 /* zip_fopen_index_encrypted.c in Sources */,
 				4B01D6C615B2F46B002D5007 /* zip_fopen_index.c in Sources */,
-				4B5169A822A7993E00AA4340 /* zip_mkstempm.c in Sources */,
 				4B69E6EE2032F18B0001EEE7 /* zip_winzip_aes.c in Sources */,
 				4B01D6C715B2F46B002D5007 /* zip_fopen.c in Sources */,
 				3D9284821C309510001EABA7 /* zip_hash.c in Sources */,

@@ -43,24 +43,28 @@
  * or default permissions if there is no previous file
  */
 int
-_zip_mkstempm(char *path, int mode) {
+_zip_mkstempm(char *path, int mode, bool create_file) {
     int fd;
     char *start, *end, *xs;
 
     int xcnt = 0;
 
-    end = path + strlen(path);
-    start = end - 1;
+    end = path + strlen(path) - 1;
+    while (end >= path) {
+        if (*end == 'X') {
+            break;
+        }
+        end--;
+    }
+    if (end < path) {
+        errno = EINVAL;
+        return -1;
+    }
+    start = end;
     while (start >= path && *start == 'X') {
         xcnt++;
         start--;
     }
-
-    if (xcnt == 0) {
-        errno = EINVAL;
-        return -1;
-    }
-
     start++;
 
     for (;;) {
@@ -68,7 +72,7 @@ _zip_mkstempm(char *path, int mode) {
 
         xs = start;
 
-        while (xs < end) {
+        while (xs <= end) {
             char digit = value % 36;
             if (digit < 10) {
                 *(xs++) = digit + '0';
@@ -79,19 +83,33 @@ _zip_mkstempm(char *path, int mode) {
             value /= 36;
         }
 
-        if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
-            if (mode != -1) {
-                /* open() honors umask(), which we don't want in this case */
+        if (create_file) {
+            if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
+                if (mode != -1) {
+                    /* open() honors umask(), which we don't want in this case */
 #ifdef HAVE_FCHMOD
-                (void)fchmod(fd, (mode_t)mode);
+                    (void)fchmod(fd, (mode_t)mode);
 #else
-                (void)chmod(path, (mode_t)mode);
+                    (void)chmod(path, (mode_t)mode);
+                }
 #endif
+                return fd;
             }
-            return fd;
+            if (errno != EEXIST) {
+                return -1;
+            }
         }
-        if (errno != EEXIST) {
-            return -1;
+        else {
+            struct stat st;
+            
+            if (stat(path, &st) < 0) {
+                if (errno == ENOENT) {
+                    return 0;
+                }
+                else {
+                    return -1;
+                }
+            }
         }
     }
 }

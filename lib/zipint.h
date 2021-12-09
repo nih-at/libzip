@@ -576,7 +576,7 @@ zip_hash_t *_zip_hash_new(zip_error_t *error);
 bool _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t *error);
 bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error);
 
-int _zip_mkstempm(char *path, int mode);
+int _zip_mkstempm(char *path, int mode, bool create_file);
 
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 

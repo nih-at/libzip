@@ -130,7 +130,6 @@ if(WIN32)
   endif()
 else(WIN32)
   target_sources(zip PRIVATE
-    zip_mkstempm.c
     zip_source_file_stdio_named.c
     zip_random_unix.c
     )
