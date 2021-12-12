@@ -622,7 +622,6 @@
 		4B41A2661FE15FCE005D8C91 /* clone-fs-delete.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-fs-delete.test"; sourceTree = "<group>"; };
 		4B41A2671FE1604E005D8C91 /* clone-fs-replace.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "clone-fs-replace.test"; sourceTree = "<group>"; };
 		4B4CB5572483D7B7005C5428 /* nihtest.conf.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = nihtest.conf.in; sourceTree = "<group>"; };
-		4B5169A722A7993D00AA4340 /* zip_mkstempm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip_mkstempm.c; sourceTree = "<group>"; };
 		4B51DDB21FDADEDF00C5CA85 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
 		4B51DDB31FDAE1DB00C5CA85 /* ziptool_regress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ziptool_regress.c; sourceTree = "<group>"; };
 		4B51DDC01FDAE20A00C5CA85 /* ziptool_regress */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ziptool_regress; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1531,7 +1530,6 @@
 				4BCF3019199A2F820064207B /* zip_io_util.c */,
 				4B908F502385BE6C00886355 /* zip_libzip_version.c */,
 				4BDC721C15B1B25E00236D3C /* zip_memdup.c */,
-				4B5169A722A7993D00AA4340 /* zip_mkstempm.c */,
 				4BDC721D15B1B25E00236D3C /* zip_name_locate.c */,
 				4BDC721E15B1B25E00236D3C /* zip_new.c */,
 				4BDC721F15B1B25E00236D3C /* zip_open.c */,
