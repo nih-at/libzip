@@ -58,8 +58,8 @@ libzip (-lzip)
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <code class="In">#include &lt;<a class="In">zip.h</a>&gt;</code>
-<p class="Pp"><var class="Vt">typedef void (*zip_cancel_callback)(zip_t *,
-    double, void *);</var></p>
+<p class="Pp"><var class="Vt">typedef int (*zip_cancel_callback)(zip_t *, void
+    *);</var></p>
 <p class="Pp"><var class="Ft">void</var>
   <br/>
   <code class="Fn">zip_register_cancel_callback_with_state</code>(<var class="Fa" style="white-space: nowrap;">zip_t
@@ -83,11 +83,8 @@ This function can be used to cancel writing of a zip archive during
     <a class="Xr" href="zip_close.html">zip_close(3)</a> in regular intervals
     (after every zip archive entry that's completely written to disk, and while
     writing data for entries) with zip archive <var class="Ar">archive</var>,
-    the current progress state (see
-    <a class="Xr" href="zip_register_progress_callback_with_state.html">zip_register_progress_callback_with_state(3)</a>)
-    as a <var class="Vt">double</var>, and the user-provided user-data
-    <var class="Ar">ud</var> as arguments. The progress state is a
-    <var class="Vt">double</var> in the range from 0.0 to 1.0.</p>
+    and the user-provided user-data <var class="Ar">ud</var> as arguments. When
+    the callback function returns a non-zero value, writing is cancelled.</p>
 <p class="Pp">The callback function should be fast, since it will be called
     often.</p>
 </section>
@@ -113,8 +110,8 @@ This function can be used to cancel writing of a zip archive during
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 6, 2021</td>
     <td class="foot-os">NiH</td>
+    <td class="foot-date">Januari 18, 2022</td>
   </tr>
 </table>
 </body>

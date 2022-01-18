@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_REGISTER_CANCEL_CALLBACK_WITH_STATE" "3" "April 6, 2021" "NiH" "Library Functions Manual"
+.TH "ZIP_REGISTER_CANCEL_CALLBACK_WITH_STATE" "3" "Januari 18, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -41,7 +41,7 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fItypedef void (*zip_cancel_callback)(zip_t *, double, void *);\fR
+\fItypedef int (*zip_cancel_callback)(zip_t *, void *);\fR
 .sp
 \fIvoid\fR
 .br
@@ -69,16 +69,9 @@ zip_close(3)
 in regular intervals (after every zip archive entry that's completely
 written to disk, and while writing data for entries) with zip archive
 \fIarchive\fR,
-the current progress state (see
-zip_register_progress_callback_with_state(3))
-as a
-\fIdouble\fR,
 and the user-provided user-data
 \fIud\fR
-as arguments.
-The progress state is a
-\fIdouble\fR
-in the range from 0.0 to 1.0.
+as arguments. When the callback function returns a non-zero value, writing is cancelled.
 .PP
 The callback function should be fast, since it will be called often.
 .SH "SEE ALSO"
