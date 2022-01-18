@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_OPEN" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_OPEN" "3" "Januari 18, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -176,6 +176,10 @@ for details.
 The file specified by
 \fIpath\fR
 does not allow seeks.
+.PP
+Errors that occur when creating a new archive file are indicated by the
+\fBzip_close\fR()
+function.
 .SH "SEE ALSO"
 libzip(3),
 zip_close(3),
