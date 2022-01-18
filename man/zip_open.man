@@ -176,8 +176,7 @@ for details.
 The file specified by
 \fIpath\fR
 does not allow seeks.
-.PD 0
-.PP
+.sp
 Errors that occur when creating a new archive file are indicated by the
 \fBzip_close\fR()
 function.
