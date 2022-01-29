@@ -11,11 +11,11 @@ typedef enum { SOURCE_TYPE_NONE, SOURCE_TYPE_IN_MEMORY, SOURCE_TYPE_HOLE } sourc
 source_type_t source_type = SOURCE_TYPE_NONE;
 zip_uint64_t fragment_size = 0;
 
-static int add_nul(int argc, char *argv[]);
-static int cancel(int argc, char *argv[]);
-static int unchange_one(int argc, char *argv[]);
-static int unchange_all(int argc, char *argv[]);
-static int zin_close(int argc, char *argv[]);
+static int add_nul(char *argv[]);
+static int cancel(char *argv[]);
+static int unchange_one(char *argv[]);
+static int unchange_all(char *argv[]);
+static int zin_close(char *argv[]);
 
 #define OPTIONS_REGRESS "F:Hm"
 
@@ -59,7 +59,7 @@ static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
 
 
 static int
-add_nul(int argc, char *argv[]) {
+add_nul(char *argv[]) {
     zip_source_t *zs;
     zip_uint64_t length = strtoull(argv[1], NULL, 10);
 
@@ -77,7 +77,7 @@ add_nul(int argc, char *argv[]) {
 }
 
 static int
-unchange_all(int argc, char *argv[]) {
+unchange_all(char *argv[]) {
     if (zip_unchange_all(za) < 0) {
         fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
         return -1;
@@ -87,7 +87,7 @@ unchange_all(int argc, char *argv[]) {
 
 
 static int
-unchange_one(int argc, char *argv[]) {
+unchange_one(char *argv[]) {
     zip_uint64_t idx;
 
     idx = strtoull(argv[0], NULL, 10);
@@ -110,7 +110,7 @@ cancel_callback(zip_t *archive, void *ud) {
 }
 
 static int
-cancel(int argc, char *argv[]) {
+cancel(char *argv[]) {
     zip_int64_t percent;
     percent = strtoll(argv[0], NULL, 10);
     if (percent > 100 || percent < 0) {
@@ -122,12 +122,12 @@ cancel(int argc, char *argv[]) {
     zip_register_cancel_callback_with_state(za, cancel_callback, NULL, NULL);
 
     /* needs the percentage updates from print_progress */
-    print_progress(argc, argv);
+    print_progress(argv);
     return 0;
 }
 
 static int
-zin_close(int argc, char *argv[]) {
+zin_close(char *argv[]) {
     zip_uint64_t idx;
 
     idx = strtoull(argv[0], NULL, 10);
