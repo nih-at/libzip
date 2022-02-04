@@ -100,7 +100,6 @@ cd build
 if errorlevel 1 popd & goto exit_failure
 cmake .. -G %CMAKE_GENERATOR% -T %CMAKE_TOOLSET% -DCMAKE_PREFIX_PATH="%ZLIB_INSTALL_PATH%"
 if errorlevel 1 popd & goto exit_failure
-goto :EOF
 
 rem ---------------------------------------------------------------------------
 rem Build libzip.
