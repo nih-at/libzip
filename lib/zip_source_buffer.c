@@ -361,13 +361,13 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
     clone->fragment_offsets[clone->nfragments] = offset;
     clone->size = offset;
 
-    clone->first_owned_fragment = ZIP_MIN(buffer->first_owned_fragment, clone->nfragments - 1);
+    clone->first_owned_fragment = ZIP_MIN(buffer->first_owned_fragment, clone->nfragments);
 
     buffer->shared_buffer = clone;
     clone->shared_buffer = buffer;
     buffer->shared_fragments = clone->nfragments;
     clone->shared_fragments = fragment + 1;
-
+    
     return clone;
 }
 
