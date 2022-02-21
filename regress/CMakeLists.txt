@@ -8,6 +8,7 @@ set(TEST_PROGRAMS
   fuzz_main
   nonrandomopentest
   liboverride-test
+  delete_unchange
 )
 
 set(GETOPT_USERS

@@ -1,0 +1,4 @@
+# prepare zip file with one file, delete the file, unchange, try to locate it
+program delete_unchange
+return 0
+args testbuffer.zip
