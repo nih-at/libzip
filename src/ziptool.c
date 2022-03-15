@@ -626,6 +626,14 @@ get_flags(const char *arg) {
         flags |= ZIP_FL_LOCAL;
     if (strchr(arg, 'u') != NULL)
         flags |= ZIP_FL_UNCHANGED;
+    if (strchr(arg, '8') != NULL)
+        flags |= ZIP_FL_ENC_UTF_8;
+    if (strchr(arg, '4') != NULL)
+        flags |= ZIP_FL_ENC_CP437;
+    if (strchr(arg, 'r') != NULL)
+        flags |= ZIP_FL_ENC_RAW;
+    if (strchr(arg, 's') != NULL)
+        flags |= ZIP_FL_ENC_STRICT;
     return flags;
 }
 
@@ -824,10 +832,14 @@ usage(const char *progname, const char *reason) {
     }
     fprintf(out, "\nSupported flags are:\n"
                  "\t0\t(no flags)\n"
+                 "\t4\tZIP_FL_ENC_CP437\n"
+                 "\t8\tZIP_FL_ENC_UTF_8\n"
                  "\tC\tZIP_FL_NOCASE\n"
                  "\tc\tZIP_FL_CENTRAL\n"
                  "\td\tZIP_FL_NODIR\n"
                  "\tl\tZIP_FL_LOCAL\n"
+                 "\tr\tZIP_FL_ENC_RAW\n"
+                 "\ts\tZIP_FL_ENC_STRICT\n"
                  "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nSupported compression methods are:\n"
                  "\tdefault\n");

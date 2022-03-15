@@ -611,12 +611,12 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
 zip_source_t *_zip_source_zip_new(zip_t *, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_uint64_t, const char *, zip_error_t *error);
 
 int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error);
-int _zip_string_equal(const zip_string_t *, const zip_string_t *);
-void _zip_string_free(zip_string_t *);
-zip_uint32_t _zip_string_crc32(const zip_string_t *);
-const zip_uint8_t *_zip_string_get(zip_string_t *, zip_uint32_t *, zip_flags_t, zip_error_t *);
-zip_uint16_t _zip_string_length(const zip_string_t *);
-zip_string_t *_zip_string_new(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_error_t *);
+int _zip_string_equal(const zip_string_t *a, const zip_string_t *b);
+void _zip_string_free(zip_string_t *string);
+zip_uint32_t _zip_string_crc32(const zip_string_t *string);
+const zip_uint8_t *_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error);
+zip_uint16_t _zip_string_length(const zip_string_t *string);
+zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error);
 int _zip_string_write(zip_t *za, const zip_string_t *string);
 bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
 bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
