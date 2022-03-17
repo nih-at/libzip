@@ -77,9 +77,6 @@ zip_open(const char *fn, int _flags, int *zep) {
 
 ZIP_EXTERN zip_t *
 zip_open_from_source(zip_source_t *src, int _flags, zip_error_t *error) {
-    static zip_int64_t needed_support_read = -1;
-    static zip_int64_t needed_support_write = -1;
-
     unsigned int flags;
     zip_int64_t supported;
     exists_t exists;
@@ -91,15 +88,11 @@ zip_open_from_source(zip_source_t *src, int _flags, zip_error_t *error) {
     flags = (unsigned int)_flags;
 
     supported = zip_source_supports(src);
-    if (needed_support_read == -1) {
-        needed_support_read = zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_STAT, -1);
-        needed_support_write = zip_source_make_command_bitmap(ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_REMOVE, -1);
-    }
-    if ((supported & needed_support_read) != needed_support_read) {
+    if ((supported & ZIP_SOURCE_SUPPORTS_SEEKABLE) != ZIP_SOURCE_SUPPORTS_SEEKABLE) {
         zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
         return NULL;
     }
-    if ((supported & needed_support_write) != needed_support_write) {
+    if ((supported & ZIP_SOURCE_SUPPORTS_WRITABLE) != ZIP_SOURCE_SUPPORTS_WRITABLE) {
         flags |= ZIP_RDONLY;
     }
 

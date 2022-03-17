@@ -57,7 +57,7 @@ zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error
     zs->cb.f = zcb;
     zs->ud = ud;
 
-    zs->supports = zcb(ud, NULL, 0, ZIP_SOURCE_SUPPORTS);
+    zs->supports = zcb(ud, NULL, 0, ZIP_SOURCE_SUPPORTS) | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, -1);
     if (zs->supports < 0) {
         zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
     }
