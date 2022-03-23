@@ -130,7 +130,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     zip_error_init(&ctx->error);
     zip_file_attributes_init(&ctx->attributes);
 
-    ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, -1);
+    ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     zip_source_file_stat_init(&sb);
     if (!ops->stat(ctx, &sb)) {

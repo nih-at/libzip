@@ -389,7 +389,7 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
     }
 
     case ZIP_SOURCE_SUPPORTS:
-        return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, -1);
+        return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     default:
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
