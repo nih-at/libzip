@@ -49,7 +49,7 @@ The functions
 .Fn zip_source_function
 and
 .Fn zip_source_function_create
-creates a zip source from the user-provided function
+create a zip source from the user-provided function
 .Ar fn ,
 which must be of the following type:
 .Pp
@@ -109,6 +109,12 @@ Must additionally support
 .Dv ZIP_SOURCE_TELL_WRITE ,
 and
 .Dv ZIP_SOURCE_REMOVE .
+.Pp
+On top of the above, supporting a pseudo-command
+.Dv ZIP_SOURCE_SUPPORTS_REOPEN
+will allow calling
+.Fn zip_fopen
+without the ZIP_FL_UNCHANGED flag to read the modified data.
 .El
 .Ss Dv ZIP_SOURCE_ACCEPT_EMPTY
 Return 1 if an empty source should be accepted as a valid zip archive.
@@ -300,6 +306,8 @@ Return the current write offset in the source, like
 .Ss Dv ZIP_SOURCE_WRITE
 Write data to the source.
 Return number of bytes written.
+.Ss Dv ZIP_SOURCE_SUPPORTS_REOPEN
+Never called.
 .Ss Return Values
 Commands should return \-1 on error.
 .Dv ZIP_SOURCE_ERROR
