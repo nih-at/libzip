@@ -81,6 +81,68 @@ unsigned int z_in_count;
 zip_flags_t stat_flags;
 
 static int
+cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
+    zip_error_t error;
+    zip_source_t *src;
+    zip_int64_t n;
+    char buf[8192];
+
+#ifdef _WIN32
+    /* Need to set stdout to binary mode for Windows */
+    setmode(fileno(stdout), _O_BINARY);
+#endif
+    zip_error_init(&error);
+    /* we can't pass 0 as a len to zip_source_zip_create because it
+       will try to give us compressed data */
+    if (len == 0) {
+        struct zip_stat sb;
+
+        if (zip_stat_index(za, idx, stat_flags, &sb) < 0) {
+            fprintf(stderr, "zip_stat_index failed on '%" PRIu64 "' failed: %s\n", idx, zip_strerror(za));
+            return -1;
+        }
+
+        if (!(sb.valid & ZIP_STAT_SIZE)) {
+            fprintf(stderr, "can't cat file at index '%" PRIu64 "' with unknown size\n", idx);
+            return -1;
+        }
+        len = sb.size;
+    }
+    if ((src = zip_source_zip_create(za, idx, 0, start, len, &error)) == NULL) {
+        fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return -1;
+    }
+    zip_error_fini(&error);
+
+    if (zip_source_open(src) < 0) {
+        fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(zip_source_error(src)));
+        zip_source_free(src);
+        return -1;
+    }
+    while ((n = zip_source_read(src, buf, sizeof(buf))) > 0) {
+        if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
+            fprintf(stderr, "can't write file contents to stdout: %s\n", strerror(errno));
+            zip_source_free(src);
+            return -1;
+        }
+    }
+    if (n == -1) {
+        fprintf(stderr, "can't read file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(zip_source_error(src)));
+        zip_source_free(src);
+        return -1;
+    }
+    if (zip_source_close(src) < 0) {
+        fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(zip_source_error(src)));
+        zip_source_free(src);
+        return -1;
+    }
+    zip_source_free(src);
+
+    return 0;
+}
+
+static int
 add(char *argv[]) {
     zip_source_t *zs;
 
@@ -170,41 +232,23 @@ static int
 cat(char *argv[]) {
     /* output file contents to stdout */
     zip_uint64_t idx;
-    zip_int64_t n;
-    zip_file_t *zf;
-    char buf[8192];
-    int err;
     idx = strtoull(argv[0], NULL, 10);
 
-#ifdef _WIN32
-    /* Need to set stdout to binary mode for Windows */
-    setmode(fileno(stdout), _O_BINARY);
-#endif
-    if ((zf = zip_fopen_index(za, idx, 0)) == NULL) {
-        fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
-        return -1;
-    }
-    while ((n = zip_fread(zf, buf, sizeof(buf))) > 0) {
-        if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
-            zip_fclose(zf);
-            fprintf(stderr, "can't write file contents to stdout: %s\n", strerror(errno));
-            return -1;
-        }
-    }
-    if (n == -1) {
-        fprintf(stderr, "can't read file at index '%" PRIu64 "': %s\n", idx, zip_file_strerror(zf));
-        zip_fclose(zf);
-        return -1;
-    }
-    if ((err = zip_fclose(zf)) != 0) {
-        zip_error_t error;
+    return cat_impl(idx, 0, 0);
+}
 
-        zip_error_init_with_code(&error, err);
-        fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(&error));
-        return -1;
-    }
+static int
+cat_partial(char *argv[]) {
+    /* output partial file contents to stdout */
+    zip_uint64_t idx;
+    zip_uint64_t start;
+    zip_uint64_t len;
 
-    return 0;
+    idx = strtoull(argv[0], NULL, 10);
+    start = strtoull(argv[1], NULL, 10);
+    len = strtoull(argv[2], NULL, 10);
+
+    return cat_impl(idx, start, len);
 }
 
 static int
@@ -739,6 +783,7 @@ dispatch_table_t dispatch_table[] = {{"add", 2, "name content", "add file called
                                      {"add_file", 4, "name file_to_add offset len", "add file to archive, len bytes starting from offset", add_file},
                                      {"add_from_zip", 5, "name archivename index offset len", "add file from another archive, len bytes starting from offset", add_from_zip},
                                      {"cat", 1, "index", "output file contents to stdout", cat},
+                                     {"cat_partial", 3, "index start length", "output partial file contents to stdout", cat_partial},
                                      {"count_extra", 2, "index flags", "show number of extra fields for archive entry", count_extra},
                                      {"count_extra_by_id", 3, "index extra_id flags", "show number of extra fields of type extra_id for archive entry", count_extra_by_id},
                                      {"delete", 1, "index", "remove entry", delete},
