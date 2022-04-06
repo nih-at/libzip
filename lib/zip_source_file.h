@@ -34,7 +34,7 @@
 struct zip_source_file_stat {
     zip_uint64_t size; /* must be valid for regular files */
     time_t mtime;      /* must always be valid, is initialized to current time */
-    bool exists;       /* must always be vaild */
+    bool exists;       /* must always be valid */
     bool regular_file; /* must always be valid */
 };
 

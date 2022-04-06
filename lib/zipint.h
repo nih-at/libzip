@@ -122,7 +122,7 @@ enum zip_compression_status {
 typedef enum zip_compression_status zip_compression_status_t;
 
 struct zip_compression_algorithm {
-    /* Return maxiumum compressed size for uncompressed data of given size. */
+    /* Return maximum compressed size for uncompressed data of given size. */
     zip_uint64_t (*maximum_compressed_size)(zip_uint64_t uncompressed_size);
 
     /* called once to create new context */
