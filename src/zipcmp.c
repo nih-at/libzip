@@ -369,7 +369,7 @@ compare_zip(char *const zn[]) {
     }
 
     if (summary) {
-	printf("%d files added, %d files removed\n", plus_count, minus_count);
+	printf("%d files removed, %d files added\n", minus_count, plus_count);
     }
 
     switch (res) {
