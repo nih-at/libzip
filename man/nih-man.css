@@ -3,9 +3,7 @@ div.lit {
 }
 div.sec-head, div.ssec-head, h1, h2 {
     padding: 4pt;
-    border: solid;
-    border-width: 1px;
-    border-color: #555555;
+    border: 1px solid #555555;
     background: #aaaaaa;
     font-weight: bold;
 }
