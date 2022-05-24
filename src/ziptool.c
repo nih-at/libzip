@@ -1011,6 +1011,10 @@ main(int argc, char *argv[]) {
         }
     }
 
+#ifdef PRECLOSE_REGRESS
+    PRECLOSE_REGRESS;
+#endif
+
     if (zip_close(za) == -1) {
         fprintf(stderr, "can't close zip archive '%s': %s\n", archive, zip_strerror(za));
         return 1;
