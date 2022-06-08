@@ -222,7 +222,7 @@ elseif (MBEDTLS_FOUND)
   set(HAVE_MBEDTLS 1)
 endif()
 
-if (NOT HAVE_CRYPTO)
+if ((ENABLE_COMMONCRYPTO OR ENABLE_GNUTLS OR ENABLE_MBEDTLS OR ENABLE_OPENSSL OR ENABLE_WINDOWS_CRYPTO) AND NOT HAVE_CRYPTO)
   message(WARNING "-- neither Common Crypto, GnuTLS, mbed TLS, OpenSSL, nor Windows Cryptography found; AES support disabled")
 endif()
 
@@ -267,7 +267,7 @@ endif()
 
 include(FindPerl)
 
-if(NOT PERL_FOUND)
+if(BUILD_REGRESS AND NOT PERL_FOUND)
   message(WARNING "-- perl not found, regression testing disabled")
   set(BUILD_REGRESS OFF)
 endif()
