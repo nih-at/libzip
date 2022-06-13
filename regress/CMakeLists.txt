@@ -93,4 +93,12 @@ foreach(FULL_CASE IN LISTS EXTRA_TESTS)
   set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
 endforeach()
 
+set(XFAIL_TESTS
+  set_file_mtime_pkware.test
+)
+
+foreach(CASE ${XFAIL_TESTS})
+  set_tests_properties(${CASE} PROPERTIES WILL_FAIL TRUE)
+endforeach()
+
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
