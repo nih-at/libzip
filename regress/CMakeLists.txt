@@ -94,7 +94,6 @@ foreach(FULL_CASE IN LISTS EXTRA_TESTS)
 endforeach()
 
 set(XFAIL_TESTS
-  set_file_mtime_pkware.test
 )
 
 foreach(CASE ${XFAIL_TESTS})

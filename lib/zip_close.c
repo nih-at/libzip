@@ -448,13 +448,29 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             zip_source_free(src_final);
             return -1;
         }
+
+        if (de->encryption_method == ZIP_EM_TRAD_PKWARE) {
+            de->bitflags |= ZIP_GPBF_DATA_DESCRIPTOR;
+
+            /* PKWare encryption uses last_mod, make sure it gets the right value. */
+            if (de->changed & ZIP_DIRENT_LAST_MOD) {
+                zip_stat_t st_mtime;
+                zip_stat_init(&st_mtime);
+                st_mtime.valid = ZIP_STAT_MTIME;
+                st_mtime.mtime = de->last_mod;
+                if ((src_tmp = _zip_source_window_new(src_final, 0, -1, &st_mtime, NULL, NULL, 0, &za->error)) == NULL) {
+                    zip_source_free(src_final);
+                    return -1;
+                }
+                zip_source_free(src_final);
+                src_final = src_tmp;
+            }
+        }
+
         if ((src_tmp = impl(za, src_final, de->encryption_method, ZIP_CODEC_ENCODE, password)) == NULL) {
             /* error set by impl */
             zip_source_free(src_final);
             return -1;
-        }
-        if (de->encryption_method == ZIP_EM_TRAD_PKWARE) {
-            de->bitflags |= ZIP_GPBF_DATA_DESCRIPTOR;
         }
 
         zip_source_free(src_final);
