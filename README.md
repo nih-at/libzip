@@ -32,7 +32,7 @@ subscribe to it by sending a mail with the subject "subscribe
 libzip-discuss" to minimalist at nih.at. List mail should be sent
 to libzip-discuss at nih.at. Use this for bug reports or questions.
 
-If you want to reach the authors in private, use <libzip@nih.at>.
+If you want to reach the authors in private, use <info@libzip.org>.
 
 [![Github Actions Build Status](https://github.com/nih-at/libzip/workflows/build/badge.svg)](https://github.com/nih-at/libzip/actions?query=workflow%3Abuild)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/f1bqqt9djvf22f5g?svg=true)](https://ci.appveyor.com/project/nih-at/libzip)
