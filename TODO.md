@@ -1,6 +1,10 @@
 ## Before next release
 
-reconsider zip_source_zip (uncompressed data for whole file not easy to get)
+## Other
+
+- Support extended timestamp extra field (0x5455): mtime overrides dos mtime from dirent, function to get/set all three.  
+
+- reconsider zip_source_zip (uncompressed data for whole file not easy to get)
 
 ## Prefixes
 
