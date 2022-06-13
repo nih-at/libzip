@@ -140,10 +140,17 @@ Additionally, any errors returned by the callback function for added or replaced
   <span class="An">Thomas Klausner</span>
   &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
 </section>
+<section class="Sh">
+<h1 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
+Please note that all indices, <a class="Xr" href="zip_stat.html">zip_stat(3)</a>
+  information and other data about the archive is invalid after
+  <code class="Nm">zip_close</code>. When you open the same file again, it will
+  be a completely new <var class="Vt">zip_t</var> structure.
+</section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 6, 2021</td>
+    <td class="foot-date">April 1, 2022</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

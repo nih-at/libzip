@@ -144,6 +144,10 @@ The archive specified by <var class="Ar">path</var> is opened unless:
   <dd>The file specified by <var class="Ar">path</var> does not allow
     seeks.</dd>
 </dl>
+For newly created archives, <code class="Fn">zip_open</code>() does not try to
+  create the file; this is done when calling
+  <a class="Xr" href="zip_close.html">zip_close(3)</a> and any errors, like
+  missing write permissions, will be reported then.
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -168,7 +172,7 @@ The archive specified by <var class="Ar">path</var> is opened unless:
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-date">June 18, 2022</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

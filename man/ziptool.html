@@ -224,9 +224,15 @@ For all commands below, the index is zero-based. In other words, the first entry
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Flags"><a class="permalink" href="#Flags">Flags</a></h2>
-Some commands take flag arguments. Supported flags are:
+Some commands take flag arguments. Each character in the argument sets the
+  corresponding flag. Use 0 or the empty string for no flags.
+<p class="Pp">Supported flags are:</p>
 <div class="Bd-indent">
 <dl class="Bl-tag Bl-compact">
+  <dt><var class="Ar">4</var></dt>
+  <dd><a class="permalink" href="#ZIP_FL_ENC_CP437"><code class="Dv" id="ZIP_FL_ENC_CP437">ZIP_FL_ENC_CP437</code></a></dd>
+  <dt><var class="Ar">8</var></dt>
+  <dd><a class="permalink" href="#ZIP_FL_ENC_UTF_8"><code class="Dv" id="ZIP_FL_ENC_UTF_8">ZIP_FL_ENC_UTF_8</code></a></dd>
   <dt><var class="Ar">C</var></dt>
   <dd><a class="permalink" href="#ZIP_FL_NOCASE"><code class="Dv" id="ZIP_FL_NOCASE">ZIP_FL_NOCASE</code></a></dd>
   <dt><var class="Ar">c</var></dt>
@@ -235,6 +241,10 @@ Some commands take flag arguments. Supported flags are:
   <dd><a class="permalink" href="#ZIP_FL_NODIR"><code class="Dv" id="ZIP_FL_NODIR">ZIP_FL_NODIR</code></a></dd>
   <dt><var class="Ar">l</var></dt>
   <dd><a class="permalink" href="#ZIP_FL_LOCAL"><code class="Dv" id="ZIP_FL_LOCAL">ZIP_FL_LOCAL</code></a></dd>
+  <dt><var class="Ar">r</var></dt>
+  <dd><a class="permalink" href="#ZIP_FL_ENC_RAW"><code class="Dv" id="ZIP_FL_ENC_RAW">ZIP_FL_ENC_RAW</code></a></dd>
+  <dt><var class="Ar">s</var></dt>
+  <dd><a class="permalink" href="#ZIP_FL_ENC_STRICT"><code class="Dv" id="ZIP_FL_ENC_STRICT">ZIP_FL_ENC_STRICT</code></a></dd>
   <dt><var class="Ar">u</var></dt>
   <dd><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dd>
 </dl>
@@ -307,7 +317,7 @@ ziptool testfile.zip delete 0
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-date">March 15, 2022</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

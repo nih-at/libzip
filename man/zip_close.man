@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_CLOSE" "3" "April 6, 2021" "NiH" "Library Functions Manual"
+.TH "ZIP_CLOSE" "3" "April 1, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -140,3 +140,11 @@ was added in libzip 0.6.
 Dieter Baron <\fIdillo@nih.at\fR>
 and
 Thomas Klausner <\fItk@giga.or.at\fR>
+.SH "CAVEATS"
+Please note that all indices,
+zip_stat(3)
+information and other data about the archive is invalid after
+\fBzip_close\fR.
+When you open the same file again, it will be a completely new
+\fIzip_t\fR
+structure.
