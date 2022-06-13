@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd October 15, 2021
+.Dd June 18, 2022
 .Dt LIBZIP 3
 .Os
 .Sh NAME
@@ -62,7 +62,31 @@ zip archive atomically.
 .Pp
 Below there are two sections listing functions: one for how to read
 from zip archives and one for how to create/modify them.
-.Ss THREAD SAFETY
+.Sh FILE NAMES
+.Ss Encoding
+Names of files in the host file system are expected in UTF-8 encoding.
+On Windows, variants for ASCII and UTF-16 are also available.
+.Pp
+Names of files inside archives are by default expected in UTF-8 encoding.
+Other encodings can be requested by using the flags
+.Dv ZIP_FL_ENC_CP437
+and
+.Dv ZIP_FL_ENC_RAW .
+.Pp
+For details see the relevant man pages.
+.Ss Directory Separator
+The zip format requires the use of forward slash
+.Pq Sq /
+as directory separator.
+Since backslash
+.Pq Sq \e
+can be part of a valid file name on Unix systems,
+.Nm
+does not automatically convert them, even on Windows.
+It is the responsibility of the programmer to ensure that all
+directory separators are passed as forward slashes to
+.Nm .
+.Sh THREAD SAFETY
 In general, different zip archives opened by
 .Nm
 are independent of each other and can be used by parallel-running
@@ -76,19 +100,19 @@ or
 access to the target archive must be synchronized with access to the
 source archive as well.
 .Sh READING ZIP ARCHIVES
-.Ss open archive
+.Ss Open Archive
 .Bl -bullet -compact
 .It
 .Xr zip_open 3
 .It
 .Xr zip_fdopen 3
 .El
-.Ss find files
+.Ss Find Files
 .Bl -bullet -compact
 .It
 .Xr zip_name_locate 3
 .El
-.Ss read files
+.Ss Read Files
 .Bl -bullet -compact
 .It
 .Xr zip_fopen 3
@@ -110,12 +134,12 @@ source archive as well.
 .It
 .Xr zip_fclose 3
 .El
-.Ss close archive
+.Ss Close Archive
 .Bl -bullet -compact
 .It
 .Xr zip_close 3
 .El
-.Ss miscellaneous
+.Ss Miscellaneous
 .Bl -bullet -compact
 .It
 .Xr zip_stat 3
@@ -139,12 +163,12 @@ source archive as well.
 .Xr zip_set_default_password 3
 .El
 .Sh CREATING/MODIFYING ZIP ARCHIVES
-.Ss create/open archive
+.Ss Create/Open Archive
 .Bl -bullet -compact
 .It
 .Xr zip_open 3
 .El
-.Ss add/change files and directories
+.Ss Add/Change Files and Directories
 .Bl -bullet -compact
 .It
 .Xr zip_dir_add 3
@@ -177,17 +201,17 @@ source archive as well.
 .It
 .Xr zip_source_zip 3
 .El
-.Ss rename files
+.Ss Rename Files
 .Bl -bullet -compact
 .It
 .Xr zip_rename 3
 .El
-.Ss delete files
+.Ss Delete Files
 .Bl -bullet -compact
 .It
 .Xr zip_delete 3
 .El
-.Ss revert changes
+.Ss Revert Changes
 .Bl -bullet -compact
 .It
 .Xr zip_unchange 3
@@ -196,7 +220,7 @@ source archive as well.
 .It
 .Xr zip_unchange_archive 3
 .El
-.Ss read/modify extra fields
+.Ss Read/Modify Extra Fields
 .Bl -bullet -compact
 .It
 .Xr zip_file_extra_field_by_id 3
@@ -213,14 +237,14 @@ source archive as well.
 .It
 .Xr zip_file_extra_fields_count_by_id 3
 .El
-.Ss close archive (writing)
+.Ss Close Archive (Writing)
 .Bl -bullet -compact
 .It
 .Xr zip_close 3
 .It
 .Xr zip_discard 3
 .El
-.Ss miscellaneous (writing)
+.Ss Miscellaneous (Writing)
 .Bl -bullet -compact
 .It
 .Xr zip_file_attributes_init 3
