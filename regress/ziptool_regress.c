@@ -13,6 +13,8 @@ zip_uint64_t fragment_size = 0;
 
 static int add_nul(char *argv[]);
 static int cancel(char *argv[]);
+static int is_seekable(char *argv[]);
+static int seek(char *argv[]);
 static int unchange_one(char *argv[]);
 static int unchange_all(char *argv[]);
 static int zin_close(char *argv[]);
@@ -37,6 +39,8 @@ static int zin_close(char *argv[]);
 #define DISPATCH_REGRESS \
     {"add_nul", 2, "name length", "add NUL bytes", add_nul}, \
     {"cancel", 1, "limit", "cancel writing archive when limit% have been written (calls print_progress)", cancel}, \
+    {"is_seekable", 1, "index", "report if entry is seekable", is_seekable}, \
+    {"seek", 2, "index offset", "seek in entry to offset", seek}, \
     {"unchange", 1, "index", "revert changes for entry", unchange_one}, \
     {"unchange_all", 0, "", "revert all changes", unchange_all}, \
     { "zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close }
@@ -77,31 +81,6 @@ add_nul(char *argv[]) {
 }
 
 static int
-unchange_all(char *argv[]) {
-    if (zip_unchange_all(za) < 0) {
-        fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
-        return -1;
-    }
-    return 0;
-}
-
-
-static int
-unchange_one(char *argv[]) {
-    zip_uint64_t idx;
-
-    idx = strtoull(argv[0], NULL, 10);
-
-    if (zip_unchange(za, idx) < 0) {
-	fprintf(stderr, "can't revert changes for entry %" PRIu64 ": %s", idx, zip_strerror(za));
-	return -1;
-    }
-
-    return 0;
-}
-
-
-static int
 cancel_callback(zip_t *archive, void *ud) {
     if (progress_userdata.percentage >= progress_userdata.limit) {
         return -1;
@@ -123,6 +102,73 @@ cancel(char *argv[]) {
 
     /* needs the percentage updates from print_progress */
     print_progress(argv);
+    return 0;
+}
+
+static int
+is_seekable(char *argv[]) {
+    zip_uint64_t idx;
+    zip_file_t *zf;
+
+    idx = strtoull(argv[0], NULL, 10);
+    if ((zf = zip_fopen_index(za, idx, 0)) == NULL) {
+        fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
+        return -1;
+    }
+    switch (zip_file_is_seekable(zf)) {
+    case -1:
+	fprintf(stderr, "can't check if file %" PRIu64 " is seekable: %s\n", idx, zip_strerror(za));
+	return -1;
+    case 0:
+	printf("%" PRIu64 ": NOT seekable\n", idx);
+	break;
+    case 1:
+	printf("%" PRIu64 ": seekable\n", idx);
+	break;
+    }
+    return 0;
+}
+
+static int
+seek(char *argv[]) {
+    zip_uint64_t idx;
+    zip_file_t *zf;
+    zip_int64_t offset;
+
+    idx = strtoull(argv[0], NULL, 10);
+    offset = strtoull(argv[1], NULL, 10);
+    if ((zf = zip_fopen_index(za, idx, 0)) == NULL) {
+        fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
+        return -1;
+    }
+    if (zip_fseek(zf, offset, SEEK_SET) == -1) {
+	fprintf(stderr, "can't seek in file %" PRIu64 ": %s\n", idx, zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
+unchange_all(char *argv[]) {
+    if (zip_unchange_all(za) < 0) {
+        fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
+        return -1;
+    }
+    return 0;
+}
+
+
+static int
+unchange_one(char *argv[]) {
+    zip_uint64_t idx;
+
+    idx = strtoull(argv[0], NULL, 10);
+
+    if (zip_unchange(za, idx) < 0) {
+	fprintf(stderr, "can't revert changes for entry %" PRIu64 ": %s", idx, zip_strerror(za));
+	return -1;
+    }
+
     return 0;
 }
 
