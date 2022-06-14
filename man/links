@@ -10,6 +10,7 @@ zip_file_set_mtime zip_file_set_dostime
 zip_file_strerror zip_strerror
 zip_fopen zip_fopen_index
 zip_fopen_encrypted zip_fopen_index_encrypted
+zip_fseek zip_file_is_seekable
 zip_open zip_open_from_source
 zip_source_begin_write zip_source_begin_write_cloning
 zip_source_buffer zip_source_buffer_create
