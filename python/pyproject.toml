@@ -1,0 +1,38 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.2", "setuptools_scm[toml]>=3.4.3", "wheel"]
+
+[project]
+name = "libzip"
+description = "ctypes-based bindings to libzip"
+readme = "ReadMe.md"
+keywords = ["libzip", "zip",]
+license = {text = "Unlicense"}
+authors = [{name = "KOLANICH"}]
+requires-python = ">=3.4"
+dependencies = []
+dynamic = ["version"]
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"Environment :: Other Environment",
+	"Intended Audience :: Developers",
+	"License :: Public Domain",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3 :: Only",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+]
+[project.urls]
+Homepage = "https://github.com/nih-at/libzip/tree/main/python"
+
+
+[tool.setuptools]
+zip-safe = true
+include-package-data = false
+
+[tool.setuptools.packages]
+find = {namespaces = false}
+
+[tool.setuptools_scm]
+relative_to = ".."
