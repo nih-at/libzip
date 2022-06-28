@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd April 17, 2020
+.Dd June 28, 2022
 .Dt ZIP_SOURCE_FUNCTION 3
 .Os
 .Sh NAME
@@ -114,7 +114,9 @@ On top of the above, supporting a pseudo-command
 .Dv ZIP_SOURCE_SUPPORTS_REOPEN
 will allow calling
 .Fn zip_fopen
-without the ZIP_FL_UNCHANGED flag to read the modified data.
+without the
+.Dv ZIP_FL_UNCHANGED
+flag to read the modified data.
 .El
 .Ss Dv ZIP_SOURCE_ACCEPT_EMPTY
 Return 1 if an empty source should be accepted as a valid zip archive.
