@@ -62,6 +62,9 @@ zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, voi
     if (zs->supports < 0) {
         zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
     }
+    if (!zip_source_supports_reopen(src)) {
+        zs->supports &= ~ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SUPPORTS_REOPEN);
+    }
 
     return zs;
 }
