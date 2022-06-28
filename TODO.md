@@ -2,9 +2,9 @@
 
 ## Other
 
+- split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`). 
 - Support extended timestamp extra field (0x5455): mtime overrides dos mtime from dirent, function to get/set all three.  
-
-- reconsider zip_source_zip (uncompressed data for whole file not easy to get)
+- Add support for torrentzip.
 
 ## Prefixes
 
@@ -31,8 +31,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Features
 
-* add flag `ZIP_FL_SUPPORT_MULTIPLE_OPENS` and allow zip_fopen (perhaps other functions) on added/replaced files with such sources
-* add seek support for AES-encrypted files
 * consistently use `_zip_crypto_clear()` for passwords
 * support setting extra fields from `zip_source`
   * introduce layers of extra fields:
@@ -98,7 +96,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   - [Linux Foundation Core Infrastructure Initiative Best Practices](https://bestpractices.coreinfrastructure.org/)
   - [Readme Maturity Level](https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md)
   - [Github Community Profile](https://github.com/nih-at/libzip/community)
-* test different crypto backends with TravisCI.
+* test different crypto backends with GitHub actions.
 * improve man page formatting of tagged lists on webpage (`<dl>`)
 * rewrite `make_zip_errors.sh` in cmake
 * script to check if all exported symbols are marked with `ZIP_EXTERN`, add to `make distcheck`
