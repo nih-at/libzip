@@ -110,13 +110,12 @@ Must additionally support
 and
 .Dv ZIP_SOURCE_REMOVE .
 .Pp
-On top of the above, supporting a pseudo-command
+On top of the above, supporting the pseudo-command
 .Dv ZIP_SOURCE_SUPPORTS_REOPEN
-will allow calling
-.Fn zip_fopen
-without the
-.Dv ZIP_FL_UNCHANGED
-flag to read the modified data.
+allows calling
+.Fn zip_source_open
+again after calling
+.Fn zip_source_close .
 .El
 .Ss Dv ZIP_SOURCE_ACCEPT_EMPTY
 Return 1 if an empty source should be accepted as a valid zip archive.
@@ -309,7 +308,8 @@ Return the current write offset in the source, like
 Write data to the source.
 Return number of bytes written.
 .Ss Dv ZIP_SOURCE_SUPPORTS_REOPEN
-Never called.
+This command is never actually invoked, support for it signals the
+ability to handle multiple open/read/close cycles.
 .Ss Return Values
 Commands should return \-1 on error.
 .Dv ZIP_SOURCE_ERROR
