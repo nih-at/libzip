@@ -242,6 +242,8 @@ typedef enum zip_source_cmd zip_source_cmd_t;
 
 #define ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd) (((zip_int64_t)1) << (cmd))
 
+#define ZIP_SOURCE_CHECK_SUPPORTED(supported, cmd)  (((supported) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd)) != 0)
+
 /* clang-format off */
 
 #define ZIP_SOURCE_SUPPORTS_READABLE	(ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_OPEN) \
