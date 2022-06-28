@@ -3,6 +3,10 @@
 
 * Allow reading changed file data.
 
+1.9.2 [2022-06-28]
+
+* Fix version number in header file.
+
 1.9.1 [2022-06-28]
 ===================
 
