@@ -1,3 +1,9 @@
+1.10.0 [2022-06-XX]
+===================
+
+* Allow reading changed file data.
+* Fix `zip_file_is_seekable()`.
+
 1.9.0 [2022-06-13]
 ==================
 

@@ -218,7 +218,8 @@ regress_fopen(char *argv[]) {
         fprintf(stderr, "can't open entry '%s' from input archive: %s\n", argv[0], zip_strerror(za));
         return -1;
     }
-    ++z_files_count;
+    printf("opened '%s' as file %u\n", argv[0], z_files_count);
+    z_files_count += 1;
     return 0;
 }
 

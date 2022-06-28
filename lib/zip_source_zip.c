@@ -37,8 +37,6 @@
 #include "zipint.h"
 
 ZIP_EXTERN zip_source_t *zip_source_zip_create(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_int64_t len, zip_error_t *error) {
-    const char *password;
-
     if (len < -1) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
@@ -52,13 +50,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_create(zip_t *srcza, zip_uint64_t srcidx
     else
         flags &= ~ZIP_FL_COMPRESSED;
 
-    password = srcza->default_password;
-
-    if (password != NULL && password[0] == '\0') {
-        password = NULL;
-    }
-
-    return _zip_source_zip_new(srcza, srcidx, flags, start, (zip_uint64_t)len, password, error);
+    return _zip_source_zip_new(srcza, srcidx, flags, start, (zip_uint64_t)len, srcza->default_password, error);
 }
 
 

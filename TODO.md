@@ -21,6 +21,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## API Issues
 
+* Add `zip_file_use_password` to set per-file password to use if libzip needs to decrypt the file (e.g. when changing encryption or compression method).
+
 * `zip_get_archive_comment` has `int *lenp` argument.  Cleaner would be `zip_uint32_t *`.
   rename and fix.  which other functions for naming consistency?
 * rename remaining `zip_XXX_{file,archive}_*` to `zip_{file,archive}_XXX_*`?
