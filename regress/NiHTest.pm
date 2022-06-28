@@ -320,6 +320,7 @@ sub runtest_one {
 	my ($self, $tag) = @_;
 
 	$ENV{TZ} = "UTC";
+	$ENV{LANG} = "C";
 	$ENV{LC_CTYPE} = "C";
 	$ENV{POSIXLY_CORRECT} = 1;
 	$self->sandbox_create($tag);
