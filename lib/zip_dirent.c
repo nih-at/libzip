@@ -503,75 +503,17 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 
     if (zde->uncomp_size == ZIP_UINT32_MAX || zde->comp_size == ZIP_UINT32_MAX || zde->offset == ZIP_UINT32_MAX) {
         zip_uint16_t got_len;
-        zip_buffer_t *ef_buffer;
         const zip_uint8_t *ef = _zip_ef_get_by_id(zde->extra_fields, &got_len, ZIP_EF_ZIP64, 0, local ? ZIP_EF_LOCAL : ZIP_EF_CENTRAL, error);
-        /* TODO: if got_len == 0 && !ZIP64_EOCD: no error, 0xffffffff is valid value */
-        if (ef == NULL) {
-            if (!from_buffer) {
-                _zip_buffer_free(buffer);
-            }
-            return -1;
-        }
-
-        if ((ef_buffer = _zip_buffer_new((zip_uint8_t *)ef, got_len)) == NULL) {
-            zip_error_set(error, ZIP_ER_MEMORY, 0);
-            if (!from_buffer) {
-                _zip_buffer_free(buffer);
-            }
-            return -1;
-        }
-
-        if (zde->uncomp_size == ZIP_UINT32_MAX) {
-            zde->uncomp_size = _zip_buffer_get_64(ef_buffer);
-        }
-        else if (local) {
-            /* From appnote.txt: This entry in the Local header MUST
-               include BOTH original and compressed file size fields. */
-            (void)_zip_buffer_skip(ef_buffer, 8); /* error is caught by _zip_buffer_eof() call */
-        }
-        if (zde->comp_size == ZIP_UINT32_MAX) {
-            zde->comp_size = _zip_buffer_get_64(ef_buffer);
-        }
-        if (!local) {
-            if (zde->offset == ZIP_UINT32_MAX) {
-                zde->offset = _zip_buffer_get_64(ef_buffer);
-            }
-            if (zde->disk_number == ZIP_UINT16_MAX) {
-                zde->disk_number = _zip_buffer_get_32(ef_buffer);
-            }
-        }
-
-        if (!_zip_buffer_eof(ef_buffer)) {
-            /* accept additional fields if values match */
-            bool ok = true;
-            switch (got_len) {
-            case 28:
-                _zip_buffer_set_offset(ef_buffer, 24);
-                if (zde->disk_number != _zip_buffer_get_32(ef_buffer)) {
-                    ok = false;
-                }
-                /* fallthrough */
-            case 24:
-                _zip_buffer_set_offset(ef_buffer, 0);
-                if ((zde->uncomp_size != _zip_buffer_get_64(ef_buffer)) || (zde->comp_size != _zip_buffer_get_64(ef_buffer)) || (zde->offset != _zip_buffer_get_64(ef_buffer))) {
-                    ok = false;
-                }
-                break;
-
-            default:
-                ok = false;
-            }
-            if (!ok) {
-                zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_INVALID_ZIP64_EF);
-                _zip_buffer_free(ef_buffer);
+        if (ef != NULL) {
+            if (!zip_dirent_process_ef_zip64(zde, ef, got_len, local, error)) {
                 if (!from_buffer) {
                     _zip_buffer_free(buffer);
                 }
                 return -1;
             }
         }
-        _zip_buffer_free(ef_buffer);
     }
+
 
     if (!_zip_buffer_ok(buffer)) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
@@ -597,6 +539,65 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     zde->extra_fields = _zip_ef_remove_internal(zde->extra_fields);
 
     return (zip_int64_t)size + (zip_int64_t)variable_size;
+}
+
+bool zip_dirent_process_ef_zip64(zip_dirent_t* zde, const zip_uint8_t* ef, zip_uint64_t got_len, bool local, zip_error_t* error) {
+    zip_buffer_t *ef_buffer;
+
+    if ((ef_buffer = _zip_buffer_new((zip_uint8_t *)ef, got_len)) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
+
+    if (zde->uncomp_size == ZIP_UINT32_MAX) {
+        zde->uncomp_size = _zip_buffer_get_64(ef_buffer);
+    }
+    else if (local) {
+        /* From appnote.txt: This entry in the Local header MUST
+           include BOTH original and compressed file size fields. */
+        (void)_zip_buffer_skip(ef_buffer, 8); /* error is caught by _zip_buffer_eof() call */
+    }
+    if (zde->comp_size == ZIP_UINT32_MAX) {
+        zde->comp_size = _zip_buffer_get_64(ef_buffer);
+    }
+    if (!local) {
+        if (zde->offset == ZIP_UINT32_MAX) {
+            zde->offset = _zip_buffer_get_64(ef_buffer);
+        }
+        if (zde->disk_number == ZIP_UINT16_MAX) {
+            zde->disk_number = _zip_buffer_get_32(ef_buffer);
+        }
+    }
+
+    if (!_zip_buffer_eof(ef_buffer)) {
+        /* accept additional fields if values match */
+        bool ok = true;
+        switch (got_len) {
+        case 28:
+            _zip_buffer_set_offset(ef_buffer, 24);
+            if (zde->disk_number != _zip_buffer_get_32(ef_buffer)) {
+                ok = false;
+            }
+            /* fallthrough */
+        case 24:
+            _zip_buffer_set_offset(ef_buffer, 0);
+            if ((zde->uncomp_size != _zip_buffer_get_64(ef_buffer)) || (zde->comp_size != _zip_buffer_get_64(ef_buffer)) || (zde->offset != _zip_buffer_get_64(ef_buffer))) {
+                ok = false;
+            }
+            break;
+
+        default:
+            ok = false;
+        }
+        if (!ok) {
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_INVALID_ZIP64_EF);
+            _zip_buffer_free(ef_buffer);
+            return false;
+        }
+    }
+    _zip_buffer_free(ef_buffer);
+
+    return true;
 }
 
 
