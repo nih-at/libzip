@@ -80,7 +80,6 @@ _zip_file_new(zip_t *za) {
 
     zf->za = za;
     zip_error_init(&zf->error);
-    zf->eof = 0;
     zf->src = NULL;
 
     return zf;

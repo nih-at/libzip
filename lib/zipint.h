@@ -308,7 +308,6 @@ struct zip {
 struct zip_file {
     zip_t *za;         /* zip archive containing this file */
     zip_error_t error; /* error information */
-    bool eof;
     zip_source_t *src; /* data source */
 };
 
