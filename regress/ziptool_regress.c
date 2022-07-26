@@ -15,13 +15,13 @@ unsigned int z_files_count;
 
 static int add_nul(char *argv[]);
 static int cancel(char *argv[]);
+static int regress_fopen(char *argv[]);
+static int regress_fread(char *argv[]);
+static int regress_fseek(char *argv[]);
 static int is_seekable(char *argv[]);
-static int seek(char *argv[]);
 static int unchange_one(char *argv[]);
 static int unchange_all(char *argv[]);
 static int zin_close(char *argv[]);
-static int regress_fopen(char *argv[]);
-static int regress_fread(char *argv[]);
 
 #define OPTIONS_REGRESS "F:Hm"
 
@@ -43,13 +43,13 @@ static int regress_fread(char *argv[]);
 #define DISPATCH_REGRESS \
     {"add_nul", 2, "name length", "add NUL bytes", add_nul}, \
     {"cancel", 1, "limit", "cancel writing archive when limit% have been written (calls print_progress)", cancel}, \
+    {"fopen", 1, "name", "open archive entry", regress_fopen}, \
+    {"fread", 2, "file_index length", "read from fopened file and print", regress_fread}, \
+    {"fseek", 3, "file_index offset whence", "seek in fopened file", regress_fseek}, \
     {"is_seekable", 1, "index", "report if entry is seekable", is_seekable}, \
-    {"seek", 2, "index offset", "seek in entry to offset", seek}, \
     {"unchange", 1, "index", "revert changes for entry", unchange_one}, \
     {"unchange_all", 0, "", "revert all changes", unchange_all}, \
-    {"zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close}, \
-    {"fopen", 1, "name", "open archive entry", regress_fopen}, \
-    {"fread", 2, "file_index length", "read from fopened file and print", regress_fread}
+    {"zin_close", 1, "index", "close input zip_source (for internal tests)", zin_close}
 
 #define PRECLOSE_REGRESS                                         \
   do {                                                           \
@@ -73,8 +73,8 @@ zip_t *ziptool_open(const char *archive, int flags, zip_error_t *error, zip_uint
 
 zip_source_t *memory_src = NULL;
 
+static int get_whence(const char *str);
 zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
-
 static zip_t *read_to_memory(const char *archive, int flags, zip_error_t *error, zip_source_t **srcp);
 static zip_source_t *source_nul(zip_t *za, zip_uint64_t length);
 
@@ -147,19 +147,23 @@ is_seekable(char *argv[]) {
 }
 
 static int
-seek(char *argv[]) {
-    zip_uint64_t idx;
+regress_fseek(char *argv[]) {
+    zip_uint64_t file_idx;
     zip_file_t *zf;
     zip_int64_t offset;
+    int whence;
 
-    idx = strtoull(argv[0], NULL, 10);
-    offset = strtoull(argv[1], NULL, 10);
-    if ((zf = zip_fopen_index(za, idx, 0)) == NULL) {
-        fprintf(stderr, "can't open file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
+    file_idx = strtoull(argv[0], NULL, 10);
+    offset = strtoll(argv[1], NULL, 10);
+    whence = get_whence(argv[2]);
+    if (file_idx >= z_files_count || z_files[file_idx] == NULL) {
+        fprintf(stderr, "trying to seek in invalid opened file\n");
         return -1;
     }
-    if (zip_fseek(zf, offset, SEEK_SET) == -1) {
-	fprintf(stderr, "can't seek in file %" PRIu64 ": %s\n", idx, zip_strerror(za));
+    zf = z_files[file_idx];
+
+    if (zip_fseek(zf, offset, whence) == -1) {
+	fprintf(stderr, "can't seek in file %" PRIu64 ": %s\n", file_idx, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -254,8 +258,12 @@ regress_fread(char *argv[]) {
             return -1;
         }
         if (n == 0) {
+#if 0
             fprintf(stderr, "premature end of opened file %" PRIu64 "\n", file_idx);
             return -1;
+#else
+            break;
+#endif
         }
         if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
             fprintf(stderr, "can't write file contents to stdout: %s\n", strerror(errno));
@@ -282,6 +290,22 @@ read_hole(const char *archive, int flags, zip_error_t *error) {
     }
 
     return zs;
+}
+
+
+static int get_whence(const char *str) {
+    if (strcasecmp(str, "set") == 0) {
+        return SEEK_SET;
+    }
+    else if (strcasecmp(str, "cur") == 0) {
+        return SEEK_CUR;
+    }
+    else if (strcasecmp(str, "end") == 0) {
+        return SEEK_END;
+    }
+    else {
+        return 100; /* invalid */
+    }
 }
 
 
