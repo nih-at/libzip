@@ -181,6 +181,29 @@ find_package(ZLIB 1.1.2 REQUIRED)
 # can override the name used in the pkg-config file
 if (NOT ZLIB_LINK_LIBRARY_NAME)
   set(ZLIB_LINK_LIBRARY_NAME "z")
+
+  # Get the correct name in common cases
+  list(LENGTH ZLIB_LIBRARIES N_ZLIB_LIBRARIES)
+  if(N_ZLIB_LIBRARIES EQUAL 1)
+    set(ZLIB_FILENAME ${ZLIB_LIBRARIES})
+  elseif(N_ZLIB_LIBRARIES EQUAL 4)
+    # ZLIB_LIBRARIES might have the target_link_library() format like
+    # "optimized;path/to/zlib.lib;debug;path/to/zlibd.lib". Use the 'optimized'
+    # case unless we know we are in a Debug build.
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      list(FIND ZLIB_LIBRARIES "debug" ZLIB_LIBRARIES_INDEX_OF_CONFIG)
+    else()
+      list(FIND ZLIB_LIBRARIES "optimized" ZLIB_LIBRARIES_INDEX_OF_CONFIG)
+    endif()
+    if(ZLIB_LIBRARIES_INDEX_OF_CONFIG GREATER_EQUAL 0)
+      math(EXPR ZLIB_FILENAME_INDEX "${ZLIB_LIBRARIES_INDEX_OF_CONFIG}+1")
+      list(GET ZLIB_LIBRARIES ${ZLIB_FILENAME_INDEX} ZLIB_FILENAME)
+    endif()
+  endif()
+  if(ZLIB_FILENAME)
+    get_filename_component(ZLIB_FILENAME ${ZLIB_FILENAME} NAME_WE)
+    string(REGEX REPLACE "^lib" "" ZLIB_LINK_LIBRARY_NAME ${ZLIB_FILENAME})
+  endif()
 endif(NOT ZLIB_LINK_LIBRARY_NAME)
 
 if(ENABLE_BZIP2)
