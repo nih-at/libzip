@@ -1,0 +1,236 @@
+.\" zip_estat.mdoc -- get (extended) information about file
+.\" Copyright (C) 2022 Dieter Baron and Thomas Klausner
+.\"
+.\" This file is part of libzip, a library to manipulate ZIP archives.
+.\" The authors can be contacted at <libzip@nih.at>
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in
+.\"    the documentation and/or other materials provided with the
+.\"    distribution.
+.\" 3. The names of the authors may not be used to endorse or promote
+.\"    products derived from this software without specific prior
+.\"    written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
+.\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+.\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+.\" DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+.\" GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+.\" INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+.\" IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+.\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\"
+.Dd July 26, 2022
+.Dt ZIP_ESTAT 3
+.Os
+.Sh NAME
+.Nm zip_estat_free ,
+.Nm zip_estat_get_string ,
+.Nm zip_estat_get_time ,
+.Nm zip_estat_get_u16 ,
+.Nm zip_estat_get_u32 ,
+.Nm zip_estat_get_u64 ,
+.Nm zip_estat_is_valid ,
+.Nm zip_estat_new ,
+.Nm zip_estat_set_string ,
+.Nm zip_estat_set_time ,
+.Nm zip_estat_set_u16 ,
+.Nm zip_estat_set_u32 ,
+.Nm zip_estat_set_u64 ,
+.Nm zip_estat_t ,
+.Nm zip_file_estat ,
+.Nm zip_file_estat_index ,
+.Nm zip_file_set_from_estat
+.Nd get/set extended information about file
+.Sh LIBRARY
+libzip (-lzip)
+.Sh SYNOPSIS
+.Ss Memory management
+.In zip.h
+.Ft zip_estat_t *
+.Fn zip_estat_new
+.Ft void
+.Fn zip_estat_free "zip_estat_t *est"
+.Ss Get estat structure for file
+.Ft const zip_estat_t *
+.Fn zip_file_estat "zip_t *archive" "const char *filename" "zip_flags_t flags"
+.Ft const zip_estat_t *
+.Fn zip_file_estat_index "zip_t *archive" "zip_uint64_t index" "zip_flags_t flags"
+.Ss Set estat structure for file
+.Ft zip_bool
+.Fn zip_file_set_from_estat_index "zip_t *archive" "zip_uint64_t index" "const zip_estat_t *est"
+.Ss Access estat member data
+.Ft zip_bool
+.Fn zip_estat_is_valid "const zip_estat_t *est" "zip_uint64_t id"
+.Ft const char *
+.Fn zip_estat_get_string "const zip_estat_t *est" "zip_uint64_t id"
+.Ft time_t
+.Fn zip_estat_get_time "const zip_estat_t *est" "zip_uint64_t id"
+.Ft zip_uint16_t
+.Fn zip_estat_get_u16 "const zip_estat_t *est" "zip_uint64_t id"
+.Ft zip_uint32_t
+.Fn zip_estat_get_u32 "const zip_estat_t *est" "zip_uint64_t id"
+.Ft zip_uint64_t
+.Fn zip_estat_get_u64 "const zip_estat_t *est" "zip_uint64_t id"
+.Ss Set estat member data
+.Ft zip_bool
+.Fn zip_estat_set_string "zip_estat_t *est" "zip_uint64_t id" "const char *value" "zip_error_t *error"
+.Ft zip_bool
+.Fn zip_estat_set_time "zip_estat_t *est" "zip_uint64_t id" "time_t value" "zip_error_t *error"
+.Ft zip_bool
+.Fn zip_estat_set_u16 "zip_estat_t *est" "zip_uint64_t id" "zip_uint16_t value" "zip_error_t *error"
+.Ft zip_bool
+.Fn zip_estat_set_u32 "zip_estat_t *est" "zip_uint64_t id" "zip_uint32_t value" "zip_error_t *error"
+.Ft zip_bool
+.Fn zip_estat_set_u64 "zip_estat_t *est" "zip_uint64_t id" "zip_uint64_t value" "zip_error_t *error"
+.Sh DESCRIPTION
+The
+.Ft zip_estat_t
+structure obtains extended information about a file in an archive.
+The structure can be fetched using
+.Fn zip_file_estat
+for a file named
+.Ar filename
+in the archive.
+The
+.Ar flags
+argument specifies how the name lookup should be done.
+Its values are described in
+.Xr zip_name_locate 3 .
+Also,
+.Dv ZIP_FL_UNCHANGED
+may be
+.Em or Ns No 'ed
+to it to request information about the original file in the archive,
+ignoring any changes made.
+.Pp
+The
+.Fn zip_stat_index
+function obtains information about the file at position
+.Ar index .
+.Pp
+The result is an opaque
+.Ft zip_estat_t
+structure.
+After checking with
+.Fn zip_estat_is_valid
+if a particular information is available, it can be accessed using
+.Fn zip_estat_get_string ,
+.Fn zip_estat_get_time ,
+.Fn zip_estat_get_u16 ,
+.Fn zip_estat_get_u32 ,
+and
+.Fn zip_estat_get_u64
+respectively, depending on the type.
+.Pp
+The following data are available (of the listed type):
+.Bl -tag -offset 8n -width 30n
+.It ZIP_ESTAT_NAME
+string (char *)
+.It ZIP_ESTAT_SIZE
+zip_uint64_t
+.It ZIP_ESTAT_COMPRESSED_SIZE
+zip_uint64_t
+.It ZIP_ESTAT_CRC
+zip_uint32_t
+.It ZIP_ESTAT_COMPRESSION_METHOD
+zip_uint16_t
+.It ZIP_ESTAT_ENCRYPTION_METHOD
+zip_uint16_t
+.It ZIP_ESTAT_MODIFICATION_TIME
+time_t
+.It ZIP_ESTAT_ACCESS_TIME
+time_t
+.It ZIP_ESTAT_CREATION_TIME
+time_t
+.El
+.Pp
+.Fn zip_file_set_from_estat_index
+can be used to set particular data points for a file in an archive.
+Create a new
+.Ft zip_estat_t
+using
+.Fn zip_estat_new ,
+fill in the values with the
+.Fn zip_estat_set_string ,
+.Fn zip_estat_set_time ,
+.Fn zip_estat_set_u16 ,
+.Fn zip_estat_set_u32 ,
+and
+.Fn zip_estat_set_u64
+functions, respectively, then call
+.Fn zip_file_set_from_estat_index
+to set the data and finally free the structure with
+.Fn zip_estat_free .
+.Sh RETURN VALUES
+Upon successful completion a value corresponding to the boolean true
+is returned (for the functions with
+.Ft zip_bool
+return type), a value except
+.Dv NULL
+(for the ones returning a pointer), or the requested data (for the
+others).
+Otherwise, a value corresponding to the boolean false (for the
+functions with
+.Ft zip_bool
+return type),
+.Dv NULL
+(for the ones returning a pointer) or 0 (for the others) is returned.
+If the function has a
+.Ft zip_error_t
+argument, the error information is filled in to indicate the error.
+.Sh ERRORS
+The function
+.Fn zip_file_estat
+can fail for any of the errors specified for the routine
+.Xr zip_name_locate 3 .
+.Pp
+The function
+.Fn zip_file_estat_index
+fails and sets the error information to
+.Er ZIP_ER_INVAL
+if
+.Ar index
+is invalid.
+If
+.Dv ZIP_FL_UNCHANGED
+is not set and no information can be obtained from the source
+callback, the error information is set to
+.Er ZIP_ER_CHANGED .
+.Pp
+The
+.Fn zip_estat_set_string ,
+.Fn zip_estat_set_time ,
+.Fn zip_estat_set_u16 ,
+.Fn zip_estat_set_u32 ,
+and
+.Fn zip_estat_set_u64
+functions return
+.Dv ZIP_ER_INVAL
+for invalid arguments, or when called on mismatching types.
+.\" TODO
+.\" The
+.\" .Fn zip_file_set_from_estat_index
+.\" function returns
+.Sh SEE ALSO
+.Xr libzip 3 ,
+.Xr zip_get_num_entries 3 ,
+.Xr zip_name_locate 3 ,
+.Xr zip_stat 3
+.Sh HISTORY
+.Ft zip_estat_t
+and all corresponding functions were added in libzip 2.0.
+.Sh AUTHORS
+.An -nosplit
+.An Dieter Baron Aq Mt dillo@nih.at
+and
+.An Thomas Klausner Aq Mt tk@giga.or.at
