@@ -132,13 +132,20 @@ _zip_buffer_left(zip_buffer_t *buffer) {
 
 zip_uint64_t
 _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
+    zip_uint64_t copied;
+
     if (_zip_buffer_left(buffer) < length) {
         length = _zip_buffer_left(buffer);
     }
 
-    memcpy(data, _zip_buffer_get(buffer, length), length);
+    copied = 0;
+    while (copied < length) {
+        size_t n = ZIP_MIN(length - copied, SIZE_MAX);
+        memcpy(data + copied, _zip_buffer_get(buffer, n), n);
+        copied += n;
+    }
 
-    return length;
+    return copied;
 }
 
 

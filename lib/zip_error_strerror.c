@@ -96,7 +96,15 @@ zip_error_strerror(zip_error_t *err) {
         return zip_error_string;
     }
     else {
-        if ((s = (char *)malloc(strlen(system_error_string) + (zip_error_string ? strlen(zip_error_string) + 2 : 0) + 1)) == NULL) {
+        size_t length = strlen(system_error_string);
+        if (zip_error_string) {
+            size_t length_error = strlen(zip_error_string);
+            if (length + length_error + 2 < length) {
+                return _zip_err_str[ZIP_ER_MEMORY].description;
+            }
+            length += length_error;
+        }
+        if (length == SIZE_MAX || (s = (char *)malloc(length + 1)) == NULL) {
             return _zip_err_str[ZIP_ER_MEMORY].description;
         }
 

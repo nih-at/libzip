@@ -555,7 +555,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 static int
 copy_data(zip_t *za, zip_uint64_t len) {
     DEFINE_BYTE_ARRAY(buf, BUFSIZE);
-    size_t n;
     double total = (double)len;
 
     if (!byte_array_init(buf, BUFSIZE)) {
@@ -564,7 +563,8 @@ copy_data(zip_t *za, zip_uint64_t len) {
     }
 
     while (len > 0) {
-        n = len > BUFSIZE ? BUFSIZE : len;
+        zip_uint64_t n = ZIP_MIN(len, BUFSIZE);
+
         if (_zip_read(za->src, buf, n, &za->error) < 0) {
             byte_array_fini(buf);
             return -1;

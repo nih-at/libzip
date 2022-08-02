@@ -50,8 +50,8 @@ struct buffer {
 
     zip_uint64_t shared_fragments; /* number of shared fragments */
     struct buffer *shared_buffer;  /* buffer fragments are shared with */
-    zip_uint64_t size;             /* size of buffer */
 
+    zip_uint64_t size;             /* size of buffer */
     zip_uint64_t offset;           /* current offset in buffer */
     zip_uint64_t current_fragment; /* fragment current offset is in */
 };
@@ -344,6 +344,7 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
         fragment_offset = buffer->fragments[fragment].length;
     }
 
+    /* TODO: This should also consider the length of the fully shared fragments */
     waste = buffer->fragments[fragment].length - fragment_offset;
     if (waste > offset) {
         zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
@@ -356,7 +357,7 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
 
 #ifndef __clang_analyzer__
     /* clone->fragments can't be null, since it was created with at least one fragment */
-    clone->fragments[clone->nfragments - 1].length = fragment_offset;
+    clone->fragments[fragment].length = fragment_offset;
 #endif
     clone->fragment_offsets[clone->nfragments] = offset;
     clone->size = offset;
@@ -365,7 +366,7 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
 
     buffer->shared_buffer = clone;
     clone->shared_buffer = buffer;
-    buffer->shared_fragments = clone->nfragments;
+    buffer->shared_fragments = fragment + 1;
     clone->shared_fragments = fragment + 1;
     
     return clone;
@@ -433,12 +434,20 @@ buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *erro
         return true;
     }
 
-    if ((fragments = realloc(buffer->fragments, sizeof(buffer->fragments[0]) * capacity)) == NULL) {
+    zip_uint64_t fragments_size = sizeof(buffer->fragments[0]) * capacity;
+    zip_uint64_t offsets_size = sizeof(buffer->fragment_offsets[0]) * (capacity + 1);
+
+    if (capacity == ZIP_UINT64_MAX || fragments_size < capacity || fragments_size > SIZE_MAX|| offsets_size < capacity || offsets_size > SIZE_MAX) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
+
+    if ((fragments = realloc(buffer->fragments, (size_t)fragments_size)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }
     buffer->fragments = fragments;
-    if ((offsets = realloc(buffer->fragment_offsets, sizeof(buffer->fragment_offsets[0]) * (capacity + 1))) == NULL) {
+    if ((offsets = realloc(buffer->fragment_offsets, (size_t)offsets_size)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }
@@ -497,6 +506,7 @@ buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int 
             buffer->fragments[j].data = fragments[i].data;
             buffer->fragments[j].length = fragments[i].length;
             buffer->fragment_offsets[i] = offset;
+            // TODO: overflow
             offset += fragments[i].length;
             j++;
         }
@@ -559,7 +569,7 @@ buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error) 
 
 static zip_int64_t
 buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
-    zip_uint64_t n, i, fragment_offset, capacity;
+    zip_uint64_t copied, i, fragment_offset, capacity;
 
     if (buffer->offset + length + WRITE_FRAGMENT_SIZE - 1 < length) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -601,24 +611,27 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
 
     i = buffer->current_fragment;
     fragment_offset = buffer->offset - buffer->fragment_offsets[i];
-    n = 0;
-    while (n < length) {
-        zip_uint64_t left = ZIP_MIN(length - n, buffer->fragments[i].length - fragment_offset);
+    copied = 0;
+    while (copied < length) {
+        zip_uint64_t n = ZIP_MIN(ZIP_MIN(length - copied, buffer->fragments[i].length - fragment_offset), SIZE_MAX);
 
-        memcpy(buffer->fragments[i].data + fragment_offset, data + n, left);
+        memcpy(buffer->fragments[i].data + fragment_offset, data + copied, (size_t)n);
 
-        if (left == buffer->fragments[i].length - fragment_offset) {
+        if (n == buffer->fragments[i].length - fragment_offset) {
             i++;
+            fragment_offset = 0;
         }
-        n += left;
-        fragment_offset = 0;
+        else {
+            fragment_offset += n;
+        }
+        copied += n;
     }
 
-    buffer->offset += n;
+    buffer->offset += copied;
     buffer->current_fragment = i;
     if (buffer->offset > buffer->size) {
         buffer->size = buffer->offset;
     }
 
-    return (zip_int64_t)n;
+    return (zip_int64_t)copied;
 }

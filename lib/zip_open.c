@@ -44,7 +44,7 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cdir, zip_error_t *erro
 static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len);
 static exists_t _zip_file_exists(zip_source_t *src, zip_error_t *error);
 static int _zip_headercomp(const zip_dirent_t *, const zip_dirent_t *);
-static unsigned char *_zip_memmem(const unsigned char *, size_t, const unsigned char *, size_t);
+static const unsigned char *_zip_memmem(const unsigned char *, size_t, const unsigned char *, size_t);
 static zip_cdir_t *_zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_error_t *error);
 static zip_cdir_t *_zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error);
 static zip_cdir_t *_zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error);
@@ -542,7 +542,7 @@ _zip_file_exists(zip_source_t *src, zip_error_t *error) {
 static zip_cdir_t *
 _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
     zip_cdir_t *cdir, *cdirnew;
-    zip_uint8_t *match;
+    const zip_uint8_t *match;
     zip_int64_t buf_offset;
     zip_uint64_t buflen;
     zip_int64_t a;
@@ -582,7 +582,8 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
     zip_error_set(&error, ZIP_ER_NOZIP, 0);
 
     match = _zip_buffer_get(buffer, 0);
-    while ((match = _zip_memmem(match, _zip_buffer_left(buffer) - (EOCDLEN - 4), (const unsigned char *)EOCD_MAGIC, 4)) != NULL) {
+    /* The size of buffer never greater than CDBUFSIZE. */
+    while (_zip_buffer_left(buffer) >= EOCDLEN && (match = _zip_memmem(match, (size_t)_zip_buffer_left(buffer) - (EOCDLEN - 4), (const unsigned char *)EOCD_MAGIC, 4)) != NULL) {
         _zip_buffer_set_offset(buffer, (zip_uint64_t)(match - _zip_buffer_data(buffer)));
         if ((cdirnew = _zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &error)) != NULL) {
             if (cdir) {
@@ -627,19 +628,28 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
 }
 
 
-static unsigned char *
-_zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little, size_t littlelen) {
+static const unsigned char *_zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little, size_t littlelen) {
     const unsigned char *p;
 
-    if ((biglen < littlelen) || (littlelen == 0))
-        return NULL;
-    p = big - 1;
-    while ((p = (const unsigned char *)memchr(p + 1, little[0], (size_t)(big - (p + 1)) + (size_t)(biglen - littlelen) + 1)) != NULL) {
-        if (memcmp(p + 1, little + 1, littlelen - 1) == 0)
-            return (unsigned char *)p;
+    if (littlelen == 0) {
+        return big;
     }
 
-    return NULL;
+    if (biglen < littlelen) {
+        return NULL;
+    }
+
+    p = big;
+    while (true) {
+        p = (const unsigned char *)memchr(p, little[0], biglen - (littlelen - 1) - (size_t)(p - big));
+        if (p == NULL) {
+            return NULL;
+        }
+        if (memcmp(p + 1, little + 1, littlelen - 1) == 0) {
+            return p;
+        }
+        p += 1;
+    }
 }
 
 

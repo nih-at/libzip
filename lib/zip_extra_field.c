@@ -243,6 +243,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
     if (!_zip_buffer_eof(buffer)) {
         /* Android APK files align stored file data with padding in extra fields; ignore. */
         /* see https://android.googlesource.com/platform/build/+/master/tools/zipalign/ZipAlign.cpp */
+        /* buffer is at most 64k long, so this can't overflow. */
         size_t glen = _zip_buffer_left(buffer);
         zip_uint8_t *garbage;
         garbage = _zip_buffer_get(buffer, glen);

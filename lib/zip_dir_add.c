@@ -61,7 +61,7 @@ zip_dir_add(zip_t *za, const char *name, zip_flags_t flags) {
     len = strlen(name);
 
     if (name[len - 1] != '/') {
-        if ((s = (char *)malloc(len + 2)) == NULL) {
+        if (len > SIZE_MAX - 2 || (s = (char *)malloc(len + 2)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             return -1;
         }
