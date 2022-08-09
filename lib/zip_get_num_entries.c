@@ -37,16 +37,27 @@
 
 ZIP_EXTERN zip_int64_t
 zip_get_num_entries(zip_t *za, zip_flags_t flags) {
-    zip_uint64_t n;
-
-    if (za == NULL)
+    if (za == NULL) {
         return -1;
+    }
 
     if (flags & ZIP_FL_UNCHANGED) {
-        n = za->nentry;
+        zip_uint64_t n = za->nentry;
+
         while (n > 0 && za->entry[n - 1].orig == NULL)
             --n;
         return (zip_int64_t)n;
     }
-    return (zip_int64_t)za->nentry;
+    else {
+        zip_uint64_t n = 0;
+        zip_uint64_t i;
+
+        for (i = 0; i < za->nentry; i++) {
+            if (!za->entry[i].deleted) {
+                n += 1;
+            }
+        }
+
+        return (zip_int64_t)n;
+    }
 }

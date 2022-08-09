@@ -42,10 +42,15 @@ zip_get_num_files(zip_t *za) {
     if (za == NULL)
         return -1;
 
-    if (za->nentry > INT_MAX) {
+    zip_int64_t n = zip_get_num_entries(za);
+
+    if (n < 0) {
+        return -1;
+    }
+    if (n > INT_MAX) {
         zip_error_set(&za->error, ZIP_ER_OPNOTSUPP, 0);
         return -1;
     }
 
-    return (int)za->nentry;
+    return (int)n;
 }
