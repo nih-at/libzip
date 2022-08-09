@@ -42,7 +42,7 @@ zip_get_num_files(zip_t *za) {
     if (za == NULL)
         return -1;
 
-    zip_int64_t n = zip_get_num_entries(za);
+    zip_int64_t n = zip_get_num_entries(za, 0);
 
     if (n < 0) {
         return -1;
