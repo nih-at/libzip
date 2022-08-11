@@ -108,7 +108,7 @@ zip_error_strerror(zip_error_t *err) {
             return _zip_err_str[ZIP_ER_MEMORY].description;
         }
 
-        sprintf(s, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);
+        snprintf(s, length + 1, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);
         err->str = s;
 
         return s;
