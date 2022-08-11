@@ -305,7 +305,7 @@ static int create_temp_file(zip_source_file_context_t *ctx, bool create_file) {
         zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
         return -1;
     }
-    snprintf(temp, temp_size, "%s.XXXXXX", ctx->fname);
+    snprintf(temp, temp_size, "%s.XXXXXX.part", ctx->fname);
     end = temp + strlen(temp) - 5;
     start = end - 6;
     
