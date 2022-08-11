@@ -102,13 +102,13 @@ zip_error_strerror(zip_error_t *err) {
             if (length + length_error + 2 < length) {
                 return _zip_err_str[ZIP_ER_MEMORY].description;
             }
-            length += length_error;
+            length += length_error + 2;
         }
         if (length == SIZE_MAX || (s = (char *)malloc(length + 1)) == NULL) {
             return _zip_err_str[ZIP_ER_MEMORY].description;
         }
 
-        sprintf(s, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);
+        snprintf(s, length + 1, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);
         err->str = s;
 
         return s;
