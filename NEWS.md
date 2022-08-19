@@ -2,6 +2,7 @@
 
 * Allow reading changed file data.
 * Fix handling of files of size 4294967295.
+* zipmerge: copy extra fields.
 * CMake: add detection of mbedTLS version 3.
 
 
