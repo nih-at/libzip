@@ -137,7 +137,7 @@ typedef char bool;
 
 #ifndef HAVE_SNPRINTF_S
 #ifdef HAVE__SNPRINTF_S
-#define snprintf_s _snprintf_s
+#define snprintf_s(buf, bufsz, fmt, ...) (_snprintf_s((buf), (bufsz), (bufsz), (fmt), __VA_ARGS__))
 #else
 #define snprintf_s snprintf
 #endif
@@ -158,6 +158,10 @@ typedef char bool;
 #ifndef HAVE_STRERROR_S
 #define strerrorlen_s(errnum) (strlen(strerror(errnum)))
 #define strerror_s(buf, bufsz, errnum) ((void)strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz)-1] = '\0', strerrorlen_s(errnum) >= (bufsz))
+#else
+#ifndef HAVE_STRERRORLEN_S
+#define strerrorlen_s(errnum)   8192
+#endif
 #endif
 
 #if SIZEOF_OFF_T == 8

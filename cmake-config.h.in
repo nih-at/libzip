@@ -45,6 +45,7 @@
 #cmakedefine HAVE_STRCASECMP
 #cmakedefine HAVE_STRDUP
 #cmakedefine HAVE_STRERROR_S
+#cmakedefine HAVE_STRERRORLEN_S
 #cmakedefine HAVE_STRICMP
 #cmakedefine HAVE_STRNCPY_S
 #cmakedefine HAVE_STRTOLL
