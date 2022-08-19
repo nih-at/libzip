@@ -460,12 +460,12 @@ ZIP_EXTERN int zip_source_stat(zip_source_t *_Nonnull, zip_stat_t *_Nonnull);
 ZIP_EXTERN zip_int64_t zip_source_tell(zip_source_t *_Nonnull);
 ZIP_EXTERN zip_int64_t zip_source_tell_write(zip_source_t *_Nonnull);
 #ifdef _WIN32
-ZIP_EXTERN zip_source_t *_Nullable zip_source_win32a(zip_t *_Nullable, const char *_Nullable, zip_uint64_t, zip_int64_t);
-ZIP_EXTERN zip_source_t *_Nullable zip_source_win32a_create(const char *_Nullable, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
-ZIP_EXTERN zip_source_t *_Nullable zip_source_win32handle(zip_t *_Nullable, void *_Nullable, zip_uint64_t, zip_int64_t);
-ZIP_EXTERN zip_source_t *_Nullable zip_source_win32handle_create(void *_Nullable, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
-ZIP_EXTERN zip_source_t *_Nullable zip_source_win32w(zip_t *_Nullable, const wchar_t *_Nullable, zip_uint64_t, zip_int64_t);
-ZIP_EXTERN zip_source_t *_Nullable zip_source_win32w_create(const wchar_t *_Nullable, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_win32a(zip_t *_Nonnull, const char *_Nonnull, zip_uint64_t, zip_int64_t);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_win32a_create(const char *_Nonnull, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_win32handle(zip_t *_Nonnull, void *_Nonnull, zip_uint64_t, zip_int64_t);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_win32handle_create(void *_Nonnull, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_win32w(zip_t *_Nonnull, const wchar_t *_Nonnull, zip_uint64_t, zip_int64_t);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_win32w_create(const wchar_t *_Nonnull, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
 #endif
 ZIP_EXTERN zip_source_t *_Nullable zip_source_window_create(zip_source_t *_Nonnull, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
 ZIP_EXTERN zip_int64_t zip_source_write(zip_source_t *_Nonnull, const void *_Nullable, zip_uint64_t);
