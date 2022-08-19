@@ -44,16 +44,16 @@ ZIP_EXTERN int
 zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
     zip_error_t error;
     const char *error_string;
+    int ret;
 
     zip_error_init(&error);
     zip_error_set(&error, ze, se);
 
     error_string = zip_error_strerror(&error);
 
-    snprintf_s(buf, len, error_string, strlen(error_string));
-    buf[len - 1] = '\0';
+    ret = snprintf_s(buf, len, error_string, strlen(error_string));
 
     zip_error_fini(&error);
 
-    return buf;
+    return ret;
 }

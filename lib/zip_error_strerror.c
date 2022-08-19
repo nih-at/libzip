@@ -62,6 +62,7 @@ zip_error_strerror(zip_error_t *err) {
                 size_t len = strerrorlen_s(err->sys_err) + 1;
                 system_error_buffer = malloc(len);
                 strerror_s(system_error_buffer, len, err->sys_err);
+                system_error_string = system_error_buffer;
                 break;
             }
                 
