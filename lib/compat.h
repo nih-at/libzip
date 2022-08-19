@@ -101,7 +101,7 @@ typedef char bool;
 #define snprintf _snprintf
 #endif
 #if !defined(HAVE__SNWPRINTF_S)
-#define _snwprintf_s _snwprintf
+#define _snwprintf_s(buf, bufsz, fmt, ...) (_snwprintf((buf), (bufsz), (bufsz), fmt, __VA_ARGS__))
 #endif
 #if defined(HAVE__STRDUP)
 #if !defined(HAVE_STRDUP) || defined(_WIN32)
