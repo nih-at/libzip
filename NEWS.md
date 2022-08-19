@@ -4,6 +4,7 @@
 * Fix handling of files of size 4294967295.
 * zipmerge: copy extra fields.
 * CMake: add detection of mbedTLS version 3.
+* Use ISO C secure library functions, if available.
 
 
 # 1.9.2 [2022-06-28]

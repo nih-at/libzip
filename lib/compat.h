@@ -97,6 +97,9 @@ typedef char bool;
 #if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
 #define snprintf _snprintf
 #endif
+#if !defined(HAVE__SNWPRINTF_S)
+#define _snwprintf_s _snwprintf_s
+#endif
 #if defined(HAVE__STRDUP)
 #if !defined(HAVE_STRDUP) || defined(_WIN32)
 #undef strdup
@@ -125,12 +128,33 @@ typedef char bool;
 #define ftello(s) ((long)ftell((s)))
 #endif
 
+#ifndef HAVE_MEMCPY_S
+#define memcpy_s(dest, destsz, src, count) (memcpy((dest), (src), (count)), 0)
+#endif
+
+#ifndef HAVE_SNPRINTF_S
+#ifdef HAVE__SNPRINTF_S
+#define snprintf_s _snprintf_s
+#else
+#define snprintf_s snprintf
+#endif
+#endif
+
 #if !defined(HAVE_STRCASECMP)
 #if defined(HAVE__STRICMP)
 #define strcasecmp _stricmp
 #elif defined(HAVE_STRICMP)
 #define strcasecmp stricmp
 #endif
+#endif
+
+#ifndef HAVE_STRCPY_S
+#define strncpy_s(dest, destsz, src, count) (strncpy((dest), (src), (count)), 0)
+#endif
+
+#ifndef HAVE_STRERROR_S
+#define strerrorlen_s(errnum) (strlen(strerror(errnum)))
+#define strerror_s(buf, bufsz, errnum) (strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz)-1] = '\0', strerrorlen_s(errnum) >= (bufsz))
 #endif
 
 #if SIZEOF_OFF_T == 8

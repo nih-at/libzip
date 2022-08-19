@@ -103,7 +103,7 @@ static HANDLE __stdcall utf16_create_file(const char *name, DWORD access, DWORD 
 
 static void
 utf16_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i) {
-    _snwprintf((wchar_t *)buf, len, L"%s.%08x", (const wchar_t *)name, i);
+    _snwprintf_s((wchar_t *)buf, len, L"%s.%08x", (const wchar_t *)name, i);
 }
 
 

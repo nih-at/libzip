@@ -83,5 +83,5 @@ ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp) {
 
 static void
 ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i) {
-    snprintf(buf, len, "%s.%08x", name, i);
+    snprintf_s(buf, len, "%s.%08x", name, i);
 }

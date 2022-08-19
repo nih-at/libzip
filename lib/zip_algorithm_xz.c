@@ -258,7 +258,7 @@ input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
     if (ctx->method == ZIP_CM_LZMA && !ctx->compress && ctx->header_state == INCOMPLETE) {
         /* if not, get more of the data */
         zip_uint8_t got = (zip_uint8_t)ZIP_MIN(HEADER_BYTES_ZIP - ctx->header_bytes_offset, length);
-        memcpy(ctx->header + ctx->header_bytes_offset, data, got);
+        memcpy_s(ctx->header + ctx->header_bytes_offset, sizeof(ctx->header) - ctx->header_bytes_offset, data, got);
         ctx->header_bytes_offset += got;
         length -= got;
         data += got;
@@ -335,7 +335,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
         if (ctx->header_state == OUTPUT) {
             /* write header */
             zip_uint8_t write_len = (zip_uint8_t)ZIP_MIN(HEADER_BYTES_ZIP - ctx->header_bytes_offset, *length);
-            memcpy(data, ctx->header + ctx->header_bytes_offset, write_len);
+            memcpy_s(data, *length, ctx->header + ctx->header_bytes_offset, write_len);
             ctx->header_bytes_offset += write_len;
             *length = write_len;
             if (ctx->header_bytes_offset == HEADER_BYTES_ZIP) {
