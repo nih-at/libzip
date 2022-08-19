@@ -132,7 +132,7 @@ typedef char bool;
 #endif
 
 #ifndef HAVE_MEMCPY_S
-#define memcpy_s(dest, destsz, src, count) (memcpy((dest), (src), (count)), 0)
+#define memcpy_s(dest, destsz, src, count) (memcpy((dest), (src), (count)) == NULL)
 #endif
 
 #ifndef HAVE_SNPRINTF_S
@@ -157,7 +157,7 @@ typedef char bool;
 
 #ifndef HAVE_STRERROR_S
 #define strerrorlen_s(errnum) (strlen(strerror(errnum)))
-#define strerror_s(buf, bufsz, errnum) (strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz)-1] = '\0', strerrorlen_s(errnum) >= (bufsz))
+#define strerror_s(buf, bufsz, errnum) ((void)strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz)-1] = '\0', strerrorlen_s(errnum) >= (bufsz))
 #endif
 
 #if SIZEOF_OFF_T == 8

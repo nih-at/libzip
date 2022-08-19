@@ -109,7 +109,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
     ctx->start = start;
     ctx->len = (zip_uint64_t)len;
     if (st) {
-        memcpy_s(&ctx->st, sizeof(ctx->st), st, sizeof(*st));
+        (void)memcpy_s(&ctx->st, sizeof(ctx->st), st, sizeof(*st));
         ctx->st.name = NULL;
         ctx->st.valid &= ~ZIP_STAT_NAME;
     }
@@ -262,7 +262,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
             zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
             return -1;
         }
-        memcpy_s(data, len, &ctx->attributes, sizeof(ctx->attributes));
+        (void)memcpy_s(data, len, &ctx->attributes, sizeof(ctx->attributes));
         return sizeof(ctx->attributes);
 
     case ZIP_SOURCE_OPEN:
@@ -355,7 +355,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
             return -1;
         }
 
-        memcpy_s(data, len, &ctx->st, sizeof(ctx->st));
+        (void)memcpy_s(data, len, &ctx->st, sizeof(ctx->st));
         return sizeof(ctx->st);
     }
 
