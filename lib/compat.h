@@ -101,7 +101,7 @@ typedef char bool;
 #define snprintf _snprintf
 #endif
 #if !defined(HAVE__SNWPRINTF_S)
-#define _snwprintf_s _snwprintf_s
+#define _snwprintf_s _snwprintf
 #endif
 #if defined(HAVE__STRDUP)
 #if !defined(HAVE_STRDUP) || defined(_WIN32)
@@ -151,7 +151,7 @@ typedef char bool;
 #endif
 #endif
 
-#ifndef HAVE_STRCPY_S
+#ifndef HAVE_STRNCPY_S
 #define strncpy_s(dest, destsz, src, count) (strncpy((dest), (src), (count)), 0)
 #endif
 
