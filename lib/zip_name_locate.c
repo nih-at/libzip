@@ -71,7 +71,7 @@ _zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zip_error_t *e
     }
 
     if ((flags & (ZIP_FL_ENC_UTF_8 | ZIP_FL_ENC_RAW)) == 0 && fname[0] != '\0') {
-        if ((str = _zip_string_new((const zip_uint8_t *)fname, (zip_uint16_t )strlen(fname), flags, error)) == NULL) {
+        if ((str = _zip_string_new((const zip_uint8_t *)fname, (zip_uint16_t)strlen(fname), flags, error)) == NULL) {
             return -1;
         }
         if ((fname = (const char *)_zip_string_get(str, NULL, 0, error)) == NULL) {
