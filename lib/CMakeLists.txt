@@ -115,7 +115,7 @@ add_library(zip
   )
 add_library(libzip::zip ALIAS zip)
 
-if(WIN32)
+if(WIN32 OR MINGW)
   target_sources(zip PRIVATE
     zip_source_file_win32.c
     zip_source_file_win32_named.c
@@ -128,12 +128,12 @@ if(WIN32)
     target_sources(zip PRIVATE zip_source_file_win32_ansi.c zip_random_win32.c)
     target_link_libraries(zip PRIVATE advapi32)
   endif()
-else(WIN32)
+else(WIN32 OR MINGW)
   target_sources(zip PRIVATE
     zip_source_file_stdio_named.c
     zip_random_unix.c
     )
-endif(WIN32)
+endif(WIN32 OR MINGW)
 
 if(HAVE_LIBBZ2)
   target_sources(zip PRIVATE zip_algorithm_bzip2.c)
