@@ -141,7 +141,7 @@ _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
     copied = 0;
     while (copied < length) {
         size_t n = ZIP_MIN(length - copied, SIZE_MAX);
-        memcpy(data + copied, _zip_buffer_get(buffer, n), n);
+        (void)memcpy_s(data + copied, length - copied, _zip_buffer_get(buffer, n), n);
         copied += n;
     }
 
@@ -228,7 +228,7 @@ _zip_buffer_put(zip_buffer_t *buffer, const void *src, size_t length) {
         return -1;
     }
 
-    memcpy(dst, src, length);
+    (void)memcpy_s(dst, length, src, length);
     return 0;
 }
 

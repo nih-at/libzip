@@ -87,10 +87,10 @@ void diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, 
         hexdata[offset++] = (i == 0 ? '<' : ' ');
 
         if (i >= MAX_BYTES) {
-            sprintf(hexdata + offset, "...");
+            snprintf(hexdata + offset, sizeof(hexdata) - offset, "...");
             break;
         }
-        sprintf(hexdata + offset, "%02x", data[i]);
+        snprintf(hexdata + offset, sizeof(hexdata) - offset, "%02x", data[i]);
         offset += 2;
     }
 

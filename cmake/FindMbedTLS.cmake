@@ -85,6 +85,7 @@ find_library(MbedTLS_LIBRARY
 
 # Extract version information from the header file
 if(MbedTLS_INCLUDE_DIR)
+  # for major version 3
   if(EXISTS ${MbedTLS_INCLUDE_DIR}/mbedtls/build_info.h)
     file(STRINGS ${MbedTLS_INCLUDE_DIR}/mbedtls/build_info.h _ver_line
         REGEX "^#define MBEDTLS_VERSION_STRING  *\"[0-9]+\\.[0-9]+\\.[0-9]+\""
@@ -92,6 +93,7 @@ if(MbedTLS_INCLUDE_DIR)
     string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+"
         MbedTLS_VERSION "${_ver_line}")
     unset(_ver_line)
+  # for major version 2
   elseif(EXISTS ${MbedTLS_INCLUDE_DIR}/mbedtls/version.h)
     file(STRINGS ${MbedTLS_INCLUDE_DIR}/mbedtls/version.h _ver_line
          REGEX "^#define MBEDTLS_VERSION_STRING  *\"[0-9]+\\.[0-9]+\\.[0-9]+\""

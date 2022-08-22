@@ -487,12 +487,13 @@ list_directory(const char *name, struct archive *a) {
                         break;
                     }
                     
-                    dir_name = malloc(strlen(ent->fts_path + prefix_length) + 2);
+                    size_t dir_name_size = strlen(ent->fts_path + prefix_length) + 2;
+                    dir_name = malloc(dir_name_size);
                     if (dir_name == NULL) {
                         fprintf(stderr, "%s: malloc failure\n", progname);
                         exit(1);
                     }
-                    sprintf(dir_name, "%s/", ent->fts_path + prefix_length);
+                    snprintf(dir_name, dir_name_size, "%s/", ent->fts_path + prefix_length);
                     a->entry[a->nentry].name = dir_name;
                     a->entry[a->nentry].size = 0;
                     a->entry[a->nentry].crc = 0;

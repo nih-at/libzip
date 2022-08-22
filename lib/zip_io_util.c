@@ -81,7 +81,7 @@ _zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp
             free(r);
             return NULL;
         }
-        memcpy(r, data, length);
+        (void)memcpy_s(r, length, data, length);
     }
     else {
         if (_zip_read(src, r, length, error) < 0) {
