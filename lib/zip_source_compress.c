@@ -240,7 +240,10 @@ compress_read(zip_source_t *src, struct context *ctx, void *data, zip_uint64_t l
             if (ctx->can_store && (zip_uint64_t)ctx->first_read <= out_offset) {
                 ctx->is_stored = true;
                 ctx->size = (zip_uint64_t)ctx->first_read;
-                (void)memcpy_s(data, len, ctx->buffer, ctx->size);
+                if (len != (size_t)len || ctx->size != (size_t)(ctx->size)) {
+                    return -1;
+                }
+                (void)memcpy_s(data, (size_t)len, ctx->buffer, (size_t)(ctx->size));
                 return (zip_int64_t)ctx->size;
             }
             end = true;

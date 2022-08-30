@@ -50,8 +50,9 @@ zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
     zip_error_set(&error, ze, se);
 
     error_string = zip_error_strerror(&error);
-
-    ret = snprintf_s(buf, len, error_string, strlen(error_string));
+    if (len != (size_t)len)
+      return -1;
+    ret = snprintf_s(buf, (size_t)len, error_string, strlen(error_string));
 
     zip_error_fini(&error);
 

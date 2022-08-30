@@ -1089,13 +1089,20 @@ _zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *err
 
 void
 _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate) {
-    struct tm *tpm;
+    struct tm *tpm = NULL;
 
 #ifdef HAVE_LOCALTIME_R
     struct tm tm;
     tpm = localtime_r(&intime, &tm);
 #else
+#if __STDC_WANT_SECURE_LIB__
+    struct tm tm;
+    errno_t err = localtime_s(&tm, &intime);
+    if (err == 0)
+      tpm = &tm;
+#else
     tpm = localtime(&intime);
+#endif // __STDC_WANT_SECURE_LIB__
 #endif
     if (tpm == NULL) {
         /* if localtime() fails, return an arbitrary date (1980-01-01 00:00:00) */

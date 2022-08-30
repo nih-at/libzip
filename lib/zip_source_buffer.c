@@ -225,8 +225,10 @@ read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
             zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
             return -1;
         }
-
-        (void)memcpy_s(data, len, &ctx->attributes, sizeof(ctx->attributes));
+        if (len != (size_t)len) {
+            return 0;
+        }
+        (void)memcpy_s(data, (size_t)len, &ctx->attributes, sizeof(ctx->attributes));
 
         return sizeof(ctx->attributes);
     }
@@ -538,7 +540,10 @@ buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
     while (n < length) {
         zip_uint64_t left = ZIP_MIN(length - n, buffer->fragments[i].length - fragment_offset);
 
-        (void)memcpy_s(data + n, length - n, buffer->fragments[i].data + fragment_offset, left);
+        if (length - n != (size_t)(length - n) || left != (size_t)left) {
+            return 0;
+        }
+        (void)memcpy_s(data + n, (size_t)(length - n), buffer->fragments[i].data + fragment_offset, (size_t)left);
 
         if (left == buffer->fragments[i].length - fragment_offset) {
             i++;
@@ -614,8 +619,11 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
     copied = 0;
     while (copied < length) {
         zip_uint64_t n = ZIP_MIN(ZIP_MIN(length - copied, buffer->fragments[i].length - fragment_offset), SIZE_MAX);
+        if(buffer->fragments[i].length - fragment_offset != (size_t)(buffer->fragments[i].length - fragment_offset)){
+            return -1;
+        }
 
-        (void)memcpy_s(buffer->fragments[i].data + fragment_offset, buffer->fragments[i].length - fragment_offset, data + copied, (size_t)n);
+        (void)memcpy_s(buffer->fragments[i].data + fragment_offset,(size_t)(buffer->fragments[i].length - fragment_offset), data + copied, (size_t)n);
 
         if (n == buffer->fragments[i].length - fragment_offset) {
             i++;

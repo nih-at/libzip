@@ -31,6 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <tchar.h>
 
 #include "zipint.h"
 #ifdef HAVE_UNISTD_H
@@ -59,7 +60,7 @@ zip_fdopen(int fd_orig, int _flags, int *zep) {
         return NULL;
     }
 
-    if ((fp = fdopen(fd, "rb")) == NULL) {
+    if ((fp = _tfdopen(fd, _T("rb"))) == NULL) {
         close(fd);
         _zip_set_open_error(zep, NULL, ZIP_ER_OPEN);
         return NULL;

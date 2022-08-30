@@ -262,7 +262,10 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
             zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
             return -1;
         }
-        (void)memcpy_s(data, len, &ctx->attributes, sizeof(ctx->attributes));
+        if (len != (size_t)len) {
+            return 0;
+        }
+        (void)memcpy_s(data, (size_t)len, &ctx->attributes, sizeof(ctx->attributes));
         return sizeof(ctx->attributes);
 
     case ZIP_SOURCE_OPEN:
@@ -354,8 +357,10 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
             zip_error_set(&ctx->error, zip_error_code_zip(&ctx->stat_error), zip_error_code_system(&ctx->stat_error));
             return -1;
         }
-
-        (void)memcpy_s(data, len, &ctx->st, sizeof(ctx->st));
+        if (len != (size_t)len) {
+            return 0;
+        }
+        (void)memcpy_s(data, (size_t)len, &ctx->st, sizeof(ctx->st));
         return sizeof(ctx->st);
     }
 
