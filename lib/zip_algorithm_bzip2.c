@@ -213,6 +213,7 @@ end_of_input(void *ud) {
 static zip_compression_status_t
 process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     struct ctx *ctx = (struct ctx *)ud;
+    unsigned int avail_out;
 
     int ret;
 
@@ -221,7 +222,8 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
         return ZIP_COMPRESSION_NEED_DATA;
     }
 
-    ctx->zstr.avail_out = (unsigned int)ZIP_MIN(UINT_MAX, *length);
+    avail_out = (unsigned int)ZIP_MIN(UINT_MAX, *length);
+    ctx->zstr.avail_out = avail_out;
     ctx->zstr.next_out = (char *)data;
 
     if (ctx->compress) {
@@ -231,7 +233,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
         ret = BZ2_bzDecompress(&ctx->zstr);
     }
 
-    *length = *length - ctx->zstr.avail_out;
+    *length = avail_out - ctx->zstr.avail_out;
 
     switch (ret) {
     case BZ_FINISH_OK: /* compression */

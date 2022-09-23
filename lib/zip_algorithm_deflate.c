@@ -198,10 +198,12 @@ end_of_input(void *ud) {
 static zip_compression_status_t
 process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     struct ctx *ctx = (struct ctx *)ud;
+    uInt avail_out;
 
     int ret;
 
-    ctx->zstr.avail_out = (uInt)ZIP_MIN(UINT_MAX, *length);
+    avail_out = (uInt)ZIP_MIN(UINT_MAX, *length);
+    ctx->zstr.avail_out = avail_out;
     ctx->zstr.next_out = (Bytef *)data;
 
     if (ctx->compress) {
@@ -211,7 +213,7 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
         ret = inflate(&ctx->zstr, Z_SYNC_FLUSH);
     }
 
-    *length = *length - ctx->zstr.avail_out;
+    *length = avail_out - ctx->zstr.avail_out;
 
     switch (ret) {
     case Z_OK:

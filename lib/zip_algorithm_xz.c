@@ -313,6 +313,7 @@ end_of_input(void *ud) {
 static zip_compression_status_t
 process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     struct ctx *ctx = (struct ctx *)ud;
+    uInt avail_out;
     lzma_ret ret;
     /* for compression of LZMA1 */
     if (ctx->method == ZIP_CM_LZMA && ctx->compress) {
@@ -345,11 +346,12 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
         }
     }
 
-    ctx->zstr.avail_out = (uInt)ZIP_MIN(UINT_MAX, *length);
+    avail_out = (uInt)ZIP_MIN(UINT_MAX, *length);
+    ctx->zstr.avail_out = avail_out;
     ctx->zstr.next_out = (Bytef *)data;
 
     ret = lzma_code(&ctx->zstr, ctx->end_of_input ? LZMA_FINISH : LZMA_RUN);
-    *length = *length - ctx->zstr.avail_out;
+    *length = avail_out - ctx->zstr.avail_out;
 
     switch (ret) {
     case LZMA_OK:
