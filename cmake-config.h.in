@@ -4,6 +4,7 @@
 #include "zipconf.h"
 #endif
 /* BEGIN DEFINES */
+#cmakedefine ENABLE_FDOPEN
 #cmakedefine HAVE___PROGNAME
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
@@ -34,6 +35,7 @@
 #cmakedefine HAVE_LIBLZMA
 #cmakedefine HAVE_LIBZSTD
 #cmakedefine HAVE_LOCALTIME_R
+#cmakedefine HAVE_LOCALTIME_S
 #cmakedefine HAVE_MEMCPY_S
 #cmakedefine HAVE_MBEDTLS
 #cmakedefine HAVE_MKSTEMP

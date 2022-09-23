@@ -131,6 +131,14 @@ typedef char bool;
 #define ftello(s) ((long)ftell((s)))
 #endif
 
+#ifndef HAVE_LOCALTIME_S
+#ifdef HAVE_LOCALTIME_R
+#define localtime_s localtime_r
+#else
+#define localtime_s(t, tm) (localtime(t))
+#endif
+#endif
+
 #ifndef HAVE_MEMCPY_S
 #define memcpy_s(dest, destsz, src, count) (memcpy((dest), (src), (count)) == NULL)
 #endif

@@ -630,12 +630,8 @@ zstat(char *argv[]) {
         printf("compressed size: '%" PRIu64 "'\n", sb.comp_size);
     if (sb.valid & ZIP_STAT_MTIME) {
         struct tm *tpm;
-#ifdef HAVE_LOCALTIME_R
         struct tm tm;
-        tpm = localtime_r(&sb.mtime, &tm);
-#else
-        tpm = localtime(&sb.mtime);
-#endif
+        tpm = localtime_s(&sb.mtime, &tm);
         if (tpm == NULL) {
             printf("mtime: <not valid>\n");
         }

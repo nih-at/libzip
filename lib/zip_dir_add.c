@@ -65,7 +65,7 @@ zip_dir_add(zip_t *za, const char *name, zip_flags_t flags) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             return -1;
         }
-        strcpy(s, name);
+        strncpy_s(s, len + 2, name, len);
         s[len] = '/';
         s[len + 1] = '\0';
     }
