@@ -34,7 +34,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <zlib.h>
 
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
@@ -51,7 +50,7 @@ zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
 
     error_string = zip_error_strerror(&error);
 
-    ret = snprintf_s(buf, len, error_string, strlen(error_string));
+    ret = snprintf_s(buf, ZIP_MIN(len, SIZE_MAX), error_string, strlen(error_string));
 
     zip_error_fini(&error);
 

@@ -247,7 +247,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
         size_t glen = _zip_buffer_left(buffer);
         zip_uint8_t *garbage;
         garbage = _zip_buffer_get(buffer, glen);
-        if (glen >= 4 || garbage == NULL || memcmp(garbage, "\0\0\0", glen) != 0) {
+        if (glen >= 4 || garbage == NULL || memcmp(garbage, "\0\0\0", (size_t)glen) != 0) {
             zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EF_TRAILING_GARBAGE);
             _zip_buffer_free(buffer);
             _zip_ef_free(ef_head);
