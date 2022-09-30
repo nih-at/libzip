@@ -42,7 +42,6 @@
 #define __STDC_LIMIT_MACROS
 
 /* to have ISO C secure library functions */
-#define __STDC_WANT_SECURE_LIB__ 1
 #define __STDC_WANT_LIB_EXT1__ 1
 
 #ifdef _WIN32
