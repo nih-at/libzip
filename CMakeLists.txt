@@ -90,7 +90,7 @@ endif()
 # Checks
 
 # Request ISO C secure library functions (memcpy_s &c)
-list(APPEND CMAKE_REQUIRED_DEFINITIONS -D__STDC_WANT_LIB_EXT1__=1)
+list(APPEND CMAKE_REQUIRED_DEFINITIONS -D__STDC_WANT_LIB_EXT1__=1 -D__STDC_WANT_SECURE_LIB__=1)
 
 check_function_exists(_close HAVE__CLOSE)
 check_function_exists(_dup HAVE__DUP)
