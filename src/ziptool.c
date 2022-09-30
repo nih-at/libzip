@@ -631,7 +631,7 @@ zstat(char *argv[]) {
     if (sb.valid & ZIP_STAT_MTIME) {
         struct tm *tpm;
         struct tm tm;
-        tpm = localtime_s(&sb.mtime, &tm);
+        tpm = zip_localtime(&sb.mtime, &tm);
         if (tpm == NULL) {
             printf("mtime: <not valid>\n");
         }

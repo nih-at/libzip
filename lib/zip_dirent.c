@@ -1091,9 +1091,9 @@ void
 _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate) {
     struct tm *tpm;
     struct tm tm;
-    tpm = localtime_s(&intime, &tm);
+    tpm = zip_localtime(&intime, &tm);
     if (tpm == NULL) {
-        /* if localtime() fails, return an arbitrary date (1980-01-01 00:00:00) */
+        /* if localtime fails, return an arbitrary date (1980-01-01 00:00:00) */
         *ddate = (1 << 5) + 1;
         *dtime = 0;
         return;
