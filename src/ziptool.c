@@ -33,6 +33,8 @@
 
 #include "config.h"
 
+#include "compat.h"
+
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,8 +56,6 @@
 extern int optopt;
 
 #include "zip.h"
-
-#include "compat.h"
 
 typedef struct dispatch_table_s {
     const char *cmdline_name;
