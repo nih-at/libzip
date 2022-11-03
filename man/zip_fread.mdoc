@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd September 28, 2021
+.Dd November 3, 2022
 .Dt ZIP_FREAD 3
 .Os
 .Sh NAME
@@ -49,7 +49,10 @@ function reads up to
 bytes from
 .Ar file
 into
-.Ar buf .
+.Ar buf
+from the current position in the file (see
+.Xr zip_fseek 3 ) .
+After reading, the current position is updated by the number of bytes read.
 .Sh RETURN VALUES
 If successful, the number of bytes actually read is returned.
 When
