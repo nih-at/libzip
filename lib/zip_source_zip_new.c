@@ -285,7 +285,13 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
     }
 
     if (partial_data && (needs_decrypt || needs_decompress)) {
-        s2 = zip_source_window_create(src, start, data_len, error);
+        zip_stat_t st2;
+        zip_stat_init(&st2);
+        if (data_len >= 0) {
+            st2.valid = ZIP_STAT_SIZE;
+            st2.size = (zip_uint64_t)data_len;
+        }
+        s2 = _zip_source_window_new(src, start, data_len, &st2, 0, NULL, 0, error);
         zip_source_free(src);
         if (s2 == NULL) {
             return NULL;
