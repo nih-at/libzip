@@ -54,6 +54,10 @@ struct buffer {
     zip_uint64_t size;             /* size of buffer */
     zip_uint64_t offset;           /* current offset in buffer */
     zip_uint64_t current_fragment; /* fragment current offset is in */
+
+    zip_int32_t comp_method;
+    zip_uint64_t uncomp_size;
+    zip_uint32_t uncomp_crc;
 };
 
 typedef struct buffer buffer_t;
@@ -134,6 +138,17 @@ zip_source_buffer_fragment_create(const zip_buffer_fragment_t *fragments, zip_ui
     return zip_source_buffer_fragment_with_attributes_create(fragments, nfragments, freep, NULL, error);
 }
 
+ZIP_EXTERN int
+zip_source_buffer_set_compression(const zip_source_t *source, zip_int32_t comp_method, zip_uint64_t uncomp_size, zip_uint32_t uncomp_crc) {
+    struct read_data *ctx = (struct read_data*)(source->ud);
+
+    ctx->in->comp_method = comp_method;
+    ctx->in->uncomp_size = uncomp_size;
+    ctx->in->uncomp_crc = uncomp_crc;
+
+    return 0;
+}
+
 zip_source_t *
 zip_source_buffer_fragment_with_attributes_create(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int freep, zip_file_attributes_t *attributes, zip_error_t *error) {
     struct read_data *ctx;
@@ -156,6 +171,7 @@ zip_source_buffer_fragment_with_attributes_create(const zip_buffer_fragment_t *f
     }
 
     ctx->in = buffer;
+    ctx->in->comp_method = ZIP_CM_STORE;
     ctx->out = NULL;
     ctx->mtime = time(NULL);
     if (attributes) {
@@ -174,7 +190,6 @@ zip_source_buffer_fragment_with_attributes_create(const zip_buffer_fragment_t *f
 
     return zs;
 }
-
 
 zip_source_t *
 zip_source_buffer_with_attributes(zip_t *za, const void *data, zip_uint64_t len, int freep, zip_file_attributes_t *attributes) {
@@ -277,11 +292,20 @@ read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
 
         zip_stat_init(st);
         st->mtime = ctx->mtime;
-        st->size = ctx->in->size;
-        st->comp_size = st->size;
-        st->comp_method = ZIP_CM_STORE;
         st->encryption_method = ZIP_EM_NONE;
         st->valid = ZIP_STAT_MTIME | ZIP_STAT_SIZE | ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD | ZIP_STAT_ENCRYPTION_METHOD;
+
+        if (ctx->in->comp_method != ZIP_CM_STORE) {
+            st->size = ctx->in->uncomp_size;
+            st->comp_size = ctx->in->size;
+            st->comp_method = ctx->in->comp_method;
+            st->crc = ctx->in->uncomp_crc;
+            st->valid |= ZIP_STAT_CRC;
+        } else {
+            st->size = ctx->in->size;
+            st->comp_size = st->size;
+            st->comp_method = ZIP_CM_STORE;
+        }
 
         return sizeof(*st);
     }
