@@ -436,7 +436,7 @@ ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer(zip_t *_Nonnull, const void
 ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer_create(const void *_Nullable, zip_uint64_t, int, zip_error_t *_Nullable);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer_fragment(zip_t *_Nonnull, const zip_buffer_fragment_t *_Nonnull, zip_uint64_t, int);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer_fragment_create(const zip_buffer_fragment_t *_Nullable, zip_uint64_t, int, zip_error_t *_Nullable);
-ZIP_EXTERN int zip_source_buffer_set_compression(const zip_source_t *_Nonnull, zip_int32_t comp_method, zip_uint64_t uncomp_size, zip_uint32_t uncomp_crc);
+ZIP_EXTERN int zip_set_file_raw_compression(const zip_source_t *_Nonnull, zip_int32_t comp_method, zip_uint64_t uncomp_size, zip_uint32_t uncomp_crc);
 ZIP_EXTERN int zip_source_close(zip_source_t *_Nonnull);
 ZIP_EXTERN int zip_source_commit_write(zip_source_t *_Nonnull);
 ZIP_EXTERN zip_error_t *_Nonnull zip_source_error(zip_source_t *_Nonnull);
