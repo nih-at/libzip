@@ -348,6 +348,7 @@ typedef struct zip_buffer_fragment zip_buffer_fragment_t;
 typedef zip_uint32_t zip_flags_t;
 
 typedef zip_int64_t (*zip_source_callback)(void *_Nullable, void *_Nullable, zip_uint64_t, zip_source_cmd_t);
+typedef zip_int64_t (*zip_source_layered_callback)(zip_source_t *_Nonnull, void *_Nullable, void *_Nullable, zip_uint64_t, enum zip_source_cmd);
 typedef void (*zip_progress_callback)(zip_t *_Nonnull, double, void *_Nullable);
 typedef int (*zip_cancel_callback)(zip_t *_Nonnull, void *_Nullable);
 
@@ -381,6 +382,7 @@ ZIP_EXTERN void zip_error_fini(zip_error_t *_Nonnull);
 ZIP_EXTERN void zip_error_init(zip_error_t *_Nonnull);
 ZIP_EXTERN void zip_error_init_with_code(zip_error_t *_Nonnull, int);
 ZIP_EXTERN void zip_error_set(zip_error_t *_Nullable, int, int);
+ZIP_EXTERN void zip_error_set_from_source(zip_error_t *_Nonnull, zip_source_t *_Nullable);
 ZIP_EXTERN const char *_Nonnull zip_error_strerror(zip_error_t *_Nonnull);
 ZIP_EXTERN int zip_error_system_type(const zip_error_t *_Nonnull);
 ZIP_EXTERN zip_int64_t zip_error_to_data(const zip_error_t *_Nonnull, void *_Nonnull, zip_uint64_t);
@@ -449,8 +451,11 @@ ZIP_EXTERN zip_source_t *_Nullable zip_source_function_create(zip_source_callbac
 ZIP_EXTERN int zip_source_get_file_attributes(zip_source_t *_Nonnull, zip_file_attributes_t *_Nonnull);
 ZIP_EXTERN int zip_source_is_deleted(zip_source_t *_Nonnull);
 ZIP_EXTERN void zip_source_keep(zip_source_t *_Nonnull);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_layered(zip_t *_Nullable, zip_source_t *_Nonnull, zip_source_layered_callback _Nonnull, void *_Nullable);
+ZIP_EXTERN zip_source_t *_Nullable zip_source_layered_create(zip_source_t *_Nonnull, zip_source_layered_callback _Nonnull, void *_Nullable, zip_error_t *_Nullable);
 ZIP_EXTERN zip_int64_t zip_source_make_command_bitmap(zip_source_cmd_t, ...);
 ZIP_EXTERN int zip_source_open(zip_source_t *_Nonnull);
+ZIP_EXTERN zip_int64_t zip_source_pass_to_lower_layer(zip_source_t *_Nonnull, void *_Nullable, zip_uint64_t, zip_source_cmd_t);
 ZIP_EXTERN zip_int64_t zip_source_read(zip_source_t *_Nonnull, void *_Nonnull, zip_uint64_t);
 ZIP_EXTERN void zip_source_rollback_write(zip_source_t *_Nonnull);
 ZIP_EXTERN int zip_source_seek(zip_source_t *_Nonnull, zip_int64_t, int);

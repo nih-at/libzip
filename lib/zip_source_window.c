@@ -182,7 +182,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             for (n = 0; n < ctx->start; n += (zip_uint64_t)ret) {
                 i = (ctx->start - n > BUFSIZE ? BUFSIZE : ctx->start - n);
                 if ((ret = zip_source_read(src, b, i)) < 0) {
-                    _zip_error_set_from_source(&ctx->error, src);
+                    zip_error_set_from_source(&ctx->error, src);
                     byte_array_fini(b);
                     return -1;
                 }
@@ -210,7 +210,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 
         if (ctx->needs_seek) {
             if (zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET) < 0) {
-                _zip_error_set_from_source(&ctx->error, src);
+                zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
         }
@@ -241,12 +241,12 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             }
             if (args->whence == SEEK_END) {
                 if (zip_source_seek(src, args->offset, args->whence) < 0) {
-                    _zip_error_set_from_source(&ctx->error, src);
+                    zip_error_set_from_source(&ctx->error, src);
                     return -1;
                 }
                 new_offset = zip_source_tell(src);
                 if (new_offset < 0) {
-                    _zip_error_set_from_source(&ctx->error, src);
+                    zip_error_set_from_source(&ctx->error, src);
                     return -1;
                 }
                 if ((zip_uint64_t)new_offset < ctx->start) {
@@ -296,8 +296,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
         return (zip_int64_t)(ctx->offset - ctx->start);
 
     default:
-        zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
-        return -1;
+        return zip_source_pass_to_lower_layer(src, data, len, cmd);
     }
 }
 

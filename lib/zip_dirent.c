@@ -129,7 +129,7 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     int ret;
 
     if ((off = zip_source_tell_write(za->src)) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
     offset = (zip_uint64_t)off;
@@ -146,7 +146,7 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     }
 
     if ((off = zip_source_tell_write(za->src)) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
     size = (zip_uint64_t)off - offset;
@@ -729,7 +729,7 @@ _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error) {
     size = local ? LENTRYSIZE : CDENTRYSIZE;
 
     if (zip_source_seek(src, local ? 26 : 28, SEEK_CUR) < 0) {
-        _zip_error_set_from_source(error, src);
+        zip_error_set_from_source(error, src);
         return -1;
     }
 

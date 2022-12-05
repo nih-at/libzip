@@ -46,7 +46,7 @@ _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *e
     }
 
     if ((n = zip_source_read(src, b, length)) < 0) {
-        _zip_error_set_from_source(error, src);
+        zip_error_set_from_source(error, src);
         return -1;
     }
 
@@ -122,7 +122,7 @@ _zip_write(zip_t *za, const void *data, zip_uint64_t length) {
     zip_int64_t n;
 
     if ((n = zip_source_write(za->src, data, length)) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
     if ((zip_uint64_t)n != length) {

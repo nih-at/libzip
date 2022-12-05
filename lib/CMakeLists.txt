@@ -86,6 +86,7 @@ add_library(zip
   zip_source_is_deleted.c
   zip_source_layered.c
   zip_source_open.c
+  zip_source_pass_to_lower_layer.c
   zip_source_pkware_decode.c
   zip_source_pkware_encode.c
   zip_source_read.c

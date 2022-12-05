@@ -1,8 +1,10 @@
-# Unreleased
+# 1.10 [Unreleased]
 
+* Make support for layered sources public.
 * Allow reading changed file data.
 * Fix handling of files of size 4294967295.
-* zipmerge: copy extra fields.
+* `zipmerge`: copy extra fields.
+* `zipmerge`: add option to keep files uncompressed.
 * CMake: add detection of mbedTLS version 3.
 * Use ISO C secure library functions, if available.
 * Fix reading/writing compressed data with buffers > 4GiB.

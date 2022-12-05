@@ -66,7 +66,7 @@ zip_close(zip_t *za) {
         if ((za->open_flags & ZIP_TRUNCATE) || changed) {
             if (zip_source_remove(za->src) < 0) {
                 if (!((zip_error_code_zip(zip_source_error(za->src)) == ZIP_ER_REMOVE) && (zip_error_code_system(zip_source_error(za->src)) == ENOENT))) {
-                    _zip_error_set_from_source(&za->error, za->src);
+                    zip_error_set_from_source(&za->error, za->src);
                     return -1;
                 }
             }
@@ -146,7 +146,7 @@ zip_close(zip_t *za) {
     }
     if (unchanged_offset == 0) {
         if (zip_source_begin_write(za->src) < 0) {
-            _zip_error_set_from_source(&za->error, za->src);
+            zip_error_set_from_source(&za->error, za->src);
             free(filelist);
             return -1;
         }
@@ -196,7 +196,7 @@ zip_close(zip_t *za) {
         }
 
         if ((off = zip_source_tell_write(za->src)) < 0) {
-            _zip_error_set_from_source(&za->error, za->src);
+            zip_error_set_from_source(&za->error, za->src);
             error = 1;
             break;
         }
@@ -240,7 +240,7 @@ zip_close(zip_t *za) {
                 break;
             }
             if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
-                _zip_error_set_from_source(&za->error, za->src);
+                zip_error_set_from_source(&za->error, za->src);
                 error = 1;
                 break;
             }
@@ -267,7 +267,7 @@ zip_close(zip_t *za) {
 
     if (!error) {
         if (zip_source_commit_write(za->src) != 0) {
-            _zip_error_set_from_source(&za->error, za->src);
+            zip_error_set_from_source(&za->error, za->src);
             error = 1;
         }
         _zip_progress_end(za->progress);
@@ -296,7 +296,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     bool needs_recompress, needs_decompress, needs_crc, needs_compress, needs_reencrypt, needs_decrypt, needs_encrypt;
 
     if (zip_source_stat(src, &st) < 0) {
-        _zip_error_set_from_source(&za->error, src);
+        zip_error_set_from_source(&za->error, src);
         return -1;
     }
 
@@ -360,7 +360,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     }
 
     if ((offstart = zip_source_tell_write(za->src)) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
@@ -479,19 +479,19 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 
 
     if ((offdata = zip_source_tell_write(za->src)) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
     ret = copy_source(za, src_final, data_length);
 
     if (zip_source_stat(src_final, &st) < 0) {
-        _zip_error_set_from_source(&za->error, src_final);
+        zip_error_set_from_source(&za->error, src_final);
         ret = -1;
     }
 
     if (zip_source_get_file_attributes(src_final, &attributes) != 0) {
-        _zip_error_set_from_source(&za->error, src_final);
+        zip_error_set_from_source(&za->error, src_final);
         ret = -1;
     }
 
@@ -502,12 +502,12 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     }
 
     if ((offend = zip_source_tell_write(za->src)) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
     if (zip_source_seek_write(za->src, offstart, SEEK_SET) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
@@ -538,7 +538,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     }
 
     if (zip_source_seek_write(za->src, offend, SEEK_SET) < 0) {
-        _zip_error_set_from_source(&za->error, za->src);
+        zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
 
@@ -595,7 +595,7 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
     int ret;
 
     if (zip_source_open(src) < 0) {
-        _zip_error_set_from_source(&za->error, src);
+        zip_error_set_from_source(&za->error, src);
         return -1;
     }
 
@@ -622,7 +622,7 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
     }
 
     if (n < 0) {
-        _zip_error_set_from_source(&za->error, src);
+        zip_error_set_from_source(&za->error, src);
         ret = -1;
     }
 

@@ -1,6 +1,6 @@
 /*
-  zip_source_function.c -- create zip data source from callback function
-  Copyright (C) 1999-2022 Dieter Baron and Thomas Klausner
+  zip_source_pass_to_lower_layer.c -- pass command to lower layer
+  Copyright (C) 2022 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -31,69 +31,48 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <stdlib.h>
-
 #include "zipint.h"
 
+zip_int64_t zip_source_pass_to_lower_layer(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command) {
+    switch (command) {
+    case ZIP_SOURCE_OPEN:
+    case ZIP_SOURCE_CLOSE:
+    case ZIP_SOURCE_FREE:
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES:
+    case ZIP_SOURCE_SUPPORTS_REOPEN:
+        return 0;
 
-ZIP_EXTERN zip_source_t *
-zip_source_function(zip_t *za, zip_source_callback zcb, void *ud) {
-    if (za == NULL) {
-        return NULL;
+    case ZIP_SOURCE_STAT:
+        return sizeof(zip_stat_t);
+
+    case ZIP_SOURCE_ACCEPT_EMPTY:
+    case ZIP_SOURCE_ERROR:
+    case ZIP_SOURCE_READ:
+    case ZIP_SOURCE_SEEK:
+    case ZIP_SOURCE_TELL:
+        return _zip_source_call(src, data, length, command);
+
+
+    case ZIP_SOURCE_BEGIN_WRITE:
+    case ZIP_SOURCE_BEGIN_WRITE_CLONING:
+    case ZIP_SOURCE_COMMIT_WRITE:
+    case ZIP_SOURCE_REMOVE:
+    case ZIP_SOURCE_ROLLBACK_WRITE:
+    case ZIP_SOURCE_SEEK_WRITE:
+    case ZIP_SOURCE_TELL_WRITE:
+    case ZIP_SOURCE_WRITE:
+        zip_error_set(&src->error, ZIP_ER_OPNOTSUPP, 0);
+        return -1;
+
+    case ZIP_SOURCE_SUPPORTS:
+        if (length < sizeof(zip_int64_t)) {
+            zip_error_set(&src->error, ZIP_ER_INTERNAL, 0);
+            return -1;
+        }
+        return *(zip_int64_t *)data;
+
+    default:
+        zip_error_set(&src->error, ZIP_ER_OPNOTSUPP, 0);
+        return -1;
     }
-
-    return zip_source_function_create(zcb, ud, &za->error);
-}
-
-
-ZIP_EXTERN zip_source_t *
-zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error) {
-    zip_source_t *zs;
-
-    if ((zs = _zip_source_new(error)) == NULL)
-        return NULL;
-
-    zs->cb.f = zcb;
-    zs->ud = ud;
-
-    zs->supports = zcb(ud, NULL, 0, ZIP_SOURCE_SUPPORTS);
-    if (zs->supports < 0) {
-        zs->supports = ZIP_SOURCE_SUPPORTS_READABLE;
-    }
-    zs->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, -1);
-
-    return zs;
-}
-
-
-ZIP_EXTERN void
-zip_source_keep(zip_source_t *src) {
-    src->refcount++;
-}
-
-
-zip_source_t *
-_zip_source_new(zip_error_t *error) {
-    zip_source_t *src;
-
-    if ((src = (zip_source_t *)malloc(sizeof(*src))) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
-    }
-
-    src->src = NULL;
-    src->cb.f = NULL;
-    src->ud = NULL;
-    src->open_count = 0;
-    src->write_state = ZIP_SOURCE_WRITE_CLOSED;
-    src->source_closed = false;
-    src->source_archive = NULL;
-    src->refcount = 1;
-    zip_error_init(&src->error);
-    src->eof = false;
-    src->had_read_error = false;
-    src->bytes_read = 0;
-
-    return src;
 }

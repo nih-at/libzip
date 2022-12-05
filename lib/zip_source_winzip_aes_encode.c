@@ -139,7 +139,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
         }
 
         if ((ret = zip_source_read(src, data, length)) < 0) {
-            _zip_error_set_from_source(&ctx->error, src);
+            zip_error_set_from_source(&ctx->error, src);
             return -1;
         }
 
@@ -207,8 +207,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
         return 0;
 
     default:
-        zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return zip_source_pass_to_lower_layer(src, data, length, cmd);
     }
 }
 

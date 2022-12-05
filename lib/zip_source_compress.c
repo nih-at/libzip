@@ -257,7 +257,7 @@ compress_read(zip_source_t *src, struct context *ctx, void *data, zip_uint64_t l
             }
 
             if ((n = zip_source_read(src, ctx->buffer, sizeof(ctx->buffer))) < 0) {
-                _zip_error_set_from_source(&ctx->error, src);
+                zip_error_set_from_source(&ctx->error, src);
                 end = true;
                 break;
             }
@@ -319,7 +319,7 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
         ctx->first_read = -1;
         
         if (zip_source_stat(src, &st) < 0 || zip_source_get_file_attributes(src, &attributes) < 0) {
-            _zip_error_set_from_source(&ctx->error, src);
+            zip_error_set_from_source(&ctx->error, src);
             return -1;
         }
 
@@ -392,7 +392,6 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
         return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     default:
-        zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
-        return -1;
+        return zip_source_pass_to_lower_layer(src, data, len, cmd);
     }
 }

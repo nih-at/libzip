@@ -49,7 +49,7 @@ zip_source_stat(zip_source_t *src, zip_stat_t *st) {
 
     if (ZIP_SOURCE_IS_LAYERED(src)) {
         if (zip_source_stat(src->src, st) < 0) {
-            _zip_error_set_from_source(&src->error, src->src);
+            zip_error_set_from_source(&src->error, src->src);
             return -1;
         }
     }
