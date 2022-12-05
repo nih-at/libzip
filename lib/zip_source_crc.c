@@ -141,6 +141,10 @@ crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source
         st = (zip_stat_t *)data;
 
         if (ctx->crc_complete) {
+            if ((st->valid & ZIP_STAT_SIZE) && st->size != ctx->size) {
+                zip_error_set(&ctx->error, ZIP_ER_DATA_LENGTH, 0);
+                return -1;
+            }
             /* TODO: Set comp_size, comp_method, encryption_method?
                     After all, this only works for uncompressed data. */
             st->size = ctx->size;

@@ -135,6 +135,7 @@ extern "C" {
 #define ZIP_ER_TELL 30            /* S Tell error */
 #define ZIP_ER_COMPRESSED_DATA 31 /* N Compressed data invalid */
 #define ZIP_ER_CANCELLED 32       /* N Operation cancelled */
+#define ZIP_ER_DATA_LENGTH 33     /* N Unexpected length of data */
 
 /* type of system error value */
 
