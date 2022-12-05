@@ -50,7 +50,7 @@ char *progname;
 
 #define PROGRAM "zipmerge"
 
-#define USAGE "usage: %s [-DhIiSsV] target-zip zip...\n"
+#define USAGE "usage: %s [-DhIikSsV] target-zip zip...\n"
 
 char help_head[] = PROGRAM " (" PACKAGE ") by Dieter Baron and Thomas Klausner\n\n";
 
@@ -60,16 +60,17 @@ char help[] = "\n\
   -D       ignore directory component in file names\n\
   -I       ignore case in file names\n\
   -i       ask before overwriting files\n\
+  -k       don't compress when adding uncompressed files\n\
   -S       don't overwrite identical files\n\
   -s       overwrite identical files without asking\n\
 \n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2004-2021 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2004-2022 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
-#define OPTIONS "hVDiIsS"
+#define OPTIONS "hVDiIksS"
 
 #define CONFIRM_ALL_YES 0x001
 #define CONFIRM_ALL_NO 0x002
@@ -78,6 +79,7 @@ Copyright (C) 2004-2021 Dieter Baron and Thomas Klausner\n\
 
 int confirm;
 zip_flags_t name_flags;
+int keep_stored;
 
 static int confirm_replace(zip_t *, const char *, zip_uint64_t, zip_t *, const char *, zip_uint64_t);
 static void copy_extra_fields(zip_t *destination_archive, zip_uint64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, zip_flags_t flags);
@@ -97,25 +99,29 @@ main(int argc, char *argv[]) {
 
     confirm = CONFIRM_ALL_YES;
     name_flags = 0;
+    keep_stored = 0;
 
     while ((c = getopt(argc, argv, OPTIONS)) != -1) {
         switch (c) {
         case 'D':
             name_flags |= ZIP_FL_NODIR;
             break;
-        case 'i':
-            confirm &= ~CONFIRM_ALL_YES;
-            break;
         case 'I':
             name_flags |= ZIP_FL_NOCASE;
             break;
-        case 's':
-            confirm &= ~CONFIRM_SAME_NO;
-            confirm |= CONFIRM_SAME_YES;
+        case 'i':
+            confirm &= ~CONFIRM_ALL_YES;
+            break;
+        case 'k':
+            keep_stored = 1;
             break;
         case 'S':
             confirm &= ~CONFIRM_SAME_YES;
             confirm |= CONFIRM_SAME_NO;
+            break;
+        case 's':
+            confirm &= ~CONFIRM_SAME_NO;
+            confirm |= CONFIRM_SAME_YES;
             break;
 
         case 'h':
@@ -301,6 +307,12 @@ static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, 
 
     copy_extra_fields(destination_archive, (zip_uint64_t)destination_index, source_archive, source_index, ZIP_FL_CENTRAL);
     copy_extra_fields(destination_archive, (zip_uint64_t)destination_index, source_archive, source_index, ZIP_FL_LOCAL);
+    if (keep_stored) {
+        zip_stat_t st;
+        if (zip_stat_index(source_archive, source_index, 0, &st) == 0 && (st.valid & ZIP_STAT_COMP_METHOD) && st.comp_method == ZIP_CM_STORE) {
+            zip_set_file_compression(destination_archive, destination_index, ZIP_CM_STORE, 0);
+        }
+    }
 
     return 0;
 }
