@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_OPEN" "3" "June 18, 2022" "NiH" "Library Functions Manual"
+.TH "ZIP_OPEN" "3" "October 9, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -122,6 +122,25 @@ to indicate the error, while
 sets
 \fIze\fR
 to indicate the error.
+.SH "EXAMPLES"
+Here's an example of how you could report errors during
+\fBzip_open\fR:
+.nf
+.sp
+.RS 0n
+    zip_t *za;
+    int err;
+
+    if ((za = zip_open(name, 0, &err)) == NULL) {
+        zip_error_t error;
+        zip_error_init_with_code(&error, err);
+        fprintf(stderr, "%s: cannot open zip archive '%s': %s\en",
+	        progname, name, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return -1;
+    }
+.RE
+.fi
 .SH "ERRORS"
 The archive specified by
 \fIpath\fR

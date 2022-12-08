@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_FUNCTION" "3" "April 17, 2020" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "June 28, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -60,7 +60,7 @@ The functions
 \fBzip_source_function\fR()
 and
 \fBzip_source_function_create\fR()
-creates a zip source from the user-provided function
+create a zip source from the user-provided function
 \fIfn\fR,
 which must be of the following type:
 .PP
@@ -120,6 +120,13 @@ Must additionally support
 \fRZIP_SOURCE_TELL_WRITE\fR,
 and
 \fRZIP_SOURCE_REMOVE\fR.
+.sp
+On top of the above, supporting the pseudo-command
+\fRZIP_SOURCE_SUPPORTS_REOPEN\fR
+allows calling
+\fBzip_source_open\fR()
+again after calling
+\fBzip_source_close\fR().
 .SS "\fRZIP_SOURCE_ACCEPT_EMPTY\fR"
 Return 1 if an empty source should be accepted as a valid zip archive.
 This is the default if this command is not supported by a source.
@@ -316,6 +323,9 @@ ftell(3).
 .SS "\fRZIP_SOURCE_WRITE\fR"
 Write data to the source.
 Return number of bytes written.
+.SS "\fRZIP_SOURCE_SUPPORTS_REOPEN\fR"
+This command is never actually invoked, support for it signals the
+ability to handle multiple open/read/close cycles.
 .SS "Return Values"
 Commands should return \-1 on error.
 \fRZIP_SOURCE_ERROR\fR

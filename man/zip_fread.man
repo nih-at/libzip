@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_FREAD" "3" "September 28, 2021" "NiH" "Library Functions Manual"
+.TH "ZIP_FREAD" "3" "November 3, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -55,7 +55,10 @@ function reads up to
 bytes from
 \fIfile\fR
 into
-\fIbuf\fR.
+\fIbuf\fR
+from the current position in the file (see
+zip_fseek(3)).
+After reading, the current position is updated by the number of bytes read.
 .SH "RETURN VALUES"
 If successful, the number of bytes actually read is returned.
 When

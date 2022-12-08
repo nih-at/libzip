@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_FDOPEN" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_FDOPEN" "3" "September 23, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -134,6 +134,10 @@ The file specified by
 \fIfd\fR
 could not be prepared for use by
 libzip(3).
+.TP 19n
+[\fRZIP_ER_OPNOTSUPP\fR]
+.br
+This functionality has been disabled at compile time.
 .TP 19n
 [\fRZIP_ER_READ\fR]
 A read error occurred; see

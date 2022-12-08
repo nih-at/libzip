@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "June 18, 2022" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "December 5, 2022" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -184,6 +184,9 @@ zip_get_num_entries(3)
 .TP 4n
 \fB\(bu\fR
 zip_set_default_password(3)
+.TP 4n
+\fB\(bu\fR
+zip_source_pass_to_lower_layer(3)
 .PD
 .SH "CREATING/MODIFYING ZIP ARCHIVES"
 .SS "Create/Open Archive"
@@ -236,6 +239,9 @@ zip_source_free(3)
 zip_source_function(3)
 .TP 4n
 \fB\(bu\fR
+zip_source_layered(3)
+.TP 4n
+\fB\(bu\fR
 zip_source_zip(3)
 .PD
 .SS "Rename Files"
@@ -261,17 +267,17 @@ zip_unchange_archive(3)
 .SS "Read/Modify Extra Fields"
 .TP 4n
 \fB\(bu\fR
-zip_file_extra_field_by_id(3)
-.PD 0
-.TP 4n
-\fB\(bu\fR
 zip_file_extra_field_delete(3)
+.PD 0
 .TP 4n
 \fB\(bu\fR
 zip_file_extra_field_delete_by_id(3)
 .TP 4n
 \fB\(bu\fR
 zip_file_extra_field_get(3)
+.TP 4n
+\fB\(bu\fR
+zip_file_extra_field_get_by_id(3)
 .TP 4n
 \fB\(bu\fR
 zip_file_extra_field_set(3)
@@ -335,6 +341,12 @@ zip_get_error(3)
 .TP 4n
 \fB\(bu\fR
 zip_error_init_with_code(3)
+.TP 4n
+\fB\(bu\fR
+zip_error_set(3)
+.TP 4n
+\fB\(bu\fR
+zip_error_set_from_source(3)
 .TP 4n
 \fB\(bu\fR
 zip_error_system_type(3)

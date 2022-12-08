@@ -75,6 +75,7 @@ set(MAN_PAGES
   zip_source_free.3
   zip_source_function.3
   zip_source_is_deleted.3
+  zip_source_layered.3
   zip_source_keep.3
   zip_source_make_command_bitmap.3
   zip_source_open.3
