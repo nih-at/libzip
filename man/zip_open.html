@@ -115,6 +115,26 @@ Upon successful completion <code class="Fn">zip_open</code>() and
   <var class="Ar">ze</var> to indicate the error.
 </section>
 <section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+Here's an example of how you could report errors during
+  <code class="Nm">zip_open</code>:
+<div class="Bd Pp">
+<pre>
+    zip_t *za;
+    int err;
+
+    if ((za = zip_open(name, 0, &amp;err)) == NULL) {
+        zip_error_t error;
+        zip_error_init_with_code(&amp;error, err);
+        fprintf(stderr, &quot;%s: cannot open zip archive '%s': %s\n&quot;,
+	        progname, name, zip_error_strerror(&amp;error));
+        zip_error_fini(&amp;error);
+        return -1;
+    }
+</pre>
+</div>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 The archive specified by <var class="Ar">path</var> is opened unless:
 <dl class="Bl-tag">
@@ -172,7 +192,7 @@ For newly created archives, <code class="Fn">zip_open</code>() does not try to
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">June 18, 2022</td>
+    <td class="foot-date">October 9, 2022</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

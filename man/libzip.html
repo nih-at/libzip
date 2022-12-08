@@ -166,6 +166,7 @@ In general, different zip archives opened by <code class="Nm">libzip</code> are
   <li><a class="Xr" href="zip_get_name.html">zip_get_name(3)</a></li>
   <li><a class="Xr" href="zip_get_num_entries.html">zip_get_num_entries(3)</a></li>
   <li><a class="Xr" href="zip_set_default_password.html">zip_set_default_password(3)</a></li>
+  <li><a class="Xr" href="zip_source_pass_to_lower_layer.html">zip_source_pass_to_lower_layer(3)</a></li>
 </ul>
 </section>
 </section>
@@ -197,6 +198,7 @@ In general, different zip archives opened by <code class="Nm">libzip</code> are
   <li><a class="Xr" href="zip_source_filep.html">zip_source_filep(3)</a></li>
   <li><a class="Xr" href="zip_source_free.html">zip_source_free(3)</a></li>
   <li><a class="Xr" href="zip_source_function.html">zip_source_function(3)</a></li>
+  <li><a class="Xr" href="zip_source_layered.html">zip_source_layered(3)</a></li>
   <li><a class="Xr" href="zip_source_zip.html">zip_source_zip(3)</a></li>
 </ul>
 </section>
@@ -227,10 +229,10 @@ In general, different zip archives opened by <code class="Nm">libzip</code> are
 <h2 class="Ss" id="Read/Modify_Extra_Fields"><a class="permalink" href="#Read/Modify_Extra_Fields">Read/Modify
   Extra Fields</a></h2>
 <ul class="Bl-bullet Bl-compact">
-  <li><a class="Xr" href="zip_file_extra_field_by_id.html">zip_file_extra_field_by_id(3)</a></li>
   <li><a class="Xr" href="zip_file_extra_field_delete.html">zip_file_extra_field_delete(3)</a></li>
   <li><a class="Xr" href="zip_file_extra_field_delete_by_id.html">zip_file_extra_field_delete_by_id(3)</a></li>
   <li><a class="Xr" href="zip_file_extra_field_get.html">zip_file_extra_field_get(3)</a></li>
+  <li><a class="Xr" href="zip_file_extra_field_get_by_id.html">zip_file_extra_field_get_by_id(3)</a></li>
   <li><a class="Xr" href="zip_file_extra_field_set.html">zip_file_extra_field_set(3)</a></li>
   <li><a class="Xr" href="zip_file_extra_fields_count.html">zip_file_extra_fields_count(3)</a></li>
   <li><a class="Xr" href="zip_file_extra_fields_count_by_id.html">zip_file_extra_fields_count_by_id(3)</a></li>
@@ -268,6 +270,8 @@ In general, different zip archives opened by <code class="Nm">libzip</code> are
   <li><a class="Xr" href="zip_file_get_error.html">zip_file_get_error(3)</a></li>
   <li><a class="Xr" href="zip_get_error.html">zip_get_error(3)</a></li>
   <li><a class="Xr" href="zip_error_init_with_code.html">zip_error_init_with_code(3)</a></li>
+  <li><a class="Xr" href="zip_error_set.html">zip_error_set(3)</a></li>
+  <li><a class="Xr" href="zip_error_set_from_source.html">zip_error_set_from_source(3)</a></li>
   <li><a class="Xr" href="zip_error_system_type.html">zip_error_system_type(3)</a></li>
   <li><a class="Xr" href="zip_errors.html">zip_errors(3)</a></li>
 </ul>
@@ -282,7 +286,7 @@ In general, different zip archives opened by <code class="Nm">libzip</code> are
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">June 18, 2022</td>
+    <td class="foot-date">December 5, 2022</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
