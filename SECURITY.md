@@ -8,6 +8,6 @@ We take great care to maintain backwards compatibility, so we expect our users t
 
 ## Reporting a Vulnerability
 
-You can reach us per email at libzip@nih.at. 
+You can reach us per email at info@libzip.org.
 
 For less sensitive reports, you can also open an issue or pull request on GitHub.
