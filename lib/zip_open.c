@@ -491,9 +491,20 @@ _zip_headercomp(const zip_dirent_t *central, const zip_dirent_t *local) {
 
     if ((central->crc != local->crc) || (central->comp_size != local->comp_size) || (central->uncomp_size != local->uncomp_size)) {
         /* InfoZip stores valid values in local header even when data descriptor is used.
-           This is in violation of the appnote. */
-        if (((local->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0 || local->crc != 0 || local->comp_size != 0 || local->uncomp_size != 0))
+           This is in violation of the appnote.
+	   macOS Archive sets the compressed size even when data descriptor is used ( but not the others),
+	   also in violation of the appnote.
+	*/
+	/* if data descriptor is not used, the values must match */
+        if ((local->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0) {
             return -1;
+	}
+	/* when using a data descriptor, the local header value must be zero or match */
+	if ((local->crc != 0 && central->crc != local->crc) ||
+	    (local->comp_size != 0 && central->comp_size != local->comp_size) ||
+	    (local->uncomp_size != 0 && central->uncomp_size != local->uncomp_size)) {
+	    return -1;
+	}
     }
 
     return 0;
