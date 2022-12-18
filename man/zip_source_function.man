@@ -97,8 +97,9 @@ Must support
 \fRZIP_SOURCE_READ\fR,
 \fRZIP_SOURCE_CLOSE\fR,
 \fRZIP_SOURCE_STAT\fR,
+\fRZIP_SOURCE_ERROR\fR,
 and
-\fRZIP_SOURCE_ERROR\fR.
+\fRZIP_SOURCE_FREE\fR.
 .TP 24n
 seekable read source
 Same as previous, but from a source allowing reading from arbitrary
