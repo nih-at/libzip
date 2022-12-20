@@ -303,7 +303,6 @@ struct zip {
 /* file in zip archive, part of API */
 
 struct zip_file {
-    zip_t *za;         /* zip archive containing this file */
     zip_error_t error; /* error information */
     zip_source_t *src; /* data source */
 };
