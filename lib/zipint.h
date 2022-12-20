@@ -486,6 +486,8 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #endif
 #endif
 
+#define zip_realloc(inout_memory, inout_alloced, element_size, additional_elements, error) zip_realloc_implementation((void **)inout_memory, inout_alloced, element_size, additional_elements, error)
+bool zip_realloc_implementation(void **inout_memory, zip_uint64_t *inout_alloced, zip_uint64_t element_size, zip_uint64_t additional_elements, zip_error_t *error);
 
 zip_int64_t _zip_add_entry(zip_t *);
 

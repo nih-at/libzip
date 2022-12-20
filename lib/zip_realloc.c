@@ -1,6 +1,6 @@
 /*
-  zip_add_entry.c -- create and init struct zip_entry
-  Copyright (C) 1999-2021 Dieter Baron and Thomas Klausner
+  zip_realloc.c -- reallocate with additional elements
+  Copyright (C) 2009-2022 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -31,36 +31,45 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include <stdlib.h>
 
 #include "zipint.h"
 
+bool zip_realloc_implementation(void **inout_memory, zip_uint64_t *inout_alloced, zip_uint64_t element_size, zip_uint64_t additional_elements, zip_error_t *error) {
+    void *old_memory = *inout_memory;
+    zip_uint64_t old_alloced = *inout_alloced;
+    zip_uint64_t new_alloced;
+    size_t new_size;
+    void *new_memory;
 
-/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
-
-zip_int64_t
-_zip_add_entry(zip_t *za) {
-    zip_uint64_t idx;
-
-    if (za->nentry + 1 >= za->nentry_alloc) {
-        zip_uint64_t additional_entries = 2 * za->nentry_alloc;
-
-        if (additional_entries < 16) {
-            additional_entries = 16;
-        }
-        else if (additional_entries > 1024) {
-            additional_entries = 1024;
-        }
-
-        if (!zip_realloc(&za->entry, &za->nentry_alloc, sizeof(struct zip_entry), additional_entries, &za->error)) {
-            return -1;
-        }
+    if (additional_elements == 0) {
+        return true;
     }
 
-    idx = za->nentry++;
+    if (old_alloced + additional_elements < old_alloced) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
 
-    _zip_entry_init(za->entry + idx);
+    new_alloced = old_alloced + additional_elements;
 
-    return (zip_int64_t)idx;
+    if (new_alloced > SIZE_MAX / element_size) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
+
+    /* Cast explicitly to size_t to quiet msvc complaints about
+       possible loss of data. At this point we know that the result of
+       "new_alloced * element_size" should fit into size_t. */
+    new_size = (size_t)(new_alloced * element_size);
+
+    if ((new_memory = realloc(old_memory, new_size)) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
+
+    *inout_memory = new_memory;
+    *inout_alloced = new_alloced;
+
+    return true;
 }
