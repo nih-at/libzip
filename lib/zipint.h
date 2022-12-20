@@ -291,8 +291,8 @@ struct zip {
     zip_uint64_t nentry_alloc; /* number of entries allocated */
     zip_entry_t *entry;        /* entries */
 
-    unsigned int nopen_source;       /* number of open sources using archive */
-    unsigned int nopen_source_alloc; /* number of sources allocated */
+    zip_uint64_t nopen_source;       /* number of open sources using archive */
+    zip_uint64_t nopen_source_alloc; /* number of sources allocated */
     zip_source_t **open_source;      /* open sources using archive */
 
     zip_hash_t *names; /* hash table for name lookup */
