@@ -618,7 +618,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
     while (copied < length) {
         zip_uint64_t n = ZIP_MIN(ZIP_MIN(length - copied, buffer->fragments[i].length - fragment_offset), SIZE_MAX);
 #if ZIP_UINT64_MAX > SIZE_MAX
-        n = ZIP_MIN(n, SIZE_MAX)
+        n = ZIP_MIN(n, SIZE_MAX);
 #endif
 
         (void)memcpy_s(buffer->fragments[i].data + fragment_offset, (size_t)n, data + copied, (size_t)n);
