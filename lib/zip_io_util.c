@@ -31,8 +31,10 @@
  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "zipint.h"
 
@@ -128,6 +130,16 @@ _zip_write(zip_t *za, const void *data, zip_uint64_t length) {
     if ((zip_uint64_t)n != length) {
         zip_error_set(&za->error, ZIP_ER_WRITE, EINTR);
         return -1;
+    }
+
+    if (za->write_crc != NULL) {
+        zip_uint64_t position = 0;
+        while (position < length) {
+            zip_uint64_t nn = ZIP_MIN(UINT_MAX, length - position);
+
+            *za->write_crc = (zip_uint32_t)crc32(*za->write_crc, (const Bytef *)data + position, (uInt)nn);
+            position += nn;
+        }
     }
 
     return 0;

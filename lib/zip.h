@@ -91,7 +91,9 @@ extern "C" {
 
 /* archive global flags flags */
 
-#define ZIP_AFL_RDONLY 2u /* read only -- cannot be cleared */
+#define ZIP_AFL_RDONLY  2u /* read only -- cannot be cleared */
+#define ZIP_AFL_IS_TORRENTZIP	4u /* current archive is torrentzipped */
+#define ZIP_AFL_WANT_TORRENTZIP	8u /* write archive in torrentzip format */
 
 
 /* create a new extra field */
@@ -136,6 +138,7 @@ extern "C" {
 #define ZIP_ER_COMPRESSED_DATA 31 /* N Compressed data invalid */
 #define ZIP_ER_CANCELLED 32       /* N Operation cancelled */
 #define ZIP_ER_DATA_LENGTH 33     /* N Unexpected length of data */
+#define ZIP_ER_NOT_ALLOWED 34     /* N Not allowed in torrentzip */
 
 /* type of system error value */
 

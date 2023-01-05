@@ -67,6 +67,12 @@
 #define EF_WINZIP_AES_SIZE 7
 #define MAX_DATA_DESCRIPTOR_LENGTH 24
 
+#define TORRENTZIP_SIGNATURE "TORRENTZIPPED-"
+#define TORRENTZIP_SIGNATURE_LENGTH 14
+#define TORRENTZIP_CRC_LENGTH 8
+#define TORRENTZIP_MEM_LEVEL 8
+#define TORRENTZIP_COMPRESSION_FLAGS ZIP_UINT16_MAX
+
 #define ZIP_CRYPTO_PKWARE_HEADERLEN 12
 
 #define ZIP_CM_REPLACED_DEFAULT (-2)
@@ -298,6 +304,8 @@ struct zip {
     zip_hash_t *names; /* hash table for name lookup */
 
     zip_progress_t *progress; /* progress callback for zip_close() */
+
+    zip_uint32_t* write_crc; /* have _zip_write() compute CRC */
 };
 
 /* file in zip archive, part of API */
@@ -452,7 +460,7 @@ struct zip_buffer {
 
 struct zip_filelist {
     zip_uint64_t idx;
-    /* TODO    const char *name; */
+    const char *name;
 };
 
 typedef struct zip_filelist zip_filelist_t;
@@ -473,6 +481,8 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #define ZIP_ENTRY_HAS_CHANGES(e) (ZIP_ENTRY_DATA_CHANGED(e) || (e)->deleted || ZIP_ENTRY_CHANGED((e), ZIP_DIRENT_ALL))
 
 #define ZIP_IS_RDONLY(za) ((za)->ch_flags & ZIP_AFL_RDONLY)
+#define ZIP_IS_TORRENTZIP(za) ((za)->flags & ZIP_AFL_IS_TORRENTZIP)
+#define ZIP_WANT_TORRENTZIP(za) ((za)->ch_flags & ZIP_AFL_WANT_TORRENTZIP)
 
 
 #ifdef HAVE_EXPLICIT_MEMSET
@@ -530,6 +540,8 @@ zip_dirent_t *_zip_dirent_new(void);
 bool zip_dirent_process_ef_zip64(zip_dirent_t * zde, const zip_uint8_t * ef, zip_uint64_t got_len, bool local, zip_error_t * error);
 zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_error_t *error);
 void _zip_dirent_set_version_needed(zip_dirent_t *de, bool force_zip64);
+void zip_dirent_torrentzip_normalize(zip_dirent_t *de);
+
 zip_int32_t _zip_dirent_size(zip_source_t *src, zip_uint16_t, zip_error_t *);
 int _zip_dirent_write(zip_t *za, zip_dirent_t *dirent, zip_flags_t flags);
 

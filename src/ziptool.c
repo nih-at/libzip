@@ -69,6 +69,7 @@ static zip_flags_t get_flags(const char *arg);
 static zip_int32_t get_compression_method(const char *arg);
 static zip_uint16_t get_encryption_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
+static int parse_archive_flag(const char* arg);
 int ziptool_post_close(const char *archive);
 
 #ifndef FOR_REGRESS
@@ -333,10 +334,22 @@ get_archive_comment(char *argv[]) {
     const char *comment;
     int len;
     /* get archive comment */
-    if ((comment = zip_get_archive_comment(za, &len, 0)) == NULL)
+    if ((comment = zip_get_archive_comment(za, &len, 0)) == NULL || len == 0)
         printf("No archive comment\n");
     else
         printf("Archive comment: %.*s\n", len, comment);
+    return 0;
+}
+
+static int
+get_archive_flag(char *argv[]) {
+    int flag = parse_archive_flag(argv[0]);
+    if (flag < 0) {
+        fprintf(stderr, "invalid archive flag '%s'\n", argv[0]);
+        return -1;
+    }
+
+    printf("%d\n", zip_get_archive_flag(za, flag, 0));
     return 0;
 }
 
@@ -505,6 +518,24 @@ set_archive_comment(char *argv[]) {
 }
 
 static int
+set_archive_flag(char *argv[]) {
+    int flag = parse_archive_flag(argv[0]);
+    if (flag < 0) {
+        fprintf(stderr, "invalid archive flag '%s'\n", argv[0]);
+        return -1;
+    }
+
+    int value = strcasecmp(argv[1], "1") == 0 || strcasecmp(argv[1], "true") == 0 || strcasecmp(argv[1], "yes") == 0;
+
+    if (zip_set_archive_flag(za, flag, value) < 0) {
+        fprintf(stderr, "can't set archive flag '%s' to %d: %s\n", argv[0], value, zip_strerror(za));
+        return -1;
+    }
+    return 0;
+}
+
+
+static int
 set_file_comment(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
@@ -653,6 +684,19 @@ zstat(char *argv[]) {
     return 0;
 }
 
+static int parse_archive_flag(const char* arg) {
+    if (strcasecmp(arg, "rdonly") == 0) {
+        return ZIP_AFL_RDONLY;
+    }
+    else if (strcasecmp(arg, "is-torrentzip") == 0) {
+        return ZIP_AFL_IS_TORRENTZIP;
+    }
+    else if (strcasecmp(arg, "want-torrentzip") == 0) {
+        return ZIP_AFL_WANT_TORRENTZIP;
+    }
+    return -1;
+}
+
 static zip_flags_t
 get_flags(const char *arg) {
     zip_flags_t flags = 0;
@@ -786,6 +830,7 @@ dispatch_table_t dispatch_table[] = {{"add", 2, "name content", "add file called
                                      {"delete_extra", 3, "index extra_idx flags", "remove extra field", delete_extra},
                                      {"delete_extra_by_id", 4, "index extra_id extra_index flags", "remove extra field of type extra_id", delete_extra_by_id},
                                      {"get_archive_comment", 0, "", "show archive comment", get_archive_comment},
+                                     {"get_archive_flag", 1, "flag", "show archive flag", get_archive_flag},
                                      {"get_extra", 3, "index extra_index flags", "show extra field", get_extra},
                                      {"get_extra_by_id", 4, "index extra_id extra_index flags", "show extra field of type extra_id", get_extra_by_id},
                                      {"get_file_comment", 1, "index", "get file comment", get_file_comment},
@@ -795,6 +840,7 @@ dispatch_table_t dispatch_table[] = {{"add", 2, "name content", "add file called
                                      {"rename", 2, "index name", "rename entry", zrename},
                                      {"replace_file_contents", 2, "index data", "replace entry with data", replace_file_contents},
                                      {"set_archive_comment", 1, "comment", "set archive comment", set_archive_comment},
+                                     {"set_archive_flag", 2, "flag", "set archive flag", set_archive_flag},
                                      {"set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra},
                                      {"set_file_comment", 2, "index comment", "set file comment", set_file_comment},
                                      {"set_file_compression", 3, "index method compression_flags", "set file compression method", set_file_compression},

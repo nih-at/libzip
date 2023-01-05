@@ -40,7 +40,8 @@
 struct ctx {
     zip_error_t *error;
     bool compress;
-    int compression_flags;
+    int level;
+    int mem_level;
     bool end_of_input;
     z_stream zstr;
 };
@@ -70,10 +71,14 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
 
     ctx->error = error;
     ctx->compress = compress;
-    ctx->compression_flags = compression_flags;
-    if (ctx->compression_flags < 1 || ctx->compression_flags > 9) {
-        ctx->compression_flags = Z_BEST_COMPRESSION;
+    ctx->level = compression_flags;
+    if (compression_flags >= 1 && compression_flags <= 9) {
+        ctx->level = compression_flags;
     }
+    else {
+        ctx->level = Z_BEST_COMPRESSION;
+    }
+    ctx->mem_level = compression_flags == TORRENTZIP_COMPRESSION_FLAGS ? TORRENTZIP_MEM_LEVEL : MAX_MEM_LEVEL;
     ctx->end_of_input = false;
 
     ctx->zstr.zalloc = Z_NULL;
@@ -112,10 +117,10 @@ general_purpose_bit_flags(void *ud) {
         return 0;
     }
 
-    if (ctx->compression_flags < 3) {
+    if (ctx->level < 3) {
         return 2 << 1;
     }
-    else if (ctx->compression_flags > 7) {
+    else if (ctx->level > 7) {
         return 1 << 1;
     }
     return 0;
@@ -134,7 +139,7 @@ start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
 
     if (ctx->compress) {
         /* negative value to tell zlib not to write a header */
-        ret = deflateInit2(&ctx->zstr, ctx->compression_flags, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+        ret = deflateInit2(&ctx->zstr, ctx->level, Z_DEFLATED, -MAX_WBITS, ctx->mem_level, Z_DEFAULT_STRATEGY);
     }
     else {
         ret = inflateInit2(&ctx->zstr, -MAX_WBITS);
