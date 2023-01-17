@@ -892,7 +892,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
    check whether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
 
 static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
-    zip_uint32_t crc_got, crc_should;
+    zip_uint32_t crc_should;
     char buf[8+1];
     char *end;
 
