@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_FUNCTION" "3" "June 28, 2022" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "January 5, 2023" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -99,6 +99,12 @@ Must support
 \fRZIP_SOURCE_STAT\fR,
 and
 \fRZIP_SOURCE_ERROR\fR.
+.sp
+If your source uses any allocated memory (including
+\fIuserdata\fR)
+it should also implement
+\fRZIP_SOURCE_FREE\fR
+to avoid memory leaks.
 .TP 24n
 seekable read source
 Same as previous, but from a source allowing reading from arbitrary

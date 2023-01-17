@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_ZIP" "3" "April 4, 2021" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_ZIP" "3" "January 17, 2023" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -82,18 +82,26 @@ is zero and
 is \-1, the whole file will be copied without decompressing it.
 .PP
 Supported flags are:
-.TP 23n
+.TP 22n
+\fRZIP_FL_COMPRESSED\fR
+Get the compressed data.
+Default is uncompressed, except if
+\fIstart\fR
+is zero and
+\fIlen\fR
+is zero or \-1.
+.TP 22n
+\fRZIP_FL_ENCRYPTED\fR
+Get the encrypted data.
+Default is decrypted.
+(This flag implies
+\fRZIP_FL_COMPRESSED\fR.)
+.TP 22n
 \fRZIP_FL_UNCHANGED\fR
 Try to get the original data without any changes that may have been
 made to
 \fIsrcarchive\fR
 after opening it.
-.TP 23n
-\fRZIP_FL_RECOMPRESS\fR
-When adding the data from
-\fIsrcarchive\fR,
-re-compress it using the current settings instead of copying the
-compressed data.
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,

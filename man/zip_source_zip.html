@@ -92,12 +92,16 @@ The functions <code class="Fn">zip_source_zip</code>() and
   decompressing it.
 <p class="Pp">Supported flags are:</p>
 <dl class="Bl-tag">
+  <dt><a class="permalink" href="#ZIP_FL_COMPRESSED"><code class="Dv" id="ZIP_FL_COMPRESSED">ZIP_FL_COMPRESSED</code></a></dt>
+  <dd>Get the compressed data. Default is uncompressed, except if
+      <var class="Ar">start</var> is zero and <var class="Ar">len</var> is zero
+      or -1.</dd>
+  <dt><a class="permalink" href="#ZIP_FL_ENCRYPTED"><code class="Dv" id="ZIP_FL_ENCRYPTED">ZIP_FL_ENCRYPTED</code></a></dt>
+  <dd>Get the encrypted data. Default is decrypted. (This flag implies
+      <code class="Dv">ZIP_FL_COMPRESSED</code>.)</dd>
   <dt><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dt>
   <dd>Try to get the original data without any changes that may have been made
       to <var class="Ar">srcarchive</var> after opening it.</dd>
-  <dt><a class="permalink" href="#ZIP_FL_RECOMPRESS"><code class="Dv" id="ZIP_FL_RECOMPRESS">ZIP_FL_RECOMPRESS</code></a></dt>
-  <dd>When adding the data from <var class="Ar">srcarchive</var>, re-compress it
-      using the current settings instead of copying the compressed data.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -149,7 +153,7 @@ Additionally, it can return all error codes from
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 4, 2021</td>
+    <td class="foot-date">January 17, 2023</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

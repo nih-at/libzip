@@ -100,7 +100,11 @@ The functions <code class="Fn">zip_source_function</code>() and
       <code class="Dv">ZIP_SOURCE_READ</code>,
       <code class="Dv">ZIP_SOURCE_CLOSE</code>,
       <code class="Dv">ZIP_SOURCE_STAT</code>, and
-      <code class="Dv">ZIP_SOURCE_ERROR</code>.</dd>
+      <code class="Dv">ZIP_SOURCE_ERROR</code>.
+    <p class="Pp">If your source uses any allocated memory (including
+        <var class="Ar">userdata</var>) it should also implement
+        <code class="Dv">ZIP_SOURCE_FREE</code> to avoid memory leaks.</p>
+  </dd>
   <dt>seekable read source</dt>
   <dd>Same as previous, but from a source allowing reading from arbitrary
       offsets (also for read-only zip archive). Must additionally support
@@ -382,7 +386,7 @@ Upon successful completion, the created source is returned. Otherwise,
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">June 28, 2022</td>
+    <td class="foot-date">January 5, 2023</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
