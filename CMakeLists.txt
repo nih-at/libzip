@@ -474,6 +474,15 @@ write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-v
 configure_package_config_file("${PROJECT_NAME}-config.cmake.in" "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libzip)
 
+# Install Find* modules, they are required by libzip-config.cmake to resolve dependencies
+install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNettle.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindZstd.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMbedTLS.cmake
+  DESTINATION
+    ${CMAKE_INSTALL_LIBDIR}/cmake/libzip/modules
+  )  
+
 if(LIBZIP_DO_INSTALL)
   # Add targets to the build-tree export set
   export(TARGETS zip
