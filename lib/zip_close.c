@@ -217,7 +217,7 @@ zip_close(zip_t *za) {
 
             zs = NULL;
             if (!ZIP_ENTRY_DATA_CHANGED(entry)) {
-                if ((zs = _zip_source_zip_new(za, i, ZIP_FL_UNCHANGED, 0, 0, NULL, &za->error)) == NULL) {
+                if ((zs = zip_source_zip_file_create(za, i, ZIP_FL_UNCHANGED, 0, -1, NULL, &za->error)) == NULL) {
                     error = 1;
                     break;
                 }

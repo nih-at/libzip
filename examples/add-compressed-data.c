@@ -154,7 +154,7 @@ main(int argc, char *argv[]) {
         exit(1);
     }
 
-    if ((zip_add(za, "precompressed", src_comp)) < 0) {
+    if ((zip_file_add(za, "precompressed", src_comp, 0)) < 0) {
         fprintf(stderr, "%s: cannot add precompressed file: %s\n", argv[0], zip_strerror(za));
         zip_source_free(src_comp);
         zip_discard(za);

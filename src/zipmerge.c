@@ -285,14 +285,14 @@ merge_zip(zip_t *za, const char *tname, const char *sname) {
 
 
 static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, const char* name) {
-    zip_source_t *source = zip_source_zip(destination_archive, source_archive, source_index, 0, 0, 0);
+    zip_source_t *source = zip_source_zip_file(destination_archive, source_archive, source_index, ZIP_FL_COMPRESSED, 0, -1, NULL);
 
     if (source == NULL) {
         return -1;
     }
 
     if (destination_index >= 0) {
-        if (zip_replace(destination_archive, (zip_uint64_t)destination_index, source) < 0) {
+        if (zip_file_replace(destination_archive, (zip_uint64_t)destination_index, source, 0) < 0) {
             zip_source_free(source);
             return -1;
         }

@@ -81,7 +81,7 @@ main(int argc, char *argv[]) {
     if ((name = strrchr(file, '/')) == NULL)
         name = file;
 
-    if (zip_add(za, name, zs) == -1) {
+    if (zip_file_add(za, name, zs, 0) == -1) {
         zip_source_free(zs);
         fprintf(stderr, "%s: can't add file '%s': %s\n", prg, file, zip_strerror(za));
         return 1;

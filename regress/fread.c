@@ -122,7 +122,7 @@ main(int argc, char *argv[]) {
         fail++;
     }
     else {
-        if (zip_replace(z, (zip_uint64_t)idx, zs) < 0) {
+        if (zip_file_replace(z, (zip_uint64_t)idx, zs, 0) < 0) {
             fprintf(stderr, "%s: can't replace 'storedok' in zip archive '%s': %s\n", progname, archive, zip_strerror(z));
             fail++;
         }

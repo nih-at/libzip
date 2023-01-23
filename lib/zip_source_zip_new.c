@@ -38,7 +38,12 @@
 
 static void _zip_file_attributes_from_dirent(zip_file_attributes_t *attributes, zip_dirent_t *de);
 
-zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_uint64_t len, const char *password, zip_error_t *error) {
+ZIP_EXTERN zip_source_t *zip_source_zip_file(zip_t* za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_int64_t len, const char *password) {
+    return zip_source_zip_file_create(srcza, srcidx, flags, start, len, password, &za->error);
+}
+
+
+ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_int64_t len, const char *password, zip_error_t *error) {
     /* TODO: We need to make sure that the returned source is invalidated when srcza is closed. */
     zip_source_t *src, *s2;
     zip_stat_t st;
@@ -48,7 +53,7 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
     zip_flags_t stat_flags;
     zip_int64_t data_len;
 
-    if (srcza == NULL || srcidx >= srcza->nentry || len > ZIP_INT64_MAX) {
+    if (srcza == NULL || srcidx >= srcza->nentry || len < -1) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
@@ -84,19 +89,19 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
         flags |= ZIP_FL_COMPRESSED;
     }
 
-    if ((start > 0 || len > 0) && (flags & ZIP_FL_COMPRESSED)) {
+    if ((start > 0 || len >= 0) && (flags & ZIP_FL_COMPRESSED)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
 
     have_size = (st.valid & ZIP_STAT_SIZE) != 0;
     /* overflow or past end of file */
-    if ((start > 0 || len > 0) && ((start + len < start) || (have_size && (start + len > st.size)))) {
+    if (len >= 0 && ((start > 0 && start + len < start) || (have_size && start + len > st.size))) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
 
-    if (len == 0) {
+    if (len == -1) {
         if (have_size) {
             if (st.size - start > ZIP_INT64_MAX) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -109,11 +114,7 @@ zip_source_t *_zip_source_zip_new(zip_t *srcza, zip_uint64_t srcidx, zip_flags_t
         }
     }
     else {
-        if (len > ZIP_INT64_MAX) {
-            zip_error_set(error, ZIP_ER_INVAL, 0);
-            return NULL;
-        }
-        data_len = (zip_int64_t)(len);
+           data_len = len;
     }
 
     if (have_size) {
