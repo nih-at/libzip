@@ -935,6 +935,11 @@ usage(const char *progname, const char *reason) {
                  "\tr\tZIP_FL_ENC_RAW\n"
                  "\ts\tZIP_FL_ENC_STRICT\n"
                  "\tu\tZIP_FL_UNCHANGED\n");
+    fprintf(out, "\nSupported archive flags are:\n"
+	         "\tcreate-or-keep-empty-file-for-archive\n"
+	         "\tis-torrentzip\n"
+	         "\trdonly\n"
+	         "\twant-torrentzip\n");
     fprintf(out, "\nSupported compression methods are:\n"
                  "\tdefault\n");
     if (zip_compression_method_supported(ZIP_CM_BZIP2, 1)) {
