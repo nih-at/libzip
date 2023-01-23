@@ -409,7 +409,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             return -1;
         }
 
-        zip_source_free(src_final);
         src_final = src_tmp;
     }
 
@@ -419,7 +418,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             return -1;
         }
 
-        zip_source_free(src_final);
         src_final = src_tmp;
     }
 
@@ -429,7 +427,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             return -1;
         }
 
-        zip_source_free(src_final);
         src_final = src_tmp;
     }
 
@@ -439,7 +436,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             return -1;
         }
 
-        zip_source_free(src_final);
         src_final = src_tmp;
     }
 
@@ -474,7 +470,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
                     zip_source_free(src_final);
                     return -1;
                 }
-                zip_source_free(src_final);
                 src_final = src_tmp;
             }
         }
@@ -485,7 +480,6 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             return -1;
         }
 
-        zip_source_free(src_final);
         src_final = src_tmp;
     }
 

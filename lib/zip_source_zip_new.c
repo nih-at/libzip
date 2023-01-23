@@ -262,24 +262,24 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         }
 
         s2 = enc_impl(srcza, src, st.encryption_method, 0, password);
-        zip_source_free(src);
         if (s2 == NULL) {
+            zip_source_free(src);
             return NULL;
         }
         src = s2;
     }
     if (needs_decompress) {
         s2 = zip_source_decompress(srcza, src, st.comp_method);
-        zip_source_free(src);
         if (s2 == NULL) {
+            zip_source_free(src);
             return NULL;
         }
         src = s2;
     }
     if (needs_crc) {
         s2 = zip_source_crc_create(src, 1, error);
-        zip_source_free(src);
         if (s2 == NULL) {
+            zip_source_free(src);
             return NULL;
         }
         src = s2;
@@ -293,8 +293,8 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
             st2.size = (zip_uint64_t)data_len;
         }
         s2 = _zip_source_window_new(src, start, data_len, &st2, 0, NULL, 0, error);
-        zip_source_free(src);
         if (s2 == NULL) {
+            zip_source_free(src);
             return NULL;
         }
         src = s2;

@@ -63,7 +63,6 @@ zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, voi
         return NULL;
     }
 
-    zip_source_keep(src);
     zs->src = src;
     zs->cb.l = cb;
     zs->ud = ud;

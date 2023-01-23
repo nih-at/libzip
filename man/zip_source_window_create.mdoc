@@ -52,6 +52,14 @@ and having size
 If
 .Ar len
 is \-1, the window spans to the end of the underlying source.
+.Pp
+.Fn zip_source_window
+and
+.Fn zip_source_window_create
+don't take ownership of
+.Ar source .
+The caller is responsible for freeing it.
+(This is different to other layered sources.)
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
 Otherwise,
