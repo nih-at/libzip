@@ -698,6 +698,9 @@ static int parse_archive_flag(const char* arg) {
     else if (strcasecmp(arg, "want-torrentzip") == 0) {
         return ZIP_AFL_WANT_TORRENTZIP;
     }
+    else if (strcasecmp(arg, "create-or-keep-file-for-empty-archive") == 0) {
+        return ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE;
+    }
     return -1;
 }
 

@@ -62,8 +62,8 @@ zip_close(zip_t *za) {
 
     changed = _zip_changed(za, &survivors);
 
-    /* don't create zip files with no entries */
-    if (survivors == 0) {
+    if (survivors == 0 && !(za->ch_flags & ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE)) {
+        /* don't create zip files with no entries */
         if ((za->open_flags & ZIP_TRUNCATE) || changed) {
             if (zip_source_remove(za->src) < 0) {
                 if (!((zip_error_code_zip(zip_source_error(za->src)) == ZIP_ER_REMOVE) && (zip_error_code_system(zip_source_error(za->src)) == ENOENT))) {
@@ -76,7 +76,8 @@ zip_close(zip_t *za) {
         return 0;
     }
 
-    if (!changed) {
+    /* Always write empty archive if we are told to keep it, otherwise it wouldn't be created if the file doesn't already exist. */
+    if (!changed && survivors > 0) {
         zip_discard(za);
         return 0;
     }

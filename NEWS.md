@@ -11,6 +11,7 @@
 * Fix reading/writing compressed data with buffers > 4GiB.
 * Restore support for torrentzip.
 * Add warnings when using deprecated functions.
+* Allow keeping files for empty archives.
 
 
 # 1.9.2 [2022-06-28]

@@ -104,6 +104,7 @@ extern "C" {
 #define ZIP_AFL_RDONLY  2u /* read only -- cannot be cleared */
 #define ZIP_AFL_IS_TORRENTZIP	4u /* current archive is torrentzipped */
 #define ZIP_AFL_WANT_TORRENTZIP	8u /* write archive in torrentzip format */
+#define ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE 16u /* don't remove file if archive is empty */
 
 
 /* create a new extra field */

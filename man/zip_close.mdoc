@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd April 1, 2022
+.Dd January 23, 2023
 .Dt ZIP_CLOSE 3
 .Os
 .Sh NAME
@@ -50,7 +50,9 @@ to disk.
 If
 .Ar archive
 contains no files, the file is completely removed (no empty archive is
-written).
+written), unless the archive flag
+.Dv ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE
+is set.
 If successful,
 .Ar archive
 is freed.
@@ -114,6 +116,7 @@ for added or replaced files will be passed back.
 .Xr zip_open 3 ,
 .Xr zip_register_cancel_callback_with_state 3 ,
 .Xr zip_register_progress_callback_with_state 3 ,
+.Xr zip_set_archive_flag 3 ,
 .Xr zip_strerror 3
 .Sh HISTORY
 .Fn zip_close
