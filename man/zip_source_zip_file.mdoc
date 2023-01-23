@@ -43,7 +43,7 @@ libzip (-lzip)
 .Ft zip_source_t *
 .Fn zip_source_zip_file "zip_t *archive" "zip_t *srcarchive" "zip_uint64_t srcidx" "zip_flags_t flags" "zip_uint64_t start" "zip_int64_t length" "const char *password"
 .Ft zip_source_t *
-.Fn zip_source_zip_create "zip_t *srcarchive" "zip_uint64_t srcidx" "zip_flags_t flags" "zip_uint64_t start" "zip_int64_t length" "const char *password" "zip_error_t *error"
+.Fn zip_source_zip_file_create "zip_t *srcarchive" "zip_uint64_t srcidx" "zip_flags_t flags" "zip_uint64_t start" "zip_int64_t length" "const char *password" "zip_error_t *error"
 .Sh DESCRIPTION
 The functions
 .Fn zip_source_zip_file
@@ -101,9 +101,9 @@ or
 .Ar error
 is set to indicate the error.
 .Sh ERRORS
-.Fn zip_source_zip
+.Fn zip_source_zip_file
 and
-.Fn zip_source_zip_create
+.Fn zip_source_zip_file_create
 fail if:
 .Bl -tag -width Er
 .It Bq Er ZIP_ER_CHANGED
