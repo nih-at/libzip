@@ -55,7 +55,8 @@ main(int argc, char *argv[]) {
     zip_t *z;
     int c, flags, ze;
     zip_int64_t count;
-    int error;
+    int error_count;
+    zip_error_t error;
 
     flags = 0;
 
@@ -80,7 +81,7 @@ main(int argc, char *argv[]) {
         }
     }
 
-    error = 0;
+    error_count = 0;
     for (; optind < argc; optind++) {
         fname = argv[optind];
         errno = 0;
@@ -92,22 +93,23 @@ main(int argc, char *argv[]) {
             continue;
         }
 
+        zip_error_init_with_code(&error, ze);
         printf("opening '%s' returned error %d", fname, ze);
-        switch (zip_error_get_sys_type(ze)) {
+        switch (zip_error_system_type(&error)) {
             case ZIP_ET_SYS:
             case ZIP_ET_LIBZIP:
-                printf("/%d", errno);
+                printf("/%d", zip_error_code_system(&error));
                 break;
-                
+
             default:
                 break;
         }
         printf("\n");
-        error++;
+        error_count++;
     }
 
-    if (error > 0)
-        fprintf(stderr, "%d errors\n", error);
+    if (error_count > 0)
+        fprintf(stderr, "%d errors\n", error_count);
 
-    return error ? 1 : 0;
+    return error_count ? 1 : 0;
 }
