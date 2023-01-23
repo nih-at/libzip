@@ -90,7 +90,7 @@ set(MAN_PAGES
   zip_source_win32a.3
   zip_source_win32handle.3
   zip_source_win32w.3
-  zip_source_window.3
+  zip_source_window_create.3
   zip_source_write.3
   zip_source_zip.3
   zip_stat.3

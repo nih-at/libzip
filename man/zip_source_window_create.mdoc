@@ -1,5 +1,4 @@
-.\" Automatically generated from an mdoc input file.  Do not edit.
-.\" zip_source_window.mdoc -- create zip data source overlay
+.\" zip_source_window_create.mdoc -- create zip data source overlay
 .\" Copyright (C) 2021 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -30,67 +29,63 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_WINDOW" "3" "April 29, 2021" "NiH" "Library Functions Manual"
-.nh
-.if n .ad l
-.SH "NAME"
-\fBzip_source_window_create\fR
-\- create zip data source overlay
-.SH "LIBRARY"
+.Dd April 29, 2021
+.Dt ZIP_SOURCE_WINDOW_CREATE 3
+.Os
+.Sh NAME
+.Nm zip_source_window_create
+.Nd create zip data source overlay
+.Sh LIBRARY
 libzip (-lzip)
-.SH "SYNOPSIS"
-\fB#include <zip.h>\fR
-.sp
-\fIzip_source_t *\fR
-.br
-.PD 0
-.HP 4n
-\fBzip_source_window_create\fR(\fIzip_source_t\ *source\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
-.PD
-.SH "DESCRIPTION"
+.Sh SYNOPSIS
+.In zip.h
+.Ft zip_source_t *
+.Fn zip_source_window_create "zip_source_t *source" "zip_uint64_t start" "zip_int64_t len" "zip_error_t *error"
+.Sh DESCRIPTION
 The
-\fBzip_source_window_create\fR()
+.Fn zip_source_window_create
 function create a zip source from an underlying zip source,
 restricting access to a particular window starting at byte
-\fIstart\fR
+.Ar start
 and having size
-\fIlen\fR.
+.Ar len .
 If
-\fIlen\fR
+.Ar len
 is \-1, the window spans to the end of the underlying source.
-.SH "RETURN VALUES"
+.Sh RETURN VALUES
 Upon successful completion, the created source is returned.
 Otherwise,
-\fRNULL\fR
+.Dv NULL
 is returned and the error code in
-\fIerror\fR
+.Ar error
 is set to indicate the error.
-.SH "ERRORS"
-\fBzip_source_window_create\fR()
+.Sh ERRORS
+.Fn zip_source_window_create
 fails if:
-.TP 19n
-[\fRZIP_ER_INVAL\fR]
-\fIsrc\fR
+.Bl -tag -width Er
+.It Bq Er ZIP_ER_INVAL
+.Ar src
 is
-\fRNULL\fR;
+.Dv NULL ;
 there is an integer overflow adding
-\fIstart\fR
+.Ar start
 and
-\fIlen\fR;
+.Ar len ;
 or
-\fIlen\fR
+.Ar len
 is less than \-1.
-.TP 19n
-[\fRZIP_ER_MEMORY\fR]
+.It Bq Er ZIP_ER_MEMORY
 Required memory could not be allocated.
-.SH "SEE ALSO"
-libzip(3),
-zip_source(3)
-zip_source(3)
-.SH "HISTORY"
-\fBzip_source_window_create\fR()
+.El
+.Sh SEE ALSO
+.Xr libzip 3 ,
+.Xr zip_source 3
+.Xr zip_source 3
+.Sh HISTORY
+.Fn zip_source_window_create
 was added in libzip 1.8.0.
-.SH "AUTHORS"
-Dieter Baron <\fIdillo@nih.at\fR>
+.Sh AUTHORS
+.An -nosplit
+.An Dieter Baron Aq Mt dillo@nih.at
 and
-Thomas Klausner <\fItk@giga.or.at\fR>
+.An Thomas Klausner Aq Mt tk@giga.or.at
