@@ -928,7 +928,6 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
             zip_source_free(src_window);
             return;
         }
-        zip_source_free(src_window);
         if (zip_source_open(src_crc) != 0) {
             zip_source_free(src_crc);
             return;
