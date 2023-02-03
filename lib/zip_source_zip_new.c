@@ -58,11 +58,15 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         return NULL;
     }
 
+    if (flags & ZIP_FL_ENCRYPTED) {
+        flags |= ZIP_FL_COMPRESSED;
+    }
+
     changed_data = false;
     if ((flags & ZIP_FL_UNCHANGED) == 0) {
         zip_entry_t *entry = srcza->entry + srcidx;
         if (ZIP_ENTRY_DATA_CHANGED(entry)) {
-            if (!zip_source_supports_reopen(entry->source)) {
+            if ((flags & ZIP_FL_COMPRESSED) || !zip_source_supports_reopen(entry->source)) {
                 zip_error_set(error, ZIP_ER_CHANGED, 0);
                 return NULL;
             }
@@ -83,10 +87,6 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
     if (zip_stat_index(srcza, srcidx, stat_flags, &st) < 0) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
         return NULL;
-    }
-
-    if (flags & ZIP_FL_ENCRYPTED) {
-        flags |= ZIP_FL_COMPRESSED;
     }
 
     if ((start > 0 || len >= 0) && (flags & ZIP_FL_COMPRESSED)) {
