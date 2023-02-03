@@ -58,7 +58,7 @@ maximum_compressed_size(zip_uint64_t uncompressed_size) {
 
 
 static void *
-allocate(bool compress, int compression_flags, zip_error_t *error) {
+allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error) {
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
@@ -67,8 +67,10 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
 
     ctx->error = error;
     ctx->compress = compress;
-    ctx->compression_flags = compression_flags;
-    if (ctx->compression_flags < 1 || ctx->compression_flags > 9) {
+    if (compression_flags >= 1 && compression_flags <= 9) {
+        ctx->compression_flags = (int)compression_flags;
+    }
+    else {
         ctx->compression_flags = 9;
     }
     ctx->end_of_input = false;
@@ -82,13 +84,15 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
 
 
 static void *
-compress_allocate(zip_uint16_t method, int compression_flags, zip_error_t *error) {
+compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+    (void)method;
     return allocate(true, compression_flags, error);
 }
 
 
 static void *
-decompress_allocate(zip_uint16_t method, int compression_flags, zip_error_t *error) {
+decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+    (void)method;
     return allocate(false, compression_flags, error);
 }
 
@@ -103,6 +107,7 @@ deallocate(void *ud) {
 
 static zip_uint16_t
 general_purpose_bit_flags(void *ud) {
+    (void)ud;
     return 0;
 }
 
@@ -132,8 +137,6 @@ map_error(int ret) {
     case BZ_IO_ERROR:
     case BZ_OUTBUFF_FULL:
     case BZ_SEQUENCE_ERROR:
-        return ZIP_ER_INTERNAL;
-
     default:
         return ZIP_ER_INTERNAL;
     }
@@ -143,6 +146,9 @@ static bool
 start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     struct ctx *ctx = (struct ctx *)ud;
     int ret;
+
+    (void)st;
+    (void)attributes;
 
     ctx->zstr.avail_in = 0;
     ctx->zstr.next_in = NULL;

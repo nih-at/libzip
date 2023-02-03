@@ -104,7 +104,7 @@ maximum_compressed_size(zip_uint64_t uncompressed_size) {
 
 
 static void *
-allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t method) {
+allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error, zip_uint16_t method) {
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
@@ -114,16 +114,16 @@ allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t 
 
     ctx->error = error;
     ctx->compress = compress;
-    if (compression_flags < 0 || compression_flags > 9) {
-        ctx->compression_flags = 6; /* default value */
+    if (compression_flags <= 9) {
+        ctx->compression_flags = compression_flags;
     } else {
-	ctx->compression_flags = (zip_uint32_t)compression_flags;
+        ctx->compression_flags = 6; /* default value */
     }
     ctx->compression_flags |= LZMA_PRESET_EXTREME;
     ctx->end_of_input = false;
     memset(ctx->header, 0, sizeof(ctx->header));
     ctx->header_bytes_offset = 0;
-    if (ZIP_CM_LZMA) {
+    if (method == ZIP_CM_LZMA) {
         ctx->header_state = INCOMPLETE;
     }
     else {
@@ -136,13 +136,13 @@ allocate(bool compress, int compression_flags, zip_error_t *error, zip_uint16_t 
 
 
 static void *
-compress_allocate(zip_uint16_t method, int compression_flags, zip_error_t *error) {
+compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
     return allocate(true, compression_flags, error, method);
 }
 
 
 static void *
-decompress_allocate(zip_uint16_t method, int compression_flags, zip_error_t *error) {
+decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
     return allocate(false, compression_flags, error, method);
 }
 

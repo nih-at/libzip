@@ -134,7 +134,7 @@ struct zip_compression_algorithm {
     zip_uint64_t (*maximum_compressed_size)(zip_uint64_t uncompressed_size);
 
     /* called once to create new context */
-    void *(*allocate)(zip_uint16_t method, int compression_flags, zip_error_t *error);
+    void *(*allocate)(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error);
     /* called once to free context */
     void (*deallocate)(void *ctx);
 
@@ -178,7 +178,7 @@ const zip_uint8_t *zip_get_extra_field_by_id(zip_t *, int, int, zip_uint16_t, in
    user-supplied compression/encryption implementation is finished.
    Thus we will keep it private for now. */
 
-zip_source_t *zip_source_compress(zip_t *za, zip_source_t *src, zip_int32_t cm, int compression_flags);
+zip_source_t *zip_source_compress(zip_t *za, zip_source_t *src, zip_int32_t cm, zip_uint32_t compression_flags);
 zip_source_t *zip_source_crc_create(zip_source_t *, int, zip_error_t *error);
 zip_source_t *zip_source_decompress(zip_t *za, zip_source_t *src, zip_int32_t cm);
 zip_source_t *zip_source_pkware_decode(zip_t *, zip_source_t *, zip_uint16_t, int, const char *);
@@ -352,7 +352,7 @@ struct zip_dirent {
     zip_uint32_t ext_attrib;         /* (c)  external file attributes */
     zip_uint64_t offset;             /* (c)  offset of local header */
 
-    zip_uint16_t compression_level; /*      level of compression to use (never valid in orig) */
+    zip_uint32_t compression_level; /*      level of compression to use (never valid in orig) */
     zip_uint16_t encryption_method; /*      encryption method, computed from other fields */
     char *password;                 /*      file specific encryption password */
 };

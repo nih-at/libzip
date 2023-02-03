@@ -83,10 +83,10 @@ static struct implementation implementations[] = {
 
 static size_t implementations_size = sizeof(implementations) / sizeof(implementations[0]);
 
-static zip_source_t *compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool compress, int compression_flags);
+static zip_source_t *compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool compress, zip_uint32_t compression_flags);
 static zip_int64_t compress_callback(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 static void context_free(struct context *ctx);
-static struct context *context_new(zip_int32_t method, bool compress, int compression_flags, zip_compression_algorithm_t *algorithm);
+static struct context *context_new(zip_int32_t method, bool compress, zip_uint32_t compression_flags, zip_compression_algorithm_t *algorithm);
 static zip_int64_t compress_read(zip_source_t *, struct context *, void *, zip_uint64_t);
 
 zip_compression_algorithm_t *
@@ -117,7 +117,7 @@ zip_compression_method_supported(zip_int32_t method, int compress) {
 }
 
 zip_source_t *
-zip_source_compress(zip_t *za, zip_source_t *src, zip_int32_t method, int compression_flags) {
+zip_source_compress(zip_t *za, zip_source_t *src, zip_int32_t method, zip_uint32_t compression_flags) {
     return compression_source_new(za, src, method, true, compression_flags);
 }
 
@@ -128,7 +128,7 @@ zip_source_decompress(zip_t *za, zip_source_t *src, zip_int32_t method) {
 
 
 static zip_source_t *
-compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool compress, int compression_flags) {
+compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool compress, zip_uint32_t compression_flags) {
     struct context *ctx;
     zip_source_t *s2;
     zip_compression_algorithm_t *algorithm = NULL;
@@ -158,7 +158,7 @@ compression_source_new(zip_t *za, zip_source_t *src, zip_int32_t method, bool co
 
 
 static struct context *
-context_new(zip_int32_t method, bool compress, int compression_flags, zip_compression_algorithm_t *algorithm) {
+context_new(zip_int32_t method, bool compress, zip_uint32_t compression_flags, zip_compression_algorithm_t *algorithm) {
     struct context *ctx;
 
     if ((ctx = (struct context *)malloc(sizeof(*ctx))) == NULL) {

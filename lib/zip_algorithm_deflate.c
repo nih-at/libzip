@@ -61,7 +61,7 @@ maximum_compressed_size(zip_uint64_t uncompressed_size) {
 
 
 static void *
-allocate(bool compress, int compression_flags, zip_error_t *error) {
+allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error) {
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
@@ -71,9 +71,8 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
 
     ctx->error = error;
     ctx->compress = compress;
-    ctx->level = compression_flags;
     if (compression_flags >= 1 && compression_flags <= 9) {
-        ctx->level = compression_flags;
+        ctx->level = (int)compression_flags;
     }
     else {
         ctx->level = Z_BEST_COMPRESSION;
@@ -90,13 +89,15 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
 
 
 static void *
-compress_allocate(zip_uint16_t method, int compression_flags, zip_error_t *error) {
+compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+    (void)method;
     return allocate(true, compression_flags, error);
 }
 
 
 static void *
-decompress_allocate(zip_uint16_t method, int compression_flags, zip_error_t *error) {
+decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+    (void)method;
     return allocate(false, compression_flags, error);
 }
 
@@ -131,6 +132,9 @@ static bool
 start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     struct ctx *ctx = (struct ctx *)ud;
     int ret;
+
+    (void)st;
+    (void)attributes;
 
     ctx->zstr.avail_in = 0;
     ctx->zstr.next_in = NULL;
