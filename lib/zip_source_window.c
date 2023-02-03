@@ -112,7 +112,6 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
             free(ctx);
             return NULL;
         }
-        ctx->stat.valid &= ~ZIP_STAT_SIZE;
     }
     
     window_source = zip_source_layered_create(src, window_read, ctx, error);
@@ -284,12 +283,14 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             return -1;
         }
 
-        if (ctx->end_valid) {
-            st->valid |= ZIP_STAT_SIZE;
-            st->size = ctx->end - ctx->start;
-        }
-        else if (st->valid & ZIP_STAT_SIZE) {
-            st->size -= ctx->start;
+        if (!(ctx->stat.valid & ZIP_STAT_SIZE)) {
+            if (ctx->end_valid) {
+                st->valid |= ZIP_STAT_SIZE;
+                st->size = ctx->end - ctx->start;
+            }
+            else if (st->valid & ZIP_STAT_SIZE) {
+                st->size -= ctx->start;
+            }
         }
 
         return 0;
