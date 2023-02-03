@@ -49,6 +49,7 @@ struct window {
     zip_uint64_t offset; /* offset in src for next read */
 
     zip_stat_t stat;
+    zip_uint64_t stat_invalid;
     zip_file_attributes_t attributes;
     zip_error_t error;
     zip_int64_t supports;
@@ -60,12 +61,12 @@ static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip
 
 ZIP_EXTERN zip_source_t *
 zip_source_window_create(zip_source_t *src, zip_uint64_t start, zip_int64_t len, zip_error_t *error) {
-    return _zip_source_window_new(src, start, len, NULL, 0, NULL, 0, error);
+    return _zip_source_window_new(src, start, len, NULL, 0, NULL, NULL, 0, error);
 }
 
 
 zip_source_t *
-_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_file_attributes_t *attributes, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error) {
+_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error) {
     zip_source_t* window_source;
     struct window *ctx;
 
@@ -95,6 +96,7 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
         ctx->end_valid = true;
     }
     zip_stat_init(&ctx->stat);
+    ctx->stat_invalid = st_invalid;
     if (attributes != NULL) {
         (void)memcpy_s(&ctx->attributes, sizeof(ctx->attributes), attributes, sizeof(ctx->attributes));
     }
@@ -292,6 +294,8 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
                 st->size -= ctx->start;
             }
         }
+
+        st->valid &= ~ctx->stat_invalid;
 
         return 0;
     }
