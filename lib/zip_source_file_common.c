@@ -272,7 +272,7 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
             }
         }
 
-        if (ctx->start > 0) { // TODO: rewind on re-open
+        if (ctx->start > 0) { /* TODO: rewind on re-open */
             if (ctx->ops->seek(ctx, ctx->f, (zip_int64_t)ctx->start, SEEK_SET) == false) {
                 /* TODO: skip by reading */
                 return -1;

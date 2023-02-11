@@ -138,7 +138,7 @@ main(int argc, char *argv[]) {
         zip_error_init_with_code(&error, err);
         fprintf(stderr, "%s: cannot open zip archive '%s': %s\n", argv[0], destination_archive, zip_error_strerror(&error));
         zip_error_fini(&error);
-        zip_source_free(src_autoclose); // freeing src_autoclose closes z_source
+        zip_source_free(src_autoclose); /* freeing src_autoclose closes z_source */
         exit(1);
     }
 
