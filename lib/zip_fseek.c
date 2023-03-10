@@ -57,5 +57,5 @@ zip_file_is_seekable(zip_file_t *zfile) {
         return -1;
     }
     
-    return ZIP_SOURCE_CHECK_SUPPORTED(zip_source_supports(zfile->src), ZIP_SOURCE_SEEK);
+    return zip_source_is_seekable(zfile->src);
 }

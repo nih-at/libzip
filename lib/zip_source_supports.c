@@ -67,3 +67,8 @@ zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...) {
 
     return bitmap;
 }
+
+
+ZIP_EXTERN int zip_source_is_seekable(zip_source_t *src) {
+    return ZIP_SOURCE_CHECK_SUPPORTED(zip_source_supports(src->src), ZIP_SOURCE_SEEK);
+}
