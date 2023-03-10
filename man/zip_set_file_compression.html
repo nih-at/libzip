@@ -106,7 +106,8 @@ The <code class="Fn">zip_set_file_compression</code>() function sets the
     best, 0 chooses the default. For <code class="Dv">ZIP_CM_ZSTD</code>
     possible values are
     <a class="Xr" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/ZSTD_minCLevel.html">ZSTD_minCLevel(3)</a> to
-    <a class="Xr" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/ZSTD_maxCLevel.html">ZSTD_maxCLevel(3)</a>.</p>
+    <a class="Xr" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/ZSTD_maxCLevel.html">ZSTD_maxCLevel(3)</a>; negative
+    values must be cast to <var class="Ft">zip_uint32_t</var>.</p>
 <p class="Pp">Further compression method specific flags might be added over
     time.</p>
 <p class="Pp">The current compression method for a file in a zip archive can be
@@ -154,7 +155,7 @@ Upon successful completion 0 is returned. Otherwise, -1 is returned and the
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">June 18, 2021</td>
+    <td class="foot-date">February 2, 2023</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

@@ -154,6 +154,9 @@ For all commands below, the index is zero-based. In other words, the first entry
       <var class="Ar">index</var> using <var class="Ar">flags</var>.</dd>
   <dt><a class="permalink" href="#get_archive_comment"><code class="Cm" id="get_archive_comment">get_archive_comment</code></a></dt>
   <dd>Print archive comment.</dd>
+  <dt><a class="permalink" href="#get_archive_flag"><code class="Cm" id="get_archive_flag">get_archive_flag</code></a>
+    <var class="Ar">flag</var></dt>
+  <dd>Print state of archive flag <var class="Ar">flag</var>.</dd>
   <dt><a class="permalink" href="#get_extra"><code class="Cm" id="get_extra">get_extra</code></a>
     <var class="Ar">index extra_index flags</var></dt>
   <dd>Print extra field <var class="Ar">extra_index</var> for archive entry
@@ -184,6 +187,10 @@ For all commands below, the index is zero-based. In other words, the first entry
   <dt><a class="permalink" href="#set_archive_comment"><code class="Cm" id="set_archive_comment">set_archive_comment</code></a>
     <var class="Ar">comment</var></dt>
   <dd>Set archive comment to <var class="Ar">comment</var>.</dd>
+  <dt><a class="permalink" href="#get_archive_flag_2"><code class="Cm" id="get_archive_flag_2">get_archive_flag</code></a>
+    <var class="Ar">flag</var> <var class="Ar">value</var></dt>
+  <dd>Set archive flag <var class="Ar">flag</var> to
+      <var class="Ar">value</var>.</dd>
   <dt><a class="permalink" href="#set_extra"><code class="Cm" id="set_extra">set_extra</code></a>
     <var class="Ar">index extra_id extra_index flags value</var></dt>
   <dd>Set extra field number <var class="Ar">extra_index</var> of type
@@ -249,6 +256,18 @@ Some commands take flag arguments. Each character in the argument sets the
   <dd><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dd>
 </dl>
 </div>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Archive_flags"><a class="permalink" href="#Archive_flags">Archive
+  flags</a></h2>
+<code class="Cm">get_archive_flag</code> and
+  <code class="Cm">set_archive_flag</code> work on the following flags:
+<ul class="Bl-bullet Bd-indent Bl-compact">
+  <li><a class="permalink" href="#create-or-keep-empty-file-for-archive"><code class="Dv" id="create-or-keep-empty-file-for-archive">create-or-keep-empty-file-for-archive</code></a></li>
+  <li><a class="permalink" href="#is-torrentzip"><code class="Dv" id="is-torrentzip">is-torrentzip</code></a></li>
+  <li><a class="permalink" href="#rdonly"><code class="Dv" id="rdonly">rdonly</code></a></li>
+  <li><a class="permalink" href="#want-torrentzip"><code class="Dv" id="want-torrentzip">want-torrentzip</code></a></li>
+</ul>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Compression_Methods"><a class="permalink" href="#Compression_Methods">Compression
@@ -317,7 +336,7 @@ ziptool testfile.zip delete 0
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">March 15, 2022</td>
+    <td class="foot-date">January 23, 2023</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

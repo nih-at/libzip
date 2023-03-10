@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_LAYERED" "3" "December 5, 2022" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_LAYERED" "3" "January 20, 2023" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -96,6 +96,10 @@ for a description of the commands.
 A layered source transforms the data or metadata of the source below in some way.
 Layered sources can't support writing and are not sufficient to cleanly add support for additional compression or encryption methods.
 This may be revised in a later release of libzip.
+.PP
+On success, the layered source takes ownership of
+\fIsource\fR.
+The caller should not free it.
 .PP
 The interaction with the lower layer depends on the command:
 .SS "\fRZIP_SOURCE_ACCEPT_EMPTY\fR"

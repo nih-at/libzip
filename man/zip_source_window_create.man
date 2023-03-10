@@ -58,6 +58,14 @@ and having size
 If
 \fIlen\fR
 is \-1, the window spans to the end of the underlying source.
+.PP
+\fBzip_source_window\fR()
+and
+\fBzip_source_window_create\fR()
+don't take ownership of
+\fIsource\fR.
+The caller is responsible for freeing it.
+(This is different to other layered sources.)
 .SH "RETURN VALUES"
 Upon successful completion, the created source is returned.
 Otherwise,

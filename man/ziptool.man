@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIPTOOL" "1" "March 15, 2022" "NiH" "General Commands Manual"
+.TH "ZIPTOOL" "1" "January 23, 2023" "NiH" "General Commands Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -187,6 +187,10 @@ using
 \fBget_archive_comment\fR
 Print archive comment.
 .TP 12n
+\fBget_archive_flag\fR \fIflag\fR
+Print state of archive flag
+\fIflag\fR.
+.TP 12n
 \fBget_extra\fR \fIindex extra_index flags\fR
 Print extra field
 \fIextra_index\fR
@@ -235,6 +239,12 @@ with the string
 \fBset_archive_comment\fR \fIcomment\fR
 Set archive comment to
 \fIcomment\fR.
+.TP 12n
+\fBget_archive_flag\fR \fIflag\fR \fIvalue\fR
+Set archive flag
+\fIflag\fR
+to
+\fIvalue\fR.
 .TP 12n
 \fBset_extra\fR \fIindex extra_id extra_index flags value\fR
 Set extra field number
@@ -324,6 +334,27 @@ Supported flags are:
 .TP 5n
 \fIu\fR
 \fRZIP_FL_UNCHANGED\fR
+.RE
+.PD
+.SS "Archive flags"
+\fBget_archive_flag\fR
+and
+\fBset_archive_flag\fR
+work on the following flags:
+.RS 6n
+.PD 0
+.TP 4n
+\fB\(bu\fR
+\fRcreate-or-keep-empty-file-for-archive\fR
+.TP 4n
+\fB\(bu\fR
+\fRis-torrentzip\fR
+.TP 4n
+\fB\(bu\fR
+\fRrdonly\fR
+.TP 4n
+\fB\(bu\fR
+\fRwant-torrentzip\fR
 .RE
 .PD
 .SS "Compression Methods"

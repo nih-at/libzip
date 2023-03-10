@@ -1,5 +1,5 @@
 .\" Automatically generated from an mdoc input file.  Do not edit.
-.\" zip_source_zip.mdoc -- create data source from zip file
+.\" zip_source_zip_file.mdoc -- create data source from zip file
 .\" Copyright (C) 2004-2021 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
@@ -30,13 +30,13 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_ZIP" "3" "January 23, 2023" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_ZIP_FILE" "3" "March 10, 2023" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
-\fBzip_source_zip\fR,
-\fBzip_source_zip_create\fR
-\- create data source from zip file (obsolete interface)
+\fBzip_source_zip_file\fR,
+\fBzip_source_zip_file_create\fR
+\- create data source from zip file
 .SH "LIBRARY"
 libzip (-lzip)
 .SH "SYNOPSIS"
@@ -46,57 +46,64 @@ libzip (-lzip)
 .br
 .PD 0
 .HP 4n
-\fBzip_source_zip\fR(\fIzip_t\ *archive\fR, \fIzip_t\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR);
+\fBzip_source_zip_file\fR(\fIzip_t\ *archive\fR, \fIzip_t\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ length\fR, \fIconst\ char\ *password\fR);
 .PD
 .PP
 \fIzip_source_t *\fR
 .br
 .PD 0
 .HP 4n
-\fBzip_source_zip_create\fR(\fIzip_t\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ len\fR, \fIzip_error_t\ *error\fR);
+\fBzip_source_zip_file_create\fR(\fIzip_t\ *srcarchive\fR, \fIzip_uint64_t\ srcidx\fR, \fIzip_flags_t\ flags\fR, \fIzip_uint64_t\ start\fR, \fIzip_int64_t\ length\fR, \fIconst\ char\ *password\fR, \fIzip_error_t\ *error\fR);
 .PD
 .SH "DESCRIPTION"
 The functions
-\fBzip_source_zip\fR()
+\fBzip_source_zip_file\fR()
 and
-\fBzip_source_zip_create\fR()
-are the obsolete versions of
-zip_source_zip_file(3)
-or
-zip_source_zip_file_create(3)
-respectively.
-If you want to get the compressed data of the complete file, use
-.RS 6n
-zip_source_zip_file(za, source_archive, source_index, ZIP_FL_COMPRESSED, 0, -1, NULL)
-.RE
-.PP
-The functions
-\fBzip_source_zip\fR()
-and
-\fBzip_source_zip_create\fR()
+\fBzip_source_zip_file_create\fR()
 create a zip source from a file in a zip archive.
 The
 \fIsrcarchive\fR
 argument is the (open) zip archive containing the source zip file
 at index
 \fIsrcidx\fR.
-\fIlen\fR
+\fIlength\fR
 bytes from offset
 \fIstart\fR
 will be used in the zip_source.
 If
-\fIlen\fR
-is 0 or \-1, the rest of the file, starting from
+\fIlength\fR
+is \-1, the rest of the file, starting from
 \fIstart\fR,
 is used.
-If
-\fIstart\fR
-is zero and
-\fIlen\fR
-is \-1, the whole file will be copied without decompressing it.
+.PP
+If you intend to copy a file from one archive to another, using the flag
+\fRZIP_FL_COMPRESSED\fR
+is more efficient, as it avoids recompressing the file data.
 .PP
 Supported flags are:
-.br
+.TP 22n
+\fRZIP_FL_COMPRESSED\fR
+Get the compressed data.
+This is only supported if the complete file data is requested
+(\fIstart\fR
+== 0 and
+\fIlength\fR
+== \-1).
+This is not supported for changed data.
+Default is uncompressed.
+.TP 22n
+\fRZIP_FL_ENCRYPTED\fR
+Get the encrypted data.
+(This flag implies
+\fRZIP_FL_COMPRESSED\fR.)
+This is only supported if the complete file data is requested
+(\fIstart\fR
+== 0 and
+\fIlength\fR
+== \-1).
+Default is decrypted.
+.TP 22n
+\fRZIP_FL_UNCHANGED\fR
 Try to get the original data without any changes that may have been
 made to
 \fIsrcarchive\fR
@@ -111,9 +118,9 @@ or
 \fIerror\fR
 is set to indicate the error.
 .SH "ERRORS"
-\fBzip_source_zip\fR()
+\fBzip_source_zip_file\fR()
 and
-\fBzip_source_zip_create\fR()
+\fBzip_source_zip_file_create\fR()
 fail if:
 .TP 19n
 [\fRZIP_ER_CHANGED\fR]
@@ -124,7 +131,7 @@ Unchanged data was requested, but it is not available.
 \fIsrcidx\fR,
 \fIstart\fR,
 or
-\fIlen\fR
+\fIlength\fR
 are invalid.
 .TP 19n
 [\fRZIP_ER_MEMORY\fR]
@@ -142,15 +149,10 @@ zip_file_add(3),
 zip_file_replace(3),
 zip_source(3)
 .SH "HISTORY"
-\fBzip_source_zip\fR()
-was added in libzip 1.0.
-\fBzip_source_zip_create\fR()
-was added in libzip 1.8.0.
-Both were deprecated in libzip 1.10.0.
-Use
 \fBzip_source_zip_file\fR()
-or
-instead.
+and
+\fBzip_source_zip_file_create\fR()
+were added in libzip 1.10.0.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

@@ -103,6 +103,8 @@ The functions <code class="Fn">zip_source_layered</code>() and
     below in some way. Layered sources can't support writing and are not
     sufficient to cleanly add support for additional compression or encryption
     methods. This may be revised in a later release of libzip.</p>
+<p class="Pp">On success, the layered source takes ownership of
+    <var class="Ar">source</var>. The caller should not free it.</p>
 <p class="Pp">The interaction with the lower layer depends on the command:</p>
 <section class="Ss">
 <h2 class="Ss"><code class="Dv">ZIP_SOURCE_ACCEPT_EMPTY</code></h2>
@@ -205,7 +207,7 @@ Upon successful completion, the created source is returned. Otherwise,
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 5, 2022</td>
+    <td class="foot-date">January 20, 2023</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
