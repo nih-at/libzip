@@ -96,6 +96,13 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
         }
     }
 
+    if ((za->ch_flags & ZIP_AFL_WANT_TORRENTZIP) && (flags & ZIP_FL_UNCHANGED) == 0) {
+        st->comp_method = ZIP_CM_DEFLATE;
+        st->mtime = _zip_d2u_time(0xbc00, 0x2198);
+        st->valid |= ZIP_STAT_MTIME | ZIP_STAT_COMP_METHOD;
+        st->valid &= ~ZIP_STAT_COMP_SIZE;
+    }
+
     st->index = index;
     st->name = name;
     st->valid |= ZIP_STAT_INDEX | ZIP_STAT_NAME;
