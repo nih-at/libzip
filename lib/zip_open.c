@@ -186,8 +186,11 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
 
     zip_check_torrentzip(za, cdir);
 
-    if (!ZIP_IS_TORRENTZIP(za)) {
+    if (ZIP_IS_TORRENTZIP(za)) {
         /* Torrentzip uses the archive comment to detect changes by tools that are not torrentzip aware. */
+        _zip_string_free(cdir->comment);
+    }
+    else {
         za->comment_orig = cdir->comment;
     }
 
@@ -888,6 +891,18 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 }
 
 
+static int decode_hex(char c) {
+    if (c >= '0' && c <= '9') {
+        return c - '0';
+    }
+    else if (c >= 'A' & c <= 'F') {
+        return c - 'A' + 10;
+    }
+    else {
+        return -1;
+    }
+}
+
 /* _zip_check_torrentzip:
    check whether ZA has a valid TORRENTZIP comment, i.e. is torrentzipped */
 
@@ -895,6 +910,7 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
     zip_uint32_t crc_should;
     char buf[8+1];
     char *end;
+    size_t i;
 
     if (cdir == NULL) {
         return;
@@ -906,10 +922,15 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
 
     memcpy(buf, cdir->comment->raw + TORRENTZIP_SIGNATURE_LENGTH, TORRENTZIP_CRC_LENGTH);
     buf[TORRENTZIP_CRC_LENGTH] = '\0';
-    errno = 0;
-    crc_should = strtoul(buf, &end, 16);
-    if ((crc_should == UINT_MAX && errno != 0) || (end && *end)) {
-        return;
+    crc_should = 0;
+    for (i = 0; i < TORRENTZIP_CRC_LENGTH; i += 2) {
+        int low, high;
+        high = decode_hex((buf[i]));
+        low = decode_hex(buf[i + 1]);
+        if (high < 0 || low < 0) {
+            return;
+        }
+        crc_should = (crc_should << 8) + (high << 4) + low;
     }
 
     {
