@@ -6,6 +6,7 @@
 
 ### Torrentzip
 
+- check mtime, extra fields, ... in cdir (and local entries?)
 - Add tests
 - Document
 - Handle data sources with unknown uncompressed size.
