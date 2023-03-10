@@ -357,6 +357,7 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
         else {
             st->comp_method = ZIP_CM_STORE;
             st->valid |= ZIP_STAT_COMP_METHOD;
+            st->valid &= ~ZIP_STAT_COMP_SIZE;
             if (ctx->end_of_stream) {
                 st->size = ctx->size;
                 st->valid |= ZIP_STAT_SIZE;

@@ -87,7 +87,7 @@ extern "C" {
 #define ZIP_FL_NODIR 2u        /* ignore directory component */
 #define ZIP_FL_COMPRESSED 4u   /* read compressed data */
 #define ZIP_FL_UNCHANGED 8u    /* use original data, ignoring changes */
-#define ZIP_FL_RECOMPRESS 16u  /* force recompression of data */
+/* 16u was ZIP_FL_RECOMPRESS, which is deprecated */
 #define ZIP_FL_ENCRYPTED 32u   /* read encrypted data (implies ZIP_FL_COMPRESSED) */
 #define ZIP_FL_ENC_GUESS 0u    /* guess string encoding (is default) */
 #define ZIP_FL_ENC_RAW 64u     /* get unmodified string */
@@ -368,6 +368,8 @@ typedef void (*zip_progress_callback)(zip_t *_Nonnull, double, void *_Nullable);
 typedef int (*zip_cancel_callback)(zip_t *_Nonnull, void *_Nullable);
 
 #ifndef ZIP_DISABLE_DEPRECATED
+#define ZIP_FL_RECOMPRESS 16u  /* force recompression of data */
+
 typedef void (*zip_progress_callback_t)(double);
 ZIP_DEPRECATED("use 'zip_register_progress_callback_with_state' instead") ZIP_EXTERN void zip_register_progress_callback(zip_t *_Nonnull, zip_progress_callback_t _Nullable);
 
