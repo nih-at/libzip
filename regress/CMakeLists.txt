@@ -94,7 +94,6 @@ foreach(FULL_CASE IN LISTS EXTRA_TESTS)
 endforeach()
 
 set(XFAIL_TESTS
-  check_torrentzip_modified.test
 )
 
 foreach(CASE ${XFAIL_TESTS})

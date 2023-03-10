@@ -895,7 +895,7 @@ static int decode_hex(char c) {
     if (c >= '0' && c <= '9') {
         return c - '0';
     }
-    else if (c >= 'A' & c <= 'F') {
+    else if (c >= 'A' && c <= 'F') {
         return c - 'A' + 10;
     }
     else {
@@ -909,7 +909,6 @@ static int decode_hex(char c) {
 static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
     zip_uint32_t crc_should;
     char buf[8+1];
-    char *end;
     size_t i;
 
     if (cdir == NULL) {
@@ -937,6 +936,8 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
         zip_stat_t st;
         zip_source_t* src_window;
         zip_source_t* src_crc;
+        zip_uint8_t buffer[512];
+        zip_int64_t ret;
 
         zip_stat_init(&st);
         st.valid |= ZIP_STAT_SIZE | ZIP_STAT_CRC;
@@ -953,14 +954,12 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
             zip_source_free(src_crc);
             return;
         }
-        zip_uint8_t buffer[512];
-        while (zip_source_read(src_crc, buffer, sizeof(buffer)) > 0) {
-        }
-        if (zip_source_stat(src_crc, &st) < 0) {
-            zip_source_free(src_crc);
-            return;
+        while ((ret = zip_source_read(src_crc, buffer, sizeof(buffer))) > 0) {
         }
         zip_source_free(src_crc);
+        if (ret < 0) {
+            return;
+        }
     }
 
     /* TODO: if check consistency, check cdir entries for valid values */
