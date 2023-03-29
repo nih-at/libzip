@@ -23,7 +23,7 @@ if (NOT IS_SHARED)
   endif()
 
   if(ENABLE_ZSTD)
-    find_dependency(Zstd 1.3.6)
+    find_dependency(zstd 1.3.6)
   endif()
 
   if(ENABLE_GNUTLS)
