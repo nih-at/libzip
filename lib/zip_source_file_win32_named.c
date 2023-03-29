@@ -85,7 +85,7 @@ _zip_win32_named_op_commit_write(zip_source_file_context_t *ctx) {
         }
     }
 
-    if (!file_ops->move_file(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING)) {
+    if (!file_ops->move_file(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED)) {
         zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
