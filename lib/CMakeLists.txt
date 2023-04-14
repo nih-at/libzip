@@ -148,7 +148,7 @@ endif()
 
 if(HAVE_LIBZSTD)
   target_sources(zip PRIVATE zip_algorithm_zstd.c)
-  target_link_libraries(zip PRIVATE Zstd::Zstd)
+  target_link_libraries(zip PRIVATE ${zstd_TARGET})
 endif()
 
 if(HAVE_COMMONCRYPTO)
