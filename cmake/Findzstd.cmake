@@ -89,22 +89,22 @@ find_file(zstd_DLL
 # On Windows, we manually define the library names to avoid mistaking the
 # implib for the static library
 if(zstd_DLL)
-  set(_zstd_win_static_name zstd-static.lib)
-  set(_zstd_win_shared_name zstd.lib)
+  set(_zstd_win_static_name zstd-static)
+  set(_zstd_win_shared_name zstd)
 else()
   # vcpkg removes the -static suffix in static builds
-  set(_zstd_win_static_name zstd.lib zstd_static.lib)
+  set(_zstd_win_static_name zstd zstd_static)
   set(_zstd_win_shared_name)
 endif()
 
 set(_previous_suffixes ${CMAKE_FIND_LIBRARY_SUFFIXES})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".dylib" ".dll.a" "")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".dylib" ".dll.a" ".lib")
 find_library(zstd_SHARED_LIBRARY
   NAMES zstd ${_zstd_win_shared_name}
   HINTS ${PC_zstd_LIBDIR}
 )
 
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" "")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib")
 find_library(zstd_STATIC_LIBRARY
   NAMES zstd ${_zstd_win_static_name}
   HINTS ${PC_zstd_LIBDIR}
