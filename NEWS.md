@@ -12,6 +12,7 @@
 * Restore support for torrentzip.
 * Add warnings when using deprecated functions.
 * Allow keeping files for empty archives.
+* Support mbedTLS>=3.3.0
 
 
 # 1.9.2 [2022-06-28]
