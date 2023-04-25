@@ -117,7 +117,7 @@ _zip_crypto_pbkdf2(const zip_uint8_t *key, zip_uint64_t key_length, const zip_ui
     mbedtls_md_context_t sha1_ctx;
     bool ok = true;
 
-#if !defined(MBEDTLS_DEPRECATED_REMOVED) || MBEDTLS_VERSION_NUMBER < 0x03030000
+#if MBEDTLS_VERSION_NUMBER < 0x03030000
 
     mbedtls_md_init(&sha1_ctx);
 
