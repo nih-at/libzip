@@ -18,7 +18,6 @@
 #cmakedefine HAVE__STRICMP
 #cmakedefine HAVE__STRTOI64
 #cmakedefine HAVE__STRTOUI64
-#cmakedefine HAVE__UMASK
 #cmakedefine HAVE__UNLINK
 #cmakedefine HAVE_ARC4RANDOM
 #cmakedefine HAVE_CLONEFILE
