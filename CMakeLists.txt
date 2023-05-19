@@ -311,10 +311,10 @@ else(BUILD_TOOLS)
   endif(BUILD_REGRESS)
 endif()
 
-include(FindPerl)
+find_program(NIHTEST nihtest)
 
-if(BUILD_REGRESS AND NOT PERL_FOUND)
-  message(WARNING "-- perl not found, regression testing disabled")
+if(BUILD_REGRESS AND NOT NIHTEST)
+  message(WARNING "-- nihtest not found, regression testing disabled")
   set(BUILD_REGRESS OFF)
 endif()
 
@@ -459,11 +459,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake-zipconf.h.in ${PROJECT_BINARY_D
 set(srcdir ${CMAKE_CURRENT_SOURCE_DIR}/regress)
 set(abs_srcdir ${CMAKE_CURRENT_SOURCE_DIR}/regress)
 set(top_builddir ${PROJECT_BINARY_DIR}) # used to find config.h
-
-configure_file(regress/nihtest.conf.in ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/nihtest.conf @ONLY)
-file(COPY ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/nihtest.conf
-  DESTINATION ${PROJECT_BINARY_DIR}/regress
-  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 configure_file(regress/runtest.in ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest @ONLY)
 file(COPY ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest
