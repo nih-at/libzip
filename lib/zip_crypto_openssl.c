@@ -41,11 +41,6 @@
 #include <openssl/rand.h>
 
 #ifdef USE_OPENSSL_3_API
-struct _zip_crypto_hmac_t {
-    EVP_MAC *mac;
-    EVP_MAC_CTX *ctx;
-};
-
 static _zip_crypto_hmac_t* hmac_new() {
     _zip_crypto_hmac_t *hmac = (_zip_crypto_hmac_t*)malloc(sizeof(*hmac));
     if (hmac != NULL) {

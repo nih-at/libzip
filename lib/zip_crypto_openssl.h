@@ -49,6 +49,10 @@
 
 #define _zip_crypto_aes_t EVP_CIPHER_CTX
 #ifdef USE_OPENSSL_3_API
+struct _zip_crypto_hmac_t {
+    EVP_MAC *mac;
+    EVP_MAC_CTX *ctx;
+};
 typedef struct _zip_crypto_hmac_t _zip_crypto_hmac_t;
 #define _zip_crypto_hmac(hmac, data, length) (EVP_MAC_update((hmac->ctx), (data), (length)) == 1)
 #else
