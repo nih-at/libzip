@@ -47,6 +47,7 @@ static _zip_crypto_hmac_t* hmac_new() {
         hmac->mac = NULL;
         hmac->ctx = NULL;
     }
+    return hmac;
 }
 static void hmac_free(_zip_crypto_hmac_t* hmac) {
     if (hmac != NULL) {
