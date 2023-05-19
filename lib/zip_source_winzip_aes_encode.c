@@ -36,13 +36,13 @@
 #include <string.h>
 
 #include "zipint.h"
-
+#include "zip_crypto.h"
 
 struct winzip_aes {
     char *password;
     zip_uint16_t encryption_method;
 
-    zip_uint8_t data[ZIP_MAX(WINZIP_AES_MAX_HEADER_LENGTH, SHA1_LENGTH)];
+    zip_uint8_t data[ZIP_MAX(WINZIP_AES_MAX_HEADER_LENGTH, ZIP_CRYPTO_SHA1_LENGTH)];
     zip_buffer_t *buffer;
 
     zip_winzip_aes_t *aes_ctx;
