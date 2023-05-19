@@ -6,13 +6,13 @@
 * Fix handling of files of size 4294967295.
 * `zipmerge`: copy extra fields.
 * `zipmerge`: add option to keep files uncompressed.
-* CMake: add detection of mbedTLS version 3.
 * Use ISO C secure library functions, if available.
 * Fix reading/writing compressed data with buffers > 4GiB.
 * Restore support for torrentzip.
 * Add warnings when using deprecated functions.
 * Allow keeping files for empty archives.
-* Support mbedTLS>=3.3.0
+* Support mbedTLS>=3.3.0.
+* Support OpenSSL 3.
 
 
 # 1.9.2 [2022-06-28]
