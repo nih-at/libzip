@@ -18,10 +18,10 @@ For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 
 - Apple's CommonCrypto (available on macOS and iOS)
+- Microsoft Windows Cryptography Framework
+- [OpenSSL](https://www.openssl.org/) >= 1.0.
 - [GnuTLS](https://www.gnutls.org/) and [Nettle](https://www.lysator.liu.se/~nisse/nettle/) (at least nettle 3.0)
 - [mbed TLS](https://tls.mbed.org/)
-- [OpenSSL](https://www.openssl.org/) >= 1.0.
-- Microsoft Windows Cryptography Framework
 
 If you don't want a library even if it is installed, you can
 pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
