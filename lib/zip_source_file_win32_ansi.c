@@ -48,7 +48,8 @@ zip_win32_file_operations_t ops_ansi = {
     ansi_make_tempname,
     MoveFileExA,
     SetFileAttributesA,
-    strdup
+    strdup,
+    CopyFileExA
 };
 
 DONT_WARN_INCOMPATIBLE_FN_PTR_END

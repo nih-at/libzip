@@ -50,7 +50,8 @@ zip_win32_file_operations_t ops_utf16 = {
     utf16_make_tempname,
     MoveFileExW,
     SetFileAttributesW,
-    utf16_strdup
+    utf16_strdup,
+    CopyFileExW
 };
 
 DONT_WARN_INCOMPATIBLE_FN_PTR_END
