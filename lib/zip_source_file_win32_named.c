@@ -217,6 +217,7 @@ _zip_win32_named_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
     if (!GetFileInformationByHandle(h, &file_info)) {
         DWORD error = GetLastError();
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(error));
+        CloseHandle(h);
         return false;
     }
 
@@ -231,12 +232,15 @@ _zip_win32_named_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
 
     if (!_zip_filetime_to_time_t(file_info.ftLastWriteTime, &st->mtime)) {
         zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
+        CloseHandle(h);
         return false;
     }
 
     st->size = ((zip_uint64_t)file_info.nFileSizeHigh << 32) | file_info.nFileSizeLow;
 
     /* TODO: fill in ctx->attributes */
+
+    CloseHandle(h);
 
     return true;
 }
