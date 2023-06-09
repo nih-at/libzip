@@ -1,4 +1,4 @@
-features CRYPTO
+features HAVE_CRYPTO
 precheck ./liboverride-test
 description encrypt file without entropy, to make results repeatable
 return 0

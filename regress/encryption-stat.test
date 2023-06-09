@@ -1,4 +1,4 @@
-features CRYPTO
+features HAVE_CRYPTO
 description encrypt file, look at stat before commit
 return 0
 arguments encrypt.zzip  stat 1  set_file_encryption 1 AES-128 no-entropy  stat 1  unchange_all

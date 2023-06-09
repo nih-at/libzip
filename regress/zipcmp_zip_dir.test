@@ -1,5 +1,5 @@
 # compare zip with directory
-features FTS_H
+features HAVE_FTS_H
 program zipcmp
 mkdir a
 mkdir a/dir-with-file

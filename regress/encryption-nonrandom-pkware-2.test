@@ -1,4 +1,4 @@
-features CRYPTO
+features HAVE_CRYPTO
 precheck ./liboverride-test
 description encrypt file by Traditional PKWare, set mtime (used in PKWare encryption)
 return 0
