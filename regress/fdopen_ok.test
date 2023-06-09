@@ -3,9 +3,7 @@ program ../src/ziptool
 arguments /dev/stdin stat 0
 return 0
 file test.zip test.zip
-stdin
-
-end-of-inline-data
+stdin test.zip
 stdout
 name: 'test'
 index: '0'

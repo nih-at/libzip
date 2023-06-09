@@ -460,12 +460,6 @@ set(srcdir ${CMAKE_CURRENT_SOURCE_DIR}/regress)
 set(abs_srcdir ${CMAKE_CURRENT_SOURCE_DIR}/regress)
 set(top_builddir ${PROJECT_BINARY_DIR}) # used to find config.h
 
-configure_file(regress/runtest.in ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest @ONLY)
-file(COPY ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest
-  DESTINATION ${PROJECT_BINARY_DIR}/regress
-  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-  )
-
 # create package config file
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file("${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"

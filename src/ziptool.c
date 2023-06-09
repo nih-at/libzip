@@ -71,6 +71,8 @@ static zip_uint16_t get_encryption_method(const char *arg);
 static void hexdump(const zip_uint8_t *data, zip_uint16_t len);
 static int parse_archive_flag(const char* arg);
 int ziptool_post_close(const char *archive);
+static const char* decode_filename(const char* name);
+static const char* encode_filename(const char* name);
 
 #ifndef FOR_REGRESS
 #define OPTIONS_REGRESS ""
@@ -80,6 +82,7 @@ int ziptool_post_close(const char *archive);
 zip_t *za, *z_in[16];
 unsigned int z_in_count;
 zip_flags_t stat_flags;
+int hex_encoded_filenames = 0; // Can only be set in ziptool_regress.
 
 static int
 cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
@@ -152,7 +155,7 @@ add(char *argv[]) {
         return -1;
     }
 
-    if (zip_file_add(za, argv[0], zs, 0) == -1) {
+    if (zip_file_add(za, decode_filename(argv[0]), zs, 0) == -1) {
         zip_source_free(zs);
         fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
         return -1;
@@ -163,7 +166,7 @@ add(char *argv[]) {
 static int
 add_dir(char *argv[]) {
     /* add directory */
-    if (zip_dir_add(za, argv[0], 0) < 0) {
+    if (zip_dir_add(za, decode_filename(argv[0]), 0) < 0) {
         fprintf(stderr, "can't add directory '%s': %s\n", argv[0], zip_strerror(za));
         return -1;
     }
@@ -189,7 +192,7 @@ add_file(char *argv[]) {
         }
     }
 
-    if (zip_file_add(za, argv[0], zs, 0) == -1) {
+    if (zip_file_add(za, decode_filename(argv[0]), zs, 0) == -1) {
         zip_source_free(zs);
         fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
         return -1;
@@ -223,7 +226,7 @@ add_from_zip(char *argv[]) {
         zip_close(z_in[z_in_count]);
         return -1;
     }
-    if (zip_file_add(za, argv[0], zs, 0) == -1) {
+    if (zip_file_add(za, decode_filename(argv[0]), zs, 0) == -1) {
         fprintf(stderr, "can't add file '%s': %s\n", argv[0], zip_strerror(za));
         zip_source_free(zs);
         zip_close(z_in[z_in_count]);
@@ -341,7 +344,7 @@ get_archive_comment(char *argv[]) {
     if ((comment = zip_get_archive_comment(za, &len, 0)) == NULL || len == 0)
         printf("No archive comment\n");
     else
-        printf("Archive comment: %.*s\n", len, comment);
+        printf("Archive comment: %.*s\n", len, encode_filename(comment));
     return 0;
 }
 
@@ -438,7 +441,7 @@ name_locate(char *argv[]) {
     zip_int64_t idx;
     flags = get_flags(argv[1]);
 
-    if ((idx = zip_name_locate(za, argv[0], flags)) < 0) {
+    if ((idx = zip_name_locate(za, decode_filename(argv[0]), flags)) < 0) {
         fprintf(stderr, "can't find entry with name '%s' using flags '%s'\n", argv[0], argv[1]);
     }
     else {
@@ -471,7 +474,7 @@ static int
 zrename(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    if (zip_file_rename(za, idx, argv[1], 0) < 0) {
+    if (zip_file_rename(za, idx, decode_filename(argv[1]), 0) < 0) {
         fprintf(stderr, "can't rename file at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
         return -1;
     }
@@ -656,7 +659,7 @@ zstat(char *argv[]) {
     }
 
     if (sb.valid & ZIP_STAT_NAME)
-        printf("name: '%s'\n", sb.name);
+        printf("name: '%s'\n", encode_filename(sb.name));
     if (sb.valid & ZIP_STAT_INDEX)
         printf("index: '%" PRIu64 "'\n", sb.index);
     if (sb.valid & ZIP_STAT_SIZE)
@@ -1084,4 +1087,53 @@ main(int argc, char *argv[]) {
     }
 
     return err;
+}
+
+#define BIN2HEX(n) ((n) >= 10 ? (n) + 'a' - 10 : (n) + '0')
+#define HEX2BIN(c) (((c) >= '0' && (c) <= '9') ? (c) - '0' : ((c) >= 'A' && (c) <= 'F') ? (c) - 'A' + 10 : (c) - 'a' + 10)
+
+#define FILENAME_BUFFER_LENGTH 8192
+static char filename_buffer[FILENAME_BUFFER_LENGTH + 1];
+
+static const char* encode_filename(const char* name) {
+    if (!hex_encoded_filenames) {
+        return name;
+    }
+
+    if (strlen(name) > FILENAME_BUFFER_LENGTH / 2) {
+        // TODO: error message
+        exit(1);
+    }
+    const unsigned char* s = (const unsigned char*)name;
+    char* t = filename_buffer;
+    while (*s != '\0') {
+        *(t++) = BIN2HEX(*s >> 4);
+        *(t++) = BIN2HEX(*s & 0xf);
+        s += 1;
+    }
+    *t = '\0';
+    return filename_buffer;
+}
+
+static const char* decode_filename(const char* name) {
+    if (!hex_encoded_filenames) {
+        return name;
+    }
+
+    if (strlen(name) > FILENAME_BUFFER_LENGTH * 2) {
+        // TODO: error message
+        exit(1);
+    }
+    // TODO: check that strlen(name) % 2 == 0
+    // TODO: check with strspn that s is all hex digits
+
+    unsigned char *t = (unsigned char*)filename_buffer;
+    const char *s = name;
+    while (*s != '\0') {
+        *(t++) = (HEX2BIN(s[0]) << 4) | HEX2BIN(s[1]);
+        s += 2;
+    }
+    *t = '\0';
+
+    return filename_buffer;
 }
