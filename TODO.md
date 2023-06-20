@@ -9,9 +9,9 @@
 
 ## Other
 
-- split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`). 
-- Support extended timestamp extra field (0x5455): mtime overrides dos mtime from dirent, function to get/set all three.  
-- Add support for torrentzip.
+- split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`).
+- Support extended timestamp extra field (0x5455): mtime overrides dos mtime from dirent, function to get/set all three.
+- Check UTF-8 code against https://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt
 
 ## Prefixes
 
@@ -99,6 +99,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Infrastructure
 
+* add coverage reports, e.g. using gcovr or https://github.com/eddyxu/cpp-coveralls (coveralls.io)
 * review guidelines/community standards
   - [Linux Foundation Core Infrastructure Initiative Best Practices](https://bestpractices.coreinfrastructure.org/)
   - [Readme Maturity Level](https://github.com/LappleApple/feedmereadmes/blob/master/README-maturity-model.md)
@@ -189,3 +190,4 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * I/O abstraction layer
   * `zip_open_from_source`
 * read two zip entries interleaved
+* test `zip_file_is_seekable` (via `ziptool`?)
