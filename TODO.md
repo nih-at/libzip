@@ -4,9 +4,6 @@
 
 ### Torrentzip
 
-- check mtime, extra fields, ... in cdir (and local entries?)
-- Add tests
-- Document
 - Handle data sources with unknown uncompressed size.
 - Handle when uncompressed size < 4GB but compressed size > 4GB.
 
@@ -117,7 +114,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Test Case Issues
 
-* add test cases for all ZIP_INCONS detail errors
+* add test cases for all `ZIP_INCONS` detail errors
 * `incons-local-filename-short.zzip` doesn't test short filename, since extra fields fail to parse.
 * test error cases with special source
   - tell it which command should fail
@@ -135,7 +132,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 	  - state of source (opened, EOF reached, ...)
 * test for zipcmp reading directory (requires fts)
 * add test case for clone with files > 4k
-* consider testing for malloc/realloc failures
+* consider testing for `malloc`/`realloc` failures
 * Winzip AES support
   * test cases decryption: <=20, >20, stat for both
   * test cases encryption: no password, default password, file-specific password, 128/192/256, <=20, >20
@@ -172,7 +169,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   * close
   * zipcmp copy expected
   * remove copy
-* (`error_get)
+* (`error_get`)
 * (`error_get_sys_type`)
 * (`error_to_str`)
 * (`extra_fields`)
