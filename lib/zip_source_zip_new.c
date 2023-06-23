@@ -52,6 +52,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
     bool partial_data, needs_crc, encrypted, needs_decrypt, compressed, needs_decompress, changed_data, have_size, have_comp_size;
     zip_flags_t stat_flags;
     zip_int64_t data_len;
+    bool take_ownership = false;
 
     if (srcza == NULL || srcidx >= srcza->nentry || len < -1) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -161,9 +162,9 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         src = NULL;
     }
 
-    /* if we created source buffer above, store it in s2, so we can
-       free it after it's wrapped in window source */
-    s2 = src;
+
+    /* If we created source buffer above, we want the window source to take ownership of it. */
+    take_ownership = src != NULL;
     /* if we created a buffer source above, then treat it as if
        reading the changed data - that way we don't need add another
        special case to the code below that wraps it in the window
@@ -200,7 +201,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
             st2.valid |= ZIP_STAT_MTIME;
         }
 
-        if ((src = _zip_source_window_new(src, start, data_len, &st2, ZIP_STAT_NAME, &attributes, source_archive, source_index, error)) == NULL) {
+        if ((src = _zip_source_window_new(src, start, data_len, &st2, ZIP_STAT_NAME, &attributes, source_archive, source_index, take_ownership, error)) == NULL) {
             return NULL;
         }
     }
@@ -219,7 +220,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
            attributes and to have a source that positions the read
            offset properly before each read for multiple zip_file_t
            referring to the same underlying source */
-        if ((src =  _zip_source_window_new(srcza->src, 0, (zip_int64_t)st.comp_size, &st, ZIP_STAT_NAME, &attributes, srcza, srcidx, error)) == NULL) {
+        if ((src =  _zip_source_window_new(srcza->src, 0, (zip_int64_t)st.comp_size, &st, ZIP_STAT_NAME, &attributes, srcza, srcidx, take_ownership, error)) == NULL) {
             return NULL;
         }
     }
@@ -235,16 +236,12 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
            attributes and to have a source that positions the read
            offset properly before each read for multiple zip_file_t
            referring to the same underlying source */
-        if ((src = _zip_source_window_new(src, 0, data_len, &st, ZIP_STAT_NAME, &attributes, NULL, 0, error)) == NULL) {
+        if ((src = _zip_source_window_new(src, 0, data_len, &st, ZIP_STAT_NAME, &attributes, NULL, 0, take_ownership, error)) == NULL) {
             return NULL;
         }
     }
-    /* drop a reference of a buffer source if we created one above -
-       window source that wraps it has increased the ref count on its
-       own */
-    if (s2 != NULL) {
-        zip_source_free(s2);
-    }
+
+    /* In all cases, src is a window source and therefore is owned by this function. */
 
     if (_zip_source_set_source_archive(src, srcza) < 0) {
         zip_source_free(src);
@@ -266,6 +263,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
             zip_source_free(src);
             return NULL;
         }
+
         src = s2;
     }
     if (needs_decompress) {
@@ -292,7 +290,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
             st2.valid = ZIP_STAT_SIZE;
             st2.size = (zip_uint64_t)data_len;
         }
-        s2 = _zip_source_window_new(src, start, data_len, &st2, ZIP_STAT_NAME, NULL, NULL, 0, error);
+        s2 = _zip_source_window_new(src, start, data_len, &st2, ZIP_STAT_NAME, NULL, NULL, 0, true, error);
         if (s2 == NULL) {
             zip_source_free(src);
             return NULL;
