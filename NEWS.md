@@ -1,4 +1,4 @@
-# 1.10.0 [Unreleased]
+# 1.10.0 [2023-06-23]
 
 * Make support for layered sources public.
 * Add `zip_source_zip_file` and `zip_source_zip_file_create`, deprecate `zip_source_zip` and `zip_source_zip_create`.
