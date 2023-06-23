@@ -23,9 +23,9 @@ static int unchange_one(char *argv[]);
 static int unchange_all(char *argv[]);
 static int zin_close(char *argv[]);
 
-#define OPTIONS_REGRESS "F:Hm"
+#define OPTIONS_REGRESS "F:Hmx"
 
-#define USAGE_REGRESS " [-Hm] [-F fragment-size]"
+#define USAGE_REGRESS " [-Hmx] [-F fragment-size]"
 
 #define GETOPT_REGRESS                              \
     case 'H':                                       \
@@ -36,6 +36,9 @@ static int zin_close(char *argv[]);
         break;                                      \
     case 'F':                                       \
         fragment_size = strtoull(optarg, NULL, 10); \
+        break;                                      \
+    case 'x':                                       \
+        hex_encoded_filenames = 1;                  \
         break;
 
 /* clang-format off */

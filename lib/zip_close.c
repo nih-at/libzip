@@ -467,7 +467,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
                 zip_stat_init(&st_mtime);
                 st_mtime.valid = ZIP_STAT_MTIME;
                 st_mtime.mtime = de->last_mod;
-                if ((src_tmp = _zip_source_window_new(src_final, 0, -1, &st_mtime, 0, NULL, NULL, 0, &za->error)) == NULL) {
+                if ((src_tmp = _zip_source_window_new(src_final, 0, -1, &st_mtime, 0, NULL, NULL, 0, true, &za->error)) == NULL) {
                     zip_source_free(src_final);
                     return -1;
                 }

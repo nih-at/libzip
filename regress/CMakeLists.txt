@@ -88,7 +88,8 @@ set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
 foreach(FULL_CASE IN LISTS EXTRA_TESTS)
   get_filename_component(CASE ${FULL_CASE} NAME)
-  add_test(NAME ${CASE} COMMAND ${PERL_EXECUTABLE} ${PROJECT_BINARY_DIR}/regress/runtest -v --bin-sub-directory $<CONFIG> ${PROJECT_SOURCE_DIR}/regress/${CASE})
+  add_test(NAME ${CASE} COMMAND ${NIHTEST} -v  ${CASE})
+  # TODO: add --bin-sub-directory $<CONFIG>
   set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
   set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
 endforeach()
@@ -101,3 +102,5 @@ foreach(CASE ${XFAIL_TESTS})
 endforeach()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+
+configure_file(nihtest.conf.in nihtest.conf @ONLY)

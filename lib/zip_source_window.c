@@ -61,12 +61,12 @@ static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip
 
 ZIP_EXTERN zip_source_t *
 zip_source_window_create(zip_source_t *src, zip_uint64_t start, zip_int64_t len, zip_error_t *error) {
-    return _zip_source_window_new(src, start, len, NULL, 0, NULL, NULL, 0, error);
+    return _zip_source_window_new(src, start, len, NULL, 0, NULL, NULL, 0, false, error);
 }
 
 
 zip_source_t *
-_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_t *source_archive, zip_uint64_t source_index, zip_error_t *error) {
+_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error) {
     zip_source_t* window_source;
     struct window *ctx;
 
@@ -117,7 +117,7 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
     }
     
     window_source = zip_source_layered_create(src, window_read, ctx, error);
-    if (window_source != NULL) {
+    if (window_source != NULL && !take_ownership) {
         zip_source_keep(src);
     }
     return window_source;
