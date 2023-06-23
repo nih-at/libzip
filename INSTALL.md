@@ -1,7 +1,5 @@
 libzip uses [cmake](https://cmake.org) to build.
 
-For running the tests, you need to have [perl](https://www.perl.org).
-
 You'll need [zlib](http://www.zlib.net/) (at least version 1.1.2). It
 comes with most operating systems.
 
@@ -27,6 +25,10 @@ If you don't want a library even if it is installed, you can
 pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
 `COMMONCRYPTO`, `GNUTLS`, `MBEDTLS`, or `OPENSSL`.
 
+For running the tests, you need to have
+[Python](https://www.python.org/) and
+[nihtest](https://pypi.org/project/nihtest/) installed.
+
 The basic usage is
 ```sh
 mkdir build
@@ -48,7 +50,7 @@ Some useful parameters you can pass to `cmake` with `-Dparameter=value`:
 - `LIBZIP_DO_INSTALL`: If you include libzip as a subproject, link it
   statically and do not want to let it install its files, set this
   variable to `OFF`. Defaults to `ON`.
-  
+
 If you want to compile with custom `CFLAGS`, set them in the environment
 before running `cmake`:
 ```sh
