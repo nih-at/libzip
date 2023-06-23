@@ -6,11 +6,5 @@ program-directories = @PROJECT_BINARY_DIR@/regress
 default-program = ziptool_regress
 default-stderr-replace = "^[^ :]*: " ""
 
-[setenv]
-TZ=UTC
-LANG=C
-LC_CTYPE=C
-POSIXLY_CORRECT=1
-
 [comparators]
 zip.zip = zipcmp -pv
