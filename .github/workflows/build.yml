@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
       - name: install dependencies (Linux)
         if: ${{ runner.os == 'Linux' }}
         run: |
@@ -31,9 +34,10 @@ jobs:
           vcpkgGitCommitId: f93ba152d55e1d243160e690bc302ffe8638358e
           vcpkgTriplet: x64-windows
           vcpkgArguments: zlib bzip2 liblzma zstd
-      - name: prepare build directory
+      - name: prepare build directory and install nihtest
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
+          pip install nihtest
       - name: configure (Unix)
         if: ${{ runner.os != 'Windows' }}
         working-directory: ${{runner.workspace}}/build
