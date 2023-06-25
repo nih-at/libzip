@@ -22,6 +22,7 @@ jobs:
       - name: install python and pip
         uses: actions/setup-python@v4
         with:
+          python-version: '3.11'
           cache: 'pip'
       - name: install dependencies (Linux)
         if: ${{ runner.os == 'Linux' }}
