@@ -8,7 +8,7 @@ program-directories = @PROJECT_BINARY_DIR@/regress
     @PROJECT_BINARY_DIR@/src/Release
     @PROJECT_BINARY_DIR@/src/Debug
 default-program = ziptool_regress
-default-stderr-replace = "^[^ :]*: " ""
+default-stderr-replace = "^([A-Z]:)?[^ :]*: " ""
 
 [comparators]
 zip.zip = zipcmp -pv
