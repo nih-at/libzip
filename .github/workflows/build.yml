@@ -53,6 +53,12 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         run: |
           cmake --build . --config Release
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: regress-directory
+          path: |
+            ${{runner.workspace}}/build/regress
       - name: test
         working-directory: ${{runner.workspace}}/build
         run: |
