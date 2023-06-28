@@ -1096,20 +1096,33 @@ main(int argc, char *argv[]) {
 static char filename_buffer[FILENAME_BUFFER_LENGTH + 1];
 
 static const char* encode_filename(const char* name) {
-    if (!hex_encoded_filenames) {
-        return name;
-    }
+    char *t = filename_buffer;
 
-    if (strlen(name) > FILENAME_BUFFER_LENGTH / 2) {
-        // TODO: error message
-        exit(1);
+    if (!hex_encoded_filenames) {
+        const char* s = name;
+        if (strlen(name) > FILENAME_BUFFER_LENGTH) {
+            // TODO: error message
+            exit(1);
+        }
+        while (*s != '\0') {
+            if (s[0] == '\r' && s[1] == '\n') {
+                s++;
+                continue;
+            }
+            *(t++) = *(s++);
+        }
     }
-    const unsigned char* s = (const unsigned char*)name;
-    char* t = filename_buffer;
-    while (*s != '\0') {
-        *(t++) = BIN2HEX(*s >> 4);
-        *(t++) = BIN2HEX(*s & 0xf);
-        s += 1;
+    else {
+        const unsigned char *s = (const unsigned char *)name;
+        if (strlen(name) > FILENAME_BUFFER_LENGTH / 2) {
+            // TODO: error message
+            exit(1);
+        }
+        while (*s != '\0') {
+            *(t++) = BIN2HEX(*s >> 4);
+            *(t++) = BIN2HEX(*s & 0xf);
+            s += 1;
+        }
     }
     *t = '\0';
     return filename_buffer;
