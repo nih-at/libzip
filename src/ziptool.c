@@ -85,16 +85,12 @@ zip_flags_t stat_flags;
 int hex_encoded_filenames = 0; // Can only be set in ziptool_regress.
 
 static int
-cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
+cat_impl_backend(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len, FILE *out) {
     zip_error_t error;
     zip_source_t *src;
     zip_int64_t n;
     char buf[8192];
 
-#ifdef _WIN32
-    /* Need to set stdout to binary mode for Windows */
-    setmode(fileno(stdout), _O_BINARY);
-#endif
     zip_error_init(&error);
     /* we can't pass 0 as a len to zip_source_zip_create because it
        will try to give us compressed data */
@@ -125,8 +121,8 @@ cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
         return -1;
     }
     while ((n = zip_source_read(src, buf, sizeof(buf))) > 0) {
-        if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
-            fprintf(stderr, "can't write file contents to stdout: %s\n", strerror(errno));
+        if (fwrite(buf, (size_t)n, 1, out) != 1) {
+            fprintf(stderr, "can't write file contents: %s\n", strerror(errno));
             zip_source_free(src);
             return -1;
         }
@@ -144,6 +140,15 @@ cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
     zip_source_free(src);
 
     return 0;
+}
+
+static int
+cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
+#ifdef _WIN32
+    /* Need to set stdout to binary mode for Windows */
+    setmode(fileno(stdout), _O_BINARY);
+#endif
+    return cat_impl_backend(idx, start, len, stdout);
 }
 
 static int
