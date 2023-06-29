@@ -1,5 +1,5 @@
 description size of input file increases between add and close
-arguments test.zip add_file new short 0 -2 extract_as 1 short
+arguments -- test.zip add_file new short 0 -2 extract_as 1 short
 file test.zip changing-size.zip changing-size-muchlonger.zip
 file short <inline> <inline>
 short
