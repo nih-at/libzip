@@ -60,28 +60,35 @@ from it.
 .Pp
 When passing
 .Dv ZIP_LENGTH_TO_END
-(or \-1, which is deprecated) as length,
+(or \-1, which is deprecated) as
+.Ar len ,
 .Nm
-determines the file size when it is called and uses that as the expected file size.
-If the file size grows between creating and reading from the source, the additional data is ignored.
+determines the file size when it is called and uses that as the
+expected file size.
+If the file size grows between creating and reading from the source,
+the additional data is ignored.
 If the file shrinks,
 .Nm libzip
 treats it as an error
-.Dv ( ZIP_ER_DATA_LENGTH).
+.Dv ( ZIP_ER_DATA_LENGTH ) .
 .Pp
 When passing
 .Dv ZIP_LENGTH_UNCHECKED
-as length,
+as
+.Ar len ,
 .Nm
 assumes the file's size is unknown.
-Reading from the source returns as much data as is there at that time (usually when calling
-.Nm zip_close ).
+Reading from the source returns as much data as is there at that time
+(usually when calling
+.Xr zip_close 3 ) .
 .Pp
 .Nm libzip
-can do various optimizations if the size of a source is known when it's created, so for normally
+can do various optimizations if the size of a source is known when
+it's created, so
 .Dv ZIP_LENGTH_TO_END
 is preferrable.
-If you deal with files that are likely to change while you are processing them, you can use the less efficient
+If you deal with files that are likely to change while you are
+processing them, you can use the less efficient
 .Dv ZIP_LENGTH_UNCHECKED .
 .Pp
 If the file supports seek, the source can be used to open a zip archive from.
