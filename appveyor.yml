@@ -2,6 +2,7 @@ os:
 - Visual Studio 2017
 
 environment:
+  PATH: C:\Python38-x64\Scripts;C:\Python38-arm\Scripts;$(PATH)
   matrix:
     - GENERATOR: "Visual Studio 15 2017 Win64"
       TRIPLET: x64-windows
