@@ -1060,6 +1060,10 @@ main(int argc, char *argv[]) {
     }
     zip_error_fini(&error);
 
+#ifdef REGRESS_PREPARE_ARGS
+    REGRESS_PREPARE_ARGS
+#endif
+
     err = 0;
     while (arg < argc) {
         int ret;

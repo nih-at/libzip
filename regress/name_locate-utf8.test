@@ -1,5 +1,8 @@
 description tests for various encoding flags for zip_name_locate
-arguments test.zip  name_locate "æÆôöòûùÿÖÜ¢£¥₧ƒá" 0  name_locate "æÆôöòûùÿÖÜ¢£¥₧ƒá" 4  name_locate "æÆôöòûùÿÖÜ¢£¥₧ƒá" 8  name_locate "æÆôöòûùÿÖÜ¢£¥₧ƒá" r  name_locate "æÆôöòûùÿÖÜ¢£¥₧ƒá" s
+arguments -i test.zip dummy
+stdin
+name_locate æÆôöòûùÿÖÜ¢£¥₧ƒá 0  name_locate æÆôöòûùÿÖÜ¢£¥₧ƒá 4  name_locate æÆôöòûùÿÖÜ¢£¥₧ƒá 8  name_locate æÆôöòûùÿÖÜ¢£¥₧ƒá r  name_locate æÆôöòûùÿÖÜ¢£¥₧ƒá s
+end-of-inline-data
 return 0
 file test.zip test-cp437.zip
 stdout
