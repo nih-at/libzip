@@ -1,5 +1,5 @@
 # zip_fdopen: stdin opens fine
-program ../src/ziptool
+#program ../src/ziptool
 arguments /dev/stdin stat 0
 return 0
 file test.zip test.zip
