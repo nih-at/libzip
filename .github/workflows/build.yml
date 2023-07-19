@@ -47,6 +47,8 @@ jobs:
       - name: configure (Windows)
         if: ${{ runner.os == 'Windows' }}
         working-directory: ${{runner.workspace}}/build
+        env:
+          CFLAGS: /utf-8
         run: |
           cmake ${{ matrix.cmake_extra }} -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
       - name: build
