@@ -1,7 +1,3 @@
-### Layered Sources
-
-- `zip_source_layered` should take ownership of lower source. (`zip_source_window` does not and is part of the public API, so keep it that way.) Document both.
-
 ### Torrentzip
 
 - Handle data sources with unknown uncompressed size.
