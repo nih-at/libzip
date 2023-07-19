@@ -48,7 +48,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         working-directory: ${{runner.workspace}}/build
         run: |
-          chcp
+          python -c "import sys; print(sys.getdefaultencoding());"
           cmake ${{ matrix.cmake_extra }} -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
       - name: build
         working-directory: ${{runner.workspace}}/build
