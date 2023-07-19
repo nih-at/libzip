@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_WIN32W" "3" "June 22, 2018" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_WIN32W" "3" "June 30, 2023" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -68,11 +68,10 @@ and read
 bytes from offset
 \fIstart\fR
 from it.
-If
+For a description of the
 \fIlen\fR
-is 0 or \-1, the whole file (starting from
-\fIstart\fR)
-is used.
+argument, see
+zip_source_file(3).
 .PP
 If the file supports seek, the source can be used to open a zip archive from.
 .PP
@@ -114,11 +113,17 @@ libzip(3),
 zip_file_add(3),
 zip_file_replace(3),
 zip_source(3),
+zip_source_file(3),
 zip_source_win32a(3),
 zip_source_win32handle(3)
 .SH "HISTORY"
 \fBzip_source_win32w\fR()
 was added in libzip 1.0.
+.PP
+\fRZIP_LENGTH_TO_END\fR
+and
+\fRZIP_LENGTH_UNCHECKED\fR
+were added in libzip 1.10.1.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and
