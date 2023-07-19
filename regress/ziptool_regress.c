@@ -97,16 +97,27 @@ int get_stdin_commands(void) {
     int argc = 0;
     char *p, *word;
     fgets(stdin_line, sizeof(stdin_line), stdin);
-    p = stdin_line;
-    while ((word = strsep(&p, " \n")) != NULL) {
-        if (word[0] == '\0') {
-            continue;
+    word = p = stdin_line;
+    while (1) {
+        if (*p == ' ' || *p == '\n') {
+            *p = '\0';
+            if (word[0] != '\0') {
+                stdin_argv[argc] = word;
+                argc += 1;
+                if (argc >= MAX_STDIN_ARGC) {
+                    break;
+                }
+            }
+            word = p + 1;
         }
-        stdin_argv[argc] = word;
-        argc++;
-        if (argc >= MAX_STDIN_ARGC) {
+        else if (*p == '\0') {
+            if (word[0] != '\0') {
+                stdin_argv[argc] = word;
+                argc += 1;
+            }
             break;
         }
+        p += 1;
     }
     return argc;
 }
