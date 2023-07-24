@@ -95,6 +95,7 @@ zip_random_uint32(void) {
 
     if (!seeded) {
         srandom((unsigned int)time(NULL));
+        seeded = true;
     }
 
     return (zip_uint32_t)random();
