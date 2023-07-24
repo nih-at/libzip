@@ -93,12 +93,21 @@ zip_random_uint32(void) {
         return value;
     }
 
+#ifdef HAVE_RANDOM
     if (!seeded) {
         srandom((unsigned int)time(NULL));
         seeded = true;
     }
 
     return (zip_uint32_t)random();
+#else
+    if (!seeded) {
+        srand((unsigned int)time(NULL));
+        seeded = true;
+    }
+
+    return (zip_uint32_t)rand();
+#endif
 }
 #endif
 
