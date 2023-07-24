@@ -83,6 +83,11 @@ zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
 #ifndef HAVE_RANDOM_UINT32
 #include <stdlib.h>
 
+#ifndef HAVE_RANDOM
+#define srandom srand
+#define random rand
+#endif
+
 zip_uint32_t
 zip_random_uint32(void) {
     static bool seeded = false;
@@ -93,21 +98,12 @@ zip_random_uint32(void) {
         return value;
     }
 
-#ifdef HAVE_RANDOM
     if (!seeded) {
         srandom((unsigned int)time(NULL));
         seeded = true;
     }
 
     return (zip_uint32_t)random();
-#else
-    if (!seeded) {
-        srand((unsigned int)time(NULL));
-        seeded = true;
-    }
-
-    return (zip_uint32_t)rand();
-#endif
 }
 #endif
 
