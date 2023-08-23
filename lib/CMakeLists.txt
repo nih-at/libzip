@@ -117,6 +117,7 @@ add_library(zip
 add_library(libzip::zip ALIAS zip)
 
 if(WIN32)
+  target_compile_definitions(zip PRIVATE WIN32_LEAN_AND_MEAN)
   target_sources(zip PRIVATE
     zip_source_file_win32.c
     zip_source_file_win32_named.c
