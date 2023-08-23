@@ -18,9 +18,9 @@ jobs:
             name_extra: " clang-cl"
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: install python and pip
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
         with:
           python-version: '3.11'
       - name: install dependencies (Linux)
@@ -29,7 +29,7 @@ jobs:
           sudo apt-get install libzstd-dev
       - name: install dependencies (Windows)
         if: ${{ runner.os == 'Windows' }}
-        uses: lukka/run-vcpkg@v7
+        uses: lukka/run-vcpkg@55dacfc31e8e18d7db5616e325de5e2124b20d3b # v7.5
         id: runvcpkg
         with:
           vcpkgGitCommitId: f93ba152d55e1d243160e690bc302ffe8638358e
@@ -54,7 +54,7 @@ jobs:
         run: |
           cmake --build . --config Release
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: regress-directory
           path: |
