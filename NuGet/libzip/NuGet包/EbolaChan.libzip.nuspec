@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+	<metadata>
+		<id>EbolaChan.LibZip</id>
+		<version>1.10.1.0</version>
+		<readme>README.md</readme>
+		<description>
+			A C library for reading, creating, and modifying zip archives.
+			支持的平台：x64。支持的平台工具集：v143。
+			Supported platform: x64. Supported platform toolset: v143.
+		</description>
+		<authors>Dieter Baron and Thomas Klausner, packed by 埃博拉酱</authors>
+		<projectUrl>https://github.com/Silver-Fang/libzip-NuGet</projectUrl>
+		<tags>native Static v143 x64 libzip</tags>
+		<icon>图标.png</icon>
+		<license type="expression">MIT</license>
+		<summary>A C library for reading, creating, and modifying zip archives.</summary>
+		<releaseNotes>
+			https://github.com/nih-at/libzip/releases/tag/v1.10.1
+			将任何D开头的配置识别为Debug，R开头的配置识别为Release
+			Any configuration beginning with D is identified as Debug and any configuration beginning with R is identified as Release
+		</releaseNotes>
+	</metadata>
+	<!-- 不能指定files，否则只会包含files中的文件 -->
+</package>
