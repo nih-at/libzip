@@ -52,7 +52,7 @@ find $SRC/libzip/regress -name "*_corpus*" | \
 find $SRC/libzip/regress -name "*_corpus*" | \
      xargs zip $OUT/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip
 
-find $SRC/libzip/regress -name "*_aes*" | \
+find $SRC/libzip/regress -name "*_aes*" -o -name "*.zip" | \
      xargs zip $OUT/zip_read_encrypted_arhive_fuzzer_seed_corpus.zip
 
 cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
