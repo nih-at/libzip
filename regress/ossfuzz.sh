@@ -20,16 +20,39 @@
 
 mkdir build
 cd build
-cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DENABLE_OPENSSL=OFF -DBUILD_TOOLS=OFF -DENABLE_LZMA=OFF ..
+cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DENABLE_OPENSSL=ON -DBUILD_TOOLS=OFF -DENABLE_LZMA=OFF -DHAVE_CRYPTO=ON ..
 make -j$(nproc)
 
 $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
     $SRC/libzip/regress/zip_read_fuzzer.cc \
     -o $OUT/zip_read_fuzzer \
-    $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz
+    $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
 
+$CXX $CXXFLAGS -std=c++11 -I. -I../lib \
+    $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer.cc \
+    -o $OUT/zip_write_encrypt_aes256_file_fuzzer \
+    $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
+
+$CXX $CXXFLAGS -std=c++11 -I. -I../lib \
+    $SRC/libzip/regress/zip_write_encrypt_pkware_file_fuzzer.cc \
+    -o $OUT/zip_write_encrypt_pkware_file_fuzzer \
+    $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
+
+$CXX $CXXFLAGS -std=c++11 -I. -I../lib \
+    $SRC/libzip/regress/zip_read_encrypted_archive_fuzzer.cc \
+    -o $OUT/zip_read_encrypted_archive_fuzzer \
+    $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto 
+    
 find $SRC/libzip/regress -name "*.zip" | \
      xargs zip $OUT/zip_read_fuzzer_seed_corpus.zip
 
-cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
+find $SRC/libzip/regress -name "*_corpus*" | \
+     xargs zip $OUT/zip_write_encrypt_pkware_file_fuzzer_seed_corpus.zip
 
+find $SRC/libzip/regress -name "*_corpus*" | \
+     xargs zip $OUT/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip
+
+find $SRC/libzip/regress -name "*_aes*" | \
+     xargs zip $OUT/zip_read_encrypted_arhive_fuzzer_seed_corpus.zip
+
+cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
