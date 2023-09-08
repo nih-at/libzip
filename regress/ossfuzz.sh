@@ -18,6 +18,8 @@
 # This script is meant to be run by
 # https://github.com/google/oss-fuzz/blob/master/projects/libzip/Dockerfile
 
+mv $SRC/libzip/regress/fuzzers/* $SRC/libzip/regress
+
 mkdir build
 cd build
 cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DENABLE_OPENSSL=ON -DBUILD_TOOLS=OFF -DENABLE_LZMA=OFF -DHAVE_CRYPTO=ON ..
