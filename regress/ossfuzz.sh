@@ -18,7 +18,6 @@
 # This script is meant to be run by
 # https://github.com/google/oss-fuzz/blob/master/projects/libzip/Dockerfile
 
-mv $SRC/libzip/regress/fuzzers/* $SRC/libzip/regress
 
 mkdir build
 cd build
@@ -44,17 +43,11 @@ $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
     $SRC/libzip/regress/zip_read_encrypted_archive_fuzzer.cc \
     -o $OUT/zip_read_encrypted_archive_fuzzer \
     $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto 
-    
-find $SRC/libzip/regress -name "*.zip" | \
-     xargs zip $OUT/zip_read_fuzzer_seed_corpus.zip
 
-find $SRC/libzip/regress -name "*_corpus*" | \
-     xargs zip $OUT/zip_write_encrypt_pkware_file_fuzzer_seed_corpus.zip
 
-find $SRC/libzip/regress -name "*_corpus*" | \
-     xargs zip $OUT/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip
-
-find $SRC/libzip/regress -name "*_aes*" -o -name "*.zip" | \
-     xargs zip $OUT/zip_read_encrypted_arhive_fuzzer_seed_corpus.zip
+cp $SRC/libzip/regress/zip_read_fuzzer_seed_corpus.zip $OUT/
+cp $SRC/libzip/regress/zip_write_encrypt_pkware_file_fuzzer_seed_corpus.zip $OUT/
+cp $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip $OUT/
+cp $SRC/libzip/regress/zip_read_encrypted_arhive_fuzzer_seed_corpus.zip $OUT/
 
 cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
