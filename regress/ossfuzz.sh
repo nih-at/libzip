@@ -47,8 +47,8 @@ $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
 find $SRC/libzip/regress -name "*zip" -not -name "*fuzzer_seed_corpus*" | \
      xargs zip $OUT/zip_read_fuzzer_seed_corpus.zip
 
-cp $SRC/libzip/regress/zip_write_encrypt_pkware_file_fuzzer_seed_corpus.zip $OUT/
 cp $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip $OUT/
+cp $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip $OUT/zip_write_encrypt_pkware_file_fuzzer_seed_corpus.zip
 cp $SRC/libzip/regress/zip_read_encrypted_file_fuzzer_seed_corpus.zip $OUT/
 
 cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
