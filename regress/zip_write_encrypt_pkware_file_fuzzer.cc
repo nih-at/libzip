@@ -27,8 +27,8 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     zip_file_t* f;
 
     std::string path = random_string(20) + "_pkware"+ ".zip";
-    const char *password = "secretpassword";
-    const char * file    = "file";   
+    const char *password = random_string(20).c_str();
+    const char * file    = random_string(20).c_str();
     int error = 0;
     struct zip *archive = zip_open(path.c_str(), ZIP_CREATE, &error);
 
