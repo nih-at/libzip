@@ -4,12 +4,16 @@
 #include <fstream>
 #include <string>  
 
-// Forward declaration of the random_string function
 std::string random_string(size_t length);
 
 #ifdef __cplusplus
 extern "C"
 #endif
+
+/**
+This fuzzing target takes input data, creates a ZIP archive from it, checks the archive's consistency, 
+and iterates over the entries in the archive, reading data from each entry.
+**/
 
 int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {

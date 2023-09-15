@@ -8,6 +8,10 @@
 extern "C"
 #endif
 
+/**
+This fuzzer target simulates the process of handling encrypted files within a ZIP archive .
+**/
+
 int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     zip_source_t* src;
