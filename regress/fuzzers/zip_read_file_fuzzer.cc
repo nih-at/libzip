@@ -42,13 +42,12 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 
             while (zip_fread(f, buf, sizeof(buf)) > 0) {
                 ;
-            }                
-            zip_close(za);
-            
-        }
-
-        std::remove(name.c_str()); 
+            }       
             zip_fclose(f);
+                     
+        }
+        zip_close(za);
+        std::remove(name.c_str()); 
 
     }
     else {

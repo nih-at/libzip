@@ -57,4 +57,4 @@ cp $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip $OUT
 cp $SRC/libzip/regress/zip_read_encrypted_file_fuzzer_seed_corpus.zip $OUT/
 
 cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
-cp $OUT/zip_read_fuzzer_seed_corpus.zip $OUT/zip_read_file_fuzzer_seed_corpus.zip###CHANGE
+cp $OUT/zip_read_fuzzer_seed_corpus.zip $OUT/zip_read_file_fuzzer_seed_corpus.zip
