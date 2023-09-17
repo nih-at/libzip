@@ -32,7 +32,7 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
         outfile.write(reinterpret_cast<const char*>(data), size);
         outfile.close();
 
-        za = zip_open(name.c_str(), ZIP_CHECKCONS, NULL);
+        za = zip_open(name.c_str(), 0, NULL);
         n = zip_get_num_entries(za, 0);
         for (i = 0; i < n; i++) {
             f = zip_fopen_index(za, i, 0);
@@ -44,9 +44,11 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
                 ;
             }                
             zip_close(za);
-            std::remove(name.c_str()); 
-            zip_fclose(f);
+            
         }
+
+        std::remove(name.c_str()); 
+            zip_fclose(f);
 
     }
     else {
