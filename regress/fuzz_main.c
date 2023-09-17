@@ -1,4 +1,4 @@
-#include "zip_read_fuzzer.cc"
+#include "fuzzers/zip_read_fuzzer.cc"
 #include <stdio.h>
 #include <stdlib.h>
 

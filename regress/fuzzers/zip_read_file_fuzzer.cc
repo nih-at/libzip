@@ -86,4 +86,6 @@ random_string(size_t length) {
     std::generate_n(str.begin(), length, randchar);
     return str;
 }
+#ifdef __cplusplus
 }
+#endif
