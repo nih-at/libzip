@@ -32,49 +32,31 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
         outfile.write(reinterpret_cast<const char*>(data), size);
         outfile.close();
 
-        struct zip* archive = zip_open(name.c_str(), ZIP_CHECKCONS, NULL);
+        za = zip_open(name.c_str(), ZIP_CHECKCONS, NULL);
         if (archive) {
             int result = zip_close(archive);
-        } 
+            zip_error_fini(&error);
+
+            n = zip_get_num_entries(za, 0);
+            for (i = 0; i < n; i++) {
+                f = zip_fopen_index(za, i, 0);
+                if (f == NULL) {
+                    continue;
+                }
+
+                while (zip_fread(f, buf, sizeof(buf)) > 0) {
+                    ;
+                }
+                zip_close(za);
+                std::remove(name.c_str()); 
+                zip_fclose(f);
+            }
+
+        }
     } else {
         std::cerr << "Unable to open the file." << std::endl;
     }
-    std::remove(name.c_str()); 
-
-    zip_error_init(&error);
-
-    if ((src = zip_source_buffer_create(data, size, 0, &error)) == NULL) {
-        zip_error_fini(&error);
-        return 0;
-    }
-
-    
-    if ((za = zip_open_from_source(src, 0, &error)) == NULL) {
-        zip_source_free(src);
-        zip_error_fini(&error);
-        return 0;
-    }
-
-    
-    zip_error_fini(&error);
-
-    n = zip_get_num_entries(za, 0);
-
-    for (i = 0; i < n; i++) {
-        f = zip_fopen_index(za, i, 0);
-        if (f == NULL) {
-            continue;
-        }
-
-        while (zip_fread(f, buf, sizeof(buf)) > 0) {
-            ;
-        }
-
-        zip_fclose(f);
-    }
-
-    zip_close(za);
-
+        
     return 0;
 }
 
