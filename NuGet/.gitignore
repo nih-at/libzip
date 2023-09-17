@@ -1,7 +1,10 @@
+# Visual Studio temporary files
 .vs
 packages
 libzip/x64
-libzip/NuGet包/build/native/lib
-*.nupkg
-README.md
-LICENSE.txt
+# The following files are generated during the NuGetPack.ps1 packaging process and should not appear in the Git repository.
+libzip/NuGetPack/README.md
+libzip/NuGetPack/LICENSE.txt
+libzip/NuGetPack/build/native/include/zip.h
+libzip/*.nupkg
+# lib, pdb, and idb files are not excluded from Git because they are related to the VS platform toolset version. I guess they should be kept in Git to support as many versions of the VS platform toolset as possible.

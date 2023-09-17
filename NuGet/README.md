@@ -1,0 +1,1 @@
+Run libzip\NuGetPack.ps1 with PowerShell to make a NuGet package. Do not use the nuget command directly because some files need to be generated temporarily.
