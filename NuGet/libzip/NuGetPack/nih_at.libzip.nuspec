@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+	<metadata>
+		<id>nih_at.libzip</id>
+		<version>1.10.1.0</version>
+		<readme>README.md</readme>
+		<description>
+			A C library for reading, creating, and modifying zip archives.
+			Supported platform: x64. Supported platform toolset: v143.
+		</description>
+		<authors>Dieter Baron and Thomas Klausner</authors>
+		<projectUrl>https://github.com/nih-at/libzip</projectUrl>
+		<tags>native Static v143 x64 libzip</tags>
+		<icon>Icon.png</icon>
+		<license type="file">LICENSE.txt</license>
+		<summary>A C library for reading, creating, and modifying zip archives.</summary>
+		<releaseNotes>
+			https://github.com/nih-at/libzip/releases/tag/v1.10.1
+		</releaseNotes>
+	</metadata>
+</package>

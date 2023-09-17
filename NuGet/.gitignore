@@ -3,3 +3,5 @@ packages
 libzip/x64
 libzip/NuGet包/build/native/lib
 *.nupkg
+README.md
+LICENSE.txt

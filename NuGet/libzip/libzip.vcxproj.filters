@@ -18,10 +18,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuGetPack\nih_at.libzip.nuspec" />
+    <None Include="NuGetPack\build\native\nih_at.libzip.targets" />
+    <None Include="NuGetPack.ps1" />
     <None Include="packages.config" />
-    <None Include="NuGet包\EbolaChan.libzip.nuspec" />
-    <None Include="NuGet包\build\native\EbolaChan.LibZip.targets" />
-    <None Include="NuGet打包.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="zip_err_str.c">
@@ -398,14 +398,14 @@
     <ClInclude Include="..\..\lib\zipint.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NuGet包\build\native\include\zip.h">
+    <ClInclude Include="NuGetPack\build\native\include\zip.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NuGet包\build\native\include\zipconf.h">
+    <ClInclude Include="NuGetPack\build\native\include\zipconf.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(ZLibDir)lib\$(Platform)\$(Configuration)\$(ZLibName).lib" />
+    <Library Include="$(ZLibDir)lib\$(Platform)\Debug\$(ZLibName).lib" />
   </ItemGroup>
 </Project>
