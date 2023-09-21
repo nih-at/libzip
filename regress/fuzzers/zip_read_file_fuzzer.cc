@@ -3,8 +3,6 @@
 #include <string>
 #include <zip.h>
 
-std::string random_string(size_t length);
-
 #ifdef __cplusplus
 extern "C" {
 #if 0
@@ -12,6 +10,8 @@ extern "C" {
     }
 #endif
 #endif
+
+std::string random_string(size_t length);
 
 /**
    This fuzzing target takes input data, creates a ZIP archive from it, checks the archive's consistency,
