@@ -63,13 +63,12 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
             std::cerr << "Error closing archive." << std::endl;
             return 1;
         }
-        std::remove(name.c_str());
     }
     else {
         std::cerr << "Unable to open the file." << std::endl;
         return 1;
     }
-
+    std::remove(name.c_str());
     return 0;
 }
 
