@@ -37,6 +37,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
         za = zip_open(name.c_str(), 0, NULL);
         if (za == NULL) {
+            std::remove(name.c_str());
             std::cerr << "Error opening archive." << std::endl;
             return 1;
         }
@@ -45,6 +46,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         for (i = 0; i < n; i++) {
             f = zip_fopen_index(za, i, 0);
             if (f == NULL) {
+                std::remove(name.c_str());
                 std::cerr << "Unable to open file." << std::endl;
                 zip_close(za);
                 return 1;
@@ -54,22 +56,24 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
                 ;
             }
             if (zip_fclose(f) < 0) {
+                std::remove(name.c_str());
                 std::cerr << "Error closing file." << std::endl;
                 zip_close(za);
                 return 1;
             }
         }
         if (zip_close(za) < 0) {
+            std::remove(name.c_str());
             std::cerr << "Error closing archive." << std::endl;
             return 1;
         }
-        std::remove(name.c_str());
     }
     else {
+        std::remove(name.c_str());
         std::cerr << "Unable to open the file." << std::endl;
         return 1;
     }
-
+    std::remove(name.c_str());
     return 0;
 }
 
