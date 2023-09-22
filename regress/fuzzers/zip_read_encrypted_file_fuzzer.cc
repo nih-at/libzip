@@ -1,26 +1,29 @@
-#include <zip.h>
-#include <zipint.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
+#include <zip.h>
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
+#if 0
+    /* fix autoindent */
+    }
+#endif
 #endif
 
 /**
-This fuzzer target simulates the process of handling encrypted files within a ZIP archive .
+   This fuzzer target simulates the process of handling encrypted
+   files within a ZIP archive.
 **/
 
-int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
-{
-    zip_source_t* src;
-    zip_t* za;
+int
+LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+    zip_source_t *src;
+    zip_t *za;
     zip_error_t error;
     char buf[32768];
     zip_int64_t i, n;
-    zip_file_t* f;
-
+    zip_file_t *f;
 
     if ((src = zip_source_buffer_create(data, size, 0, &error)) == NULL) {
         zip_error_fini(&error);
@@ -49,9 +52,20 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
         return 1;
     }
 
-    
-    zip_fclose(file);
-    zip_close(za);
+    /* TODO: read file */
+
+    if (zip_fclose(file) < 0) {
+        std::cerr << "Failed to close encrypted file" << std::endl;
+        zip_close(za);
+        return 1;
+    }
+    if (zip_close(za) < 0) {
+        std::cerr << "Failed to close archive" << std::endl;
+        return 1;
+    }
 
     return 0;
 }
+#ifdef __cplusplus
+}
+#endif
