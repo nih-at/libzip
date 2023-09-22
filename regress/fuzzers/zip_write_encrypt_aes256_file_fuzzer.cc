@@ -39,25 +39,30 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     struct zip *archive = zip_open(path.c_str(), ZIP_CREATE, &error);
 
     if (error) {
+        std::remove(path.c_str());
         return -1;
     }
 
     struct zip_source *source = zip_source_buffer(archive, data, size, 0);
     if (source == NULL) {
+        std::remove(path.c_str());
         printf("failed to create source buffer. %s\n", zip_strerror(archive));
         return -1;
     }
 
     int index = (int)zip_file_add(archive, file.c_str(), source, ZIP_FL_OVERWRITE);
     if (index < 0) {
+        std::remove(path.c_str());
         printf("failed to add file to archive: %s\n", zip_strerror(archive));
         return -1;
     }
     if (zip_file_set_encryption(archive, index, ZIP_EM_AES_256, password.c_str()) < 0) {
+        std::remove(path.c_str());
         printf("failed to set file encryption: %s\n", zip_strerror(archive));
         return -1;
     }
     if (zip_close(archive) < 0) {
+        std::remove(path.c_str());
         printf("error closing archive: %s\n", zip_strerror(archive));
         return -1;
     }
