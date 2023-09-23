@@ -49,7 +49,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         return 1;
     }
 
-    while (zip_fread(f, buf, sizeof(buf)) > 0) {
+    while (zip_fread(file, buf, sizeof(buf)) > 0) {
         ;
     }
 
