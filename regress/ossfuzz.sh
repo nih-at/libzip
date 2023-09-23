@@ -25,11 +25,6 @@ cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DENABLE_
 make -j$(nproc)
 
 $CC $CFLAGS -I. -I../lib \
-    $SRC/libzip/regress/zip_read_encrypted_file_fuzzer.c \
-    -o $OUT/zip_read_encrypted_file_fuzzer \
-    $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
-
-$CC $CFLAGS -I. -I../lib \
     $SRC/libzip/regress/zip_read_file_fuzzer.c \
     -o $OUT/zip_read_file_fuzzer \
     $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
@@ -54,7 +49,6 @@ find $SRC/libzip/regress -name "*zip" -not -name "*fuzzer_seed_corpus*" | \
 
 cp $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip $OUT/
 cp $SRC/libzip/regress/zip_write_encrypt_aes256_file_fuzzer_seed_corpus.zip $OUT/zip_write_encrypt_pkware_file_fuzzer_seed_corpus.zip
-cp $SRC/libzip/regress/zip_read_encrypted_file_fuzzer_seed_corpus.zip $OUT/
 
 cp $SRC/libzip/regress/zip_read_fuzzer.dict $OUT/
 cp $OUT/zip_read_fuzzer_seed_corpus.zip $OUT/zip_read_file_fuzzer_seed_corpus.zip
