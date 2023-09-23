@@ -1,13 +1,5 @@
 #include <zip.h>
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-    /* fix autoindent */
-    }
-#endif
-#endif
-
 /**
    This fuzzer target simulates the process of handling encrypted
    files within a ZIP archive.
@@ -63,6 +55,3 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     return 0;
 }
-#ifdef __cplusplus
-}
-#endif

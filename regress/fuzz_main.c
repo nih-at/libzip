@@ -1,8 +1,10 @@
-#include "fuzzers/zip_read_fuzzer.cc"
+#include "fuzzers/zip_read_fuzzer.c"
 #include <stdio.h>
 #include <stdlib.h>
 
 /* fuzz target entry point, works without libFuzzer */
+
+extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 
 int
 main(int argc, char **argv) {

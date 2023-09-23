@@ -1,12 +1,5 @@
 #include <zip.h>
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-    /* fix autoindent */
-    }
-#endif
-#endif
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_source_t *src;
@@ -50,7 +43,3 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     return 0;
 }
-
-#ifdef __cplusplus
-}
-#endif
