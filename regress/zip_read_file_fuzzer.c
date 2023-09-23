@@ -25,6 +25,9 @@ randomize(char *buf, int count) {
    and iterates over the entries in the archive, reading data from each entry.
 **/
 
+#ifdef __cplusplus
+extern "C"
+#endif
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_t *za;

@@ -6,6 +6,9 @@
    files within a ZIP archive.
 **/
 
+#ifdef __cplusplus
+extern "C"
+#endif
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_source_t *src;
