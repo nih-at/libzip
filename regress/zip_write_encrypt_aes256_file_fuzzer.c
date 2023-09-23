@@ -9,10 +9,10 @@ randomize(char *buf, int count) {
     const char *charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     int charlen;
     int i;
-    charlen = strlen(charset);
-    srandom(time(NULL));
+    charlen = (int)strlen(charset);
+    srand(time(NULL));
     for (i = 0; i < count; i++) {
-        buf[i] = charset[random() % charlen];
+        buf[i] = charset[rand() % charlen];
     }
 }
 

@@ -1,11 +1,9 @@
 #include <errno.h>
-#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
 #include <zip.h>
 
 void
@@ -13,10 +11,10 @@ randomize(char *buf, int count) {
     const char *charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     int charlen;
     int i;
-    charlen = strlen(charset);
-    srandom(time(NULL));
+    charlen = (int)strlen(charset);
+    srand(time(NULL));
     for (i = 0; i < count; i++) {
-        buf[i] = charset[random() % charlen];
+        buf[i] = charset[rand() % charlen];
     }
 }
 
@@ -35,20 +33,21 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_int64_t i, n;
     zip_file_t *f;
     char name[20 + 4 + 1];
-    int fd;
+    FILE *fp;
 
     snprintf(name, sizeof(name), "XXXXXXXXXXXXXXXXXXXX.zip");
     randomize(name, 20);
 
-    if ((fd = open(name, O_WRONLY | O_CREAT | O_EXCL, 0600)) < 0) {
+    if ((fp = fopen(name, "w+bx")) == NULL) {
         fprintf(stderr, "can't create file '%s': %s\n", name, strerror(errno));
         return 1;
     }
-    if (write(fd, data, size) != size) {
+    if (fwrite(data, 1, size, fp) != size) {
+        fclose(fp);
         fprintf(stderr, "can't write data to file '%s': %s\n", name, strerror(errno));
         return 1;
     }
-    if (close(fd) < 0) {
+    if (fclose(fp) < 0) {
         fprintf(stderr, "can't close file '%s': %s\n", name, strerror(errno));
         return 1;
     }
