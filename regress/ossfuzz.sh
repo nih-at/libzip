@@ -41,7 +41,7 @@ $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
 
 $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
     $SRC/libzip/regress/fuzzers/zip_read_encrypted_file_fuzzer.cc \
-    -o $OUT/zip_read_encrypted_archive_fuzzer \
+    -o $OUT/zip_read_encrypted_file_fuzzer \
     $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
 
 $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
