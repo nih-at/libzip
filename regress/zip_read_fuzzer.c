@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <zip.h>
 
 int
