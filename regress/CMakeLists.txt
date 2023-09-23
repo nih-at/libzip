@@ -1,11 +1,18 @@
 check_function_exists(getopt HAVE_GETOPT)
 
+set(FUZZ_PROGRAMS
+  zip_read_encrypted_file_fuzzer
+  zip_read_file_fuzzer
+  zip_read_fuzzer
+  zip_write_encrypt_aes256_file_fuzzer
+  zip_write_encrypt_pkware_file_fuzzer
+)
+
 set(TEST_PROGRAMS
   add_from_filep
   can_clone_file
   fopen_unchanged
   fseek
-  fuzz_main
   nonrandomopentest
   liboverride-test
 )
@@ -20,7 +27,7 @@ set(HOLE_USERS
   ziptool_regress
 )
 
-set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS})
+set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS} ${FUZZ_PROGRAMS})
 
 foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   add_executable(${PROGRAM} ${PROGRAM}.c)
@@ -38,6 +45,10 @@ endif(NOT HAVE_GETOPT)
 
 foreach(PROGRAM IN LISTS HOLE_USERS)
   target_sources(${PROGRAM} PRIVATE source_hole.c)
+endforeach()
+
+foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
+  target_sources(${PROGRAM} PRIVATE fuzz_main.c)
 endforeach()
 
 # for including ziptool.c

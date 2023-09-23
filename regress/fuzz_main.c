@@ -1,4 +1,3 @@
-#include "fuzzers/zip_read_fuzzer.c"
 #include <stdio.h>
 #include <stdlib.h>
 
