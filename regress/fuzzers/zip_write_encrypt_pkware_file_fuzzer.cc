@@ -39,12 +39,6 @@ different file types.
 
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-    zip_source_t *src;
-    zip_t *za;
-    char buf[32768];
-    zip_int64_t i, n;
-    zip_file_t *f;
-
     std::string path = random_string(20) + "_pkware" + ".zip";
     std::string password = random_string(20);
     std::string file = random_string(20);

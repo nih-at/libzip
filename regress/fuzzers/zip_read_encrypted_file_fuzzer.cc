@@ -19,8 +19,6 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_t *za;
     zip_error_t error;
     char buf[32768];
-    zip_int64_t i, n;
-    zip_file_t *f;
 
     if ((src = zip_source_buffer_create(data, size, 0, &error)) == NULL) {
         zip_error_fini(&error);

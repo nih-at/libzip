@@ -32,9 +32,7 @@ extern "C" {
 
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-    zip_source_t *src;
     zip_t *za;
-    zip_error_t error;
     char buf[32768];
     zip_int64_t i, n;
     zip_file_t *f;
