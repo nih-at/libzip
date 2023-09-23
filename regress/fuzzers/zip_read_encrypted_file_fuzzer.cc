@@ -1,6 +1,3 @@
-#include <fstream>
-#include <iostream>
-#include <string>
 #include <zip.h>
 
 #ifdef __cplusplus
@@ -39,7 +36,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     int file_index = zip_name_locate(za, "file", 0);
 
     if (file_index < 0) {
-        std::cerr << "Failed to locate encrypted file in ZIP archive" << std::endl;
+        fprintf(stderr, "Failed to locate encrypted file in ZIP archive\n");
         zip_close(za);
         return 1;
     }
@@ -47,20 +44,22 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_file_t *file = zip_fopen_index_encrypted(za, file_index, 0, "secretpassword");
 
     if (!file) {
-        std::cerr << "Failed to open encrypted file for reading" << std::endl;
+        fprintf(stderr, "Failed to open encrypted file for reading\n");
         zip_close(za);
         return 1;
     }
 
-    /* TODO: read file */
+    while (zip_fread(f, buf, sizeof(buf)) > 0) {
+        ;
+    }
 
     if (zip_fclose(file) < 0) {
-        std::cerr << "Failed to close encrypted file" << std::endl;
+        fprintf(stderr, "Failed to close encrypted file\n");
         zip_close(za);
         return 1;
     }
     if (zip_close(za) < 0) {
-        std::cerr << "Failed to close archive" << std::endl;
+        fprintf(stderr, "Failed to close archive\n");
         return 1;
     }
 
