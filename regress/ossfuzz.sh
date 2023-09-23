@@ -44,8 +44,8 @@ $CXX $CXXFLAGS -std=c++11 -I. -I../lib \
     -o $OUT/zip_write_encrypt_aes256_file_fuzzer \
     $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
 
-$CXX $CXXFLAGS -std=c++11 -I. -I../lib \
-    $SRC/libzip/regress/fuzzers/zip_write_encrypt_pkware_file_fuzzer.cc \
+$CXX $CXXFLAGS -I. -I../lib \
+    $SRC/libzip/regress/fuzzers/zip_write_encrypt_pkware_file_fuzzer.c \
     -o $OUT/zip_write_encrypt_pkware_file_fuzzer \
     $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
 
