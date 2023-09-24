@@ -46,25 +46,25 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     struct zip_source *source = zip_source_buffer(archive, data, size, 0);
     if (source == NULL) {
-        zip_discard(archive);
         fprintf(stderr, "failed to create source buffer. %s\n", zip_strerror(archive));
+        zip_discard(archive);
         return -1;
     }
 
     int index = (int)zip_file_add(archive, file, source, ZIP_FL_OVERWRITE);
     if (index < 0) {
-        zip_discard(archive);
         fprintf(stderr, "failed to add file to archive: %s\n", zip_strerror(archive));
+        zip_discard(archive);
         return -1;
     }
     if (zip_file_set_encryption(archive, index, ZIP_EM_TRAD_PKWARE, password) < 0) {
-        zip_discard(archive);
         fprintf(stderr, "failed to set file encryption: %s\n", zip_strerror(archive));
+        zip_discard(archive);
         return -1;
     }
     if (zip_close(archive) < 0) {
-        zip_discard(archive);
         fprintf(stderr, "error closing archive: %s\n", zip_strerror(archive));
+        zip_discard(archive);
         return -1;
     }
     remove(path);
