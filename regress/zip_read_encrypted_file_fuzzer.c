@@ -13,6 +13,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_error_t error;
     char buf[32768];
 
+    zip_error_init(&error);
     if ((src = zip_source_buffer_create(data, size, 0, &error)) == NULL) {
         zip_error_fini(&error);
         return 0;
@@ -23,6 +24,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         zip_error_fini(&error);
         return 0;
     }
+    zip_error_fini(&error);
 
     int file_index = zip_name_locate(za, "file", 0);
 
