@@ -67,7 +67,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         zip_discard(archive);
         return -1;
     }
-    remove(path);
+    (void)remove(path);
 
     return 0;
 }

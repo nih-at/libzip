@@ -49,7 +49,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     za = zip_open(name, 0, NULL);
     if (za == NULL) {
-        remove(name);
+        (void)remove(name);
         fprintf(stderr, "Error opening archive '%s'\n", name);
         return 1;
     }
@@ -60,7 +60,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         if (f == NULL) {
             fprintf(stderr, "Unable to open file %d.\n", (int)i);
             zip_close(za);
-            remove(name);
+            (void)remove(name);
             return 1;
         }
 
@@ -70,16 +70,16 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         if (zip_fclose(f) < 0) {
             fprintf(stderr, "Error closing file %d\n", (int)i);
             zip_close(za);
-            remove(name);
+            (void)remove(name);
             return 1;
         }
     }
     if (zip_close(za) < 0) {
         zip_discard(za);
-        remove(name);
+        (void)remove(name);
         fprintf(stderr, "Error closing archiv '%s'\n", name);
         return 1;
     }
-    remove(name);
+    (void)remove(name);
     return 0;
 }
