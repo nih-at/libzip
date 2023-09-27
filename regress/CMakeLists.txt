@@ -1,13 +1,5 @@
 check_function_exists(getopt HAVE_GETOPT)
 
-set(FUZZ_PROGRAMS
-  zip_read_encrypted_file_fuzzer
-  zip_read_file_fuzzer
-  zip_read_fuzzer
-  zip_write_encrypt_aes256_file_fuzzer
-  zip_write_encrypt_pkware_file_fuzzer
-)
-
 set(TEST_PROGRAMS
   add_from_filep
   can_clone_file
@@ -27,7 +19,7 @@ set(HOLE_USERS
   ziptool_regress
 )
 
-set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS} ${FUZZ_PROGRAMS})
+set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS})
 
 foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   add_executable(${PROGRAM} ${PROGRAM}.c)

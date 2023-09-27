@@ -31,7 +31,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     int error = 0;
     struct zip *archive;
 
-    snprintf(path, sizeof(path), "XXXXXXXXXXXXXXXXXXXX_pkware.zip");
+    snprintf(path, sizeof(path), "XXXXXXXXXXXXXXXXXXXX_aes256.zip");
     snprintf(password, sizeof(password), "XXXXXXXXXXXXXXXXXXXX");
     snprintf(file, sizeof(file), "XXXXXXXXXXXXXXXXXXXX");
     randomize(path, 20);
@@ -52,6 +52,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     int index = (int)zip_file_add(archive, file, source, ZIP_FL_OVERWRITE);
     if (index < 0) {
         fprintf(stderr, "failed to add file to archive: %s\n", zip_strerror(archive));
+        zip_source_free(source);
         zip_discard(archive);
         return -1;
     }
