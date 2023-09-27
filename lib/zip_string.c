@@ -88,8 +88,10 @@ _zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip
 
     if ((flags & ZIP_FL_ENC_RAW) == 0) {
         /* start guessing */
-        if (string->encoding == ZIP_ENCODING_UNKNOWN)
-            _zip_guess_encoding(string, ZIP_ENCODING_UNKNOWN);
+        if (string->encoding == ZIP_ENCODING_UNKNOWN) {
+            /* guess encoding, sets string->encoding */
+            (void)_zip_guess_encoding(string, ZIP_ENCODING_UNKNOWN);
+        }
 
         if (((flags & ZIP_FL_ENC_STRICT) && string->encoding != ZIP_ENCODING_ASCII && string->encoding != ZIP_ENCODING_UTF8_KNOWN) || (string->encoding == ZIP_ENCODING_CP437)) {
             if (string->converted == NULL) {
