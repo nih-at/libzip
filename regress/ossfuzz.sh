@@ -1,3 +1,3 @@
 #!/bin/bash -eu
 
-exec /bin/bash -eu $SRC/ossfuzz/ossfuzz.sh
+exec /bin/bash -eu $SRC/libzip/ossfuzz/ossfuzz.sh
