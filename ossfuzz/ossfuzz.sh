@@ -32,7 +32,6 @@ do
       $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
 done
 
-# cp $SRC/libzip/ossfuzz/zip_read_fuzzer_seed_corpus.zip $OUT
 find $SRC/libzip/regress -name "*zip" | \
      xargs zip $OUT/zip_read_fuzzer_seed_corpus.zip
 cp $SRC/libzip/ossfuzz/zip_read_fuzzer.dict $OUT/
