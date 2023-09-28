@@ -49,6 +49,7 @@ do
     if [ -f $OUT/$source$file ]
     then
       cp $OUT/$source$file $OUT/$target$file
+    fi
   done
 done
 
