@@ -27,7 +27,7 @@ randomize(char *buf, int count) {
 }
 
 
-int
+extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     char path[20 + 7 + 4 + 1], password[21], file[21];
     int error = 0;

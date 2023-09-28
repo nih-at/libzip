@@ -3,7 +3,7 @@
 
 #include "zip_read_fuzzer_common.h"
 
-int
+extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_source_t *src;
     zip_error_t error;
