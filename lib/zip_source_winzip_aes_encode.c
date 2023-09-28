@@ -83,6 +83,9 @@ zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 static int
 encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     zip_uint16_t salt_length = SALT_LENGTH(ctx->encryption_method);
+    /* TODO: The memset() is just for testing the memory sanitizer,
+       zip_secure_random() will overwrite the same bytes */
+    memset(ctx->data, 0xff, salt_length);
     if (!zip_secure_random(ctx->data, salt_length)) {
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
         return -1;
