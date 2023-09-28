@@ -45,10 +45,13 @@
    and iterates over the entries in the archive, reading data from each entry.
 **/
 
-extern "C" int
+#ifdef __cplusplus
+extern "C"
+#endif
+int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_t *za;
-    char *name = "test.zip";
+    const char *name = "test.zip";
     FILE *fp;
     zip_error_t error;
     int err = 0;
