@@ -33,7 +33,7 @@
 
 #include "zip.h"
 
-void fuzzer_read(zip_t *za, zip_error_t *error, char *password) {
+void fuzzer_read(zip_t *za, zip_error_t *error, const char *password) {
     zip_int64_t i, n, ret;
     char buf[32768];
 
@@ -42,7 +42,7 @@ void fuzzer_read(zip_t *za, zip_error_t *error, char *password) {
         zip_error_fini(error);
         return;
     }
-    
+
     zip_set_default_password(za, password);
 
     zip_error_fini(error);
