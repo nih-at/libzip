@@ -127,6 +127,9 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
 bool
 _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
     int len = 0;
+    /* TODO: The memset() is just for testing the memory sanitizer,
+       _zip_winzip_aes_new() will overwrite the same bytes */
+    memset(out, 0xff, ZIP_CRYPTO_AES_BLOCK_LENGTH);
     if (EVP_EncryptUpdate(aes, out, &len, in, ZIP_CRYPTO_AES_BLOCK_LENGTH) != 1
         || len != ZIP_CRYPTO_AES_BLOCK_LENGTH) {
         return false;
@@ -214,6 +217,9 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
 
 bool
 _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
+    /* TODO: The memset() is just for testing the memory sanitizer,
+       _zip_winzip_aes_new() will overwrite the same bytes */
+    memset(data, 0xff, ZIP_CRYPTO_SHA1_LENGTH);
 #ifdef USE_OPENSSL_3_API
     size_t length = 0;
     return EVP_MAC_final(hmac->ctx, data, &length, ZIP_CRYPTO_SHA1_LENGTH) == 1 && length == ZIP_CRYPTO_SHA1_LENGTH;
