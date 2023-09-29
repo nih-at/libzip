@@ -21,7 +21,7 @@
 
 mkdir build
 cd build
-cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DENABLE_OPENSSL=ON -DBUILD_TOOLS=OFF -DENABLE_BZIP2=OFF -DENABLE_LZMA=OFF -DENABLE_ZSTD=OFF -DHAVE_CRYPTO=ON ..
+cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DENABLE_OPENSSL=ON -DBUILD_TOOLS=OFF -DHAVE_CRYPTO=ON ..
 make -j$(nproc)
 
 for fuzzer in $(make list-fuzzers | sed -n 's/^FUZZERS: //p')
@@ -29,7 +29,7 @@ do
   $CXX $CFLAGS -I. -I../lib \
     $SRC/libzip/ossfuzz/$fuzzer.c \
       -o $OUT/$fuzzer \
-      $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lz -v -lssl -lcrypto
+      $LIB_FUZZING_ENGINE $SRC/libzip/build/lib/libzip.a -lbz2 -llzma -lz -lzstd -v -lssl -lcrypto
 done
 
 find $SRC/libzip/regress -name "*zip" | \
