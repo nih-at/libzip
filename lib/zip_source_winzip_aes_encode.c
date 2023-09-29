@@ -91,6 +91,9 @@ encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
         return -1;
     }
 
+    /* TODO: The memset() is just for testing the memory sanitizer,
+       _zip_winzip_aes_new() will overwrite the same bytes */
+    memset(ctx->data + salt_length, 0xff, WINZIP_AES_PASSWORD_VERIFY_LENGTH);
     if ((ctx->aes_ctx = _zip_winzip_aes_new((zip_uint8_t *)ctx->password, strlen(ctx->password), ctx->data, ctx->encryption_method, ctx->data + salt_length, &ctx->error)) == NULL) {
         return -1;
     }
