@@ -253,6 +253,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         zip_encryption_implementation enc_impl;
 
         if ((enc_impl = _zip_get_encryption_implementation(st.encryption_method, ZIP_CODEC_DECODE)) == NULL) {
+            zip_source_free(src);
             zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
             return NULL;
         }
