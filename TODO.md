@@ -1,6 +1,5 @@
 ## Fuzzing
 
-- remove memset() calls added for MSAN tests
 - improve AES and PKWARE encryption tests
 - add more
 
