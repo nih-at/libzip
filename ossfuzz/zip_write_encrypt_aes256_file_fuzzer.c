@@ -4,16 +4,6 @@
 #include <time.h>
 #include <zip.h>
 
-void
-randomize(char *buf, int count) {
-    const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    int i;
-    srand(time(NULL));
-    for (i = 0; i < count; i++) {
-        buf[i] = charset[rand() % sizeof(charset)];
-    }
-}
-
 /**
    This fuzzing target takes input data, creates a ZIP archive, load
    it to a buffer, adds a file to it with AES-256 encryption and a
@@ -30,16 +20,11 @@ extern "C"
 #endif
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-    char path[20 + 7 + 4 + 1], password[21], file[21];
+    const char *path = "test_aes256.zip";
+    const char *password = "password";
+    const char *file = "filename";
     int error = 0;
     struct zip *archive;
-
-    snprintf(path, sizeof(path), "XXXXXXXXXXXXXXXXXXXX_aes256.zip");
-    snprintf(password, sizeof(password), "XXXXXXXXXXXXXXXXXXXX");
-    snprintf(file, sizeof(file), "XXXXXXXXXXXXXXXXXXXX");
-    randomize(path, 20);
-    randomize(password, 20);
-    randomize(file, 20);
 
     if ((archive = zip_open(path, ZIP_CREATE, &error)) == NULL) {
         return -1;
