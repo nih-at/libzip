@@ -26,6 +26,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     int error = 0;
     struct zip *archive;
 
+    (void)remove(path);
     if ((archive = zip_open(path, ZIP_CREATE, &error)) == NULL) {
         return -1;
     }
