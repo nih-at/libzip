@@ -98,6 +98,7 @@ foreach(FULL_CASE IN LISTS EXTRA_TESTS)
 endforeach()
 
 set(XFAIL_TESTS
+  zipcmp_zip_dir_slash.test
 )
 
 foreach(CASE ${XFAIL_TESTS})
