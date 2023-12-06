@@ -2,6 +2,7 @@
 
 - improve AES and PKWARE encryption tests
 - add more
+- review memset() uses
 
 ### Torrentzip
 
