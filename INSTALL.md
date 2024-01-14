@@ -22,7 +22,7 @@ listed in order of preference:
 - [mbed TLS](https://tls.mbed.org/)
 
 If you don't want a library even if it is installed, you can
-pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
+pass `-DLIBZIP_ENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
 `COMMONCRYPTO`, `GNUTLS`, `MBEDTLS`, or `OPENSSL`.
 
 For running the tests, you need to have
@@ -44,7 +44,7 @@ Some useful parameters you can pass to `cmake` with `-Dparameter=value`:
 - `BUILD_SHARED_LIBS`: set to `ON` or `OFF` to enable/disable building
   of shared libraries, defaults to `ON`
 - `CMAKE_INSTALL_PREFIX`: for setting the installation path
-- `DOCUMENTATION_FORMAT`: choose one of `man`, `mdoc`, and `html` for
+- `LIBZIP_DOCUMENTATION_FORMAT`: choose one of `man`, `mdoc`, and `html` for
   the installed documentation (default: decided by cmake depending on
   available tools)
 - `LIBZIP_DO_INSTALL`: If you include libzip as a subproject, link it

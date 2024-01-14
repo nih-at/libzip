@@ -51,7 +51,7 @@ zip_fdopen(int fd_orig, int _flags, int *zep) {
         return NULL;
     }
 
-#ifndef ENABLE_FDOPEN
+#ifndef LIBZIP_ENABLE_FDOPEN
     _zip_set_open_error(zep, NULL, ZIP_ER_OPNOTSUPP);
     return NULL;
 #else
