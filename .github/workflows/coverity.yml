@@ -16,7 +16,7 @@ jobs:
       TOKEN: ${{ secrets.COVERITY_TOKEN }}
       PROJECT: libzip
       SHORT_PROJECT: libzip
-      EMAIL: tk@giga.or.at
+      EMAIL: wiz@gatalith.at
       COV_TOOLS: cov-tools
       COV_RESULTS: cov-int
 
