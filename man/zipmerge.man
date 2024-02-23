@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIPMERGE" "1" "December 5, 2022" "NiH" "General Commands Manual"
+.TH "ZIPMERGE" "1" "November 7, 2023" "NiH" "General Commands Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -44,12 +44,15 @@
 \fIsource-zip\fR\ [\fIsource-zip\ ...\fR]
 .SH "DESCRIPTION"
 \fBzipmerge\fR
-merges the source zip archives
+copies files from the source zip archives
 \fIsource-zip\fR
-into the target zip archive
+to the target zip archive
 \fItarget-zip\fR.
 By default, files in the source zip archives overwrite
 existing files of the same name in the target zip archive.
+By default, compressed files in the source archive are
+copied directly without recompression, uncompressed files
+are compressed using the default compression algorithm.
 .PP
 Supported options:
 .TP 5n
@@ -75,13 +78,13 @@ Do not compress files that were uncompressed in
 otherwise they are compressed with the default compression method.
 .TP 5n
 \fB\-S\fR
-Do not overwrite files that have the same size and
+Do not overwrite files that have the same name, size, and
 CRC32 in both the source and target archives.
 .TP 5n
 \fB\-s\fR
 When
 \fB\-i\fR
-is given, do not ask before overwriting files that have the same size
+is given, do not ask before overwriting files that have the same name, size,
 and CRC32.
 .TP 5n
 \fB\-V\fR
@@ -99,7 +102,7 @@ was added in libzip 0.6.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and
-Thomas Klausner <\fItk@giga.or.at\fR>
+Thomas Klausner <\fIwiz@gatalith.at\fR>
 .SH "CAVEATS"
 \fBzipmerge\fR
 uses one open file descriptor per zip archive.

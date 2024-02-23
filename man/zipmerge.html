@@ -64,10 +64,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<code class="Nm">zipmerge</code> merges the source zip archives
-  <var class="Ar">source-zip</var> into the target zip archive
+<code class="Nm">zipmerge</code> copies files from the source zip archives
+  <var class="Ar">source-zip</var> to the target zip archive
   <var class="Ar">target-zip</var>. By default, files in the source zip archives
-  overwrite existing files of the same name in the target zip archive.
+  overwrite existing files of the same name in the target zip archive. By
+  default, compressed files in the source archive are copied directly without
+  recompression, uncompressed files are compressed using the default compression
+  algorithm.
 <p class="Pp">Supported options:</p>
 <dl class="Bl-tag">
   <dt><a class="permalink" href="#D"><code class="Fl" id="D">-D</code></a></dt>
@@ -85,11 +88,11 @@
       <var class="Ar">source-zip</var>, otherwise they are compressed with the
       default compression method.</dd>
   <dt><a class="permalink" href="#S"><code class="Fl" id="S">-S</code></a></dt>
-  <dd>Do not overwrite files that have the same size and CRC32 in both the
-      source and target archives.</dd>
+  <dd>Do not overwrite files that have the same name, size, and CRC32 in both
+      the source and target archives.</dd>
   <dt><a class="permalink" href="#s"><code class="Fl" id="s">-s</code></a></dt>
   <dd>When <code class="Fl">-i</code> is given, do not ask before overwriting
-      files that have the same size and CRC32.</dd>
+      files that have the same name, size, and CRC32.</dd>
   <dt><a class="permalink" href="#V"><code class="Fl" id="V">-V</code></a></dt>
   <dd>Display version information and exit.</dd>
 </dl>
@@ -116,7 +119,7 @@
 <span class="An">Dieter Baron</span>
   &lt;<a class="Mt" href="mailto:dillo@nih.at">dillo@nih.at</a>&gt; and
   <span class="An">Thomas Klausner</span>
-  &lt;<a class="Mt" href="mailto:tk@giga.or.at">tk@giga.or.at</a>&gt;
+  &lt;<a class="Mt" href="mailto:wiz@gatalith.at">wiz@gatalith.at</a>&gt;
 </section>
 <section class="Sh">
 <h1 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
@@ -128,7 +131,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 5, 2022</td>
+    <td class="foot-date">November 7, 2023</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
