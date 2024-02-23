@@ -126,8 +126,6 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     zip_buffer_t *buffer;
     zip_int64_t off;
     zip_uint64_t i;
-    bool is_zip64;
-    int ret;
     zip_uint32_t cdir_crc;
 
     if ((off = zip_source_tell_write(za->src)) < 0) {
@@ -135,8 +133,6 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
         return -1;
     }
     offset = (zip_uint64_t)off;
-
-    is_zip64 = false;
 
     if (ZIP_WANT_TORRENTZIP(za)) {
         cdir_crc = (zip_uint32_t)crc32(0, NULL, 0);
@@ -146,10 +142,9 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     for (i = 0; i < survivors; i++) {
         zip_entry_t *entry = za->entry + filelist[i].idx;
 
-        if ((ret = _zip_dirent_write(za, entry->changes ? entry->changes : entry->orig, ZIP_FL_CENTRAL)) < 0)
+        if (_zip_dirent_write(za, entry->changes ? entry->changes : entry->orig, ZIP_FL_CENTRAL) < 0) {
             return -1;
-        if (ret)
-            is_zip64 = true;
+        }
     }
 
     za->write_crc = NULL;
@@ -160,16 +155,12 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
     }
     size = (zip_uint64_t)off - offset;
 
-    if (offset > ZIP_UINT32_MAX || survivors > ZIP_UINT16_MAX) {
-        is_zip64 = true;
-    }
-
     if ((buffer = _zip_buffer_new(buf, sizeof(buf))) == NULL) {
         zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
         return -1;
     }
 
-    if (is_zip64) {
+    if (survivors > ZIP_UINT16_MAX || offset > ZIP_UINT32_MAX || size > ZIP_UINT32_MAX) {
         _zip_buffer_put(buffer, EOCD64_MAGIC, 4);
         _zip_buffer_put_64(buffer, EOCD64LEN - 12);
         _zip_buffer_put_16(buffer, 45);
