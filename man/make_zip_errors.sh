@@ -108,7 +108,7 @@ cat <<EOF >> "$2.$$" || exit 1
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at
 and
-.An Thomas Klausner Aq Mt tk@giga.or.at
+.An Thomas Klausner Aq Mt wiz@gatalith.at
 EOF
 
 mv "$2.$$" "$2" || exit 1
