@@ -108,7 +108,9 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
 
     if (st.valid & ZIP_STAT_MTIME) {
         unsigned short dostime, dosdate;
-        _zip_u2d_time(st.mtime, &dostime, &dosdate);
+        if (_zip_u2d_time(st.mtime, &dostime, &dosdate, &ctx->error) < 0) {
+            return -1;
+        }
         if (header[ZIP_CRYPTO_PKWARE_HEADERLEN - 1] == dostime >> 8) {
             ok = true;
         }

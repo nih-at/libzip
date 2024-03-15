@@ -524,7 +524,10 @@ _zip_headercomp(const zip_dirent_t *central, const zip_dirent_t *local) {
 	   and global headers for the bitflags */
 	|| (central->bitflags != local->bitflags)
 #endif
-        || (central->comp_method != local->comp_method) || (central->last_mod != local->last_mod) || !_zip_string_equal(central->filename, local->filename))
+        || (central->comp_method != local->comp_method)
+        || (central->last_mod_date != local->last_mod_date)
+        || (central->last_mod_time != local->last_mod_time)
+        || !_zip_string_equal(central->filename, local->filename))
         return -1;
 
     if ((central->crc != local->crc) || (central->comp_size != local->comp_size) || (central->uncomp_size != local->uncomp_size)) {

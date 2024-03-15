@@ -339,7 +339,8 @@ struct zip_dirent {
     zip_uint16_t version_needed;     /* (cl) version needed to extract */
     zip_uint16_t bitflags;           /* (cl) general purpose bit flag */
     zip_int32_t comp_method;         /* (cl) compression method used (uint16 and ZIP_CM_DEFAULT (-1)) */
-    time_t last_mod;                 /* (cl) time of last modification */
+    zip_uint16_t last_mod_time;      /* (cl) time of last modification */
+    zip_uint16_t last_mod_date;      /* (cl) date of last modification */
     zip_uint32_t crc;                /* (cl) CRC-32 of uncompressed data */
     zip_uint64_t comp_size;          /* (cl) size of compressed data */
     zip_uint64_t uncomp_size;        /* (cl) size of uncompressed data */
@@ -647,7 +648,7 @@ zip_t *_zip_new(zip_error_t *);
 
 zip_int64_t _zip_file_replace(zip_t *, zip_uint64_t, const char *, zip_source_t *, zip_flags_t);
 int _zip_set_name(zip_t *, zip_uint64_t, const char *, zip_flags_t);
-void _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *);
+int _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *, zip_error_t *);
 int _zip_unchange(zip_t *, zip_uint64_t, int);
 void _zip_unchange_data(zip_entry_t *);
 int _zip_write(zip_t *za, const void *data, zip_uint64_t length);

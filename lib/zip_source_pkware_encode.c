@@ -95,7 +95,9 @@ encrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
         set_mtime(ctx, &st);
     }
 
-    _zip_u2d_time(ctx->mtime, &dostime, &dosdate);
+    if (_zip_u2d_time(ctx->mtime, &dostime, &dosdate, &ctx->error) < 0) {
+        return -1;
+    }
 
     if ((ctx->buffer = _zip_buffer_new(NULL, ZIP_CRYPTO_PKWARE_HEADERLEN)) == NULL) {
         zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);

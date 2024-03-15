@@ -77,7 +77,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
         }
 
         if (entry->changes != NULL && entry->changes->changed & ZIP_DIRENT_LAST_MOD) {
-            st->mtime = de->last_mod;
+            st->mtime = _zip_d2u_time(de->last_mod_time, de->last_mod_date);
             st->valid |= ZIP_STAT_MTIME;
         }
     }
@@ -86,7 +86,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
 
         st->crc = de->crc;
         st->size = de->uncomp_size;
-        st->mtime = de->last_mod;
+        st->mtime = _zip_d2u_time(de->last_mod_time, de->last_mod_date);
         st->comp_size = de->comp_size;
         st->comp_method = (zip_uint16_t)de->comp_method;
         st->encryption_method = de->encryption_method;
