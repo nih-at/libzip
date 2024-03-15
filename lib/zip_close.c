@@ -44,7 +44,7 @@
 
 static int add_data(zip_t *, zip_source_t *, zip_dirent_t *, zip_uint32_t);
 static int copy_data(zip_t *, zip_uint64_t);
-static int copy_source(zip_t *, zip_source_t *, zip_int64_t);
+static int copy_source(zip_t *, zip_source_t *, zip_source_t *, zip_int64_t);
 static int torrentzip_compare_names(const void *a, const void *b);
 static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
 static int write_data_descriptor(zip_t *za, const zip_dirent_t *dirent, int is_zip64);
@@ -495,7 +495,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
         return -1;
     }
 
-    ret = copy_source(za, src_final, data_length);
+    ret = copy_source(za, src_final, src, data_length);
 
     if (zip_source_stat(src_final, &st) < 0) {
         zip_error_set_from_source(&za->error, src_final);
@@ -605,7 +605,7 @@ copy_data(zip_t *za, zip_uint64_t len) {
 
 
 static int
-copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
+copy_source(zip_t *za, zip_source_t *src, zip_source_t *src_for_length, zip_int64_t data_length) {
     DEFINE_BYTE_ARRAY(buf, BUFSIZE);
     zip_int64_t n, current;
     int ret;
@@ -628,7 +628,13 @@ copy_source(zip_t *za, zip_source_t *src, zip_int64_t data_length) {
             break;
         }
         if (n == BUFSIZE && za->progress && data_length > 0) {
-            current += n;
+            zip_int64_t t;
+            t = zip_source_tell(src_for_length);
+            if (t >= 0) {
+                current = t;
+            } else {
+                current += n;
+            }
             if (_zip_progress_update(za->progress, (double)current / (double)data_length) != 0) {
                 zip_error_set(&za->error, ZIP_ER_CANCELLED, 0);
                 ret = -1;
