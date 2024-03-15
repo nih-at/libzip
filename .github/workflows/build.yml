@@ -27,14 +27,14 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt-get install libzstd-dev
+      - name: install latest CMake and Ninja for lukka/run-vcpkg (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        uses: lukka/get-cmake@latest
       - name: install dependencies (Windows)
         if: ${{ runner.os == 'Windows' }}
-        uses: lukka/run-vcpkg@v7
-        id: runvcpkg
+        uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: f93ba152d55e1d243160e690bc302ffe8638358e
-          vcpkgTriplet: x64-windows
-          vcpkgArguments: zlib bzip2 liblzma zstd
+          vcpkgGitCommitId: 2cf957350da28ad032178a974607f59f961217d9
       - name: prepare build directory and install nihtest
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
