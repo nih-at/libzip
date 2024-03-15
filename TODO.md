@@ -12,7 +12,6 @@
 ## Other
 
 - split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`).
-- Support extended timestamp extra field (0x5455): mtime overrides dos mtime from dirent, function to get/set all three.
 - Check UTF-8 code against https://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt
 
 ## Prefixes
@@ -54,7 +53,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * delete all extra fields during `zip_replace()`
 * function to copy file from one archive to another
 * set `O_CLOEXEC` flag after fopen and mkstemp
-* `zip_file_set_mtime()`: support InfoZIP time stamps
 * support streaming output (creating new archive to e.g. stdout)
 * add function to read/set ASCII file flag
 * `zip_commit()` (to finish changes without closing archive)
