@@ -101,6 +101,9 @@ _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
     zip_encoding_type_t enc;
     const zip_uint8_t *name;
     zip_uint32_t i, j, ulen;
+    bool can_be_ascii = true;
+    bool can_be_utf8 = true;
+    bool has_control_characters = false;
 
     if (str == NULL) {
         return ZIP_ENCODING_ASCII;
@@ -111,15 +114,16 @@ _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
     if (str->encoding != ZIP_ENCODING_UNKNOWN) {
         return str->encoding;
     }
-    enc = ZIP_ENCODING_ASCII;
+
     for (i = 0; i < str->length; i++) {
         if (name[i] < 128) {
-            if (name[i] > 31 || name[i] == '\r' || name[i] == '\n' || name[i] == '\t') {
-                continue;
+            if (name[i] < 32 && name[i] != '\r' && name[i] != '\n' && name[i] != '\t') {
+                has_control_characters = true;
             }
+            continue;
         }
 
-        enc = ZIP_ENCODING_UTF8_GUESSED;
+        can_be_ascii = false;
         if ((name[i] & UTF_8_LEN_2_MASK) == UTF_8_LEN_2_MATCH) {
             ulen = 1;
         }
@@ -130,37 +134,76 @@ _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
             ulen = 3;
         }
         else {
-            enc = ZIP_ENCODING_CP437;
+            can_be_utf8 = false;
             break;
         }
 
         if (i + ulen >= str->length) {
-            enc = ZIP_ENCODING_CP437;
+            can_be_utf8 = false;
             break;
         }
 
         for (j = 1; j <= ulen; j++) {
             if ((name[i + j] & UTF_8_CONTINUE_MASK) != UTF_8_CONTINUE_MATCH) {
-                enc = ZIP_ENCODING_CP437;
+                can_be_utf8 = false;
                 goto done;
             }
         }
         i += ulen;
     }
 
-done:
-    str->encoding = enc;
+ done:
+    enc = ZIP_ENCODING_CP437;
 
-    if (expected_encoding != ZIP_ENCODING_UNKNOWN) {
-        if (expected_encoding == ZIP_ENCODING_UTF8_KNOWN && enc == ZIP_ENCODING_UTF8_GUESSED) {
-            str->encoding = enc = ZIP_ENCODING_UTF8_KNOWN;
+    switch (expected_encoding) {
+    case ZIP_ENCODING_UTF8_KNOWN:
+    case ZIP_ENCODING_UTF8_GUESSED:
+        if (can_be_utf8) {
+            enc = ZIP_ENCODING_UTF8_KNOWN;
         }
+        else {
+            enc = ZIP_ENCODING_ERROR;
+        }
+        break;
 
-        if (expected_encoding != enc && enc != ZIP_ENCODING_ASCII) {
-            return ZIP_ENCODING_ERROR;
+    case ZIP_ENCODING_ASCII:
+        if (can_be_ascii && !has_control_characters) {
+            enc = ZIP_ENCODING_ASCII;
         }
+        else {
+            enc = ZIP_ENCODING_ERROR;
+        }
+        break;
+
+    case ZIP_ENCODING_CP437:
+        enc = ZIP_ENCODING_CP437;
+        break;
+
+    case ZIP_ENCODING_UNKNOWN:
+        if (can_be_ascii && !has_control_characters) {
+            /* only bytes from 0x20-0x7F */
+            enc = ZIP_ENCODING_ASCII;
+        }
+        else if (can_be_ascii && has_control_characters) {
+            /* only bytes from 0x00-0x7F */
+            enc = ZIP_ENCODING_CP437;
+        }
+        else if (can_be_utf8) {
+            /* contains bytes from 0x80-0xFF and is valid UTF-8 */
+            enc =  ZIP_ENCODING_UTF8_GUESSED;
+        }
+        else {
+            /* fallback */
+            enc = ZIP_ENCODING_CP437;
+        }
+        break;
+    case ZIP_ENCODING_ERROR:
+        /* invalid, shouldn't happen */
+        enc = ZIP_ENCODING_ERROR;
+        break;
     }
 
+    str->encoding = enc;
     return enc;
 }
 
