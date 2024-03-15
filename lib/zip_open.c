@@ -144,6 +144,27 @@ zip_open_from_source(zip_source_t *src, int _flags, zip_error_t *error) {
 }
 
 
+static bool
+_is_truncated_zip(zip_source_t *src) {
+    unsigned char data[4];
+    /* check if the source is a truncated zip archive: true if yes, no
+       if not or can't be determined */
+    if (zip_source_seek(src, 0, SEEK_SET) < 0) {
+        return false;
+    }
+
+    if (zip_source_read(src, data, 4) != 4) {
+        return false;
+    }
+
+    if (memcmp(data, LOCAL_MAGIC, 4) == 0) {
+        /* file starts with a ZIP local header signature */
+        return true;
+    }
+    return false;
+}
+
+
 zip_t *
 _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
     zip_t *za;
@@ -174,6 +195,12 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
 
     if ((cdir = _zip_find_central_dir(za, len)) == NULL) {
         _zip_error_copy(error, &za->error);
+        if (zip_error_code_zip(error) == ZIP_ER_NOZIP) {
+            /* not a zip - find out if it's truncated */
+            if (_is_truncated_zip(src)) {
+                zip_error_set(error, ZIP_ER_TRUNCATED_ZIP, 0);
+            }
+        }
         /* keep src so discard does not get rid of it */
         zip_source_keep(src);
         zip_discard(za);

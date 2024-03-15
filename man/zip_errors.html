@@ -2,7 +2,7 @@
 <html>
 <!-- This is an automatically generated file.  Do not edit.
    zip_errors.mdoc -- list of all libzip error codes
-   Copyright (C) 1999-2021 Dieter Baron and Thomas Klausner
+   Copyright (C) 1999-2024 Dieter Baron and Thomas Klausner
   
    This file is part of libzip, a library to manipulate ZIP archives.
    The authors can be contacted at <info@libzip.org>
@@ -33,7 +33,7 @@
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
      This file was generated automatically by ./make_zip_errors.sh
-     from ./../lib/zip.h; make changes there.
+     from ../lib/zip.h; make changes there.
    -->
 <head>
   <meta charset="utf-8"/>
@@ -66,6 +66,8 @@ libzip (-lzip)
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 The following error codes are used by libzip:
 <dl class="Bl-tag">
+  <dt>[<code class="Er">ZIP_ER_CANCELLED</code>]</dt>
+  <dd>Operation cancelled.</dd>
   <dt>[<code class="Er">ZIP_ER_CHANGED</code>]</dt>
   <dd>Entry has been changed.</dd>
   <dt>[<code class="Er">ZIP_ER_CLOSE</code>]</dt>
@@ -76,6 +78,8 @@ The following error codes are used by libzip:
   <dd>Compressed data invalid.</dd>
   <dt>[<code class="Er">ZIP_ER_CRC</code>]</dt>
   <dd>CRC error.</dd>
+  <dt>[<code class="Er">ZIP_ER_DATA_LENGTH</code>]</dt>
+  <dd>Unexpected length of data.</dd>
   <dt>[<code class="Er">ZIP_ER_DELETED</code>]</dt>
   <dd>Entry has been deleted.</dd>
   <dt>[<code class="Er">ZIP_ER_ENCRNOTSUPP</code>]</dt>
@@ -100,6 +104,8 @@ The following error codes are used by libzip:
   <dd>No such file.</dd>
   <dt>[<code class="Er">ZIP_ER_NOPASSWD</code>]</dt>
   <dd>No password provided.</dd>
+  <dt>[<code class="Er">ZIP_ER_NOT_ALLOWED</code>]</dt>
+  <dd>Not allowed in torrentzip.</dd>
   <dt>[<code class="Er">ZIP_ER_NOZIP</code>]</dt>
   <dd>Not a zip archive.</dd>
   <dt>[<code class="Er">ZIP_ER_OK</code>]</dt>
@@ -122,6 +128,8 @@ The following error codes are used by libzip:
   <dd>Tell error.</dd>
   <dt>[<code class="Er">ZIP_ER_TMPOPEN</code>]</dt>
   <dd>Failure to create temporary file.</dd>
+  <dt>[<code class="Er">ZIP_ER_TRUNCATED_ZIP</code>]</dt>
+  <dd>Possibly truncated or corrupted zip archive.</dd>
   <dt>[<code class="Er">ZIP_ER_WRITE</code>]</dt>
   <dd>Write error.</dd>
   <dt>[<code class="Er">ZIP_ER_WRONGPASSWD</code>]</dt>
@@ -142,7 +150,7 @@ The following error codes are used by libzip:
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-date">March 15, 2024</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

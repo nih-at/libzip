@@ -154,6 +154,7 @@ extern "C" {
 #define ZIP_ER_CANCELLED 32       /* N Operation cancelled */
 #define ZIP_ER_DATA_LENGTH 33     /* N Unexpected length of data */
 #define ZIP_ER_NOT_ALLOWED 34     /* N Not allowed in torrentzip */
+#define ZIP_ER_TRUNCATED_ZIP 35   /* N Possibly truncated or corrupted zip archive */
 
 /* type of system error value */
 
