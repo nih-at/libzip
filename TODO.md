@@ -60,7 +60,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * `zipcmp`: add option for file content comparison
 * `zipcmp`: add more paranoid checks:
   * external attributes/opsys
-  * last_mod
   * version needed/made by
   * general purpose bit flags
 * add more consistency checks:
@@ -84,7 +83,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * use bool
 * use `ZIP_SOURCE_SUPPORTS_{READABLE,SEEKABLE,WRITABLE}`
 * use `zip_source_seek_compute_offset()`
-* get rid of `zip_get_{compression,encryption}_implementation()`
+* get rid of `zip_get_encryption_implementation()`
 * use `zip_*int*_t` internally
 * `zip_source_file()`: don't allow write if start/len specify a part of the file
 
