@@ -1101,7 +1101,7 @@ main(int argc, char *argv[]) {
 #define BIN2HEX(n) ((n) >= 10 ? (n) + 'a' - 10 : (n) + '0')
 #define HEX2BIN(c) (((c) >= '0' && (c) <= '9') ? (c) - '0' : ((c) >= 'A' && (c) <= 'F') ? (c) - 'A' + 10 : (c) - 'a' + 10)
 
-#define FILENAME_BUFFER_LENGTH 8192
+#define FILENAME_BUFFER_LENGTH (2 * 64 * 1024)
 static char filename_buffer[FILENAME_BUFFER_LENGTH + 1];
 
 static const char* encode_filename(const char* name) {
@@ -1110,7 +1110,7 @@ static const char* encode_filename(const char* name) {
     if (!hex_encoded_filenames) {
         const char* s = name;
         if (strlen(name) > FILENAME_BUFFER_LENGTH) {
-            // TODO: error message
+            fprintf(stderr, "internal buffer limit reached, increase buffer size\n");
             exit(1);
         }
         while (*s != '\0') {
@@ -1124,7 +1124,7 @@ static const char* encode_filename(const char* name) {
     else {
         const unsigned char *s = (const unsigned char *)name;
         if (strlen(name) > FILENAME_BUFFER_LENGTH / 2) {
-            // TODO: error message
+            fprintf(stderr, "internal buffer limit reached, increase buffer size\n");
             exit(1);
         }
         while (*s != '\0') {
@@ -1143,7 +1143,7 @@ static const char* decode_filename(const char* name) {
     }
 
     if (strlen(name) > FILENAME_BUFFER_LENGTH * 2) {
-        // TODO: error message
+        fprintf(stderr, "internal buffer limit reached, increase buffer size\n");
         exit(1);
     }
     // TODO: check that strlen(name) % 2 == 0
