@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd September 22, 2020
+.Dd March 18, 2024
 .Dt ZIP_FILE_ADD 3
 .Os
 .Sh NAME
@@ -100,6 +100,17 @@ after it was used successfully in a
 or
 .Nm zip_file_replace
 call.
+.Pp
+Please also note that when using
+.Nm zip_replace ,
+the target file's extra field information will be deleted since this
+usually is dependent on the file contents.
+If you want to keep them, query them beforehand with
+.Xr zip_file_extra_field_get 3
+and restore them after
+.Nm zip_replace
+with
+.Xr zip_file_extra_field_set 3 .
 .Sh RETURN VALUES
 Upon successful completion,
 .Fn zip_file_add

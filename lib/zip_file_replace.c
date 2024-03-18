@@ -83,6 +83,12 @@ _zip_file_replace(zip_t *za, zip_uint64_t idx, const char *name, zip_source_t *s
         return -1;
     }
 
+    /* delete all extra fields - these are usually data that are
+     * strongly coupled with the original data */
+    if (zip_file_extra_field_delete(za, idx, ZIP_EXTRA_FIELD_ALL, ZIP_FL_CENTRAL | ZIP_FL_LOCAL) < 0) {
+        return -1;
+    }
+
     /* does not change any name related data, so we can do it here;
      * needed for a double add of the same file name */
     _zip_unchange_data(za->entry + idx);

@@ -49,7 +49,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   * allow invalid data flag, used when computing extra field size before writing data
   * new command `ZIP_SOURCE_EXTRA_FIELDS`
   * no support for multiple copies of same extra field
-* delete all extra fields during `zip_replace()`
 * function to copy file from one archive to another
 * set `O_CLOEXEC` flag after fopen and mkstemp
 * support streaming output (creating new archive to e.g. stdout)
