@@ -82,6 +82,7 @@ add_library(zip
   zip_source_file_stdio.c
   zip_source_free.c
   zip_source_function.c
+  zip_source_get_dostime.c
   zip_source_get_file_attributes.c
   zip_source_is_deleted.c
   zip_source_layered.c

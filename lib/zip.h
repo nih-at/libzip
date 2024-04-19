@@ -257,7 +257,8 @@ enum zip_source_cmd {
     ZIP_SOURCE_BEGIN_WRITE_CLONING, /* like ZIP_SOURCE_BEGIN_WRITE, but keep part of original file */
     ZIP_SOURCE_ACCEPT_EMPTY,        /* whether empty files are valid archives */
     ZIP_SOURCE_GET_FILE_ATTRIBUTES, /* get additional file attributes */
-    ZIP_SOURCE_SUPPORTS_REOPEN      /* allow reading from changed entry */
+    ZIP_SOURCE_SUPPORTS_REOPEN,     /* allow reading from changed entry */
+    ZIP_SOURCE_GET_DOS_TIME         /* get last modification time in DOS format */
 };
 typedef enum zip_source_cmd zip_source_cmd_t;
 
