@@ -1,6 +1,6 @@
 /*
   zip_source_get_dostime.c -- get modification time in DOS format from source
-  Copyright (C) 2025 Dieter Baron and Thomas Klausner
+  Copyright (C) 2024 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -34,7 +34,7 @@
 
 #include "zipint.h"
 
-/* Returns -1 on error, 0 on no dostime avaialable, 1 for dostime returned */
+/* Returns -1 on error, 0 on no dostime available, 1 for dostime returned */
 ZIP_EXTERN int
 zip_source_get_dos_time(zip_source_t *src, zip_dostime_t *dos_time) {
     if (src->source_closed) {
