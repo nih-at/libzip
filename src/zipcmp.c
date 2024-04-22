@@ -410,7 +410,19 @@ list_directory(const char *name, struct archive *a) {
     zip_uint64_t nalloc;
     size_t prefix_length;
 
-    char *const names[2] = {(char *)name, NULL};
+    char* normalized_name = strdup(name);
+    prefix_length = strlen(name) + 1;
+    while (prefix_length > 0 && normalized_name[prefix_length-1] == '/') {
+        prefix_length -= 1;
+    }
+    if (prefix_length > 0) {
+        normalized_name[prefix_length] = '\0';
+    }
+    else {
+        normalized_name[1] = '\0';
+    }
+
+    char *const names[2] = {(char *)normalized_name, NULL};
 
 
     if ((fts = fts_open(names, FTS_NOCHDIR | FTS_LOGICAL, NULL)) == NULL) {
