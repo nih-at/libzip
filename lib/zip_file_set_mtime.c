@@ -65,8 +65,8 @@ zip_file_set_dostime(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zip_uint16
         }
     }
 
-    e->changes->last_mod_time = dtime;
-    e->changes->last_mod_date = ddate;
+    e->changes->last_mod.time = dtime;
+    e->changes->last_mod.date = ddate;
     e->changes->changed |= ZIP_DIRENT_LAST_MOD;
 
     return 0;

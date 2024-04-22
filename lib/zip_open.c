@@ -525,8 +525,8 @@ _zip_headercomp(const zip_dirent_t *central, const zip_dirent_t *local) {
 	|| (central->bitflags != local->bitflags)
 #endif
         || (central->comp_method != local->comp_method)
-        || (central->last_mod_date != local->last_mod_date)
-        || (central->last_mod_time != local->last_mod_time)
+        || (central->last_mod.time != local->last_mod.time)
+        || (central->last_mod.date != local->last_mod.date)
         || !_zip_string_equal(central->filename, local->filename))
         return -1;
 

@@ -290,8 +290,8 @@ _zip_dirent_init(zip_dirent_t *de) {
     de->version_needed = 10; /* 1.0 */
     de->bitflags = 0;
     de->comp_method = ZIP_CM_DEFAULT;
-    de->last_mod_date = 0;
-    de->last_mod_time = 0;
+    de->last_mod.date = 0;
+    de->last_mod.time = 0;
     de->crc = 0;
     de->comp_size = 0;
     de->uncomp_size = 0;
@@ -381,8 +381,8 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     zde->comp_method = _zip_buffer_get_16(buffer);
 
     /* convert to time_t */
-    zde->last_mod_time = _zip_buffer_get_16(buffer);
-    zde->last_mod_date = _zip_buffer_get_16(buffer);
+    zde->last_mod.time = _zip_buffer_get_16(buffer);
+    zde->last_mod.date = _zip_buffer_get_16(buffer);
 
     zde->crc = _zip_buffer_get_32(buffer);
     zde->comp_size = _zip_buffer_get_32(buffer);
@@ -778,7 +778,7 @@ _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error) {
 
 int
 _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
-    zip_uint16_t dostime, dosdate;
+    zip_dostime_t dostime;
     zip_encoding_type_t com_enc, name_enc;
     zip_extra_field_t *ef;
     zip_extra_field_t *ef64;
@@ -917,15 +917,14 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     }
 
     if (ZIP_WANT_TORRENTZIP(za)) {
-        dostime = 0xbc00;
-        dosdate = 0x2198;
+        dostime.time = 0xbc00;
+        dostime.date = 0x2198;
     }
     else {
-        dostime = de->last_mod_time;
-        dosdate = de->last_mod_date;
+        dostime = de->last_mod;
     }
-    _zip_buffer_put_16(buffer, dostime);
-    _zip_buffer_put_16(buffer, dosdate);
+    _zip_buffer_put_16(buffer, dostime.time);
+    _zip_buffer_put_16(buffer, dostime.date);
 
     if (is_winzip_aes && de->uncomp_size < 20) {
         _zip_buffer_put_32(buffer, 0);
@@ -1026,7 +1025,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
 
 time_t
-_zip_d2u_time(zip_uint16_t dtime, zip_uint16_t ddate) {
+_zip_d2u_time(const zip_dostime_t* dtime) {
     struct tm tm;
 
     memset(&tm, 0, sizeof(tm));
@@ -1034,13 +1033,13 @@ _zip_d2u_time(zip_uint16_t dtime, zip_uint16_t ddate) {
     /* let mktime decide if DST is in effect */
     tm.tm_isdst = -1;
 
-    tm.tm_year = ((ddate >> 9) & 127) + 1980 - 1900;
-    tm.tm_mon = ((ddate >> 5) & 15) - 1;
-    tm.tm_mday = ddate & 31;
+    tm.tm_year = ((dtime->date >> 9) & 127) + 1980 - 1900;
+    tm.tm_mon = ((dtime->date >> 5) & 15) - 1;
+    tm.tm_mday = dtime->date & 31;
 
-    tm.tm_hour = (dtime >> 11) & 31;
-    tm.tm_min = (dtime >> 5) & 63;
-    tm.tm_sec = (dtime << 1) & 62;
+    tm.tm_hour = (dtime->time >> 11) & 31;
+    tm.tm_min = (dtime->time >> 5) & 63;
+    tm.tm_sec = (dtime->time << 1) & 62;
 
     return mktime(&tm);
 }

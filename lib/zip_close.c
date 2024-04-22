@@ -471,7 +471,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
                 zip_stat_t st_mtime;
                 zip_stat_init(&st_mtime);
                 st_mtime.valid = ZIP_STAT_MTIME;
-                st_mtime.mtime = _zip_d2u_time(de->last_mod_time, de->last_mod_date);
+                st_mtime.mtime = _zip_d2u_time(&de->last_mod);
                 if ((src_tmp = _zip_source_window_new(src_final, 0, -1, &st_mtime, 0, NULL, NULL, 0, true, &za->error)) == NULL) {
                     zip_source_free(src_final);
                     return -1;
@@ -536,7 +536,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
         else {
             time(&mtime);
         }
-        if (_zip_u2d_time(st.mtime, &de->last_mod_time, &de->last_mod_date, &za->error) < 0) {
+        if (_zip_u2d_time(st.mtime, &de->last_mod.time, &de->last_mod.date, &za->error) < 0) {
             return -1;
         }
     }

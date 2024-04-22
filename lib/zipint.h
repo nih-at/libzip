@@ -270,6 +270,7 @@ struct zip_hash;
 struct zip_progress;
 
 typedef struct zip_cdir zip_cdir_t;
+typedef struct zip_dostime zip_dostime_t;
 typedef struct zip_dirent zip_dirent_t;
 typedef struct zip_entry zip_entry_t;
 typedef struct zip_extra_field zip_extra_field_t;
@@ -328,6 +329,11 @@ struct zip_file {
 #define ZIP_DIRENT_PASSWORD 0x0080u
 #define ZIP_DIRENT_ALL ZIP_UINT32_MAX
 
+struct zip_dostime {
+    zip_uint16_t time;
+    zip_uint16_t date;
+};
+
 struct zip_dirent {
     zip_uint32_t changed;
     bool local_extra_fields_read; /*      whether we already read in local header extra fields */
@@ -339,8 +345,7 @@ struct zip_dirent {
     zip_uint16_t version_needed;     /* (cl) version needed to extract */
     zip_uint16_t bitflags;           /* (cl) general purpose bit flag */
     zip_int32_t comp_method;         /* (cl) compression method used (uint16 and ZIP_CM_DEFAULT (-1)) */
-    zip_uint16_t last_mod_time;      /* (cl) time of last modification */
-    zip_uint16_t last_mod_date;      /* (cl) date of last modification */
+    zip_dostime_t last_mod;          /* (cl) time of last modification */
     zip_uint32_t crc;                /* (cl) CRC-32 of uncompressed data */
     zip_uint64_t comp_size;          /* (cl) size of compressed data */
     zip_uint64_t uncomp_size;        /* (cl) size of uncompressed data */
@@ -529,7 +534,7 @@ void _zip_cdir_free(zip_cdir_t *);
 bool _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error);
 zip_cdir_t *_zip_cdir_new(zip_uint64_t, zip_error_t *);
 zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors);
-time_t _zip_d2u_time(zip_uint16_t, zip_uint16_t);
+time_t _zip_d2u_time(const zip_dostime_t*);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);
 
 void _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool, zip_uint32_t);
@@ -612,7 +617,7 @@ void _zip_set_open_error(int *zep, const zip_error_t *err, int ze);
 bool zip_source_accept_empty(zip_source_t *src);
 zip_int64_t _zip_source_call(zip_source_t *src, void *data, zip_uint64_t length, zip_source_cmd_t command);
 bool _zip_source_eof(zip_source_t *);
-int zip_source_get_dos_time(zip_source_t *src, zip_uint16_t *dos_time, zip_uint16_t *dos_date);
+int zip_source_get_dos_time(zip_source_t *src, zip_dostime_t *dos_time);
 
 zip_source_t *_zip_source_file_or_p(const char *, FILE *, zip_uint64_t, zip_int64_t, const zip_stat_t *, zip_error_t *error);
 bool _zip_source_had_error(zip_source_t *);
