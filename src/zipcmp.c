@@ -409,27 +409,37 @@ list_directory(const char *name, struct archive *a) {
     FTSENT *ent;
     zip_uint64_t nalloc;
     size_t prefix_length;
+    size_t name_length;
+    char* normalized_name;
 
-    char* normalized_name = strdup(name);
-    prefix_length = strlen(name) + 1;
-    while (prefix_length > 0 && normalized_name[prefix_length-1] == '/') {
-        prefix_length -= 1;
+    name_length = strlen(name);
+    if (name_length == 0) {
+        fprintf(stderr, "%s: can't open directory '': invalid name\n", progname);
+        return -1;
     }
-    if (prefix_length > 0) {
-        normalized_name[prefix_length] = '\0';
+
+    normalized_name = strdup(name);
+
+    while (name_length > 0 && normalized_name[name_length-1] == '/') {
+        name_length -= 1;
     }
-    else {
+    normalized_name[name_length] = '\0';
+
+    if (name_length == 0) {
+        normalized_name[0] = '/';
         normalized_name[1] = '\0';
+        name_length = 1;
     }
 
-    char *const names[2] = {(char *)normalized_name, NULL};
+    prefix_length = name_length + 1;
 
+    char *const names[2] = {normalized_name, NULL};
 
     if ((fts = fts_open(names, FTS_NOCHDIR | FTS_LOGICAL, NULL)) == NULL) {
         fprintf(stderr, "%s: can't open directory '%s': %s\n", progname, name, strerror(errno));
+        free(normalized_name);
         return -1;
     }
-    prefix_length = strlen(name) + 1;
 
     nalloc = 0;
 
@@ -492,6 +502,7 @@ list_directory(const char *name, struct archive *a) {
                 a->entry[a->nentry].size = (zip_uint64_t)ent->fts_statp->st_size;
                 if ((crc = compute_crc(ent->fts_accpath)) < 0) {
                     fts_close(fts);
+                    free(normalized_name);
                     return -1;
                 }
 
@@ -505,9 +516,11 @@ list_directory(const char *name, struct archive *a) {
 
     if (fts_close(fts)) {
         fprintf(stderr, "%s: error closing directory '%s': %s\n", progname, a->name, strerror(errno));
+        free(normalized_name);
         return -1;
     }
 
+    free(normalized_name);
     return 0;
 }
 #endif
