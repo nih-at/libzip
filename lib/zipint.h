@@ -624,7 +624,7 @@ bool _zip_source_had_error(zip_source_t *);
 void _zip_source_invalidate(zip_source_t *src);
 zip_source_t *_zip_source_new(zip_error_t *error);
 int _zip_source_set_source_archive(zip_source_t *, zip_t *);
-zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error);
+zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_dostime_t *dostime, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error);
 
 int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error);
 int _zip_string_equal(const zip_string_t *a, const zip_string_t *b);
@@ -655,7 +655,7 @@ zip_t *_zip_new(zip_error_t *);
 
 zip_int64_t _zip_file_replace(zip_t *, zip_uint64_t, const char *, zip_source_t *, zip_flags_t);
 int _zip_set_name(zip_t *, zip_uint64_t, const char *, zip_flags_t);
-int _zip_u2d_time(time_t, zip_uint16_t *, zip_uint16_t *, zip_error_t *);
+int _zip_u2d_time(time_t, zip_dostime_t *, zip_error_t *);
 int _zip_unchange(zip_t *, zip_uint64_t, int);
 void _zip_unchange_data(zip_entry_t *);
 int _zip_write(zip_t *za, const void *data, zip_uint64_t length);

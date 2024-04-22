@@ -98,7 +98,6 @@ foreach(FULL_CASE IN LISTS EXTRA_TESTS)
 endforeach()
 
 set(XFAIL_TESTS
-  mtime-dstpoint.test
   zipcmp_zip_dir_slash.test
 )
 

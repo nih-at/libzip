@@ -74,11 +74,11 @@ zip_file_set_dostime(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zip_uint16
 
 ZIP_EXTERN int
 zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags) {
-    zip_uint16_t ddate, dtime;
+    zip_dostime_t dostime;
 
-    if (_zip_u2d_time(mtime, &dtime, &ddate, &za->error) < 0) {
+    if (_zip_u2d_time(mtime, &dostime, &za->error) < 0) {
         return -1;
     }
 
-    return zip_file_set_dostime(za, idx, dtime, ddate, flags);
+    return zip_file_set_dostime(za, idx, dostime.time, dostime.date, flags);
 }

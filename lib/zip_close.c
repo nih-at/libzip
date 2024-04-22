@@ -468,11 +468,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
 
             /* PKWare encryption uses last_mod, make sure it gets the right value. */
             if (de->changed & ZIP_DIRENT_LAST_MOD) {
-                zip_stat_t st_mtime;
-                zip_stat_init(&st_mtime);
-                st_mtime.valid = ZIP_STAT_MTIME;
-                st_mtime.mtime = _zip_d2u_time(&de->last_mod);
-                if ((src_tmp = _zip_source_window_new(src_final, 0, -1, &st_mtime, 0, NULL, NULL, 0, true, &za->error)) == NULL) {
+                if ((src_tmp = _zip_source_window_new(src_final, 0, -1, NULL, 0, NULL, &de->last_mod, NULL, 0, true, &za->error)) == NULL) {
                     zip_source_free(src_final);
                     return -1;
                 }
@@ -529,15 +525,22 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
     }
 
     if ((de->changed & ZIP_DIRENT_LAST_MOD) == 0) {
-        time_t mtime;
-        if (st.valid & ZIP_STAT_MTIME) {
-            mtime = st.mtime;
-        }
-        else {
-            time(&mtime);
-        }
-        if (_zip_u2d_time(st.mtime, &de->last_mod.time, &de->last_mod.date, &za->error) < 0) {
+        int ret2 = zip_source_get_dos_time(src, &de->last_mod);
+        if (ret2 < 0) {
+            zip_error_set_from_source(&za->error, src);
             return -1;
+        }
+        if (ret2 == 0) {
+            time_t mtime;
+            if (st.valid & ZIP_STAT_MTIME) {
+                mtime = st.mtime;
+            }
+            else {
+                time(&mtime);
+            }
+            if (_zip_u2d_time(st.mtime, &de->last_mod, &za->error) < 0) {
+                return -1;
+            }
         }
     }
     de->comp_method = st.comp_method;

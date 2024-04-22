@@ -1111,14 +1111,14 @@ _zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *err
 
 
 int
-_zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate, zip_error_t *ze) {
+_zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
     struct tm *tpm;
     struct tm tm;
     tpm = zip_localtime(&intime, &tm);
     if (tpm == NULL) {
         /* if localtime fails, return an arbitrary date (1980-01-01 00:00:00) */
-        *ddate = (1 << 5) + 1;
-        *dtime = 0;
+        dtime->date = (1 << 5) + 1;
+        dtime->time = 0;
         if (ze) {
             zip_error_set(ze, ZIP_ER_INVAL, errno);
         }
@@ -1128,8 +1128,8 @@ _zip_u2d_time(time_t intime, zip_uint16_t *dtime, zip_uint16_t *ddate, zip_error
         tpm->tm_year = 80;
     }
 
-    *ddate = (zip_uint16_t)(((tpm->tm_year + 1900 - 1980) << 9) + ((tpm->tm_mon + 1) << 5) + tpm->tm_mday);
-    *dtime = (zip_uint16_t)(((tpm->tm_hour) << 11) + ((tpm->tm_min) << 5) + ((tpm->tm_sec) >> 1));
+    dtime->date = (zip_uint16_t)(((tpm->tm_year + 1900 - 1980) << 9) + ((tpm->tm_mon + 1) << 5) + tpm->tm_mday);
+    dtime->time = (zip_uint16_t)(((tpm->tm_hour) << 11) + ((tpm->tm_min) << 5) + ((tpm->tm_sec) >> 1));
 
     return 0;
 }
