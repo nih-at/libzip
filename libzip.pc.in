@@ -12,3 +12,4 @@ Version: @PROJECT_VERSION@
 Libs: @PKG_CONFIG_RPATH@ -L${libdir} -lzip
 Libs.private: @LIBS@
 Cflags: -I${includedir}
+Cflags.private: -DZIP_STATIC
