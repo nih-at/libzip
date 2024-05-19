@@ -538,7 +538,7 @@ add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
             else {
                 time(&mtime);
             }
-            if (_zip_u2d_time(st.mtime, &de->last_mod, &za->error) < 0) {
+            if (_zip_u2d_time(mtime, &de->last_mod, &za->error) < 0) {
                 return -1;
             }
         }
