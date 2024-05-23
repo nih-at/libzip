@@ -35,7 +35,7 @@
 #include "zipint.h"
 
 /* Returns -1 on error, 0 on no dostime available, 1 for dostime returned */
-ZIP_EXTERN int
+int
 zip_source_get_dos_time(zip_source_t *src, zip_dostime_t *dos_time) {
     if (src->source_closed) {
         return -1;
