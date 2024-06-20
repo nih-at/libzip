@@ -6,8 +6,7 @@
 
 ### Torrentzip
 
-- Handle data sources with unknown uncompressed size.
-- Handle when uncompressed size < 4GB but compressed size > 4GB.
+- Handle data sources with unknown uncompressed size: if we forced ZIP64 and don't need it, return specific error (so calling code can decide what to do (e. g. clear torrentzip flag and call `zip_close()` again)).
 
 ## Other
 
