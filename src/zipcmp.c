@@ -568,12 +568,7 @@ list_zip(const char *name, struct archive *a) {
                 a->entry[i].comp_method = 0;
                 a->entry[i].n_extra_fields = 0;
             }
-            if (compare_time_stamps) {
-                a->entry[i].last_modification_time = st.mtime;
-            }
-            else {
-                a->entry[i].last_modification_time = 0;
-            }
+            a->entry[i].last_modification_time = st.mtime;
         }
 
         if (paranoid) {
@@ -755,7 +750,7 @@ entry_cmp(const void *p1, const void *p2) {
     if (e1->crc != e2->crc) {
         return (int)e1->crc - (int)e2->crc;
     }
-    if (e1->last_modification_time != e2->last_modification_time) {
+    if (compare_time_stamps && e1->last_modification_time != e2->last_modification_time) {
         return (int)(e1->last_modification_time - e2->last_modification_time);
     }
 
