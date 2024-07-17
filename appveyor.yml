@@ -65,7 +65,7 @@ before_build:
   cmd: >-
     py -m pip install nihtest
 
-    vcpkg install zlib:%TRIPLET% bzip2:%TRIPLET% liblzma:%TRIPLET% zstd:%TRIPLET%
+    vcpkg install
 
     mkdir build
 
