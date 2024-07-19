@@ -1,5 +1,6 @@
 # X.X [Unreleased]
 
+* Stop searching after finding acceptable central directory, even if it contains inconsistencies.
 * Only write Zip64 EOCD if fields don't fit in normal EOCD. Previously libzip also wrote it when any directory entry required Zip64.
 * Allow bytes from 0x00-0x1F as UTF-8.
 * Add new error code `ZIP_ER_TRUNCATED_ZIP` for files that start with a valid local header signature.

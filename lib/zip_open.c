@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,10 +45,10 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir);
 static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len);
 static exists_t _zip_file_exists(zip_source_t *src, zip_error_t *error);
 static int _zip_headercomp(const zip_dirent_t *, const zip_dirent_t *);
-static const unsigned char *_zip_memmem(const unsigned char *, size_t, const unsigned char *, size_t);
 static zip_cdir_t *_zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_error_t *error);
 static zip_cdir_t *_zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error);
 static zip_cdir_t *_zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error);
+static const unsigned char *find_eocd(zip_buffer_t *buffer, const unsigned char *last);
 
 
 ZIP_EXTERN zip_t *
@@ -596,12 +595,10 @@ _zip_file_exists(zip_source_t *src, zip_error_t *error) {
 
 static zip_cdir_t *
 _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
-    zip_cdir_t *cdir, *cdirnew;
+    zip_cdir_t *cdir;
     const zip_uint8_t *match;
     zip_int64_t buf_offset;
     zip_uint64_t buflen;
-    zip_int64_t a;
-    zip_int64_t best;
     zip_error_t error;
     zip_buffer_t *buffer;
 
@@ -628,7 +625,6 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
         return NULL;
     }
 
-    best = -1;
     cdir = NULL;
     if (buflen >= CDBUFSIZE) {
         /* EOCD64 locator is before EOCD, so leave place for it */
@@ -636,76 +632,51 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
     }
     zip_error_set(&error, ZIP_ER_NOZIP, 0);
 
-    match = _zip_buffer_get(buffer, 0);
-    /* The size of buffer never greater than CDBUFSIZE. */
-    while (_zip_buffer_left(buffer) >= EOCDLEN && (match = _zip_memmem(match, (size_t)_zip_buffer_left(buffer) - (EOCDLEN - 4), (const unsigned char *)EOCD_MAGIC, 4)) != NULL) {
+    match = NULL;
+    while ((match = find_eocd(buffer, match)) != NULL) {
         _zip_buffer_set_offset(buffer, (zip_uint64_t)(match - _zip_buffer_data(buffer)));
-        if ((cdirnew = _zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &error)) != NULL) {
-            if (cdir) {
-                if (best <= 0) {
-                    best = _zip_checkcons(za, cdir, &error);
-                }
-
-                a = _zip_checkcons(za, cdirnew, &error);
-                if (best < a) {
-                    _zip_cdir_free(cdir);
-                    cdir = cdirnew;
-                    best = a;
-                }
-                else {
-                    _zip_cdir_free(cdirnew);
-                }
+        if ((cdir = _zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &error)) != NULL) {
+            if ((za->open_flags & ZIP_CHECKCONS) && _zip_checkcons(za, cdir, &error) < 0) {
+                _zip_error_copy(&za->error, &error);
+                _zip_buffer_free(buffer);
+                _zip_cdir_free(cdir);
+                return NULL;
             }
-            else {
-                cdir = cdirnew;
-                if (za->open_flags & ZIP_CHECKCONS)
-                    best = _zip_checkcons(za, cdir, &error);
-                else {
-                    best = 0;
-                }
-            }
-            cdirnew = NULL;
+            break;
         }
 
-        match++;
-        _zip_buffer_set_offset(buffer, (zip_uint64_t)(match - _zip_buffer_data(buffer)));
+        if (match == _zip_buffer_data(buffer)) {
+            break;
+        }
+        match -= 1;
     }
 
     _zip_buffer_free(buffer);
 
-    if (best < 0) {
+    if (cdir == NULL) {
         _zip_error_copy(&za->error, &error);
-        _zip_cdir_free(cdir);
-        return NULL;
     }
-
     return cdir;
 }
 
 
-static const unsigned char *
-_zip_memmem(const unsigned char *big, size_t biglen, const unsigned char *little, size_t littlelen) {
+static const unsigned char *find_eocd(zip_buffer_t *buffer, const unsigned char *last) {
+    const unsigned char *data = _zip_buffer_data(buffer);
     const unsigned char *p;
 
-    if (littlelen == 0) {
-        return big;
+    if (last == NULL) {
+        last = data + _zip_buffer_size(buffer) - MAGIC_LEN;
     }
 
-    if (biglen < littlelen) {
-        return NULL;
+    for (p = last; p >= data; p -= 1) {
+        if (*p == EOCD_MAGIC[0]) {
+            if (memcmp(p, EOCD_MAGIC, MAGIC_LEN) == 0) {
+                return p;
+            }
+        }
     }
 
-    p = big;
-    while (true) {
-        p = (const unsigned char *)memchr(p, little[0], biglen - (littlelen - 1) - (size_t)(p - big));
-        if (p == NULL) {
-            return NULL;
-        }
-        if (memcmp(p + 1, little + 1, littlelen - 1) == 0) {
-            return p;
-        }
-        p += 1;
-    }
+    return NULL;
 }
 
 

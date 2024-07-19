@@ -56,6 +56,7 @@
 #define DATADES_MAGIC "PK\7\10"
 #define EOCD64LOC_MAGIC "PK\6\7"
 #define EOCD64_MAGIC "PK\6\6"
+#define MAGIC_LEN 4
 #define CDENTRYSIZE 46u
 #define LENTRYSIZE 30
 #define MAXCOMLEN 65536
