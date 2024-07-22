@@ -88,3 +88,6 @@ test_script:
     set VERBOSE=yes
 
     IF %RUN_TESTS%==yes ( ctest -C %CMAKE_CONFIG% --output-on-failure )
+
+cache:
+  - c:\tools\vcpkg\installed\
