@@ -3,6 +3,7 @@ os:
 
 environment:
   PATH: C:\Python311-x64\Scripts;C:\Python311-arm\Scripts;$(PATH)
+  VCPKG_BINARY_SOURCES: clear;files,C:\vcpkg.cache,readwrite
   matrix:
     - GENERATOR: "Visual Studio 16 2019"
       PLATFORM: x64
@@ -65,8 +66,6 @@ before_build:
   cmd: >-
     py -m pip install nihtest
 
-    vcpkg install
-
     mkdir build
 
     cd build
@@ -90,4 +89,4 @@ test_script:
     IF %RUN_TESTS%==yes ( ctest -C %CMAKE_CONFIG% --output-on-failure )
 
 cache:
-  - c:\tools\vcpkg\installed\
+  - c:\vcpkg.cache -> vcpkg.json
