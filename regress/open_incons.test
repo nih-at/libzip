@@ -36,7 +36,8 @@ file incons-local-filename-short.zzip incons-local-filename-short.zip
 file incons-local-filename.zzip incons-local-filename.zip
 file incons-local-magic-bad.zzip incons-local-magic-bad.zip
 file incons-local-size-larger.zzip incons-local-size-larger.zip
-arguments -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-size.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip incons-gap-before-cd.zzip incons-gap-before-eocd.zzip incons-gap-before-local.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip
+file incons-stored-size.zzip incons-stored-size.zip
+arguments -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-size.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip incons-gap-before-cd.zzip incons-gap-before-eocd.zzip incons-gap-before-local.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip incons-stored-size.zzip
 return 1
 # tryopen does not test checksums, so this is fine.
 # different extra fields local vs. central is fine
@@ -77,6 +78,7 @@ opening 'incons-local-filename-short.zzip' returned error 21/16
 opening 'incons-local-filename.zzip' returned error 21/6
 opening 'incons-local-magic-bad.zzip' returned error 19
 opening 'incons-local-size-larger.zzip' returned error 21/6
+opening 'incons-stored-size.zzip' succeeded, 1 entries
 end-of-inline-data
 stderr
 31 errors
