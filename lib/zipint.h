@@ -300,8 +300,8 @@ struct zip {
     zip_uint64_t nentry_alloc; /* number of entries allocated */
     zip_entry_t *entry;        /* entries */
 
-    unsigned int nopen_source;       /* number of open sources using archive */
-    unsigned int nopen_source_alloc; /* number of sources allocated */
+    zip_uint64_t nopen_source;       /* number of open sources using archive */
+    zip_uint64_t nopen_source_alloc; /* number of sources allocated */
     zip_source_t **open_source;      /* open sources using archive */
 
     zip_hash_t *names; /* hash table for name lookup */
@@ -504,6 +504,8 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #endif
 #endif
 
+#define zip_realloc(inout_memory, inout_alloced, element_size, additional_elements, error) zip_realloc_implementation((void **)inout_memory, inout_alloced, element_size, additional_elements, error)
+bool zip_realloc_implementation(void **inout_memory, zip_uint64_t *inout_alloced, zip_uint64_t element_size, zip_uint64_t additional_elements, zip_error_t *error);
 
 zip_int64_t _zip_add_entry(zip_t *);
 
