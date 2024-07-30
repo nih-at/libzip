@@ -92,8 +92,8 @@ opening 'incons-local-filename.zzip' returned error 21/6
 opening 'incons-local-magic-bad.zzip' returned error 19
 opening 'incons-local-size-larger.zzip' returned error 21/6
 opening 'incons-stored-size.zzip' succeeded, 1 entries
-opening 'incons-streamed.zzip' returned error 21/6
+opening 'incons-streamed.zzip' succeeded, 1 entries
 end-of-inline-data
 stderr
-34 errors
+33 errors
 end-of-inline-data
