@@ -4,7 +4,7 @@
 #include "zipconf.h"
 #endif
 /* BEGIN DEFINES */
-#cmakedefine ENABLE_FDOPEN
+#cmakedefine LIBZIP_ENABLE_FDOPEN
 #cmakedefine HAVE___PROGNAME
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
