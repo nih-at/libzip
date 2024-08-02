@@ -340,10 +340,11 @@ _zip_dirent_new(void) {
 */
 
 zip_int64_t
-_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_error_t *error) {
+_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, zip_error_t *error) {
     zip_uint8_t buf[CDENTRYSIZE];
     zip_uint32_t size, variable_size;
     zip_uint16_t filename_len, comment_len, ef_len;
+    bool is_zip64 = false;
 
     bool from_buffer = (buffer != NULL);
 
@@ -526,6 +527,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
                 return -1;
             }
         }
+        is_zip64 = true;
     }
 
 
@@ -536,8 +538,38 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
         }
         return -1;
     }
+
     if (!from_buffer) {
         _zip_buffer_free(buffer);
+    }
+
+    if (local && zde->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
+        zip_uint32_t df_crc;
+        zip_uint64_t df_comp_size, df_uncomp_size;
+        if (zip_source_seek(src, central_compressed_size, SEEK_CUR) != 0 || (buffer = _zip_buffer_new_from_source(src, MAX_DATA_DESCRIPTOR_LENGTH, buf, error)) == NULL) {
+            return -1;
+        }
+        if (memcmp(_zip_buffer_peek(buffer, MAGIC_LEN), DATADES_MAGIC, MAGIC_LEN) == 0) {
+            _zip_buffer_skip(buffer, MAGIC_LEN);
+        }
+        df_crc = _zip_buffer_get_32(buffer);
+        df_comp_size = is_zip64 ? _zip_buffer_get_64(buffer) : _zip_buffer_get_32(buffer);
+        df_uncomp_size = is_zip64 ? _zip_buffer_get_64(buffer) : _zip_buffer_get_32(buffer);
+
+        if (!_zip_buffer_ok(buffer)) {
+            zip_error_set(error, ZIP_ER_INTERNAL, 0);
+            _zip_buffer_free(buffer);
+            return -1;
+        }
+        _zip_buffer_free(buffer);
+
+        if ((zde->crc != 0 && zde->crc != df_crc) || (zde->comp_size != 0 && zde->comp_size != df_comp_size) || (zde->uncomp_size != 0 && zde->uncomp_size != df_uncomp_size)) {
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_DATA_DESCRIPTOR_MISMATCH);
+            return -1;
+        }
+        zde->crc = df_crc;
+        zde->comp_size = df_comp_size;
+        zde->uncomp_size = df_uncomp_size;
     }
 
     /* zip_source_seek / zip_source_tell don't support values > ZIP_INT64_MAX */
@@ -555,7 +587,8 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     return (zip_int64_t)size + (zip_int64_t)variable_size;
 }
 
-bool zip_dirent_process_ef_zip64(zip_dirent_t* zde, const zip_uint8_t* ef, zip_uint64_t got_len, bool local, zip_error_t* error) {
+bool
+zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64_t got_len, bool local, zip_error_t *error) {
     zip_buffer_t *ef_buffer;
 
     if ((ef_buffer = _zip_buffer_new((zip_uint8_t *)ef, got_len)) == NULL) {
@@ -679,18 +712,18 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
 
     crc_valid = true;
     switch (_zip_buffer_get_16(buffer)) {
-        case 1:
-            break;
+    case 1:
+        break;
 
-        case 2:
-            crc_valid = false;
-            /* TODO: When checking consistency, check that crc is 0. */
-            break;
-            
-        default:
-            zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
-            _zip_buffer_free(buffer);
-            return false;
+    case 2:
+        crc_valid = false;
+        /* TODO: When checking consistency, check that crc is 0. */
+        break;
+
+    default:
+        zip_error_set(error, ZIP_ER_ENCRNOTSUPP, 0);
+        _zip_buffer_free(buffer);
+        return false;
     }
 
     /* vendor */
@@ -1025,7 +1058,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
 
 time_t
-_zip_d2u_time(const zip_dostime_t* dtime) {
+_zip_d2u_time(const zip_dostime_t *dtime) {
     struct tm tm;
 
     memset(&tm, 0, sizeof(tm));
@@ -1188,10 +1221,11 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
    Set values suitable for torrentzip.
 */
 
-void zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
+void
+zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
     de->version_madeby = 0;
     de->version_needed = 20; /* 2.0 */
-    de->bitflags = 2; /* maximum compression */
+    de->bitflags = 2;        /* maximum compression */
     de->comp_method = ZIP_CM_DEFLATE;
     de->compression_level = TORRENTZIP_COMPRESSION_FLAGS;
     de->disk_number = 0;
@@ -1199,10 +1233,10 @@ void zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
     de->ext_attrib = 0;
 
     /* last_mod, extra_fields, and comment are normalized in zip_dirent_write() directly */
-
 }
 
-int zip_dirent_check_consistency(zip_dirent_t *dirent) {
+int
+zip_dirent_check_consistency(zip_dirent_t *dirent) {
     if (dirent->comp_method == ZIP_CM_STORE && dirent->comp_size != dirent->uncomp_size) {
         return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
     }

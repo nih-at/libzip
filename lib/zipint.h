@@ -237,6 +237,7 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_INVALID_EF_LENGTH 18 /* E extra field length is invalid */
 #define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 19 /* E file length in header doesn't match actual file length */
 #define ZIP_ER_DETAIL_STORED_SIZE_MISMATCH 20 /* E compressed and uncompressed sizes don't match for stored file */
+#define ZIP_ER_DETAIL_DATA_DESCRIPTOR_MISMATCH 21 /* E local header and data descriptor do not match */
 
 /* directory entry: general purpose bit flags */
 
@@ -548,7 +549,7 @@ void _zip_dirent_init(zip_dirent_t *);
 bool _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
 zip_dirent_t *_zip_dirent_new(void);
 bool zip_dirent_process_ef_zip64(zip_dirent_t * zde, const zip_uint8_t * ef, zip_uint64_t got_len, bool local, zip_error_t * error);
-zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_error_t *error);
+zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, zip_error_t *error);
 void _zip_dirent_set_version_needed(zip_dirent_t *de, bool force_zip64);
 void zip_dirent_torrentzip_normalize(zip_dirent_t *de);
 
