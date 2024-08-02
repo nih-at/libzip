@@ -697,7 +697,7 @@ find_eocd(zip_buffer_t *buffer, const unsigned char *last) {
 static zip_cdir_t *
 _zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error) {
     zip_cdir_t *cd;
-    zip_uint16_t this_disk, eocd_disk, num_disks;
+    zip_uint16_t this_disk, eocd_disk;
     zip_uint64_t i, nentry, size, offset, eocd_offset;
 
     if (_zip_buffer_left(buffer) < EOCDLEN) {
