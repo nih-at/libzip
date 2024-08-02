@@ -402,7 +402,7 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
             grown = true;
         }
 
-        if ((cd->entry[i].orig = _zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, 0, error)) < 0) {
+        if ((cd->entry[i].orig = _zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, 0, za->open_flags & ZIP_CHECKCONS, error)) < 0) {
             if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
                 zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), i));
             }
@@ -497,7 +497,7 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
             return -1;
         }
 
-        if (_zip_dirent_read(&temp, za->src, NULL, true, cd->entry[i].orig->comp_size, error) == -1) {
+        if (_zip_dirent_read(&temp, za->src, NULL, true, cd->entry[i].orig->comp_size, true, error) == -1) {
             if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
                 zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), i));
             }

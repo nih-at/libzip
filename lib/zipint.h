@@ -239,6 +239,8 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_STORED_SIZE_MISMATCH 20 /* E compressed and uncompressed sizes don't match for stored file */
 #define ZIP_ER_DETAIL_DATA_DESCRIPTOR_MISMATCH 21 /* E local header and data descriptor do not match */
 #define ZIP_ER_DETAIL_EOCD64_LOCATOR_MISMATCH 22 /* G EOCD64 and EOCD64 locator do not match */
+#define ZIP_ER_DETAIL_UTF8_FILENAME_MISMATCH 23 /* E UTF-8 filename is ASCII and doesn't match filename */
+#define ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH 24 /* E UTF-8 comment is ASCII and doesn't match comment */
 
 /* directory entry: general purpose bit flags */
 
@@ -553,7 +555,7 @@ void _zip_dirent_init(zip_dirent_t *);
 bool _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
 zip_dirent_t *_zip_dirent_new(void);
 bool zip_dirent_process_ef_zip64(zip_dirent_t * zde, const zip_uint8_t * ef, zip_uint64_t got_len, bool local, zip_error_t * error);
-zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, zip_error_t *error);
+zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, bool check_consistency, zip_error_t *error);
 void _zip_dirent_set_version_needed(zip_dirent_t *de, bool force_zip64);
 void zip_dirent_torrentzip_normalize(zip_dirent_t *de);
 
@@ -639,6 +641,7 @@ int _zip_string_equal(const zip_string_t *a, const zip_string_t *b);
 void _zip_string_free(zip_string_t *string);
 zip_uint32_t _zip_string_crc32(const zip_string_t *string);
 const zip_uint8_t *_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error);
+bool _zip_string_is_ascii(const zip_string_t *string);
 zip_uint16_t _zip_string_length(const zip_string_t *string);
 zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error);
 int _zip_string_write(zip_t *za, const zip_string_t *string);

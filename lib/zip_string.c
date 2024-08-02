@@ -109,6 +109,20 @@ _zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip
     return string->raw;
 }
 
+bool _zip_string_is_ascii(const zip_string_t *string) {
+    if (string->encoding != ZIP_ENCODING_ASCII) {
+        zip_uint16_t i;
+
+        for (i = 0; i < string->length; i++) {
+            if (string->raw[i] & 0x80) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 
 zip_uint16_t
 _zip_string_length(const zip_string_t *s) {

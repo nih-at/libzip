@@ -42,7 +42,7 @@
 #include "zip.h"
 #include "zipint.h"
 
-static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str);
+static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency);
 static zip_extra_field_t *_zip_ef_utf8(zip_uint16_t, zip_string_t *, zip_error_t *);
 static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error);
 
@@ -324,7 +324,7 @@ _zip_dirent_new(void) {
 }
 
 
-/* _zip_dirent_read(zde, fp, bufp, left, localp, error):
+/*
    Fills the zip directory entry zde.
 
    If buffer is non-NULL, data is taken from there; otherwise data is read from fp as needed.
@@ -335,10 +335,11 @@ _zip_dirent_new(void) {
 */
 
 zip_int64_t
-_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, zip_error_t *error) {
+_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, bool check_consistency, zip_error_t *error) {
     zip_uint8_t buf[CDENTRYSIZE];
     zip_uint32_t size, variable_size;
     zip_uint16_t filename_len, comment_len, ef_len;
+    zip_string_t *utf8_string;
     bool is_zip64 = false;
 
     bool from_buffer = (buffer != NULL);
@@ -506,8 +507,22 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
         }
     }
 
-    zde->filename = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_NAME, zde->filename);
-    zde->comment = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_COMMENT, zde->comment);
+    if ((utf8_string = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_NAME, zde->filename, check_consistency)) == NULL && zde->filename != NULL) {
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_UTF8_FILENAME_MISMATCH);
+        if (!from_buffer) {
+            _zip_buffer_free(buffer);
+        }
+        return -1;
+    }
+    zde->filename = utf8_string;
+    if ((utf8_string = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_COMMENT, zde->comment, check_consistency)) == NULL && zde->comment != NULL) {
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH);
+        if (!from_buffer) {
+            _zip_buffer_free(buffer);
+        }
+        return -1;
+    }
+    zde->comment = utf8_string;
 
     /* Zip64 */
 
@@ -644,7 +659,7 @@ zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64
 
 
 static zip_string_t *
-_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str) {
+_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency) {
     zip_uint16_t ef_len;
     zip_uint32_t ef_crc;
     zip_buffer_t *buffer;
@@ -667,6 +682,14 @@ _zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string
         zip_string_t *ef_str = _zip_string_new(_zip_buffer_get(buffer, len), len, ZIP_FL_ENC_UTF_8, NULL);
 
         if (ef_str != NULL) {
+            if (check_consistency) {
+                if (!_zip_string_equal(str, ef_str) && _zip_string_is_ascii(ef_str)) {
+                    _zip_string_free(ef_str);
+                    _zip_buffer_free(buffer);
+                    return NULL;
+                }
+            }
+
             _zip_string_free(str);
             str = ef_str;
         }
