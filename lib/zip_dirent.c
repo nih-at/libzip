@@ -515,14 +515,16 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
         return -1;
     }
     zde->filename = utf8_string;
-    if ((utf8_string = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_COMMENT, zde->comment, check_consistency)) == NULL && zde->comment != NULL) {
-        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH);
-        if (!from_buffer) {
-            _zip_buffer_free(buffer);
+    if (!local) {
+        if ((utf8_string = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_COMMENT, zde->comment, check_consistency)) == NULL && zde->comment != NULL) {
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH);
+            if (!from_buffer) {
+                _zip_buffer_free(buffer);
+            }
+            return -1;
         }
-        return -1;
+        zde->comment = utf8_string;
     }
-    zde->comment = utf8_string;
 
     /* Zip64 */
 
