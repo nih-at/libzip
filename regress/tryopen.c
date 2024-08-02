@@ -46,6 +46,7 @@
     "\t-c\tcheck consistency\n"        \
     "\t-e\texclusively open archive\n" \
     "\t-n\tcreate new file\n"          \
+    "\t-s\tprint error string\n"       \
     "\t-t\ttruncate file to size 0\n"
 
 
@@ -57,10 +58,11 @@ main(int argc, char *argv[]) {
     zip_int64_t count;
     int error_count;
     zip_error_t error;
+    int error_strings = 0;
 
     flags = 0;
 
-    while ((c = getopt(argc, argv, "cent")) != -1) {
+    while ((c = getopt(argc, argv, "censt")) != -1) {
         switch (c) {
         case 'c':
             flags |= ZIP_CHECKCONS;
@@ -70,6 +72,9 @@ main(int argc, char *argv[]) {
             break;
         case 'n':
             flags |= ZIP_CREATE;
+            break;
+        case 's':
+            error_strings = 1;
             break;
         case 't':
             flags |= ZIP_TRUNCATE;
@@ -94,8 +99,13 @@ main(int argc, char *argv[]) {
         }
 
         zip_error_init_with_code(&error, ze);
-        printf("opening '%s' returned error %d", fname, ze);
-        switch (zip_error_system_type(&error)) {
+        printf("opening '%s' returned error ", fname);
+        if (error_strings) {
+            printf("%s", zip_error_strerror(&error));
+        }
+        else {
+            printf("%d", ze);
+            switch (zip_error_system_type(&error)) {
             case ZIP_ET_SYS:
             case ZIP_ET_LIBZIP:
                 printf("/%d", zip_error_code_system(&error));
@@ -103,6 +113,7 @@ main(int argc, char *argv[]) {
 
             default:
                 break;
+            }
         }
         printf("\n");
         error_count++;
