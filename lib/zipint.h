@@ -230,12 +230,13 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_CDIR_INVALID 11  /* G invalid value in central directory */
 #define ZIP_ER_DETAIL_VARIABLE_SIZE_OVERFLOW 12 /* E variable size fields overflow header */
 #define ZIP_ER_DETAIL_INVALID_UTF8_IN_FILENAME 13 /* E invalid UTF-8 in filename */
-#define ZIP_ER_DETAIL_INVALID_UTF8_IN_COMMENT 13 /* E invalid UTF-8 in comment */
-#define ZIP_ER_DETAIL_INVALID_ZIP64_EF 14 /* E invalid Zip64 extra field */
-#define ZIP_ER_DETAIL_INVALID_WINZIPAES_EF 14 /* E invalid WinZip AES extra field */
-#define ZIP_ER_DETAIL_EF_TRAILING_GARBAGE 15 /* E garbage at end of extra fields */
-#define ZIP_ER_DETAIL_INVALID_EF_LENGTH 16 /* E extra field length is invalid */
-#define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 17 /* E file length in header doesn't match actual file length */
+#define ZIP_ER_DETAIL_INVALID_UTF8_IN_COMMENT 14 /* E invalid UTF-8 in comment */
+#define ZIP_ER_DETAIL_INVALID_ZIP64_EF 15 /* E invalid Zip64 extra field */
+#define ZIP_ER_DETAIL_INVALID_WINZIPAES_EF 16 /* E invalid WinZip AES extra field */
+#define ZIP_ER_DETAIL_EF_TRAILING_GARBAGE 17 /* E garbage at end of extra fields */
+#define ZIP_ER_DETAIL_INVALID_EF_LENGTH 18 /* E extra field length is invalid */
+#define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 19 /* E file length in header doesn't match actual file length */
+#define ZIP_ER_DETAIL_STORED_SIZE_MISMATCH 20 /* E compressed and uncompressed sizes don't match for stored file */
 
 /* directory entry: general purpose bit flags */
 
@@ -539,6 +540,7 @@ time_t _zip_d2u_time(const zip_dostime_t*);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);
 
 void _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool, zip_uint32_t);
+int zip_dirent_check_consistency(zip_dirent_t *dirent);
 zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *);
 void _zip_dirent_free(zip_dirent_t *);
 void _zip_dirent_finalize(zip_dirent_t *);

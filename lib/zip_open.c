@@ -456,6 +456,7 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
     zip_uint64_t i;
     zip_uint64_t min, max, j;
     struct zip_dirent temp;
+    int detail;
 
     _zip_dirent_init(&temp);
     if (cd->nentry) {
@@ -505,6 +506,11 @@ _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
         temp.extra_fields = NULL;
 
         _zip_dirent_finalize(&temp);
+
+        if ((detail = zip_dirent_check_consistency(cd->entry[i].orig)) != 0) {
+            zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(detail, i));
+            return -1;
+        }
     }
 
     return (max - min) < ZIP_INT64_MAX ? (zip_int64_t)(max - min) : ZIP_INT64_MAX;

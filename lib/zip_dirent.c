@@ -1201,3 +1201,10 @@ void zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
     /* last_mod, extra_fields, and comment are normalized in zip_dirent_write() directly */
 
 }
+
+int zip_dirent_check_consistency(zip_dirent_t *dirent) {
+    if (dirent->comp_method == ZIP_CM_STORE && dirent->comp_size != dirent->uncomp_size) {
+        return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
+    }
+    return 0;
+}
