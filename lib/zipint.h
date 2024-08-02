@@ -238,6 +238,7 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 19 /* E file length in header doesn't match actual file length */
 #define ZIP_ER_DETAIL_STORED_SIZE_MISMATCH 20 /* E compressed and uncompressed sizes don't match for stored file */
 #define ZIP_ER_DETAIL_DATA_DESCRIPTOR_MISMATCH 21 /* E local header and data descriptor do not match */
+#define ZIP_ER_DETAIL_EOCD64_LOCATOR_MISMATCH 22 /* G EOCD64 and EOCD64 locator do not match */
 
 /* directory entry: general purpose bit flags */
 
@@ -372,6 +373,9 @@ struct zip_cdir {
     zip_uint64_t nentry;       /* number of entries */
     zip_uint64_t nentry_alloc; /* number of entries allocated */
 
+    zip_uint32_t this_disk;
+    zip_uint32_t eocd_disk;
+    zip_uint64_t num_entries;
     zip_uint64_t size;     /* size of central directory */
     zip_uint64_t offset;   /* offset of central directory in file */
     zip_string_t *comment; /* zip archive comment */
@@ -535,7 +539,7 @@ zip_uint64_t _zip_buffer_size(zip_buffer_t *buffer);
 
 void _zip_cdir_free(zip_cdir_t *);
 bool _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error);
-zip_cdir_t *_zip_cdir_new(zip_uint64_t, zip_error_t *);
+zip_cdir_t *_zip_cdir_new(zip_error_t *);
 zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors);
 time_t _zip_d2u_time(const zip_dostime_t*);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);

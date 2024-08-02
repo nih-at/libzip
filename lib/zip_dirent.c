@@ -63,7 +63,7 @@ _zip_cdir_free(zip_cdir_t *cd) {
 
 
 zip_cdir_t *
-_zip_cdir_new(zip_uint64_t nentry, zip_error_t *error) {
+_zip_cdir_new(zip_error_t *error) {
     zip_cdir_t *cd;
 
     if ((cd = (zip_cdir_t *)malloc(sizeof(*cd))) == NULL) {
@@ -76,11 +76,6 @@ _zip_cdir_new(zip_uint64_t nentry, zip_error_t *error) {
     cd->size = cd->offset = 0;
     cd->comment = NULL;
     cd->is_zip64 = false;
-
-    if (!_zip_cdir_grow(cd, nentry, error)) {
-        _zip_cdir_free(cd);
-        return NULL;
-    }
 
     return cd;
 }

@@ -73,7 +73,7 @@ opening 'incons-ef-local-dupe-zip64-v2.zzip' succeeded, 1 entries
 opening 'incons-ef-local-id-size.zzip' returned error Zip archive inconsistent: entry 0: extra field length is invalid
 opening 'incons-ef-local-id.zzip' succeeded, 1 entries
 opening 'incons-ef-local-size.zzip' returned error Zip archive inconsistent: entry 0: extra field length is invalid
-opening 'incons-eocd64.zzip' succeeded, 1 entries
+opening 'incons-eocd64.zzip' returned error Zip archive inconsistent: EOCD64 and EOCD do not match
 opening 'incons-eocd-magic-bad.zzip' returned error Possibly truncated or corrupted zip archive
 opening 'incons-file-count-high.zzip' returned error Zip archive inconsistent: central directory count of entries is incorrect
 opening 'incons-file-count-low.zzip' returned error Zip archive inconsistent: central directory count of entries is incorrect
@@ -97,5 +97,5 @@ opening 'incons-streamed.zzip' returned error Zip archive inconsistent: entry 0:
 opening 'incons-streamed-2.zzip' returned error Zip archive inconsistent: entry 0: local header and data descriptor do not match
 end-of-inline-data
 stderr
-36 errors
+37 errors
 end-of-inline-data
