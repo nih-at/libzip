@@ -302,10 +302,6 @@ _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_err
         }
     }
 
-    if (cd == NULL) {
-        return NULL;
-    }
-
     if (cd->eocd_disk != 0 || cd->this_disk != 0) {
         zip_error_set(error, ZIP_ER_MULTIDISK, 0);
         _zip_cdir_free(cd);
