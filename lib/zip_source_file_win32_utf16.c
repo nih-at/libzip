@@ -150,8 +150,7 @@ utf16_strdup(const char *string) {
 
 
 static BOOL __stdcall
-utf16_find_first_file(const void *name, void* data) 
+utf16_find_first_file(const void *name, void* data)
 {
     return FileFirstFileW((const wchar_t *)name, data);
 }
-

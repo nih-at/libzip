@@ -223,14 +223,12 @@ _zip_win32_named_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
     if (file_attributes.dwFileAttributes != INVALID_FILE_ATTRIBUTES) {
         if ((file_attributes.dwFileAttributes & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_DEVICE)) == 0) {
             if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
-                printf("REPARSE_POINT!!!!\n");
                 WIN32_FIND_DATA find_data;
                 if (file_ops->find_first_file(ctx->fname, &find_data) != INVALID_HANDLE_VALUE) {
-                    st->regular_file = find_data.dwReserved0 == IO_REPARSE_TAG_DEDUP;
+                    st->regular_file = (find_data.dwReserved0 == IO_REPARSE_TAG_DEDUP);
                 }
             }
             else {
-                printf("Not REPARSE_POINT ...\n");
                 st->regular_file = true;
             }
         }
