@@ -427,32 +427,31 @@ buffer_free(buffer_t *buffer) {
 
 static bool
 buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *error) {
-    zip_buffer_fragment_t *fragments;
-    zip_uint64_t *offsets;
+    zip_uint64_t tmp_fragments_capacity, tmp_offsets_capacity, additional_elements;
 
-    if (capacity < buffer->fragments_capacity) {
+    if (capacity <= buffer->fragments_capacity) {
         return true;
     }
 
-    zip_uint64_t fragments_size = sizeof(buffer->fragments[0]) * capacity;
-    zip_uint64_t offsets_size = sizeof(buffer->fragment_offsets[0]) * (capacity + 1);
-
-    if (capacity == ZIP_UINT64_MAX || fragments_size < capacity || fragments_size > SIZE_MAX|| offsets_size < capacity || offsets_size > SIZE_MAX) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
+    tmp_fragments_capacity = buffer->fragments_capacity;
+    additional_elements = capacity - buffer->fragments_capacity;
+    if (!zip_realloc(&buffer->fragments, &tmp_fragments_capacity, sizeof(buffer->fragments[0]), additional_elements, error)) {
         return false;
     }
 
-    if ((fragments = realloc(buffer->fragments, (size_t)fragments_size)) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
+    /* This is technically not correct if buffer->fragment_capacity is
+       0, but results in the correct required new capacity for
+       buffer->fragment_offsets in all cases (one element more than
+       for buffer->fragments). Also, since we added
+       additional_elements (which is 1 or more) to
+       buffer->fragments_capacity in the previous realloc, we know it
+       can't overflow. */
+    tmp_offsets_capacity = buffer->fragments_capacity + 1;
+    if (!zip_realloc(&buffer->fragment_offsets, &tmp_offsets_capacity, sizeof(buffer->fragment_offsets[0]), additional_elements, error)) {
         return false;
     }
-    buffer->fragments = fragments;
-    if ((offsets = realloc(buffer->fragment_offsets, (size_t)offsets_size)) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return false;
-    }
-    buffer->fragment_offsets = offsets;
-    buffer->fragments_capacity = capacity;
+
+    buffer->fragments_capacity = tmp_fragments_capacity;
 
     return true;
 }
