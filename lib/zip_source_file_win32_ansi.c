@@ -41,7 +41,7 @@ static BOOL __stdcall ansi_get_file_attributes_ex(const void *name, GET_FILEEX_I
 static void ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 static BOOL __stdcall ansi_move_file(const void *from, const void *to, DWORD flags);
 static BOOL __stdcall ansi_set_file_attributes(const void *name, DWORD attributes);
-static BOOL __stdcall ansi_find_first_file(const void *name, void* data);
+static HANDLE __stdcall ansi_find_first_file(const void *name, void* data);
 
 /* clang-format off */
 DONT_WARN_INCOMPATIBLE_FN_PTR_BEGIN
@@ -129,7 +129,7 @@ ansi_set_file_attributes(const void *name, DWORD attributes)
     return SetFileAttributesA((const char *)name, attributes);
 }
 
-static BOOL __stdcall
+static HANDLE __stdcall
 ansi_find_first_file(const void *name, void *data)
 {
     return FindFirstFileA((const char *)name, data); 
