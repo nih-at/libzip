@@ -3,12 +3,12 @@ arguments zip-in-archive-comment.zip stat 0
 file zip-in-archive-comment.zip zip-in-archive-comment.zip
 return 0
 stdout
-name: 'testfile.txt'
+name: 'test'
 index: '0'
-size: '0'
-compressed size: '0'
-mtime: 'Fri Jul 15 2005 16:37:14'
-crc: '0'
+size: '5'
+compressed size: '5'
+mtime: 'Mon Oct 06 2003 15:46:42'
+crc: '3bb935c6'
 compression method: '0'
 encryption method: '0'
 

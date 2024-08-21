@@ -306,8 +306,7 @@ _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i) {
 }
 
 
-int
-_zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset) {
+int _zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset) {
     if (offset > buffer->size) {
         buffer->ok = false;
         return -1;

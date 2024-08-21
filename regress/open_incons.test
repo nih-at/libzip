@@ -3,6 +3,8 @@ program tryopen
 file incons-archive-comment-longer.zzip incons-archive-comment-longer.zip
 file incons-archive-comment-shorter.zzip incons-archive-comment-shorter.zip
 file incons-cdoffset.zzip incons-cdoffset.zip
+file incons-cdsize-large.zzip incons-cdsize-large.zip
+file incons-cdsize-small.zzip incons-cdsize-large.zip
 file incons-central-compression-method.zzip incons-central-compression-method.zip
 file incons-central-compsize-larger.zzip incons-central-compsize-larger.zip
 file incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger-toolarge.zip
@@ -47,14 +49,16 @@ file incons-local-size-larger.zzip incons-local-size-larger.zip
 file incons-stored-size.zzip incons-stored-size.zip
 file incons-streamed.zzip incons-streamed.zip
 file incons-streamed-2.zzip incons-streamed-2.zip
-arguments -s -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-file-comment-utf8-ascii.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-dupe-utf8comment.zzip incons-ef-local-dupe-utf8name.zzip incons-ef-local-dupe-zip64-v1.zzip incons-ef-local-dupe-zip64-v2.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-size.zzip incons-ef-local-utf8name-ascii.zzip incons-eocd64.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip incons-gap-before-cd.zzip incons-gap-before-eocd.zzip incons-gap-before-local.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-nil-byte.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip incons-stored-size.zzip incons-streamed.zzip incons-streamed-2.zzip
+arguments -s -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-cdsize-large.zzip incons-cdsize-small.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-file-comment-utf8-ascii.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-dupe-utf8comment.zzip incons-ef-local-dupe-utf8name.zzip incons-ef-local-dupe-zip64-v1.zzip incons-ef-local-dupe-zip64-v2.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-size.zzip incons-ef-local-utf8name-ascii.zzip incons-eocd64.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip incons-gap-before-cd.zzip incons-gap-before-eocd.zzip incons-gap-before-local.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-nil-byte.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip incons-stored-size.zzip incons-streamed.zzip incons-streamed-2.zzip
 return 1
 # tryopen does not test checksums, so this is fine.
 # different extra fields local vs. central is fine
 stdout
 opening 'incons-archive-comment-longer.zzip' returned error Zip archive inconsistent: archive comment length incorrect
 opening 'incons-archive-comment-shorter.zzip' returned error Zip archive inconsistent: archive comment length incorrect
-opening 'incons-cdoffset.zzip' returned error Zip archive inconsistent: central directory overlaps EOCD, or there is space between them
+opening 'incons-cdoffset.zzip' returned error Possibly truncated or corrupted zip archive
+opening 'incons-cdsize-large.zzip' returned error Zip archive inconsistent: central directory overlaps EOCD, or there is space between them
+opening 'incons-cdsize-small.zzip' returned error Zip archive inconsistent: central directory overlaps EOCD, or there is space between them
 opening 'incons-central-compression-method.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-central-compsize-larger-toolarge.zzip' returned error Possibly truncated or corrupted zip archive
 opening 'incons-central-compsize-larger.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
@@ -101,5 +105,5 @@ opening 'incons-streamed.zzip' returned error Zip archive inconsistent: entry 0:
 opening 'incons-streamed-2.zzip' returned error Zip archive inconsistent: entry 0: local header and data descriptor do not match
 end-of-inline-data
 stderr
-38 errors
+40 errors
 end-of-inline-data
