@@ -364,10 +364,15 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
         _zip_buffer_set_offset(buffer, eocd_offset + EOCDLEN);
         tail_len = _zip_buffer_left(buffer);
 
-        if (tail_len < comment_len || ((za->open_flags & ZIP_CHECKCONS) && tail_len != comment_len)) {
-            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_COMMENT_LENGTH_INVALID);
-            _zip_cdir_free(cd);
-            return true;
+        if (tail_len != comment_len) {
+            if (za->open_flags & ZIP_CHECKCONS) {
+                zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_COMMENT_LENGTH_INVALID);
+                _zip_cdir_free(cd);
+                return true;
+            }
+            if (tail_len < comment_len) {
+                comment_len = tail_len;
+            }
         }
 
         if (comment_len) {
