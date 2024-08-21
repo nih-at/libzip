@@ -42,6 +42,7 @@ static void utf16_make_tempname(char *buf, size_t len, const char *name, zip_uin
 static BOOL __stdcall utf16_move_file(const void *from, const void *to, DWORD flags);
 static BOOL __stdcall utf16_set_file_attributes(const void *name, DWORD attributes);
 static char *utf16_strdup(const char *string);
+static HANDLE __stdcall utf16_find_first_file(const void *name, void* data);
 
 
 /* clang-format off */
@@ -54,7 +55,8 @@ zip_win32_file_operations_t ops_utf16 = {
     utf16_make_tempname,
     utf16_move_file,
     utf16_set_file_attributes,
-    utf16_strdup
+    utf16_strdup,
+    utf16_find_first_file
 };
 /* clang-format on */
 
@@ -140,4 +142,11 @@ utf16_set_file_attributes(const void *name, DWORD attributes)
 static char *
 utf16_strdup(const char *string) {
     return (char *)_wcsdup((const wchar_t *)string);
+}
+
+
+static HANDLE __stdcall
+utf16_find_first_file(const void *name, void* data)
+{
+    return FindFirstFileW((const wchar_t *)name, data);
 }
