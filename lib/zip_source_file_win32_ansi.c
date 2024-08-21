@@ -43,8 +43,6 @@ static BOOL __stdcall ansi_move_file(const void *from, const void *to, DWORD fla
 static BOOL __stdcall ansi_set_file_attributes(const void *name, DWORD attributes);
 
 /* clang-format off */
-DONT_WARN_INCOMPATIBLE_FN_PTR_BEGIN
-
 zip_win32_file_operations_t ops_ansi = {
     ansi_allocate_tempname,
     ansi_create_file,
@@ -56,8 +54,6 @@ zip_win32_file_operations_t ops_ansi = {
     ansi_set_file_attributes,
     strdup
 };
-
-DONT_WARN_INCOMPATIBLE_FN_PTR_END
 /* clang-format on */
 
 ZIP_EXTERN zip_source_t *
