@@ -1,4 +1,4 @@
-# zip_open: file with wrong archive comment lentgh, no consistency check: opens fine
+# zip_open: file with wrong archive comment length, no consistency check: opens fine
 program tryopen
 arguments incons-archive-comment-longer.zip incons-archive-comment-shorter.zip
 return 0
