@@ -673,4 +673,4 @@ int _zip_unchange(zip_t *, zip_uint64_t, int);
 void _zip_unchange_data(zip_entry_t *);
 int _zip_write(zip_t *za, const void *data, zip_uint64_t length);
 
-#endif /* zipint.h */
+#endif /* _HAD_ZIPINT_H */

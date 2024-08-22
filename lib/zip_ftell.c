@@ -38,11 +38,13 @@ ZIP_EXTERN zip_int64_t
 zip_ftell(zip_file_t *zf) {
     zip_int64_t res;
 
-    if (!zf)
+    if (zf == NULL) {
         return -1;
+    }
 
-    if (zf->error.zip_err != 0)
+    if (zf->error.zip_err != 0) {
         return -1;
+    }
 
     res = zip_source_tell(zf->src);
     if (res < 0) {

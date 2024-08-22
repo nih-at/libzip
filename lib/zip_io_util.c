@@ -70,7 +70,7 @@ _zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp
     }
 
     r = (zip_uint8_t *)malloc(length + (nulp ? 1 : 0));
-    if (!r) {
+    if (r == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }

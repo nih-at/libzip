@@ -64,7 +64,7 @@ _zip_add_entry(zip_t *za) {
             return -1;
         }
         rentries = (zip_entry_t *)realloc(za->entry, sizeof(struct zip_entry) * (size_t)nalloc);
-        if (!rentries) {
+        if (rentries == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             return -1;
         }

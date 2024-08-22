@@ -51,8 +51,9 @@ void
 _zip_cdir_free(zip_cdir_t *cd) {
     zip_uint64_t i;
 
-    if (!cd)
+    if (cd == NULL) {
         return;
+    }
 
     for (i = 0; i < cd->nentry; i++)
         _zip_entry_finalize(cd->entry + i);
@@ -139,6 +140,7 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
         zip_entry_t *entry = za->entry + filelist[i].idx;
 
         if (_zip_dirent_write(za, entry->changes ? entry->changes : entry->orig, ZIP_FL_CENTRAL) < 0) {
+            za->write_crc = NULL;
             return -1;
         }
     }
@@ -446,7 +448,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 
     if (filename_len) {
         zde->filename = _zip_read_string(buffer, src, filename_len, 1, error);
-        if (!zde->filename) {
+        if (zde->filename == NULL) {
             if (zip_error_code_zip(error) == ZIP_ER_EOF) {
                 zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_VARIABLE_SIZE_OVERFLOW);
             }
@@ -490,7 +492,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
 
     if (comment_len) {
         zde->comment = _zip_read_string(buffer, src, comment_len, 0, error);
-        if (!zde->comment) {
+        if (zde->comment == NULL) {
             if (!from_buffer) {
                 _zip_buffer_free(buffer);
             }
