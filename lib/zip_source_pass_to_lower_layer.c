@@ -1,6 +1,6 @@
 /*
   zip_source_pass_to_lower_layer.c -- pass command to lower layer
-  Copyright (C) 2022 Dieter Baron and Thomas Klausner
+  Copyright (C) 2022-2024 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>

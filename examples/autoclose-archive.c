@@ -1,6 +1,6 @@
 /*
   autoclose-archive.c -- automatically close archive when source is closed
-  Copyright (C) 2022 Dieter Baron and Thomas Klausner
+  Copyright (C) 2022-2023 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>

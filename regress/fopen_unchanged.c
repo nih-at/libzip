@@ -1,6 +1,6 @@
 /*
   fopen_unchanged.c -- test case for adding file and reading from unchanged
-  Copyright (C) 2012-2021 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2023 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>

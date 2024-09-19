@@ -1,6 +1,6 @@
 /*
   add-compressed-data.c -- add already compressed file to zip archive
-  Copyright (C) 2022 Dieter Baron and Thomas Klausner
+  Copyright (C) 2022-2023 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
