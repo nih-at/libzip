@@ -1,3 +1,7 @@
+# 1.11.1 [2024-09-19]
+
+* Fix zipconf.h for version number with missing third component.
+
 # 1.11 [2024-09-19]
 
 * Stop searching after finding acceptable central directory, even if it contains inconsistencies.

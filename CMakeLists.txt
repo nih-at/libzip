@@ -6,8 +6,12 @@ if (${CMAKE_VERSION} VERSION_LESS "3.17.0")
 endif()
 
 project(libzip
-  VERSION 1.11
+  VERSION 1.11.1
   LANGUAGES C)
+
+if(NOT libzip_VERSION_PATCH)
+  set(libzip_VERSION_PATCH 0)
+endif()
 
 option(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
 option(ENABLE_GNUTLS "Enable use of GnuTLS" ON)
