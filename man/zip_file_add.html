@@ -105,6 +105,13 @@ The data is obtained from the <var class="Ar">source</var> argument, see
     be called on a <var class="Ar">source</var> after it was used successfully
     in a <code class="Nm">zip_file_add</code> or
     <code class="Nm">zip_file_replace</code> call.</p>
+<p class="Pp">Please also note that when using
+    <code class="Nm">zip_replace</code>, the target file's extra field
+    information will be deleted since this usually is dependent on the file
+    contents. If you want to keep them, query them beforehand with
+    <a class="Xr" href="zip_file_extra_field_get.html">zip_file_extra_field_get(3)</a>
+    and restore them after <code class="Nm">zip_replace</code> with
+    <a class="Xr" href="zip_file_extra_field_set.html">zip_file_extra_field_set(3)</a>.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
@@ -170,7 +177,7 @@ if ((s=zip_source_buffer(archive, buf, sizeof(buf), 0)) == NULL ||
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 22, 2020</td>
+    <td class="foot-date">March 18, 2024</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

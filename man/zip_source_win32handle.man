@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_WIN32HANDLE" "3" "December 18, 2017" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_WIN32HANDLE" "3" "May 14, 2024" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -61,9 +61,7 @@ The functions
 and
 \fBzip_source_win32handle_create\fR()
 create a zip source from a Windows file handle.
-They open
-\fIfname\fR
-and read
+They read
 \fIlen\fR
 bytes from offset
 \fIstart\fR
@@ -96,7 +94,7 @@ and
 fail if:
 .TP 19n
 [\fRZIP_ER_INVAL\fR]
-\fIfname\fR,
+\fIh\fR,
 \fIstart\fR,
 or
 \fIlen\fR
@@ -104,11 +102,6 @@ are invalid.
 .TP 19n
 [\fRZIP_ER_MEMORY\fR]
 Required memory could not be allocated.
-.TP 19n
-[\fRZIP_ER_OPEN\fR]
-Opening
-\fIfname\fR
-failed.
 .SH "SEE ALSO"
 libzip(3),
 zip_file_add(3),
