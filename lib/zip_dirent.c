@@ -39,7 +39,6 @@
 #include <time.h>
 #include <zlib.h>
 
-#include "zip.h"
 #include "zipint.h"
 
 static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency);
