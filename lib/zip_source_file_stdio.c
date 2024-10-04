@@ -42,9 +42,20 @@
 #include <sys/stat.h>
 
 #ifdef _WIN32
+#define STAT_ST _stat64
+#define STAT_F _stat64
+#define FSTAT_F _fstat64
+#define FSEEK_F _fseeki64
+#define OFF_T __int64
 #ifndef S_IWUSR
 #define S_IWUSR _S_IWRITE
 #endif
+#else
+#define STAT_ST stat
+#define STAT_F stat
+#define FSTAT_F fstat
+#define FSEEK_F fseeko
+#define OFF_T off_t
 #endif
 
 /* clang-format off */
@@ -120,7 +131,7 @@ _zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
     }
 #endif
 
-    if (fseeko((FILE *)f, (off_t)offset, whence) < 0) {
+    if (FSEEK_F((FILE *)f, (OFF_T)offset, whence) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_SEEK, errno);
         return false;
     }
@@ -130,15 +141,15 @@ _zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
 
 bool
 _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
-    struct stat sb;
+    struct STAT_ST sb;
 
     int ret;
 
     if (ctx->fname) {
-        ret = stat(ctx->fname, &sb);
+        ret = STAT_F(ctx->fname, &sb);
     }
     else {
-        ret = fstat(fileno((FILE *)ctx->f), &sb);
+        ret = FSTAT_F(fileno((FILE *)ctx->f), &sb);
     }
 
     if (ret < 0) {
