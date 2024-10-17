@@ -97,10 +97,12 @@ The functions <code class="Fn">zip_source_zip</code>() and
     <var class="Ar">start</var>, is used. If <var class="Ar">start</var> is zero
     and <var class="Ar">len</var> is -1, the whole file will be copied without
     decompressing it.</p>
-<p class="Pp">Supported flags are:
-  <br/>
-  Try to get the original data without any changes that may have been made to
-    <var class="Ar">srcarchive</var> after opening it.</p>
+<p class="Pp">Supported flags are:</p>
+<dl class="Bl-tag">
+  <dt><a class="permalink" href="#ZIP_FL_UNCHANGED"><code class="Dv" id="ZIP_FL_UNCHANGED">ZIP_FL_UNCHANGED</code></a></dt>
+  <dd>Try to get the original data without any changes that may have been made
+      to <var class="Ar">srcarchive</var> after opening it.</dd>
+</dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
@@ -141,7 +143,8 @@ Additionally, it can return all error codes from
 <code class="Fn">zip_source_zip</code>() was added in libzip 1.0.
   <code class="Fn">zip_source_zip_create</code>() was added in libzip 1.8.0.
   Both were deprecated in libzip 1.10.0. Use
-  <code class="Fn">zip_source_zip_file</code>() or instead.
+  <code class="Fn">zip_source_zip_file</code>() or
+  <code class="Fn">zip_source_zip_file_create</code>() instead.
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>

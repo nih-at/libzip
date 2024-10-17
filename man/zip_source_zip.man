@@ -96,7 +96,8 @@ is zero and
 is \-1, the whole file will be copied without decompressing it.
 .PP
 Supported flags are:
-.br
+.TP 14n
+\fRZIP_FL_UNCHANGED\fR
 Try to get the original data without any changes that may have been
 made to
 \fIsrcarchive\fR
@@ -150,6 +151,7 @@ Both were deprecated in libzip 1.10.0.
 Use
 \fBzip_source_zip_file\fR()
 or
+\fBzip_source_zip_file_create\fR()
 instead.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>

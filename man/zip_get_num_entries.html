@@ -70,8 +70,8 @@ The <code class="Fn">zip_get_num_entries</code>() function returns the number of
   entries in <var class="Ar">archive</var>. Entries are all files that are
   present in the original archive or that were added while the archive is open.
   This includes deleted files, since indices are not renumbered until the
-  archive is closed. (This allows to refer to deleted files, e. g. to undelete
-  them.)
+  archive is closed. (This allows one to refer to deleted files, e. g. to
+  undelete them.)
 <p class="Pp">If <var class="Ar">flags</var> is set to
     <code class="Dv">ZIP_FL_UNCHANGED</code>, the original number of files is
     returned.</p>

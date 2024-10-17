@@ -302,7 +302,9 @@ Set default password for encryption/decryption to
 Print information about archive entry
 \fIindex\fR.
 .SS "Flags"
-Some commands take flag arguments. Each character in the argument sets the corresponding flag. Use 0 or the empty string for no flags.
+Some commands take flag arguments.
+Each character in the argument sets the corresponding flag.
+Use 0 or the empty string for no flags.
 .PP
 Supported flags are:
 .RS 6n
