@@ -244,7 +244,7 @@ if(ENABLE_LZMA)
 endif(ENABLE_LZMA)
 
 if(ENABLE_ZSTD)
-  find_package(zstd 1.3.6)
+  find_package(zstd 1.4.0)
   if(zstd_FOUND)
     set(HAVE_LIBZSTD 1)
     if(TARGET zstd::libzstd_shared AND BUILD_SHARED_LIBS)
