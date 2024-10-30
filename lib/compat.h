@@ -63,7 +63,6 @@ typedef char bool;
 #endif
 
 #include <errno.h>
-#include <sys/_types/_off_t.h>
 
 /* at least MinGW does not provide EOPNOTSUPP, see
  * http://sourceforge.net/p/mingw/bugs/263/
