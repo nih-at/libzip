@@ -282,6 +282,7 @@ _zip_dirent_init(zip_dirent_t *de) {
     de->cloned = 0;
 
     de->crc_valid = true;
+    de->last_mod_mtime_valid = false;
     de->version_madeby = 63 | (ZIP_OPSYS_DEFAULT << 8);
     de->version_needed = 10; /* 1.0 */
     de->bitflags = 0;
@@ -1262,4 +1263,13 @@ zip_dirent_check_consistency(zip_dirent_t *dirent) {
         return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
     }
     return 0;
+}
+
+time_t zip_dirent_get_last_mod_mtime(zip_dirent_t *de) {
+    if (!de->last_mod_mtime_valid) {
+        de->last_mod_mtime = _zip_d2u_time(&de->last_mod);
+        de->last_mod_mtime_valid = true;
+    }
+
+    return de->last_mod_mtime;
 }
