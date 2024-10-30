@@ -101,7 +101,10 @@ check_function_exists(_close HAVE__CLOSE)
 check_function_exists(_dup HAVE__DUP)
 check_function_exists(_fdopen HAVE__FDOPEN)
 check_function_exists(_fileno HAVE__FILENO)
+check_function_exists(_fseeki64 HAVE__FSEEKI64)
+check_function_exists(_fstat64 HAVE__FSTAT64)
 check_function_exists(_setmode HAVE__SETMODE)
+check_function_exists(_stat64 HAVE__STAT64)
 check_symbol_exists(_snprintf stdio.h HAVE__SNPRINTF)
 check_symbol_exists(_snprintf_s stdio.h HAVE__SNPRINTF_S)
 check_symbol_exists(_snwprintf_s stdio.h HAVE__SNWPRINTF_S)
@@ -463,8 +466,8 @@ else()
 endif()
 
 # write out config file
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake-config.h.in ${PROJECT_BINARY_DIR}/config.h)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake-zipconf.h.in ${PROJECT_BINARY_DIR}/zipconf.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/zipconf.h.in ${PROJECT_BINARY_DIR}/zipconf.h)
 
 # for tests
 
