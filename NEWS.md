@@ -1,3 +1,7 @@
+# 1.11.2 [2024-10-31]
+
+* Fix performance regression in `zip_stat` introduced in 1.11.
+
 # 1.11.1 [2024-09-19]
 
 * Fix zipconf.h for version number with missing third component.
