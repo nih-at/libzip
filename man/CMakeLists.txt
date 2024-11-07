@@ -17,6 +17,7 @@ set(MAN_PAGES
   zip_error_get_sys_type.3
   zip_error_init.3
   zip_error_set.3
+  zip_error_set_from_source.3
   zip_error_strerror.3
   zip_error_system_type.3
   zip_error_to_data.3
