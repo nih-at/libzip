@@ -97,7 +97,7 @@ zip_close(3)).
 can do various optimizations if the size of a source is known when
 it's created, so
 \fRZIP_LENGTH_TO_END\fR
-is preferrable.
+is preferable.
 If you deal with files that are likely to change while you are
 processing them, you can use the less efficient
 \fRZIP_LENGTH_UNCHECKED\fR.
