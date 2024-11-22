@@ -1,3 +1,7 @@
+# 1.11.3 [Unreleased]
+
+* Don't hardcode `_Nullable` support in `zip.h` to allow it to be used with different compilers.
+
 # 1.11.2 [2024-10-31]
 
 * Fix performance regression in `zip_stat` introduced in 1.11.
