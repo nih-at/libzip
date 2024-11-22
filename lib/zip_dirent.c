@@ -1200,21 +1200,21 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
         zip_uint16_t bitflags = (de->bitflags & ~mask) | (attributes->general_purpose_bit_flags & mask);
         if (de->bitflags != bitflags) {
             de->bitflags = bitflags;
-            changed = true;
+            has_changed = true;
         }
     }
     if (attributes->valid & ZIP_FILE_ATTRIBUTES_ASCII) {
         zip_uint16_t int_attrib = (de->int_attrib & ~0x1) | (attributes->ascii ? 1 : 0);
         if (de->int_attrib != int_attrib) {
             de->int_attrib = int_attrib;
-            changed = true;
+            has_changed = true;
         }
     }
     /* manually set attributes are preferred over attributes provided by source */
     if ((changed & ZIP_DIRENT_ATTRIBUTES) == 0 && (attributes->valid & ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES)) {
         if (de->ext_attrib != attributes->external_file_attributes) {
             de->ext_attrib = attributes->external_file_attributes;
-            changed = true;
+            has_changed = true;
         }
     }
 
@@ -1247,7 +1247,7 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
 
     if (de->version_needed != version_needed) {
         de->version_needed = version_needed;
-        changed = true;
+        has_changed = true;
     }
 
     zip_int16_t version_madeby = 63 | (de->version_madeby & 0xff00);
@@ -1256,10 +1256,10 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
     }
     if (de->version_madeby != version_madeby) {
         de->version_madeby = version_madeby;
-        changed = true;
+        has_changed = true;
     }
 
-    return changed;
+    return has_changed;
 }
 
 
