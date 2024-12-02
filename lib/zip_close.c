@@ -515,11 +515,13 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t
 
     /* as long as we don't support non-seekable output, clear data descriptor bit */
     if ((is_zip64 = _zip_dirent_write(za, de, flags)) < 0) {
+        zip_source_free(src_final);
         return -1;
     }
 
     if ((offdata = zip_source_tell_write(za->src)) < 0) {
         zip_error_set_from_source(&za->error, za->src);
+        zip_source_free(src_final);
         return -1;
     }
 
