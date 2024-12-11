@@ -1280,10 +1280,31 @@ zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
     /* last_mod, extra_fields, and comment are normalized in zip_dirent_write() directly */
 }
 
-int
-zip_dirent_check_consistency(zip_dirent_t *dirent) {
-    if (dirent->comp_method == ZIP_CM_STORE && dirent->comp_size != dirent->uncomp_size) {
-        return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
+int zip_dirent_check_consistency(zip_dirent_t *dirent) {
+    if (dirent->comp_method == ZIP_CM_STORE) {
+        zip_uint64_t header_size = 0;
+        switch (dirent->encryption_method) {
+        case ZIP_EM_NONE:
+            break;
+        case ZIP_EM_TRAD_PKWARE:
+            header_size = 12;
+            break;
+        case ZIP_EM_AES_128:
+            header_size = 20;
+            break;
+        case ZIP_EM_AES_192:
+            header_size = 24;
+            break;
+        case ZIP_EM_AES_256:
+            header_size = 28;
+            break;
+
+        default:
+            return 0;
+        }
+        if (dirent->uncomp_size + header_size < dirent->uncomp_size || dirent->comp_size != dirent->uncomp_size + header_size) {
+            return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
+        }
     }
     return 0;
 }
