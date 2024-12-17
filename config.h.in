@@ -32,6 +32,7 @@
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_GETPROGNAME
+#cmakedefine HAVE_GETSECURITYINFO
 #cmakedefine HAVE_GNUTLS
 #cmakedefine HAVE_LIBBZ2
 #cmakedefine HAVE_LIBLZMA
