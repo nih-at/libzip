@@ -6,12 +6,12 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4
-    - name: configure and build
+    - name: NetBSD test
       uses: vmactions/netbsd-vm@v1
       with:
         usesh: true
         copyback: false
-        prepare:
+        prepare: |
           /usr/sbin/pkg_add cmake zstd py313-pip
           /usr/pkg/bin/pip-3.13 install nihtest
           # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-system-path
