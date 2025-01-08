@@ -153,7 +153,7 @@ struct zip_compression_algorithm {
     bool (*input)(void *ctx, zip_uint8_t *data, zip_uint64_t length);
 
     /* all input data has been provided */
-    void (*end_of_input)(void *ctx);
+    bool (*end_of_input)(void *ctx);
 
     /* process input data, writing to data, which has room for length bytes, update length to number of bytes written */
     zip_compression_status_t (*process)(void *ctx, zip_uint8_t *data, zip_uint64_t *length);
@@ -242,6 +242,7 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_EOCD64_LOCATOR_MISMATCH 22 /* G EOCD64 and EOCD64 locator do not match */
 #define ZIP_ER_DETAIL_UTF8_FILENAME_MISMATCH 23 /* E UTF-8 filename is ASCII and doesn't match filename */
 #define ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH 24 /* E UTF-8 comment is ASCII and doesn't match comment */
+#define ZIP_ER_DETAIL_COMPRESSED_DATA_TRAILING_GARBAGE 25 /* G garbage at end of compressed data */
 
 /* directory entry: general purpose bit flags */
 
