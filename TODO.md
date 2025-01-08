@@ -1,5 +1,3 @@
-* Confirm overflow checks are working
-
 ## Fuzzing
 
 - improve AES and PKWARE encryption tests
