@@ -508,7 +508,8 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t
     if (!ZIP_WANT_TORRENTZIP(za)) {
         if (zip_source_get_file_attributes(src_final, &attributes) != 0) {
             zip_error_set_from_source(&za->error, src_final);
-            ret = -1;
+            zip_source_free(src_final);
+            return -1;
         }
         _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0, changed);
     }

@@ -340,6 +340,7 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
     fragment_offset = offset - buffer->fragment_offsets[fragment];
 
     if (fragment_offset == 0) {
+        /* We can't be at beginning of fragment zero if offset > 0. */
         fragment--;
         fragment_offset = buffer->fragments[fragment].length;
     }
