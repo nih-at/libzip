@@ -52,7 +52,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 * set `O_CLOEXEC` flag after fopen and mkstemp
 * support streaming output (creating new archive to e.g. stdout)
 * add function to read/set ASCII file flag
-* `zip_commit()` (to finish changes without closing archive)
 * add custom compression function support
 * `zip_source_zip()`: allow rewinding
 * `zipcmp`: add option for file content comparison
