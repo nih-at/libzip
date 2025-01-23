@@ -304,7 +304,8 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t
     int is_zip64;
     zip_flags_t flags;
     bool needs_recompress, needs_decompress, needs_crc, needs_compress, needs_reencrypt, needs_decrypt, needs_encrypt;
-    bool have_dos_time, dirent_changed;
+    bool dirent_changed;
+    bool have_dos_time = false;
     time_t mtime_before_copy;
 
     if (zip_source_stat(src, &st) < 0) {
