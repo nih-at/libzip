@@ -60,6 +60,7 @@ add_library(zip
   zip_open.c
   zip_pkware.c
   zip_progress.c
+  zip_realloc.c
   zip_rename.c
   zip_replace.c
   zip_set_archive_comment.c

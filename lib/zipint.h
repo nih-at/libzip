@@ -108,6 +108,8 @@
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))
 
+#define ZIP_REALLOC(memory, alloced_elements, additional_elements, error) zip_realloc((void **)&memory, &alloced_elements, sizeof(*memory), additional_elements, error)
+
 /* This section contains API that won't materialize like this.  It's
    placed in the internal section, pending cleanup. */
 
@@ -307,8 +309,8 @@ struct zip {
     zip_uint64_t nentry_alloc; /* number of entries allocated */
     zip_entry_t *entry;        /* entries */
 
-    unsigned int nopen_source;       /* number of open sources using archive */
-    unsigned int nopen_source_alloc; /* number of sources allocated */
+    zip_uint64_t nopen_source;       /* number of open sources using archive */
+    zip_uint64_t nopen_source_alloc; /* number of sources allocated */
     zip_source_t **open_source;      /* open sources using archive */
 
     zip_hash_t *names; /* hash table for name lookup */
@@ -619,6 +621,8 @@ void _zip_progress_free(zip_progress_t *progress);
 int _zip_progress_start(zip_progress_t *progress);
 int _zip_progress_subrange(zip_progress_t *progress, double start, double end);
 int _zip_progress_update(zip_progress_t *progress, double value);
+
+bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t element_size, zip_uint64_t additional_elements, zip_error_t *error);
 
 /* this symbol is extern so it can be overridden for regression testing */
 ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
