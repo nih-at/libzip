@@ -359,8 +359,6 @@ _zip_deregister_source(zip_t *za, zip_source_t *src) {
 
 int
 _zip_register_source(zip_t *za, zip_source_t *src) {
-    zip_source_t **open_source;
-
     if (za->nopen_source + 1 >= za->nopen_source_alloc) {
         if (!ZIP_REALLOC(za->open_source, za->nopen_source_alloc, 10, &za->error)) {
             return -1;
