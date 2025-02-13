@@ -1,6 +1,3 @@
-- Remove zipcmp, zipmerge, and ziptool from installed cmake files
-  (to avoid having libzip-devel packages depend on the tools)
-
 ## Fuzzing
 
 - improve AES and PKWARE encryption tests
