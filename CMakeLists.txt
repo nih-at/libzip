@@ -495,4 +495,7 @@ if(LIBZIP_DO_INSTALL)
   install(EXPORT ${PROJECT_NAME}-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-targets.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
+  install(EXPORT ${PROJECT_NAME}-bin-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-bin-targets.cmake
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  )
 endif()
