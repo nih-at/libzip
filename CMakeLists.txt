@@ -486,8 +486,8 @@ if(LIBZIP_DO_INSTALL)
   # Add targets to the build-tree export set
   export(TARGETS zip
     FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake")
-  export(TARGETS zip
-    FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-bin-targets.cmake")
+  # export(TARGETS zip
+  #   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-bin-targets.cmake")
 
   # installation
   install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION include)
@@ -497,7 +497,7 @@ if(LIBZIP_DO_INSTALL)
   install(EXPORT ${PROJECT_NAME}-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-targets.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
-  install(EXPORT ${PROJECT_NAME}-bin-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-bin-targets.cmake
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-  )
+  # install(EXPORT ${PROJECT_NAME}-bin-targets NAMESPACE libzip:: FILE ${PROJECT_NAME}-bin-targets.cmake
+    #       DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  # )
 endif()
