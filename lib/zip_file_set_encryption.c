@@ -40,7 +40,6 @@
 ZIP_EXTERN int
 zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const char *password) {
     zip_entry_t *e;
-    zip_uint16_t old_method;
     char *our_password = NULL;
 
     if (idx >= za->nentry) {
