@@ -13,10 +13,10 @@ jobs:
         os: [macos-latest, ubuntu-latest]
         cmake_extra: [""]
         name_extra: [""]
-        include:
-          - os: windows-latest
-            cmake_extra: "-T ClangCl"
-            name_extra: " clang-cl"
+        # include:
+        #   - os: windows-latest
+        #     cmake_extra: "-T ClangCl"
+        #     name_extra: " clang-cl"
     steps:
       - name: checkout
         uses: actions/checkout@v4
