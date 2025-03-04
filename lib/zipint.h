@@ -556,13 +556,14 @@ zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint6
 time_t _zip_d2u_time(const zip_dostime_t*);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);
 
-bool _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool, zip_uint32_t);
+bool _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool);
 int zip_dirent_check_consistency(zip_dirent_t *dirent);
 zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *);
 void _zip_dirent_free(zip_dirent_t *);
 void _zip_dirent_finalize(zip_dirent_t *);
 time_t zip_dirent_get_last_mod_mtime(zip_dirent_t *de);
 void _zip_dirent_init(zip_dirent_t *);
+bool _zip_dirent_merge(zip_dirent_t *de, zip_dirent_t *de_orig, bool replacing_data, zip_error_t *error);
 bool _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
 zip_dirent_t *_zip_dirent_new(void);
 bool zip_dirent_process_ef_zip64(zip_dirent_t * zde, const zip_uint8_t * ef, zip_uint64_t got_len, bool local, zip_error_t * error);

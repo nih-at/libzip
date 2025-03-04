@@ -42,7 +42,7 @@
 #endif
 
 
-static int add_data(zip_t *, zip_source_t *, zip_dirent_t *, zip_uint32_t);
+static int add_data(zip_t *, zip_source_t *, zip_dirent_t *);
 static int copy_data(zip_t *, zip_uint64_t);
 static int copy_source(zip_t *, zip_source_t *, zip_source_t *, zip_int64_t);
 static int torrentzip_compare_names(const void *a, const void *b);
@@ -195,6 +195,12 @@ zip_close(zip_t *za) {
                 break;
             }
         }
+        else if (entry->orig != NULL) {
+            if (!_zip_dirent_merge(entry->changes, entry->orig, ZIP_ENTRY_DATA_CHANGED(entry), &za->error)) {
+                error = 1;
+                break;
+            }
+        }
         de = entry->changes;
 
         if (_zip_read_local_ef(za, i) < 0) {
@@ -225,7 +231,7 @@ zip_close(zip_t *za) {
             }
 
             /* add_data writes dirent */
-            if (add_data(za, zs ? zs : entry->source, de, entry->changes ? entry->changes->changed : 0) < 0) {
+            if (add_data(za, zs ? zs : entry->source, de) < 0) {
                 error = 1;
                 if (zs)
                     zip_source_free(zs);
@@ -295,7 +301,7 @@ zip_close(zip_t *za) {
 }
 
 
-static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t changed) {
+static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     zip_int64_t offstart, offdata, offend, data_length;
     zip_stat_t st;
     zip_file_attributes_t attributes;
@@ -512,7 +518,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t
             zip_source_free(src_final);
             return -1;
         }
-        _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0, changed);
+        _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0);
     }
 
     /* as long as we don't support non-seekable output, clear data descriptor bit */
@@ -564,7 +570,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de, zip_uint32_t
     de->comp_size = (zip_uint64_t)(offend - offdata);
 
     if (!ZIP_WANT_TORRENTZIP(za)) {
-        dirent_changed |= _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0, changed);
+        dirent_changed |= _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0);
 
         if ((de->changed & ZIP_DIRENT_LAST_MOD) == 0 && !have_dos_time) {
             if (st.valid & ZIP_STAT_MTIME) {
