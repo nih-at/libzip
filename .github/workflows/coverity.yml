@@ -6,6 +6,9 @@ on:
       # Mondays at 03:00
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Coverity

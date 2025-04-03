@@ -1,5 +1,7 @@
 name: BSD
 on: [push]
+permissions:
+  contents: read
 jobs:
   NetBSD:
     runs-on: ubuntu-latest
