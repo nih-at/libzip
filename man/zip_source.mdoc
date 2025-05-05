@@ -39,13 +39,13 @@
 libzip (-lzip)
 .Sh SYNOPSIS
 .In zip.h
-.Vt zip_source_t *zs ;
+.Vt zip_source_t *source ;
 .Sh DESCRIPTION
 A
 .Vt zip_source_t
-is a data source used by
+represents a data source (or destination when used for writing).
 .Xr libzip 3
-for adding or replacing file contents for a file in a zip archive.
+uses it for adding or replacing file contents for a file in a zip archive.
 If the source supports seeking, it can also be used to open zip archives from.
 .Pp
 Data can come from a file on disk
@@ -60,6 +60,8 @@ memory
 .Xr zip_source_buffer_fragment 3 ,
 or
 .Xr zip_source_buffer_fragment_create 3 ) ,
+a file inside an archive
+.Xr ( zip_source_zip 3 ) ,
 or provided via a callback function
 .Xr ( zip_source_function 3
 or
@@ -68,6 +70,19 @@ or
 or
 .Xr zip_source_window_create 3
 can be used restrict access to a part of the contained data.
+.Pp
+It can also be used as a filter to process the data provided by an underlying
+.Vt zip_source_t
+(e.g., to compress it or compute a checksum), created with
+.Xr zip_source_layered 3
+or
+.Xr zip_source_layered_create 3 ) .
+.Pp
+Sources are freed with
+.Xr zip_source_free 3 .
+.Pp
+Sources must support reading, and can optionally support seeking and
+writing.
 .Pp
 .Vt zip_source_t
 is reference counted, and created with a reference count of 1.
@@ -89,6 +104,7 @@ to increase the reference count, for example if you need the source after
 .Xr zip_source_filep 3 ,
 .Xr zip_source_free 3 ,
 .Xr zip_source_function 3 ,
+.Xr zip_source_keep 3 ,
 .Xr zip_source_window 3 ,
 .Xr zip_source_zip 3
 .Sh AUTHORS
