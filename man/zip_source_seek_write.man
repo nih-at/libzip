@@ -77,7 +77,7 @@ Otherwise, \-1 is returned and the error information in
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),
-zip_source(3),
+zip_source(5),
 zip_source_begin_write(3),
 zip_source_commit_write(3),
 zip_source_rollback_write(3),

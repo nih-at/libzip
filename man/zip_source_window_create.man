@@ -93,7 +93,7 @@ is less than \-1.
 Required memory could not be allocated.
 .SH "SEE ALSO"
 libzip(3),
-zip_source(3)
+zip_source(5)
 .SH "HISTORY"
 \fBzip_source_window_create\fR()
 was added in libzip 1.8.0.

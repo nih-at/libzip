@@ -104,7 +104,7 @@ as code page 437 (CP-437).
 The data is obtained from the
 \fIsource\fR
 argument, see
-zip_source(3).
+zip_source(5).
 .PD
 .PP
 \fINOTE\fR:
@@ -182,7 +182,7 @@ Required memory could not be allocated.
 Archive was opened in read-only mode.
 .SH "SEE ALSO"
 libzip(3),
-zip_source(3)
+zip_source(5)
 .SH "HISTORY"
 \fBzip_file_add\fR()
 and

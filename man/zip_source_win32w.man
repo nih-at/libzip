@@ -112,7 +112,7 @@ failed.
 libzip(3),
 zip_file_add(3),
 zip_file_replace(3),
-zip_source(3),
+zip_source(5),
 zip_source_file(3),
 zip_source_win32a(3),
 zip_source_win32handle(3)

@@ -59,7 +59,7 @@ If the source supports seeking, 1 is returned.
 Otherwise, 0 is returned.
 .SH "SEE ALSO"
 libzip(3),
-zip_source(3),
+zip_source(5),
 zip_source_seek(3)
 .SH "HISTORY"
 \fBzip_source_is_seekable\fR()

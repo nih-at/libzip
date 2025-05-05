@@ -77,7 +77,7 @@ Otherwise, \-1 is returned and the error information in
 is set to indicate the error.
 .SH "SEE ALSO"
 libzip(3),
-zip_source(3),
+zip_source(5),
 zip_source_is_seekable(3),
 zip_source_read(3),
 zip_source_tell(3)

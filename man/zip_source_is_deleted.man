@@ -57,7 +57,7 @@ This can for example happen when all entries are removed from a zip archive.
 returns 1 if the zip_source is deleted and 0 otherwise.
 .SH "SEE ALSO"
 libzip(3),
-zip_source(3)
+zip_source(5)
 .SH "HISTORY"
 \fBzip_source_is_deleted\fR()
 was added in libzip 1.0.

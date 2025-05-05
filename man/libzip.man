@@ -83,23 +83,23 @@ This allows extending the structures in the future without breaking compatibilit
 .SS "zip_t"
 This type represents an opened archive.
 See
-zip(3).
+zip(5).
 .SS "zip_file_t"
 This type represents a file from an archive that has been opened for reading.
 See
-zip_file(3).
+zip_file(5).
 .SS "zip_source_t"
 This type represents a source (or destination) of data.
 It is used in
 \fBlibzip\fR
 for providing data when adding or replacing files, accessing data from a file inside an archive, and the data for the archive as a whole.
 See
-zip_source(3).
+zip_source(5).
 .SS "zip_error_t"
 This type represents information about an error.
 Its type can be checked against pre-defined constants and it can be converted to a human readable string.
 See
-zip_error(3).
+zip_error(5).
 .SH "FILE NAMES"
 .SS "Encoding"
 Names of files in the host file system are expected in UTF-8 encoding.
@@ -356,7 +356,7 @@ zip_set_archive_comment(3)
 zip_set_archive_flag(3)
 .TP 4n
 \fB\(bu\fR
-zip_source(3)
+zip_source(5)
 .PD
 .SH "ERROR HANDLING"
 .TP 4n

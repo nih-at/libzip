@@ -100,7 +100,7 @@ libzip(3),
 zip_file_add(3),
 zip_file_replace(3),
 zip_open_from_source(3),
-zip_source(3)
+zip_source(5)
 .SH "HISTORY"
 \fBzip_source_buffer\fR()
 and
