@@ -19,17 +19,17 @@ It supports the following features:
 - Reading archives and file data from files or memory buffers
 - Reverting unsaved changes
 - Zip64 large archives
-- Winzip AES and legacy PKware encryption
+- Winzip AES and legacy PKWARE encryption
 
 The [BSD license](LICENSE) used for libzip allows its use in commercial products. 
 
 ## Who Uses libzip?
 
-libzip is used in major open source projects like [KDE](https://kde.org/), [Chromium](https://www.chromium.org/Home), [ImageMagick](https://github.com/ImageMagick/ImageMagick/), and [Veracrypt](https://www.veracrypt.fr/).
+libzip is used in major open source projects like [KDE](https://kde.org/), [Chromium](https://www.chromium.org/Home), [ImageMagick](https://github.com/ImageMagick/ImageMagick/), and [VeraCrypt](https://www.veracrypt.fr/).
 
 Commercial products using libzip include [Lightroom from Adobe](https://lightroom.adobe.com/) and the [Kobo eReader](http://www.kobo.com/desktop).
 
-There are also bindings for other programming languages: [Python](https://github.com/KOLANICH-libs/libzip.py), [Ruby](http://rubygems.org/gems/zipruby/), [LUA](https://github.com/brimworks/lua-zip), [PHP](http://pecl.php.net/package/zip), and others.
+There are also bindings for other programming languages: [Python](https://github.com/KOLANICH-libs/libzip.py), [Ruby](http://rubygems.org/gems/zipruby/), [Lua](https://github.com/brimworks/lua-zip), [PHP](http://pecl.php.net/package/zip), and others.
 
 There is a more complete [list of projects](https://libzip.org/users/).
 
@@ -62,7 +62,7 @@ file [API-CHANGES.md](API-CHANGES.md).
 
 ## Staying in Touch
 
-More information and the latest version can always be found on [libzip.org](https://libzip.org).  The official repository is at [github](https://github.com/nih-at/libzip/).
+More information and the latest version can always be found on [libzip.org](https://libzip.org).  The official repository is at [GitHub](https://github.com/nih-at/libzip/).
 
 If you want to reach the authors in private, use <info@libzip.org>.
 
