@@ -81,97 +81,25 @@ These data types correspond to central concepts in
 Most of them are private, meaning you can't allocate them or access their members directly.
 This allows extending the structures in the future without breaking compatibility.
 .SS "zip_t"
-This type represents an open zip archive and is used for all functions accessing and modifying archives.
-.PP
-It is created with
-zip_open(3),
-zip_open_from_source(3),
-or
-zip_fdopen(3).
-.PP
-It is closed with
-zip_close(3)
-or
-zip_discard(3).
+This type represents an opened archive.
+See
+zip(3).
 .SS "zip_file_t"
 This type represents a file from an archive that has been opened for reading.
-.PP
-It is created with
-zip_fopen(3),
-zip_fopen_index,
-zip_fopen_encrypted(3),
-or
-zip_fopen_index_encrypted(3).
-.PP
-Data is access with
-zip_fread(3),
-zip_file_is_seekable(3),
-zip_ftell(3),
-or
-zip_fseek(3).
-.PP
-It is closed with
-zip_fclose(3).
-.PP
-If the containing
-\fIzip_t\fR
-is closed, all further uses of the
-\fIzip_file_t\fR
-return an error.
-It is a convenience wrapper around
-\fIzip_source_t\fR.
+See
+zip_file(3).
 .SS "zip_source_t"
-This type represents either a data source (or destination when used
-for writing).
-.PP
-Data can come from a file on disk
-(zip_source_file(3),
-zip_source_file_create(3),
-zip_source_filep(3),
-or
-zip_source_filep_create(3)),
-memory
-(zip_source_buffer(3),
-zip_source_buffer_create(3),
-zip_source_buffer_fragment(3),
-or
-zip_source_buffer_fragment_create(3)),
-or provided via a callback function
-(zip_source_function(3)
-or
-zip_source_function_create(3)).
-.PP
-It can also be used as a filter to process the data provided by an underlying
-\fIzip_source_t\fR
-(e.g., to compress it or compute a checksum), created with
-zip_source_layered(3)
-or
-zip_source_layered_create(3)).
-.PP
-Sources are freed with
-zip_source_free(3).
-.PP
-Sources must support reading, and can optionally support seeking and
-writing.
+This type represents a source (or destination) of data.
+It is used in
+\fBlibzip\fR
+for providing data when adding or replacing files, accessing data from a file inside an archive, and the data for the archive as a whole.
+See
+zip_source(3).
 .SS "zip_error_t"
 This type represents information about an error.
-Its member are publicly accessible, and is usually allocated directly
-on the stack or as member of another structure.
-.PP
-It is initialized with
-zip_error_init(3)
-or
-zip_error_init_with_code(3).
-.PP
-The type of error can be accessed with
-zip_error_code_zip(3)
-and
-zip_error_code_system(3).
-It can be converted to a human readable string with
-zip_error_strerror(3).
-.PP
-After use, it should be cleaned up with
-zip_error_fini(3).
+Its type can be checked against pre-defined constants and it can be converted to a human readable string.
+See
+zip_error(3).
 .SH "FILE NAMES"
 .SS "Encoding"
 Names of files in the host file system are expected in UTF-8 encoding.

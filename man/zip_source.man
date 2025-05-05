@@ -41,13 +41,13 @@ libzip (-lzip)
 .SH "SYNOPSIS"
 \fB#include <zip.h>\fR
 .sp
-\fIzip_source_t *zs\fR;
+\fIzip_source_t *source\fR;
 .SH "DESCRIPTION"
 A
 \fIzip_source_t\fR
-is a data source used by
+represents a data source (or destination when used for writing).
 libzip(3)
-for adding or replacing file contents for a file in a zip archive.
+uses it for adding or replacing file contents for a file in a zip archive.
 If the source supports seeking, it can also be used to open zip archives from.
 .PP
 Data can come from a file on disk
@@ -62,6 +62,8 @@ zip_source_buffer_create(3),
 zip_source_buffer_fragment(3),
 or
 zip_source_buffer_fragment_create(3)),
+a file inside an archive
+(zip_source_zip(3)),
 or provided via a callback function
 (zip_source_function(3)
 or
@@ -70,6 +72,19 @@ zip_source_window(3)
 or
 zip_source_window_create(3)
 can be used restrict access to a part of the contained data.
+.PP
+It can also be used as a filter to process the data provided by an underlying
+\fIzip_source_t\fR
+(e.g., to compress it or compute a checksum), created with
+zip_source_layered(3)
+or
+zip_source_layered_create(3)).
+.PP
+Sources are freed with
+zip_source_free(3).
+.PP
+Sources must support reading, and can optionally support seeking and
+writing.
 .PP
 \fIzip_source_t\fR
 is reference counted, and created with a reference count of 1.
@@ -91,6 +106,7 @@ zip_source_file(3),
 zip_source_filep(3),
 zip_source_free(3),
 zip_source_function(3),
+zip_source_keep(3),
 zip_source_window(3),
 zip_source_zip(3)
 .SH "AUTHORS"

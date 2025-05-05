@@ -60,14 +60,15 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp"><code class="In">#include
   &lt;<a class="In">zip.h</a>&gt;</code></p>
-<p class="Pp"><var class="Vt">zip_source_t *zs</var>;</p>
+<p class="Pp"><var class="Vt">zip_source_t *source</var>;</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">A <var class="Vt">zip_source_t</var> is a data source used by
-    <a class="Xr" href="libzip.html">libzip(3)</a> for adding or replacing file
-    contents for a file in a zip archive. If the source supports seeking, it can
-    also be used to open zip archives from.</p>
+<p class="Pp">A <var class="Vt">zip_source_t</var> represents a data source (or
+    destination when used for writing).
+    <a class="Xr" href="libzip.html">libzip(3)</a> uses it for adding or
+    replacing file contents for a file in a zip archive. If the source supports
+    seeking, it can also be used to open zip archives from.</p>
 <p class="Pp">Data can come from a file on disk
     (<a class="Xr" href="zip_source_file.html">zip_source_file(3)</a>,
     <a class="Xr" href="zip_source_file_create.html">zip_source_file_create(3)</a>,
@@ -79,12 +80,23 @@
     <a class="Xr" href="zip_source_buffer_fragment.html">zip_source_buffer_fragment(3)</a>,
     or
     <a class="Xr" href="zip_source_buffer_fragment_create.html">zip_source_buffer_fragment_create(3)</a>),
-    or provided via a callback function
+    a file inside an archive
+    (<a class="Xr" href="zip_source_zip.html">zip_source_zip(3)</a>), or
+    provided via a callback function
     (<a class="Xr" href="zip_source_function.html">zip_source_function(3)</a> or
     <a class="Xr" href="zip_source_function_create.html">zip_source_function_create(3)</a>).
     <a class="Xr" href="zip_source_window.html">zip_source_window(3)</a> or
     <a class="Xr" href="zip_source_window_create.html">zip_source_window_create(3)</a>
     can be used restrict access to a part of the contained data.</p>
+<p class="Pp">It can also be used as a filter to process the data provided by an
+    underlying <var class="Vt">zip_source_t</var> (e.g., to compress it or
+    compute a checksum), created with
+    <a class="Xr" href="zip_source_layered.html">zip_source_layered(3)</a> or
+    <a class="Xr" href="zip_source_layered_create.html">zip_source_layered_create(3)</a>).</p>
+<p class="Pp">Sources are freed with
+    <a class="Xr" href="zip_source_free.html">zip_source_free(3)</a>.</p>
+<p class="Pp">Sources must support reading, and can optionally support seeking
+    and writing.</p>
 <p class="Pp"><var class="Vt">zip_source_t</var> is reference counted, and
     created with a reference count of 1.
     <a class="Xr" href="zip_open_from_source.html">zip_open_from_source(3)</a>,
@@ -107,6 +119,7 @@
     <a class="Xr" href="zip_source_filep.html">zip_source_filep(3)</a>,
     <a class="Xr" href="zip_source_free.html">zip_source_free(3)</a>,
     <a class="Xr" href="zip_source_function.html">zip_source_function(3)</a>,
+    <a class="Xr" href="zip_source_keep.html">zip_source_keep(3)</a>,
     <a class="Xr" href="zip_source_window.html">zip_source_window(3)</a>,
     <a class="Xr" href="zip_source_zip.html">zip_source_zip(3)</a></p>
 </section>
