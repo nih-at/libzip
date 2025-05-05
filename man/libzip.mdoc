@@ -60,7 +60,10 @@ For this reason, when modifying zip archives,
 writes to a temporary file and replaces the original
 zip archive atomically.
 .Sh GENERAL NOTES
-When adding files to an archive, the file data is only read when the new archive is written. Therefore all files added must remain valid until the archive is closed with
+When adding files to an archive, the file data is only read when the
+new archive is written.
+Therefore all files added must remain valid until the archive is
+closed with
 .Xr zip_close 3
 or
 .Xr zip_discard 3 .
@@ -72,7 +75,7 @@ pointers as arguments.
 These data types correspond to central concepts in
 .Nm .
 Most of them are private, meaning you can't allocate them or access their members directly.
-This allows extending the structures in the future wihtout breaking compatiblity.
+This allows extending the structures in the future without breaking compatibility.
 .Ss zip_t
 This type represents an open zip archive and is used for all functions accessing and modifying archives.
 .Pp
@@ -111,10 +114,11 @@ If the containing
 is closed, all further uses of the
 .Vt zip_file_t
 return an error.
-It is a convenience warpper around
+It is a convenience wrapper around
 .Vt zip_source_t .
 .Ss zip_source_t
-This type represents either a data source (or destination when used for writing)
+This type represents either a data source (or destination when used
+for writing).
 .Pp
 Data can come from a file on disk
 .Xr ( zip_source_file 3 ,
@@ -125,28 +129,30 @@ or
 memory
 .Xr ( zip_source_buffer 3 ,
 .Xr zip_source_buffer_create 3 ,
-.Xr zip_source_buffer_fragment 3
+.Xr zip_source_buffer_fragment 3 ,
 or
 .Xr zip_source_buffer_fragment_create 3 ) ,
-or provided via a callbac function
+or provided via a callback function
 .Xr ( zip_source_function 3
 or
 .Xr zip_source_function_create 3 ) .
 .Pp
 It can also be used as a filter to process the data provided by an underlying
 .Vt zip_source_t
-(e.g. to compress it or compute a checksum), created with
+(e.g., to compress it or compute a checksum), created with
 .Xr zip_source_layered 3
 or
-.Xr zip_soruce_layered_create 3 ) .
+.Xr zip_source_layered_create 3 ) .
 .Pp
 Sources are freed with
 .Xr zip_source_free 3 .
 .Pp
-Sources must support reading, and can optionally support seeking and writing.
-
+Sources must support reading, and can optionally support seeking and
+writing.
 .Ss zip_error_t
-This type represents information about an error. Its member are publicly accessible, and is usually allocated directly on the stack or as member of another structure.
+This type represents information about an error.
+Its member are publicly accessible, and is usually allocated directly
+on the stack or as member of another structure.
 .Pp
 It is initialized with
 .Xr zip_error_init 3
