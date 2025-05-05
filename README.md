@@ -19,6 +19,7 @@ It supports the following features:
 - Reading archives and file data from files or memory buffers
 - Reverting unsaved changes
 - Zip64 large archives
+- Deflate, bzip2, LZMA, and zstd compression
 - Winzip AES and legacy PKWARE encryption
 
 The [BSD license](LICENSE) used for libzip allows its use in commercial products. 
