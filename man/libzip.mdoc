@@ -145,6 +145,15 @@ source archive as well.
 .It
 .Xr zip_fdopen 3
 .El
+.Ss Get Archive Attributes
+.Bl -bullet -compact
+.It
+.Xr zip_get_archive_comment 3
+.It
+.Xr zip_get_archive_flag 3
+.It
+.Xr zip_get_num_entries 3
+.El
 .Ss Find Files
 .Bl -bullet -compact
 .It
@@ -177,7 +186,7 @@ source archive as well.
 .It
 .Xr zip_close 3
 .El
-.Ss Getting File Attributes
+.Ss Get File Attributes
 .Bl -bullet -compact
 .It
 .Xr zip_stat 3
@@ -194,12 +203,6 @@ source archive as well.
 .Xr zip_compression_method_supported 3
 .It
 .Xr zip_encryption_method_supported 3
-.It
-.Xr zip_get_archive_comment 3
-.It
-.Xr zip_get_archive_flag 3
-.It
-.Xr zip_get_num_entries 3
 .It
 .Xr zip_set_default_password 3
 .El
@@ -315,6 +318,14 @@ source archive as well.
 .Xr zip_source_zip 3
 .El
 .Ss Using Source
+.Bl -bullet -compact
+.It
+.Xr zip_file_add 3
+.It
+.Xr zip_file_replace 3
+.It
+.Xr zip_open_from_source 3
+.El
 .Ss Implementing Source
 .Bl -bullet -compact
 .It
