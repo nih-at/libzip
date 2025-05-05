@@ -59,13 +59,109 @@ For this reason, when modifying zip archives,
 .Nm
 writes to a temporary file and replaces the original
 zip archive atomically.
-.Pp
-Below there are two sections listing functions: one for how to read
-from zip archives and one for how to create/modify them.
 .Sh GENERAL NOTES
+When adding files to an archive, the file data is only read when the new archive is written. Therefore all files added must remain valid until the archive is closed with
+.Xr zip_close 3
+or
+.Xr zip_discard 3 .
+.Pp
 Unless explicitly documented, functions should not be passed
 .Dv NULL
 pointers as arguments.
+.Sh DATA TYPES
+These data types correspond to central concepts in
+.Nm .
+Most of them are private, meaning you can't allocate them or access their members directly.
+This allows extending the structures in the future wihtout breaking compatiblity.
+.Ss zip_t
+This type represents an open zip archive and is used for all functions accessing and modifying archives.
+.Pp
+It is created with
+.Xr zip_open 3 ,
+.Xr zip_open_from_source 3 ,
+or
+.Xr zip_fdopen 3 .
+.Pp
+It is closed with
+.Xr zip_close 3
+or
+.Xr zip_discard 3 .
+.Ss zip_file_t
+This type represents a file from an archive that has been opened for reading.
+.Pp
+It is created with
+.Xr zip_fopen 3 ,
+.Xr zip_fopen_index ,
+.Xr zip_fopen_encrypted 3 ,
+or
+.Xr zip_fopen_index_encrypted 3 .
+.Pp
+Data is access with
+.Xr zip_fread 3 ,
+.Xr zip_file_is_seekable 3 ,
+.Xr zip_ftell 3 ,
+or
+.Xr zip_fseek 3 .
+.Pp
+It is closed with
+.Xr zip_fclose 3 .
+.Pp
+If the containing
+.Vt zip_t
+is closed, all further uses of the
+.Vt zip_file_t
+return an error.
+It is a convenience warpper around
+.Vt zip_source_t .
+.Ss zip_source_t
+This type represents either a data source (or destination when used for writing)
+.Pp
+Data can come from a file on disk
+.Xr ( zip_source_file 3 ,
+.Xr zip_source_file_create 3 ,
+.Xr zip_source_filep 3 ,
+or
+.Xr zip_source_filep_create 3 ) ,
+memory
+.Xr ( zip_source_buffer 3 ,
+.Xr zip_source_buffer_create 3 ,
+.Xr zip_source_buffer_fragment 3
+or
+.Xr zip_source_buffer_fragment_create 3 ) ,
+or provided via a callbac function
+.Xr ( zip_source_function 3
+or
+.Xr zip_source_function_create 3 ) .
+.Pp
+It can also be used as a filter to process the data provided by an underlying
+.Vt zip_source_t
+(e.g. to compress it or compute a checksum), created with
+.Xr zip_source_layered 3
+or
+.Xr zip_soruce_layered_create 3 ) .
+.Pp
+Sources are freed with
+.Xr zip_source_free 3 .
+.Pp
+Sources must support reading, and can optionally support seeking and writing.
+
+.Ss zip_error_t
+This type represents information about an error. Its member are publicly accessible, and is usually allocated directly on the stack or as member of another structure.
+.Pp
+It is initialized with
+.Xr zip_error_init 3
+or
+.Xr zip_error_init_with_code 3 .
+.Pp
+The type of error can be accessed with
+.Xr zip_error_code_zip 3
+and
+.Xr zip_error_code_system 3 .
+It can be converted to a human readable string with
+.Xr zip_error_strerror 3 .
+.Pp
+After use, it should be cleaned up with
+.Xr zip_error_fini 3 .
 .Sh FILE NAMES
 .Ss Encoding
 Names of files in the host file system are expected in UTF-8 encoding.
@@ -108,6 +204,8 @@ source archive as well.
 .Bl -bullet -compact
 .It
 .Xr zip_open 3
+.It
+.Xr zip_open_from_source 3
 .It
 .Xr zip_fdopen 3
 .El
