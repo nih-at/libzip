@@ -1,7 +1,7 @@
 set(MAN_PAGES
   ZIP_SOURCE_GET_ARGS.3
   libzip.3
-  zip.3
+  zip.5
   zip_add.3
   zip_add_dir.3
   zip_close.3
@@ -10,7 +10,7 @@ set(MAN_PAGES
   zip_dir_add.3
   zip_discard.3
   zip_encryption_method_supported.3
-  zip_error.3
+  zip_error.5
   zip_error_clear.3
   zip_error_code_system.3
   zip_error_code_zip.3
@@ -27,7 +27,7 @@ set(MAN_PAGES
   zip_errors.3
   zip_fclose.3
   zip_fdopen.3
-  zip_file.3
+  zip_file.5
   zip_file_add.3
   zip_file_attributes_init.3
   zip_file_extra_field_delete.3
@@ -67,7 +67,7 @@ set(MAN_PAGES
   zip_set_default_password.3
   zip_set_file_comment.3
   zip_set_file_compression.3
-  zip_source.3
+  zip_source.5
   zip_source_begin_write.3
   zip_source_buffer.3
   zip_source_buffer_fragment.3
