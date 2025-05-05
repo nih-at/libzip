@@ -1,6 +1,7 @@
 # 1.11.4 [Unreleased]
 
 * Use separate cmake package files for library and programs.
+* Improve documentation.
 
 # 1.11.3 [2025-01-20]
 
