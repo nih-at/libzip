@@ -95,6 +95,7 @@ zip_file_replace(3)
 will take ownership of the passed source (decrement the reference count when they are done using it), so
 zip_source_free(3)
 only needs to be called when these functions return an error.
+The underlying data (file or buffer) must remain valid until the archive is closed.
 Use
 zip_source_keep(3)
 to increase the reference count, for example if you need the source after

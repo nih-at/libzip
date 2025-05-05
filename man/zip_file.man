@@ -48,7 +48,7 @@ A
 represents a file inside an archive, opened for reading.
 It is created with
 zip_fopen(3),
-zip_fopen_index,
+zip_fopen_index(3),
 zip_fopen_encrypted(3),
 or
 zip_fopen_index_encrypted(3).

@@ -105,7 +105,8 @@
     ownership of the passed source (decrement the reference count when they are
     done using it), so
     <a class="Xr" href="zip_source_free.html">zip_source_free(3)</a> only needs
-    to be called when these functions return an error. Use
+    to be called when these functions return an error. The underlying data (file
+    or buffer) must remain valid until the archive is closed. Use
     <a class="Xr" href="zip_source_keep.html">zip_source_keep(3)</a> to increase
     the reference count, for example if you need the source after
     <a class="Xr" href="zip_close.html">zip_close(3)</a>.</p>
