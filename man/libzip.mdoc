@@ -177,30 +177,31 @@ source archive as well.
 .It
 .Xr zip_close 3
 .El
-.Ss Miscellaneous
+.Ss Getting File Attributes
 .Bl -bullet -compact
 .It
 .Xr zip_stat 3
-.It
-.Xr zip_compression_method_supported 3
-.It
-.Xr zip_encryption_method_supported 3
 .It
 .Xr zip_file_get_comment 3
 .It
 .Xr zip_file_get_external_attributes 3
 .It
+.Xr zip_get_name 3
+.El
+.Ss Miscellaneous
+.Bl -bullet -compact
+.It
+.Xr zip_compression_method_supported 3
+.It
+.Xr zip_encryption_method_supported 3
+.It
 .Xr zip_get_archive_comment 3
 .It
 .Xr zip_get_archive_flag 3
 .It
-.Xr zip_get_name 3
-.It
 .Xr zip_get_num_entries 3
 .It
 .Xr zip_set_default_password 3
-.It
-.Xr zip_source_pass_to_lower_layer 3
 .El
 .Sh CREATING/MODIFYING ZIP ARCHIVES
 .Ss Create/Open Archive
@@ -234,12 +235,6 @@ source archive as well.
 .Xr zip_source_file 3
 .It
 .Xr zip_source_filep 3
-.It
-.Xr zip_source_free 3
-.It
-.Xr zip_source_function 3
-.It
-.Xr zip_source_layered 3
 .It
 .Xr zip_source_zip 3
 .El
@@ -302,6 +297,35 @@ source archive as well.
 .Xr zip_set_archive_flag 3
 .It
 .Xr zip_source 5
+.El
+.Sh SOURCES
+.Ss Create Source
+.Bl -bullet -compact
+.It
+.Xr zip_source_buffer 3
+.It
+.Xr zip_source_file 3
+.It
+.Xr zip_source_filep 3
+.It
+.Xr zip_source_function 3
+.It
+.Xr zip_source_layered 3
+.It
+.Xr zip_source_zip 3
+.El
+.Ss Using Source
+.Ss Implementing Source
+.Bl -bullet -compact
+.It
+.Xr zip_source_pass_to_lower_layer 3
+.El
+.Ss Source Life Cycle
+.Bl -bullet -compact
+.It
+.Xr zip_source_free 3
+.It
+.Xr zip_source_keep 3
 .El
 .Sh ERROR HANDLING
 .Bl -bullet -compact
