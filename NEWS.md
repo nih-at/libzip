@@ -1,4 +1,4 @@
-# 1.11.4 [Unreleased]
+# 1.11.4 [2025-05-23]
 
 * Use separate cmake package files for library and programs.
 * Improve documentation.
