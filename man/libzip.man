@@ -50,6 +50,9 @@ were:
 .PD 0
 .TP 4n
 \fB\(bu\fR
+Maintain a stable API without breaking backwards compatibility.
+.TP 4n
+\fB\(bu\fR
 Do not create corrupt files, even in case of errors.
 .TP 4n
 \fB\(bu\fR
@@ -150,6 +153,18 @@ zip_open_from_source(3)
 \fB\(bu\fR
 zip_fdopen(3)
 .PD
+.SS "Get Archive Attributes"
+.TP 4n
+\fB\(bu\fR
+zip_get_archive_comment(3)
+.PD 0
+.TP 4n
+\fB\(bu\fR
+zip_get_archive_flag(3)
+.TP 4n
+\fB\(bu\fR
+zip_get_num_entries(3)
+.PD
 .SS "Find Files"
 .TP 4n
 \fB\(bu\fR
@@ -189,17 +204,11 @@ zip_fclose(3)
 .TP 4n
 \fB\(bu\fR
 zip_close(3)
-.SS "Miscellaneous"
+.SS "Get File Attributes"
 .TP 4n
 \fB\(bu\fR
 zip_stat(3)
 .PD 0
-.TP 4n
-\fB\(bu\fR
-zip_compression_method_supported(3)
-.TP 4n
-\fB\(bu\fR
-zip_encryption_method_supported(3)
 .TP 4n
 \fB\(bu\fR
 zip_file_get_comment(3)
@@ -208,22 +217,19 @@ zip_file_get_comment(3)
 zip_file_get_external_attributes(3)
 .TP 4n
 \fB\(bu\fR
-zip_get_archive_comment(3)
-.TP 4n
-\fB\(bu\fR
-zip_get_archive_flag(3)
-.TP 4n
-\fB\(bu\fR
 zip_get_name(3)
+.PD
+.SS "Miscellaneous"
 .TP 4n
 \fB\(bu\fR
-zip_get_num_entries(3)
+zip_compression_method_supported(3)
+.PD 0
+.TP 4n
+\fB\(bu\fR
+zip_encryption_method_supported(3)
 .TP 4n
 \fB\(bu\fR
 zip_set_default_password(3)
-.TP 4n
-\fB\(bu\fR
-zip_source_pass_to_lower_layer(3)
 .PD
 .SH "CREATING/MODIFYING ZIP ARCHIVES"
 .SS "Create/Open Archive"
@@ -268,15 +274,6 @@ zip_source_file(3)
 .TP 4n
 \fB\(bu\fR
 zip_source_filep(3)
-.TP 4n
-\fB\(bu\fR
-zip_source_free(3)
-.TP 4n
-\fB\(bu\fR
-zip_source_function(3)
-.TP 4n
-\fB\(bu\fR
-zip_source_layered(3)
 .TP 4n
 \fB\(bu\fR
 zip_source_zip(3)
@@ -357,6 +354,53 @@ zip_set_archive_flag(3)
 .TP 4n
 \fB\(bu\fR
 zip_source(5)
+.PD
+.SH "SOURCES"
+.SS "Create Source"
+.TP 4n
+\fB\(bu\fR
+zip_source_buffer(3)
+.PD 0
+.TP 4n
+\fB\(bu\fR
+zip_source_file(3)
+.TP 4n
+\fB\(bu\fR
+zip_source_filep(3)
+.TP 4n
+\fB\(bu\fR
+zip_source_function(3)
+.TP 4n
+\fB\(bu\fR
+zip_source_layered(3)
+.TP 4n
+\fB\(bu\fR
+zip_source_zip(3)
+.PD
+.SS "Using Source"
+.TP 4n
+\fB\(bu\fR
+zip_file_add(3)
+.PD 0
+.TP 4n
+\fB\(bu\fR
+zip_file_replace(3)
+.TP 4n
+\fB\(bu\fR
+zip_open_from_source(3)
+.PD
+.SS "Implementing Source"
+.TP 4n
+\fB\(bu\fR
+zip_source_pass_to_lower_layer(3)
+.SS "Source Life Cycle"
+.TP 4n
+\fB\(bu\fR
+zip_source_free(3)
+.PD 0
+.TP 4n
+\fB\(bu\fR
+zip_source_keep(3)
 .PD
 .SH "ERROR HANDLING"
 .TP 4n

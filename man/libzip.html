@@ -68,6 +68,7 @@
 <p class="Pp">The main design criteria for <code class="Nm">libzip</code>
   were:</p>
 <ul class="Bl-bullet Bl-compact">
+  <li>Maintain a stable API without breaking backwards compatibility.</li>
   <li>Do not create corrupt files, even in case of errors.</li>
   <li>Do not delete data.</li>
   <li>Be efficient.</li>
@@ -171,6 +172,15 @@
 </ul>
 </section>
 <section class="Ss">
+<h2 class="Ss" id="Get_Archive_Attributes"><a class="permalink" href="#Get_Archive_Attributes">Get
+  Archive Attributes</a></h2>
+<ul class="Bl-bullet Bl-compact">
+  <li><a class="Xr" href="zip_get_archive_comment.html">zip_get_archive_comment(3)</a></li>
+  <li><a class="Xr" href="zip_get_archive_flag.html">zip_get_archive_flag(3)</a></li>
+  <li><a class="Xr" href="zip_get_num_entries.html">zip_get_num_entries(3)</a></li>
+</ul>
+</section>
+<section class="Ss">
 <h2 class="Ss" id="Find_Files"><a class="permalink" href="#Find_Files">Find
   Files</a></h2>
 <ul class="Bl-bullet Bl-compact">
@@ -201,19 +211,21 @@
 </ul>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Miscellaneous"><a class="permalink" href="#Miscellaneous">Miscellaneous</a></h2>
+<h2 class="Ss" id="Get_File_Attributes"><a class="permalink" href="#Get_File_Attributes">Get
+  File Attributes</a></h2>
 <ul class="Bl-bullet Bl-compact">
   <li><a class="Xr" href="zip_stat.html">zip_stat(3)</a></li>
-  <li><a class="Xr" href="zip_compression_method_supported.html">zip_compression_method_supported(3)</a></li>
-  <li><a class="Xr" href="zip_encryption_method_supported.html">zip_encryption_method_supported(3)</a></li>
   <li><a class="Xr" href="zip_file_get_comment.html">zip_file_get_comment(3)</a></li>
   <li><a class="Xr" href="zip_file_get_external_attributes.html">zip_file_get_external_attributes(3)</a></li>
-  <li><a class="Xr" href="zip_get_archive_comment.html">zip_get_archive_comment(3)</a></li>
-  <li><a class="Xr" href="zip_get_archive_flag.html">zip_get_archive_flag(3)</a></li>
   <li><a class="Xr" href="zip_get_name.html">zip_get_name(3)</a></li>
-  <li><a class="Xr" href="zip_get_num_entries.html">zip_get_num_entries(3)</a></li>
+</ul>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Miscellaneous"><a class="permalink" href="#Miscellaneous">Miscellaneous</a></h2>
+<ul class="Bl-bullet Bl-compact">
+  <li><a class="Xr" href="zip_compression_method_supported.html">zip_compression_method_supported(3)</a></li>
+  <li><a class="Xr" href="zip_encryption_method_supported.html">zip_encryption_method_supported(3)</a></li>
   <li><a class="Xr" href="zip_set_default_password.html">zip_set_default_password(3)</a></li>
-  <li><a class="Xr" href="zip_source_pass_to_lower_layer.html">zip_source_pass_to_lower_layer(3)</a></li>
 </ul>
 </section>
 </section>
@@ -243,9 +255,6 @@
   <li><a class="Xr" href="zip_source_buffer.html">zip_source_buffer(3)</a></li>
   <li><a class="Xr" href="zip_source_file.html">zip_source_file(3)</a></li>
   <li><a class="Xr" href="zip_source_filep.html">zip_source_filep(3)</a></li>
-  <li><a class="Xr" href="zip_source_free.html">zip_source_free(3)</a></li>
-  <li><a class="Xr" href="zip_source_function.html">zip_source_function(3)</a></li>
-  <li><a class="Xr" href="zip_source_layered.html">zip_source_layered(3)</a></li>
   <li><a class="Xr" href="zip_source_zip.html">zip_source_zip(3)</a></li>
 </ul>
 </section>
@@ -304,6 +313,45 @@
   <li><a class="Xr" href="zip_set_archive_comment.html">zip_set_archive_comment(3)</a></li>
   <li><a class="Xr" href="zip_set_archive_flag.html">zip_set_archive_flag(3)</a></li>
   <li><a class="Xr" href="zip_source.html">zip_source(5)</a></li>
+</ul>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SOURCES"><a class="permalink" href="#SOURCES">SOURCES</a></h1>
+<section class="Ss">
+<h2 class="Ss" id="Create_Source"><a class="permalink" href="#Create_Source">Create
+  Source</a></h2>
+<ul class="Bl-bullet Bl-compact">
+  <li><a class="Xr" href="zip_source_buffer.html">zip_source_buffer(3)</a></li>
+  <li><a class="Xr" href="zip_source_file.html">zip_source_file(3)</a></li>
+  <li><a class="Xr" href="zip_source_filep.html">zip_source_filep(3)</a></li>
+  <li><a class="Xr" href="zip_source_function.html">zip_source_function(3)</a></li>
+  <li><a class="Xr" href="zip_source_layered.html">zip_source_layered(3)</a></li>
+  <li><a class="Xr" href="zip_source_zip.html">zip_source_zip(3)</a></li>
+</ul>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Using_Source"><a class="permalink" href="#Using_Source">Using
+  Source</a></h2>
+<ul class="Bl-bullet Bl-compact">
+  <li><a class="Xr" href="zip_file_add.html">zip_file_add(3)</a></li>
+  <li><a class="Xr" href="zip_file_replace.html">zip_file_replace(3)</a></li>
+  <li><a class="Xr" href="zip_open_from_source.html">zip_open_from_source(3)</a></li>
+</ul>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Implementing_Source"><a class="permalink" href="#Implementing_Source">Implementing
+  Source</a></h2>
+<ul class="Bl-bullet Bl-compact">
+  <li><a class="Xr" href="zip_source_pass_to_lower_layer.html">zip_source_pass_to_lower_layer(3)</a></li>
+</ul>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Source_Life_Cycle"><a class="permalink" href="#Source_Life_Cycle">Source
+  Life Cycle</a></h2>
+<ul class="Bl-bullet Bl-compact">
+  <li><a class="Xr" href="zip_source_free.html">zip_source_free(3)</a></li>
+  <li><a class="Xr" href="zip_source_keep.html">zip_source_keep(3)</a></li>
 </ul>
 </section>
 </section>
