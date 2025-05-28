@@ -167,7 +167,7 @@ elseif(HAVE_OPENSSL)
   target_link_libraries(zip PRIVATE OpenSSL::Crypto)
 elseif(HAVE_MBEDTLS)
   target_sources(zip PRIVATE zip_crypto_mbedtls.c)
-  target_link_libraries(zip PRIVATE MbedTLS::MbedTLS)
+  target_link_libraries(zip PRIVATE MbedTLS::mbedcrypto)
 endif()
 
 if(HAVE_CRYPTO)
