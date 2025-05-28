@@ -41,7 +41,7 @@ Imported Targets
 
 This module provides the following imported targets, if found:
 
-``MbedTLS::MbedTLS``
+``MbedTLS::mbedcrypto``
   The Mbed TLS library
 
 Result Variables
@@ -126,9 +126,9 @@ if(MbedTLS_FOUND)
 #  set(MbedTLS_DEFINITIONS ${PC_MbedTLS_CFLAGS_OTHER})
 endif()
 
-if(MbedTLS_FOUND AND NOT TARGET MbedTLS::MbedTLS)
-  add_library(MbedTLS::MbedTLS UNKNOWN IMPORTED)
-  set_target_properties(MbedTLS::MbedTLS PROPERTIES
+if(MbedTLS_FOUND AND NOT TARGET MbedTLS::mbedcrypto)
+  add_library(MbedTLS::mbedcrypto UNKNOWN IMPORTED)
+  set_target_properties(MbedTLS::mbedcrypto PROPERTIES
     IMPORTED_LOCATION "${MbedTLS_LIBRARY}"
 #    INTERFACE_COMPILE_OPTIONS "${PC_MbedTLS_CFLAGS_OTHER}"
     INTERFACE_INCLUDE_DIRECTORIES "${MbedTLS_INCLUDE_DIR}"
