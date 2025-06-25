@@ -345,6 +345,10 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 
     flags = ZIP_EF_LOCAL;
 
+    if (st.valid & ZIP_STAT_CRC) {
+        de->crc = st.crc;
+    }
+    
     if ((st.valid & ZIP_STAT_SIZE) == 0) {
         /* TODO: not valid for torrentzip */
         flags |= ZIP_FL_FORCE_ZIP64;
