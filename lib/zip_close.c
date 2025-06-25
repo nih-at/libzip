@@ -326,7 +326,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
         st.comp_method = ZIP_CM_STORE;
     }
 
-    if (ZIP_CM_IS_DEFAULT(de->comp_method) && st.comp_method != ZIP_CM_STORE) {
+    if (de->comp_method == ZIP_CM_REPLACED_DEFAULT && st.comp_method != ZIP_CM_STORE) {
         de->comp_method = st.comp_method;
     }
     else if (de->comp_method == ZIP_CM_STORE && (st.valid & ZIP_STAT_SIZE)) {
@@ -348,7 +348,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     if (st.valid & ZIP_STAT_CRC) {
         de->crc = st.crc;
     }
-    
+
     if ((st.valid & ZIP_STAT_SIZE) == 0) {
         /* TODO: not valid for torrentzip */
         flags |= ZIP_FL_FORCE_ZIP64;
