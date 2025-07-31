@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_WINDOW_CREATE" "3" "April 29, 2021" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_WINDOW_CREATE" "3" "July 31, 2025" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -59,10 +59,8 @@ If
 \fIlen\fR
 is \-1, the window spans to the end of the underlying source.
 .PP
-\fBzip_source_window\fR()
-and
 \fBzip_source_window_create\fR()
-don't take ownership of
+doesn't take ownership of
 \fIsource\fR.
 The caller is responsible for freeing it.
 (This is different to other layered sources.)

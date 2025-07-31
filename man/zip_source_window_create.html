@@ -76,10 +76,10 @@
     access to a particular window starting at byte <var class="Ar">start</var>
     and having size <var class="Ar">len</var>. If <var class="Ar">len</var> is
     -1, the window spans to the end of the underlying source.</p>
-<p class="Pp" id="zip_source_window"><a class="permalink" href="#zip_source_window"><code class="Fn">zip_source_window</code></a>()
-    and <code class="Fn">zip_source_window_create</code>() don't take ownership
-    of <var class="Ar">source</var>. The caller is responsible for freeing it.
-    (This is different to other layered sources.)</p>
+<p class="Pp" id="zip_source_window_create~2"><a class="permalink" href="#zip_source_window_create~2"><code class="Fn">zip_source_window_create</code></a>()
+    doesn't take ownership of <var class="Ar">source</var>. The caller is
+    responsible for freeing it. (This is different to other layered
+  sources.)</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
@@ -122,7 +122,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 29, 2021</td>
+    <td class="foot-date">July 31, 2025</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

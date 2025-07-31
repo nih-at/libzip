@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE" "5" "May 5, 2025" "NiH" "File Formats Manual"
+.TH "ZIP_SOURCE" "5" "July 31, 2025" "NiH" "File Formats Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -68,8 +68,6 @@ or provided via a callback function
 (zip_source_function(3)
 or
 zip_source_function_create(3)).
-zip_source_window(3)
-or
 zip_source_window_create(3)
 can be used restrict access to a part of the contained data.
 .PP
@@ -108,7 +106,7 @@ zip_source_filep(3),
 zip_source_free(3),
 zip_source_function(3),
 zip_source_keep(3),
-zip_source_window(3),
+zip_source_window_create(3),
 zip_source_zip(3)
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
