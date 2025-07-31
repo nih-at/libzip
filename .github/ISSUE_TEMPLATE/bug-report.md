@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+**libzip Version**
+Version of libzip or revision repository used.
+
 **Describe the Bug**
 A clear and concise description of what the bug is.
 
