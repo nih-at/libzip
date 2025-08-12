@@ -78,7 +78,6 @@
 
 #define ZIP_CRYPTO_PKWARE_HEADERLEN 12
 
-#define ZIP_CM_REPLACED_DEFAULT (-2)
 #define ZIP_CM_WINZIP_AES 99 /* Winzip AES encrypted */
 
 #define WINZIP_AES_PASSWORD_VERIFY_LENGTH 2
@@ -87,8 +86,7 @@
 #define HMAC_LENGTH 10
 #define SALT_LENGTH(method) ((method) == ZIP_EM_AES_128 ? 8 : ((method) == ZIP_EM_AES_192 ? 12 : 16))
 
-#define ZIP_CM_IS_DEFAULT(x) ((x) == ZIP_CM_DEFAULT || (x) == ZIP_CM_REPLACED_DEFAULT)
-#define ZIP_CM_ACTUAL(x) ((zip_uint16_t)(ZIP_CM_IS_DEFAULT(x) ? ZIP_CM_DEFLATE : (x)))
+#define ZIP_CM_ACTUAL(x) ((zip_uint16_t)((x) == ZIP_CM_DEFAULT ? ZIP_CM_DEFLATE : (x)))
 
 #define ZIP_EF_UTF_8_COMMENT 0x6375
 #define ZIP_EF_UTF_8_NAME 0x7075

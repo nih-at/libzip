@@ -326,7 +326,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
         st.comp_method = ZIP_CM_STORE;
     }
 
-    if (de->comp_method == ZIP_CM_REPLACED_DEFAULT && st.comp_method != ZIP_CM_STORE) {
+    if ((de->changed & ZIP_DIRENT_COMP_METHOD) == 0 && st.comp_method != ZIP_CM_STORE) {
         de->comp_method = st.comp_method;
     }
     else if (de->comp_method == ZIP_CM_STORE && (st.valid & ZIP_STAT_SIZE)) {
@@ -356,12 +356,13 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     }
     else {
         de->uncomp_size = st.size;
-        /* this is technically incorrect (copy_source counts compressed data), but it's the best we have */
-        data_length = (zip_int64_t)st.size;
 
         if ((st.valid & ZIP_STAT_COMP_SIZE) == 0) {
             zip_uint64_t max_compressed_size;
             zip_uint16_t compression_method = ZIP_CM_ACTUAL(de->comp_method);
+
+            /* this is technically incorrect (copy_source counts compressed data), but it's the best we have */
+            data_length = (zip_int64_t)st.size;
 
             if (compression_method == ZIP_CM_STORE) {
                 max_compressed_size = st.size;

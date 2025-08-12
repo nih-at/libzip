@@ -58,7 +58,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
             return -1;
         }
 
-        if (ZIP_CM_IS_DEFAULT(de->comp_method)) {
+        if (de->comp_method == ZIP_CM_DEFAULT) {
             if (!(st->valid & ZIP_STAT_COMP_METHOD) || st->comp_method == ZIP_CM_STORE) {
                 st->valid &= ~(ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD);
             }

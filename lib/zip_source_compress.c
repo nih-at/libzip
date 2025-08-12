@@ -161,7 +161,7 @@ static struct context *context_new(zip_int32_t method, bool compress, zip_uint32
         return NULL;
     }
     zip_error_init(&ctx->error);
-    ctx->can_store = compress ? ZIP_CM_IS_DEFAULT(method) : false;
+    ctx->can_store = compress ? method == ZIP_CM_DEFAULT : false;
     ctx->algorithm = algorithm;
     ctx->method = method;
     ctx->compress = compress;

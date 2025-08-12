@@ -93,18 +93,6 @@ _zip_file_replace(zip_t *za, zip_uint64_t idx, const char *name, zip_source_t *s
      * needed for a double add of the same file name */
     _zip_unchange_data(za->entry + idx);
 
-    if (za->entry[idx].orig != NULL && (za->entry[idx].changes == NULL || (za->entry[idx].changes->changed & ZIP_DIRENT_COMP_METHOD) == 0)) {
-        if (za->entry[idx].changes == NULL) {
-            if ((za->entry[idx].changes = _zip_dirent_clone(za->entry[idx].orig)) == NULL) {
-                zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-                return -1;
-            }
-        }
-
-        za->entry[idx].changes->comp_method = ZIP_CM_REPLACED_DEFAULT;
-        za->entry[idx].changes->changed |= ZIP_DIRENT_COMP_METHOD;
-    }
-
     za->entry[idx].source = source;
 
     return (zip_int64_t)idx;
