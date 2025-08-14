@@ -187,6 +187,12 @@ target_include_directories(zip
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
+if (ENABLE_COVERAGE)
+  target_compile_options(zip PRIVATE -coverage)
+  target_link_options(zip PRIVATE -coverage)
+endif()
+
+
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zip
     EXPORT ${PROJECT_NAME}-targets

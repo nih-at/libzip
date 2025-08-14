@@ -25,6 +25,8 @@ option(ENABLE_ZSTD "Enable use of Zstandard" ON)
 
 option(ENABLE_FDOPEN "Enable zip_fdopen, which is not allowed in Microsoft CRT secure libraries" ON)
 
+option(ENABLE_COVERAGE "Enable code coverage reporting of test suite" OFF)
+
 option(BUILD_TOOLS "Build tools in the src directory (zipcmp, zipmerge, ziptool)" ON)
 option(BUILD_REGRESS "Build regression tests" ON)
 option(BUILD_OSSFUZZ "Build fuzzers for ossfuzz" ON)
@@ -298,6 +300,11 @@ endif()
 # for code completion frameworks
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(ENABLE_COVERAGE)
+  find_program(LCOV lcov REQUIRED)
+  find_program(GENHTML genhtml REQUIRED)
+endif()
+
 # Testing
 ENABLE_TESTING()
 
@@ -325,6 +332,7 @@ if(BUILD_REGRESS AND NOT NIHTEST)
 endif()
 
 if(BUILD_REGRESS)
+  include(CTest)
   add_subdirectory(regress)
 endif()
 

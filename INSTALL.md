@@ -1,3 +1,5 @@
+## Dependencies
+
 libzip uses [cmake](https://cmake.org) to build.
 
 You'll need [zlib](http://www.zlib.net/) (at least version 1.1.2). It
@@ -29,6 +31,10 @@ For running the tests, you need to have
 [Python](https://www.python.org/) and
 [nihtest](https://pypi.org/project/nihtest/) installed.
 
+For code coverage report of the test suite, you need to have [lcov](https://github.com/linux-test-project/lcov) installed.
+
+## Building libzip
+
 The basic usage is
 ```sh
 mkdir build
@@ -56,6 +62,15 @@ before running `cmake`:
 ```sh
 CFLAGS=-DMY_CUSTOM_FLAG cmake ..
 ```
+
+## Test Suite Code Coverage
+
+To enable collecting code coverage, pass `-DENABLE_COVERAGE=ON` to `cmake`. After running the tests with `make test`, run `make coverage` to create the report in `regress/coverage/index.html`.
+
+Please note that this builds libzip with coverage gathering enabled. You should not use such a build in production.
+
+
+## Special System Requirements
 
 If you are compiling on a system with a small stack size, add
 `-DZIP_ALLOCATE_BUFFER` to `CFLAGS`.
