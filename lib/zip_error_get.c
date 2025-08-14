@@ -32,7 +32,7 @@
 */
 
 
-// LCOV_EXCL_START
+/* LCOV_EXCL_START */
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
@@ -53,4 +53,4 @@ ZIP_EXTERN zip_error_t *
 zip_file_get_error(zip_file_t *f) {
     return &f->error;
 }
-// LCOV_EXCL_STOP
+/* LCOV_EXCL_STOP */

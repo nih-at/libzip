@@ -32,7 +32,7 @@
 */
 
 
-// LCOV_EXCL_START
+/* LCOV_EXCL_START */
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 #include <limits.h>
@@ -50,4 +50,4 @@ zip_get_num_files(zip_t *za) {
 
     return (int)za->nentry;
 }
-// LCOV_EXCL_STOP
+/* LCOV_EXCL_STOP */

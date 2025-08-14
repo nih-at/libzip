@@ -31,7 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// LCOV_EXCL_START
+/* LCOV_EXCL_START */
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
@@ -40,4 +40,4 @@ ZIP_EXTERN void
 zip_file_error_get(zip_file_t *zf, int *zep, int *sep) {
     _zip_error_get(&zf->error, zep, sep);
 }
-// LCOV_EXCL_STOP
+/* LCOV_EXCL_STOP */

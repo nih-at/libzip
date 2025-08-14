@@ -32,7 +32,7 @@
 */
 
 
-// LCOV_EXCL_START
+/* LCOV_EXCL_START */
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
@@ -45,4 +45,4 @@ zip_set_file_comment(zip_t *za, zip_uint64_t idx, const char *comment, int len) 
     }
     return zip_file_set_comment(za, idx, comment, (zip_uint16_t)len, 0);
 }
-// LCOV_EXCL_STOP
+/* LCOV_EXCL_STOP */
