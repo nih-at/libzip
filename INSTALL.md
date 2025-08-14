@@ -65,7 +65,7 @@ CFLAGS=-DMY_CUSTOM_FLAG cmake ..
 
 ## Test Suite Code Coverage
 
-To enable collecting code coverage, pass `-DENABLE_COVERAGE=ON` to `cmake`. After running the tests with `make test`, run `make coverage` to create the report in `regress/coverage/index.html`.
+To enable collecting code coverage, pass `-DENABLE_COVERAGE=ON` to `cmake`. After running the tests with `make test`, run `make coverage` to create the report in `coverage/index.html`.
 
 Please note that this builds libzip with coverage gathering enabled. You should not use such a build in production.
 
