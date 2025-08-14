@@ -32,6 +32,7 @@
 */
 
 
+// LCOV_EXCL_START
 #include <stdlib.h>
 
 #define _ZIP_COMPILING_DEPRECATED
@@ -61,3 +62,4 @@ ZIP_EXTERN zip_source_t *zip_source_zip_create(zip_t *srcza, zip_uint64_t srcidx
 ZIP_EXTERN zip_source_t *zip_source_zip(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_int64_t len) {
     return zip_source_zip_create(srcza, srcidx, flags, start, len, &za->error);
 }
+// LCOV_EXCL_STOP

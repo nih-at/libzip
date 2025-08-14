@@ -260,7 +260,7 @@ zip_register_cancel_callback_with_state(zip_t *za, zip_cancel_callback callback,
     return 0;
 }
 
-
+// LCOV_EXCL_START
 struct legacy_ud {
     zip_progress_callback_t callback;
 };
@@ -291,3 +291,4 @@ zip_register_progress_callback(zip_t *za, zip_progress_callback_t progress_callb
         free(ud);
     }
 }
+// LCOV_EXCL_STOP

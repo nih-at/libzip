@@ -32,6 +32,7 @@
 */
 
 
+// LCOV_EXCL_START
 #include <stdio.h>
 #include <string.h>
 
@@ -56,3 +57,4 @@ zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
 
     return ret;
 }
+// LCOV_EXCL_STOP

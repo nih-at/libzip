@@ -31,6 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+// LCOV_EXCL_START
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
@@ -43,3 +44,4 @@ zip_error_get_sys_type(int ze) {
 
     return _zip_err_str[ze].type;
 }
+// LCOV_EXCL_STOP

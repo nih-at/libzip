@@ -31,7 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+// LCOV_EXCL_START
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
@@ -42,3 +42,4 @@ ZIP_EXTERN zip_int64_t
 zip_add_dir(zip_t *za, const char *name) {
     return zip_dir_add(za, name, 0);
 }
+// LCOV_EXCL_STOP

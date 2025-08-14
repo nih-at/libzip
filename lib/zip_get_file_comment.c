@@ -32,6 +32,7 @@
 */
 
 
+// LCOV_EXCL_START
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
 
@@ -48,3 +49,4 @@ zip_get_file_comment(zip_t *za, zip_uint64_t idx, int *lenp, int flags) {
 
     return s;
 }
+// LCOV_EXCL_STOP
