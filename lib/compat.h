@@ -38,6 +38,8 @@
 
 #include "config.h"
 
+#include <sys/stat.h>
+
 /* to have *_MAX definitions for all types when compiling with g++ */
 #define __STDC_LIMIT_MACROS
 
@@ -124,19 +126,19 @@ typedef char bool;
 #endif
 
 
-#if defined(HAVE__FSEEKI64) && defined(HAVE__FSTAT64) && defined(HAVE__SEEK64)
+#if defined(HAVE__FSEEKI64) && defined(HAVE__FSTAT64) && defined(HAVE__FTELLI64)
 /* Windows API using int64 */
 typedef zip_int64_t zip_off_t;
 typedef struct _stat64 zip_os_stat_t;
 #define zip_os_stat _stat64
 #define zip_os_fstat _fstat64
-#define zip_os_seek _fseeki64
+#define zip_os_fseek _fseeki64
+#define zip_os_ftell _ftelli64
 #define ZIP_FSEEK_MAX ZIP_INT64_MAX
 #define ZIP_FSEEK_MIN ZIP_INT64_MIN
 #else
 
 /* Normal API */
-#include <sys/stat.h>
 typedef struct stat zip_os_stat_t;
 #define zip_os_fstat fstat
 #define zip_os_stat stat
@@ -222,10 +224,10 @@ typedef long zip_off_t;
 
 #ifndef HAVE_STRERROR_S
 #define strerrorlen_s(errnum) (strlen(strerror(errnum)))
-#define strerror_s(buf, bufsz, errnum) ((void)strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz)-1] = '\0', strerrorlen_s(errnum) >= (bufsz))
+#define strerror_s(buf, bufsz, errnum) ((void)strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz) - 1] = '\0', strerrorlen_s(errnum) >= (bufsz))
 #else
 #ifndef HAVE_STRERRORLEN_S
-#define strerrorlen_s(errnum)   8192
+#define strerrorlen_s(errnum) 8192
 #endif
 #endif
 
@@ -259,11 +261,11 @@ typedef long zip_off_t;
 #endif
 
 #ifndef S_ISDIR
-#define S_ISDIR(mode) (((mode)&S_IFMT) == S_IFDIR)
+#define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
 #endif
 
 #ifndef S_ISREG
-#define S_ISREG(mode) (((mode)&S_IFMT) == S_IFREG)
+#define S_ISREG(mode) (((mode) & S_IFMT) == S_IFREG)
 #endif
 
 #endif /* compat.h */

@@ -12,6 +12,7 @@
 #cmakedefine HAVE__FILENO
 #cmakedefine HAVE__FSEEKI64
 #cmakedefine HAVE__FSTAT64
+#cmakedefine HAVE__FTELLI64
 #cmakedefine HAVE__SETMODE
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__SNPRINTF_S
