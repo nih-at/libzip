@@ -120,6 +120,19 @@
     <var class="Ar">ze</var> to indicate the error.</p>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
+<p class="Pp">Opening the same archive multiple times can lead to problems: When
+    a modified archive is closed, the underlying file is rewritten and thus
+    invalidates all other <var class="Vt">zip_t</var> objects for that archive,
+    which will fail in unpredictable ways. Also, writing may fail on some
+    platforms if the file is in use by another <var class="Vt">zip_t</var>
+    object.</p>
+<p class="Pp">Thus, it is only valid to open the same archive multiple times as
+    long as you make changes to at most one <var class="Vt">zip_t</var> object
+    and close that last. Using the flag <code class="Dv">ZIP_RDONLY</code> helps
+    enforce that.</p>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">Here's an example of how you could report errors during
     <code class="Nm">zip_open</code>:</p>
@@ -197,7 +210,7 @@ For newly created archives, <code class="Fn">zip_open</code>() does not try to
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">May 5, 2025</td>
+    <td class="foot-date">September 16, 2025</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

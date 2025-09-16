@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "LIBZIP" "3" "May 5, 2025" "NiH" "Library Functions Manual"
+.TH "LIBZIP" "3" "September 16, 2025" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -128,12 +128,22 @@ It is the responsibility of the programmer to ensure that all
 directory separators are passed as forward slashes to
 \fBlibzip\fR.
 .SH "THREAD SAFETY"
-In general, different zip archives opened by
-\fBlibzip\fR
-are independent of each other and can be used by parallel-running
+In general, different
+\fIzip_t\fR
+objects are independent of each other and can be used by parallel-running
 threads without locking.
-If you want to use an archive from multiple threads, you have to
-synchronize access to it yourself.
+.PP
+If you want to use one
+\fIzip_t\fR
+object from multiple threads, you have to synchronize access to it yourself.
+.PP
+Alternatively, if you only want to read from an archive, you can open the
+archive multiple times to create a separate
+\fIzip_t\fR
+object for each thread; to avoid making changes by mistake, use the flag
+\fRZIP_RDONLY\fR
+when opening the archive.
+.PP
 If you use an archive as a source for
 zip_file_add(3)
 or

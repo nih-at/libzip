@@ -149,11 +149,17 @@
 <section class="Sh">
 <h1 class="Sh" id="THREAD_SAFETY"><a class="permalink" href="#THREAD_SAFETY">THREAD
   SAFETY</a></h1>
-<p class="Pp">In general, different zip archives opened by
-    <code class="Nm">libzip</code> are independent of each other and can be used
-    by parallel-running threads without locking. If you want to use an archive
-    from multiple threads, you have to synchronize access to it yourself. If you
-    use an archive as a source for
+<p class="Pp">In general, different <var class="Vt">zip_t</var> objects are
+    independent of each other and can be used by parallel-running threads
+    without locking.</p>
+<p class="Pp">If you want to use one <var class="Vt">zip_t</var> object from
+    multiple threads, you have to synchronize access to it yourself.</p>
+<p class="Pp">Alternatively, if you only want to read from an archive, you can
+    open the archive multiple times to create a separate
+    <var class="Vt">zip_t</var> object for each thread; to avoid making changes
+    by mistake, use the flag <code class="Dv">ZIP_RDONLY</code> when opening the
+    archive.</p>
+<p class="Pp">If you use an archive as a source for
     <a class="Xr" href="zip_file_add.html">zip_file_add(3)</a> or
     <a class="Xr" href="zip_file_replace.html">zip_file_replace(3)</a>, access
     to the target archive must be synchronized with access to the source archive
@@ -381,7 +387,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">May 5, 2025</td>
+    <td class="foot-date">September 16, 2025</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
