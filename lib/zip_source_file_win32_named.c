@@ -213,9 +213,11 @@ _zip_win32_named_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t 
             if (file_attributes.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
                 WIN32_FIND_DATA find_data;
                 /* Deduplication on Windows replaces files with reparse points;
-		 * accept them as regular files. */
-                if (file_ops->find_first_file(ctx->fname, &find_data) != INVALID_HANDLE_VALUE) {
+                 * accept them as regular files. */
+                HANDLE find_handle = file_ops->find_first_file(ctx->fname, &find_data);
+                if (find_handle != INVALID_HANDLE_VALUE) {
                     st->regular_file = (find_data.dwReserved0 == IO_REPARSE_TAG_DEDUP);
+                    FindClose(find_handle);
                 }
             }
             else {
