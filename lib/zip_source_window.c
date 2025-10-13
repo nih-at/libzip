@@ -31,11 +31,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "zipint.h"
 
 #include <stdlib.h>
 #include <string.h>
-
-#include "zipint.h"
 
 struct window {
     zip_uint64_t start; /* where in file we start reading */

@@ -31,6 +31,8 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "zipint.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,8 +40,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include <zlib.h>
-
-#include "zipint.h"
 
 static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency);
 static zip_extra_field_t *_zip_ef_utf8(zip_uint16_t, zip_string_t *, zip_error_t *);

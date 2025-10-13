@@ -33,11 +33,11 @@
 
 
 /* LCOV_EXCL_START */
-#include <stdio.h>
-#include <string.h>
-
 #define _ZIP_COMPILING_DEPRECATED
 #include "zipint.h"
+
+#include <stdio.h>
+#include <string.h>
 
 
 ZIP_EXTERN int

@@ -31,11 +31,11 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "zipint.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "zipint.h"
 
 #include "zip_source_file.h"
 

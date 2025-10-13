@@ -31,10 +31,10 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "zipint.h"
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "zipint.h"
 
 #ifndef WRITE_FRAGMENT_SIZE
 #define WRITE_FRAGMENT_SIZE (64 * 1024)

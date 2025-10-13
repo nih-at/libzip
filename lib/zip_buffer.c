@@ -31,10 +31,10 @@
  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "zipint.h"
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "zipint.h"
 
 zip_uint8_t *
 _zip_buffer_data(zip_buffer_t *buffer) {

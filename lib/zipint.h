@@ -34,8 +34,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "config.h"
-
 #include "compat.h"
 
 #ifdef ZIP_ALLOCATE_BUFFER

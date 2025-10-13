@@ -31,12 +31,12 @@
  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "zipint.h"
+
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <zlib.h>
-
-#include "zipint.h"
 
 int
 _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error) {

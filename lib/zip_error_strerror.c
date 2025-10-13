@@ -32,12 +32,12 @@
 */
 
 
+#include "zipint.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <zlib.h>
-
-#include "zipint.h"
 
 ZIP_EXTERN const char *
 zip_error_strerror(zip_error_t *err) {

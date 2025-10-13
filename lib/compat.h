@@ -34,17 +34,15 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "zipconf.h"
-
-#include "config.h"
-
-#include <sys/stat.h>
-
 /* to have *_MAX definitions for all types when compiling with g++ */
 #define __STDC_LIMIT_MACROS
 
 /* to have ISO C secure library functions */
 #define __STDC_WANT_LIB_EXT1__ 1
+
+#include "config.h"
+
+#include <sys/stat.h>
 
 #ifdef _WIN32
 #ifndef ZIP_EXTERN
