@@ -32,6 +32,7 @@ file incons-eocd-magic-bad.zzip incons-eocd-magic-bad.zip
 file incons-file-count-high.zzip incons-file-count-high.zip
 file incons-file-count-low.zzip incons-file-count-low.zip
 file incons-file-count-overflow.zzip incons-file-count-overflow.zip
+file incons-filename-nul-byte.zzip incons-filename-nul-byte.zip
 file incons-gap-before-cd.zzip incons-gap-before-cd.zip
 file incons-gap-before-eocd.zzip incons-gap-before-eocd.zip
 file incons-gap-before-local.zzip incons-gap-before-local.zip
@@ -41,7 +42,6 @@ file incons-local-compsize-smaller.zzip incons-local-compsize-smaller.zip
 file incons-local-crc.zzip incons-local-crc.zip
 file incons-local-filename-long.zzip incons-local-filename-long.zip
 file incons-local-filename-missing.zzip incons-local-filename-missing.zip
-file incons-local-filename-nil-byte.zzip incons-local-filename-nil-byte.zip
 file incons-local-filename-short.zzip incons-local-filename-short.zip
 file incons-local-filename.zzip incons-local-filename.zip
 file incons-local-magic-bad.zzip incons-local-magic-bad.zip
@@ -49,7 +49,7 @@ file incons-local-size-larger.zzip incons-local-size-larger.zip
 file incons-stored-size.zzip incons-stored-size.zip
 file incons-streamed.zzip incons-streamed.zip
 file incons-streamed-2.zzip incons-streamed-2.zip
-arguments -s -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-cdsize-large.zzip incons-cdsize-small.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-file-comment-utf8-ascii.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-dupe-utf8comment.zzip incons-ef-local-dupe-utf8name.zzip incons-ef-local-dupe-zip64-v1.zzip incons-ef-local-dupe-zip64-v2.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-size.zzip incons-ef-local-utf8name-ascii.zzip incons-eocd64.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip incons-gap-before-cd.zzip incons-gap-before-eocd.zzip incons-gap-before-local.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-local-filename-nil-byte.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip incons-stored-size.zzip incons-streamed.zzip incons-streamed-2.zzip
+arguments -s -c incons-archive-comment-longer.zzip incons-archive-comment-shorter.zzip incons-cdoffset.zzip incons-cdsize-large.zzip incons-cdsize-small.zzip incons-central-compression-method.zzip incons-central-compsize-larger-toolarge.zzip incons-central-compsize-larger.zzip incons-central-compsize-smaller.zzip incons-central-crc.zzip incons-central-date.zzip incons-central-file-comment-longer.zzip incons-central-file-comment-shorter.zzip incons-central-file-comment-utf8-ascii.zzip incons-central-magic-bad.zzip incons-central-magic-bad2.zzip incons-central-size-larger.zzip incons-data.zzip incons-ef-central-size-wrong.zzip incons-ef-local-dupe-utf8comment.zzip incons-ef-local-dupe-utf8name.zzip incons-ef-local-dupe-zip64-v1.zzip incons-ef-local-dupe-zip64-v2.zzip incons-ef-local-id-size.zzip incons-ef-local-id.zzip incons-ef-local-size.zzip incons-ef-local-utf8name-ascii.zzip incons-eocd64.zzip incons-eocd-magic-bad.zzip incons-file-count-high.zzip incons-file-count-low.zzip incons-file-count-overflow.zzip incons-gap-before-cd.zzip incons-gap-before-eocd.zzip incons-gap-before-local.zzip incons-local-compression-method.zzip incons-local-compsize-larger.zzip incons-local-compsize-smaller.zzip incons-local-crc.zzip incons-local-filename-long.zzip incons-local-filename-missing.zzip incons-filename-nul-byte.zzip incons-local-filename-short.zzip incons-local-filename.zzip incons-local-magic-bad.zzip incons-local-size-larger.zzip incons-stored-size.zzip incons-streamed.zzip incons-streamed-2.zzip
 return 1
 # tryopen does not test checksums, so this is fine.
 # different extra fields local vs. central is fine
@@ -95,7 +95,7 @@ opening 'incons-local-compsize-smaller.zzip' returned error Zip archive inconsis
 opening 'incons-local-crc.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-local-filename-long.zzip' returned error Premature end of file
 opening 'incons-local-filename-missing.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
-opening 'incons-local-filename-nil-byte.zzip' succeeded, 1 entries
+opening 'incons-filename-nul-byte.zzip' succeeded, 1 entries
 opening 'incons-local-filename-short.zzip' returned error Zip archive inconsistent: entry 0: extra field length is invalid
 opening 'incons-local-filename.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-local-magic-bad.zzip' returned error Not a zip archive
