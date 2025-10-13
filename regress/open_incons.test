@@ -95,7 +95,7 @@ opening 'incons-local-compsize-smaller.zzip' returned error Zip archive inconsis
 opening 'incons-local-crc.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-local-filename-long.zzip' returned error Premature end of file
 opening 'incons-local-filename-missing.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
-opening 'incons-filename-nul-byte.zzip' succeeded, 1 entries
+opening 'incons-filename-nul-byte.zzip' returned error Zip archive inconsistent: entry 0: NUL byte in file name
 opening 'incons-local-filename-short.zzip' returned error Zip archive inconsistent: entry 0: extra field length is invalid
 opening 'incons-local-filename.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-local-magic-bad.zzip' returned error Not a zip archive
@@ -105,5 +105,5 @@ opening 'incons-streamed.zzip' returned error Zip archive inconsistent: entry 0:
 opening 'incons-streamed-2.zzip' returned error Zip archive inconsistent: entry 0: local header and data descriptor do not match
 end-of-inline-data
 stderr
-40 errors
+41 errors
 end-of-inline-data

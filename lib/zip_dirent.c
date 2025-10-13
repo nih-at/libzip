@@ -505,6 +505,20 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
                 return -1;
             }
         }
+
+        if (check_consistency) {
+            zip_uint8_t *p;
+
+            for (p = zde->filename->raw; p < zde->filename->raw + zde->filename->length; p++) {
+                if (*p == 0) {
+                    zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_NUL_IN_FILENAME);
+                    if (!from_buffer) {
+                        _zip_buffer_free(buffer);
+                    }
+                    return -1;
+                }
+            }
+        }
     }
 
     if (ef_len) {

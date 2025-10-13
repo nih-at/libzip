@@ -243,6 +243,7 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_UTF8_FILENAME_MISMATCH 23 /* E UTF-8 filename is ASCII and doesn't match filename */
 #define ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH 24 /* E UTF-8 comment is ASCII and doesn't match comment */
 #define ZIP_ER_DETAIL_COMPRESSED_DATA_TRAILING_GARBAGE 25 /* G garbage at end of compressed data */
+#define ZIP_ER_DETAIL_NUL_IN_FILENAME 26 /* E NUL byte in file name */
 
 /* directory entry: general purpose bit flags */
 

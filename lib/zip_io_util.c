@@ -93,12 +93,7 @@ _zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp
     }
 
     if (nulp) {
-        zip_uint8_t *o;
-        /* replace any in-string NUL characters with spaces */
         r[length] = 0;
-        for (o = r; o < r + length; o++)
-            if (*o == '\0')
-                *o = ' ';
     }
 
     return r;
