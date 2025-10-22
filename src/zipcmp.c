@@ -419,6 +419,10 @@ list_directory(const char *name, struct archive *a) {
     }
 
     normalized_name = strdup(name);
+    if (normalized_name == NULL) {
+        fprintf(stderr, "%s: malloc failure\n", progname);
+        exit(1);
+    }
 
     while (name_length > 0 && normalized_name[name_length-1] == '/') {
         name_length -= 1;
