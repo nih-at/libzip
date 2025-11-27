@@ -125,7 +125,11 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
     }
     
     window_source = zip_source_layered_create(src, window_read, ctx, error);
-    if (window_source != NULL && !take_ownership) {
+    if (window_source == NULL) {
+        free(ctx);
+        return NULL;
+    }
+    if (!take_ownership) {
         zip_source_keep(src);
     }
     return window_source;

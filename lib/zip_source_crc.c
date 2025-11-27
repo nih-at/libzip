@@ -54,6 +54,7 @@ static zip_int64_t crc_read(zip_source_t *, void *, void *, zip_uint64_t, zip_so
 zip_source_t *
 zip_source_crc_create(zip_source_t *src, int validate, zip_error_t *error) {
     struct crc_context *ctx;
+    zip_source_t *new_src;
 
     if (src == NULL) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -72,7 +73,12 @@ zip_source_crc_create(zip_source_t *src, int validate, zip_error_t *error) {
     ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
     ctx->size = 0;
 
-    return zip_source_layered_create(src, crc_read, ctx, error);
+    new_src = zip_source_layered_create(src, crc_read, ctx, error);
+    if (new_src == NULL) {
+        free(ctx);
+        return NULL;
+    }
+    return new_src;
 }
 
 
