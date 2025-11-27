@@ -970,6 +970,11 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
         ef64 = _zip_ef_new(ZIP_EF_ZIP64, (zip_uint16_t)(_zip_buffer_offset(ef_buffer)), ef_zip64, ZIP_EF_BOTH);
         _zip_buffer_free(ef_buffer);
+        if (ef64 == NULL) {
+            zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            _zip_ef_free(ef);
+            return -1;
+        }
         ef64->next = ef;
         ef = ef64;
     }
@@ -999,6 +1004,11 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
         ef_winzip = _zip_ef_new(ZIP_EF_WINZIP_AES, EF_WINZIP_AES_SIZE, data, ZIP_EF_BOTH);
         _zip_buffer_free(ef_buffer);
+        if (ef_winzip == NULL) {
+            zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            _zip_ef_free(ef);
+            return -1;
+        }
         ef_winzip->next = ef;
         ef = ef_winzip;
     }
