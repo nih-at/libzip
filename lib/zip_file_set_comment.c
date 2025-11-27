@@ -71,9 +71,14 @@ zip_file_set_comment(zip_t *za, zip_uint64_t idx, const char *comment, zip_uint1
 
     e = za->entry + idx;
 
-    if (e->changes) {
+    if (e->changes && e->changes->changed & ZIP_DIRENT_COMMENT) {
         _zip_string_free(e->changes->comment);
-        e->changes->comment = NULL;
+        if (e->orig && e->changes->cloned) {
+            e->changes->comment = e->orig->comment;
+        }
+        else {
+            e->changes->comment = NULL;
+        }
         e->changes->changed &= ~ZIP_DIRENT_COMMENT;
     }
 
