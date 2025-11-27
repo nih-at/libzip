@@ -91,20 +91,25 @@ diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, zip_u
         return;
     }
 
-    offset = 0;
-    for (i = 0; i < data_length; i++) {
-        hexdata[offset++] = (i == 0 ? '<' : ' ');
-
-        if (i >= MAX_BYTES) {
-            snprintf(hexdata + offset, sizeof(hexdata) - offset, "...");
-            break;
-        }
-        snprintf(hexdata + offset, sizeof(hexdata) - offset, "%02x", data[i]);
-        offset += 2;
+    if (data == NULL) {
+        strcpy(hexdata, "<no data>");
     }
+    else {
+        offset = 0;
+        for (i = 0; i < data_length; i++) {
+            hexdata[offset++] = (i == 0 ? '<' : ' ');
 
-    hexdata[offset++] = '>';
-    hexdata[offset] = '\0';
+            if (i >= MAX_BYTES) {
+                snprintf(hexdata + offset, sizeof(hexdata) - offset, "...");
+                break;
+            }
+            snprintf(hexdata + offset, sizeof(hexdata) - offset, "%02x", data[i]);
+            offset += 2;
+        }
+
+        hexdata[offset++] = '>';
+        hexdata[offset] = '\0';
+    }
 
     va_start(ap, fmt);
     vsnprintf(prefix, sizeof(prefix), fmt, ap);

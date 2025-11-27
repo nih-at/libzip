@@ -672,21 +672,19 @@ ef_read(zip_t *za, zip_uint64_t idx, struct entry *e) {
 
     e->n_extra_fields = (zip_uint16_t)(n_local + n_central);
 
-    if ((e->extra_fields = (struct ef *)malloc(sizeof(e->extra_fields[0]) * e->n_extra_fields)) == NULL)
-        return -1;
+    if ((e->extra_fields = (struct ef *)malloc(sizeof(e->extra_fields[0]) * e->n_extra_fields)) == NULL) {
+        fprintf(stderr, "%s: malloc failure\n", progname);
+        exit(1);
+    }
 
     for (i = 0; i < n_local; i++) {
         e->extra_fields[i].name = e->name;
         e->extra_fields[i].data = zip_file_extra_field_get(za, idx, i, &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_LOCAL);
-        if (e->extra_fields[i].data == NULL)
-            return -1;
         e->extra_fields[i].flags = ZIP_FL_LOCAL;
     }
     for (; i < e->n_extra_fields; i++) {
         e->extra_fields[i].name = e->name;
         e->extra_fields[i].data = zip_file_extra_field_get(za, idx, (zip_uint16_t)(i - n_local), &e->extra_fields[i].id, &e->extra_fields[i].size, ZIP_FL_CENTRAL);
-        if (e->extra_fields[i].data == NULL)
-            return -1;
         e->extra_fields[i].flags = ZIP_FL_CENTRAL;
     }
 
@@ -723,6 +721,8 @@ ef_order(const void *ap, const void *bp) {
         return a->id - b->id;
     if (a->size != b->size)
         return a->size - b->size;
+    if (a->data == NULL || b->data == NULL)
+        return a->data == b->data ? 0 : (a->data == NULL ? -1 : 1);
     return memcmp(a->data, b->data, a->size);
 }
 
