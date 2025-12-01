@@ -535,7 +535,7 @@ list_zip(const char *name, struct archive *a) {
     zip_t *za;
     int err;
     struct zip_stat st;
-    unsigned int i;
+    unsigned int i, j;
 
     if ((za = zip_open(name, check_consistency ? ZIP_CHECKCONS : 0, &err)) == NULL) {
         zip_error_t error;
@@ -556,23 +556,30 @@ list_zip(const char *name, struct archive *a) {
             exit(1);
         }
 
+        j = 0;
         for (i = 0; i < a->nentry; i++) {
-            zip_stat_index(za, i, 0, &st);
-            a->entry[i].name = strdup(st.name);
-            a->entry[i].size = st.size;
-            a->entry[i].crc = st.crc;
+            if (zip_stat_index(za, i, 0, &st) < 0) {
+                fprintf(stderr, "%s: cannot stat file %u in zip archive '%s': %s\n", progname, i, name, zip_strerror(za));
+                continue;
+            }
+
+            a->entry[j].name = strdup(st.name);
+            a->entry[j].size = st.size;
+            a->entry[j].crc = st.crc;
             if (test_files)
                 test_file(za, i, name, st.name, st.size, st.crc);
             if (paranoid) {
-                a->entry[i].comp_method = st.comp_method;
-                ef_read(za, i, a->entry + i);
-                a->entry[i].comment = zip_file_get_comment(za, i, &a->entry[i].comment_length, 0);
+                a->entry[j].comp_method = st.comp_method;
+                ef_read(za, i, a->entry + j);
+                a->entry[j].comment = zip_file_get_comment(za, i, &a->entry[j].comment_length, 0);
             }
             else {
-                a->entry[i].comp_method = 0;
-                a->entry[i].n_extra_fields = 0;
+                a->entry[j].comp_method = 0;
+                a->entry[j].n_extra_fields = 0;
             }
-            a->entry[i].last_modification_time = st.mtime;
+            a->entry[j].last_modification_time = st.mtime;
+
+            j++;
         }
 
         if (paranoid) {
@@ -584,6 +591,8 @@ list_zip(const char *name, struct archive *a) {
             a->comment = NULL;
             a->comment_length = 0;
         }
+        
+        a->nentry = j;
     }
 
     return 0;
