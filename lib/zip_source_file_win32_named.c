@@ -1,6 +1,6 @@
 /*
   zip_source_file_win32_named.c -- source for Windows file opened by name
-  Copyright (C) 1999-2024 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2025 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>

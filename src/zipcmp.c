@@ -1,6 +1,6 @@
 /*
   zipcmp.c -- compare zip files
-  Copyright (C) 2003-2024 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2025 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -175,7 +175,7 @@ char help[] = "\n\
 Report bugs to <info@libzip.org>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2003-2024 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2003-2025 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "ChipqsTtVv"
