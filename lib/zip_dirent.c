@@ -1256,6 +1256,7 @@ bool
 _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes, bool force_zip64) {
     zip_uint16_t length;
     bool has_changed = false;
+    zip_uint16_t version_madeby, version_needed;
 
     if (attributes->valid & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS) {
         zip_uint16_t mask = attributes->general_purpose_bit_mask & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS_ALLOWED_MASK;
@@ -1280,7 +1281,6 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
         }
     }
 
-    zip_uint16_t version_needed;
     if (de->comp_method == ZIP_CM_LZMA) {
         version_needed = 63;
     }
@@ -1312,7 +1312,7 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
         has_changed = true;
     }
 
-    zip_int16_t version_madeby = 63 | (de->version_madeby & 0xff00);
+    version_madeby = 63 | (de->version_madeby & 0xff00);
     if ((de->changed & ZIP_DIRENT_ATTRIBUTES) == 0 && (attributes->valid & ZIP_FILE_ATTRIBUTES_HOST_SYSTEM)) {
         version_madeby = (version_madeby & 0xff) | (zip_uint16_t)(attributes->host_system << 8);
     }
