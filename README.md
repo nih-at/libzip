@@ -2,7 +2,6 @@
 
 ## A C Library for Reading, Creating, and Modifying Zip Archives
 
-
 ## Why Use libzip?
 
 libzip has been continuously developed since 2005. It is efficient, small, and flexible. It is usable on Linux, macOS, and Windows and many other operating systems.
@@ -22,7 +21,7 @@ It supports the following features:
 - Deflate, bzip2, LZMA, and zstd compression
 - Winzip AES and legacy PKWARE encryption
 
-The [BSD license](LICENSE) used for libzip allows its use in commercial products. 
+The [BSD license](LICENSE) used for libzip allows its use in commercial products.
 
 ## Who Uses libzip?
 
@@ -34,19 +33,17 @@ There are also bindings for other programming languages: [Python](https://github
 
 There is a more complete [list of projects](https://libzip.org/users/).
 
-
 ## Getting Started
 
-Most Linux and other Unix distributions include libzip in their package distributions, it is usually called `libzip` or `libzip-dev`. 
+Most Linux and other Unix distributions include libzip in their package distributions, it is usually called `libzip` or `libzip-dev`.
 
 On macOS, it is included in both Homebrew and Mac Ports.
 
 On Windows, it is in vcpkg.
 
-A list of available packages can be found on [Repology](https://repology.org/project/libzip/versions). 
+A list of available packages can be found on [Repology](https://repology.org/project/libzip/versions).
 
 For building and installing libzip from source, see the [INSTALL.md](INSTALL.md) file.
-
 
 ## Using libzip
 
@@ -60,10 +57,9 @@ If you have developed an application using libzip, you can find out
 about API changes and how to adapt your code for them in the included
 file [API-CHANGES.md](API-CHANGES.md).
 
-
 ## Staying in Touch
 
-More information and the latest version can always be found on [libzip.org](https://libzip.org).  The official repository is at [GitHub](https://github.com/nih-at/libzip/).
+More information and the latest version can always be found on [libzip.org](https://libzip.org). The official repository is at [GitHub](https://github.com/nih-at/libzip/).
 
 If you want to reach the authors in private, use <info@libzip.org>.
 
