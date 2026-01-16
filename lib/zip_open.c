@@ -733,23 +733,42 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
 static const unsigned char *
 find_eocd(zip_buffer_t *buffer, const unsigned char *last) {
     const unsigned char *data = _zip_buffer_data(buffer);
+    zip_uint64_t bufsize;
+    zip_uint64_t start;
     const unsigned char *p;
 
-    if (last == NULL) {
-        last = data + _zip_buffer_size(buffer) - MAGIC_LEN;
+    bufsize = _zip_buffer_size(buffer);
+    if (bufsize < MAGIC_LEN) {
+        return NULL;
     }
-    else if (last == _zip_buffer_data(buffer)) {
+
+    if (last == NULL) {
+        start = bufsize - MAGIC_LEN;
+    }
+    else if (last <= data) {
         return NULL;
     }
     else {
-        last -= 1;
+        zip_uint64_t last_pos = (zip_uint64_t)(last - data);
+        if (last_pos > bufsize) {
+            return NULL;
+        }
+        start = last_pos - 1;
+        if (start > bufsize - MAGIC_LEN) {
+            start = bufsize - MAGIC_LEN;
+        }
     }
 
-    for (p = last; p >= data; p -= 1) {
+    /* Scan backwards safely without creating pointers outside the buffer. */
+    for (zip_uint64_t i = start;; i--) {
+        p = data + i;
         if (*p == EOCD_MAGIC[0]) {
             if (memcmp(p, EOCD_MAGIC, MAGIC_LEN) == 0) {
                 return p;
             }
+        }
+        if (i == 0) {
+            break;
         }
     }
 
