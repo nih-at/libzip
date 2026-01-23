@@ -41,7 +41,6 @@
 #cmakedefine HAVE_LOCALTIME_R
 #cmakedefine HAVE_LOCALTIME_S
 #cmakedefine HAVE_MEMCPY_S
-#cmakedefine HAVE_MBEDTLS
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_OPENSSL
 #cmakedefine HAVE_SETMODE

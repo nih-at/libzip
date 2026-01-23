@@ -15,7 +15,6 @@ endif()
 
 option(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
 option(ENABLE_GNUTLS "Enable use of GnuTLS" ON)
-option(ENABLE_MBEDTLS "Enable use of mbed TLS" ON)
 option(ENABLE_OPENSSL "Enable use of OpenSSL" ON)
 option(ENABLE_WINDOWS_CRYPTO "Enable use of Windows cryptography libraries" ON)
 
@@ -50,9 +49,6 @@ endif()
 if(ENABLE_GNUTLS)
   find_package(Nettle 3.0)
   find_package(GnuTLS)
-endif()
-if(ENABLE_MBEDTLS)
-  find_package(MbedTLS 1.0)
 endif()
 if(ENABLE_OPENSSL)
   find_package(OpenSSL)
@@ -272,13 +268,10 @@ elseif (OPENSSL_FOUND)
 elseif (GNUTLS_FOUND AND NETTLE_FOUND)
   set(HAVE_CRYPTO 1)
   set(HAVE_GNUTLS 1)
-elseif (MbedTLS_FOUND)
-  set(HAVE_CRYPTO 1)
-  set(HAVE_MBEDTLS 1)
 endif()
 
-if ((ENABLE_COMMONCRYPTO OR ENABLE_GNUTLS OR ENABLE_MBEDTLS OR ENABLE_OPENSSL OR ENABLE_WINDOWS_CRYPTO) AND NOT HAVE_CRYPTO)
-  message(WARNING "-- neither Common Crypto, GnuTLS, mbed TLS, OpenSSL, nor Windows Cryptography found; AES support disabled")
+if ((ENABLE_COMMONCRYPTO OR ENABLE_GNUTLS OR ENABLE_OPENSSL OR ENABLE_WINDOWS_CRYPTO) AND NOT HAVE_CRYPTO)
+  message(WARNING "-- neither Common Crypto, GnuTLS, OpenSSL, nor Windows Cryptography found; AES support disabled")
 endif()
 
 if(MSVC)
@@ -487,7 +480,6 @@ if(LIBZIP_DO_INSTALL)
   install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNettle.cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findzstd.cmake
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMbedTLS.cmake
     DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/libzip/modules
   )

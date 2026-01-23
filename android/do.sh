@@ -25,7 +25,6 @@ build_it()
 		-DENABLE_OPENSSL:BOOL=OFF \
 		-DENABLE_COMMONCRYPTO:BOOL=OFF \
 		-DENABLE_GNUTLS:BOOL=OFF \
-		-DENABLE_MBEDTLS:BOOL=OFF \
 		-DENABLE_OPENSSL:BOOL=OFF \
 		-DENABLE_WINDOWS_CRYPTO:BOOL=OFF \
 		-DBUILD_TOOLS:BOOL=OFF \
@@ -34,7 +33,7 @@ build_it()
 		-DBUILD_SHARED_LIBS:BOOL=$want_shared \
 		-DBUILD_DOC:BOOL=OFF \
 		-DANDROID_TOOLCHAIN=clang  cmake -H.. -B$BUILD_DIR/${ANDROID_TARGET_PLATFORM}
-		   	
+
         #run make with all system threads and install
         cd $BUILD_DIR/${ANDROID_TARGET_PLATFORM}
         make install -j$(nproc --all)
@@ -44,20 +43,20 @@ build_it()
 #--------------------------------------------------------------------
 for ANDROID_TARGET_PLATFORM in armeabi-v7a arm64-v8a x86 x86_64
 do
-	echo "Building libzip for ${ANDROID_TARGET_PLATFORM}" 
-	
+	echo "Building libzip for ${ANDROID_TARGET_PLATFORM}"
+
 	build_it ON
 	build_it OFF
-	
+
 	if [ $? -ne 0 ]; then
 		echo "Error executing: cmake"
 		exit 1
 	fi
 
-	
+
 	if [ $? -ne 0 ]; then
 		echo "Error executing make install for platform: ${ANDROID_TARGET_PLATFORM}"
 		exit 1
     fi
-    
-done    
+
+done

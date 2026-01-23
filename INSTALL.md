@@ -25,7 +25,7 @@ listed in order of preference:
 
 If you don't want a library even if it is installed, you can
 pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
-`COMMONCRYPTO`, `GNUTLS`, `MBEDTLS`, or `OPENSSL`.
+`COMMONCRYPTO`, `GNUTLS`, or `OPENSSL`.
 
 For running the tests, you need to have
 [Python](https://www.python.org/) and

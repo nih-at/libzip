@@ -1,3 +1,7 @@
+# 1.12 [Unreleased]
+
+* Remove mbedTLS support - the required functions were made private.
+
 # 1.11.4 [2025-05-23]
 
 * Use separate cmake package files for library and programs.
