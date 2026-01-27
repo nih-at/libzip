@@ -1,4 +1,4 @@
-#include "zip.h"
+#include "zipint.h"
 
 #include <sys/stat.h>
 
