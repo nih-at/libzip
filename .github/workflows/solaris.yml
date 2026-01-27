@@ -1,0 +1,27 @@
+name: Solaris
+on: [push]
+permissions:
+  contents: read
+jobs:
+  Solaris:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: Solaris test
+      uses: vmactions/solaris-vm@v1
+      with:
+        release: "11.4-gcc"
+        usesh: true
+        copyback: false
+        prepare: |
+          pkg install cmake zstd
+          python -m venv nihtest-venv
+          source nihtest-venv/bin/activate
+          pip install nihtest
+        run: |
+          source nihtest-venv/bin/activate
+          cmake -E make_directory ${{runner.workspace}}/build
+          cmake ${{ matrix.cmake_extra }} ${{github.workspace}}
+          cmake --build . --config Release
+          ctest --output-on-failure -V -C Release
