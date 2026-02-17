@@ -736,20 +736,27 @@ find_eocd(zip_buffer_t *buffer, const unsigned char *last) {
     const unsigned char *p;
 
     if (last == NULL) {
+        if (_zip_buffer_size(buffer) < MAGIC_LEN) {
+            return NULL;
+        }
         last = data + _zip_buffer_size(buffer) - MAGIC_LEN;
     }
-    else if (last == _zip_buffer_data(buffer)) {
-        return NULL;
-    }
     else {
+        if (last == _zip_buffer_data(buffer)) {
+            return NULL;
+        }
         last -= 1;
     }
-
+    
     for (p = last; p >= data; p -= 1) {
         if (*p == EOCD_MAGIC[0]) {
             if (memcmp(p, EOCD_MAGIC, MAGIC_LEN) == 0) {
                 return p;
             }
+        }
+        if (p == data) {
+            /* Avoid undefined behavior by creating pointer outside buffer */
+            break;
         }
     }
 
