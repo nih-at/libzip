@@ -15,7 +15,6 @@ jobs:
         usesh: true
         copyback: false
         prepare: |
-          pkg install cmake zstd
           python -m venv nihtest-venv
           source nihtest-venv/bin/activate
           pip install nihtest
