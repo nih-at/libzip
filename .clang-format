@@ -1,19 +1,20 @@
 BasedOnStyle: LLVM
-IndentWidth: 4
-ColumnLimit: 2000
-KeepEmptyLinesAtTheStartOfBlocks: false
+
+AlignEscapedNewlines: Left
+AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: InlineOnly
-MaxEmptyLinesToKeep: 2
+BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true
-AlignEscapedNewlines: Left
-UseTab: Never
-#PPDirectiveIndentStyle: AfterHash
-
-AllowShortEnumsOnASingleLine: false
-BreakBeforeBinaryOperators: All
+ColumnLimit: 2000
 # EnumTrailingComma: Remove # required clang-format 21
+IndentWidth: 4
 InsertBraces: true
 InsertNewlineAtEOF: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+UseTab: Never
+
+# PPDirectiveIndentStyle: AfterHash
 # OneLineFormatOffRegex
