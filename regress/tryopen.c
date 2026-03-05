@@ -50,8 +50,7 @@
     "\t-t\ttruncate file to size 0\n"
 
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     const char *fname;
     zip_t *z;
     int c, flags, ze;
@@ -119,8 +118,9 @@ main(int argc, char *argv[]) {
         error_count++;
     }
 
-    if (error_count > 0)
+    if (error_count > 0) {
         fprintf(stderr, "%d errors\n", error_count);
+    }
 
     return error_count ? 1 : 0;
 }

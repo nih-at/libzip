@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN zip_int64_t
-zip_source_tell_write(zip_source_t *src) {
+ZIP_EXTERN zip_int64_t zip_source_tell_write(zip_source_t *src) {
     if (ZIP_SOURCE_IS_LAYERED(src)) {
         zip_error_set(&src->error, ZIP_ER_OPNOTSUPP, 0);
         return -1;

@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int
-zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
+ZIP_EXTERN int zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
     zip_source_args_seek_t args;
 
     if (src->source_closed) {
@@ -59,8 +58,7 @@ zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
 }
 
 
-zip_int64_t
-zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t length, void *data, zip_uint64_t data_length, zip_error_t *error) {
+zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t length, void *data, zip_uint64_t data_length, zip_error_t *error) {
     zip_int64_t new_offset;
     zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, data_length, error);
 

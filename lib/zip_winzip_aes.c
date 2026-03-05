@@ -50,8 +50,7 @@ struct _zip_winzip_aes {
     int pad_offset;
 };
 
-static bool
-aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
+static bool aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
     zip_uint64_t i, j;
 
     for (i = 0; i < length; i++) {
@@ -74,8 +73,7 @@ aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
 }
 
 
-zip_winzip_aes_t *
-_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, const zip_uint8_t *salt, zip_uint16_t encryption_method, zip_uint8_t *password_verify, zip_error_t *error) {
+zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, const zip_uint8_t *salt, zip_uint16_t encryption_method, zip_uint8_t *password_verify, zip_error_t *error) {
     zip_winzip_aes_t *ctx;
     zip_uint8_t buffer[2 * (MAX_KEY_LENGTH / 8) + WINZIP_AES_PASSWORD_VERIFY_LENGTH];
     zip_uint16_t key_size = 0; /* in bits */
@@ -132,26 +130,22 @@ _zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t password_length, c
 }
 
 
-bool
-_zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
+bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
     return aes_crypt(ctx, data, length) && _zip_crypto_hmac(ctx->hmac, data, length);
 }
 
 
-bool
-_zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
+bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
     return _zip_crypto_hmac(ctx->hmac, data, length) && aes_crypt(ctx, data, length);
 }
 
 
-bool
-_zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac) {
+bool _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac) {
     return _zip_crypto_hmac_output(ctx->hmac, hmac);
 }
 
 
-void
-_zip_winzip_aes_free(zip_winzip_aes_t *ctx) {
+void _zip_winzip_aes_free(zip_winzip_aes_t *ctx) {
     if (ctx == NULL) {
         return;
     }

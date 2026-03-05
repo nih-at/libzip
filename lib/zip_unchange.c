@@ -37,14 +37,12 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int
-zip_unchange(zip_t *za, zip_uint64_t idx) {
+ZIP_EXTERN int zip_unchange(zip_t *za, zip_uint64_t idx) {
     return _zip_unchange(za, idx, 0);
 }
 
 
-int
-_zip_unchange(zip_t *za, zip_uint64_t idx, int allow_duplicates) {
+int _zip_unchange(zip_t *za, zip_uint64_t idx, int allow_duplicates) {
     zip_int64_t i;
     bool renamed;
 

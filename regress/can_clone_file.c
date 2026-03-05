@@ -52,8 +52,7 @@
 #include <unistd.h>
 #endif
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 #ifdef HAVE_CLONEFILE
     struct statfs fs;
     struct attrlist attribute_list;

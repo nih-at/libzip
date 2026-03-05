@@ -96,8 +96,7 @@ static const zip_uint16_t _cp437_to_unicode[256] = {
 #define UTF_8_CONTINUE_MATCH 0x80
 
 
-zip_encoding_type_t
-_zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
+zip_encoding_type_t _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
     zip_encoding_type_t enc;
     const zip_uint8_t *name;
     zip_uint32_t i, j, ulen;
@@ -152,7 +151,7 @@ _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
         i += ulen;
     }
 
- done:
+done:
     enc = ZIP_ENCODING_CP437;
 
     switch (expected_encoding) {
@@ -190,7 +189,7 @@ _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
         }
         else if (can_be_utf8) {
             /* contains bytes from 0x80-0xFF and is valid UTF-8 */
-            enc =  ZIP_ENCODING_UTF8_GUESSED;
+            enc = ZIP_ENCODING_UTF8_GUESSED;
         }
         else {
             /* fallback */
@@ -208,8 +207,7 @@ _zip_guess_encoding(zip_string_t *str, zip_encoding_type_t expected_encoding) {
 }
 
 
-static zip_uint32_t
-_zip_unicode_to_utf8_len(zip_uint32_t codepoint) {
+static zip_uint32_t _zip_unicode_to_utf8_len(zip_uint32_t codepoint) {
     if (codepoint < 0x0080) {
         return 1;
     }
@@ -223,8 +221,7 @@ _zip_unicode_to_utf8_len(zip_uint32_t codepoint) {
 }
 
 
-static zip_uint32_t
-_zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf) {
+static zip_uint32_t _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf) {
     if (codepoint < 0x0080) {
         buf[0] = codepoint & 0xff;
         return 1;
@@ -248,8 +245,7 @@ _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *buf) {
 }
 
 
-zip_uint8_t *
-_zip_cp437_to_utf8(const zip_uint8_t *const _cp437buf, zip_uint32_t len, zip_uint32_t *utf8_lenp, zip_error_t *error) {
+zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t *const _cp437buf, zip_uint32_t len, zip_uint32_t *utf8_lenp, zip_error_t *error) {
     zip_uint8_t *cp437buf = (zip_uint8_t *)_cp437buf;
     zip_uint8_t *utf8buf;
     zip_uint32_t buflen, i, offset;

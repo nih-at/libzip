@@ -46,10 +46,10 @@
 **/
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
-int
-LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_t *za;
     const char *name = "test.zip";
     FILE *fp;
@@ -81,3 +81,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     (void)remove(name);
     return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

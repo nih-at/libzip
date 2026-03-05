@@ -46,8 +46,7 @@ struct ctx {
 };
 
 
-static zip_uint64_t
-maximum_compressed_size(zip_uint64_t uncompressed_size) {
+static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
     zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.006);
 
     if (compressed_size < uncompressed_size) {
@@ -57,8 +56,7 @@ maximum_compressed_size(zip_uint64_t uncompressed_size) {
 }
 
 
-static void *
-allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error) {
+static void *allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error) {
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
@@ -83,37 +81,32 @@ allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error) {
 }
 
 
-static void *
-compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+static void *compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
     (void)method;
     return allocate(true, compression_flags, error);
 }
 
 
-static void *
-decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+static void *decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
     (void)method;
     return allocate(false, compression_flags, error);
 }
 
 
-static void
-deallocate(void *ud) {
+static void deallocate(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
     free(ctx);
 }
 
 
-static zip_uint16_t
-general_purpose_bit_flags(void *ud) {
+static zip_uint16_t general_purpose_bit_flags(void *ud) {
     (void)ud;
     return 0;
 }
 
 
-static int
-map_error(int ret) {
+static int map_error(int ret) {
     switch (ret) {
     case BZ_FINISH_OK:
     case BZ_FLUSH_OK:
@@ -142,8 +135,7 @@ map_error(int ret) {
     }
 }
 
-static bool
-start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
+static bool start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     struct ctx *ctx = (struct ctx *)ud;
     int ret;
 
@@ -171,8 +163,7 @@ start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
 }
 
 
-static bool
-end(void *ud) {
+static bool end(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
     int err;
 
@@ -192,8 +183,7 @@ end(void *ud) {
 }
 
 
-static bool
-input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
+static bool input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
     struct ctx *ctx = (struct ctx *)ud;
 
     if (length > UINT_MAX || ctx->zstr.avail_in > 0) {
@@ -216,8 +206,7 @@ static bool end_of_input(void *ud) {
 }
 
 
-static zip_compression_status_t
-process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
+static zip_compression_status_t process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     struct ctx *ctx = (struct ctx *)ud;
     unsigned int avail_out;
 

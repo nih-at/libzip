@@ -37,8 +37,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_function(zip_t *za, zip_source_callback zcb, void *ud) {
+ZIP_EXTERN zip_source_t *zip_source_function(zip_t *za, zip_source_callback zcb, void *ud) {
     if (za == NULL) {
         return NULL;
     }
@@ -47,12 +46,12 @@ zip_source_function(zip_t *za, zip_source_callback zcb, void *ud) {
 }
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error) {
+ZIP_EXTERN zip_source_t *zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error) {
     zip_source_t *zs;
 
-    if ((zs = _zip_source_new(error)) == NULL)
+    if ((zs = _zip_source_new(error)) == NULL) {
         return NULL;
+    }
 
     zs->cb.f = zcb;
     zs->ud = ud;
@@ -67,14 +66,12 @@ zip_source_function_create(zip_source_callback zcb, void *ud, zip_error_t *error
 }
 
 
-ZIP_EXTERN void
-zip_source_keep(zip_source_t *src) {
+ZIP_EXTERN void zip_source_keep(zip_source_t *src) {
     src->refcount++;
 }
 
 
-zip_source_t *
-_zip_source_new(zip_error_t *error) {
+zip_source_t *_zip_source_new(zip_error_t *error) {
     zip_source_t *src;
 
     if ((src = (zip_source_t *)malloc(sizeof(*src))) == NULL) {

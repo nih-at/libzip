@@ -57,8 +57,7 @@ static zip_source_file_operations_t ops_win32_read = {
 
 /* clang-format on */
 
-ZIP_EXTERN zip_source_t *
-zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len) {
+ZIP_EXTERN zip_source_t *zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL) {
         return NULL;
     }
@@ -67,8 +66,7 @@ zip_source_win32handle(zip_t *za, HANDLE h, zip_uint64_t start, zip_int64_t len)
 }
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
+ZIP_EXTERN zip_source_t *zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (h == INVALID_HANDLE_VALUE || length < ZIP_LENGTH_UNCHECKED) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
@@ -78,14 +76,12 @@ zip_source_win32handle_create(HANDLE h, zip_uint64_t start, zip_int64_t length, 
 }
 
 
-void
-_zip_win32_op_close(zip_source_file_context_t *ctx) {
+void _zip_win32_op_close(zip_source_file_context_t *ctx) {
     CloseHandle((HANDLE)ctx->f);
 }
 
 
-zip_int64_t
-_zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
+zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
     DWORD i;
 
     /* TODO: cap len to "DWORD_MAX" */
@@ -98,8 +94,7 @@ _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) 
 }
 
 
-bool
-_zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence) {
+bool _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence) {
     LARGE_INTEGER li;
     DWORD method;
 
@@ -128,14 +123,12 @@ _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
 }
 
 
-static bool
-_zip_win32_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
+static bool _zip_win32_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
     return _zip_stat_win32(ctx, st, (HANDLE)ctx->f);
 }
 
 
-zip_int64_t
-_zip_win32_op_tell(zip_source_file_context_t *ctx, void *f) {
+zip_int64_t _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f) {
     LARGE_INTEGER zero;
     LARGE_INTEGER new_offset;
 
@@ -149,8 +142,7 @@ _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f) {
 }
 
 
-int
-_zip_win32_error_to_errno(DWORD win32err) {
+int _zip_win32_error_to_errno(DWORD win32err) {
     /* Note: This list isn't exhaustive, but should cover common cases. */
     switch (win32err) {
     case ERROR_INVALID_PARAMETER:
@@ -174,8 +166,7 @@ _zip_win32_error_to_errno(DWORD win32err) {
 }
 
 
-static bool
-_zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HANDLE h) {
+static bool _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HANDLE h) {
     FILETIME mtimeft;
     time_t mtime;
     LARGE_INTEGER size;
@@ -209,8 +200,7 @@ _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HAND
 }
 
 
-bool
-_zip_filetime_to_time_t(FILETIME ft, time_t *t) {
+bool _zip_filetime_to_time_t(FILETIME ft, time_t *t) {
     /*
     Inspired by http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux
     */

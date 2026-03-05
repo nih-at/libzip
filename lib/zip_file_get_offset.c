@@ -44,8 +44,7 @@
    On error, fills in za->error and returns 0.
 */
 
-zip_uint64_t
-_zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t *error) {
+zip_uint64_t _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t *error) {
     zip_uint64_t offset;
     zip_int32_t size;
 
@@ -62,8 +61,9 @@ _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t *error) {
     }
 
     /* TODO: cache? */
-    if ((size = _zip_dirent_size(za->src, ZIP_EF_LOCAL, error)) < 0)
+    if ((size = _zip_dirent_size(za->src, ZIP_EF_LOCAL, error)) < 0) {
         return 0;
+    }
 
     if (offset + (zip_uint32_t)size > ZIP_INT64_MAX) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
@@ -73,8 +73,7 @@ _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t *error) {
     return offset + (zip_uint32_t)size;
 }
 
-zip_uint64_t
-_zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t *error) {
+zip_uint64_t _zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t *error) {
     zip_uint64_t offset;
     zip_dirent_t *entry;
 

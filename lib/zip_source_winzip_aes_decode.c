@@ -36,6 +36,7 @@
 #include <string.h>
 
 #include "zipint.h"
+
 #include "zip_crypto.h"
 
 struct winzip_aes {
@@ -56,8 +57,7 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
 static struct winzip_aes *winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error);
 
 
-zip_source_t *
-zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t encryption_method, int flags, const char *password) {
+zip_source_t *zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t encryption_method, int flags, const char *password) {
     zip_source_t *s2;
     zip_stat_t st;
     zip_uint64_t aux_length;
@@ -99,8 +99,7 @@ zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 }
 
 
-static int
-decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
+static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     zip_uint8_t header[WINZIP_AES_MAX_HEADER_LENGTH];
     zip_uint8_t password_verification[WINZIP_AES_PASSWORD_VERIFY_LENGTH];
     unsigned int headerlen;
@@ -130,8 +129,7 @@ decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
 }
 
 
-static bool
-verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
+static bool verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
     unsigned char computed[ZIP_CRYPTO_SHA1_LENGTH], from_file[HMAC_LENGTH];
     if (zip_source_read(src, from_file, HMAC_LENGTH) < HMAC_LENGTH) {
         zip_error_set_from_source(&ctx->error, src);
@@ -154,8 +152,7 @@ verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
 }
 
 
-static zip_int64_t
-winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
+static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct winzip_aes *ctx;
     zip_int64_t n;
 
@@ -227,8 +224,7 @@ winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zi
 }
 
 
-static void
-winzip_aes_free(struct winzip_aes *ctx) {
+static void winzip_aes_free(struct winzip_aes *ctx) {
     if (ctx == NULL) {
         return;
     }
@@ -241,8 +237,7 @@ winzip_aes_free(struct winzip_aes *ctx) {
 }
 
 
-static struct winzip_aes *
-winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error) {
+static struct winzip_aes *winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error) {
     struct winzip_aes *ctx;
 
     if ((ctx = (struct winzip_aes *)malloc(sizeof(*ctx))) == NULL) {

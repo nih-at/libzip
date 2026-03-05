@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int
-zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st) {
+ZIP_EXTERN int zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st) {
     const char *name;
     zip_dirent_t *de;
     zip_entry_t *entry;
@@ -52,7 +51,6 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
     entry = za->entry + index;
 
     if ((flags & ZIP_FL_UNCHANGED) == 0 && ZIP_ENTRY_DATA_CHANGED(za->entry + index)) {
-
         if (zip_source_stat(entry->source, st) < 0) {
             zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
             return -1;
@@ -60,7 +58,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
 
         if (de->comp_method == ZIP_CM_DEFAULT) {
             if (!(st->valid & ZIP_STAT_COMP_METHOD) || st->comp_method == ZIP_CM_STORE) {
-                st->valid &= ~(ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD);
+                st->valid &= ~(ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD);
             }
         }
         else {
@@ -71,7 +69,7 @@ zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st)
             st->comp_method = de->comp_method;
         }
 
-        if (((st->valid & (ZIP_STAT_COMP_METHOD|ZIP_STAT_SIZE)) == (ZIP_STAT_COMP_METHOD|ZIP_STAT_SIZE)) && st->comp_method == ZIP_CM_STORE) {
+        if (((st->valid & (ZIP_STAT_COMP_METHOD | ZIP_STAT_SIZE)) == (ZIP_STAT_COMP_METHOD | ZIP_STAT_SIZE)) && st->comp_method == ZIP_CM_STORE) {
             st->valid |= ZIP_STAT_COMP_SIZE;
             st->comp_size = st->size;
         }

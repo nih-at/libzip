@@ -38,8 +38,7 @@
 #endif
 
 
-ZIP_EXTERN zip_t *
-zip_fdopen(int fd_orig, int _flags, int *zep) {
+ZIP_EXTERN zip_t *zip_fdopen(int fd_orig, int _flags, int *zep) {
     int fd;
     FILE *fp;
     zip_t *za;

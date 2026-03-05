@@ -40,14 +40,12 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN zip_int64_t
-zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags) {
+ZIP_EXTERN zip_int64_t zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags) {
     return _zip_name_locate(za, fname, flags, &za->error);
 }
 
 
-zip_int64_t
-_zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zip_error_t *error) {
+zip_int64_t _zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zip_error_t *error) {
     int (*cmp)(const char *, const char *);
     size_t fname_length;
     zip_string_t *str = NULL;
@@ -88,13 +86,15 @@ _zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zip_error_t *e
             fn = _zip_get_name(za, i, flags, error);
 
             /* newly added (partially filled) entry or error */
-            if (fn == NULL)
+            if (fn == NULL) {
                 continue;
+            }
 
             if (flags & ZIP_FL_NODIR) {
                 p = strrchr(fn, '/');
-                if (p)
+                if (p) {
                     fn = p + 1;
+                }
             }
 
             if (cmp(fname, fn) == 0) {

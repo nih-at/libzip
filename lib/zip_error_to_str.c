@@ -40,8 +40,7 @@
 #include <string.h>
 
 
-ZIP_EXTERN int
-zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
+ZIP_EXTERN int zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
     zip_error_t error;
     const char *error_string;
     int ret;

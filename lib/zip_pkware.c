@@ -42,8 +42,7 @@
 #define PKWARE_KEY2 878082192
 
 
-static void
-update_keys(zip_pkware_keys_t *keys, zip_uint8_t b) {
+static void update_keys(zip_pkware_keys_t *keys, zip_uint8_t b) {
     keys->key[0] = (zip_uint32_t)crc32(keys->key[0] ^ 0xffffffffUL, &b, 1) ^ 0xffffffffUL;
     keys->key[1] = (keys->key[1] + (keys->key[0] & 0xff)) * 134775813 + 1;
     b = (zip_uint8_t)(keys->key[1] >> 24);
@@ -51,8 +50,7 @@ update_keys(zip_pkware_keys_t *keys, zip_uint8_t b) {
 }
 
 
-static zip_uint8_t
-crypt_byte(zip_pkware_keys_t *keys) {
+static zip_uint8_t crypt_byte(zip_pkware_keys_t *keys) {
     zip_uint16_t tmp;
     tmp = (zip_uint16_t)(keys->key[2] | 2);
     tmp = (zip_uint16_t)(((zip_uint32_t)tmp * (tmp ^ 1)) >> 8);
@@ -60,16 +58,14 @@ crypt_byte(zip_pkware_keys_t *keys) {
 }
 
 
-void
-_zip_pkware_keys_reset(zip_pkware_keys_t *keys) {
+void _zip_pkware_keys_reset(zip_pkware_keys_t *keys) {
     keys->key[0] = PKWARE_KEY0;
     keys->key[1] = PKWARE_KEY1;
     keys->key[2] = PKWARE_KEY2;
 }
 
 
-void
-_zip_pkware_encrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len) {
+void _zip_pkware_encrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len) {
     zip_uint64_t i;
     zip_uint8_t b;
     zip_uint8_t tmp;
@@ -91,8 +87,7 @@ _zip_pkware_encrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t
 }
 
 
-void
-_zip_pkware_decrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len) {
+void _zip_pkware_decrypt(zip_pkware_keys_t *keys, zip_uint8_t *out, const zip_uint8_t *in, zip_uint64_t len) {
     zip_uint64_t i;
     zip_uint8_t b;
     zip_uint8_t tmp;

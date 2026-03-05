@@ -44,11 +44,11 @@
 #include <zip.h>
 
 struct ctx {
-    zip_t* archive;
+    zip_t *archive;
 };
 
-zip_int64_t callback(zip_source_t* src, void *ud, void* data, zip_uint64_t length, zip_source_cmd_t command) {
-    struct ctx* ctx = (struct ctx*)ud;
+zip_int64_t callback(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command) {
+    struct ctx *ctx = (struct ctx *)ud;
 
     switch (command) {
     case ZIP_SOURCE_FREE:
@@ -64,8 +64,8 @@ zip_int64_t callback(zip_source_t* src, void *ud, void* data, zip_uint64_t lengt
     }
 }
 
-zip_source_t* create_layered_autoclose(zip_source_t* source, zip_t *archive, zip_error_t *error) {
-    struct ctx* ctx = (struct ctx*)malloc(sizeof(*ctx));
+zip_source_t *create_layered_autoclose(zip_source_t *source, zip_t *archive, zip_error_t *error) {
+    struct ctx *ctx = (struct ctx *)malloc(sizeof(*ctx));
     zip_source_t *autoclose_source;
 
     /* Allocate context. */
@@ -89,8 +89,7 @@ zip_source_t* create_layered_autoclose(zip_source_t* source, zip_t *archive, zip
 }
 
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     const char *destination_archive, *source_archive, *source_file;
     zip_int64_t index;
     zip_source_t *src, *src_autoclose;
@@ -118,7 +117,6 @@ main(int argc, char *argv[]) {
         fprintf(stderr, "%s: cannot find file '%s' in '%s': %s\n", argv[0], source_file, source_archive, zip_strerror(z_source));
         zip_discard(z_source);
         exit(1);
-
     }
     if ((src = zip_source_zip_file(z_source, z_source, index, 0, 0, -1, NULL)) == NULL) {
         fprintf(stderr, "%s: cannot open file '%s' in '%s': %s\n", argv[0], source_file, source_archive, zip_strerror(z_source));

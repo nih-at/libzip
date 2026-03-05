@@ -36,8 +36,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN void
-zip_stat_init(zip_stat_t *st) {
+ZIP_EXTERN void zip_stat_init(zip_stat_t *st) {
     st->valid = 0;
     st->name = NULL;
     st->index = ZIP_UINT64_MAX;
@@ -50,8 +49,7 @@ zip_stat_init(zip_stat_t *st) {
 }
 
 
-int
-_zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error) {
+int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error) {
     /* name is not merged, since zip_stat_t doesn't own it, and src may not be valid as long as dst */
     if (src->valid & ZIP_STAT_INDEX) {
         dst->index = src->index;

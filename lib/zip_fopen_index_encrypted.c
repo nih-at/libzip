@@ -40,17 +40,17 @@
 static zip_file_t *_zip_file_new(zip_t *za);
 
 
-ZIP_EXTERN zip_file_t *
-zip_fopen_index_encrypted(zip_t *za, zip_uint64_t index, zip_flags_t flags, const char *password) {
+ZIP_EXTERN zip_file_t *zip_fopen_index_encrypted(zip_t *za, zip_uint64_t index, zip_flags_t flags, const char *password) {
     zip_file_t *zf;
     zip_source_t *src;
 
     if (password != NULL && password[0] == '\0') {
         password = NULL;
     }
-    
-    if ((src = zip_source_zip_file_create(za, index, flags, 0, -1, password, &za->error)) == NULL)
+
+    if ((src = zip_source_zip_file_create(za, index, flags, 0, -1, password, &za->error)) == NULL) {
         return NULL;
+    }
 
     if (zip_source_open(src) < 0) {
         zip_error_set_from_source(&za->error, src);
@@ -69,8 +69,7 @@ zip_fopen_index_encrypted(zip_t *za, zip_uint64_t index, zip_flags_t flags, cons
 }
 
 
-static zip_file_t *
-_zip_file_new(zip_t *za) {
+static zip_file_t *_zip_file_new(zip_t *za) {
     zip_file_t *zf;
 
     if ((zf = (zip_file_t *)malloc(sizeof(struct zip_file))) == NULL) {

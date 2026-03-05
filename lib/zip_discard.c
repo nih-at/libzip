@@ -41,12 +41,12 @@
    frees the space allocated to a zipfile struct, and closes the
    corresponding file. */
 
-void
-zip_discard(zip_t *za) {
+void zip_discard(zip_t *za) {
     zip_uint64_t i;
 
-    if (za == NULL)
+    if (za == NULL) {
         return;
+    }
 
     if (za->src) {
         zip_source_close(za->src);
@@ -60,8 +60,9 @@ zip_discard(zip_t *za) {
     _zip_hash_free(za->names);
 
     if (za->entry) {
-        for (i = 0; i < za->nentry; i++)
+        for (i = 0; i < za->nentry; i++) {
             _zip_entry_finalize(za->entry + i);
+        }
         free(za->entry);
     }
 

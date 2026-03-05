@@ -38,8 +38,7 @@
 const char *progname;
 #define USAGE "usage: %s archive index offset\n"
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     int ze;
     zip_t *z;
     zip_file_t *zf;

@@ -34,8 +34,7 @@
 
 #include "zipint.h"
 
-ZIP_EXTERN int
-zip_source_open(zip_source_t *src) {
+ZIP_EXTERN int zip_source_open(zip_source_t *src) {
     if (src->source_closed) {
         return -1;
     }

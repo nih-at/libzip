@@ -41,15 +41,15 @@
 #include <openssl/rand.h>
 
 #ifdef USE_OPENSSL_3_API
-static _zip_crypto_hmac_t* hmac_new() {
-    _zip_crypto_hmac_t *hmac = (_zip_crypto_hmac_t*)malloc(sizeof(*hmac));
+static _zip_crypto_hmac_t *hmac_new() {
+    _zip_crypto_hmac_t *hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac));
     if (hmac != NULL) {
         hmac->mac = NULL;
         hmac->ctx = NULL;
     }
     return hmac;
 }
-static void hmac_free(_zip_crypto_hmac_t* hmac) {
+static void hmac_free(_zip_crypto_hmac_t *hmac) {
     if (hmac != NULL) {
         if (hmac->ctx != NULL) {
             EVP_MAC_CTX_free(hmac->ctx);
@@ -62,10 +62,9 @@ static void hmac_free(_zip_crypto_hmac_t* hmac) {
 }
 #endif
 
-_zip_crypto_aes_t *
-_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
+_zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
     _zip_crypto_aes_t *aes;
-    const EVP_CIPHER* cipher_type;
+    const EVP_CIPHER *cipher_type;
 
     switch (key_size) {
     case 128:
@@ -108,8 +107,7 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
     return aes;
 }
 
-void
-_zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
+void _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
         return;
     }
@@ -124,19 +122,16 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
 }
 
 
-bool
-_zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
+bool _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
     int len = 0;
-    if (EVP_EncryptUpdate(aes, out, &len, in, ZIP_CRYPTO_AES_BLOCK_LENGTH) != 1
-        || len != ZIP_CRYPTO_AES_BLOCK_LENGTH) {
+    if (EVP_EncryptUpdate(aes, out, &len, in, ZIP_CRYPTO_AES_BLOCK_LENGTH) != 1 || len != ZIP_CRYPTO_AES_BLOCK_LENGTH) {
         return false;
     }
     return true;
 }
 
 
-_zip_crypto_hmac_t *
-_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
+_zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
     _zip_crypto_hmac_t *hmac;
 
     if (secret_length > INT_MAX) {
@@ -145,9 +140,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
     }
 
 #ifdef USE_OPENSSL_3_API
-    if ((hmac = hmac_new()) == NULL
-        || (hmac->mac = EVP_MAC_fetch(NULL, "HMAC", "provider=default")) == NULL
-        || (hmac->ctx = EVP_MAC_CTX_new(hmac->mac)) == NULL) {
+    if ((hmac = hmac_new()) == NULL || (hmac->mac = EVP_MAC_fetch(NULL, "HMAC", "provider=default")) == NULL || (hmac->ctx = EVP_MAC_CTX_new(hmac->mac)) == NULL) {
         hmac_free(hmac);
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
@@ -171,7 +164,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
         return NULL;
     }
 
-        HMAC_CTX_init(hmac);
+    HMAC_CTX_init(hmac);
 #else
     if ((hmac = HMAC_CTX_new()) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -194,8 +187,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 }
 
 
-void
-_zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
+void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     if (hmac == NULL) {
         return;
     }
@@ -212,8 +204,7 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
 }
 
 
-bool
-_zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
+bool _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
 #ifdef USE_OPENSSL_3_API
     size_t length = 0;
     return EVP_MAC_final(hmac->ctx, data, &length, ZIP_CRYPTO_SHA1_LENGTH) == 1 && length == ZIP_CRYPTO_SHA1_LENGTH;
@@ -224,7 +215,6 @@ _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
 }
 
 
-ZIP_EXTERN bool
-zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return RAND_bytes(buffer, length) == 1;
 }

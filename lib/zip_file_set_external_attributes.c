@@ -33,15 +33,15 @@
 
 #include "zipint.h"
 
-ZIP_EXTERN int
-zip_file_set_external_attributes(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes) {
+ZIP_EXTERN int zip_file_set_external_attributes(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_uint8_t opsys, zip_uint32_t attributes) {
     zip_entry_t *e;
     int changed;
     zip_uint8_t unchanged_opsys;
     zip_uint32_t unchanged_attributes;
 
-    if (_zip_get_dirent(za, idx, 0, NULL) == NULL)
+    if (_zip_get_dirent(za, idx, 0, NULL) == NULL) {
         return -1;
+    }
 
     if (ZIP_IS_RDONLY(za)) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);

@@ -49,8 +49,7 @@ zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
 const char *progname;
 
 
-static int
-copy_source(zip_source_t *from, zip_source_t *to) {
+static int copy_source(zip_source_t *from, zip_source_t *to) {
     zip_uint8_t buf[8192];
     zip_int64_t n;
 
@@ -93,8 +92,7 @@ copy_source(zip_source_t *from, zip_source_t *to) {
 }
 
 
-static zip_source_t *
-open_compressed(const char *fname, int flags) {
+static zip_source_t *open_compressed(const char *fname, int flags) {
     zip_error_t error;
     zip_source_t *src;
 
@@ -110,8 +108,7 @@ open_compressed(const char *fname, int flags) {
 }
 
 
-static zip_source_t *
-open_file(const char *fname) {
+static zip_source_t *open_file(const char *fname) {
     zip_error_t error;
     zip_source_t *src;
 
@@ -127,16 +124,14 @@ open_file(const char *fname) {
 }
 
 
-static void
-usage(void) {
+static void usage(void) {
     fprintf(stderr, "usage: %s [-du] in out\n", progname);
     fprintf(stderr, "\nOptions:\n  -d  decompress in\n  -u  update in\n");
     exit(1);
 }
 
 
-int
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
     zip_source_t *from;
     zip_source_t *to;
     int c, err;

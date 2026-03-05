@@ -55,15 +55,14 @@ int main(int argc, const char *argv[]) {
  Some systems bind functions called and defined within a shared library, so the override doesn't work. This program calls zip_open and checks whether the override worked.
  */
 
-int
-main(int argc, const char *argv[]) {
+int main(int argc, const char *argv[]) {
     int verbose = 0;
     int error_code;
-    
+
     if (argc > 1 && strcmp(argv[1], "-v") == 0) {
         verbose = 1;
     }
-    
+
     if (getenv("LIBOVERRIDE_SET") == NULL) {
         char *cwd = getcwd(NULL, 0);
         size_t so_size = strlen(cwd) + 64;
@@ -83,7 +82,7 @@ main(int argc, const char *argv[]) {
         }
         exit(2);
     }
-    
+
     if (zip_open("nosuchfile", 0, &error_code) != NULL) {
         /* We expect failure. */
         if (verbose) {
@@ -98,7 +97,7 @@ main(int argc, const char *argv[]) {
         }
         exit(1);
     }
-    
+
     if (verbose) {
         printf("success\n");
     }

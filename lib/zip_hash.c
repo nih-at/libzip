@@ -64,8 +64,7 @@ struct zip_hash {
 
 
 /* free list of entries */
-static void
-free_list(zip_hash_entry_t *entry) {
+static void free_list(zip_hash_entry_t *entry) {
     while (entry != NULL) {
         zip_hash_entry_t *next = entry->next;
         free(entry);
@@ -75,8 +74,7 @@ free_list(zip_hash_entry_t *entry) {
 
 
 /* compute hash of string, full 32 bit value */
-static zip_uint32_t
-hash_string(const zip_uint8_t *name) {
+static zip_uint32_t hash_string(const zip_uint8_t *name) {
     zip_uint64_t value = HASH_START;
 
     if (name == NULL) {
@@ -93,8 +91,7 @@ hash_string(const zip_uint8_t *name) {
 
 
 /* resize hash table; new_size must be a power of 2, can be larger or smaller than current size */
-static bool
-hash_resize(zip_hash_t *hash, zip_uint32_t new_size, zip_error_t *error) {
+static bool hash_resize(zip_hash_t *hash, zip_uint32_t new_size, zip_error_t *error) {
     zip_hash_entry_t **new_table;
 
     if (new_size == hash->table_size) {
@@ -132,8 +129,7 @@ hash_resize(zip_hash_t *hash, zip_uint32_t new_size, zip_error_t *error) {
 }
 
 
-static zip_uint32_t
-size_for_capacity(zip_uint64_t capacity) {
+static zip_uint32_t size_for_capacity(zip_uint64_t capacity) {
     double needed_size = capacity / HASH_MAX_FILL;
     zip_uint32_t v;
 
@@ -163,8 +159,7 @@ size_for_capacity(zip_uint64_t capacity) {
 }
 
 
-zip_hash_t *
-_zip_hash_new(zip_error_t *error) {
+zip_hash_t *_zip_hash_new(zip_error_t *error) {
     zip_hash_t *hash;
 
     if ((hash = (zip_hash_t *)malloc(sizeof(zip_hash_t))) == NULL) {
@@ -180,8 +175,7 @@ _zip_hash_new(zip_error_t *error) {
 }
 
 
-void
-_zip_hash_free(zip_hash_t *hash) {
+void _zip_hash_free(zip_hash_t *hash) {
     zip_uint32_t i;
 
     if (hash == NULL) {
@@ -201,8 +195,7 @@ _zip_hash_free(zip_hash_t *hash) {
 
 
 /* insert into hash, return error on existence or memory issues */
-bool
-_zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index, zip_flags_t flags, zip_error_t *error) {
+bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index, zip_flags_t flags, zip_error_t *error) {
     zip_uint32_t hash_value, table_index;
     zip_hash_entry_t *entry;
 
@@ -260,8 +253,7 @@ _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index, zip
 
 
 /* remove entry from hash, error if not found */
-bool
-_zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *error) {
+bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *error) {
     zip_uint32_t hash_value, index;
     zip_hash_entry_t *entry, *previous;
 
@@ -308,8 +300,7 @@ _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *error) 
 
 
 /* find value for entry in hash, -1 if not found */
-zip_int64_t
-_zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, zip_error_t *error) {
+zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, zip_error_t *error) {
     zip_uint32_t hash_value, index;
     zip_hash_entry_t *entry;
 
@@ -343,8 +334,7 @@ _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, z
 }
 
 
-bool
-_zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t *error) {
+bool _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t *error) {
     zip_uint32_t new_size;
 
     if (capacity == 0) {
@@ -365,8 +355,7 @@ _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t 
 }
 
 
-bool
-_zip_hash_revert(zip_hash_t *hash, zip_error_t *error) {
+bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error) {
     zip_uint32_t i;
     zip_hash_entry_t *entry, *previous;
 

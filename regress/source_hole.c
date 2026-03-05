@@ -90,8 +90,7 @@ static hole_t *hole_new(const char *fname, int flags, zip_error_t *error);
 static zip_int64_t source_hole_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command);
 
 
-zip_source_t *
-source_hole_create(const char *fname, int flags, zip_error_t *error) {
+zip_source_t *source_hole_create(const char *fname, int flags, zip_error_t *error) {
     hole_t *ud = hole_new(fname, flags, error);
 
     if (ud == NULL) {
@@ -101,8 +100,7 @@ source_hole_create(const char *fname, int flags, zip_error_t *error) {
 }
 
 
-static void
-buffer_free(buffer_t *buffer) {
+static void buffer_free(buffer_t *buffer) {
     zip_uint64_t i;
 
     if (buffer == NULL) {
@@ -119,8 +117,7 @@ buffer_free(buffer_t *buffer) {
 }
 
 
-static buffer_t *
-buffer_from_file(const char *fname, int flags, zip_error_t *error) {
+static buffer_t *buffer_from_file(const char *fname, int flags, zip_error_t *error) {
     buffer_t *buffer;
     FILE *f;
 
@@ -150,8 +147,7 @@ buffer_from_file(const char *fname, int flags, zip_error_t *error) {
 }
 
 
-static buffer_t *
-buffer_new(void) {
+static buffer_t *buffer_new(void) {
     buffer_t *buffer;
 
     if ((buffer = (buffer_t *)malloc(sizeof(*buffer))) == NULL) {
@@ -168,8 +164,7 @@ buffer_new(void) {
 }
 
 
-static zip_int64_t
-buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
+static zip_int64_t buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
     zip_uint64_t n, i, fragment_offset;
 
     length = MY_MIN(length, buffer->size - buffer->offset);
@@ -204,8 +199,7 @@ buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length, zip_error_
 }
 
 
-static int
-buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error) {
+static int buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error) {
     zip_uint8_t b[20];
     zip_uint64_t i;
 
@@ -221,7 +215,7 @@ buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error) {
 
     buffer->fragment_size = get_u64(b + 4);
     buffer->size = get_u64(b + 12);
-    
+
     if (buffer->fragment_size == 0) {
         zip_error_set(error, ZIP_ER_INCONS, 0);
         return -1;
@@ -231,7 +225,7 @@ buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error) {
     if (buffer->size % buffer->fragment_size != 0) {
         buffer->nfragments += 1;
     }
-    
+
     if ((buffer->nfragments > SIZE_MAX / sizeof(buffer->fragment[0])) || ((buffer->fragment = (zip_uint8_t **)malloc(sizeof(buffer->fragment[0]) * buffer->nfragments)) == NULL)) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return -1;
@@ -279,8 +273,7 @@ buffer_read_file(buffer_t *buffer, FILE *f, zip_error_t *error) {
     return 0;
 }
 
-static zip_int64_t
-buffer_seek(buffer_t *buffer, void *data, zip_uint64_t length, zip_error_t *error) {
+static zip_int64_t buffer_seek(buffer_t *buffer, void *data, zip_uint64_t length, zip_error_t *error) {
     zip_int64_t new_offset = zip_source_seek_compute_offset(buffer->offset, buffer->size, data, length, error);
 
     if (new_offset < 0) {
@@ -292,8 +285,7 @@ buffer_seek(buffer_t *buffer, void *data, zip_uint64_t length, zip_error_t *erro
 }
 
 
-static int
-buffer_to_file(buffer_t *buffer, const char *fname, zip_error_t *error) {
+static int buffer_to_file(buffer_t *buffer, const char *fname, zip_error_t *error) {
     FILE *f = fopen(fname, "wb");
     zip_uint64_t i;
     zip_uint64_t nul_run;
@@ -336,8 +328,7 @@ buffer_to_file(buffer_t *buffer, const char *fname, zip_error_t *error) {
 }
 
 
-static zip_int64_t
-buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
+static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
     zip_uint8_t **fragment;
     if (buffer->offset + length > buffer->nfragments * buffer->fragment_size) {
         zip_uint64_t needed_fragments = (buffer->offset + length + buffer->fragment_size - 1) / buffer->fragment_size;
@@ -400,8 +391,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
 }
 
 
-static zip_uint64_t
-get_u64(const zip_uint8_t *b) {
+static zip_uint64_t get_u64(const zip_uint8_t *b) {
     zip_uint64_t i;
 
     i = (zip_uint64_t)b[0] << 56 | (zip_uint64_t)b[1] << 48 | (zip_uint64_t)b[2] << 40 | (zip_uint64_t)b[3] << 32 | (zip_uint64_t)b[4] << 24 | (zip_uint64_t)b[5] << 16 | (zip_uint64_t)b[6] << 8 | (zip_uint64_t)b[7];
@@ -410,8 +400,7 @@ get_u64(const zip_uint8_t *b) {
 }
 
 
-static int
-only_nul(const zip_uint8_t *data, zip_uint64_t length) {
+static int only_nul(const zip_uint8_t *data, zip_uint64_t length) {
     zip_uint64_t i;
 
     for (i = 0; i < length; i++) {
@@ -424,8 +413,7 @@ only_nul(const zip_uint8_t *data, zip_uint64_t length) {
 }
 
 
-static int
-write_nuls(zip_uint64_t n, FILE *f) {
+static int write_nuls(zip_uint64_t n, FILE *f) {
     if (fwrite(MARK_NUL, 4, 1, f) != 1) {
         return -1;
     }
@@ -433,8 +421,7 @@ write_nuls(zip_uint64_t n, FILE *f) {
 }
 
 
-static int
-write_u64(zip_uint64_t u64, FILE *f) {
+static int write_u64(zip_uint64_t u64, FILE *f) {
     zip_uint8_t b[8];
 
     b[0] = (zip_uint8_t)((u64 >> 56) & 0xff);
@@ -450,8 +437,7 @@ write_u64(zip_uint64_t u64, FILE *f) {
 }
 
 
-static void
-hole_free(hole_t *hole) {
+static void hole_free(hole_t *hole) {
     if (hole == NULL) {
         return;
     }
@@ -463,8 +449,7 @@ hole_free(hole_t *hole) {
 }
 
 
-static hole_t *
-hole_new(const char *fname, int flags, zip_error_t *error) {
+static hole_t *hole_new(const char *fname, int flags, zip_error_t *error) {
     hole_t *ctx = (hole_t *)malloc(sizeof(*ctx));
 
     if (ctx == NULL) {
@@ -490,8 +475,7 @@ hole_new(const char *fname, int flags, zip_error_t *error) {
 }
 
 
-static zip_int64_t
-source_hole_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command) {
+static zip_int64_t source_hole_cb(void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command) {
     hole_t *ctx = (hole_t *)ud;
 
     switch (command) {

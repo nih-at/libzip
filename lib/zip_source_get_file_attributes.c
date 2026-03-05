@@ -33,8 +33,7 @@
 
 #include "zipint.h"
 
-ZIP_EXTERN void
-zip_file_attributes_init(zip_file_attributes_t *attributes) {
+ZIP_EXTERN void zip_file_attributes_init(zip_file_attributes_t *attributes) {
     attributes->valid = 0;
     attributes->version = 1;
 }
@@ -89,8 +88,8 @@ int zip_source_get_file_attributes(zip_source_t *src, zip_file_attributes_t *att
         }
         if ((lower_attributes.valid & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS)) {
             if (attributes->valid & ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS) {
-		/* only take from lower level what is not defined at current level */
-		lower_attributes.general_purpose_bit_mask &= ~attributes->general_purpose_bit_mask;
+                /* only take from lower level what is not defined at current level */
+                lower_attributes.general_purpose_bit_mask &= ~attributes->general_purpose_bit_mask;
 
                 attributes->general_purpose_bit_flags |= lower_attributes.general_purpose_bit_flags & lower_attributes.general_purpose_bit_mask;
                 attributes->general_purpose_bit_mask |= lower_attributes.general_purpose_bit_mask;

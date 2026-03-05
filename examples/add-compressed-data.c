@@ -49,8 +49,8 @@ struct ctx {
     zip_uint32_t compression_method;
 };
 
-zip_int64_t callback(zip_source_t* src, void *ud, void* data, zip_uint64_t length, zip_source_cmd_t command) {
-    struct ctx* ctx = (struct ctx*)ud;
+zip_int64_t callback(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip_source_cmd_t command) {
+    struct ctx *ctx = (struct ctx *)ud;
 
     switch (command) {
     case ZIP_SOURCE_FREE:
@@ -79,8 +79,8 @@ zip_int64_t callback(zip_source_t* src, void *ud, void* data, zip_uint64_t lengt
     }
 }
 
-zip_source_t* create_layered_compressed_source(zip_source_t* source, zip_uint64_t uncompressed_size, zip_uint32_t crc, zip_uint32_t compression_method, zip_error_t *error) {
-    struct ctx* ctx = (struct ctx*)malloc(sizeof(*ctx));
+zip_source_t *create_layered_compressed_source(zip_source_t *source, zip_uint64_t uncompressed_size, zip_uint32_t crc, zip_uint32_t compression_method, zip_error_t *error) {
+    struct ctx *ctx = (struct ctx *)malloc(sizeof(*ctx));
     zip_source_t *compressed_source;
 
     /* Allocate context. */
@@ -111,15 +111,16 @@ zip_source_t* create_layered_compressed_source(zip_source_t* source, zip_uint64_
 zip_uint16_t compression_method = ZIP_CM_DEFLATE;
 zip_uint64_t uncompressed_size = 60;
 zip_uint32_t crc = 0xb0354048;
+/* clang-format off */
 zip_uint8_t data[] = {
     0x4B, 0x4C, 0x44, 0x06, 0x5C, 0x49, 0x28, 0x80,
     0x2B, 0x11, 0x55 ,0x36, 0x19, 0x05, 0x70, 0x01,
     0x00
 };
+/* clang-format on */
 
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     const char *archive;
     zip_source_t *src, *src_comp;
     zip_t *za;

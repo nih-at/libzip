@@ -36,6 +36,7 @@
 #include <string.h>
 
 #include "zipint.h"
+
 #include "zip_crypto.h"
 
 struct winzip_aes {
@@ -57,8 +58,7 @@ static zip_int64_t winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, z
 static struct winzip_aes *winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error);
 
 
-zip_source_t *
-zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encryption_method, int flags, const char *password) {
+zip_source_t *zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encryption_method, int flags, const char *password) {
     zip_source_t *s2;
     struct winzip_aes *ctx;
 
@@ -80,8 +80,7 @@ zip_source_winzip_aes_encode(zip_t *za, zip_source_t *src, zip_uint16_t encrypti
 }
 
 
-static int
-encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
+static int encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     zip_uint16_t salt_length = SALT_LENGTH(ctx->encryption_method);
     if (!zip_secure_random(ctx->data, salt_length)) {
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
@@ -103,8 +102,7 @@ encrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
 }
 
 
-static zip_int64_t
-winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip_source_cmd_t cmd) {
+static zip_int64_t winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip_source_cmd_t cmd) {
     struct winzip_aes *ctx;
     zip_int64_t ret;
     zip_uint64_t buffer_n;
@@ -212,8 +210,7 @@ winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length,
 }
 
 
-static void
-winzip_aes_free(struct winzip_aes *ctx) {
+static void winzip_aes_free(struct winzip_aes *ctx) {
     if (ctx == NULL) {
         return;
     }
@@ -227,8 +224,7 @@ winzip_aes_free(struct winzip_aes *ctx) {
 }
 
 
-static struct winzip_aes *
-winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error) {
+static struct winzip_aes *winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error) {
     struct winzip_aes *ctx;
 
     if ((ctx = (struct winzip_aes *)malloc(sizeof(*ctx))) == NULL) {

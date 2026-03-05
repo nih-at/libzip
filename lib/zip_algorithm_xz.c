@@ -39,7 +39,11 @@
 #include <stdlib.h>
 #include <zlib.h>
 
-enum header_state { INCOMPLETE, OUTPUT, DONE };
+enum header_state {
+    INCOMPLETE,
+    OUTPUT,
+    DONE
+};
 
 #define HEADER_BYTES_ZIP 9
 #define HEADER_MAGIC_LENGTH 4
@@ -82,8 +86,7 @@ struct ctx {
 };
 
 
-static zip_uint64_t
-maximum_compressed_size(zip_uint64_t uncompressed_size) {
+static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
     /*
      According to https://sourceforge.net/p/sevenzip/discussion/45797/thread/b6bd62f8/
 
@@ -103,8 +106,7 @@ maximum_compressed_size(zip_uint64_t uncompressed_size) {
 }
 
 
-static void *
-allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error, zip_uint16_t method) {
+static void *allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error, zip_uint16_t method) {
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
@@ -116,7 +118,8 @@ allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error, zip_
     ctx->compress = compress;
     if (compression_flags <= 9) {
         ctx->compression_flags = compression_flags;
-    } else {
+    }
+    else {
         ctx->compression_flags = 6; /* default value */
     }
     ctx->compression_flags |= LZMA_PRESET_EXTREME;
@@ -135,27 +138,23 @@ allocate(bool compress, zip_uint32_t compression_flags, zip_error_t *error, zip_
 }
 
 
-static void *
-compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+static void *compress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
     return allocate(true, compression_flags, error, method);
 }
 
 
-static void *
-decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
+static void *decompress_allocate(zip_uint16_t method, zip_uint32_t compression_flags, zip_error_t *error) {
     return allocate(false, compression_flags, error, method);
 }
 
 
-static void
-deallocate(void *ud) {
+static void deallocate(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
     free(ctx);
 }
 
 
-static zip_uint16_t
-general_purpose_bit_flags(void *ud) {
+static zip_uint16_t general_purpose_bit_flags(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
     if (!ctx->compress) {
@@ -164,14 +163,13 @@ general_purpose_bit_flags(void *ud) {
 
     if (ctx->method == ZIP_CM_LZMA) {
         /* liblzma always returns an EOS/EOPM marker, see
-	 * https://sourceforge.net/p/lzmautils/discussion/708858/thread/84c5dbb9/#a5e4/3764 */
-	return 1 << 1;
+         * https://sourceforge.net/p/lzmautils/discussion/708858/thread/84c5dbb9/#a5e4/3764 */
+        return 1 << 1;
     }
     return 0;
 }
 
-static int
-map_error(lzma_ret ret) {
+static int map_error(lzma_ret ret) {
     switch (ret) {
     case LZMA_DATA_ERROR:
     case LZMA_UNSUPPORTED_CHECK:
@@ -189,8 +187,7 @@ map_error(lzma_ret ret) {
 }
 
 
-static bool
-start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
+static bool start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     struct ctx *ctx = (struct ctx *)ud;
     lzma_ret ret;
 
@@ -207,16 +204,20 @@ start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     ctx->zstr.next_out = NULL;
 
     if (ctx->compress) {
-        if (ctx->method == ZIP_CM_LZMA)
+        if (ctx->method == ZIP_CM_LZMA) {
             ret = lzma_alone_encoder(&ctx->zstr, filters[0].options);
-        else
+        }
+        else {
             ret = lzma_stream_encoder(&ctx->zstr, filters, LZMA_CHECK_CRC64);
+        }
     }
     else {
-        if (ctx->method == ZIP_CM_LZMA)
+        if (ctx->method == ZIP_CM_LZMA) {
             ret = lzma_alone_decoder(&ctx->zstr, UINT64_MAX);
-        else
+        }
+        else {
             ret = lzma_stream_decoder(&ctx->zstr, UINT64_MAX, LZMA_CONCATENATED);
+        }
     }
 
     if (ret != LZMA_OK) {
@@ -236,8 +237,7 @@ start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
 }
 
 
-static bool
-end(void *ud) {
+static bool end(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
     lzma_end(&ctx->zstr);
@@ -245,8 +245,7 @@ end(void *ud) {
 }
 
 
-static bool
-input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
+static bool input(void *ud, zip_uint8_t *data, zip_uint64_t length) {
     struct ctx *ctx = (struct ctx *)ud;
 
     if (length > UINT_MAX || ctx->zstr.avail_in > 0) {
@@ -310,8 +309,7 @@ static bool end_of_input(void *ud) {
 }
 
 
-static zip_compression_status_t
-process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
+static zip_compression_status_t process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     struct ctx *ctx = (struct ctx *)ud;
     uInt avail_out;
     lzma_ret ret;

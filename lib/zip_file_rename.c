@@ -37,8 +37,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int
-zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
+ZIP_EXTERN int zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
     const char *old_name;
     int old_is_dir, new_is_dir;
 
@@ -52,8 +51,9 @@ zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags
         return -1;
     }
 
-    if ((old_name = zip_get_name(za, idx, 0)) == NULL)
+    if ((old_name = zip_get_name(za, idx, 0)) == NULL) {
         return -1;
+    }
 
     new_is_dir = (name != NULL && name[0] != '\0' && name[strlen(name) - 1] == '/');
     old_is_dir = (old_name[0] != '\0' && old_name[strlen(old_name) - 1] == '/');

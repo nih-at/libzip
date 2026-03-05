@@ -42,7 +42,12 @@
 
 #include "zip.h"
 
-enum when { WHEN_NEVER, WHEN_OPEN, WHEN_READ, WHEN_CLOSE };
+enum when {
+    WHEN_NEVER,
+    WHEN_OPEN,
+    WHEN_READ,
+    WHEN_CLOSE
+};
 
 const char *when_name[] = {"no", "zip_fopen", "zip_fread", "zip_fclose"};
 
@@ -53,8 +58,7 @@ int verbose;
 const char *progname;
 #define USAGE "usage: %s [-v] archive\n"
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     int fail, ze;
     int c;
     zip_t *z;
@@ -164,8 +168,7 @@ main(int argc, char *argv[]) {
 }
 
 
-static int
-do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex) {
+static int do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze_ex, int se_ex) {
     zip_file_t *zf;
     enum when when_got;
     zip_error_t error_got, error_ex;
@@ -205,8 +208,9 @@ do_read(zip_t *z, const char *name, zip_flags_t flags, enum when when_ex, int ze
         zip_error_fini(&error_ex);
         return 1;
     }
-    else if (verbose)
+    else if (verbose) {
         printf("%s: %s: passed\n", progname, name);
+    }
 
     return 0;
 }

@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-int
-zip_source_close(zip_source_t *src) {
+int zip_source_close(zip_source_t *src) {
     if (!ZIP_SOURCE_IS_OPEN_READING(src)) {
         zip_error_set(&src->error, ZIP_ER_INVAL, 0);
         return -1;

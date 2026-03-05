@@ -37,8 +37,7 @@
 
 #include "zip_crypto.h"
 
-_zip_crypto_aes_t *
-_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
+_zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
     _zip_crypto_aes_t *aes;
 
     if ((aes = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
@@ -67,8 +66,7 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
     return aes;
 }
 
-bool
-_zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
+bool _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
     switch (aes->key_size) {
     case 128:
         nettle_aes128_encrypt(&aes->ctx.ctx_128, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
@@ -84,8 +82,7 @@ _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip
     return true;
 }
 
-void
-_zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
+void _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
         return;
     }
@@ -95,8 +92,7 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
 }
 
 
-_zip_crypto_hmac_t *
-_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
+_zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
     _zip_crypto_hmac_t *hmac;
 
     if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
@@ -114,8 +110,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 }
 
 
-void
-_zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
+void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     zip_uint8_t buf[ZIP_CRYPTO_SHA1_LENGTH];
 
     if (hmac == NULL) {
@@ -128,7 +123,6 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
 }
 
 
-ZIP_EXTERN bool
-zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return gnutls_rnd(GNUTLS_RND_KEY, buffer, length) == 0;
 }

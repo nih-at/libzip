@@ -39,8 +39,7 @@
 
 /* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
 
-zip_int64_t
-_zip_add_entry(zip_t *za) {
+zip_int64_t _zip_add_entry(zip_t *za) {
     zip_uint64_t idx;
 
     if (za->nentry + 1 >= za->nentry_alloc) {

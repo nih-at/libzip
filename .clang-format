@@ -1,8 +1,8 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
 ColumnLimit: 2000
-AlwaysBreakAfterReturnType: TopLevelDefinitions
 KeepEmptyLinesAtTheStartOfBlocks: false
+AllowShortFunctionsOnASingleLine: InlineOnly
 MaxEmptyLinesToKeep: 2
 BreakBeforeBraces: Custom
 BraceWrapping:
@@ -10,3 +10,10 @@ BraceWrapping:
 AlignEscapedNewlines: Left
 UseTab: Never
 #PPDirectiveIndentStyle: AfterHash
+
+AllowShortEnumsOnASingleLine: false
+BreakBeforeBinaryOperators: All
+# EnumTrailingComma: Remove # required clang-format 21
+InsertBraces: true
+InsertNewlineAtEOF: true
+# OneLineFormatOffRegex

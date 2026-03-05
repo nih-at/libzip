@@ -41,8 +41,7 @@
 const char *teststr = "This is a test.\n";
 const char *file = "teststring.txt";
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     const char *archive;
     zip_t *za;
     zip_source_t *zs;

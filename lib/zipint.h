@@ -118,14 +118,12 @@ typedef zip_source_t *(*zip_encryption_implementation)(zip_t *, zip_source_t *, 
 
 zip_encryption_implementation _zip_get_encryption_implementation(zip_uint16_t method, int operation);
 
-/* clang-format off */
 enum zip_compression_status {
     ZIP_COMPRESSION_OK,
     ZIP_COMPRESSION_END,
     ZIP_COMPRESSION_ERROR,
     ZIP_COMPRESSION_NEED_DATA
 };
-/* clang-format on */
 typedef enum zip_compression_status zip_compression_status_t;
 
 struct zip_compression_algorithm {
@@ -192,10 +190,15 @@ zip_source_t *zip_source_buffer_with_attributes_create(const void *data, zip_uin
 
 /* error source for layered sources */
 
-enum zip_les { ZIP_LES_NONE, ZIP_LES_UPPER, ZIP_LES_LOWER, ZIP_LES_INVAL };
+enum zip_les {
+    ZIP_LES_NONE,
+    ZIP_LES_UPPER,
+    ZIP_LES_LOWER,
+    ZIP_LES_INVAL
+};
 
 #define ZIP_DETAIL_ET_GLOBAL 0
-#define ZIP_DETAIL_ET_ENTRY  1
+#define ZIP_DETAIL_ET_ENTRY 1
 
 struct _zip_err_info {
     int type;
@@ -215,33 +218,33 @@ extern const int _zip_err_details_count;
 #define ADD_INDEX_TO_DETAIL(error, index) MAKE_DETAIL_WITH_INDEX(GET_ERROR_FROM_DETAIL(error), (index))
 
 /* error code for libzip-internal errors */
-#define ZIP_ER_DETAIL_NO_DETAIL 0   /* G no detail */
-#define ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD 1  /* G central directory overlaps EOCD, or there is space between them */
-#define ZIP_ER_DETAIL_COMMENT_LENGTH_INVALID 2  /* G archive comment length incorrect */
-#define ZIP_ER_DETAIL_CDIR_LENGTH_INVALID 3  /* G central directory length invalid */
-#define ZIP_ER_DETAIL_CDIR_ENTRY_INVALID 4  /* E central header invalid */
-#define ZIP_ER_DETAIL_CDIR_WRONG_ENTRIES_COUNT 5  /* G central directory count of entries is incorrect */
-#define ZIP_ER_DETAIL_ENTRY_HEADER_MISMATCH 6  /* E local and central headers do not match */
-#define ZIP_ER_DETAIL_EOCD_LENGTH_INVALID 7  /* G wrong EOCD length */
-#define ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD 8  /* G EOCD64 overlaps EOCD, or there is space between them */
-#define ZIP_ER_DETAIL_EOCD64_WRONG_MAGIC 9  /* G EOCD64 magic incorrect */
-#define ZIP_ER_DETAIL_EOCD64_MISMATCH 10  /* G EOCD64 and EOCD do not match */
-#define ZIP_ER_DETAIL_CDIR_INVALID 11  /* G invalid value in central directory */
-#define ZIP_ER_DETAIL_VARIABLE_SIZE_OVERFLOW 12 /* E variable size fields overflow header */
-#define ZIP_ER_DETAIL_INVALID_UTF8_IN_FILENAME 13 /* E invalid UTF-8 in filename */
-#define ZIP_ER_DETAIL_INVALID_UTF8_IN_COMMENT 14 /* E invalid UTF-8 in comment */
-#define ZIP_ER_DETAIL_INVALID_ZIP64_EF 15 /* E invalid Zip64 extra field */
-#define ZIP_ER_DETAIL_INVALID_WINZIPAES_EF 16 /* E invalid WinZip AES extra field */
-#define ZIP_ER_DETAIL_EF_TRAILING_GARBAGE 17 /* E garbage at end of extra fields */
-#define ZIP_ER_DETAIL_INVALID_EF_LENGTH 18 /* E extra field length is invalid */
-#define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 19 /* E file length in header doesn't match actual file length */
-#define ZIP_ER_DETAIL_STORED_SIZE_MISMATCH 20 /* E compressed and uncompressed sizes don't match for stored file */
-#define ZIP_ER_DETAIL_DATA_DESCRIPTOR_MISMATCH 21 /* E local header and data descriptor do not match */
-#define ZIP_ER_DETAIL_EOCD64_LOCATOR_MISMATCH 22 /* G EOCD64 and EOCD64 locator do not match */
-#define ZIP_ER_DETAIL_UTF8_FILENAME_MISMATCH 23 /* E UTF-8 filename is ASCII and doesn't match filename */
-#define ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH 24 /* E UTF-8 comment is ASCII and doesn't match comment */
+#define ZIP_ER_DETAIL_NO_DETAIL 0                         /* G no detail */
+#define ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD 1                /* G central directory overlaps EOCD, or there is space between them */
+#define ZIP_ER_DETAIL_COMMENT_LENGTH_INVALID 2            /* G archive comment length incorrect */
+#define ZIP_ER_DETAIL_CDIR_LENGTH_INVALID 3               /* G central directory length invalid */
+#define ZIP_ER_DETAIL_CDIR_ENTRY_INVALID 4                /* E central header invalid */
+#define ZIP_ER_DETAIL_CDIR_WRONG_ENTRIES_COUNT 5          /* G central directory count of entries is incorrect */
+#define ZIP_ER_DETAIL_ENTRY_HEADER_MISMATCH 6             /* E local and central headers do not match */
+#define ZIP_ER_DETAIL_EOCD_LENGTH_INVALID 7               /* G wrong EOCD length */
+#define ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD 8              /* G EOCD64 overlaps EOCD, or there is space between them */
+#define ZIP_ER_DETAIL_EOCD64_WRONG_MAGIC 9                /* G EOCD64 magic incorrect */
+#define ZIP_ER_DETAIL_EOCD64_MISMATCH 10                  /* G EOCD64 and EOCD do not match */
+#define ZIP_ER_DETAIL_CDIR_INVALID 11                     /* G invalid value in central directory */
+#define ZIP_ER_DETAIL_VARIABLE_SIZE_OVERFLOW 12           /* E variable size fields overflow header */
+#define ZIP_ER_DETAIL_INVALID_UTF8_IN_FILENAME 13         /* E invalid UTF-8 in filename */
+#define ZIP_ER_DETAIL_INVALID_UTF8_IN_COMMENT 14          /* E invalid UTF-8 in comment */
+#define ZIP_ER_DETAIL_INVALID_ZIP64_EF 15                 /* E invalid Zip64 extra field */
+#define ZIP_ER_DETAIL_INVALID_WINZIPAES_EF 16             /* E invalid WinZip AES extra field */
+#define ZIP_ER_DETAIL_EF_TRAILING_GARBAGE 17              /* E garbage at end of extra fields */
+#define ZIP_ER_DETAIL_INVALID_EF_LENGTH 18                /* E extra field length is invalid */
+#define ZIP_ER_DETAIL_INVALID_FILE_LENGTH 19              /* E file length in header doesn't match actual file length */
+#define ZIP_ER_DETAIL_STORED_SIZE_MISMATCH 20             /* E compressed and uncompressed sizes don't match for stored file */
+#define ZIP_ER_DETAIL_DATA_DESCRIPTOR_MISMATCH 21         /* E local header and data descriptor do not match */
+#define ZIP_ER_DETAIL_EOCD64_LOCATOR_MISMATCH 22          /* G EOCD64 and EOCD64 locator do not match */
+#define ZIP_ER_DETAIL_UTF8_FILENAME_MISMATCH 23           /* E UTF-8 filename is ASCII and doesn't match filename */
+#define ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH 24            /* E UTF-8 comment is ASCII and doesn't match comment */
 #define ZIP_ER_DETAIL_COMPRESSED_DATA_TRAILING_GARBAGE 25 /* G garbage at end of compressed data */
-#define ZIP_ER_DETAIL_NUL_IN_FILENAME 26 /* E NUL byte in file name */
+#define ZIP_ER_DETAIL_NUL_IN_FILENAME 26                  /* E NUL byte in file name */
 
 /* directory entry: general purpose bit flags */
 
@@ -314,7 +317,7 @@ struct zip {
 
     zip_progress_t *progress; /* progress callback for zip_close() */
 
-    zip_uint32_t* write_crc; /* have _zip_write() compute CRC */
+    zip_uint32_t *write_crc; /* have _zip_write() compute CRC */
     time_t torrent_mtime;
 };
 
@@ -370,7 +373,7 @@ struct zip_dirent {
     zip_uint16_t encryption_method; /*      encryption method, computed from other fields */
     char *password;                 /*      file specific encryption password */
 
-    time_t last_mod_mtime;          /*      cached last_mod in Unix time format */
+    time_t last_mod_mtime; /*      cached last_mod in Unix time format */
 };
 
 /* zip archive central directory */
@@ -384,11 +387,11 @@ struct zip_cdir {
     zip_uint32_t eocd_disk;
     zip_uint64_t disk_entries; /* number of entries on this disk */
     zip_uint64_t num_entries;  /* number of entries on all disks */
-    zip_uint64_t size;     /* size of central directory */
-    zip_uint64_t offset;   /* offset of central directory in file */
-    zip_uint64_t eocd_offset; /* offset of EOCD in file */
-    zip_string_t *comment; /* zip archive comment */
-    bool is_zip64;         /* central directory in zip64 format */
+    zip_uint64_t size;         /* size of central directory */
+    zip_uint64_t offset;       /* offset of central directory in file */
+    zip_uint64_t eocd_offset;  /* offset of EOCD in file */
+    zip_string_t *comment;     /* zip archive comment */
+    bool is_zip64;             /* central directory in zip64 format */
 };
 
 struct zip_extra_field {
@@ -550,7 +553,7 @@ void _zip_cdir_free(zip_cdir_t *);
 bool _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error);
 zip_cdir_t *_zip_cdir_new(zip_error_t *);
 zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors);
-time_t _zip_d2u_time(const zip_dostime_t*);
+time_t _zip_d2u_time(const zip_dostime_t *);
 void _zip_deregister_source(zip_t *za, zip_source_t *src);
 
 bool _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool);
@@ -563,7 +566,7 @@ void _zip_dirent_init(zip_dirent_t *);
 bool _zip_dirent_merge(zip_dirent_t *de, zip_dirent_t *de_orig, bool replacing_data, zip_error_t *error);
 bool _zip_dirent_needs_zip64(const zip_dirent_t *, zip_flags_t);
 zip_dirent_t *_zip_dirent_new(void);
-bool zip_dirent_process_ef_zip64(zip_dirent_t * zde, const zip_uint8_t * ef, zip_uint64_t got_len, bool local, zip_error_t * error);
+bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64_t got_len, bool local, zip_error_t *error);
 zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, bool check_consistency, zip_error_t *error);
 void _zip_dirent_set_version_needed(zip_dirent_t *de, bool force_zip64);
 void zip_dirent_torrentzip_normalize(zip_dirent_t *de);

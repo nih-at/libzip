@@ -38,10 +38,10 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int
-zip_set_default_password(zip_t *za, const char *passwd) {
-    if (za == NULL)
+ZIP_EXTERN int zip_set_default_password(zip_t *za, const char *passwd) {
+    if (za == NULL) {
         return -1;
+    }
 
     free(za->default_password);
 
@@ -51,8 +51,9 @@ zip_set_default_password(zip_t *za, const char *passwd) {
             return -1;
         }
     }
-    else
+    else {
         za->default_password = NULL;
+    }
 
     return 0;
 }

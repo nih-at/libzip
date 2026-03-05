@@ -41,8 +41,7 @@
    creates a new zipfile struct, and sets the contents to zero; returns
    the new struct. */
 
-zip_t *
-_zip_new(zip_error_t *error) {
+zip_t *_zip_new(zip_error_t *error) {
     zip_t *za;
 
     za = (zip_t *)malloc(sizeof(struct zip));

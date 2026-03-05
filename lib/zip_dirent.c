@@ -46,24 +46,23 @@ static zip_extra_field_t *_zip_ef_utf8(zip_uint16_t, zip_string_t *, zip_error_t
 static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error);
 
 
-void
-_zip_cdir_free(zip_cdir_t *cd) {
+void _zip_cdir_free(zip_cdir_t *cd) {
     zip_uint64_t i;
 
     if (cd == NULL) {
         return;
     }
 
-    for (i = 0; i < cd->nentry; i++)
+    for (i = 0; i < cd->nentry; i++) {
         _zip_entry_finalize(cd->entry + i);
+    }
     free(cd->entry);
     _zip_string_free(cd->comment);
     free(cd);
 }
 
 
-zip_cdir_t *
-_zip_cdir_new(zip_error_t *error) {
+zip_cdir_t *_zip_cdir_new(zip_error_t *error) {
     zip_cdir_t *cd;
 
     if ((cd = (zip_cdir_t *)malloc(sizeof(*cd))) == NULL) {
@@ -81,8 +80,7 @@ _zip_cdir_new(zip_error_t *error) {
 }
 
 
-bool
-_zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error) {
+bool _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *error) {
     zip_uint64_t i;
 
     if (additional_entries == 0) {
@@ -103,8 +101,7 @@ _zip_cdir_grow(zip_cdir_t *cd, zip_uint64_t additional_entries, zip_error_t *err
 }
 
 
-zip_int64_t
-_zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors) {
+zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivors) {
     zip_uint64_t offset, size;
     zip_string_t *comment;
     zip_uint8_t buf[EOCDLEN + EOCD64LEN + EOCD64LOCLEN];
@@ -211,17 +208,19 @@ _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t survivor
 }
 
 
-zip_dirent_t *
-_zip_dirent_clone(const zip_dirent_t *sde) {
+zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *sde) {
     zip_dirent_t *tde;
 
-    if ((tde = (zip_dirent_t *)malloc(sizeof(*tde))) == NULL)
+    if ((tde = (zip_dirent_t *)malloc(sizeof(*tde))) == NULL) {
         return NULL;
+    }
 
-    if (sde)
+    if (sde) {
         (void)memcpy_s(tde, sizeof(*tde), sde, sizeof(*sde));
-    else
+    }
+    else {
         _zip_dirent_init(tde);
+    }
 
     tde->changed = 0;
     tde->cloned = 1;
@@ -230,8 +229,7 @@ _zip_dirent_clone(const zip_dirent_t *sde) {
 }
 
 
-void
-_zip_dirent_finalize(zip_dirent_t *zde) {
+void _zip_dirent_finalize(zip_dirent_t *zde) {
     if (!zde->cloned || zde->changed & ZIP_DIRENT_FILENAME) {
         _zip_string_free(zde->filename);
         zde->filename = NULL;
@@ -254,18 +252,17 @@ _zip_dirent_finalize(zip_dirent_t *zde) {
 }
 
 
-void
-_zip_dirent_free(zip_dirent_t *zde) {
-    if (zde == NULL)
+void _zip_dirent_free(zip_dirent_t *zde) {
+    if (zde == NULL) {
         return;
+    }
 
     _zip_dirent_finalize(zde);
     free(zde);
 }
 
 
-bool
-_zip_dirent_merge(zip_dirent_t *de, zip_dirent_t *de_orig, bool replacing_data, zip_error_t *error) {
+bool _zip_dirent_merge(zip_dirent_t *de, zip_dirent_t *de_orig, bool replacing_data, zip_error_t *error) {
     if (!de->cloned) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
         return false;
@@ -313,8 +310,7 @@ _zip_dirent_merge(zip_dirent_t *de, zip_dirent_t *de_orig, bool replacing_data, 
 }
 
 
-void
-_zip_dirent_init(zip_dirent_t *de) {
+void _zip_dirent_init(zip_dirent_t *de) {
     de->changed = 0;
     de->local_extra_fields_read = 0;
     de->cloned = 0;
@@ -343,21 +339,21 @@ _zip_dirent_init(zip_dirent_t *de) {
 }
 
 
-bool
-_zip_dirent_needs_zip64(const zip_dirent_t *de, zip_flags_t flags) {
-    if (de->uncomp_size >= ZIP_UINT32_MAX || de->comp_size >= ZIP_UINT32_MAX || ((flags & ZIP_FL_CENTRAL) && de->offset >= ZIP_UINT32_MAX))
+bool _zip_dirent_needs_zip64(const zip_dirent_t *de, zip_flags_t flags) {
+    if (de->uncomp_size >= ZIP_UINT32_MAX || de->comp_size >= ZIP_UINT32_MAX || ((flags & ZIP_FL_CENTRAL) && de->offset >= ZIP_UINT32_MAX)) {
         return true;
+    }
 
     return false;
 }
 
 
-zip_dirent_t *
-_zip_dirent_new(void) {
+zip_dirent_t *_zip_dirent_new(void) {
     zip_dirent_t *de;
 
-    if ((de = (zip_dirent_t *)malloc(sizeof(*de))) == NULL)
+    if ((de = (zip_dirent_t *)malloc(sizeof(*de))) == NULL) {
         return NULL;
+    }
 
     _zip_dirent_init(de);
     return de;
@@ -374,8 +370,7 @@ _zip_dirent_new(void) {
    Returns size of dirent read if successful. On error, error is filled in and -1 is returned.
 */
 
-zip_int64_t
-_zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, bool check_consistency, zip_error_t *error) {
+zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, zip_uint64_t central_compressed_size, bool check_consistency, zip_error_t *error) {
     zip_uint8_t buf[CDENTRYSIZE];
     zip_uint32_t size, variable_size;
     zip_uint16_t filename_len, comment_len, ef_len;
@@ -409,10 +404,12 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     /* convert buffercontents to zip_dirent */
 
     _zip_dirent_init(zde);
-    if (!local)
+    if (!local) {
         zde->version_madeby = _zip_buffer_get_16(buffer);
-    else
+    }
+    else {
         zde->version_madeby = 0;
+    }
     zde->version_needed = _zip_buffer_get_16(buffer);
     zde->bitflags = _zip_buffer_get_16(buffer);
     zde->comp_method = _zip_buffer_get_16(buffer);
@@ -538,8 +535,9 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
             return -1;
         }
         free(ef);
-        if (local)
+        if (local) {
             zde->local_extra_fields_read = 1;
+        }
     }
 
     if (comment_len) {
@@ -653,8 +651,7 @@ _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, boo
     return (zip_int64_t)size + (zip_int64_t)variable_size;
 }
 
-bool
-zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64_t got_len, bool local, zip_error_t *error) {
+bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64_t got_len, bool local, zip_error_t *error) {
     zip_buffer_t *ef_buffer;
 
     if ((ef_buffer = _zip_buffer_new((zip_uint8_t *)ef, got_len)) == NULL) {
@@ -714,8 +711,7 @@ zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64
 }
 
 
-static zip_string_t *
-_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency) {
+static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency) {
     zip_uint16_t ef_len;
     zip_uint32_t ef_crc;
     zip_buffer_t *buffer;
@@ -757,8 +753,7 @@ _zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string
 }
 
 
-static bool
-_zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
+static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
     zip_uint16_t ef_len;
     zip_buffer_t *buffer;
     const zip_uint8_t *ef;
@@ -839,8 +834,7 @@ _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
 }
 
 
-zip_int32_t
-_zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error) {
+zip_int32_t _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error) {
     zip_int32_t size;
     bool local = (flags & ZIP_EF_LOCAL) != 0;
     int i;
@@ -883,8 +877,7 @@ _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t *error) {
    returned.
 */
 
-int
-_zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
+int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     zip_dostime_t dostime;
     zip_encoding_type_t com_enc, name_enc;
     zip_extra_field_t *ef;
@@ -901,14 +894,16 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     name_enc = _zip_guess_encoding(de->filename, ZIP_ENCODING_UNKNOWN);
     com_enc = _zip_guess_encoding(de->comment, ZIP_ENCODING_UNKNOWN);
 
-    if ((name_enc == ZIP_ENCODING_UTF8_KNOWN && com_enc == ZIP_ENCODING_ASCII) || (name_enc == ZIP_ENCODING_ASCII && com_enc == ZIP_ENCODING_UTF8_KNOWN) || (name_enc == ZIP_ENCODING_UTF8_KNOWN && com_enc == ZIP_ENCODING_UTF8_KNOWN))
+    if ((name_enc == ZIP_ENCODING_UTF8_KNOWN && com_enc == ZIP_ENCODING_ASCII) || (name_enc == ZIP_ENCODING_ASCII && com_enc == ZIP_ENCODING_UTF8_KNOWN) || (name_enc == ZIP_ENCODING_UTF8_KNOWN && com_enc == ZIP_ENCODING_UTF8_KNOWN)) {
         de->bitflags |= ZIP_GPBF_ENCODING_UTF_8;
+    }
     else {
         de->bitflags &= (zip_uint16_t)~ZIP_GPBF_ENCODING_UTF_8;
         if (name_enc == ZIP_ENCODING_UTF8_KNOWN) {
             ef = _zip_ef_utf8(ZIP_EF_UTF_8_NAME, de->filename, &za->error);
-            if (ef == NULL)
+            if (ef == NULL) {
                 return -1;
+            }
         }
         if ((flags & ZIP_FL_LOCAL) == 0 && com_enc == ZIP_ENCODING_UTF8_KNOWN) {
             zip_extra_field_t *ef2 = _zip_ef_utf8(ZIP_EF_UTF_8_COMMENT, de->comment, &za->error);
@@ -1087,10 +1082,12 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
         _zip_buffer_put_16(buffer, (zip_uint16_t)de->disk_number);
         _zip_buffer_put_16(buffer, de->int_attrib);
         _zip_buffer_put_32(buffer, de->ext_attrib);
-        if (de->offset < ZIP_UINT32_MAX)
+        if (de->offset < ZIP_UINT32_MAX) {
             _zip_buffer_put_32(buffer, (zip_uint32_t)de->offset);
-        else
+        }
+        else {
             _zip_buffer_put_32(buffer, ZIP_UINT32_MAX);
+        }
     }
 
     if (!_zip_buffer_ok(buffer)) {
@@ -1141,8 +1138,7 @@ _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 }
 
 
-time_t
-_zip_d2u_time(const zip_dostime_t *dtime) {
+time_t _zip_d2u_time(const zip_dostime_t *dtime) {
     struct tm tm;
 
     memset(&tm, 0, sizeof(tm));
@@ -1162,8 +1158,7 @@ _zip_d2u_time(const zip_dostime_t *dtime) {
 }
 
 
-static zip_extra_field_t *
-_zip_ef_utf8(zip_uint16_t id, zip_string_t *str, zip_error_t *error) {
+static zip_extra_field_t *_zip_ef_utf8(zip_uint16_t id, zip_string_t *str, zip_error_t *error) {
     const zip_uint8_t *raw;
     zip_uint32_t len;
     zip_buffer_t *buffer;
@@ -1201,10 +1196,10 @@ _zip_ef_utf8(zip_uint16_t id, zip_string_t *str, zip_error_t *error) {
 }
 
 
-zip_dirent_t *
-_zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *error) {
-    if (error == NULL)
+zip_dirent_t *_zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *error) {
+    if (error == NULL) {
         error = &za->error;
+    }
 
     if (idx >= za->nentry) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -1222,13 +1217,13 @@ _zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zip_error_t *err
         }
         return za->entry[idx].orig;
     }
-    else
+    else {
         return za->entry[idx].changes;
+    }
 }
 
 
-int
-_zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
+int _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
     struct tm *tpm;
     struct tm tm;
     tpm = zip_localtime(&intime, &tm);
@@ -1252,8 +1247,7 @@ _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
 }
 
 
-bool
-_zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes, bool force_zip64) {
+bool _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes, bool force_zip64) {
     zip_uint16_t length;
     bool has_changed = false;
     zip_uint16_t version_madeby, version_needed;
@@ -1329,8 +1323,7 @@ _zip_dirent_apply_attributes(zip_dirent_t *de, zip_file_attributes_t *attributes
    Set values suitable for torrentzip.
 */
 
-void
-zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
+void zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
     de->version_madeby = 0;
     de->version_needed = 20; /* 2.0 */
     de->bitflags = 2;        /* maximum compression */
@@ -1343,8 +1336,7 @@ zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
     /* last_mod, extra_fields, and comment are normalized in zip_dirent_write() directly */
 }
 
-int
-zip_dirent_check_consistency(zip_dirent_t *dirent) {
+int zip_dirent_check_consistency(zip_dirent_t *dirent) {
     if (dirent->comp_method == ZIP_CM_STORE) {
         zip_uint64_t header_size = 0;
         switch (dirent->encryption_method) {
@@ -1373,8 +1365,7 @@ zip_dirent_check_consistency(zip_dirent_t *dirent) {
     return 0;
 }
 
-time_t
-zip_dirent_get_last_mod_mtime(zip_dirent_t *de) {
+time_t zip_dirent_get_last_mod_mtime(zip_dirent_t *de) {
     if (!de->last_mod_mtime_valid) {
         de->last_mod_mtime = _zip_d2u_time(&de->last_mod);
         de->last_mod_mtime_valid = true;

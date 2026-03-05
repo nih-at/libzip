@@ -52,8 +52,7 @@ static zip_int64_t pkware_encrypt(zip_source_t *, void *, void *, zip_uint64_t, 
 static void trad_pkware_free(struct trad_pkware *);
 static struct trad_pkware *trad_pkware_new(const char *password, zip_error_t *error);
 
-zip_source_t *
-zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password) {
+zip_source_t *zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password) {
     struct trad_pkware *ctx;
     zip_source_t *s2;
 
@@ -94,8 +93,7 @@ zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flag
 }
 
 
-static int
-encrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
+static int encrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
     zip_uint8_t *header;
 
     if ((ctx->buffer = _zip_buffer_new(NULL, ZIP_CRYPTO_PKWARE_HEADERLEN)) == NULL) {
@@ -121,8 +119,7 @@ encrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
 }
 
 
-static zip_int64_t
-pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip_source_cmd_t cmd) {
+static zip_int64_t pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip_source_cmd_t cmd) {
     struct trad_pkware *ctx;
     zip_int64_t n;
     zip_uint64_t buffer_n;
@@ -230,8 +227,7 @@ pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t length, zip
 }
 
 
-static struct trad_pkware *
-trad_pkware_new(const char *password, zip_error_t *error) {
+static struct trad_pkware *trad_pkware_new(const char *password, zip_error_t *error) {
     struct trad_pkware *ctx;
 
     if ((ctx = (struct trad_pkware *)malloc(sizeof(*ctx))) == NULL) {
@@ -251,8 +247,7 @@ trad_pkware_new(const char *password, zip_error_t *error) {
 }
 
 
-static void
-trad_pkware_free(struct trad_pkware *ctx) {
+static void trad_pkware_free(struct trad_pkware *ctx) {
     if (ctx == NULL) {
         return;
     }

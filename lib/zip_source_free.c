@@ -37,10 +37,10 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN void
-zip_source_free(zip_source_t *src) {
-    if (src == NULL)
+ZIP_EXTERN void zip_source_free(zip_source_t *src) {
+    if (src == NULL) {
         return;
+    }
 
     if (src->refcount > 0) {
         src->refcount--;

@@ -83,12 +83,11 @@ int keep_stored;
 
 static int confirm_replace(zip_t *, const char *, zip_uint64_t, zip_t *, const char *, zip_uint64_t);
 static void copy_extra_fields(zip_t *destination_archive, zip_uint64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, zip_flags_t flags);
-static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, const char* name);
+static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, const char *name);
 static zip_t *merge_zip(zip_t *, const char *, const char *);
 
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     zip_t *za;
     zip_t **zs;
     int c, err;
@@ -162,8 +161,9 @@ main(int argc, char *argv[]) {
     }
 
     for (i = 0; i < n; i++) {
-        if ((zs[i] = merge_zip(za, tname, argv[i])) == NULL)
+        if ((zs[i] = merge_zip(za, tname, argv[i])) == NULL) {
             exit(1);
+        }
     }
 
     if (zip_close(za) < 0) {
@@ -171,22 +171,24 @@ main(int argc, char *argv[]) {
         exit(1);
     }
 
-    for (i = 0; i < n; i++)
+    for (i = 0; i < n; i++) {
         zip_close(zs[i]);
+    }
 
     exit(0);
 }
 
 
-static int
-confirm_replace(zip_t *za, const char *tname, zip_uint64_t it, zip_t *zs, const char *sname, zip_uint64_t is) {
+static int confirm_replace(zip_t *za, const char *tname, zip_uint64_t it, zip_t *zs, const char *sname, zip_uint64_t is) {
     char line[1024];
     struct zip_stat st, ss;
 
-    if (confirm & CONFIRM_ALL_YES)
+    if (confirm & CONFIRM_ALL_YES) {
         return 1;
-    else if (confirm & CONFIRM_ALL_NO)
+    }
+    else if (confirm & CONFIRM_ALL_NO) {
         return 0;
+    }
 
     if (zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st) < 0) {
         fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, it, tname, zip_strerror(za));
@@ -198,10 +200,12 @@ confirm_replace(zip_t *za, const char *tname, zip_uint64_t it, zip_t *zs, const 
     }
 
     if (st.size == ss.size && st.crc == ss.crc) {
-        if (confirm & CONFIRM_SAME_YES)
+        if (confirm & CONFIRM_SAME_YES) {
             return 1;
-        else if (confirm & CONFIRM_SAME_NO)
+        }
+        else if (confirm & CONFIRM_SAME_NO) {
             return 0;
+        }
     }
 
     printf("replace '%s' (%" PRIu64 " / %08x) in `%s'\n"
@@ -214,15 +218,15 @@ confirm_replace(zip_t *za, const char *tname, zip_uint64_t it, zip_t *zs, const 
         return -1;
     }
 
-    if (tolower((unsigned char)line[0]) == 'y')
+    if (tolower((unsigned char)line[0]) == 'y') {
         return 1;
+    }
 
     return 0;
 }
 
 
-static zip_t *
-merge_zip(zip_t *za, const char *tname, const char *sname) {
+static zip_t *merge_zip(zip_t *za, const char *tname, const char *sname) {
     zip_t *zs;
     zip_int64_t ret, idx;
     zip_uint64_t i;
@@ -284,7 +288,7 @@ merge_zip(zip_t *za, const char *tname, const char *sname) {
 }
 
 
-static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, const char* name) {
+static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, zip_t *source_archive, zip_uint64_t source_index, const char *name) {
     zip_source_t *source = zip_source_zip_file(destination_archive, source_archive, source_index, ZIP_FL_COMPRESSED, 0, -1, NULL);
 
     if (source == NULL) {

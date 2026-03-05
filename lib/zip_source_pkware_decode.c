@@ -50,8 +50,7 @@ static struct trad_pkware *trad_pkware_new(const char *password, zip_error_t *er
 static void trad_pkware_free(struct trad_pkware *);
 
 
-zip_source_t *
-zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password) {
+zip_source_t *zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password) {
     struct trad_pkware *ctx;
     zip_source_t *s2;
 
@@ -77,8 +76,7 @@ zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flag
 }
 
 
-static int
-decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
+static int decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
     zip_uint8_t header[ZIP_CRYPTO_PKWARE_HEADERLEN];
     zip_stat_t st;
     zip_dostime_t dostime;
@@ -117,8 +115,7 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
        - mtime - InfoZIP way, to avoid computing complete CRC before encrypting data
        - CRC - old PKWare way
     */
-    if (header[ZIP_CRYPTO_PKWARE_HEADERLEN - 1] == dostime.time >> 8
-        || header[ZIP_CRYPTO_PKWARE_HEADERLEN - 1] == st.crc >> 24) {
+    if (header[ZIP_CRYPTO_PKWARE_HEADERLEN - 1] == dostime.time >> 8 || header[ZIP_CRYPTO_PKWARE_HEADERLEN - 1] == st.crc >> 24) {
         return 0;
     }
     else {
@@ -128,8 +125,7 @@ decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
 }
 
 
-static zip_int64_t
-pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
+static zip_int64_t pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct trad_pkware *ctx;
     zip_int64_t n;
 
@@ -186,8 +182,7 @@ pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_so
 }
 
 
-static struct trad_pkware *
-trad_pkware_new(const char *password, zip_error_t *error) {
+static struct trad_pkware *trad_pkware_new(const char *password, zip_error_t *error) {
     struct trad_pkware *ctx;
 
     if ((ctx = (struct trad_pkware *)malloc(sizeof(*ctx))) == NULL) {
@@ -207,8 +202,7 @@ trad_pkware_new(const char *password, zip_error_t *error) {
 }
 
 
-static void
-trad_pkware_free(struct trad_pkware *ctx) {
+static void trad_pkware_free(struct trad_pkware *ctx) {
     if (ctx == NULL) {
         return;
     }

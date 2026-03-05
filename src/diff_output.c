@@ -7,8 +7,7 @@
 
 #include "compat.h"
 
-static void
-ensure_header(diff_output_t *output) {
+static void ensure_header(diff_output_t *output) {
     if (output->archive_names[0] != NULL) {
         printf("--- %s\n", output->archive_names[0]);
         printf("+++ %s\n", output->archive_names[1]);
@@ -17,8 +16,7 @@ ensure_header(diff_output_t *output) {
     }
 }
 
-void
-diff_output_init(diff_output_t *output, int verbose, char *const archive_names[]) {
+void diff_output_init(diff_output_t *output, int verbose, char *const archive_names[]) {
     output->archive_names[0] = archive_names[0];
     output->archive_names[1] = archive_names[1];
     output->verbose = verbose;
@@ -28,21 +26,18 @@ diff_output_init(diff_output_t *output, int verbose, char *const archive_names[]
     output->file_mtime = 0;
 }
 
-void
-diff_output_start_file(diff_output_t *output, const char *name, zip_uint64_t size, zip_uint32_t crc, zip_uint64_t mtime) {
+void diff_output_start_file(diff_output_t *output, const char *name, zip_uint64_t size, zip_uint32_t crc, zip_uint64_t mtime) {
     output->file_name = name;
     output->file_size = size;
     output->file_crc = crc;
     output->file_mtime = mtime;
 }
 
-void
-diff_output_end_file(diff_output_t *output) {
+void diff_output_end_file(diff_output_t *output) {
     output->file_name = NULL;
 }
 
-void
-diff_output(diff_output_t *output, int side, const char *fmt, ...) {
+void diff_output(diff_output_t *output, int side, const char *fmt, ...) {
     va_list ap;
 
     if (!output->verbose) {
@@ -63,8 +58,7 @@ diff_output(diff_output_t *output, int side, const char *fmt, ...) {
     printf("\n");
 }
 
-void
-diff_output_file(diff_output_t *output, char side, const char *name, zip_uint64_t size, zip_uint32_t crc, zip_uint64_t mtime) {
+void diff_output_file(diff_output_t *output, char side, const char *name, zip_uint64_t size, zip_uint32_t crc, zip_uint64_t mtime) {
     if (!output->verbose) {
         return;
     }
@@ -80,8 +74,7 @@ diff_output_file(diff_output_t *output, char side, const char *name, zip_uint64_
 }
 
 #define MAX_BYTES 64
-void
-diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, zip_uint64_t data_length, const char *fmt, ...) {
+void diff_output_data(diff_output_t *output, int side, const zip_uint8_t *data, zip_uint64_t data_length, const char *fmt, ...) {
     char prefix[1024];
     char hexdata[MAX_BYTES * 3 + 6];
     size_t i, offset;

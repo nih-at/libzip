@@ -40,8 +40,7 @@
 
 static const char *prg;
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     const char *archive;
     const char *file;
     const char *name;
@@ -78,8 +77,9 @@ main(int argc, char *argv[]) {
         return 1;
     }
 
-    if ((name = strrchr(file, '/')) == NULL)
+    if ((name = strrchr(file, '/')) == NULL) {
         name = file;
+    }
 
     if (zip_file_add(za, name, zs, 0) == -1) {
         zip_source_free(zs);

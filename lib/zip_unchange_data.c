@@ -34,8 +34,7 @@
 
 #include "zipint.h"
 
-void
-_zip_unchange_data(zip_entry_t *ze) {
+void _zip_unchange_data(zip_entry_t *ze) {
     if (ze->source) {
         zip_source_free(ze->source);
         ze->source = NULL;

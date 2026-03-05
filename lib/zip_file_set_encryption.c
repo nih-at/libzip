@@ -37,8 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-ZIP_EXTERN int
-zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const char *password) {
+ZIP_EXTERN int zip_file_set_encryption(zip_t *za, zip_uint64_t idx, zip_uint16_t method, const char *password) {
     zip_entry_t *e;
     char *our_password = NULL;
 

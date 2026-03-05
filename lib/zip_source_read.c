@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-zip_int64_t
-zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
+zip_int64_t zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
     zip_uint64_t bytes_read;
     zip_int64_t n;
 
@@ -90,7 +89,6 @@ zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
 }
 
 
-bool
-_zip_source_eof(zip_source_t *src) {
+bool _zip_source_eof(zip_source_t *src) {
     return src->eof;
 }

@@ -39,8 +39,7 @@
 
 #include <zip.h>
 
-static int
-get_data(void **datap, size_t *sizep, const char *archive) {
+static int get_data(void **datap, size_t *sizep, const char *archive) {
     /* example implementation that reads data from file */
     struct stat st;
     FILE *fp;
@@ -82,15 +81,13 @@ get_data(void **datap, size_t *sizep, const char *archive) {
     return 0;
 }
 
-static int
-modify_archive(zip_t *za) {
+static int modify_archive(zip_t *za) {
     /* modify the archive */
     return 0;
 }
 
 
-static int
-use_data(void *data, size_t size, const char *archive) {
+static int use_data(void *data, size_t size, const char *archive) {
     /* example implementation that writes data to file */
     FILE *fp;
 
@@ -120,8 +117,7 @@ use_data(void *data, size_t size, const char *archive) {
 }
 
 
-int
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     const char *archive;
     zip_source_t *src;
     zip_t *za;

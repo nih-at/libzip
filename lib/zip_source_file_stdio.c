@@ -65,8 +65,7 @@ static zip_source_file_operations_t ops_stdio_read = {
 /* clang-format on */
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_filep(zip_t *za, FILE *file, zip_uint64_t start, zip_int64_t len) {
+ZIP_EXTERN zip_source_t *zip_source_filep(zip_t *za, FILE *file, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL) {
         return NULL;
     }
@@ -75,8 +74,7 @@ zip_source_filep(zip_t *za, FILE *file, zip_uint64_t start, zip_int64_t len) {
 }
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
+ZIP_EXTERN zip_source_t *zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (file == NULL || length < ZIP_LENGTH_UNCHECKED) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
@@ -86,14 +84,12 @@ zip_source_filep_create(FILE *file, zip_uint64_t start, zip_int64_t length, zip_
 }
 
 
-void
-_zip_stdio_op_close(zip_source_file_context_t *ctx) {
+void _zip_stdio_op_close(zip_source_file_context_t *ctx) {
     fclose((FILE *)ctx->f);
 }
 
 
-zip_int64_t
-_zip_stdio_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
+zip_int64_t _zip_stdio_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
     size_t i;
 #if SIZE_MAX < ZIP_UINT64_MAX
     if (len > SIZE_MAX) {
@@ -112,8 +108,7 @@ _zip_stdio_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) 
 }
 
 
-bool
-_zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence) {
+bool _zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence) {
 #if ZIP_FSEEK_MAX > ZIP_INT64_MAX
     if (offset > ZIP_FSEEK_MAX || offset < ZIP_FSEEK_MIN) {
         zip_error_set(&ctx->error, ZIP_ER_SEEK, EOVERFLOW);
@@ -129,8 +124,7 @@ _zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
 }
 
 
-bool
-_zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
+bool _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
     zip_os_stat_t sb;
 
     int ret;
@@ -167,8 +161,7 @@ _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st) {
 }
 
 
-zip_int64_t
-_zip_stdio_op_tell(zip_source_file_context_t *ctx, void *f) {
+zip_int64_t _zip_stdio_op_tell(zip_source_file_context_t *ctx, void *f) {
     zip_off_t offset = zip_os_ftell((FILE *)f);
 
     if (offset < 0) {

@@ -52,8 +52,7 @@ extern char *__progname;
 #if defined(HAVE_GETPROGNAME)
 /* all fine */
 #else
-const char *
-getprogname(void) {
+const char *getprogname(void) {
 #if defined(HAVE___PROGNAME)
     return __progname;
 #else
@@ -76,30 +75,34 @@ static const char *myname = NULL;
 /* TODO: catch free for sentinel too */
 /* TODO: optionally, catch malloc of particular size */
 
-static void
-init(void) {
+static void init(void) {
     char *foo;
     myname = getprogname();
-    if (!myname)
+    if (!myname) {
         myname = "(unknown)";
-    if ((foo = getenv("MALLOC_MAX_COUNT")) != NULL)
+    }
+    if ((foo = getenv("MALLOC_MAX_COUNT")) != NULL) {
         max_count = strtoul(foo, NULL, 0);
-    if ((foo = getenv("MALLOC_MIN_SIZE")) != NULL)
+    }
+    if ((foo = getenv("MALLOC_MIN_SIZE")) != NULL) {
         min_size = strtoul(foo, NULL, 0);
+    }
     real_calloc = dlsym(RTLD_NEXT, "calloc");
-    if (!real_calloc)
+    if (!real_calloc) {
         abort();
+    }
     real_malloc = dlsym(RTLD_NEXT, "malloc");
-    if (!real_malloc)
+    if (!real_malloc) {
         abort();
+    }
     real_realloc = dlsym(RTLD_NEXT, "realloc");
-    if (!real_realloc)
+    if (!real_realloc) {
         abort();
+    }
     inited = 1;
 }
 
-void *
-calloc(size_t number, size_t size) {
+void *calloc(size_t number, size_t size) {
     void *ret;
 
     if (!inited) {
@@ -119,8 +122,7 @@ calloc(size_t number, size_t size) {
     return ret;
 }
 
-void *
-malloc(size_t size) {
+void *malloc(size_t size) {
     void *ret;
 
     if (!inited) {
@@ -140,8 +142,7 @@ malloc(size_t size) {
     return ret;
 }
 
-void *
-realloc(void *ptr, size_t size) {
+void *realloc(void *ptr, size_t size) {
     void *ret;
 
     if (!inited) {

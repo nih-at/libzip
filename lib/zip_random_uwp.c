@@ -40,10 +40,10 @@
 #ifndef HAVE_SECURE_RANDOM
 
 #include <windows.h>
+
 #include <bcrypt.h>
 
-ZIP_EXTERN bool
-zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     BCRYPT_ALG_HANDLE hAlg = NULL;
     NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
     if (!BCRYPT_SUCCESS(hr) || hAlg == NULL) {
@@ -62,8 +62,7 @@ zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
 #ifndef HAVE_RANDOM_UINT32
 #include <stdlib.h>
 
-zip_uint32_t
-zip_random_uint32(void) {
+zip_uint32_t zip_random_uint32(void) {
     static bool seeded = false;
 
     zip_uint32_t value;

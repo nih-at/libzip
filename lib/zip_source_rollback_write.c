@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN void
-zip_source_rollback_write(zip_source_t *src) {
+ZIP_EXTERN void zip_source_rollback_write(zip_source_t *src) {
     if (ZIP_SOURCE_IS_LAYERED(src)) {
         return;
     }

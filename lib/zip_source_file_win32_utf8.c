@@ -33,8 +33,7 @@
 
 #include "zip_source_file_win32.h"
 
-ZIP_EXTERN zip_source_t *
-zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
+ZIP_EXTERN zip_source_t *zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL) {
         return NULL;
     }
@@ -43,8 +42,7 @@ zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t le
 }
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
+ZIP_EXTERN zip_source_t *zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     int size;
     wchar_t *wfname;
     zip_source_t *source;

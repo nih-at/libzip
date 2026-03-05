@@ -16,10 +16,10 @@
  **/
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
-int
-LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     const char *path = "test_aes256.zip";
     const char *password = "password";
     const char *file = "filename";
@@ -59,3 +59,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

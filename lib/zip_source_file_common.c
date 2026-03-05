@@ -41,16 +41,14 @@
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 
-static void
-zip_source_file_stat_init(zip_source_file_stat_t *st) {
+static void zip_source_file_stat_init(zip_source_file_stat_t *st) {
     st->size = 0;
     st->mtime = time(NULL);
     st->exists = false;
     st->regular_file = false;
 }
 
-zip_source_t *
-zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_source_file_operations_t *ops, void *ops_userdata, zip_error_t *error) {
+zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zip_int64_t len, const zip_stat_t *st, zip_source_file_operations_t *ops, void *ops_userdata, zip_error_t *error) {
     zip_source_file_context_t *ctx;
     zip_source_t *zs;
     zip_source_file_stat_t sb;
@@ -210,8 +208,7 @@ zip_source_file_common_new(const char *fname, void *file, zip_uint64_t start, zi
 }
 
 
-static zip_int64_t
-read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
+static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     zip_source_file_context_t *ctx;
     char *buf;
 
@@ -357,8 +354,9 @@ read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     }
 
     case ZIP_SOURCE_STAT: {
-        if (len < sizeof(ctx->st))
+        if (len < sizeof(ctx->st)) {
             return -1;
+        }
 
         if (zip_error_code_zip(&ctx->stat_error) != 0) {
             zip_error_set(&ctx->error, zip_error_code_zip(&ctx->stat_error), zip_error_code_system(&ctx->stat_error));

@@ -1,13 +1,12 @@
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 /* fuzz target entry point, works without libFuzzer */
 
 extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 
-int
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
     FILE *f = NULL;
     char *buf = NULL;
     long siz_buf;
@@ -48,7 +47,7 @@ main(int argc, char **argv) {
 
     (void)LLVMFuzzerTestOneInput((uint8_t *)buf, siz_buf);
 
- err:
+err:
     if (f) {
         fclose(f);
     }

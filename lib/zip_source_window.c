@@ -60,22 +60,20 @@ struct window {
 static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 
 
-ZIP_EXTERN zip_source_t *
-zip_source_window_create(zip_source_t *src, zip_uint64_t start, zip_int64_t len, zip_error_t *error) {
+ZIP_EXTERN zip_source_t *zip_source_window_create(zip_source_t *src, zip_uint64_t start, zip_int64_t len, zip_error_t *error) {
     return _zip_source_window_new(src, start, len, NULL, 0, NULL, NULL, NULL, 0, false, error);
 }
 
 
-zip_source_t *
-_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_dostime_t *dostime, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error) {
-    zip_source_t* window_source;
+zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_dostime_t *dostime, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error) {
+    zip_source_t *window_source;
     struct window *ctx;
 
     if (src == NULL || length < -1 || (source_archive == NULL && source_index != 0)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
-    
+
     if (length >= 0) {
         if (start + (zip_uint64_t)length < start) {
             zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -123,7 +121,7 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
             return NULL;
         }
     }
-    
+
     window_source = zip_source_layered_create(src, window_read, ctx, error);
     if (window_source == NULL) {
         free(ctx);
@@ -136,16 +134,14 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
 }
 
 
-int
-_zip_source_set_source_archive(zip_source_t *src, zip_t *za) {
+int _zip_source_set_source_archive(zip_source_t *src, zip_t *za) {
     src->source_archive = za;
     return _zip_register_source(za, src);
 }
 
 
 /* called by zip_discard to avoid operating on file from closed archive */
-void
-_zip_source_invalidate(zip_source_t *src) {
+void _zip_source_invalidate(zip_source_t *src) {
     src->source_closed = 1;
 
     if (zip_error_code_zip(&src->error) == ZIP_ER_OK) {
@@ -154,8 +150,7 @@ _zip_source_invalidate(zip_source_t *src) {
 }
 
 
-static zip_int64_t
-window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
+static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct window *ctx;
     zip_int64_t ret;
     zip_uint64_t n, i;
@@ -251,10 +246,10 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 
     case ZIP_SOURCE_SEEK: {
         zip_int64_t new_offset;
-        
+
         if (!ctx->end_valid) {
             zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
-            
+
             if (args == NULL) {
                 return -1;
             }
@@ -279,11 +274,11 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
         }
 
         new_offset = zip_source_seek_compute_offset(ctx->offset - ctx->start, ctx->end - ctx->start, data, len, &ctx->error);
-        
+
         if (new_offset < 0) {
             return -1;
         }
-        
+
         ctx->offset = (zip_uint64_t)new_offset + ctx->start;
         return 0;
     }
@@ -346,8 +341,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
 }
 
 
-void
-_zip_deregister_source(zip_t *za, zip_source_t *src) {
+void _zip_deregister_source(zip_t *za, zip_source_t *src) {
     zip_uint64_t i;
 
     for (i = 0; i < za->nopen_source; i++) {
@@ -360,8 +354,7 @@ _zip_deregister_source(zip_t *za, zip_source_t *src) {
 }
 
 
-int
-_zip_register_source(zip_t *za, zip_source_t *src) {
+int _zip_register_source(zip_t *za, zip_source_t *src) {
     if (za->nopen_source + 1 >= za->nopen_source_alloc) {
         if (!ZIP_REALLOC(za->open_source, za->nopen_source_alloc, 10, &za->error)) {
             return -1;

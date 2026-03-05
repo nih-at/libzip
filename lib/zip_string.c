@@ -38,26 +38,27 @@
 #include <string.h>
 #include <zlib.h>
 
-zip_uint32_t
-_zip_string_crc32(const zip_string_t *s) {
+zip_uint32_t _zip_string_crc32(const zip_string_t *s) {
     zip_uint32_t crc;
 
     crc = (zip_uint32_t)crc32(0L, Z_NULL, 0);
 
-    if (s != NULL)
+    if (s != NULL) {
         crc = (zip_uint32_t)crc32(crc, s->raw, s->length);
+    }
 
     return crc;
 }
 
 
-int
-_zip_string_equal(const zip_string_t *a, const zip_string_t *b) {
-    if (a == NULL || b == NULL)
+int _zip_string_equal(const zip_string_t *a, const zip_string_t *b) {
+    if (a == NULL || b == NULL) {
         return a == b;
+    }
 
-    if (a->length != b->length)
+    if (a->length != b->length) {
         return 0;
+    }
 
     /* TODO: encoding */
 
@@ -65,10 +66,10 @@ _zip_string_equal(const zip_string_t *a, const zip_string_t *b) {
 }
 
 
-void
-_zip_string_free(zip_string_t *s) {
-    if (s == NULL)
+void _zip_string_free(zip_string_t *s) {
+    if (s == NULL) {
         return;
+    }
 
     free(s->raw);
     free(s->converted);
@@ -76,13 +77,13 @@ _zip_string_free(zip_string_t *s) {
 }
 
 
-const zip_uint8_t *
-_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error) {
+const zip_uint8_t *_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error) {
     static const zip_uint8_t empty[1] = "";
 
     if (string == NULL) {
-        if (lenp)
+        if (lenp) {
             *lenp = 0;
+        }
         return empty;
     }
 
@@ -95,17 +96,20 @@ _zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip
 
         if (((flags & ZIP_FL_ENC_STRICT) && string->encoding != ZIP_ENCODING_ASCII && string->encoding != ZIP_ENCODING_UTF8_KNOWN) || (string->encoding == ZIP_ENCODING_CP437)) {
             if (string->converted == NULL) {
-                if ((string->converted = _zip_cp437_to_utf8(string->raw, string->length, &string->converted_length, error)) == NULL)
+                if ((string->converted = _zip_cp437_to_utf8(string->raw, string->length, &string->converted_length, error)) == NULL) {
                     return NULL;
+                }
             }
-            if (lenp)
+            if (lenp) {
                 *lenp = string->converted_length;
+            }
             return string->converted;
         }
     }
 
-    if (lenp)
+    if (lenp) {
         *lenp = string->length;
+    }
     return string->raw;
 }
 
@@ -124,22 +128,22 @@ bool _zip_string_is_ascii(const zip_string_t *string) {
 }
 
 
-zip_uint16_t
-_zip_string_length(const zip_string_t *s) {
-    if (s == NULL)
+zip_uint16_t _zip_string_length(const zip_string_t *s) {
+    if (s == NULL) {
         return 0;
+    }
 
     return s->length;
 }
 
 
-zip_string_t *
-_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error) {
+zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error) {
     zip_string_t *s;
     zip_encoding_type_t expected_encoding;
 
-    if (length == 0)
+    if (length == 0) {
         return NULL;
+    }
 
     switch (flags & ZIP_FL_ENCODING_ALL) {
     case ZIP_FL_ENC_GUESS:
@@ -185,10 +189,10 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
 }
 
 
-int
-_zip_string_write(zip_t *za, const zip_string_t *s) {
-    if (s == NULL)
+int _zip_string_write(zip_t *za, const zip_string_t *s) {
+    if (s == NULL) {
         return 0;
+    }
 
     return _zip_write(za, s->raw, s->length);
 }

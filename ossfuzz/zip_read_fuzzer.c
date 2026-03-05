@@ -4,10 +4,10 @@
 #include "zip_read_fuzzer_common.h"
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
-int
-LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_source_t *src;
     zip_error_t error;
     zip_t *za;
@@ -29,3 +29,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

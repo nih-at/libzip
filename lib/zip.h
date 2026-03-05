@@ -35,13 +35,13 @@
 */
 
 #if defined(__has_feature)
-  #if !__has_feature(nullability)
-    #define _Nullable
-    #define _Nonnull
-  #endif
+#if !__has_feature(nullability)
+#define _Nullable
+#define _Nonnull
+#endif
 #else
-  #define _Nullable
-  #define _Nonnull
+#define _Nullable
+#define _Nonnull
 #endif
 
 #ifdef __cplusplus
@@ -92,10 +92,10 @@ extern "C" {
 
 /* flags for zip_name_locate, zip_fopen, zip_stat, ... */
 
-#define ZIP_FL_NOCASE 1u       /* ignore case on name lookup */
-#define ZIP_FL_NODIR 2u        /* ignore directory component */
-#define ZIP_FL_COMPRESSED 4u   /* read compressed data */
-#define ZIP_FL_UNCHANGED 8u    /* use original data, ignoring changes */
+#define ZIP_FL_NOCASE 1u     /* ignore case on name lookup */
+#define ZIP_FL_NODIR 2u      /* ignore directory component */
+#define ZIP_FL_COMPRESSED 4u /* read compressed data */
+#define ZIP_FL_UNCHANGED 8u  /* use original data, ignoring changes */
 /* 16u was ZIP_FL_RECOMPRESS, which is deprecated */
 #define ZIP_FL_ENCRYPTED 32u   /* read encrypted data (implies ZIP_FL_COMPRESSED) */
 #define ZIP_FL_ENC_GUESS 0u    /* guess string encoding (is default) */
@@ -110,9 +110,9 @@ extern "C" {
 
 /* archive global flags flags */
 
-#define ZIP_AFL_RDONLY  2u /* read only -- cannot be cleared */
-#define ZIP_AFL_IS_TORRENTZIP	4u /* current archive is torrentzipped */
-#define ZIP_AFL_WANT_TORRENTZIP	8u /* write archive in torrentzip format */
+#define ZIP_AFL_RDONLY 2u                                 /* read only -- cannot be cleared */
+#define ZIP_AFL_IS_TORRENTZIP 4u                          /* current archive is torrentzipped */
+#define ZIP_AFL_WANT_TORRENTZIP 8u                        /* write archive in torrentzip format */
 #define ZIP_AFL_CREATE_OR_KEEP_FILE_FOR_EMPTY_ARCHIVE 16u /* don't remove file if archive is empty */
 
 
@@ -273,7 +273,7 @@ typedef enum zip_source_cmd zip_source_cmd_t;
 
 #define ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd) (((zip_int64_t)1) << (cmd))
 
-#define ZIP_SOURCE_CHECK_SUPPORTED(supported, cmd)  (((supported) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd)) != 0)
+#define ZIP_SOURCE_CHECK_SUPPORTED(supported, cmd) (((supported) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd)) != 0)
 
 /* clang-format off */
 
@@ -383,7 +383,7 @@ typedef void (*zip_progress_callback)(zip_t *_Nonnull, double, void *_Nullable);
 typedef int (*zip_cancel_callback)(zip_t *_Nonnull, void *_Nullable);
 
 #ifndef ZIP_DISABLE_DEPRECATED
-#define ZIP_FL_RECOMPRESS 16u  /* force recompression of data */
+#define ZIP_FL_RECOMPRESS 16u /* force recompression of data */
 
 typedef void (*zip_progress_callback_t)(double);
 ZIP_DEPRECATED("use 'zip_register_progress_callback_with_state' instead") ZIP_EXTERN void zip_register_progress_callback(zip_t *_Nonnull, zip_progress_callback_t _Nullable);

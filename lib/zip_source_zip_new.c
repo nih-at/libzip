@@ -38,7 +38,7 @@
 
 static void _zip_file_attributes_from_dirent(zip_file_attributes_t *attributes, zip_dirent_t *de);
 
-ZIP_EXTERN zip_source_t *zip_source_zip_file(zip_t* za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_int64_t len, const char *password) {
+ZIP_EXTERN zip_source_t *zip_source_zip_file(zip_t *za, zip_t *srcza, zip_uint64_t srcidx, zip_flags_t flags, zip_uint64_t start, zip_int64_t len, const char *password) {
     return zip_source_zip_file_create(srcza, srcidx, flags, start, len, password, &za->error);
 }
 
@@ -116,7 +116,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         }
     }
     else {
-           data_len = len;
+        data_len = len;
     }
 
     if (have_size) {
@@ -219,7 +219,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
            attributes and to have a source that positions the read
            offset properly before each read for multiple zip_file_t
            referring to the same underlying source */
-        if ((src =  _zip_source_window_new(srcza->src, 0, (zip_int64_t)st.comp_size, &st, ZIP_STAT_NAME, &attributes, &de->last_mod, srcza, srcidx, take_ownership, error)) == NULL) {
+        if ((src = _zip_source_window_new(srcza->src, 0, (zip_int64_t)st.comp_size, &st, ZIP_STAT_NAME, &attributes, &de->last_mod, srcza, srcidx, take_ownership, error)) == NULL) {
             return NULL;
         }
     }
@@ -301,8 +301,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
     return src;
 }
 
-static void
-_zip_file_attributes_from_dirent(zip_file_attributes_t *attributes, zip_dirent_t *de) {
+static void _zip_file_attributes_from_dirent(zip_file_attributes_t *attributes, zip_dirent_t *de) {
     zip_file_attributes_init(attributes);
     attributes->valid = ZIP_FILE_ATTRIBUTES_ASCII | ZIP_FILE_ATTRIBUTES_HOST_SYSTEM | ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES | ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
     attributes->ascii = de->int_attrib & 1;

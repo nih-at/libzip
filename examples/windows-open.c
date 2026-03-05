@@ -33,8 +33,7 @@
 
 #include <zip.h>
 
-zip_t *
-windows_open(const wchar_t *name, int flags) {
+zip_t *windows_open(const wchar_t *name, int flags) {
     zip_source_t *src;
     zip_t *za;
     zip_error_t error;

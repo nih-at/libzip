@@ -43,8 +43,7 @@
         ZIP_UINT64_MAX, and each entry is larger than 2 bytes.
 */
 
-ZIP_EXTERN zip_int64_t
-zip_add(zip_t *za, const char *name, zip_source_t *source) {
+ZIP_EXTERN zip_int64_t zip_add(zip_t *za, const char *name, zip_source_t *source) {
     return zip_file_add(za, name, source, 0);
 }
 /* LCOV_EXCL_STOP */

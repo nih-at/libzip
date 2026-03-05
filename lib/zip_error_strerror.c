@@ -39,8 +39,7 @@
 #include <string.h>
 #include <zlib.h>
 
-ZIP_EXTERN const char *
-zip_error_strerror(zip_error_t *err) {
+ZIP_EXTERN const char *zip_error_strerror(zip_error_t *err) {
     const char *zip_error_string, *system_error_string;
     char *s;
     char *system_error_buffer = NULL;
@@ -61,54 +60,54 @@ zip_error_strerror(zip_error_t *err) {
         zip_error_string = _zip_err_str[err->zip_err].description;
 
         switch (_zip_err_str[err->zip_err].type) {
-            case ZIP_ET_SYS: {
-                size_t len = strerrorlen_s(err->sys_err) + 1;
-                system_error_buffer = malloc(len);
+        case ZIP_ET_SYS: {
+            size_t len = strerrorlen_s(err->sys_err) + 1;
+            system_error_buffer = malloc(len);
+            if (system_error_buffer == NULL) {
+                return _zip_err_str[ZIP_ER_MEMORY].description;
+            }
+            strerror_s(system_error_buffer, len, err->sys_err);
+            system_error_string = system_error_buffer;
+            break;
+        }
+
+        case ZIP_ET_ZLIB:
+            system_error_string = zError(err->sys_err);
+            break;
+
+        case ZIP_ET_LIBZIP: {
+            zip_uint8_t error = GET_ERROR_FROM_DETAIL(err->sys_err);
+            int index = GET_INDEX_FROM_DETAIL(err->sys_err);
+
+            if (error == 0) {
+                system_error_string = NULL;
+            }
+            else if (error >= _zip_err_details_count) {
+                system_error_buffer = (char *)malloc(128);
                 if (system_error_buffer == NULL) {
                     return _zip_err_str[ZIP_ER_MEMORY].description;
                 }
-                strerror_s(system_error_buffer, len, err->sys_err);
+                snprintf_s(system_error_buffer, 128, "invalid detail error %u", error);
+                system_error_buffer[128 - 1] = '\0'; /* make sure string is NUL-terminated */
                 system_error_string = system_error_buffer;
-                break;
             }
-                
-            case ZIP_ET_ZLIB:
-                system_error_string = zError(err->sys_err);
-                break;
-                
-            case ZIP_ET_LIBZIP: {
-                zip_uint8_t error = GET_ERROR_FROM_DETAIL(err->sys_err);
-                int index = GET_INDEX_FROM_DETAIL(err->sys_err);
-                
-                if (error == 0) {
-                    system_error_string = NULL;
+            else if (_zip_err_details[error].type == ZIP_DETAIL_ET_ENTRY && index < MAX_DETAIL_INDEX) {
+                system_error_buffer = (char *)malloc(128);
+                if (system_error_buffer == NULL) {
+                    return _zip_err_str[ZIP_ER_MEMORY].description;
                 }
-                else if (error >= _zip_err_details_count) {
-                    system_error_buffer = (char *)malloc(128);
-                    if (system_error_buffer == NULL) {
-                        return _zip_err_str[ZIP_ER_MEMORY].description;
-                    }
-                    snprintf_s(system_error_buffer, 128, "invalid detail error %u", error);
-                    system_error_buffer[128 - 1] = '\0'; /* make sure string is NUL-terminated */
-                    system_error_string = system_error_buffer;
-                }
-                else if (_zip_err_details[error].type == ZIP_DETAIL_ET_ENTRY && index < MAX_DETAIL_INDEX) {
-                    system_error_buffer = (char *)malloc(128);
-                    if (system_error_buffer == NULL) {
-                        return _zip_err_str[ZIP_ER_MEMORY].description;
-                    }
-                    snprintf_s(system_error_buffer, 128, "entry %d: %s", index, _zip_err_details[error].description);
-                    system_error_buffer[128 - 1] = '\0'; /* make sure string is NUL-terminated */
-                    system_error_string = system_error_buffer;
-                }
-                else {
-                    system_error_string = _zip_err_details[error].description;
-                }
-                break;
+                snprintf_s(system_error_buffer, 128, "entry %d: %s", index, _zip_err_details[error].description);
+                system_error_buffer[128 - 1] = '\0'; /* make sure string is NUL-terminated */
+                system_error_string = system_error_buffer;
             }
-                
-            default:
-                system_error_string = NULL;
+            else {
+                system_error_string = _zip_err_details[error].description;
+            }
+            break;
+        }
+
+        default:
+            system_error_string = NULL;
         }
     }
 

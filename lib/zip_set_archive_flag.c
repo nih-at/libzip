@@ -35,8 +35,7 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int
-zip_set_archive_flag(zip_t *za, zip_flags_t flag, int value) {
+ZIP_EXTERN int zip_set_archive_flag(zip_t *za, zip_flags_t flag, int value) {
     unsigned int new_flags;
 
     if (flag == ZIP_AFL_IS_TORRENTZIP) {

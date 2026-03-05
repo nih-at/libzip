@@ -51,8 +51,7 @@ struct crc_context {
 static zip_int64_t crc_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 
 
-zip_source_t *
-zip_source_crc_create(zip_source_t *src, int validate, zip_error_t *error) {
+zip_source_t *zip_source_crc_create(zip_source_t *src, int validate, zip_error_t *error) {
     struct crc_context *ctx;
     zip_source_t *new_src;
 
@@ -82,8 +81,7 @@ zip_source_crc_create(zip_source_t *src, int validate, zip_error_t *error) {
 }
 
 
-static zip_int64_t
-crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
+static zip_int64_t crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct crc_context *ctx;
     zip_int64_t n;
 

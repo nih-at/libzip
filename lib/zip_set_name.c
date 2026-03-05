@@ -38,8 +38,7 @@
 #include "zipint.h"
 
 
-int
-_zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
+int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
     zip_entry_t *e;
     zip_string_t *str;
     bool same_as_orig;
@@ -59,13 +58,16 @@ _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) 
 
     if (name && name[0] != '\0') {
         /* TODO: check for string too long */
-        if ((str = _zip_string_new((const zip_uint8_t *)name, (zip_uint16_t)strlen(name), flags, &za->error)) == NULL)
+        if ((str = _zip_string_new((const zip_uint8_t *)name, (zip_uint16_t)strlen(name), flags, &za->error)) == NULL) {
             return -1;
-        if ((flags & ZIP_FL_ENCODING_ALL) == ZIP_FL_ENC_GUESS && _zip_guess_encoding(str, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_UTF8_GUESSED)
+        }
+        if ((flags & ZIP_FL_ENCODING_ALL) == ZIP_FL_ENC_GUESS && _zip_guess_encoding(str, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_UTF8_GUESSED) {
             str->encoding = ZIP_ENCODING_UTF8_KNOWN;
+        }
     }
-    else
+    else {
         str = NULL;
+    }
 
     /* TODO: encoding flags needed for CP437? */
     if ((i = _zip_name_locate(za, name, 0, NULL)) >= 0 && (zip_uint64_t)i != idx) {
@@ -82,10 +84,12 @@ _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) 
 
     e = za->entry + idx;
 
-    if (e->orig)
+    if (e->orig) {
         same_as_orig = _zip_string_equal(e->orig->filename, str);
-    else
+    }
+    else {
         same_as_orig = false;
+    }
 
     if (!same_as_orig && e->changes == NULL) {
         if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {

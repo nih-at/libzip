@@ -38,8 +38,7 @@
 #include <string.h>
 #include <zlib.h>
 
-int
-_zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error) {
+int _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error) {
     zip_int64_t n;
 
     if (length > ZIP_INT64_MAX) {
@@ -61,8 +60,7 @@ _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *e
 }
 
 
-zip_uint8_t *
-_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error) {
+zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error) {
     zip_uint8_t *r;
 
     if (length == 0 && !nulp) {
@@ -100,13 +98,13 @@ _zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp
 }
 
 
-zip_string_t *
-_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t len, bool nulp, zip_error_t *error) {
+zip_string_t *_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t len, bool nulp, zip_error_t *error) {
     zip_uint8_t *raw;
     zip_string_t *s;
 
-    if ((raw = _zip_read_data(buffer, src, len, nulp, error)) == NULL)
+    if ((raw = _zip_read_data(buffer, src, len, nulp, error)) == NULL) {
         return NULL;
+    }
 
     s = _zip_string_new(raw, len, ZIP_FL_ENC_GUESS, error);
     free(raw);
@@ -114,8 +112,7 @@ _zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t len, bool
 }
 
 
-int
-_zip_write(zip_t *za, const void *data, zip_uint64_t length) {
+int _zip_write(zip_t *za, const void *data, zip_uint64_t length) {
     zip_int64_t n;
 
     if ((n = zip_source_write(za->src, data, length)) < 0) {

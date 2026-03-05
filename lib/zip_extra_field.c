@@ -37,8 +37,7 @@
 #include "zipint.h"
 
 
-zip_extra_field_t *
-_zip_ef_clone(const zip_extra_field_t *ef, zip_error_t *error) {
+zip_extra_field_t *_zip_ef_clone(const zip_extra_field_t *ef, zip_error_t *error) {
     zip_extra_field_t *head, *prev, *def;
 
     head = prev = NULL;
@@ -50,10 +49,12 @@ _zip_ef_clone(const zip_extra_field_t *ef, zip_error_t *error) {
             return NULL;
         }
 
-        if (head == NULL)
+        if (head == NULL) {
             head = def;
-        if (prev)
+        }
+        if (prev) {
             prev->next = def;
+        }
         prev = def;
 
         ef = ef->next;
@@ -63,8 +64,7 @@ _zip_ef_clone(const zip_extra_field_t *ef, zip_error_t *error) {
 }
 
 
-zip_extra_field_t *
-_zip_ef_delete_by_id(zip_extra_field_t *ef, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags) {
+zip_extra_field_t *_zip_ef_delete_by_id(zip_extra_field_t *ef, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags) {
     zip_extra_field_t *head, *prev;
     int i;
 
@@ -76,21 +76,25 @@ _zip_ef_delete_by_id(zip_extra_field_t *ef, zip_uint16_t id, zip_uint16_t id_idx
             if (id_idx == ZIP_EXTRA_FIELD_ALL || i == id_idx) {
                 ef->flags &= ~(flags & ZIP_EF_BOTH);
                 if ((ef->flags & ZIP_EF_BOTH) == 0) {
-                    if (prev)
+                    if (prev) {
                         prev->next = ef->next;
-                    else
+                    }
+                    else {
                         head = ef->next;
+                    }
                     ef->next = NULL;
                     _zip_ef_free(ef);
 
-                    if (id_idx == ZIP_EXTRA_FIELD_ALL)
+                    if (id_idx == ZIP_EXTRA_FIELD_ALL) {
                         continue;
+                    }
                 }
             }
 
             i++;
-            if (i > id_idx)
+            if (i > id_idx) {
                 break;
+            }
         }
         prev = ef;
     }
@@ -99,8 +103,7 @@ _zip_ef_delete_by_id(zip_extra_field_t *ef, zip_uint16_t id, zip_uint16_t id_idx
 }
 
 
-void
-_zip_ef_free(zip_extra_field_t *ef) {
+void _zip_ef_free(zip_extra_field_t *ef) {
     zip_extra_field_t *ef2;
 
     while (ef) {
@@ -112,8 +115,7 @@ _zip_ef_free(zip_extra_field_t *ef) {
 }
 
 
-const zip_uint8_t *
-_zip_ef_get_by_id(const zip_extra_field_t *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags, zip_error_t *error) {
+const zip_uint8_t *_zip_ef_get_by_id(const zip_extra_field_t *ef, zip_uint16_t *lenp, zip_uint16_t id, zip_uint16_t id_idx, zip_flags_t flags, zip_error_t *error) {
     static const zip_uint8_t empty[1] = {'\0'};
 
     int i;
@@ -126,12 +128,15 @@ _zip_ef_get_by_id(const zip_extra_field_t *ef, zip_uint16_t *lenp, zip_uint16_t 
                 continue;
             }
 
-            if (lenp)
+            if (lenp) {
                 *lenp = ef->size;
-            if (ef->size > 0)
+            }
+            if (ef->size > 0) {
                 return ef->data;
-            else
+            }
+            else {
                 return empty;
+            }
         }
     }
 
@@ -140,13 +145,13 @@ _zip_ef_get_by_id(const zip_extra_field_t *ef, zip_uint16_t *lenp, zip_uint16_t 
 }
 
 
-zip_extra_field_t *
-_zip_ef_merge(zip_extra_field_t *to, zip_extra_field_t *from) {
+zip_extra_field_t *_zip_ef_merge(zip_extra_field_t *to, zip_extra_field_t *from) {
     zip_extra_field_t *ef2, *tt, *tail;
     int duplicate;
 
-    if (to == NULL)
+    if (to == NULL) {
         return from;
+    }
 
     for (tail = to; tail->next; tail = tail->next)
         ;
@@ -164,22 +169,24 @@ _zip_ef_merge(zip_extra_field_t *to, zip_extra_field_t *from) {
         }
 
         from->next = NULL;
-        if (duplicate)
+        if (duplicate) {
             _zip_ef_free(from);
-        else
+        }
+        else {
             tail = tail->next = from;
+        }
     }
 
     return to;
 }
 
 
-zip_extra_field_t *
-_zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_flags_t flags) {
+zip_extra_field_t *_zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_flags_t flags) {
     zip_extra_field_t *ef;
 
-    if ((ef = (zip_extra_field_t *)malloc(sizeof(*ef))) == NULL)
+    if ((ef = (zip_extra_field_t *)malloc(sizeof(*ef))) == NULL) {
         return NULL;
+    }
 
     ef->next = NULL;
     ef->flags = flags;
@@ -191,15 +198,15 @@ _zip_ef_new(zip_uint16_t id, zip_uint16_t size, const zip_uint8_t *data, zip_fla
             return NULL;
         }
     }
-    else
+    else {
         ef->data = NULL;
+    }
 
     return ef;
 }
 
 
-bool
-_zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_extra_field_t **ef_head_p, zip_error_t *error) {
+bool _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_extra_field_t **ef_head_p, zip_error_t *error) {
     zip_buffer_t *buffer;
     zip_extra_field_t *ef, *ef2, *ef_head;
 
@@ -236,8 +243,9 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
             ef->next = ef2;
             ef = ef2;
         }
-        else
+        else {
             ef_head = ef = ef2;
+        }
     }
 
     if (!_zip_buffer_eof(buffer)) {
@@ -268,8 +276,7 @@ _zip_ef_parse(const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags, zip_
 }
 
 
-zip_extra_field_t *
-_zip_ef_remove_internal(zip_extra_field_t *ef) {
+zip_extra_field_t *_zip_ef_remove_internal(zip_extra_field_t *ef) {
     zip_extra_field_t *ef_head;
     zip_extra_field_t *prev, *next;
 
@@ -279,12 +286,14 @@ _zip_ef_remove_internal(zip_extra_field_t *ef) {
     while (ef) {
         if (ZIP_EF_IS_INTERNAL(ef->id)) {
             next = ef->next;
-            if (ef_head == ef)
+            if (ef_head == ef) {
                 ef_head = next;
+            }
             ef->next = NULL;
             _zip_ef_free(ef);
-            if (prev)
+            if (prev) {
                 prev->next = next;
+            }
             ef = next;
         }
         else {
@@ -297,22 +306,21 @@ _zip_ef_remove_internal(zip_extra_field_t *ef) {
 }
 
 
-zip_uint16_t
-_zip_ef_size(const zip_extra_field_t *ef, zip_flags_t flags) {
+zip_uint16_t _zip_ef_size(const zip_extra_field_t *ef, zip_flags_t flags) {
     zip_uint16_t size;
 
     size = 0;
     for (; ef; ef = ef->next) {
-        if (ef->flags & flags & ZIP_EF_BOTH)
+        if (ef->flags & flags & ZIP_EF_BOTH) {
             size = (zip_uint16_t)(size + 4 + ef->size);
+        }
     }
 
     return size;
 }
 
 
-int
-_zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags) {
+int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags) {
     zip_uint8_t b[4];
     zip_buffer_t *buffer = _zip_buffer_new(b, sizeof(b));
 
@@ -348,8 +356,7 @@ _zip_ef_write(zip_t *za, const zip_extra_field_t *ef, zip_flags_t flags) {
 }
 
 
-int
-_zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
+int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
     zip_entry_t *e;
     unsigned char b[4];
     zip_buffer_t *buffer;
@@ -362,8 +369,9 @@ _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
 
     e = za->entry + idx;
 
-    if (e->orig == NULL || e->orig->local_extra_fields_read)
+    if (e->orig == NULL || e->orig->local_extra_fields_read) {
         return 0;
+    }
 
     if (e->orig->offset + 26 > ZIP_INT64_MAX) {
         zip_error_set(&za->error, ZIP_ER_SEEK, EFBIG);
@@ -401,8 +409,9 @@ _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
 
         ef_raw = _zip_read_data(NULL, za->src, ef_len, 0, &za->error);
 
-        if (ef_raw == NULL)
+        if (ef_raw == NULL) {
             return -1;
+        }
 
         if (!_zip_ef_parse(ef_raw, ef_len, ZIP_EF_LOCAL, &ef, &za->error)) {
             free(ef_raw);
