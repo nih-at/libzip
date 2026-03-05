@@ -497,8 +497,12 @@ buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int 
             }
             buffer->fragments[j].data = fragments[i].data;
             buffer->fragments[j].length = fragments[i].length;
-            buffer->fragment_offsets[i] = offset;
-            /* TODO: overflow */
+            buffer->fragment_offsets[j] = offset;
+            if (offset + fragments[i].length < offset) {
+                zip_error_set(error, ZIP_ER_INVAL, 0);
+                buffer_free(buffer);
+                return NULL;
+            }
             offset += fragments[i].length;
             j++;
         }
