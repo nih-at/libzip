@@ -666,15 +666,15 @@ static int comment_compare(const char *c1, size_t l1, const char *c2, size_t l2)
   Compares two lists of elements and prints differences.
 
   Arguments:
-    *name*: names of the two lists being compared
-    *list*: the two lists being compared
-    *list_length*: the lengths of the two lists
-    *element_size*: the size of each element in the lists
-    *cmp*: function to compare two elements, returning <0, 0, >0
-    *ignore*: function to check if an element should be ignored
-    *check*: function to check if two elements are equal
-    *print*: function to print an element
-    *start_file*: function to print the start of a file
+    name: names of the two lists being compared
+    list: the two lists being compared
+    list_length: the lengths of the two lists
+    element_size: the size of each element in the lists
+    cmp: function to compare two elements, returning <0, 0, >0
+    ignore: function to check if an element should be ignored
+    check: function to check if two elements are equal
+    print: function to print an element
+    start_file: function to print the start of a file
 
   Returns:
     0: no differences
