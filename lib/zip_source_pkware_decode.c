@@ -53,6 +53,7 @@ static void trad_pkware_free(struct trad_pkware *);
 zip_source_t *zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_t em, int flags, const char *password) {
     struct trad_pkware *ctx;
     zip_source_t *s2;
+    zip_stat_t st;
 
     if (password == NULL || src == NULL || em != ZIP_EM_TRAD_PKWARE) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -60,6 +61,16 @@ zip_source_t *zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_
     }
     if (flags & ZIP_CODEC_ENCODE) {
         zip_error_set(&za->error, ZIP_ER_ENCRNOTSUPP, 0);
+        return NULL;
+    }
+
+    if (zip_source_stat(src, &st) != 0) {
+        zip_error_set_from_source(&za->error, src);
+        return NULL;
+    }
+
+    if ((st.valid & ZIP_STAT_COMP_SIZE) == 0 || st.comp_size < ZIP_CRYPTO_PKWARE_HEADERLEN) {
+        zip_error_set(&za->error, ZIP_ER_OPNOTSUPP, 0);
         return NULL;
     }
 
@@ -160,6 +171,10 @@ static zip_int64_t pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_u
         st->encryption_method = ZIP_EM_NONE;
         st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
         if (st->valid & ZIP_STAT_COMP_SIZE) {
+            if (st->comp_size < ZIP_CRYPTO_PKWARE_HEADERLEN) {
+                zip_error_set(&ctx->error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_ENTRY_INVALID);
+                return -1;
+            }
             st->comp_size -= ZIP_CRYPTO_PKWARE_HEADERLEN;
         }
 
