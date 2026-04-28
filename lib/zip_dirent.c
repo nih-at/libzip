@@ -1070,10 +1070,16 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     }
 
     _zip_buffer_put_16(buffer, _zip_string_length(de->filename));
-    ef_total_size = (zip_uint32_t)_zip_ef_size(ef, ZIP_EF_BOTH);
+    ef_total_size = _zip_ef_size(ef, ZIP_EF_BOTH);
     if (!ZIP_WANT_TORRENTZIP(za)) {
         /* TODO: check for overflow */
-        ef_total_size += (zip_uint32_t)_zip_ef_size(de->extra_fields, flags);
+        ef_total_size += _zip_ef_size(de->extra_fields, flags);
+    }
+    if (ef_total_size > ZIP_UINT16_MAX) {
+        zip_error_set(&za->error, ZIP_ER_EF_TOO_LARGE, 0);
+        _zip_buffer_free(buffer);
+        _zip_ef_free(ef);
+        return -1;
     }
     _zip_buffer_put_16(buffer, (zip_uint16_t)ef_total_size);
 

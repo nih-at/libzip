@@ -164,6 +164,7 @@ extern "C" {
 #define ZIP_ER_DATA_LENGTH 33     /* N Unexpected length of data */
 #define ZIP_ER_NOT_ALLOWED 34     /* N Not allowed in torrentzip */
 #define ZIP_ER_TRUNCATED_ZIP 35   /* N Possibly truncated or corrupted zip archive */
+#define ZIP_ER_EF_TOO_LARGE 36    /* N Extra fields too large */
 
 /* type of system error value */
 

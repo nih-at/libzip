@@ -306,13 +306,13 @@ zip_extra_field_t *_zip_ef_remove_internal(zip_extra_field_t *ef) {
 }
 
 
-zip_uint16_t _zip_ef_size(const zip_extra_field_t *ef, zip_flags_t flags) {
-    zip_uint16_t size;
+zip_uint32_t _zip_ef_size(const zip_extra_field_t *ef, zip_flags_t flags) {
+    zip_uint32_t size;
 
     size = 0;
     for (; ef; ef = ef->next) {
         if (ef->flags & flags & ZIP_EF_BOTH) {
-            size = (zip_uint16_t)(size + 4 + ef->size);
+            size = (zip_uint32_t)(size + 4 + ef->size);
         }
     }
 

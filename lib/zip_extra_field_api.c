@@ -241,7 +241,7 @@ ZIP_EXTERN zip_int16_t zip_file_extra_fields_count_by_id(zip_t *za, zip_uint64_t
 
 ZIP_EXTERN int zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags) {
     zip_dirent_t *de;
-    zip_uint16_t ls, cs;
+    zip_uint32_t ls, cs;
     zip_extra_field_t *ef, *ef_prev, *ef_new;
     int i, found, new_len;
 
@@ -315,7 +315,7 @@ ZIP_EXTERN int zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_
     new_len += len + 4;
 
     if (new_len > ZIP_UINT16_MAX) {
-        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+        zip_error_set(&za->error, ZIP_ER_EF_TOO_LARGE, 0);
         return -1;
     }
 
