@@ -202,7 +202,11 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
         st->encryption_method = ZIP_EM_NONE;
         st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
         if (st->valid & ZIP_STAT_COMP_SIZE) {
-            st->comp_size -= 12 + SALT_LENGTH(ctx->encryption_method);
+            if (st->comp_size < WINZIP_AES_PASSWORD_VERIFY_LENGTH + SALT_LENGTH(ctx->encryption_method) + HMAC_LENGTH) {
+                zip_error_set(&ctx->error, ZIP_ER_DATA_LENGTH, 0);
+                return -1;
+            }
+            st->comp_size -= WINZIP_AES_PASSWORD_VERIFY_LENGTH + SALT_LENGTH(ctx->encryption_method) + HMAC_LENGTH;
         }
 
         return 0;

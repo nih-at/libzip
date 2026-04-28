@@ -172,7 +172,7 @@ static zip_int64_t pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_u
         st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
         if (st->valid & ZIP_STAT_COMP_SIZE) {
             if (st->comp_size < ZIP_CRYPTO_PKWARE_HEADERLEN) {
-                zip_error_set(&ctx->error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_ENTRY_INVALID);
+                zip_error_set(&ctx->error, ZIP_ER_DATA_LENGTH, 0);
                 return -1;
             }
             st->comp_size -= ZIP_CRYPTO_PKWARE_HEADERLEN;
