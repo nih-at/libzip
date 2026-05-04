@@ -152,7 +152,7 @@ find_package_handle_standard_args(zstd
 
 if(zstd_FOUND AND zstd_SHARED_LIBRARY AND NOT TARGET zstd::libzstd_shared)
   add_library(zstd::libzstd_shared SHARED IMPORTED)
-  if(WIN32)
+  if(WIN32 OR CYGWIN)
     set_target_properties(zstd::libzstd_shared PROPERTIES
       IMPORTED_LOCATION "${zstd_DLL}"
       IMPORTED_IMPLIB "${zstd_SHARED_LIBRARY}"
