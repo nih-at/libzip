@@ -19,7 +19,7 @@ jobs:
         #     name_extra: " clang-cl"
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: install python and pip
         uses: actions/setup-python@v5
         with:
