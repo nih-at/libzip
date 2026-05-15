@@ -31,16 +31,21 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <fcntl.h>
+
 #include "zipint.h"
 
 #include "zip_source_file.h"
 #include "zip_source_file_stdio.h"
 
-#include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#if defined(__TINYC__)
+#include "compat.h"
 #endif
 
 #ifdef HAVE_CLONEFILE

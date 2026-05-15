@@ -478,6 +478,8 @@ if(LIBZIP_DO_INSTALL)
 
   # Install Find* modules, they are required by libzip-config.cmake to resolve dependencies
   install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindBZip2.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibLZMA.cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNettle.cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findzstd.cmake
     DESTINATION

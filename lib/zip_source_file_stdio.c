@@ -31,14 +31,19 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <fcntl.h>
+
 #include "zipint.h"
 
 #include "zip_source_file.h"
 #include "zip_source_file_stdio.h"
 
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#if defined(__TINYC__)
+#include "compat.h"
+#endif
 
 #ifdef _WIN32
 #ifndef S_IWUSR
