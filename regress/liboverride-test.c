@@ -36,6 +36,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __APPLE__
+#define OVERRIDE_VARIABLE "DYLD_INSERT_LIBRARIES"
+#define OVERRIDE_EXTENSION "dylib"
+#else
+#define OVERRIDE_VARIABLE "LD_PRELOAD"
+#define OVERRIDE_EXTENSION "so"
+#endif
+
 #ifdef _WIN32
 int main(int argc, const char *argv[]) {
     /* Symbol override is not supported on Windows. */
@@ -73,9 +81,10 @@ int main(int argc, const char *argv[]) {
             }
             exit(2);
         }
-        snprintf(so, so_size, "%s/libliboverride.so", cwd);
+        snprintf(so, so_size, "%s/libliboverride.%s", cwd, OVERRIDE_EXTENSION);
         setenv("LIBOVERRIDE_SET", "1", 1);
-        setenv("LD_PRELOAD", so, 1);
+        setenv(OVERRIDE_VARIABLE, so, 1);
+        printf("restarting with %s=%s\n", OVERRIDE_VARIABLE, so);
         execv(argv[0], (void *)argv);
         if (verbose) {
             printf("exec failed: %s\n", strerror(errno));
@@ -86,14 +95,14 @@ int main(int argc, const char *argv[]) {
     if (zip_open("nosuchfile", 0, &error_code) != NULL) {
         /* We expect failure. */
         if (verbose) {
-            printf("open succeeded\n");
+            printf("replacement didn't work: open succeeded\n");
         }
         exit(1);
     }
     if (error_code != 32000) {
         /* Override didn't take, we didn't get its magic error code. */
         if (verbose) {
-            printf("got unexpected error %d\n", error_code);
+            printf("replacement didn't work: got unexpected error %d\n", error_code);
         }
         exit(1);
     }

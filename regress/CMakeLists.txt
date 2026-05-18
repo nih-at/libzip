@@ -57,7 +57,8 @@ set(DL_USERS
 )
 
 foreach(PROGRAM IN LISTS DL_USERS)
-  add_library(${PROGRAM} MODULE ${PROGRAM}.c)
+  add_library(${PROGRAM} SHARED ${PROGRAM}.c)
+  target_link_libraries(${PROGRAM} PRIVATE zip ${CMAKE_DL_LIBS})
   target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 endforeach()
 

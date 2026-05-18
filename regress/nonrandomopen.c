@@ -36,8 +36,12 @@
 
 #include "zipint.h"
 
-bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+#include "nihtest-preload.h"
+
+bool PRELOAD_NAME(zip_secure_random)(zip_uint8_t *buffer, zip_uint16_t length) {
     memset(buffer, 0, length);
 
     return true;
 }
+
+PRELOAD_REPLACE(zip_secure_random);

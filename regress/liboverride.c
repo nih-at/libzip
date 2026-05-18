@@ -34,14 +34,18 @@
 
 #include "zipint.h"
 
+#include "nihtest-preload.h"
+
 /*
  Some systems bind functions called and defined within a shared library, so the override doesn't work. This overrides a function called by zip_open to return an invalid error code so we can check whether the override works.
  */
 
-zip_source_t *zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
+zip_source_t *PRELOAD_NAME(zip_source_file_create)(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (error != NULL) {
         error->zip_err = 32000;
     }
 
     return NULL;
 }
+
+PRELOAD_REPLACE(zip_source_file_create);
