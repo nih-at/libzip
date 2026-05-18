@@ -78,6 +78,8 @@ typedef char bool;
 #define EOVERFLOW EFBIG
 #endif
 
+#include <fcntl.h>
+
 /* not supported on at least Windows */
 #ifndef O_CLOEXEC
 #define O_CLOEXEC 0
