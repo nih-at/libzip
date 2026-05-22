@@ -4,6 +4,9 @@ permissions:
   contents: read
 jobs:
   all:
+    permissions:
+      contents: read
+      actions: write
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }}${{ matrix.name_extra }}
     strategy:
