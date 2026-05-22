@@ -37,7 +37,6 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -E make_directory ${{runner.workspace}}/build
         cmake ${{github.workspace}}
 
     - name: Download Coverity
