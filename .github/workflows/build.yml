@@ -35,7 +35,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: 2cf957350da28ad032178a974607f59f961217d9
+          vcpkgGitCommitId: 5b1214315250939257ef5d62ecdcbca18cf4fb1c
       - name: prepare build directory and install nihtest
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
