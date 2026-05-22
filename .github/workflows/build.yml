@@ -4,16 +4,13 @@ permissions:
   contents: read
 jobs:
   all:
-    permissions:
-      contents: read
-      actions: write
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }}${{ matrix.name_extra }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        # os: [macos-latest, ubuntu-latest]
+        # os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest]
         cmake_extra: [""]
         name_extra: [""]
         # include:
