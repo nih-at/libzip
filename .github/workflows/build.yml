@@ -21,7 +21,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v6
       - name: install python and pip
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: install dependencies (Linux)
@@ -55,7 +55,7 @@ jobs:
         run: |
           cmake --build . --config Release
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: regress-directory-${{ matrix.os }}-${{ matrix.name_extra }}
           path: |
