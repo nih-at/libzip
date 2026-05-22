@@ -20,7 +20,6 @@ jobs:
           pip install nihtest
         run: |
           source nihtest-venv/bin/activate
-          cmake -E make_directory ${{runner.workspace}}/build
-          cmake ${{ matrix.cmake_extra }} ${{github.workspace}}
-          cmake --build . --config Release
-          ctest --output-on-failure -V -C Release
+          cmake -B ${{runner.workspace}}/build ${{github.workspace}}
+          cmake --build ${{runner.workspace}}/build --config Release
+          ctest --test-dir ${{runner.workspace}}/build --output-on-failure -V -C Release

@@ -19,7 +19,6 @@ jobs:
           # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-system-path
           echo "/usr/pkg/bin" >> "$GITHUB_PATH"
         run: |
-          cmake -E make_directory ${{runner.workspace}}/build
-          cmake ${{ matrix.cmake_extra }} ${{github.workspace}}
-          cmake --build . --config Release
-          ctest --output-on-failure -V -C Release
+          cmake -B ${{runner.workspace}}/build ${{github.workspace}}
+          cmake --build ${{runner.workspace}}/build --config Release
+          ctest --test-dir ${{runner.workspace}}/build --output-on-failure -V -C Release
