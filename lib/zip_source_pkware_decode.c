@@ -222,6 +222,7 @@ static void trad_pkware_free(struct trad_pkware *ctx) {
         return;
     }
 
+    _zip_crypto_clear(ctx->password, strlen(ctx->password));
     free(ctx->password);
     free(ctx);
 }
