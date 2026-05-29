@@ -112,11 +112,13 @@ zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t 
     }
 
     if ((ctx->aes = _zip_crypto_aes_new(buffer, key_size, error)) == NULL) {
+        _zip_crypto_clear(buffer, sizeof(buffer));
         _zip_crypto_clear(ctx, sizeof(*ctx));
         free(ctx);
         return NULL;
     }
     if ((ctx->hmac = _zip_crypto_hmac_new(buffer + key_length, key_length, error)) == NULL) {
+        _zip_crypto_clear(buffer, sizeof(buffer));
         _zip_crypto_aes_free(ctx->aes);
         free(ctx);
         return NULL;
@@ -125,6 +127,8 @@ zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t 
     if (password_verify) {
         (void)memcpy_s(password_verify, WINZIP_AES_PASSWORD_VERIFY_LENGTH, buffer + (2 * key_size / 8), WINZIP_AES_PASSWORD_VERIFY_LENGTH);
     }
+
+    _zip_crypto_clear(buffer, sizeof(buffer));
 
     return ctx;
 }
