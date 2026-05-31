@@ -200,9 +200,14 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
             st2.valid |= ZIP_STAT_MTIME;
         }
 
-        if ((src = _zip_source_window_new(src, start, data_len, &st2, ZIP_STAT_NAME, &attributes, &de->last_mod, source_archive, source_index, take_ownership, error)) == NULL) {
+        s2 = _zip_source_window_new(src, start, data_len, &st2, ZIP_STAT_NAME, &attributes, &de->last_mod, source_archive, source_index, take_ownership, error);
+        if (s2 == NULL) {
+            if (take_ownership) {
+                zip_source_free(src);
+            }
             return NULL;
         }
+        src = s2;
     }
     /* here we restrict src to file data, so no point in doing it for
        source that already represents only the file data */
@@ -235,9 +240,14 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
            attributes and to have a source that positions the read
            offset properly before each read for multiple zip_file_t
            referring to the same underlying source */
-        if ((src = _zip_source_window_new(src, 0, data_len, &st, ZIP_STAT_NAME, &attributes, &de->last_mod, NULL, 0, take_ownership, error)) == NULL) {
+        s2 = _zip_source_window_new(src, 0, data_len, &st, ZIP_STAT_NAME, &attributes, &de->last_mod, NULL, 0, take_ownership, error);
+        if (s2 == NULL) {
+            if (take_ownership) {
+                zip_source_free(src);
+            }
             return NULL;
         }
+        src = s2;
     }
 
     /* In all cases, src is a window source and therefore is owned by this function. */
