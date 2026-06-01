@@ -43,6 +43,9 @@ ZIP_EXTERN int zip_set_default_password(zip_t *za, const char *passwd) {
         return -1;
     }
 
+    if (za->default_password) {
+        _zip_crypto_clear(za->default_password, strlen(za->default_password));
+    }
     free(za->default_password);
 
     if (passwd && passwd[0] != '\0') {
