@@ -175,13 +175,15 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
             if ((offset = _zip_file_get_offset(ctx->source_archive, ctx->source_index, &ctx->error)) == 0) {
                 return -1;
             }
-            if (ctx->end + offset < ctx->end) {
+            if (ctx->end_valid && ctx->end + offset < ctx->end) {
                 /* zip archive data claims end of data past zip64 limits */
                 zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, ctx->source_index));
                 return -1;
             }
             ctx->start += offset;
-            ctx->end += offset;
+            if (ctx->end_valid) {
+                ctx->end += offset;
+            }
             ctx->source_archive = NULL;
         }
 
@@ -271,6 +273,25 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 ctx->offset = (zip_uint64_t)new_offset;
                 return 0;
             }
+
+            /* end is unknown, so we can't bound-check against it here */
+            switch (args->whence) {
+            case SEEK_SET:
+                new_offset = args->offset;
+                break;
+            case SEEK_CUR:
+                new_offset = (zip_int64_t)(ctx->offset - ctx->start) + args->offset;
+                break;
+            default:
+                zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                return -1;
+            }
+            if (new_offset < 0) {
+                zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                return -1;
+            }
+            ctx->offset = (zip_uint64_t)new_offset + ctx->start;
+            return 0;
         }
 
         new_offset = zip_source_seek_compute_offset(ctx->offset - ctx->start, ctx->end - ctx->start, data, len, &ctx->error);
