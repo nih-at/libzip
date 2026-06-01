@@ -524,6 +524,7 @@ static bool check_magic(zip_uint64_t offset, zip_buffer_t *buffer, zip_uint64_t 
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
     zip_uint64_t i;
     zip_uint64_t min, max, j;
+    zip_uint64_t name_len, tail_len;
     struct zip_dirent temp;
     int detail;
 
@@ -545,7 +546,19 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + _zip_string_length(cd->entry[i].orig->filename) + LENTRYSIZE;
+        /* Compute the end of this entry's local file header plus data.
+           offset and comp_size come from the central directory (comp_size
+           is a full 64-bit value via the Zip64 extra field), so the sum can
+           overflow zip_uint64_t. An overflow would wrap to a small value and
+           let an entry that extends past the central directory slip past the
+           bounds check below, defeating ZIP_CHECKCONS. */
+        name_len = _zip_string_length(cd->entry[i].orig->filename);
+        tail_len = name_len + LENTRYSIZE; /* name_len <= 0xffff, so this can't overflow */
+        if (cd->entry[i].orig->comp_size > ZIP_UINT64_MAX - tail_len || cd->entry[i].orig->offset > ZIP_UINT64_MAX - tail_len - cd->entry[i].orig->comp_size) {
+            zip_error_set(error, ZIP_ER_NOZIP, 0);
+            return -1;
+        }
+        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + tail_len;
         if (j > max) {
             max = j;
         }
@@ -869,8 +882,11 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
     /* size of EOCD */
     size = _zip_buffer_get_64(buffer);
 
-    /* is there a hole between EOCD and EOCD locator, or do they overlap? */
-    if ((flags & ZIP_CHECKCONS) && size + eocd_offset + 12 != buf_offset + eocdloc_offset) {
+    /* is there a hole between EOCD and EOCD locator, or do they overlap?
+       size is read straight from the archive and is unbounded, so guard the
+       addition against overflow; a wrapped value could spuriously match the
+       expected position and bypass this consistency check. */
+    if ((flags & ZIP_CHECKCONS) && (size > ZIP_UINT64_MAX - eocd_offset - 12 || size + eocd_offset + 12 != buf_offset + eocdloc_offset)) {
         zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD);
         if (free_buffer) {
             _zip_buffer_free(buffer);
