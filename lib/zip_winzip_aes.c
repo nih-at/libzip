@@ -156,5 +156,6 @@ void _zip_winzip_aes_free(zip_winzip_aes_t *ctx) {
 
     _zip_crypto_aes_free(ctx->aes);
     _zip_crypto_hmac_free(ctx->hmac);
+    _zip_crypto_clear(ctx, sizeof(*ctx));
     free(ctx);
 }
