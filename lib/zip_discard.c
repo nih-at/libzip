@@ -54,7 +54,7 @@ void zip_discard(zip_t *za) {
         zip_source_free(za->src);
     }
 
-    if (za->default_password) {
+    if (za->default_password != NULL) {
         _zip_crypto_clear(za->default_password, strlen(za->default_password));
     }
     free(za->default_password);
