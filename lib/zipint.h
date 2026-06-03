@@ -499,6 +499,8 @@ struct _zip_pkware_keys {
 };
 typedef struct _zip_pkware_keys zip_pkware_keys_t;
 
+#define ZIP_CHECK_ADD_OVERFLOW(a, b) ((a) + (b) < (a))
+
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))
 

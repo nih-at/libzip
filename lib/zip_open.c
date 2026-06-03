@@ -523,7 +523,7 @@ static bool check_magic(zip_uint64_t offset, zip_buffer_t *buffer, zip_uint64_t 
 
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
     zip_uint64_t i;
-    zip_uint64_t min, max, j;
+    zip_uint64_t min, max, j, tail_length;
     struct zip_dirent temp;
     int detail;
 
@@ -545,7 +545,13 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + _zip_string_length(cd->entry[i].orig->filename) + LENTRYSIZE;
+        tail_length = _zip_string_length(cd->entry[i].orig->filename) + LENTRYSIZE;
+        if (ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size, tail_length) || ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->offset + tail_length, cd->entry[i].orig->comp_size)) {
+            zip_error_set(error, ZIP_ER_NOZIP, 0);
+            return -1;
+        }
+        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + tail_length;
+
         if (j > max) {
             max = j;
         }
@@ -813,7 +819,8 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
     bool free_buffer;
     zip_uint32_t num_disks, eocd_disk, this_disk;
 
-    eocdloc_offset = _zip_buffer_offset(buffer);
+    /* The offset of the end of the buffer is less than ZIP_UINT64_MAX, so this can't overflow. */
+    eocdloc_offset = buf_offset + _zip_buffer_offset(buffer);
 
     _zip_buffer_get(buffer, 4); /* magic already verified */
 
@@ -837,7 +844,7 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
     }
 
     /* does EOCD fit before EOCD locator? */
-    if (eocd_offset + EOCD64LEN > eocdloc_offset + buf_offset) {
+    if (eocd_offset + EOCD64LEN > eocdloc_offset) {
         zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD);
         return CDIR_INVALID;
     }
@@ -869,8 +876,8 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
     /* size of EOCD */
     size = _zip_buffer_get_64(buffer);
 
-    /* is there a hole between EOCD and EOCD locator, or do they overlap? */
-    if ((flags & ZIP_CHECKCONS) && size + eocd_offset + 12 != buf_offset + eocdloc_offset) {
+    /* Is there a hole between EOCD and EOCD locator, or do they overlap? Also check for overflow. */
+    if ((flags & ZIP_CHECKCONS) && (ZIP_CHECK_ADD_OVERFLOW(size, eocd_offset + 12) || size + eocd_offset + 12 != eocdloc_offset)) {
         zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD);
         if (free_buffer) {
             _zip_buffer_free(buffer);
