@@ -967,7 +967,7 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
         return;
     }
 
-    if (_zip_string_length(cdir->comment) != TORRENTZIP_SIGNATURE_LENGTH + TORRENTZIP_CRC_LENGTH || strncmp((const char *)cdir->comment->raw, TORRENTZIP_SIGNATURE, TORRENTZIP_SIGNATURE_LENGTH) != 0) {
+    if (cdir->comment == NULL || cdir->comment->length < TORRENTZIP_SIGNATURE_LENGTH + TORRENTZIP_CRC_LENGTH || strncmp((const char *)cdir->comment->raw, TORRENTZIP_SIGNATURE, TORRENTZIP_SIGNATURE_LENGTH) != 0) {
         return;
     }
 
