@@ -175,13 +175,15 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
             if ((offset = _zip_file_get_offset(ctx->source_archive, ctx->source_index, &ctx->error)) == 0) {
                 return -1;
             }
-            if (ctx->end + offset < ctx->end) {
-                /* zip archive data claims end of data past zip64 limits */
-                zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, ctx->source_index));
-                return -1;
+            if (ctx->end_valid) {
+                if (ctx->end + offset < ctx->end) {
+                    /* zip archive data claims end of data past zip64 limits */
+                    zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, ctx->source_index));
+                    return -1;
+                }
+                ctx->end += offset;
             }
             ctx->start += offset;
-            ctx->end += offset;
             ctx->source_archive = NULL;
         }
 
@@ -271,16 +273,36 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 ctx->offset = (zip_uint64_t)new_offset;
                 return 0;
             }
+            else {
+                if (args->whence == SEEK_CUR) {
+                    if (args->offset > 0 && (zip_int64_t)ctx->offset + args->offset < args->offset) {
+                        zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                        return -1;
+                    }
+                    args->offset += (zip_int64_t)ctx->offset;
+                }
+                if (args->offset < 0) {
+                    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                    return -1;
+                }
+                if (zip_source_seek(src, args->offset, SEEK_SET) < 0) {
+                    zip_error_set_from_source(&ctx->error, src);
+                    return -1;
+                }
+                ctx->offset = (zip_uint64_t)args->offset;
+                return 0;
+            }
         }
+        else {
+            new_offset = zip_source_seek_compute_offset(ctx->offset - ctx->start, ctx->end - ctx->start, data, len, &ctx->error);
 
-        new_offset = zip_source_seek_compute_offset(ctx->offset - ctx->start, ctx->end - ctx->start, data, len, &ctx->error);
+            if (new_offset < 0) {
+                return -1;
+            }
 
-        if (new_offset < 0) {
-            return -1;
+            ctx->offset = (zip_uint64_t)new_offset + ctx->start;
+            return 0;
         }
-
-        ctx->offset = (zip_uint64_t)new_offset + ctx->start;
-        return 0;
     }
 
     case ZIP_SOURCE_STAT: {
