@@ -302,7 +302,7 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
     if (eocd_offset >= EOCD64LOCLEN && memcmp(_zip_buffer_data(buffer) + eocd_offset - EOCD64LOCLEN, EOCD64LOC_MAGIC, 4) == 0) {
         eocd64_found = true;
         _zip_buffer_set_offset(buffer, eocd_offset - EOCD64LOCLEN);
-        switch (_zip_read_eocd64(cd, za->src, buffer, buf_offset, za->flags, error)) {
+        switch (_zip_read_eocd64(cd, za->src, buffer, buf_offset, za->open_flags, error)) {
         case CDIR_OK:
             break;
 
