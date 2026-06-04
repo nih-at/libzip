@@ -4,6 +4,7 @@ set(FUZZ_PROGRAMS
   zip_read_metadata_fuzzer
   zip_write_encrypt_aes256_file_fuzzer
   zip_write_encrypt_pkware_file_fuzzer
+  zip_write_roundtrip_fuzzer
 )
 
 foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
