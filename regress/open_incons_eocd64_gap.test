@@ -1,10 +1,4 @@
-# zip_open with ZIP_CHECKCONS: a Zip64 archive whose Zip64 EOCD "size of
-# record" field does not match the position of the Zip64 EOCD locator
-# (i.e. there is a hole between the EOCD64 record and its locator) must be
-# rejected.  This consistency check lives in _zip_read_eocd64() and is only
-# performed when ZIP_CHECKCONS is requested; it regressed silently because
-# the reader was passed za->flags (where bit 0x4 means ZIP_AFL_IS_TORRENTZIP)
-# instead of za->open_flags (where bit 0x4 means ZIP_CHECKCONS).
+# zip_open with ZIP_CHECKCONS rejects archive with gap between Zip64 EOCD locator and EOCD64 record
 program tryopen
 arguments -s -c test.zip
 file test.zip incons-eocd64-gap.zip
