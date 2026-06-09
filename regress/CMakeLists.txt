@@ -22,10 +22,10 @@ set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS})
 
 foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
-    add_executable(${PROGRAM} ziptool_regress.c)
+    add_executable(${PROGRAM} programs/ziptool_regress.c)
     target_link_libraries(${PROGRAM} zip_nonrandom)
   else()
-    add_executable(${PROGRAM} ${PROGRAM}.c)
+    add_executable(${PROGRAM} programs/${PROGRAM}.c)
     target_link_libraries(${PROGRAM} zip)
     if (ENABLE_COVERAGE)
       target_compile_options(${PROGRAM} PRIVATE -coverage)
@@ -44,14 +44,14 @@ if(NOT HAVE_GETOPT)
 endif(NOT HAVE_GETOPT)
 
 foreach(PROGRAM IN LISTS HOLE_USERS)
-  target_sources(${PROGRAM} PRIVATE source_hole.c)
+  target_sources(${PROGRAM} PRIVATE programs/source_hole.c)
 endforeach()
 
 foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
-  target_sources(${PROGRAM} PRIVATE fuzz_main.c)
+  target_sources(${PROGRAM} PRIVATE programs/fuzz_main.c)
 endforeach()
 
-add_executable(files_differ files_differ.c)
+add_executable(files_differ programs/files_differ.c)
 
 # for including ziptool.c
 target_include_directories(ziptool_regress PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
@@ -59,15 +59,15 @@ target_include_directories(ziptool_regress_nonrandom PRIVATE BEFORE ${PROJECT_SO
 
 
 add_custom_target(cleanup
-    COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/cleanup.cmake
+    COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/support/cleanup.cmake
     )
 
 add_custom_target(testinput
   ALL
   VERBATIM
-  COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/manyfiles-zip.zip
-  COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/bigzero-zip.zip
-  DEPENDS ${PROJECT_SOURCE_DIR}/regress/manyfiles-zip.zip ${PROJECT_SOURCE_DIR}/regress/bigzero-zip.zip
+  COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/data/manyfiles-zip.zip
+  COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/data/bigzero-zip.zip
+  DEPENDS ${PROJECT_SOURCE_DIR}/regress/data/manyfiles-zip.zip ${PROJECT_SOURCE_DIR}/regress/data/bigzero-zip.zip
 )
 
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
@@ -87,7 +87,7 @@ if (TARGET zlib)
 endif()
 string(REPLACE ";" "\\;" path "${path}")
 
-set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
+# set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
 file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
 foreach(FULL_CASE IN LISTS EXTRA_TESTS)
@@ -108,7 +108,7 @@ endforeach()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
-configure_file(nihtest.conf.in nihtest.conf @ONLY)
+configure_file(support/nihtest.conf.in nihtest.conf @ONLY)
 
 if(ENABLE_COVERAGE)
   add_custom_target(coverage

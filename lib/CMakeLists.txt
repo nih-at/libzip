@@ -182,7 +182,7 @@ target_include_directories(zip PUBLIC ${ZIP_INCLUDE_DIRS})
 
 if (BUILD_REGRESS)
 # For testing encryption, we replace zip_secure_random with zip_nonrandom.
-add_library(zip_nonrandom ${ZIP_SOURCES} ${PROJECT_SOURCE_DIR}/regress/zip_nonrandom.c)
+add_library(zip_nonrandom ${ZIP_SOURCES} ${PROJECT_SOURCE_DIR}/regress/programs/zip_nonrandom.c)
 target_compile_definitions(zip_nonrandom PRIVATE REGRESSION_NO_RANDOM)
 target_link_libraries(zip_nonrandom PRIVATE ${ZIP_LIBRARIES})
 target_include_directories(zip_nonrandom PUBLIC ${ZIP_INCLUDE_DIRS})
