@@ -1,10 +1,12 @@
+#ifndef HAD_ZIP_RANDOM_H
+#define HAD_ZIP_RANDOM_H
+
 /*
-  liboverride.c -- override function called by zip_open()
+  zip_random.h -- allow replacing zip_secure_random
+  Copyright (C) 2026 Dieter Baron and Thomas Klausner
 
-  Copyright (C) 2017-2021 Dieter Baron and Thomas Klausner
-
-  This file is part of ckmame, a program to check rom sets for MAME.
-  The authors can be contacted at <ckmame@nih.at>
+  This file is part of libzip, a library to manipulate ZIP archives.
+  The authors can be contacted at <info@libzip.org>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
@@ -15,7 +17,7 @@
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-  3. The name of the author may not be used to endorse or promote
+  3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
 
@@ -32,20 +34,9 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "zipint.h"
+#ifdef REGRESSION_NO_RANDOM
+#define zip_secure_random zip_secure_nonrandom
+bool zip_secure_nonrandom(zip_uint8_t *buffer, zip_uint16_t length);
+#endif
 
-#include "nihtest-preload.h"
-
-/*
- Some systems bind functions called and defined within a shared library, so the override doesn't work. This overrides a function called by zip_open to return an invalid error code so we can check whether the override works.
- */
-
-zip_source_t *PRELOAD_NAME(zip_source_file_create)(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
-    if (error != NULL) {
-        error->zip_err = 32000;
-    }
-
-    return NULL;
-}
-
-PRELOAD_REPLACE(zip_source_file_create);
+#endif /* HAD_ZIP_RANDOM_H */

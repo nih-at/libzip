@@ -12,3 +12,4 @@ default-stderr-replace = "^([A-Z]:)?[^ :]*: " ""
 
 [comparators]
 zip.zip = zipcmp -pv
+nzip.zip = files_differ

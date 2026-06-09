@@ -5,8 +5,6 @@ set(TEST_PROGRAMS
   can_clone_file
   fopen_unchanged
   fseek
-  nonrandomopentest
-  liboverride-test
 )
 
 set(GETOPT_USERS
@@ -17,18 +15,24 @@ set(GETOPT_USERS
 set(HOLE_USERS
   hole
   ziptool_regress
+  ziptool_regress_nonrandom
 )
 
 set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS})
 
 foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
-  add_executable(${PROGRAM} ${PROGRAM}.c)
-  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
-  target_link_libraries(${PROGRAM} zip)
-  if (ENABLE_COVERAGE)
-    target_compile_options(${PROGRAM} PRIVATE -coverage)
-    target_link_options(${PROGRAM} PRIVATE -coverage)
+  if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
+    add_executable(${PROGRAM} ziptool_regress.c)
+    target_link_libraries(${PROGRAM} zip_nonrandom)
+  else()
+    add_executable(${PROGRAM} ${PROGRAM}.c)
+    target_link_libraries(${PROGRAM} zip)
+    if (ENABLE_COVERAGE)
+      target_compile_options(${PROGRAM} PRIVATE -coverage)
+      target_link_options(${PROGRAM} PRIVATE -coverage)
+    endif()
   endif()
+  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 endforeach()
 
 # both programs using source_hole.c also use getopt
@@ -47,20 +51,12 @@ foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
   target_sources(${PROGRAM} PRIVATE fuzz_main.c)
 endforeach()
 
+add_executable(files_differ files_differ.c)
+
 # for including ziptool.c
 target_include_directories(ziptool_regress PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(ziptool_regress_nonrandom PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
 
-set(DL_USERS
-  # malloc
-  nonrandomopen
-  liboverride
-)
-
-foreach(PROGRAM IN LISTS DL_USERS)
-  add_library(${PROGRAM} SHARED ${PROGRAM}.c)
-  target_link_libraries(${PROGRAM} PRIVATE zip ${CMAKE_DL_LIBS})
-  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
-endforeach()
 
 add_custom_target(cleanup
     COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/cleanup.cmake

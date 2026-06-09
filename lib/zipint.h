@@ -627,8 +627,7 @@ int _zip_progress_update(zip_progress_t *progress, double value);
 
 bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t element_size, zip_uint64_t additional_elements, zip_error_t *error);
 
-/* this symbol is extern so it can be overridden for regression testing */
-ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
+bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
 zip_uint32_t zip_random_uint32(void);
 
 int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);

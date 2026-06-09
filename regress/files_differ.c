@@ -1,10 +1,9 @@
 /*
-  nonrandomopen.c -- override zip_secure_random
+  files_differ.c -- compare two files, exit with 0 if they differ, 1 if they are the same
+  Copyright (C) 2026 Dieter Baron and Thomas Klausner
 
-  Copyright (C) 2017-2021 Dieter Baron and Thomas Klausner
-
-  This file is part of ckmame, a program to check rom sets for MAME.
-  The authors can be contacted at <ckmame@nih.at>
+  This file is part of libzip, a library to manipulate ZIP archives.
+  The authors can be contacted at <info@libzip.org>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
@@ -15,7 +14,7 @@
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-  3. The name of the author may not be used to endorse or promote
+  3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
 
@@ -32,16 +31,43 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <errno.h>
+#include <stdio.h>
 #include <string.h>
 
-#include "zipint.h"
+int main(int argc, char *argv[]) {
+    FILE *f1, *f2;
+    int c1, c2;
 
-#include "nihtest-preload.h"
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s file1 file2\n", argv[0]);
+        return 1;
+    }
 
-bool PRELOAD_NAME(zip_secure_random)(zip_uint8_t *buffer, zip_uint16_t length) {
-    memset(buffer, 0, length);
+    f1 = fopen(argv[1], "rb");
+    if (!f1) {
+        fprintf(stderr, "%s: can't open '%s': %s\n", argv[0], argv[1], strerror(errno));
+        return 1;
+    }
+    f2 = fopen(argv[2], "rb");
+    if (!f2) {
+        fprintf(stderr, "%s: can't open '%s': %s\n", argv[0], argv[2], strerror(errno));
+        fclose(f1);
+        return 1;
+    }
 
-    return true;
+    do {
+        c1 = fgetc(f1);
+        c2 = fgetc(f2);
+        if (c1 != c2) {
+            fclose(f1);
+            fclose(f2);
+            return 0;
+        }
+    } while (c1 != EOF && c2 != EOF);
+
+    fclose(f1);
+    fclose(f2);
+
+    return (c1 == EOF && c2 == EOF) ? 1 : 0;
 }
-
-PRELOAD_REPLACE(zip_secure_random);

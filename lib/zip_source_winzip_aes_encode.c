@@ -39,6 +39,8 @@
 
 #include "zip_crypto.h"
 
+#include "zip_random.h"
+
 struct winzip_aes {
     char *password;
     zip_uint16_t encryption_method;

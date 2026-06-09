@@ -1,6 +1,9 @@
 # 1.12 [Unreleased]
 
-* Remove mbedTLS support - the required functions were made private.
+* Remove Mbed TLS support - the required functions were made private.
+* Make non-random tests work on macOS and Windows by using a special version of libzip.
+* Securely clear passwords and key material before freeing it.
+* Add more comprehensive fuzzers for metadata and write code paths.
 
 # 1.11.4 [2025-05-23]
 
@@ -49,7 +52,7 @@
 * Restore support for torrentzip.
 * Add warnings when using deprecated functions.
 * Allow keeping files for empty archives.
-* Support mbedTLS>=3.3.0.
+* Support Mbed TLS>=3.3.0.
 * Support OpenSSL 3.
 * Use ISO C secure library functions, if available.
 
@@ -138,7 +141,7 @@
 * Fix bug in AES encryption affecting certain file sizes
 * Keep file permissions when modifying zip archives
 * Support systems with small stack size.
-* Support mbed TLS as crypto backend.
+* Support Mbed TLS as crypto backend.
 * Add nullability annotations.
 
 
