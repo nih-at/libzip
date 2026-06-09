@@ -40,8 +40,9 @@
 ZIP_EXTERN int zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
     const char *old_name;
     int old_is_dir, new_is_dir;
+    size_t name_len = name != NULL ? strlen(name) : 0;
 
-    if (idx >= za->nentry || (name != NULL && strlen(name) > ZIP_UINT16_MAX)) {
+    if (idx >= za->nentry || name_len > ZIP_UINT16_MAX) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
         return -1;
     }
@@ -55,7 +56,7 @@ ZIP_EXTERN int zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zi
         return -1;
     }
 
-    new_is_dir = (name != NULL && name[0] != '\0' && name[strlen(name) - 1] == '/');
+    new_is_dir = (name_len > 0 && name[name_len - 1] == '/');
     old_is_dir = (old_name[0] != '\0' && old_name[strlen(old_name) - 1] == '/');
 
     if (new_is_dir != old_is_dir) {

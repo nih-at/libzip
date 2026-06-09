@@ -57,8 +57,12 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
     }
 
     if (name && name[0] != '\0') {
-        /* TODO: check for string too long */
-        if ((str = _zip_string_new((const zip_uint8_t *)name, (zip_uint16_t)strlen(name), flags, &za->error)) == NULL) {
+        size_t name_len = strlen(name);
+        if (name_len > ZIP_UINT16_MAX) {
+            zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
+        if ((str = _zip_string_new((const zip_uint8_t *)name, (zip_uint16_t)name_len, flags, &za->error)) == NULL) {
             return -1;
         }
         if ((flags & ZIP_FL_ENCODING_ALL) == ZIP_FL_ENC_GUESS && _zip_guess_encoding(str, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_UTF8_GUESSED) {
