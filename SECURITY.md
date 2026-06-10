@@ -10,4 +10,4 @@ We take great care to maintain backwards compatibility, so we expect our users t
 
 You can reach us per email at info@libzip.org.
 
-For less sensitive reports, you can also open an issue or pull request on GitHub.
+For less sensitive reports, you can also open an [issue](https://github.com/nih-at/libzip/issues) or [pull request](https://github.com/nih-at/libzip/pulls) on GitHub.
