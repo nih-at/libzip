@@ -78,22 +78,22 @@ These data types correspond to central concepts in
 .Nm .
 Most of them are private, meaning you can't allocate them or access their members directly.
 This allows extending the structures in the future without breaking compatibility.
-.Ss zip_t
+.Ss Vt zip_t
 This type represents an opened archive.
 See
 .Xr zip 5 .
-.Ss zip_file_t
+.Ss Vt zip_file_t
 This type represents a file from an archive that has been opened for reading.
 See
 .Xr zip_file 5 .
-.Ss zip_source_t
+.Ss Vt zip_source_t
 This type represents a source (or destination) of data.
 It is used in
 .Nm
 for providing data when adding or replacing files, accessing data from a file inside an archive, and the data for the archive as a whole.
 See
 .Xr zip_source 5 .
-.Ss zip_error_t
+.Ss Vt zip_error_t
 This type represents information about an error.
 Its type can be checked against pre-defined constants and it can be converted to a human readable string.
 See
