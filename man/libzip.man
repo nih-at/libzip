@@ -83,22 +83,22 @@ These data types correspond to central concepts in
 \fBlibzip\fR.
 Most of them are private, meaning you can't allocate them or access their members directly.
 This allows extending the structures in the future without breaking compatibility.
-.SS "zip_t"
+.SS "\fIzip_t\fR"
 This type represents an opened archive.
 See
 zip(5).
-.SS "zip_file_t"
+.SS "\fIzip_file_t\fR"
 This type represents a file from an archive that has been opened for reading.
 See
 zip_file(5).
-.SS "zip_source_t"
+.SS "\fIzip_source_t\fR"
 This type represents a source (or destination) of data.
 It is used in
 \fBlibzip\fR
 for providing data when adding or replacing files, accessing data from a file inside an archive, and the data for the archive as a whole.
 See
 zip_source(5).
-.SS "zip_error_t"
+.SS "\fIzip_error_t\fR"
 This type represents information about an error.
 Its type can be checked against pre-defined constants and it can be converted to a human readable string.
 See

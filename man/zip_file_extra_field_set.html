@@ -112,11 +112,13 @@
 <h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
 <p class="Pp"><code class="Fn">zip_file_extra_field_set</code>() fails if:</p>
 <dl class="Bl-tag">
-  <dt id="ZIP_ER_INVAL">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er">ZIP_ER_INVAL</code></a>]</dt>
+  <dt id="ZIP_ER_EF_TOO_LARGE">[<a class="permalink" href="#ZIP_ER_EF_TOO_LARGE"><code class="Er">ZIP_ER_EF_TOO_LARGE</code></a>]</dt>
   <dd>The extra field size is too large (ID and length need 4 bytes; the maximum
-      length of all extra fields for one file combined is 65536 bytes). This
-      error also occurs if <var class="Ar">extra_field_index</var> is too
-    large.</dd>
+      length of all extra fields for one file combined is 65536 bytes).</dd>
+  <dt id="ZIP_ER_INVAL">[<a class="permalink" href="#ZIP_ER_INVAL"><code class="Er">ZIP_ER_INVAL</code></a>]</dt>
+  <dd><var class="Ar">flags</var> does not specify local or central or the extra
+      field is internal to libzip. This error also occurs if
+      <var class="Ar">extra_field_index</var> is too large.</dd>
   <dt id="ZIP_ER_MEMORY">[<a class="permalink" href="#ZIP_ER_MEMORY"><code class="Er">ZIP_ER_MEMORY</code></a>]</dt>
   <dd>Required memory could not be allocated.</dd>
   <dt id="ZIP_ER_NOENT">[<a class="permalink" href="#ZIP_ER_NOENT"><code class="Er">ZIP_ER_NOENT</code></a>]</dt>
@@ -147,7 +149,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-date">April 28, 2026</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
