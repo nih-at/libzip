@@ -476,6 +476,6 @@ bool _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
     return BCRYPT_SUCCESS(BCryptFinishHash(hmac->hHash, data, hmac->cbHash, 0));
 }
 
-ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return BCRYPT_SUCCESS(BCryptGenRandom(NULL, buffer, length, BCRYPT_USE_SYSTEM_PREFERRED_RNG));
 }

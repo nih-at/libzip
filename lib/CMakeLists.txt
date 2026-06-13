@@ -126,7 +126,6 @@ set(ZIP_SOURCES
   )
 
 if(WIN32)
-  target_compile_definitions(zip PRIVATE WIN32_LEAN_AND_MEAN)
   set(ZIP_SOURCES ${ZIP_SOURCES}
     zip_source_file_win32.c
     zip_source_file_win32_named.c
@@ -179,6 +178,10 @@ add_library(zip ${ZIP_SOURCES})
 add_library(libzip::zip ALIAS zip)
 target_link_libraries(zip PRIVATE ${ZIP_LIBRARIES})
 target_include_directories(zip PUBLIC ${ZIP_INCLUDE_DIRS})
+
+if(WIN32)
+  target_compile_definitions(zip PRIVATE WIN32_LEAN_AND_MEAN)
+endif()
 
 if (BUILD_REGRESS)
 # For testing encryption, we replace zip_secure_random with zip_nonrandom.

@@ -9,14 +9,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         cmake_extra: [""]
         name_extra: [""]
-        # include:
-        #   - os: windows-latest
-        #     cmake_extra: "-T ClangCl"
-        #     name_extra: " clang-cl"
+        include:
+          - os: windows-latest
+            cmake_extra: "-T ClangCl"
+            name_extra: " clang-cl"
     steps:
       - name: checkout
         uses: actions/checkout@v6
@@ -35,7 +34,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: 5b1214315250939257ef5d62ecdcbca18cf4fb1c
+          vcpkgGitCommitId: f3e10653cc27d62a37a3763cd84b38bca07c6075 # 2026.06.01
       - name: prepare build directory and install nihtest
         run: |
           cmake -E make_directory ${{runner.workspace}}/build
