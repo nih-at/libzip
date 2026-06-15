@@ -241,13 +241,27 @@ static char *_zip_win32_named_op_string_duplicate(zip_source_file_context_t *ctx
 
 
 static zip_int64_t _zip_win32_named_op_write(zip_source_file_context_t *ctx, const void *data, zip_uint64_t len) {
+    const zip_uint8_t *buf = (const zip_uint8_t *)data;
+    zip_uint64_t written = 0;
     DWORD ret;
-    if (!WriteFile((HANDLE)ctx->fout, data, (DWORD)len, &ret, NULL) || ret != len) {
-        zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
-        return -1;
+
+    while (written < len) {
+        DWORD chunk = _zip_win32_clamp_length(len - written);
+        const void *chunk_data = written == 0 ? data : buf + written;
+
+        if (!WriteFile((HANDLE)ctx->fout, chunk_data, chunk, &ret, NULL)) {
+            zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
+            return -1;
+        }
+        if (ret == 0) {
+            zip_error_set(&ctx->error, ZIP_ER_WRITE, EINTR);
+            return -1;
+        }
+
+        written += ret;
     }
 
-    return (zip_int64_t)ret;
+    return (zip_int64_t)written;
 }
 
 

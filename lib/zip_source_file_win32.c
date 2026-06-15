@@ -84,8 +84,7 @@ void _zip_win32_op_close(zip_source_file_context_t *ctx) {
 zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
     DWORD i;
 
-    /* TODO: cap len to "DWORD_MAX" */
-    if (!ReadFile((HANDLE)ctx->f, buf, (DWORD)len, &i, NULL)) {
+    if (!ReadFile((HANDLE)ctx->f, buf, _zip_win32_clamp_length(len), &i, NULL)) {
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
@@ -163,6 +162,11 @@ int _zip_win32_error_to_errno(DWORD win32err) {
     default:
         return 10000 + win32err;
     }
+}
+
+
+DWORD _zip_win32_clamp_length(zip_uint64_t len) {
+    return (DWORD)ZIP_MIN(len, ZIP_UINT32_MAX);
 }
 
 

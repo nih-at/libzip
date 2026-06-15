@@ -67,6 +67,7 @@ typedef struct zip_win32_file_operations zip_win32_file_operations_t;
 extern zip_source_file_operations_t _zip_source_file_win32_named_ops;
 
 void _zip_win32_op_close(zip_source_file_context_t *ctx);
+DWORD _zip_win32_clamp_length(zip_uint64_t len);
 zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len);
 bool _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence);
 zip_int64_t _zip_win32_op_tell(zip_source_file_context_t *ctx, void *f);
