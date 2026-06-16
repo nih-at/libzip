@@ -129,6 +129,21 @@ static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
 }
 
 
+/* Compare two byte sequences in constant time, without leaking through timing
+   how many leading bytes matched. Used for authentication tag (MAC) comparison
+   to avoid a timing side channel. Returns true if the sequences are equal. */
+static bool secure_equal(const unsigned char *a, const unsigned char *b, size_t length) {
+    unsigned char diff = 0;
+    size_t i;
+
+    for (i = 0; i < length; i++) {
+        diff |= (unsigned char)(a[i] ^ b[i]);
+    }
+
+    return diff == 0;
+}
+
+
 static bool verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
     unsigned char computed[ZIP_CRYPTO_SHA1_LENGTH], from_file[HMAC_LENGTH];
     if (zip_source_read(src, from_file, HMAC_LENGTH) < HMAC_LENGTH) {
@@ -143,7 +158,10 @@ static bool verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
     _zip_winzip_aes_free(ctx->aes_ctx);
     ctx->aes_ctx = NULL;
 
-    if (memcmp(from_file, computed, HMAC_LENGTH) != 0) {
+    /* The authentication tag must be compared in constant time so that the
+       number of matching leading bytes does not leak through timing, which
+       could otherwise enable byte-by-byte forgery of the MAC. */
+    if (!secure_equal(from_file, computed, HMAC_LENGTH)) {
         zip_error_set(&ctx->error, ZIP_ER_CRC, 0);
         return false;
     }
