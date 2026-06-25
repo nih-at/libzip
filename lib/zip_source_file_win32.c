@@ -83,14 +83,20 @@ void _zip_win32_op_close(zip_source_file_context_t *ctx) {
 
 zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len) {
     DWORD i;
+    zip_uint64_t offset = 0;
 
-    /* TODO: cap len to "DWORD_MAX" */
-    if (!ReadFile((HANDLE)ctx->f, buf, (DWORD)len, &i, NULL)) {
-        zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
-        return -1;
+    while (offset < len) {
+        if (!ReadFile((HANDLE)ctx->f, (char *)buf + offset, (DWORD)ZIP_MIN(len - offset, ZIP_UINT32_MAX), &i, NULL)) {
+            zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
+            break;
+        }
+        offset += i;
     }
 
-    return (zip_int64_t)i;
+    if (offset == 0 && len > 0) {
+        return -1;
+    }
+    return (zip_int64_t)offset;
 }
 
 
