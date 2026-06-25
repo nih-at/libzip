@@ -43,7 +43,7 @@
 
 #include <bcrypt.h>
 
-ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     BCRYPT_ALG_HANDLE hAlg = NULL;
     NTSTATUS hr = BCryptOpenAlgorithmProvider(&hAlg, BCRYPT_RNG_ALGORITHM, MS_PRIMITIVE_PROVIDER, 0);
     if (!BCRYPT_SUCCESS(hr) || hAlg == NULL) {

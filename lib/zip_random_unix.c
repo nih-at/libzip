@@ -42,7 +42,7 @@
 #include <stdlib.h>
 
 #ifndef HAVE_SECURE_RANDOM
-ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     arc4random_buf(buffer, length);
     return true;
 }
@@ -60,7 +60,7 @@ zip_uint32_t zip_random_uint32(void) {
 #include <fcntl.h>
 #include <unistd.h>
 
-ZIP_EXTERN bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     int fd;
 
     if ((fd = open("/dev/urandom", O_RDONLY)) < 0) {
