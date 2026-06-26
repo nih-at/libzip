@@ -342,7 +342,7 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
 
     /* We accept this EOCD as valid and won't search for an earlier one if it is unusable. */
 
-    if (!check_eocd(cd, za->flags, error)) {
+    if (!check_eocd(cd, za->open_flags, error)) {
         _zip_cdir_free(cd);
         return true;
     }
@@ -802,7 +802,7 @@ static bool check_eocd(zip_cdir_t *cd, unsigned int flags, zip_error_t *error) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return false;
     }
-    if ((flags & ZIP_CHECKCONS) && cd->offset + cd->size != cd->eocd_offset) {
+    if ((flags & ZIP_CHECKCONS) && !cd->is_zip64 && cd->offset + cd->size != cd->eocd_offset) {
         zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_LENGTH_INVALID);
         return false;
     }
