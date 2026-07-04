@@ -1,0 +1,13 @@
+# zip_open: a file entry flagged as UTF-8 (general purpose bit 11) whose name
+# is not valid UTF-8 must be rejected. Here the name is ED A0 80, the UTF-8
+# encoding of the surrogate half U+D800, which is not a valid code point.
+program tryopen
+arguments -s test.zzip
+file test.zzip incons-utf8-name-surrogate.zip
+return 1
+stdout
+opening 'test.zzip' returned error Zip archive inconsistent: entry 0: invalid UTF-8 in filename
+end-of-inline-data
+stderr
+1 errors
+end-of-inline-data
