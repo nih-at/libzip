@@ -275,7 +275,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
             }
             else {
                 if (args->whence == SEEK_CUR) {
-                    if (args->offset > 0 && (zip_int64_t)ctx->offset + args->offset < args->offset) {
+                    if (args->offset > 0 && (zip_int64_t)ctx->offset > ZIP_INT64_MAX - args->offset) {
                         zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
                         return -1;
                     }
