@@ -36,6 +36,30 @@
 
 #include "zipint.h"
 
+static void
+check_for_pending_read_error(zip_file_t *zf) {
+    zip_stat_t st;
+    zip_int64_t position;
+    zip_int64_t n;
+    zip_uint8_t dummy;
+
+    zip_stat_init(&st);
+    if (zip_source_stat(zf->src, &st) < 0 || (st.valid & ZIP_STAT_SIZE) == 0) {
+        return;
+    }
+    if ((position = zip_source_tell(zf->src)) < 0 || (zip_uint64_t)position != st.size) {
+        return;
+    }
+
+    n = zip_source_read(zf->src, &dummy, 1);
+    if (n < 0) {
+        zip_error_set_from_source(&zf->error, zf->src);
+    }
+    else if (n > 0) {
+        zip_error_set(&zf->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_INVALID_FILE_LENGTH, MAX_DETAIL_INDEX));
+    }
+}
+
 
 ZIP_EXTERN int zip_fclose(zip_file_t *zf) {
     int ret;
@@ -45,6 +69,9 @@ ZIP_EXTERN int zip_fclose(zip_file_t *zf) {
     }
 
     if (zf->src) {
+        if (zf->error.zip_err == 0) {
+            check_for_pending_read_error(zf);
+        }
         zip_source_free(zf->src);
     }
 

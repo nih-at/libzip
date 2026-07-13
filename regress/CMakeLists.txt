@@ -3,6 +3,7 @@ check_function_exists(getopt HAVE_GETOPT)
 set(TEST_PROGRAMS
   add_from_filep
   can_clone_file
+  exact_read_integrity
   fopen_unchanged
   fseek
 )
