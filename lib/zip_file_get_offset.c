@@ -37,6 +37,31 @@
 
 #include "zipint.h"
 
+static bool
+local_header_matches_central(const zip_dirent_t *central, const zip_dirent_t *local) {
+    if ((central->version_needed < local->version_needed)
+        || (central->comp_method != local->comp_method)
+        || (central->last_mod.time != local->last_mod.time)
+        || (central->last_mod.date != local->last_mod.date)
+        || !_zip_string_equal(central->filename, local->filename)) {
+        return false;
+    }
+
+    if ((central->crc != local->crc) || (central->comp_size != local->comp_size) || (central->uncomp_size != local->uncomp_size)) {
+        /* When a data descriptor is used, the local header may contain zeros instead. */
+        if ((local->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) == 0) {
+            return false;
+        }
+        if ((local->crc != 0 && central->crc != local->crc)
+            || (local->comp_size != 0 && central->comp_size != local->comp_size)
+            || (local->uncomp_size != 0 && central->uncomp_size != local->uncomp_size)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 /* _zip_file_get_offset(za, ze):
    Returns the offset of the file data for entry ze.
@@ -45,6 +70,7 @@
 */
 
 zip_uint64_t _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t *error) {
+    zip_dirent_t local_dirent;
     zip_uint64_t offset;
     zip_int32_t size;
 
@@ -60,10 +86,23 @@ zip_uint64_t _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t
         return 0;
     }
 
+    _zip_dirent_init(&local_dirent);
+
     /* TODO: cache? */
-    if ((size = _zip_dirent_size(za->src, ZIP_EF_LOCAL, error)) < 0) {
+    if ((size = (zip_int32_t)_zip_dirent_read(&local_dirent, za->src, NULL, true, za->entry[idx].orig->comp_size, false, error)) < 0) {
+        if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
+            zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), idx));
+        }
+        _zip_dirent_finalize(&local_dirent);
         return 0;
     }
+
+    if (!local_header_matches_central(za->entry[idx].orig, &local_dirent)) {
+        zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_HEADER_MISMATCH, idx));
+        _zip_dirent_finalize(&local_dirent);
+        return 0;
+    }
+    _zip_dirent_finalize(&local_dirent);
 
     if (offset + (zip_uint32_t)size > ZIP_INT64_MAX) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
