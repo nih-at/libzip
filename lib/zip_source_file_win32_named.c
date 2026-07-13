@@ -245,7 +245,7 @@ static zip_int64_t _zip_win32_named_op_write(zip_source_file_context_t *ctx, con
     zip_uint64_t offset = 0;
 
     while (offset < len) {
-        n = (DWORD)ZIP_MIN(len - offset, (zip_uint64_t)DWORD_MAX);
+        n = (DWORD)ZIP_MIN(len - offset, (zip_uint64_t)ZIP_UINT32_MAX);
         if (!WriteFile((HANDLE)ctx->fout, (char *)data + offset, n, &ret, NULL)) {
             zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
             return -1;
