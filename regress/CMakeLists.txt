@@ -5,6 +5,7 @@ set(TEST_PROGRAMS
   can_clone_file
   fopen_unchanged
   fseek
+  source_seek
 )
 
 set(GETOPT_USERS

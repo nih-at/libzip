@@ -274,22 +274,30 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 return 0;
             }
             else {
-                if (args->whence == SEEK_CUR) {
-                    if (args->offset > 0 && (zip_int64_t)ctx->offset + args->offset < args->offset) {
+                zip_uint64_t relative_offset;
+
+                if (args->whence == SEEK_SET) {
+                    if (args->offset < 0) {
                         zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
                         return -1;
                     }
-                    args->offset += (zip_int64_t)ctx->offset;
+                    relative_offset = (zip_uint64_t)args->offset;
                 }
-                if (args->offset < 0) {
+                else if (!_zip_offset_add(ctx->offset - ctx->start, args->offset, &relative_offset)) {
                     zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
                     return -1;
                 }
-                if (zip_source_seek(src, args->offset, SEEK_SET) < 0) {
+
+                if (ZIP_CHECK_ADD_OVERFLOW(ctx->start, relative_offset) || ctx->start + relative_offset > ZIP_INT64_MAX) {
+                    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+                    return -1;
+                }
+
+                ctx->offset = ctx->start + relative_offset;
+                if (zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET) < 0) {
                     zip_error_set_from_source(&ctx->error, src);
                     return -1;
                 }
-                ctx->offset = (zip_uint64_t)args->offset;
                 return 0;
             }
         }

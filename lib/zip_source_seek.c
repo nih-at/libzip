@@ -35,6 +35,29 @@
 #include "zipint.h"
 
 
+bool _zip_offset_add(zip_uint64_t offset, zip_int64_t delta, zip_uint64_t *result) {
+    if (delta >= 0) {
+        zip_uint64_t unsigned_delta = (zip_uint64_t)delta;
+
+        if (offset > ZIP_UINT64_MAX - unsigned_delta) {
+            return false;
+        }
+        *result = offset + unsigned_delta;
+    }
+    else {
+        /* Handle ZIP_INT64_MIN without overflowing signed arithmetic. */
+        zip_uint64_t unsigned_delta = (zip_uint64_t)(-(delta + 1)) + 1;
+
+        if (offset < unsigned_delta) {
+            return false;
+        }
+        *result = offset - unsigned_delta;
+    }
+
+    return true;
+}
+
+
 ZIP_EXTERN int zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
     zip_source_args_seek_t args;
 
@@ -59,7 +82,7 @@ ZIP_EXTERN int zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence
 
 
 zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t length, void *data, zip_uint64_t data_length, zip_error_t *error) {
-    zip_int64_t new_offset;
+    zip_uint64_t new_offset;
     zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, data_length, error);
 
     if (args == NULL) {
@@ -68,15 +91,25 @@ zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t len
 
     switch (args->whence) {
     case SEEK_CUR:
-        new_offset = (zip_int64_t)offset + args->offset;
+        if (!_zip_offset_add(offset, args->offset, &new_offset)) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
         break;
 
     case SEEK_END:
-        new_offset = (zip_int64_t)length + args->offset;
+        if (!_zip_offset_add(length, args->offset, &new_offset)) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
         break;
 
     case SEEK_SET:
-        new_offset = args->offset;
+        if (args->offset < 0) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
+        new_offset = (zip_uint64_t)args->offset;
         break;
 
     default:
@@ -84,10 +117,10 @@ zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t len
         return -1;
     }
 
-    if (new_offset < 0 || (zip_uint64_t)new_offset > length) {
+    if (new_offset > length || new_offset > ZIP_INT64_MAX) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return -1;
     }
 
-    return new_offset;
+    return (zip_int64_t)new_offset;
 }
