@@ -1,0 +1,3 @@
+description zip_source_is_seekable handles non-layered sources
+program source_is_seekable
+return 0
