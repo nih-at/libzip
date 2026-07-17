@@ -33,6 +33,8 @@
 
 #include "zip_source_file_win32.h"
 
+#include <intsafe.h>
+
 static zip_int64_t _zip_win32_named_op_commit_write(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_win32_named_op_create_temp_output(zip_source_file_context_t *ctx);
 static bool _zip_win32_named_op_open(zip_source_file_context_t *ctx);
