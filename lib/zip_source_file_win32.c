@@ -88,14 +88,19 @@ zip_int64_t _zip_win32_op_read(zip_source_file_context_t *ctx, void *buf, zip_ui
     while (offset < len) {
         if (!ReadFile((HANDLE)ctx->f, (char *)buf + offset, (DWORD)ZIP_MIN(len - offset, ZIP_UINT32_MAX), &i, NULL)) {
             zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
-            break;
+            if (offset == 0) {
+                return -1;
+            }
+            else {
+                break;
+            }
+        }
+        if (i == 0) {
+            break; /* EOF */
         }
         offset += i;
     }
 
-    if (offset == 0 && len > 0) {
-        return -1;
-    }
     return (zip_int64_t)offset;
 }
 
