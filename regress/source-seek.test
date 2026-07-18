@@ -1,0 +1,4 @@
+# test seek edge cases for sources and unknown-length windows
+program source_seek
+arguments ignored
+return 0
