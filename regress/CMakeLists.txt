@@ -5,6 +5,7 @@ set(TEST_PROGRAMS
   can_clone_file
   fopen_unchanged
   fseek
+  lzma_large_dict
 )
 
 set(GETOPT_USERS

@@ -1,0 +1,2 @@
+program lzma_large_dict
+return 0

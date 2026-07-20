@@ -53,6 +53,12 @@ enum header_state {
 #define HEADER_SIZE_LENGTH 8
 #define HEADER_PARAMETERS_LENGTH 5
 #define HEADER_LZMA_ALONE_LENGTH (HEADER_PARAMETERS_LENGTH + HEADER_SIZE_LENGTH)
+/*
+ * Keep attacker-controlled decoder state bounded. libzip's own preset-based
+ * encoder uses at most a 64 MiB dictionary, so allowing double that preserves
+ * headroom while avoiding multi-gigabyte allocations on crafted input.
+ */
+#define MAX_DECOMPRESS_MEMORY (UINT64_C(128) * 1024 * 1024)
 
 struct ctx {
     zip_error_t *error;
@@ -173,6 +179,7 @@ static int map_error(lzma_ret ret) {
     switch (ret) {
     case LZMA_DATA_ERROR:
     case LZMA_UNSUPPORTED_CHECK:
+    case LZMA_MEMLIMIT_ERROR:
         return ZIP_ER_COMPRESSED_DATA;
 
     case LZMA_MEM_ERROR:
@@ -213,10 +220,10 @@ static bool start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     }
     else {
         if (ctx->method == ZIP_CM_LZMA) {
-            ret = lzma_alone_decoder(&ctx->zstr, UINT64_MAX);
+            ret = lzma_alone_decoder(&ctx->zstr, MAX_DECOMPRESS_MEMORY);
         }
         else {
-            ret = lzma_stream_decoder(&ctx->zstr, UINT64_MAX, LZMA_CONCATENATED);
+            ret = lzma_stream_decoder(&ctx->zstr, MAX_DECOMPRESS_MEMORY, LZMA_CONCATENATED);
         }
     }
 
