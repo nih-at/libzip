@@ -71,6 +71,10 @@ take(stream_t *s, size_t max, size_t *out_len) {
 
 static const char *PASSWORD = "fuzzpw";
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int
 LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_error_t error;
@@ -260,3 +264,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_source_free(src); /* release keep reference */
     return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
