@@ -114,7 +114,7 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
     zip_error_init(&ctx->error);
     ctx->supports = (zip_source_supports(src) & (ZIP_SOURCE_SUPPORTS_SEEKABLE | ZIP_SOURCE_SUPPORTS_REOPEN)) | (zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_GET_DOS_TIME, ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, ZIP_SOURCE_FREE, -1));
     if (ctx->end_valid) {
-        ctx->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF);
+        ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_AT_EOF);
     }
     ctx->needs_seek = (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) ? true : false;
 
