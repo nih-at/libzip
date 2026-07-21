@@ -51,6 +51,8 @@ ZIP_EXTERN int zip_source_begin_write(zip_source_t *src) {
     }
 
     src->write_state = ZIP_SOURCE_WRITE_OPEN;
+    /* Clear past error. Otherwise the error from zip_source_begin_write_cloning() will persist and be reported on zip_source_close(). */
+    zip_error_set(&src->error, ZIP_ER_OK, 0);
 
     return 0;
 }

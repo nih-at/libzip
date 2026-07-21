@@ -227,13 +227,19 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
         /* We only advertise support for ZIP_SOURCE_AT_EOF if ctx->len is valid. */
         return ctx->offset == ctx->len;
 
-    case ZIP_SOURCE_BEGIN_WRITE:
+    case ZIP_SOURCE_BEGIN_WRITE: {
+        zip_int64_t ret;
         /* write support should not be set if fname is NULL */
         if (ctx->fname == NULL) {
             zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
             return -1;
         }
-        return ctx->ops->create_temp_output(ctx);
+        ret = ctx->ops->create_temp_output(ctx);
+        if (ret == 0) {
+            /* Clear past error. Otherwise the error from zip_source_begin_write_cloning() will persist and be reported on zip_source_close(). */ zip_error_set(&ctx->error, ZIP_ER_OK, 0);
+        }
+        return ret;
+    }
 
     case ZIP_SOURCE_BEGIN_WRITE_CLONING:
         /* write support should not be set if fname is NULL */
