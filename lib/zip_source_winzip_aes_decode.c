@@ -159,6 +159,9 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
     ctx = (struct winzip_aes *)ud;
 
     switch (cmd) {
+    case ZIP_SOURCE_AT_EOF:
+        return ctx->current_position == ctx->data_length;
+
     case ZIP_SOURCE_OPEN:
         if (decrypt_header(src, ctx) < 0) {
             return -1;
@@ -171,25 +174,33 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
             len = ctx->data_length - ctx->current_position;
         }
 
-        if (len == 0) {
-            if (!verify_hmac(src, ctx)) {
+        if (len > 0) {
+            if ((n = zip_source_read(src, data, len)) < 0) {
+                zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
-            return 0;
-        }
 
-        if ((n = zip_source_read(src, data, len)) < 0) {
-            zip_error_set_from_source(&ctx->error, src);
-            return -1;
-        }
-        ctx->current_position += (zip_uint64_t)n;
+            if (n == 0) {
+                zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
+                return -1;
+            }
 
-        if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
-            zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
-            return -1;
-        }
+            ctx->current_position += (zip_uint64_t)n;
 
-        return n;
+            if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
+                zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+                return -1;
+            }
+
+            if (ctx->current_position == ctx->data_length) {
+                (void)verify_hmac(src, ctx);
+            }
+
+            return n;
+        }
+        else {
+            return zip_error_code_zip(&ctx->error) != ZIP_ER_OK ? -1 : 0;
+        }
 
     case ZIP_SOURCE_CLOSE:
         return 0;
@@ -213,7 +224,7 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
     }
 
     case ZIP_SOURCE_SUPPORTS:
-        return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
+        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     case ZIP_SOURCE_ERROR:
         return zip_error_to_data(&ctx->error, data, len);

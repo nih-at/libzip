@@ -1,5 +1,7 @@
 # 1.12 [Unreleased]
 
+* Add `zip_source_at_eof()` and `ZIP_SOURCE_AT_EOF`.
+* Consistently report CRC and decryption errors when reading exactly to end-of-file.
 * Remove Mbed TLS support - the required functions were made private.
 * Make non-random tests work on macOS and Windows by using a special version of libzip.
 * Securely clear passwords and key material before freeing it.

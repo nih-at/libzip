@@ -128,6 +128,9 @@ static zip_int64_t pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_u
     ctx = (struct trad_pkware *)ud;
 
     switch (cmd) {
+    case ZIP_SOURCE_AT_EOF:
+        return ctx->eof;
+
     case ZIP_SOURCE_OPEN:
         ctx->eof = false;
 
@@ -213,7 +216,7 @@ static zip_int64_t pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_u
         return sizeof(ctx->dostime);
 
     case ZIP_SOURCE_SUPPORTS:
-        return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_GET_DOS_TIME, -1);
+        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_GET_DOS_TIME, -1);
 
     case ZIP_SOURCE_ERROR:
         return zip_error_to_data(&ctx->error, data, length);

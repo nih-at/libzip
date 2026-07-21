@@ -427,6 +427,8 @@ struct zip_source {
     bool eof;                /* EOF reached */
     bool had_read_error;     /* a previous ZIP_SOURCE_READ reported an error */
     zip_uint64_t bytes_read; /* for sources that don't support ZIP_SOURCE_TELL. */
+    bool have_next_byte;     /* whether next_byte contains valid data */
+    zip_uint8_t next_byte;   /* byte read to determine EOF for sources that don't support ZIP_SOURCE_AT_EOF */
 };
 
 #define ZIP_SOURCE_IS_OPEN_READING(src) ((src)->open_count > 0)
@@ -500,6 +502,7 @@ struct _zip_pkware_keys {
 typedef struct _zip_pkware_keys zip_pkware_keys_t;
 
 #define ZIP_CHECK_ADD_OVERFLOW(a, b) ((a) + (b) < (a))
+#define ZIP_CHECK_ADD_OVERFLOW_CAPPED(a, b, cap) ((a) > (cap) - (b))
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -645,6 +648,7 @@ bool _zip_source_eof(zip_source_t *);
 int zip_source_get_dos_time(zip_source_t *src, zip_dostime_t *dos_time);
 
 zip_source_t *_zip_source_file_or_p(const char *, FILE *, zip_uint64_t, zip_int64_t, const zip_stat_t *, zip_error_t *error);
+void _zip_source_get_error(zip_source_t *src);
 bool _zip_source_had_error(zip_source_t *);
 void _zip_source_invalidate(zip_source_t *src);
 zip_source_t *_zip_source_new(zip_error_t *error);

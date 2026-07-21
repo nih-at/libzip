@@ -68,6 +68,7 @@ set(MAN_PAGES
   zip_set_file_comment.3
   zip_set_file_compression.3
   zip_source.5
+  zip_source_at_eof.3
   zip_source_begin_write.3
   zip_source_buffer.3
   zip_source_buffer_fragment.3
@@ -84,6 +85,7 @@ set(MAN_PAGES
   zip_source_keep.3
   zip_source_make_command_bitmap.3
   zip_source_open.3
+  zip_source_pass_to_lower_layer.3
   zip_source_read.3
   zip_source_rollback_write.3
   zip_source_seek.3

@@ -69,6 +69,7 @@ struct read_data {
 #define buffer_capacity(buffer) ((buffer)->fragment_offsets[(buffer)->nfragments])
 #define buffer_size(buffer) ((buffer)->size)
 
+static zip_int64_t buffer_at_eof(const buffer_t *buffer);
 static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t length, zip_error_t *error);
 static zip_uint64_t buffer_find_fragment(const buffer_t *buffer, zip_uint64_t offset);
 static void buffer_free(buffer_t *buffer);
@@ -179,6 +180,9 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
     struct read_data *ctx = (struct read_data *)state;
 
     switch (cmd) {
+    case ZIP_SOURCE_AT_EOF:
+        return buffer_at_eof(ctx->in);
+
     case ZIP_SOURCE_BEGIN_WRITE:
         if ((ctx->out = buffer_new(NULL, 0, 0, &ctx->error)) == NULL) {
             return -1;
@@ -280,7 +284,7 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
     }
 
     case ZIP_SOURCE_SUPPORTS:
-        return zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_BEGIN_WRITE_CLONING, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
+        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_BEGIN_WRITE_CLONING, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_WRITE, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     case ZIP_SOURCE_TELL:
         if (ctx->in->offset > ZIP_INT64_MAX) {
@@ -501,6 +505,10 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
     }
 
     return buffer;
+}
+
+static zip_int64_t buffer_at_eof(const buffer_t *buffer) {
+    return buffer->offset == buffer->size;
 }
 
 static zip_int64_t buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {

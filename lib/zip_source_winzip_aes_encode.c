@@ -112,6 +112,9 @@ static zip_int64_t winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, z
     ctx = (struct winzip_aes *)ud;
 
     switch (cmd) {
+    case ZIP_SOURCE_AT_EOF:
+        return ctx->eof && ctx->buffer == NULL;
+
     case ZIP_SOURCE_OPEN:
         ctx->eof = false;
         if (encrypt_header(src, ctx) < 0) {
@@ -164,6 +167,10 @@ static zip_int64_t winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, z
                 return -1;
             }
             buffer_n += _zip_buffer_read(ctx->buffer, (zip_uint8_t *)data + ret, length - (zip_uint64_t)ret);
+            if (_zip_buffer_eof(ctx->buffer)) {
+                _zip_buffer_free(ctx->buffer);
+                ctx->buffer = NULL;
+            }
         }
 
         return (zip_int64_t)(buffer_n + (zip_uint64_t)ret);

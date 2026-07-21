@@ -46,11 +46,22 @@ int zip_source_close(zip_source_t *src) {
         _zip_source_call(src, NULL, 0, ZIP_SOURCE_CLOSE);
 
         if (ZIP_SOURCE_IS_LAYERED(src)) {
-            if (zip_source_close(src->src) < 0) {
+            if (!ZIP_SOURCE_IS_OPEN_READING(src->src)) {
                 zip_error_set(&src->error, ZIP_ER_INTERNAL, 0);
+                return -1;
             }
+            (void)zip_source_close(src->src);
         }
     }
 
-    return 0;
+    if (!_zip_source_had_error(src)) {
+        /* If the last read caused an error, get it. */
+        _zip_source_get_error(src);
+
+        if (ZIP_SOURCE_IS_LAYERED(src) && _zip_source_had_error(src->src)) {
+            zip_error_set_from_source(&src->error, src->src);
+        }
+    }
+
+    return _zip_source_had_error(src) ? -1 : 0;
 }

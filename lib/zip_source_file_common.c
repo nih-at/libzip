@@ -188,6 +188,10 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
             }
         }
 
+        if (ctx->st.valid & ZIP_STAT_SIZE) {
+            ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_AT_EOF);
+        }
+
         ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_GET_FILE_ATTRIBUTES);
     }
 
@@ -218,6 +222,10 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
     switch (cmd) {
     case ZIP_SOURCE_ACCEPT_EMPTY:
         return 0;
+
+    case ZIP_SOURCE_AT_EOF:
+        /* We only advertise support for ZIP_SOURCE_AT_EOF if ctx->len is valid. */
+        return ctx->offset == ctx->len;
 
     case ZIP_SOURCE_BEGIN_WRITE:
         /* write support should not be set if fname is NULL */

@@ -60,6 +60,11 @@ zip_int64_t zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
     }
 
     bytes_read = 0;
+    if (src->have_next_byte) {
+        ((zip_uint8_t *)data)[0] = src->next_byte;
+        bytes_read = 1;
+        src->have_next_byte = false;
+    }
     while (bytes_read < len) {
         if ((n = _zip_source_call(src, (zip_uint8_t *)data + bytes_read, len - bytes_read, ZIP_SOURCE_READ)) < 0) {
             src->had_read_error = true;

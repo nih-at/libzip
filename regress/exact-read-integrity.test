@@ -1,0 +1,5 @@
+description exact-size reads report integrity errors on close
+program exact_read_integrity
+return 0
+file broken.zip broken.zip
+file hmac-error.zip hmac-error.zip

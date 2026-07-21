@@ -91,6 +91,7 @@ zip_source_t *_zip_source_new(zip_error_t *error) {
     src->eof = false;
     src->had_read_error = false;
     src->bytes_read = 0;
+    src->have_next_byte = false;
 
     return src;
 }

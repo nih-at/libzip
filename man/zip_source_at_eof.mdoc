@@ -1,5 +1,5 @@
-.\" zip_fclose.mdoc -- close file in zip archive
-.\" Copyright (C) 2003-2017 Dieter Baron and Thomas Klausner
+.\" zip_source_at_eof.mdoc -- check if zip source is at end-of-file
+.\" Copyright (C) 2026 Dieter Baron and Thomas Klausner
 .\"
 .\" This file is part of libzip, a library to manipulate ZIP archives.
 .\" The authors can be contacted at <info@libzip.org>
@@ -29,40 +29,38 @@
     .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
     .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     .\"
-    .Dd July 17, 2026
-    .Dt ZIP_FCLOSE 3
+    .Dd July 21, 2026
+    .Dt ZIP_SOURCE_AT_EOF 3
     .Os
     .Sh NAME
-    .Nm zip_fclose
-    .Nd close file in zip archive
+    .Nm zip_source_at_eof
+    .Nd check if zip source is at end-of-file
     .Sh LIBRARY
     libzip (-lzip)
     .Sh SYNOPSIS
     .In zip.h
     .Ft int
-    .Fn zip_fclose "zip_file_t *file"
+    .Fn zip_source_at_eof "zip_source_t *source"
     .Sh DESCRIPTION
-    The
-    .Fn zip_fclose
-    function closes
-    .Ar file
-    and frees the memory allocated for it.
+    The function
+    .Fn zip_source_at_eof
+    check if the current position in the source is at end-of-file.
     .Sh RETURN VALUES
-    If no read error occurred and the source could be closed successfully, 0 is returned.
-    Otherwise the error code is returned.
-    If a system error occurred,
-    .Va errno
-    is set appropriately.
+    Return 1 if the source is at end-of-file, 0 if not, and \-1 on error.
     .Sh SEE ALSO
     .Xr libzip 3 ,
-    .Xr zip_fopen 3 ,
-    .Xr zip_fread 3 ,
-    .Xr zip_fseek 3
+    .Xr zip_source 5 ,
+    .Xr zip_source_read 3
     .Sh HISTORY
-    .Fn zip_fclose
-    was added in libzip 0.6.
+    .Fn zip_source_at_eof
+    was added in libzip 1.12.
     .Sh AUTHORS
     .An -nosplit
     .An Dieter Baron Aq Mt dillo@nih.at
     and
     .An Thomas Klausner Aq Mt wiz@gatalith.at
+    .Sh CAVEATS
+    If the source does not support
+    .Dv ZIP_SOURCE_AT_EOF ,
+    the library will try to read one byte to check for end-of-file.
+    This byte will be returned on the next read.

@@ -113,6 +113,9 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
     ctx->source_index = source_index;
     zip_error_init(&ctx->error);
     ctx->supports = (zip_source_supports(src) & (ZIP_SOURCE_SUPPORTS_SEEKABLE | ZIP_SOURCE_SUPPORTS_REOPEN)) | (zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_GET_DOS_TIME, ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, ZIP_SOURCE_FREE, -1));
+    if (ctx->end_valid) {
+        ctx->supports |= zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF);
+    }
     ctx->needs_seek = (ctx->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) ? true : false;
 
     if (st) {
@@ -158,6 +161,14 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
     ctx = (struct window *)_ctx;
 
     switch (cmd) {
+    case ZIP_SOURCE_AT_EOF:
+        if (ctx->end_valid) {
+            return ctx->offset == ctx->end;
+        }
+        else {
+            return zip_source_pass_to_lower_layer(src, data, len, cmd);
+        }
+
     case ZIP_SOURCE_CLOSE:
         return 0;
 
@@ -232,11 +243,9 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         }
 
         if ((ret = zip_source_read(src, data, len)) < 0) {
-            zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
+            zip_error_set_from_source(&ctx->error, src);
             return -1;
         }
-
-        ctx->offset += (zip_uint64_t)ret;
 
         if (ret == 0) {
             if (ctx->end_valid && ctx->offset < ctx->end) {
@@ -244,6 +253,8 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 return -1;
             }
         }
+
+        ctx->offset += (zip_uint64_t)ret;
         return ret;
 
     case ZIP_SOURCE_SEEK: {
