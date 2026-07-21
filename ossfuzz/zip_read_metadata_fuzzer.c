@@ -49,6 +49,10 @@ static const zip_uint16_t PROBE_IDS[] = {
 };
 #define N_PROBE_IDS (sizeof(PROBE_IDS) / sizeof(PROBE_IDS[0]))
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     zip_source_t *src;
     zip_error_t   error;
@@ -127,3 +131,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     }
     return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif
