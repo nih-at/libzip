@@ -236,7 +236,8 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
         }
         ret = ctx->ops->create_temp_output(ctx);
         if (ret == 0) {
-            /* Clear past error. Otherwise the error from zip_source_begin_write_cloning() will persist and be reported on zip_source_close(). */ zip_error_set(&ctx->error, ZIP_ER_OK, 0);
+            /* Clear past error. Otherwise the error from zip_source_begin_write_cloning() will persist and be reported on zip_source_close(). */
+            zip_error_set(&ctx->error, ZIP_ER_OK, 0);
         }
         return ret;
     }
