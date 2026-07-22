@@ -69,10 +69,18 @@ zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t len
 
     switch (args->whence) {
     case SEEK_CUR:
+        if ((args->offset > 0 && (zip_int64_t)offset > ZIP_INT64_MAX - args->offset) || (args->offset < 0 && (zip_int64_t)offset < ZIP_INT64_MIN - args->offset)) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
         new_offset = (zip_int64_t)offset + args->offset;
         break;
 
     case SEEK_END:
+        if ((args->offset > 0 && (zip_int64_t)length > ZIP_INT64_MAX - args->offset) || (args->offset < 0 && (zip_int64_t)length < ZIP_INT64_MIN - args->offset)) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
         new_offset = (zip_int64_t)length + args->offset;
         break;
 
