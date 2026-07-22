@@ -65,10 +65,13 @@ ZIP_EXTERN int zip_source_open(zip_source_t *src) {
         }
     }
 
+    /* TODO: Move the next four lines to into the else branch above, or better yet to zip_source_close()?
+       They should probably only happen when ZIP_SOURCE_IS_OPEN_READING(src) changes, so other references that have the source open are not affected. */
     src->eof = false;
     src->had_read_error = false;
     _zip_error_clear(&src->error);
     src->bytes_read = 0;
+
     src->open_count++;
 
     return 0;

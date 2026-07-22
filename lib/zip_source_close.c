@@ -43,6 +43,8 @@ int zip_source_close(zip_source_t *src) {
 
     src->open_count--;
     if (src->open_count == 0) {
+        src->have_next_byte = false;
+
         _zip_source_call(src, NULL, 0, ZIP_SOURCE_CLOSE);
 
         if (ZIP_SOURCE_IS_LAYERED(src)) {
