@@ -163,6 +163,7 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
         return ctx->current_position == ctx->data_length;
 
     case ZIP_SOURCE_OPEN:
+        zip_error_set(&ctx->error, ZIP_ER_OK, 0);
         if (decrypt_header(src, ctx) < 0) {
             return -1;
         }
@@ -202,8 +203,12 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
             return zip_error_code_zip(&ctx->error) != ZIP_ER_OK ? -1 : 0;
         }
 
-    case ZIP_SOURCE_CLOSE:
-        return 0;
+    case ZIP_SOURCE_CLOSE: {
+        bool had_error = zip_error_code_zip(&ctx->error) != ZIP_ER_OK;
+        _zip_winzip_aes_free(ctx->aes_ctx);
+        ctx->aes_ctx = NULL;
+        return had_error ? -1 : 0;
+    }
 
     case ZIP_SOURCE_STAT: {
         zip_stat_t *st;
