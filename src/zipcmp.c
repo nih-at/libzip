@@ -594,6 +594,7 @@ static int list_zip(const char *name, struct archive *a) {
                 continue;
             }
 
+            entry_init(a->entry + j);
             a->entry[j].name = strdup(st.name);
             a->entry[j].size = st.size;
             a->entry[j].crc = st.crc;
