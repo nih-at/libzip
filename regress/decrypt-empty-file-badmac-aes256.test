@@ -1,0 +1,11 @@
+# A zero-length WinZip AES entry still carries an authentication code (HMAC).
+# Here the 10-byte HMAC of an empty AES-256 entry is corrupted; reading it with
+# the correct password must fail instead of returning the entry as a valid empty
+# file.
+features HAVE_CRYPTO
+return 1
+arguments empty-badmac-aes256.zzip  set_password password  cat 0
+file empty-badmac-aes256.zzip empty-badmac-aes256.zip
+stderr
+can't read file at index '0': CRC error
+end-of-inline-data

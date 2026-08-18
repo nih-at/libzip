@@ -172,6 +172,10 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
             return -1;
         }
         ctx->current_position = 0;
+        if (ctx->data_length == 0) {
+            /* no file data, so ZIP_SOURCE_READ never sees a non-empty read; verify the authentication code here */
+            verify_hmac(src, ctx);
+        }
         return 0;
 
     case ZIP_SOURCE_READ:
