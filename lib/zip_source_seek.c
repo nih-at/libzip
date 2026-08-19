@@ -90,7 +90,7 @@ zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t len
         new_offset = ZIP_UINT64_MAX;
     }
 
-    if (new_offset == ZIP_UINT64_MAX) {
+    if (new_offset == ZIP_UINT64_MAX || new_offset > length) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return -1;
     }

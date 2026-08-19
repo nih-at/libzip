@@ -1,0 +1,13 @@
+# reading local extra fields for an entry whose local header declares a
+# filename length that points past the end of the archive must be rejected.
+# The over-seek used to slip past the (now missing) upper-bound check in
+# zip_source_seek_compute_offset and cause an out-of-bounds read in the
+# buffer source. The trailing system error text is normalized because it is
+# platform dependent.
+arguments test.zip count_extra 0 l
+file test.zip local-ef-seek-overflow.zip
+return 1
+stderr-replace "Seek error: .*" "Seek error"
+stderr
+can't get extra field count for file at index '0': Seek error
+end-of-inline-data
