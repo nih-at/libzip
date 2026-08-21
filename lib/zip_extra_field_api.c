@@ -156,7 +156,7 @@ ZIP_EXTERN const zip_uint8_t *zip_file_extra_field_get(zip_t *za, zip_uint64_t i
 ZIP_EXTERN const zip_uint8_t *zip_file_extra_field_get_by_id(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp, zip_flags_t flags) {
     zip_dirent_t *de;
 
-    if ((flags & ZIP_EF_BOTH) == 0) {
+    if ((flags & ZIP_EF_BOTH) == 0 || ((flags & ZIP_EF_BOTH) == ZIP_EF_BOTH)) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
         return NULL;
     }

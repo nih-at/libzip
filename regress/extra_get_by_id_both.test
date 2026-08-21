@@ -1,0 +1,14 @@
+# A field can not be identified by index across both lists at once: since 1.12
+# local and central extra fields are kept in separate lists, so the index would
+# be ambiguous. Reject that combination, the way zip_file_extra_field_get does.
+# The first two calls are the control: addressing one list still works.
+arguments encrypt.zip get_extra_by_id 0 21589 0 l get_extra_by_id 0 21589 0 c get_extra_by_id 0 21589 0 cl
+return 1
+file encrypt.zip encrypt.zip
+stdout
+Extra field 0x5455: len 9, data 0x033dda4c444dda4c44
+Extra field 0x5455: len 5, data 0x033dda4c44
+end-of-inline-data
+stderr
+can't get extra field data for file at index 0, extra field id 21589, ef index 0, flags 768: Invalid argument
+end-of-inline-data
