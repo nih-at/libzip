@@ -405,7 +405,7 @@ ZIP_DEPRECATED("use 'zip_source_zip_file' instead") ZIP_EXTERN zip_source_t *_Nu
 ZIP_DEPRECATED("use 'zip_source_zip_file_create' instead") ZIP_EXTERN zip_source_t *_Nullable zip_source_zip_create(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_int64_t, zip_error_t *_Nullable);
 #endif
 
-ZIP_EXTERN int zip_close(zip_t *_Nonnull);
+ZIP_EXTERN bool zip_close(zip_t *_Nonnull);
 ZIP_EXTERN int zip_delete(zip_t *_Nonnull, zip_uint64_t);
 ZIP_EXTERN zip_int64_t zip_dir_add(zip_t *_Nonnull, const char *_Nonnull, zip_flags_t);
 ZIP_EXTERN void zip_discard(zip_t *_Nonnull);

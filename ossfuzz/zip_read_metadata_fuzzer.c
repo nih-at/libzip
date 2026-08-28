@@ -126,7 +126,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         }
     }
 
-    if (zip_close(za) < 0) {
+    if (!zip_close(za)) {
         zip_discard(za);
     }
     return 0;

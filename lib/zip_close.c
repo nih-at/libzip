@@ -49,7 +49,7 @@ static int torrentzip_compare_names(const void *a, const void *b);
 static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
 static int write_data_descriptor(zip_t *za, const zip_dirent_t *dirent, int is_zip64);
 
-ZIP_EXTERN int zip_close(zip_t *za) {
+ZIP_EXTERN bool zip_close(zip_t *za) {
     zip_uint64_t i, j, survivors, unchanged_offset;
     zip_int64_t off;
     int error;
@@ -57,7 +57,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
     int changed;
 
     if (za == NULL) {
-        return -1;
+        return false;
     }
 
     changed = _zip_changed(za, &survivors);
@@ -68,27 +68,27 @@ ZIP_EXTERN int zip_close(zip_t *za) {
             if (zip_source_remove(za->src) < 0) {
                 if (!((zip_error_code_zip(zip_source_error(za->src)) == ZIP_ER_REMOVE) && (zip_error_code_system(zip_source_error(za->src)) == ENOENT))) {
                     zip_error_set_from_source(&za->error, za->src);
-                    return -1;
+                    return false;
                 }
             }
         }
         zip_discard(za);
-        return 0;
+        return true;
     }
 
     /* Always write empty archive if we are told to keep it, otherwise it wouldn't be created if the file doesn't already exist. */
     if (!changed && survivors > 0) {
         zip_discard(za);
-        return 0;
+        return true;
     }
 
     if (survivors > za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
-        return -1;
+        return false;
     }
 
     if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
-        return -1;
+        return false;
     }
 
     unchanged_offset = ZIP_UINT64_MAX;
@@ -104,7 +104,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         if (j >= survivors) {
             free(filelist);
             zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
-            return -1;
+            return false;
         }
 
         filelist[j].idx = i;
@@ -114,7 +114,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
     if (j < survivors) {
         free(filelist);
         zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_WANT_TORRENTZIP(za)) {
@@ -141,7 +141,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
             if (last_index != ZIP_UINT64_MAX) {
                 if ((unchanged_offset = _zip_file_get_end(za, last_index, &za->error)) == 0) {
                     free(filelist);
-                    return -1;
+                    return false;
                 }
             }
         }
@@ -156,7 +156,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         if (zip_source_begin_write(za->src) < 0) {
             zip_error_set_from_source(&za->error, za->src);
             free(filelist);
-            return -1;
+            return false;
         }
     }
 
@@ -164,7 +164,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         zip_error_set(&za->error, ZIP_ER_CANCELLED, 0);
         zip_source_rollback_write(za->src);
         free(filelist);
-        return -1;
+        return false;
     }
     error = 0;
     for (j = 0; j < survivors; j++) {
@@ -296,12 +296,12 @@ ZIP_EXTERN int zip_close(zip_t *za) {
 
     if (error) {
         zip_source_rollback_write(za->src);
-        return -1;
+        return false;
     }
 
     zip_discard(za);
 
-    return 0;
+    return true;
 }
 
 

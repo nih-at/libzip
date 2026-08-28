@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    if ((zip_close(za)) < 0) {
+    if (!zip_close(za)) {
         fprintf(stderr, "%s: cannot close archive '%s': %s\n", argv[0], archive, zip_strerror(za));
         zip_discard(za);
         exit(1);

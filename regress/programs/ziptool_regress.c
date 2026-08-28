@@ -268,7 +268,7 @@ static int zin_close(char *argv[]) {
         fprintf(stderr, "invalid argument '%" PRIu64 "', only %u zip sources open\n", idx, z_in_count);
         return -1;
     }
-    if (zip_close(z_in[idx]) < 0) {
+    if (!zip_close(z_in[idx])) {
         fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in[idx]));
         return -1;
     }

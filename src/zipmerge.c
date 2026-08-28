@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (zip_close(za) < 0) {
+    if (!zip_close(za)) {
         fprintf(stderr, "%s: cannot write zip archive '%s': %s\n", progname, tname, zip_strerror(za));
         exit(1);
     }

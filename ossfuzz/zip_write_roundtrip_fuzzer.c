@@ -220,7 +220,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     }
 
     /* Serialize: the write/encode path under test. */
-    if (zip_close(za) < 0) {
+    if (!zip_close(za)) {
         zip_discard(za);
         zip_source_free(src); /* release keep reference */
         return 0;
@@ -258,7 +258,7 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         }
     }
 
-    if (zip_close(za) < 0) {
+    if (!zip_close(za)) {
         zip_discard(za);
     }
     zip_source_free(src); /* release keep reference */

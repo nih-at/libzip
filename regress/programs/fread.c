@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
     }
 
     zip_unchange_all(z);
-    if (zip_close(z) == -1) {
+    if (!zip_close(z)) {
         fprintf(stderr, "%s: can't close zip archive '%s': %s\n", progname, archive, zip_strerror(z));
         return 1;
     }

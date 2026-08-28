@@ -50,7 +50,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         zip_discard(archive);
         return -1;
     }
-    if (zip_close(archive) < 0) {
+    if (!zip_close(archive)) {
         fprintf(stderr, "error closing archive: %s\n", zip_strerror(archive));
         zip_discard(archive);
         return -1;

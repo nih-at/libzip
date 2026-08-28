@@ -66,7 +66,7 @@ void fuzzer_read(zip_t *za, zip_error_t *error, const char *password) {
             continue;
         }
     }
-    if (zip_close(za) < 0) {
+    if (!zip_close(za)) {
         fprintf(stderr, "Error closing archive: %s\n", zip_strerror(za));
         zip_discard(za);
     }
