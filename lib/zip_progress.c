@@ -223,11 +223,11 @@ ZIP_EXTERN bool zip_register_progress_callback_with_state(zip_t *za, double prec
 }
 
 
-ZIP_EXTERN int zip_register_cancel_callback_with_state(zip_t *za, zip_cancel_callback callback, void (*ud_free)(void *), void *ud) {
+ZIP_EXTERN bool zip_register_cancel_callback_with_state(zip_t *za, zip_cancel_callback callback, void (*ud_free)(void *), void *ud) {
     if (callback != NULL) {
         if (za->progress == NULL) {
             if ((za->progress = _zip_progress_new(za)) == NULL) {
-                return -1;
+                return false;
             }
         }
 
@@ -245,7 +245,7 @@ ZIP_EXTERN int zip_register_cancel_callback_with_state(zip_t *za, zip_cancel_cal
         }
     }
 
-    return 0;
+    return true;
 }
 
 /* LCOV_EXCL_START */
