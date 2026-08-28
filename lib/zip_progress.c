@@ -160,9 +160,9 @@ bool _zip_progress_start(zip_progress_t *progress) {
 }
 
 
-int _zip_progress_subrange(zip_progress_t *progress, double start, double end) {
+bool _zip_progress_subrange(zip_progress_t *progress, double start, double end) {
     if (progress == NULL) {
-        return 0;
+        return true;
     }
 
     progress->start = start;
@@ -171,11 +171,11 @@ int _zip_progress_subrange(zip_progress_t *progress, double start, double end) {
     return _zip_progress_update(progress, 0.0);
 }
 
-int _zip_progress_update(zip_progress_t *progress, double sub_current) {
+bool _zip_progress_update(zip_progress_t *progress, double sub_current) {
     double current;
 
     if (progress == NULL) {
-        return 0;
+        return true;
     }
 
     if (progress->callback_progress != NULL) {
@@ -189,11 +189,11 @@ int _zip_progress_update(zip_progress_t *progress, double sub_current) {
 
     if (progress->callback_cancel != NULL) {
         if (progress->callback_cancel(progress->za, progress->ud_cancel)) {
-            return -1;
+            return false;
         }
     }
 
-    return 0;
+    return true;
 }
 
 

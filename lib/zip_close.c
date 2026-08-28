@@ -172,7 +172,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
         zip_entry_t *entry;
         zip_dirent_t *de;
 
-        if (_zip_progress_subrange(za->progress, (double)j / (double)survivors, (double)(j + 1) / (double)survivors) != 0) {
+        if (!_zip_progress_subrange(za->progress, (double)j / (double)survivors, (double)(j + 1) / (double)survivors)) {
             zip_error_set(&za->error, ZIP_ER_CANCELLED, 0);
             error = 1;
             break;
@@ -649,7 +649,7 @@ static int copy_data(zip_t *za, zip_uint64_t len) {
 
         len -= n;
 
-        if (_zip_progress_update(za->progress, (total - (double)len) / total) != 0) {
+        if (!_zip_progress_update(za->progress, (total - (double)len) / total)) {
             zip_error_set(&za->error, ZIP_ER_CANCELLED, 0);
             return -1;
         }
@@ -691,7 +691,7 @@ static int copy_source(zip_t *za, zip_source_t *src, zip_source_t *src_for_lengt
             else {
                 current += n;
             }
-            if (_zip_progress_update(za->progress, (double)current / (double)data_length) != 0) {
+            if (!_zip_progress_update(za->progress, (double)current / (double)data_length)) {
                 zip_error_set(&za->error, ZIP_ER_CANCELLED, 0);
                 ret = -1;
                 break;

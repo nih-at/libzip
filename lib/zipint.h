@@ -643,8 +643,8 @@ zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 void _zip_progress_end(zip_progress_t *progress);
 void _zip_progress_free(zip_progress_t *progress);
 bool _zip_progress_start(zip_progress_t *progress);
-int _zip_progress_subrange(zip_progress_t *progress, double start, double end);
-int _zip_progress_update(zip_progress_t *progress, double value);
+bool _zip_progress_subrange(zip_progress_t *progress, double start, double end);
+bool _zip_progress_update(zip_progress_t *progress, double value);
 
 bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t element_size, zip_uint64_t additional_elements, zip_error_t *error);
 
