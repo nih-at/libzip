@@ -197,11 +197,11 @@ bool _zip_progress_update(zip_progress_t *progress, double sub_current) {
 }
 
 
-ZIP_EXTERN int zip_register_progress_callback_with_state(zip_t *za, double precision, zip_progress_callback callback, void (*ud_free)(void *), void *ud) {
+ZIP_EXTERN bool zip_register_progress_callback_with_state(zip_t *za, double precision, zip_progress_callback callback, void (*ud_free)(void *), void *ud) {
     if (callback != NULL) {
         if (za->progress == NULL) {
             if ((za->progress = _zip_progress_new(za)) == NULL) {
-                return -1;
+                return false;
             }
         }
 
@@ -219,7 +219,7 @@ ZIP_EXTERN int zip_register_progress_callback_with_state(zip_t *za, double preci
         }
     }
 
-    return 0;
+    return true;
 }
 
 
@@ -273,7 +273,7 @@ ZIP_EXTERN void zip_register_progress_callback(zip_t *za, zip_progress_callback_
 
     ud->callback = progress_callback;
 
-    if (zip_register_progress_callback_with_state(za, 0.001, _zip_legacy_progress_callback, free, ud) < 0) {
+    if (!zip_register_progress_callback_with_state(za, 0.001, _zip_legacy_progress_callback, free, ud)) {
         free(ud);
     }
 }

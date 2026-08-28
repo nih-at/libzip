@@ -462,7 +462,7 @@ ZIP_EXTERN const char *_Nonnull zip_libzip_version(void);
 ZIP_EXTERN zip_int64_t zip_name_locate(zip_t *_Nonnull, const char *_Nonnull, zip_flags_t);
 ZIP_EXTERN zip_t *_Nullable zip_open(const char *_Nonnull, int, int *_Nullable);
 ZIP_EXTERN zip_t *_Nullable zip_open_from_source(zip_source_t *_Nonnull, int, zip_error_t *_Nullable);
-ZIP_EXTERN int zip_register_progress_callback_with_state(zip_t *_Nonnull, double, zip_progress_callback _Nullable, void (*_Nullable)(void *_Nullable), void *_Nullable);
+ZIP_EXTERN bool zip_register_progress_callback_with_state(zip_t *_Nonnull, double, zip_progress_callback _Nullable, void (*_Nullable)(void *_Nullable), void *_Nullable);
 ZIP_EXTERN int zip_register_cancel_callback_with_state(zip_t *_Nonnull, zip_cancel_callback _Nullable, void (*_Nullable)(void *_Nullable), void *_Nullable);
 ZIP_EXTERN int zip_set_archive_comment(zip_t *_Nonnull, const char *_Nullable, zip_uint16_t);
 ZIP_EXTERN int zip_set_archive_flag(zip_t *_Nonnull, zip_flags_t, int);
