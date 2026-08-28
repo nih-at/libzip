@@ -499,7 +499,7 @@ static int set_extra(char *argv[]) {
 }
 
 static int set_archive_comment(char *argv[]) {
-    if (zip_set_archive_comment(za, argv[0], (zip_uint16_t)strlen(argv[0])) < 0) {
+    if (!zip_set_archive_comment(za, argv[0], (zip_uint16_t)strlen(argv[0]))) {
         fprintf(stderr, "can't set archive comment to '%s': %s\n", argv[0], zip_strerror(za));
         return -1;
     }
