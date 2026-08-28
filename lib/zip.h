@@ -466,7 +466,7 @@ ZIP_EXTERN bool zip_register_progress_callback_with_state(zip_t *_Nonnull, doubl
 ZIP_EXTERN bool zip_register_cancel_callback_with_state(zip_t *_Nonnull, zip_cancel_callback _Nullable, void (*_Nullable)(void *_Nullable), void *_Nullable);
 ZIP_EXTERN bool zip_set_archive_comment(zip_t *_Nonnull, const char *_Nullable, zip_uint16_t);
 ZIP_EXTERN bool zip_set_archive_flag(zip_t *_Nonnull, zip_flags_t, int);
-ZIP_EXTERN int zip_set_default_password(zip_t *_Nonnull, const char *_Nullable);
+ZIP_EXTERN bool zip_set_default_password(zip_t *_Nonnull, const char *_Nullable);
 ZIP_EXTERN int zip_set_file_compression(zip_t *_Nonnull, zip_uint64_t, zip_int32_t, zip_uint32_t);
 ZIP_EXTERN int zip_source_at_eof(zip_source_t *_Nonnull);
 ZIP_EXTERN int zip_source_begin_write(zip_source_t *_Nonnull);

@@ -613,7 +613,7 @@ static int set_file_mtime_all(char *argv[]) {
 
 static int set_password(char *argv[]) {
     /* set default password */
-    if (zip_set_default_password(za, argv[0]) < 0) {
+    if (!zip_set_default_password(za, argv[0])) {
         fprintf(stderr, "can't set default password to '%s'\n", argv[0]);
         return -1;
     }

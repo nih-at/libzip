@@ -95,7 +95,7 @@ check_case(const char *archive, const char *password, const char *name, int expe
         return 1;
     }
 
-    if (password != NULL && zip_set_default_password(za, password) < 0) {
+    if (password != NULL && !zip_set_default_password(za, password)) {
         fprintf(stderr, "can't set password for '%s': %s\n", archive, zip_strerror(za));
         zip_close(za);
         return 1;
