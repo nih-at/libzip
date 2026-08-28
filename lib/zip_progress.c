@@ -140,9 +140,9 @@ void _zip_progress_set_cancel_callback(zip_progress_t *progress, zip_cancel_call
     progress->ud_cancel = ud;
 }
 
-int _zip_progress_start(zip_progress_t *progress) {
+bool _zip_progress_start(zip_progress_t *progress) {
     if (progress == NULL) {
-        return 0;
+        return true;
     }
 
     if (progress->callback_progress != NULL) {
@@ -152,11 +152,11 @@ int _zip_progress_start(zip_progress_t *progress) {
 
     if (progress->callback_cancel != NULL) {
         if (progress->callback_cancel(progress->za, progress->ud_cancel)) {
-            return -1;
+            return false;
         }
     }
 
-    return 0;
+    return true;
 }
 
 

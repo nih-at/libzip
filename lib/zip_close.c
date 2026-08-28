@@ -160,7 +160,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
         }
     }
 
-    if (_zip_progress_start(za->progress) != 0) {
+    if (!_zip_progress_start(za->progress)) {
         zip_error_set(&za->error, ZIP_ER_CANCELLED, 0);
         zip_source_rollback_write(za->src);
         free(filelist);

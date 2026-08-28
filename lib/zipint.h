@@ -642,7 +642,7 @@ zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 
 void _zip_progress_end(zip_progress_t *progress);
 void _zip_progress_free(zip_progress_t *progress);
-int _zip_progress_start(zip_progress_t *progress);
+bool _zip_progress_start(zip_progress_t *progress);
 int _zip_progress_subrange(zip_progress_t *progress, double start, double end);
 int _zip_progress_update(zip_progress_t *progress, double value);
 
