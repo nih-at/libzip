@@ -515,7 +515,7 @@ static int set_archive_flag(char *argv[]) {
 
     int value = strcasecmp(argv[1], "1") == 0 || strcasecmp(argv[1], "true") == 0 || strcasecmp(argv[1], "yes") == 0;
 
-    if (zip_set_archive_flag(za, flag, value) < 0) {
+    if (!zip_set_archive_flag(za, flag, value)) {
         fprintf(stderr, "can't set archive flag '%s' to %d: %s\n", argv[0], value, zip_strerror(za));
         return -1;
     }

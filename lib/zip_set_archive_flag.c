@@ -35,12 +35,12 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_set_archive_flag(zip_t *za, zip_flags_t flag, int value) {
+ZIP_EXTERN bool zip_set_archive_flag(zip_t *za, zip_flags_t flag, int value) {
     unsigned int new_flags;
 
     if (flag == ZIP_AFL_IS_TORRENTZIP) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     /* TODO: when setting ZIP_AFL_WANT_TORRENTZIP, we should error out if any changes have been made that are not allowed for torrentzip. */
@@ -53,23 +53,23 @@ ZIP_EXTERN int zip_set_archive_flag(zip_t *za, zip_flags_t flag, int value) {
     }
 
     if (new_flags == za->ch_flags) {
-        return 0;
+        return true;
     }
 
     /* Allow removing ZIP_AFL_RDONLY if manually set, not if archive was opened read-only. */
     if (za->flags & ZIP_AFL_RDONLY) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+        return false;
     }
 
     if ((flag & ZIP_AFL_RDONLY) && value && (za->ch_flags & ZIP_AFL_RDONLY) == 0) {
         if (_zip_changed(za, NULL)) {
             zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
-            return -1;
+            return false;
         }
     }
 
     za->ch_flags = new_flags;
 
-    return 0;
+    return true;
 }
