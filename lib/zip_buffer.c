@@ -237,11 +237,11 @@ int _zip_buffer_put_16(zip_buffer_t *buffer, zip_uint16_t i) {
 }
 
 
-int _zip_buffer_put_32(zip_buffer_t *buffer, zip_uint32_t i) {
+bool _zip_buffer_put_32(zip_buffer_t *buffer, zip_uint32_t i) {
     zip_uint8_t *data = _zip_buffer_get(buffer, 4);
 
     if (data == NULL) {
-        return -1;
+        return false;
     }
 
     data[0] = (zip_uint8_t)(i & 0xff);
@@ -249,7 +249,7 @@ int _zip_buffer_put_32(zip_buffer_t *buffer, zip_uint32_t i) {
     data[2] = (zip_uint8_t)((i >> 16) & 0xff);
     data[3] = (zip_uint8_t)((i >> 24) & 0xff);
 
-    return 0;
+    return true;
 }
 
 
