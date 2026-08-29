@@ -35,26 +35,26 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t method, zip_uint32_t flags) {
+ZIP_EXTERN bool zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t method, zip_uint32_t flags) {
     zip_entry_t *e;
 
     if (idx >= za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_IS_RDONLY(za)) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+        return false;
     }
     if (ZIP_WANT_TORRENTZIP(za)) {
         zip_error_set(&za->error, ZIP_ER_NOT_ALLOWED, 0);
-        return -1;
+        return false;
     }
 
     if (!zip_compression_method_supported(method, true)) {
         zip_error_set(&za->error, ZIP_ER_COMPNOTSUPP, 0);
-        return -1;
+        return false;
     }
 
     e = za->entry + idx;
@@ -67,7 +67,7 @@ ZIP_EXTERN int zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t
     if (e->changes == NULL) {
         if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-            return -1;
+            return false;
         }
     }
 
@@ -75,5 +75,5 @@ ZIP_EXTERN int zip_set_file_compression(zip_t *za, zip_uint64_t idx, zip_int32_t
     e->changes->compression_level = (zip_uint16_t)flags;
     e->changes->changed |= ZIP_DIRENT_COMP_METHOD;
 
-    return 0;
+    return true;
 }

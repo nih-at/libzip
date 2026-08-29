@@ -540,7 +540,7 @@ static int set_file_compression(char *argv[]) {
     idx = strtoull(argv[0], NULL, 10);
     method = get_compression_method(argv[1]);
     flags = (zip_uint32_t)strtoull(argv[2], NULL, 10);
-    if (zip_set_file_compression(za, idx, method, flags) < 0) {
+    if (!zip_set_file_compression(za, idx, method, flags)) {
         fprintf(stderr, "can't set file compression method at index '%" PRIu64 "' to '%s', flags '%" PRIu32 "': %s\n", idx, argv[1], flags, zip_strerror(za));
         return -1;
     }
