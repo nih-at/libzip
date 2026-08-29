@@ -33,33 +33,33 @@
 
 #include "zipint.h"
 
-static int zip_file_set_time(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zip_uint16_t ddate, zip_flags_t flags, time_t *mtime) {
+static bool zip_file_set_time(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zip_uint16_t ddate, zip_flags_t flags, time_t *mtime) {
     zip_entry_t *e;
 
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL) {
-        return -1;
+        return false;
     }
 
     if (ZIP_IS_RDONLY(za)) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+        return false;
     }
     if (ZIP_WANT_TORRENTZIP(za)) {
         zip_error_set(&za->error, ZIP_ER_NOT_ALLOWED, 0);
-        return -1;
+        return false;
     }
 
     e = za->entry + idx;
 
     if (e->orig != NULL && e->orig->encryption_method == ZIP_EM_TRAD_PKWARE && !ZIP_ENTRY_CHANGED(e, ZIP_DIRENT_ENCRYPTION_METHOD) && !ZIP_ENTRY_DATA_CHANGED(e)) {
         zip_error_set(&za->error, ZIP_ER_OPNOTSUPP, 0);
-        return -1;
+        return false;
     }
 
     if (e->changes == NULL) {
         if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-            return -1;
+            return false;
         }
     }
 
@@ -74,19 +74,19 @@ static int zip_file_set_time(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zi
     }
     e->changes->changed |= ZIP_DIRENT_LAST_MOD;
 
-    return 0;
+    return true;
 }
 
-ZIP_EXTERN int zip_file_set_dostime(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zip_uint16_t ddate, zip_flags_t flags) {
+ZIP_EXTERN bool zip_file_set_dostime(zip_t *za, zip_uint64_t idx, zip_uint16_t dtime, zip_uint16_t ddate, zip_flags_t flags) {
     return zip_file_set_time(za, idx, dtime, ddate, flags, NULL);
 }
 
 
-ZIP_EXTERN int zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags) {
+ZIP_EXTERN bool zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags) {
     zip_dostime_t dostime;
 
     if (_zip_u2d_time(mtime, &dostime, &za->error) < 0) {
-        return -1;
+        return false;
     }
 
     return zip_file_set_time(za, idx, dostime.time, dostime.date, flags, &mtime);

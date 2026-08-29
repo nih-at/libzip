@@ -571,7 +571,7 @@ static int set_file_dostime(char *argv[]) {
     idx = strtoull(argv[0], NULL, 10);
     dostime = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     dosdate = (zip_uint16_t)strtoull(argv[2], NULL, 10);
-    if (zip_file_set_dostime(za, idx, dostime, dosdate, 0) < 0) {
+    if (!zip_file_set_dostime(za, idx, dostime, dosdate, 0)) {
         fprintf(stderr, "can't set file dostime at index '%" PRIu64 "' to '%d'/'%d': %s\n", idx, (int)dostime, (int)dosdate, zip_strerror(za));
         return -1;
     }
@@ -584,7 +584,7 @@ static int set_file_mtime(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     mtime = (time_t)strtoull(argv[1], NULL, 10);
-    if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
+    if (!zip_file_set_mtime(za, idx, mtime, 0)) {
         fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to '%lld': %s\n", idx, (long long)mtime, zip_strerror(za));
         return -1;
     }
@@ -603,7 +603,7 @@ static int set_file_mtime_all(char *argv[]) {
         return -1;
     }
     for (idx = 0; idx < (zip_uint64_t)num_entries; idx++) {
-        if (zip_file_set_mtime(za, idx, mtime, 0) < 0) {
+        if (!zip_file_set_mtime(za, idx, mtime, 0)) {
             fprintf(stderr, "can't set file mtime at index '%" PRIu64 "' to '%lld': %s\n", idx, (long long)mtime, zip_strerror(za));
             return -1;
         }
