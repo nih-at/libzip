@@ -180,7 +180,7 @@ zip_buffer_t *_zip_buffer_new_from_source(zip_source_t *src, zip_uint64_t size, 
         return NULL;
     }
 
-    if (_zip_read(src, buffer->data, size, error) < 0) {
+    if (!_zip_read(src, buffer->data, size, error)) {
         _zip_buffer_free(buffer);
         return NULL;
     }

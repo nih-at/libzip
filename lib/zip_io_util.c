@@ -38,25 +38,25 @@
 #include <string.h>
 #include <zlib.h>
 
-int _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error) {
+bool _zip_read(zip_source_t *src, zip_uint8_t *b, zip_uint64_t length, zip_error_t *error) {
     zip_int64_t n;
 
     if (length > ZIP_INT64_MAX) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
-        return -1;
+        return false;
     }
 
     if ((n = zip_source_read(src, b, length)) < 0) {
         zip_error_set_from_source(error, src);
-        return -1;
+        return false;
     }
 
     if (n < (zip_int64_t)length) {
         zip_error_set(error, ZIP_ER_EOF, 0);
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
 
@@ -84,7 +84,7 @@ zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t leng
         (void)memcpy_s(r, length, data, length);
     }
     else {
-        if (_zip_read(src, r, length, error) < 0) {
+        if (!_zip_read(src, r, length, error)) {
             free(r);
             return NULL;
         }

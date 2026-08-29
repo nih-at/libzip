@@ -651,7 +651,7 @@ bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t ele
 bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
 zip_uint32_t zip_random_uint32(void);
 
-int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
+bool _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);
 zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error);
 bool _zip_read_local_ef(zip_t *, zip_uint64_t);

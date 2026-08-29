@@ -637,7 +637,7 @@ static int copy_data(zip_t *za, zip_uint64_t len) {
     while (len > 0) {
         zip_uint64_t n = ZIP_MIN(len, BUFSIZE);
 
-        if (_zip_read(za->src, buf, n, &za->error) < 0) {
+        if (!_zip_read(za->src, buf, n, &za->error)) {
             byte_array_fini(buf);
             return -1;
         }
