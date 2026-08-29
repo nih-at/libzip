@@ -236,7 +236,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         }
 
         if (ctx->needs_seek) {
-            if (zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET) < 0) {
+            if (!zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET)) {
                 zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
@@ -268,7 +268,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         if (!ctx->end_valid && args->whence == SEEK_END) {
             zip_int64_t lower_offset;
 
-            if (zip_source_seek(src, args->offset, args->whence) < 0) {
+            if (!zip_source_seek(src, args->offset, args->whence)) {
                 zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }
@@ -301,7 +301,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         new_offset += ctx->start;
 
         if (!ctx->end_valid) {
-            if (zip_source_seek(src, new_offset, SEEK_SET) < 0) {
+            if (!zip_source_seek(src, new_offset, SEEK_SET)) {
                 zip_error_set_from_source(&ctx->error, src);
                 return -1;
             }

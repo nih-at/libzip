@@ -438,7 +438,7 @@ ZIP_EXTERN const zip_uint8_t *_Nullable zip_file_extra_field_get_by_id(zip_t *_N
 ZIP_EXTERN const char *_Nullable zip_file_get_comment(zip_t *_Nonnull, zip_uint64_t, zip_uint32_t *_Nullable, zip_flags_t);
 ZIP_EXTERN zip_error_t *_Nonnull zip_file_get_error(zip_file_t *_Nonnull);
 ZIP_EXTERN bool zip_file_get_external_attributes(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint8_t *_Nullable, zip_uint32_t *_Nullable);
-ZIP_EXTERN int zip_file_is_seekable(zip_file_t *_Nonnull);
+ZIP_EXTERN bool zip_file_is_seekable(zip_file_t *_Nonnull);
 ZIP_EXTERN int zip_file_rename(zip_t *_Nonnull, zip_uint64_t, const char *_Nonnull, zip_flags_t);
 ZIP_EXTERN int zip_file_replace(zip_t *_Nonnull, zip_uint64_t, zip_source_t *_Nonnull, zip_flags_t);
 ZIP_EXTERN int zip_file_set_comment(zip_t *_Nonnull, zip_uint64_t, const char *_Nullable, zip_uint16_t, zip_flags_t);
@@ -452,7 +452,7 @@ ZIP_EXTERN zip_file_t *_Nullable zip_fopen_encrypted(zip_t *_Nonnull, const char
 ZIP_EXTERN zip_file_t *_Nullable zip_fopen_index(zip_t *_Nonnull, zip_uint64_t, zip_flags_t);
 ZIP_EXTERN zip_file_t *_Nullable zip_fopen_index_encrypted(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, const char *_Nullable);
 ZIP_EXTERN zip_int64_t zip_fread(zip_file_t *_Nonnull, void *_Nonnull, zip_uint64_t);
-ZIP_EXTERN zip_int8_t zip_fseek(zip_file_t *_Nonnull, zip_int64_t, int);
+ZIP_EXTERN bool zip_fseek(zip_file_t *_Nonnull, zip_int64_t, int);
 ZIP_EXTERN zip_int64_t zip_ftell(zip_file_t *_Nonnull);
 ZIP_EXTERN const char *_Nullable zip_get_archive_comment(zip_t *_Nonnull, int *_Nullable, zip_flags_t);
 ZIP_EXTERN int zip_get_archive_flag(zip_t *_Nonnull, zip_flags_t, zip_flags_t);
@@ -487,7 +487,7 @@ ZIP_EXTERN zip_source_t *_Nullable zip_source_function(zip_t *_Nonnull, zip_sour
 ZIP_EXTERN zip_source_t *_Nullable zip_source_function_create(zip_source_callback _Nonnull, void *_Nullable, zip_error_t *_Nullable);
 ZIP_EXTERN int zip_source_get_file_attributes(zip_source_t *_Nonnull, zip_file_attributes_t *_Nonnull);
 ZIP_EXTERN int zip_source_is_deleted(zip_source_t *_Nonnull);
-ZIP_EXTERN int zip_source_is_seekable(zip_source_t *_Nonnull);
+ZIP_EXTERN bool zip_source_is_seekable(zip_source_t *_Nonnull);
 ZIP_EXTERN void zip_source_keep(zip_source_t *_Nonnull);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_layered(zip_t *_Nullable, zip_source_t *_Nonnull, zip_source_layered_callback _Nonnull, void *_Nullable);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_layered_create(zip_source_t *_Nonnull, zip_source_layered_callback _Nonnull, void *_Nullable, zip_error_t *_Nullable);
@@ -496,7 +496,7 @@ ZIP_EXTERN int zip_source_open(zip_source_t *_Nonnull);
 ZIP_EXTERN zip_int64_t zip_source_pass_to_lower_layer(zip_source_t *_Nonnull, void *_Nullable, zip_uint64_t, zip_source_cmd_t);
 ZIP_EXTERN zip_int64_t zip_source_read(zip_source_t *_Nonnull, void *_Nonnull, zip_uint64_t);
 ZIP_EXTERN void zip_source_rollback_write(zip_source_t *_Nonnull);
-ZIP_EXTERN int zip_source_seek(zip_source_t *_Nonnull, zip_int64_t, int);
+ZIP_EXTERN bool zip_source_seek(zip_source_t *_Nonnull, zip_int64_t, int);
 ZIP_EXTERN zip_int64_t zip_source_seek_compute_offset(zip_uint64_t, zip_uint64_t, void *_Nonnull, zip_uint64_t, zip_error_t *_Nullable);
 ZIP_EXTERN int zip_source_seek_write(zip_source_t *_Nonnull, zip_int64_t, int);
 ZIP_EXTERN int zip_source_stat(zip_source_t *_Nonnull, zip_stat_t *_Nonnull);

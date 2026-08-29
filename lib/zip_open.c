@@ -158,7 +158,7 @@ static bool _is_truncated_zip(zip_source_t *src) {
     unsigned char data[4];
     /* check if the source is a truncated zip archive: true if yes, no
        if not or can't be determined */
-    if (zip_source_seek(src, 0, SEEK_SET) < 0) {
+    if (!zip_source_seek(src, 0, SEEK_SET)) {
         return false;
     }
 
@@ -401,7 +401,7 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
     else {
         cd_buffer = NULL;
 
-        if (zip_source_seek(za->src, (zip_int64_t)cd->offset, SEEK_SET) < 0) {
+        if (!zip_source_seek(za->src, (zip_int64_t)cd->offset, SEEK_SET)) {
             zip_error_set_from_source(error, za->src);
             _zip_cdir_free(cd);
             return true;
@@ -507,7 +507,7 @@ static bool check_magic(zip_uint64_t offset, zip_buffer_t *buffer, zip_uint64_t 
     else {
         zip_uint8_t data[MAGIC_LEN];
 
-        if (zip_source_seek(src, offset, SEEK_SET) < 0 || zip_source_read(src, data, MAGIC_LEN) != MAGIC_LEN) {
+        if (!zip_source_seek(src, offset, SEEK_SET) || zip_source_read(src, data, MAGIC_LEN) != MAGIC_LEN) {
             return false;
         }
         return memcmp(data, magic, MAGIC_LEN) == 0;
@@ -571,7 +571,7 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        if (zip_source_seek(za->src, (zip_int64_t)cd->entry[i].orig->offset, SEEK_SET) < 0) {
+        if (!zip_source_seek(za->src, (zip_int64_t)cd->entry[i].orig->offset, SEEK_SET)) {
             zip_error_set_from_source(error, za->src);
             return -1;
         }
@@ -696,7 +696,7 @@ static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len) {
     }
 
     buflen = (len < CDBUFSIZE ? len : CDBUFSIZE);
-    if (zip_source_seek(za->src, -(zip_int64_t)buflen, SEEK_END) < 0) {
+    if (!zip_source_seek(za->src, -(zip_int64_t)buflen, SEEK_END)) {
         zip_error_t *src_error = zip_source_error(za->src);
         if (zip_error_code_zip(src_error) != ZIP_ER_SEEK || zip_error_code_system(src_error) != EFBIG) {
             /* seek before start of file on my machine */
@@ -867,7 +867,7 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
         free_buffer = false;
     }
     else {
-        if (zip_source_seek(src, (zip_int64_t)eocd_offset, SEEK_SET) < 0) {
+        if (!zip_source_seek(src, (zip_int64_t)eocd_offset, SEEK_SET)) {
             zip_error_set_from_source(error, src);
             return CDIR_INVALID;
         }

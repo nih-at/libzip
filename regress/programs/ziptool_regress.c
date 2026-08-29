@@ -231,7 +231,7 @@ static int regress_fseek(char *argv[]) {
     }
     zf = z_files[file_idx];
 
-    if (zip_fseek(zf, offset, whence) == -1) {
+    if (!zip_fseek(zf, offset, whence)) {
         fprintf(stderr, "can't seek in file %" PRIu64 ": %s\n", file_idx, zip_strerror(za));
         return -1;
     }

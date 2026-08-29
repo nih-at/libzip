@@ -36,27 +36,27 @@
 
 static zip_uint64_t _zip_offset_add(zip_uint64_t offset, zip_int64_t delta);
 
-ZIP_EXTERN int zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
+ZIP_EXTERN bool zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
     zip_source_args_seek_t args;
 
     if (src->source_closed) {
-        return -1;
+        return false;
     }
     if (!ZIP_SOURCE_IS_OPEN_READING(src) || (whence != SEEK_SET && whence != SEEK_CUR && whence != SEEK_END)) {
         zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     args.offset = offset;
     args.whence = whence;
 
     if (_zip_source_call(src, &args, sizeof(args), ZIP_SOURCE_SEEK) < 0) {
-        return -1;
+        return false;
     }
 
     /* have_next_byte is never true for sources that support seek. */
     src->eof = 0;
-    return 0;
+    return true;
 }
 
 

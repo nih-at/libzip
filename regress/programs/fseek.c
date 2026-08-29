@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    if (zip_fseek(zf, offset, SEEK_SET) < 0) {
+    if (!zip_fseek(zf, offset, SEEK_SET)) {
         fprintf(stderr, "%s: zip_fseek failed: %s\n", progname, zip_error_strerror(zip_file_get_error(zf)));
         zip_fclose(zf);
         zip_close(z);

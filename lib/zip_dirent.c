@@ -621,7 +621,7 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
         zip_uint32_t df_crc;
         zip_uint64_t df_comp_size, df_uncomp_size;
 
-        if (zip_source_seek(src, central_compressed_size, SEEK_CUR) != 0 || (buffer = _zip_buffer_new_from_source(src, MAX_DATA_DESCRIPTOR_LENGTH, buf, error)) == NULL) {
+        if (!zip_source_seek(src, central_compressed_size, SEEK_CUR) || (buffer = _zip_buffer_new_from_source(src, MAX_DATA_DESCRIPTOR_LENGTH, buf, error)) == NULL) {
             return -1;
         }
         if (memcmp(_zip_buffer_peek(buffer, MAGIC_LEN), DATADES_MAGIC, MAGIC_LEN) == 0) {

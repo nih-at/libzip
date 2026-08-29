@@ -55,7 +55,7 @@ zip_uint64_t _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t
 
     offset = za->entry[idx].orig->offset;
 
-    if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
+    if (!zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET)) {
         zip_error_set_from_source(error, za->src);
         return 0;
     }
@@ -91,7 +91,7 @@ zip_uint64_t _zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t 
 
     if (entry->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
         zip_uint8_t buf[4];
-        if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
+        if (!zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET)) {
             zip_error_set_from_source(error, za->src);
             return 0;
         }

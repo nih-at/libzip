@@ -34,27 +34,27 @@
 
 #include "zipint.h"
 
-ZIP_EXTERN zip_int8_t zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence) {
+ZIP_EXTERN bool zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence) {
     if (zf == NULL) {
-        return -1;
+        return false;
     }
 
     if (zf->error.zip_err != 0) {
-        return -1;
+        return false;
     }
 
-    if (zip_source_seek(zf->src, offset, whence) < 0) {
+    if (!zip_source_seek(zf->src, offset, whence)) {
         zip_error_set_from_source(&zf->error, zf->src);
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
 
-ZIP_EXTERN int zip_file_is_seekable(zip_file_t *zfile) {
+ZIP_EXTERN bool zip_file_is_seekable(zip_file_t *zfile) {
     if (zfile == NULL) {
-        return -1;
+        return false;
     }
 
     return zip_source_is_seekable(zfile->src);

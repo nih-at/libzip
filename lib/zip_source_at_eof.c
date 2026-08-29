@@ -26,7 +26,7 @@ ZIP_EXTERN int zip_source_at_eof(zip_source_t *src) {
             }
             if (n > 0) {
                 if (src->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) {
-                    if (zip_source_seek(src, -1, SEEK_CUR) < 0) {
+                    if (!zip_source_seek(src, -1, SEEK_CUR)) {
                         return -1;
                     }
                 }

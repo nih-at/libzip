@@ -354,7 +354,7 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
         return -1;
     }
 
-    if (zip_source_seek(za->src, (zip_int64_t)(e->orig->offset + 26), SEEK_SET) < 0) {
+    if (!zip_source_seek(za->src, (zip_int64_t)(e->orig->offset + 26), SEEK_SET)) {
         zip_error_set_from_source(&za->error, za->src);
         return -1;
     }
@@ -378,7 +378,7 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
         zip_extra_field_t *ef;
         zip_uint8_t *ef_raw;
 
-        if (zip_source_seek(za->src, fname_len, SEEK_CUR) < 0) {
+        if (!zip_source_seek(za->src, fname_len, SEEK_CUR)) {
             zip_error_set(&za->error, ZIP_ER_SEEK, errno);
             return -1;
         }

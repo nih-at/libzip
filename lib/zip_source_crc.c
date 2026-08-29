@@ -191,7 +191,7 @@ static zip_int64_t crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint6
         if (args == NULL) {
             return -1;
         }
-        if (zip_source_seek(src, args->offset, args->whence) < 0 || (new_position = zip_source_tell(src)) < 0) {
+        if (!zip_source_seek(src, args->offset, args->whence) || (new_position = zip_source_tell(src)) < 0) {
             zip_error_set_from_source(&ctx->error, src);
             return -1;
         }

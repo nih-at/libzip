@@ -68,7 +68,7 @@ test_unknown_length_window(void) {
         zip_source_free(window);
         return -1;
     }
-    if (zip_source_seek(window, 0, SEEK_SET) < 0) {
+    if (!zip_source_seek(window, 0, SEEK_SET)) {
         fprintf(stderr, "can't seek to beginning of window source\n");
         zip_source_free(window);
         return -1;
@@ -78,7 +78,7 @@ test_unknown_length_window(void) {
         zip_source_free(window);
         return -1;
     }
-    if (zip_source_seek(window, 2, SEEK_SET) < 0) {
+    if (!zip_source_seek(window, 2, SEEK_SET)) {
         fprintf(stderr, "can't seek forward inside window source\n");
         zip_source_free(window);
         return -1;
@@ -88,12 +88,12 @@ test_unknown_length_window(void) {
         zip_source_free(window);
         return -1;
     }
-    if (zip_source_seek(window, -4, SEEK_CUR) == 0) {
+    if (zip_source_seek(window, -4, SEEK_CUR)) {
         fprintf(stderr, "window source allowed seek before window start\n");
         zip_source_free(window);
         return -1;
     }
-    if (zip_source_seek(window, -1, SEEK_END) < 0) {
+    if (!zip_source_seek(window, -1, SEEK_END)) {
         fprintf(stderr, "can't seek relative to end of window source\n");
         zip_source_free(window);
         return -1;
@@ -139,7 +139,7 @@ test_large_fragment_source(void) {
         zip_source_free(source);
         return -1;
     }
-    if (zip_source_seek(source, -10, SEEK_END) < 0) {
+    if (!zip_source_seek(source, -10, SEEK_END)) {
         fprintf(stderr, "can't seek to representable offset near end of fragment source\n");
         zip_source_free(source);
         return -1;
@@ -149,7 +149,7 @@ test_large_fragment_source(void) {
         zip_source_free(source);
         return -1;
     }
-    if (zip_source_seek(source, -1, SEEK_END) == 0) {
+    if (zip_source_seek(source, -1, SEEK_END)) {
         fprintf(stderr, "fragment source allowed unrepresentable offset\n");
         zip_source_free(source);
         return -1;

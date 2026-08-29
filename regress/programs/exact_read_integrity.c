@@ -204,7 +204,7 @@ check_reopened_source(void) {
         return 1;
     }
 
-    if (zip_source_open(source) < 0 || zip_source_seek(source, -1, SEEK_SET) == 0) {
+    if (zip_source_open(source) < 0 || zip_source_seek(source, -1, SEEK_SET)) {
         fprintf(stderr, "can't trigger source error\n");
         zip_source_free(source);
         zip_error_fini(&error);

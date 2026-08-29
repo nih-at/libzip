@@ -259,7 +259,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
                 error = 1;
                 break;
             }
-            if (zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET) < 0) {
+            if (!zip_source_seek(za->src, (zip_int64_t)offset, SEEK_SET)) {
                 zip_error_set_from_source(&za->error, za->src);
                 error = 1;
                 break;
