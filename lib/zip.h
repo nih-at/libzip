@@ -440,7 +440,7 @@ ZIP_EXTERN zip_error_t *_Nonnull zip_file_get_error(zip_file_t *_Nonnull);
 ZIP_EXTERN bool zip_file_get_external_attributes(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint8_t *_Nullable, zip_uint32_t *_Nullable);
 ZIP_EXTERN bool zip_file_is_seekable(zip_file_t *_Nonnull);
 ZIP_EXTERN bool zip_file_rename(zip_t *_Nonnull, zip_uint64_t, const char *_Nonnull, zip_flags_t);
-ZIP_EXTERN int zip_file_replace(zip_t *_Nonnull, zip_uint64_t, zip_source_t *_Nonnull, zip_flags_t);
+ZIP_EXTERN bool zip_file_replace(zip_t *_Nonnull, zip_uint64_t, zip_source_t *_Nonnull, zip_flags_t);
 ZIP_EXTERN int zip_file_set_comment(zip_t *_Nonnull, zip_uint64_t, const char *_Nullable, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_set_dostime(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_set_encryption(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, const char *_Nullable);

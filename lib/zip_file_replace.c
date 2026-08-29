@@ -35,17 +35,17 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_file_replace(zip_t *za, zip_uint64_t idx, zip_source_t *source, zip_flags_t flags) {
+ZIP_EXTERN bool zip_file_replace(zip_t *za, zip_uint64_t idx, zip_source_t *source, zip_flags_t flags) {
     if (idx >= za->nentry || source == NULL) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (_zip_file_replace(za, idx, NULL, source, flags) == -1) {
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
 
