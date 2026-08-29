@@ -429,7 +429,7 @@ ZIP_EXTERN zip_int64_t zip_file_add(zip_t *_Nonnull, const char *_Nonnull, zip_s
 ZIP_EXTERN void zip_file_attributes_init(zip_file_attributes_t *_Nonnull);
 ZIP_EXTERN void zip_file_error_clear(zip_file_t *_Nonnull);
 ZIP_EXTERN bool zip_file_extra_field_delete(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_flags_t);
-ZIP_EXTERN int zip_file_extra_field_delete_by_id(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_uint16_t, zip_flags_t);
+ZIP_EXTERN bool zip_file_extra_field_delete_by_id(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_extra_field_set(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_uint16_t, const zip_uint8_t *_Nullable, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN zip_int16_t zip_file_extra_fields_count(zip_t *_Nonnull, zip_uint64_t, zip_flags_t);
 ZIP_EXTERN zip_int16_t zip_file_extra_fields_count_by_id(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_flags_t);
