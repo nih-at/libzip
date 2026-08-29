@@ -74,7 +74,7 @@ zip_source_t *zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uin
         return NULL;
     }
 
-    if (zip_source_stat(src, &st) != 0) {
+    if (!zip_source_stat(src, &st)) {
         zip_error_set_from_source(&za->error, src);
         return NULL;
     }

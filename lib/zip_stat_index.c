@@ -51,7 +51,7 @@ ZIP_EXTERN int zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, 
     entry = za->entry + index;
 
     if ((flags & ZIP_FL_UNCHANGED) == 0 && ZIP_ENTRY_DATA_CHANGED(za->entry + index)) {
-        if (zip_source_stat(entry->source, st) < 0) {
+        if (!zip_source_stat(entry->source, st)) {
             zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
             return -1;
         }

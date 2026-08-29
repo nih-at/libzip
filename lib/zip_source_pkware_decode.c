@@ -64,7 +64,7 @@ zip_source_t *zip_source_pkware_decode(zip_t *za, zip_source_t *src, zip_uint16_
         return NULL;
     }
 
-    if (zip_source_stat(src, &st) != 0) {
+    if (!zip_source_stat(src, &st)) {
         zip_error_set_from_source(&za->error, src);
         return NULL;
     }
@@ -105,7 +105,7 @@ static int decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
 
     _zip_pkware_decrypt(&ctx->keys, header, header, ZIP_CRYPTO_PKWARE_HEADERLEN);
 
-    if (zip_source_stat(src, &st) < 0 || (st.valid & ZIP_STAT_CRC) == 0) {
+    if (!zip_source_stat(src, &st) || (st.valid & ZIP_STAT_CRC) == 0) {
         /* skip password validation */
         return 0;
     }

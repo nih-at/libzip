@@ -74,7 +74,7 @@ zip_source_t *zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_
     if (zip_source_get_dos_time(src, &ctx->dostime) <= 0) {
         zip_stat_t st;
 
-        if (zip_source_stat(src, &st) < 0) {
+        if (!zip_source_stat(src, &st)) {
             zip_error_set_from_source(&za->error, src);
             trad_pkware_free(ctx);
             return NULL;

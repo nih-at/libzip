@@ -570,7 +570,7 @@ static int write_memory_src_to_file(const char *archive, zip_source_t *src) {
     char *buf;
     FILE *fp;
 
-    if (zip_source_stat(src, &zst) < 0) {
+    if (!zip_source_stat(src, &zst)) {
         fprintf(stderr, "zip_source_stat on buffer failed: %s\n", zip_error_strerror(zip_source_error(src)));
         return -1;
     }

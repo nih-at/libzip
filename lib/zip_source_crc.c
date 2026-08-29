@@ -215,7 +215,7 @@ zip_int64_t validate_crc(struct crc_context *ctx, zip_source_t *src) {
     ctx->size = ctx->position;
 
     if (ctx->validate) {
-        if (zip_source_stat(src, &st) < 0) {
+        if (!zip_source_stat(src, &st)) {
             zip_error_set_from_source(&ctx->error, src);
             return -1;
         }

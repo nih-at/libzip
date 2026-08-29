@@ -318,7 +318,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     bool have_dos_time = false;
     time_t mtime_before_copy;
 
-    if (zip_source_stat(src, &st) < 0) {
+    if (!zip_source_stat(src, &st)) {
         zip_error_set_from_source(&za->error, src);
         return -1;
     }
@@ -544,7 +544,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 
     ret = copy_source(za, src_final, src, data_length);
 
-    if (zip_source_stat(src_final, &st) < 0) {
+    if (!zip_source_stat(src_final, &st)) {
         zip_error_set_from_source(&za->error, src_final);
         ret = -1;
     }

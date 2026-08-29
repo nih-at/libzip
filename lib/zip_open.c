@@ -181,7 +181,7 @@ zip_t *_zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
     zip_uint64_t len, idx;
 
     zip_stat_init(&st);
-    if (zip_source_stat(src, &st) < 0) {
+    if (!zip_source_stat(src, &st)) {
         zip_error_set_from_source(error, src);
         return NULL;
     }
@@ -669,7 +669,7 @@ static exists_t _zip_file_exists(zip_source_t *src, zip_error_t *error) {
     struct zip_stat st;
 
     zip_stat_init(&st);
-    if (zip_source_stat(src, &st) != 0) {
+    if (!zip_source_stat(src, &st)) {
         zip_error_t *src_error = zip_source_error(src);
         if (zip_error_code_zip(src_error) == ZIP_ER_READ && zip_error_code_system(src_error) == ENOENT) {
             return EXISTS_NOT;

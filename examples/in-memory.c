@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
     else {
         zip_stat_t zst;
 
-        if (zip_source_stat(src, &zst) < 0) {
+        if (!zip_source_stat(src, &zst)) {
             fprintf(stderr, "can't stat source: %s\n", zip_error_strerror(zip_source_error(src)));
             return 1;
         }
