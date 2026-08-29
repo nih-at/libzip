@@ -58,7 +58,7 @@ static int copy_source(zip_source_t *from, zip_source_t *to) {
         return -1;
     }
 
-    if (zip_source_begin_write(to) < 0) {
+    if (!zip_source_begin_write(to)) {
         fprintf(stderr, "%s: can't open source for writing: %s\n", progname, zip_error_strerror(zip_source_error(to)));
         zip_source_close(from);
         return -1;

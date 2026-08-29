@@ -153,7 +153,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
         }
     }
     if (unchanged_offset == 0) {
-        if (zip_source_begin_write(za->src) < 0) {
+        if (!zip_source_begin_write(za->src)) {
             zip_error_set_from_source(&za->error, za->src);
             free(filelist);
             return false;

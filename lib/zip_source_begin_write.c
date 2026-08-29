@@ -35,24 +35,24 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_source_begin_write(zip_source_t *src) {
+ZIP_EXTERN bool zip_source_begin_write(zip_source_t *src) {
     if (ZIP_SOURCE_IS_LAYERED(src)) {
         zip_error_set(&src->error, ZIP_ER_OPNOTSUPP, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_SOURCE_IS_OPEN_WRITING(src)) {
         zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (_zip_source_call(src, NULL, 0, ZIP_SOURCE_BEGIN_WRITE) < 0) {
-        return -1;
+        return false;
     }
 
     src->write_state = ZIP_SOURCE_WRITE_OPEN;
     /* Clear past error. Otherwise the error from zip_source_begin_write_cloning() will persist and be reported on zip_source_close(). */
     zip_error_set(&src->error, ZIP_ER_OK, 0);
 
-    return 0;
+    return true;
 }
