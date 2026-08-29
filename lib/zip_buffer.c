@@ -273,16 +273,16 @@ int _zip_buffer_put_64(zip_buffer_t *buffer, zip_uint64_t i) {
 }
 
 
-int _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i) {
+bool _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i) {
     zip_uint8_t *data = _zip_buffer_get(buffer, 1);
 
     if (data == NULL) {
-        return -1;
+        return false;
     }
 
     data[0] = i;
 
-    return 0;
+    return true;
 }
 
 
