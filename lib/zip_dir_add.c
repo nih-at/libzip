@@ -81,7 +81,7 @@ ZIP_EXTERN zip_int64_t zip_dir_add(zip_t *za, const char *name, zip_flags_t flag
         zip_source_free(source);
     }
     else {
-        if (zip_file_set_external_attributes(za, (zip_uint64_t)idx, 0, ZIP_OPSYS_DEFAULT, ZIP_EXT_ATTRIB_DEFAULT_DIR) < 0) {
+        if (!zip_file_set_external_attributes(za, (zip_uint64_t)idx, 0, ZIP_OPSYS_DEFAULT, ZIP_EXT_ATTRIB_DEFAULT_DIR)) {
             zip_delete(za, (zip_uint64_t)idx);
             return -1;
         }
