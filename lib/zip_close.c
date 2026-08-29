@@ -594,7 +594,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     }
 
     if (dirent_changed) {
-        if (zip_source_seek_write(za->src, offstart, SEEK_SET) < 0) {
+        if (!zip_source_seek_write(za->src, offstart, SEEK_SET)) {
             zip_error_set_from_source(&za->error, za->src);
             return -1;
         }
@@ -609,7 +609,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
             return -1;
         }
 
-        if (zip_source_seek_write(za->src, offend, SEEK_SET) < 0) {
+        if (!zip_source_seek_write(za->src, offend, SEEK_SET)) {
             zip_error_set_from_source(&za->error, za->src);
             return -1;
         }
