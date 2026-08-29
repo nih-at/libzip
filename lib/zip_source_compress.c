@@ -108,9 +108,9 @@ zip_compression_algorithm_t *_zip_get_compression_algorithm(zip_int32_t method, 
     return NULL;
 }
 
-ZIP_EXTERN int zip_compression_method_supported(zip_int32_t method, int compress) {
+ZIP_EXTERN bool zip_compression_method_supported(zip_int32_t method, int compress) {
     if (method == ZIP_CM_STORE) {
-        return 1;
+        return true;
     }
     return _zip_get_compression_algorithm(method, compress) != NULL;
 }
