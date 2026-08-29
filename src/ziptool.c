@@ -94,7 +94,7 @@ static int cat_impl_backend(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t l
     if (len == 0) {
         struct zip_stat sb;
 
-        if (zip_stat_index(za, idx, stat_flags, &sb) < 0) {
+        if (!zip_stat_index(za, idx, stat_flags, &sb)) {
             fprintf(stderr, "zip_stat_index failed on '%" PRIu64 "' failed: %s\n", idx, zip_strerror(za));
             return -1;
         }
@@ -626,7 +626,7 @@ static int zstat(char *argv[]) {
     struct zip_stat sb;
     idx = strtoull(argv[0], NULL, 10);
 
-    if (zip_stat_index(za, idx, stat_flags, &sb) < 0) {
+    if (!zip_stat_index(za, idx, stat_flags, &sb)) {
         fprintf(stderr, "zip_stat_index failed on '%" PRIu64 "' failed: %s\n", idx, zip_strerror(za));
         return -1;
     }

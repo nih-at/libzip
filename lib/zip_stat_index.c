@@ -35,17 +35,17 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st) {
+ZIP_EXTERN bool zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, zip_stat_t *st) {
     const char *name;
     zip_dirent_t *de;
     zip_entry_t *entry;
 
     if ((de = _zip_get_dirent(za, index, flags, NULL)) == NULL) {
-        return -1;
+        return false;
     }
 
     if ((name = zip_get_name(za, index, flags)) == NULL) {
-        return -1;
+        return false;
     }
 
     entry = za->entry + index;
@@ -53,7 +53,7 @@ ZIP_EXTERN int zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, 
     if ((flags & ZIP_FL_UNCHANGED) == 0 && ZIP_ENTRY_DATA_CHANGED(za->entry + index)) {
         if (!zip_source_stat(entry->source, st)) {
             zip_error_set(&za->error, ZIP_ER_CHANGED, 0);
-            return -1;
+            return false;
         }
 
         if (de->comp_method == ZIP_CM_DEFAULT) {
@@ -109,5 +109,5 @@ ZIP_EXTERN int zip_stat_index(zip_t *za, zip_uint64_t index, zip_flags_t flags, 
     st->name = name;
     st->valid |= ZIP_STAT_INDEX | ZIP_STAT_NAME;
 
-    return 0;
+    return true;
 }

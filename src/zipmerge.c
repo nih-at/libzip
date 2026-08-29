@@ -190,11 +190,11 @@ static int confirm_replace(zip_t *za, const char *tname, zip_uint64_t it, zip_t 
         return 0;
     }
 
-    if (zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st) < 0) {
+    if (!zip_stat_index(za, it, ZIP_FL_UNCHANGED, &st)) {
         fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, it, tname, zip_strerror(za));
         return -1;
     }
-    if (zip_stat_index(zs, is, 0, &ss) < 0) {
+    if (!zip_stat_index(zs, is, 0, &ss)) {
         fprintf(stderr, "%s: cannot stat file %" PRIu64 " in '%s': %s\n", progname, is, sname, zip_strerror(zs));
         return -1;
     }
@@ -313,7 +313,7 @@ static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, 
     copy_extra_fields(destination_archive, (zip_uint64_t)destination_index, source_archive, source_index, ZIP_FL_LOCAL);
     if (keep_stored) {
         zip_stat_t st;
-        if (zip_stat_index(source_archive, source_index, 0, &st) == 0 && (st.valid & ZIP_STAT_COMP_METHOD) && st.comp_method == ZIP_CM_STORE) {
+        if (zip_stat_index(source_archive, source_index, 0, &st) && (st.valid & ZIP_STAT_COMP_METHOD) && st.comp_method == ZIP_CM_STORE) {
             zip_set_file_compression(destination_archive, destination_index, ZIP_CM_STORE, 0);
         }
     }

@@ -589,7 +589,7 @@ static int list_zip(const char *name, struct archive *a) {
 
         j = 0;
         for (i = 0; i < a->nentry; i++) {
-            if (zip_stat_index(za, i, 0, &st) < 0) {
+            if (!zip_stat_index(za, i, 0, &st)) {
                 fprintf(stderr, "%s: warning: cannot stat file %u in zip archive '%s': %s\n", progname, i, name, zip_strerror(za));
                 continue;
             }

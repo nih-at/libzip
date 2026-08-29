@@ -86,7 +86,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         stat_flags |= ZIP_FL_UNCHANGED;
     }
 
-    if (zip_stat_index(srcza, srcidx, stat_flags, &st) < 0) {
+    if (!zip_stat_index(srcza, srcidx, stat_flags, &st)) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
         return NULL;
     }

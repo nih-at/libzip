@@ -102,7 +102,7 @@ check_case(const char *archive, const char *password, const char *name, int expe
     }
 
     zip_stat_init(&st);
-    if (zip_stat(za, name, 0, &st) < 0) {
+    if (!zip_stat(za, name, 0, &st)) {
         fprintf(stderr, "can't stat '%s' in '%s': %s\n", name, archive, zip_strerror(za));
         zip_close(za);
         return 1;

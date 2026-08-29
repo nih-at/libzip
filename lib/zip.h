@@ -514,8 +514,8 @@ ZIP_EXTERN zip_source_t *_Nullable zip_source_window_create(zip_source_t *_Nonnu
 ZIP_EXTERN zip_int64_t zip_source_write(zip_source_t *_Nonnull, const void *_Nullable, zip_uint64_t);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_zip_file(zip_t *_Nonnull, zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_int64_t, const char *_Nullable);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_zip_file_create(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_int64_t, const char *_Nullable, zip_error_t *_Nullable);
-ZIP_EXTERN int zip_stat(zip_t *_Nonnull, const char *_Nonnull, zip_flags_t, zip_stat_t *_Nonnull);
-ZIP_EXTERN int zip_stat_index(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_stat_t *_Nonnull);
+ZIP_EXTERN bool zip_stat(zip_t *_Nonnull, const char *_Nonnull, zip_flags_t, zip_stat_t *_Nonnull);
+ZIP_EXTERN bool zip_stat_index(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_stat_t *_Nonnull);
 ZIP_EXTERN void zip_stat_init(zip_stat_t *_Nonnull);
 ZIP_EXTERN const char *_Nonnull zip_strerror(zip_t *_Nonnull);
 ZIP_EXTERN int zip_unchange(zip_t *_Nonnull, zip_uint64_t);
