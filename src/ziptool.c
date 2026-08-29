@@ -291,7 +291,7 @@ static int count_extra_by_id(char *argv[]) {
 static int delete(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    if (zip_delete(za, idx) < 0) {
+    if (!zip_delete(za, idx)) {
         fprintf(stderr, "can't delete file at index '%" PRIu64 "': %s\n", idx, zip_strerror(za));
         return -1;
     }
