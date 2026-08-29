@@ -76,7 +76,7 @@ zip_int64_t _zip_file_replace(zip_t *za, zip_uint64_t idx, const char *name, zip
         idx = (zip_uint64_t)i;
     }
 
-    if (name && _zip_set_name(za, idx, name, flags) != 0) {
+    if (name && !_zip_set_name(za, idx, name, flags)) {
         if (za->nentry != za_nentry_prev) {
             _zip_entry_finalize(za->entry + idx);
             za->nentry = za_nentry_prev;

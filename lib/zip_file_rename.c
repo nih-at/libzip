@@ -37,23 +37,23 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
+ZIP_EXTERN bool zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
     const char *old_name;
     int old_is_dir, new_is_dir;
     size_t name_len = name != NULL ? strlen(name) : 0;
 
     if (idx >= za->nentry || name_len > ZIP_UINT16_MAX) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_IS_RDONLY(za)) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+        return false;
     }
 
     if ((old_name = zip_get_name(za, idx, 0)) == NULL) {
-        return -1;
+        return false;
     }
 
     new_is_dir = (name_len > 0 && name[name_len - 1] == '/');
@@ -61,7 +61,7 @@ ZIP_EXTERN int zip_file_rename(zip_t *za, zip_uint64_t idx, const char *name, zi
 
     if (new_is_dir != old_is_dir) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     return _zip_set_name(za, idx, name, flags);

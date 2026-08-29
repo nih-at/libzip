@@ -38,7 +38,7 @@
 #include "zipint.h"
 
 
-int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
+bool _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t flags) {
     zip_entry_t *e;
     zip_string_t *str;
     bool same_as_orig;
@@ -48,22 +48,22 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
 
     if (idx >= za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_IS_RDONLY(za)) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+        return false;
     }
 
     if (name && name[0] != '\0') {
         size_t name_len = strlen(name);
         if (name_len > ZIP_UINT16_MAX) {
             zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-            return -1;
+            return false;
         }
         if ((str = _zip_string_new((const zip_uint8_t *)name, (zip_uint16_t)name_len, flags, &za->error)) == NULL) {
-            return -1;
+            return false;
         }
         if ((flags & ZIP_FL_ENCODING_ALL) == ZIP_FL_ENC_GUESS && _zip_guess_encoding(str, ZIP_ENCODING_UNKNOWN) == ZIP_ENCODING_UTF8_GUESSED) {
             str->encoding = ZIP_ENCODING_UTF8_KNOWN;
@@ -77,13 +77,13 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
     if ((i = _zip_name_locate(za, name, 0, NULL)) >= 0 && (zip_uint64_t)i != idx) {
         _zip_string_free(str);
         zip_error_set(&za->error, ZIP_ER_EXISTS, 0);
-        return -1;
+        return false;
     }
 
     /* no effective name change */
     if (i >= 0 && (zip_uint64_t)i == idx) {
         _zip_string_free(str);
-        return 0;
+        return true;
     }
 
     e = za->entry + idx;
@@ -99,13 +99,13 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
         if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             _zip_string_free(str);
-            return -1;
+            return false;
         }
     }
 
     if ((new_name = _zip_string_get(same_as_orig ? e->orig->filename : str, NULL, 0, &za->error)) == NULL) {
         _zip_string_free(str);
-        return -1;
+        return false;
     }
 
     if (e->changes) {
@@ -121,7 +121,7 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
     if (old_str) {
         if ((old_name = _zip_string_get(old_str, NULL, 0, &za->error)) == NULL) {
             _zip_string_free(str);
-            return -1;
+            return false;
         }
     }
     else {
@@ -130,7 +130,7 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
 
     if (_zip_hash_add(za->names, new_name, idx, 0, &za->error) == false) {
         _zip_string_free(str);
-        return -1;
+        return false;
     }
     if (old_name) {
         _zip_hash_delete(za->names, old_name, NULL);
@@ -161,5 +161,5 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
         e->changes->filename = str;
     }
 
-    return 0;
+    return true;
 }

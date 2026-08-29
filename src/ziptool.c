@@ -459,7 +459,7 @@ static int print_progress(char *argv[]) {
 static int zrename(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    if (zip_file_rename(za, idx, decode_filename(argv[1]), 0) < 0) {
+    if (!zip_file_rename(za, idx, decode_filename(argv[1]), 0)) {
         fprintf(stderr, "can't rename file at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
         return -1;
     }
