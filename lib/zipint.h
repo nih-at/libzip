@@ -552,7 +552,7 @@ zip_uint64_t _zip_buffer_offset(zip_buffer_t *buffer);
 bool _zip_buffer_ok(zip_buffer_t *buffer);
 zip_uint8_t *_zip_buffer_peek(zip_buffer_t *buffer, zip_uint64_t length);
 int _zip_buffer_put(zip_buffer_t *buffer, const void *src, size_t length);
-int _zip_buffer_put_16(zip_buffer_t *buffer, zip_uint16_t i);
+bool _zip_buffer_put_16(zip_buffer_t *buffer, zip_uint16_t i);
 bool _zip_buffer_put_32(zip_buffer_t *buffer, zip_uint32_t i);
 bool _zip_buffer_put_64(zip_buffer_t *buffer, zip_uint64_t i);
 bool _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i);
