@@ -286,25 +286,25 @@ int _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i) {
 }
 
 
-int _zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset) {
+bool _zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset) {
     if (offset > buffer->size) {
         buffer->ok = false;
-        return -1;
+        return false;
     }
 
     buffer->ok = true;
     buffer->offset = offset;
 
-    return 0;
+    return true;
 }
 
 
-int _zip_buffer_skip(zip_buffer_t *buffer, zip_uint64_t length) {
+bool _zip_buffer_skip(zip_buffer_t *buffer, zip_uint64_t length) {
     zip_uint64_t offset = buffer->offset + length;
 
     if (offset < buffer->offset) {
         buffer->ok = false;
-        return -1;
+        return false;
     }
     return _zip_buffer_set_offset(buffer, offset);
 }

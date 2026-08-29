@@ -499,7 +499,7 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
 static bool check_magic(zip_uint64_t offset, zip_buffer_t *buffer, zip_uint64_t buffer_offset, zip_source_t *src, const char *magic) {
     if (buffer_offset <= offset) {
         zip_uint8_t *data;
-        if (_zip_buffer_set_offset(buffer, offset - buffer_offset) < 0 || (data = _zip_buffer_get(buffer, MAGIC_LEN)) == NULL) {
+        if (!_zip_buffer_set_offset(buffer, offset - buffer_offset) || (data = _zip_buffer_get(buffer, MAGIC_LEN)) == NULL) {
             return false;
         }
         return memcmp(data, magic, MAGIC_LEN) == 0;
