@@ -52,7 +52,7 @@ ZIP_EXTERN zip_file_t *zip_fopen_index_encrypted(zip_t *za, zip_uint64_t index, 
         return NULL;
     }
 
-    if (zip_source_open(src) < 0) {
+    if (!zip_source_open(src)) {
         zip_error_set_from_source(&za->error, src);
         zip_source_free(src);
         return NULL;

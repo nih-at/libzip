@@ -52,9 +52,9 @@ ZIP_EXTERN bool zip_fseek(zip_file_t *zf, zip_int64_t offset, int whence) {
 }
 
 
-ZIP_EXTERN bool zip_file_is_seekable(zip_file_t *zfile) {
+ZIP_EXTERN int zip_file_is_seekable(zip_file_t *zfile) {
     if (zfile == NULL) {
-        return false;
+        return -1;
     }
 
     return zip_source_is_seekable(zfile->src);

@@ -131,7 +131,7 @@ ZIP_EXTERN zip_t *zip_open_from_source(zip_source_t *src, int _flags, zip_error_
             zip_error_set(error, ZIP_ER_EXISTS, 0);
             return NULL;
         }
-        if (zip_source_open(src) < 0) {
+        if (!zip_source_open(src)) {
             zip_error_set_from_source(error, src);
             return NULL;
         }
@@ -1022,7 +1022,7 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir) {
             zip_source_free(src_window);
             return;
         }
-        if (zip_source_open(src_crc) != 0) {
+        if (!zip_source_open(src_crc)) {
             zip_source_free(src_crc);
             return;
         }

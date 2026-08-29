@@ -166,14 +166,14 @@ check_nonseekable_reopen(void) {
         return 1;
     }
 
-    if (zip_source_open(source) < 0 || zip_source_read(source, output, 1) != 1 || zip_source_at_eof(source) != 0 || !zip_source_close(source)) {
+    if (!zip_source_open(source) || zip_source_read(source, output, 1) != 1 || zip_source_at_eof(source) != 0 || !zip_source_close(source)) {
         fprintf(stderr, "can't prime non-seekable source\n");
         zip_source_free(source);
         zip_error_fini(&ctx.error);
         zip_error_fini(&error);
         return 1;
     }
-    if (zip_source_open(source) < 0 || zip_source_read(source, output, sizeof(input) - 1) != sizeof(input) - 1 || memcmp(input, output, sizeof(input) - 1) != 0) {
+    if (!zip_source_open(source) || zip_source_read(source, output, sizeof(input) - 1) != sizeof(input) - 1 || memcmp(input, output, sizeof(input) - 1) != 0) {
         fprintf(stderr, "reopened non-seekable source returned wrong data\n");
         zip_source_free(source);
         zip_error_fini(&ctx.error);
@@ -204,7 +204,7 @@ check_reopened_source(void) {
         return 1;
     }
 
-    if (zip_source_open(source) < 0 || zip_source_seek(source, -1, SEEK_SET)) {
+    if (!zip_source_open(source) || zip_source_seek(source, -1, SEEK_SET)) {
         fprintf(stderr, "can't trigger source error\n");
         zip_source_free(source);
         zip_error_fini(&error);
@@ -212,7 +212,7 @@ check_reopened_source(void) {
     }
     (void)zip_source_close(source);
 
-    if (zip_source_open(source) < 0 || zip_source_read(source, output, sizeof(input) - 1) != sizeof(input) - 1 || memcmp(input, output, sizeof(input) - 1) != 0) {
+    if (!zip_source_open(source) || zip_source_read(source, output, sizeof(input) - 1) != sizeof(input) - 1 || memcmp(input, output, sizeof(input) - 1) != 0) {
         fprintf(stderr, "can't read reopened source\n");
         zip_source_free(source);
         zip_error_fini(&error);

@@ -574,7 +574,7 @@ static int write_memory_src_to_file(const char *archive, zip_source_t *src) {
         fprintf(stderr, "zip_source_stat on buffer failed: %s\n", zip_error_strerror(zip_source_error(src)));
         return -1;
     }
-    if (zip_source_open(src) < 0) {
+    if (!zip_source_open(src)) {
         if (zip_error_code_zip(zip_source_error(src)) == ZIP_ER_DELETED) {
             if (unlink(archive) < 0 && errno != ENOENT) {
                 fprintf(stderr, "unlink failed: %s\n", strerror(errno));

@@ -53,7 +53,7 @@ static int copy_source(zip_source_t *from, zip_source_t *to) {
     zip_uint8_t buf[8192];
     zip_int64_t n;
 
-    if (zip_source_open(from) < 0) {
+    if (!zip_source_open(from)) {
         fprintf(stderr, "%s: can't open source for reading: %s\n", progname, zip_error_strerror(zip_source_error(from)));
         return -1;
     }

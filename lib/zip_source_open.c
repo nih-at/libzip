@@ -34,26 +34,26 @@
 
 #include "zipint.h"
 
-ZIP_EXTERN int zip_source_open(zip_source_t *src) {
+ZIP_EXTERN bool zip_source_open(zip_source_t *src) {
     if (src->source_closed) {
-        return -1;
+        return false;
     }
     if (src->write_state == ZIP_SOURCE_WRITE_REMOVED) {
         zip_error_set(&src->error, ZIP_ER_DELETED, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_SOURCE_IS_OPEN_READING(src)) {
         if ((zip_source_supports(src) & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_SEEK)) == 0) {
             zip_error_set(&src->error, ZIP_ER_INUSE, 0);
-            return -1;
+            return false;
         }
     }
     else {
         if (ZIP_SOURCE_IS_LAYERED(src)) {
-            if (zip_source_open(src->src) < 0) {
+            if (!zip_source_open(src->src)) {
                 zip_error_set_from_source(&src->error, src->src);
-                return -1;
+                return false;
             }
         }
 
@@ -61,7 +61,7 @@ ZIP_EXTERN int zip_source_open(zip_source_t *src) {
             if (ZIP_SOURCE_IS_LAYERED(src)) {
                 zip_source_close(src->src);
             }
-            return -1;
+            return false;
         }
     }
 
@@ -74,5 +74,5 @@ ZIP_EXTERN int zip_source_open(zip_source_t *src) {
 
     src->open_count++;
 
-    return 0;
+    return true;
 }

@@ -665,7 +665,7 @@ static int copy_source(zip_t *za, zip_source_t *src, zip_source_t *src_for_lengt
     zip_int64_t n, current;
     int ret;
 
-    if (zip_source_open(src) < 0) {
+    if (!zip_source_open(src)) {
         zip_error_set_from_source(&za->error, src);
         return -1;
     }

@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
 
         size = zst.size;
 
-        if (zip_source_open(src) < 0) {
+        if (!zip_source_open(src)) {
             fprintf(stderr, "can't open source: %s\n", zip_error_strerror(zip_source_error(src)));
             return 1;
         }

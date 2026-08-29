@@ -58,7 +58,7 @@ test_unknown_length_window(void) {
     zip_error_fini(&error);
     zip_source_free(base);
 
-    if (zip_source_open(window) < 0) {
+    if (!zip_source_open(window)) {
         fprintf(stderr, "can't open window source\n");
         zip_source_free(window);
         return -1;
@@ -134,7 +134,7 @@ test_large_fragment_source(void) {
     }
     zip_error_fini(&error);
 
-    if (zip_source_open(source) < 0) {
+    if (!zip_source_open(source)) {
         fprintf(stderr, "can't open fragment source\n");
         zip_source_free(source);
         return -1;
