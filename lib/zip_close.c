@@ -287,7 +287,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
     free(filelist);
 
     if (!error) {
-        if (zip_source_commit_write(za->src) != 0) {
+        if (!zip_source_commit_write(za->src)) {
             zip_error_set_from_source(&za->error, za->src);
             error = 1;
         }

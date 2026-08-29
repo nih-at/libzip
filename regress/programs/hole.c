@@ -82,7 +82,7 @@ static int copy_source(zip_source_t *from, zip_source_t *to) {
 
     zip_source_close(from);
 
-    if (zip_source_commit_write(to) < 0) {
+    if (!zip_source_commit_write(to)) {
         fprintf(stderr, "%s: can't commit source: %s\n", progname, zip_error_strerror(zip_source_error(to)));
         zip_source_rollback_write(to);
         return -1;
