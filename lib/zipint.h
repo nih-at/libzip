@@ -654,9 +654,9 @@ zip_uint32_t zip_random_uint32(void);
 int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);
 zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error);
-int _zip_read_local_ef(zip_t *, zip_uint64_t);
+bool _zip_read_local_ef(zip_t *, zip_uint64_t);
 zip_string_t *_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint16_t length, bool nulp, zip_error_t *error);
-int _zip_register_source(zip_t *za, zip_source_t *src);
+bool _zip_register_source(zip_t *za, zip_source_t *src);
 
 void _zip_set_open_error(int *zep, const zip_error_t *err, int ze);
 
@@ -670,11 +670,11 @@ void _zip_source_get_error(zip_source_t *src);
 bool _zip_source_had_error(zip_source_t *);
 void _zip_source_invalidate(zip_source_t *src);
 zip_source_t *_zip_source_new(zip_error_t *error);
-int _zip_source_set_source_archive(zip_source_t *, zip_t *);
+bool _zip_source_set_source_archive(zip_source_t *, zip_t *);
 zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_dostime_t *dostime, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error);
 
 int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error);
-int _zip_string_equal(const zip_string_t *a, const zip_string_t *b);
+bool _zip_string_equal(const zip_string_t *a, const zip_string_t *b);
 void _zip_string_free(zip_string_t *string);
 zip_uint32_t _zip_string_crc32(const zip_string_t *string);
 const zip_uint8_t *_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error);

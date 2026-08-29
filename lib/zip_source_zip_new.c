@@ -252,7 +252,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
 
     /* In all cases, src is a window source and therefore is owned by this function. */
 
-    if (_zip_source_set_source_archive(src, srcza) < 0) {
+    if (!_zip_source_set_source_archive(src, srcza)) {
         zip_source_free(src);
         return NULL;
     }

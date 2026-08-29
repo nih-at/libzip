@@ -332,7 +332,7 @@ int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef) {
 }
 
 
-int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
+bool _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
     zip_entry_t *e;
     unsigned char b[4];
     zip_buffer_t *buffer;
@@ -340,27 +340,27 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
 
     if (idx >= za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     e = za->entry + idx;
 
     if (e->orig == NULL || e->orig->local_extra_fields_read) {
-        return 0;
+        return true;
     }
 
     if (e->orig->offset + 26 > ZIP_INT64_MAX) {
         zip_error_set(&za->error, ZIP_ER_SEEK, EFBIG);
-        return -1;
+        return false;
     }
 
     if (!zip_source_seek(za->src, (zip_int64_t)(e->orig->offset + 26), SEEK_SET)) {
         zip_error_set_from_source(&za->error, za->src);
-        return -1;
+        return false;
     }
 
     if ((buffer = _zip_buffer_new_from_source(za->src, sizeof(b), b, &za->error)) == NULL) {
-        return -1;
+        return false;
     }
 
     fname_len = _zip_buffer_get_16(buffer);
@@ -369,7 +369,7 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
     if (!_zip_buffer_eof(buffer)) {
         _zip_buffer_free(buffer);
         zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
-        return -1;
+        return false;
     }
 
     _zip_buffer_free(buffer);
@@ -380,18 +380,18 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
 
         if (!zip_source_seek(za->src, fname_len, SEEK_CUR)) {
             zip_error_set(&za->error, ZIP_ER_SEEK, errno);
-            return -1;
+            return false;
         }
 
         ef_raw = _zip_read_data(NULL, za->src, ef_len, 0, &za->error);
 
         if (ef_raw == NULL) {
-            return -1;
+            return false;
         }
 
         if (!_zip_ef_parse(ef_raw, ef_len, ZIP_EF_LOCAL, &ef, &za->error)) {
             free(ef_raw);
-            return -1;
+            return false;
         }
         free(ef_raw);
 
@@ -408,7 +408,7 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
         e->changes->local_extra_fields_read = 1;
     }
 
-    return 0;
+    return true;
 }
 
 void _zip_extrafields_delete_by_id(zip_extra_fields_t *fields, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_flags_t flags) {

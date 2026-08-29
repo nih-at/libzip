@@ -122,7 +122,7 @@ ZIP_EXTERN const zip_uint8_t *zip_file_extra_field_get(zip_t *za, zip_uint64_t i
     }
 
     if (flags & ZIP_FL_LOCAL) {
-        if (_zip_read_local_ef(za, idx) < 0) {
+        if (!_zip_read_local_ef(za, idx)) {
             return NULL;
         }
     }
@@ -166,7 +166,7 @@ ZIP_EXTERN const zip_uint8_t *zip_file_extra_field_get_by_id(zip_t *za, zip_uint
     }
 
     if (flags & ZIP_FL_LOCAL) {
-        if (_zip_read_local_ef(za, idx) < 0) {
+        if (!_zip_read_local_ef(za, idx)) {
             return NULL;
         }
     }
@@ -188,7 +188,7 @@ ZIP_EXTERN zip_int16_t zip_file_extra_fields_count(zip_t *za, zip_uint64_t idx, 
     }
 
     if (flags & ZIP_FL_LOCAL) {
-        if (_zip_read_local_ef(za, idx) < 0) {
+        if (!_zip_read_local_ef(za, idx)) {
             return -1;
         }
     }
@@ -210,7 +210,7 @@ ZIP_EXTERN zip_int16_t zip_file_extra_fields_count_by_id(zip_t *za, zip_uint64_t
     }
 
     if (flags & ZIP_FL_LOCAL) {
-        if (_zip_read_local_ef(za, idx) < 0) {
+        if (!_zip_read_local_ef(za, idx)) {
             return -1;
         }
     }
@@ -266,7 +266,7 @@ int _zip_file_extra_field_prepare_for_change(zip_t *za, zip_uint64_t idx) {
     }
 
     if (e->orig) {
-        if (_zip_read_local_ef(za, idx) < 0) {
+        if (!_zip_read_local_ef(za, idx)) {
             return -1;
         }
     }

@@ -137,7 +137,7 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
 }
 
 
-int _zip_source_set_source_archive(zip_source_t *src, zip_t *za) {
+bool _zip_source_set_source_archive(zip_source_t *src, zip_t *za) {
     src->source_archive = za;
     return _zip_register_source(za, src);
 }
@@ -381,14 +381,14 @@ void _zip_deregister_source(zip_t *za, zip_source_t *src) {
 }
 
 
-int _zip_register_source(zip_t *za, zip_source_t *src) {
+bool _zip_register_source(zip_t *za, zip_source_t *src) {
     if (za->nopen_source + 1 >= za->nopen_source_alloc) {
         if (!ZIP_REALLOC(za->open_source, za->nopen_source_alloc, 10, &za->error)) {
-            return -1;
+            return false;
         }
     }
 
     za->open_source[za->nopen_source++] = src;
 
-    return 0;
+    return true;
 }

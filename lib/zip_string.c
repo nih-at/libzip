@@ -51,13 +51,13 @@ zip_uint32_t _zip_string_crc32(const zip_string_t *s) {
 }
 
 
-int _zip_string_equal(const zip_string_t *a, const zip_string_t *b) {
+bool _zip_string_equal(const zip_string_t *a, const zip_string_t *b) {
     if (a == NULL || b == NULL) {
         return a == b;
     }
 
     if (a->length != b->length) {
-        return 0;
+        return false;
     }
 
     /* TODO: encoding */

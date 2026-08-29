@@ -204,7 +204,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
         }
         de = entry->changes;
 
-        if (_zip_read_local_ef(za, i) < 0) {
+        if (!_zip_read_local_ef(za, i)) {
             error = 1;
             break;
         }
