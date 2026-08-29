@@ -86,7 +86,7 @@ zip_int64_t _zip_file_replace(zip_t *za, zip_uint64_t idx, const char *name, zip
 
     /* delete all extra fields - these are usually data that are
      * strongly coupled with the original data */
-    if (zip_file_extra_field_delete(za, idx, ZIP_EXTRA_FIELD_ALL, ZIP_FL_CENTRAL | ZIP_FL_LOCAL) < 0) {
+    if (!zip_file_extra_field_delete(za, idx, ZIP_EXTRA_FIELD_ALL, ZIP_FL_CENTRAL | ZIP_FL_LOCAL)) {
         return -1;
     }
 

@@ -305,7 +305,7 @@ static int delete_extra(char *argv[]) {
     idx = strtoull(argv[0], NULL, 10);
     eid = (zip_uint16_t)strtoull(argv[1], NULL, 10);
     geflags = get_flags(argv[2]);
-    if ((zip_file_extra_field_delete(za, idx, eid, geflags)) < 0) {
+    if (!zip_file_extra_field_delete(za, idx, eid, geflags)) {
         fprintf(stderr, "can't delete extra field data for file at index '%" PRIu64 "', extra field id '%d': %s\n", idx, eid, zip_strerror(za));
         return -1;
     }
