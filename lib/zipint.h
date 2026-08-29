@@ -597,7 +597,7 @@ bool _zip_ef_parse(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_extra_fie
 zip_extra_field_t *_zip_ef_remove_internal(zip_extra_field_t *);
 zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error);
 zip_int32_t _zip_ef_size(const zip_extra_field_t *);
-int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef);
+bool _zip_ef_write(zip_t *za, const zip_extra_field_t *ef);
 
 bool _zip_extra_fields_clone(zip_extra_fields_t *extra_fields, zip_error_t *error);
 void _zip_extra_fields_delete_by_id(zip_extra_fields_t *extra_fields, zip_uint16_t extra_field_id, zip_uint16_t extra_field_index, zip_flags_t flags);

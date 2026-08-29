@@ -1139,7 +1139,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     }
 
     if (ef) {
-        if (_zip_ef_write(za, ef) < 0) {
+        if (!_zip_ef_write(za, ef)) {
             _zip_ef_free(ef);
             return -1;
         }
@@ -1147,7 +1147,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     _zip_ef_free(ef);
     ef = (flags & ZIP_FL_LOCAL) ? de->extra_fields.local : de->extra_fields.central;
     if (ef && !ZIP_WANT_TORRENTZIP(za)) {
-        if (_zip_ef_write(za, ef) < 0) {
+        if (!_zip_ef_write(za, ef)) {
             return -1;
         }
     }

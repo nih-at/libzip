@@ -298,12 +298,12 @@ zip_int32_t _zip_ef_size(const zip_extra_field_t *ef) {
 }
 
 
-int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef) {
+bool _zip_ef_write(zip_t *za, const zip_extra_field_t *ef) {
     zip_uint8_t b[4];
     zip_buffer_t *buffer = _zip_buffer_new(b, sizeof(b));
 
     if (buffer == NULL) {
-        return -1;
+        return false;
     }
 
     for (; ef; ef = ef->next) {
@@ -313,22 +313,22 @@ int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef) {
         if (!_zip_buffer_ok(buffer)) {
             zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
             _zip_buffer_free(buffer);
-            return -1;
+            return false;
         }
         if (!_zip_write(za, b, 4)) {
             _zip_buffer_free(buffer);
-            return -1;
+            return false;
         }
         if (ef->size > 0) {
             if (!_zip_write(za, ef->data, ef->size)) {
                 _zip_buffer_free(buffer);
-                return -1;
+                return false;
             }
         }
     }
 
     _zip_buffer_free(buffer);
-    return 0;
+    return true;
 }
 
 
