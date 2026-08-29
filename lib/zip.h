@@ -470,7 +470,7 @@ ZIP_EXTERN bool zip_set_default_password(zip_t *_Nonnull, const char *_Nullable)
 ZIP_EXTERN bool zip_set_file_compression(zip_t *_Nonnull, zip_uint64_t, zip_int32_t, zip_uint32_t);
 ZIP_EXTERN int zip_source_at_eof(zip_source_t *_Nonnull);
 ZIP_EXTERN bool zip_source_begin_write(zip_source_t *_Nonnull);
-ZIP_EXTERN int zip_source_begin_write_cloning(zip_source_t *_Nonnull, zip_uint64_t);
+ZIP_EXTERN bool zip_source_begin_write_cloning(zip_source_t *_Nonnull, zip_uint64_t);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer(zip_t *_Nonnull, const void *_Nullable, zip_uint64_t, int);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer_create(const void *_Nullable, zip_uint64_t, int, zip_error_t *_Nullable);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_buffer_fragment(zip_t *_Nonnull, const zip_buffer_fragment_t *_Nonnull, zip_uint64_t, int);

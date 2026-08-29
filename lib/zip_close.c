@@ -146,7 +146,7 @@ ZIP_EXTERN bool zip_close(zip_t *za) {
             }
         }
         if (unchanged_offset > 0) {
-            if (zip_source_begin_write_cloning(za->src, unchanged_offset) < 0) {
+            if (!zip_source_begin_write_cloning(za->src, unchanged_offset)) {
                 /* cloning not supported, need to copy everything */
                 unchanged_offset = 0;
             }
