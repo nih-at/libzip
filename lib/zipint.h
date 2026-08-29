@@ -618,7 +618,7 @@ void _zip_error_copy(zip_error_t *dst, const zip_error_t *src);
 
 const zip_uint8_t *_zip_extract_extra_field_by_id(zip_error_t *, zip_uint16_t, int, const zip_uint8_t *, zip_uint16_t, zip_uint16_t *);
 
-int _zip_file_extra_field_prepare_for_change(zip_t *, zip_uint64_t);
+bool _zip_file_extra_field_prepare_for_change(zip_t *, zip_uint64_t);
 int _zip_file_fillbuf(void *, size_t, zip_file_t *);
 zip_uint64_t _zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t *error);
 zip_uint64_t _zip_file_get_offset(const zip_t *, zip_uint64_t, zip_error_t *);

@@ -57,7 +57,7 @@ ZIP_EXTERN bool zip_file_extra_field_delete(zip_t *za, zip_uint64_t idx, zip_uin
         return false;
     }
 
-    if (_zip_file_extra_field_prepare_for_change(za, idx) < 0) {
+    if (!_zip_file_extra_field_prepare_for_change(za, idx)) {
         return false;
     }
 
@@ -94,7 +94,7 @@ ZIP_EXTERN bool zip_file_extra_field_delete_by_id(zip_t *za, zip_uint64_t idx, z
         return false;
     }
 
-    if (_zip_file_extra_field_prepare_for_change(za, idx) < 0) {
+    if (!_zip_file_extra_field_prepare_for_change(za, idx)) {
         return false;
     }
 
@@ -243,7 +243,7 @@ ZIP_EXTERN bool zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16
         return false;
     }
 
-    if (_zip_file_extra_field_prepare_for_change(za, idx) < 0) {
+    if (!_zip_file_extra_field_prepare_for_change(za, idx)) {
         return false;
     }
 
@@ -251,35 +251,35 @@ ZIP_EXTERN bool zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16
 }
 
 
-int _zip_file_extra_field_prepare_for_change(zip_t *za, zip_uint64_t idx) {
+bool _zip_file_extra_field_prepare_for_change(zip_t *za, zip_uint64_t idx) {
     zip_entry_t *e;
 
     if (idx >= za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     e = za->entry + idx;
 
     if (e->changes && (e->changes->changed & ZIP_DIRENT_EXTRA_FIELD)) {
-        return 0;
+        return true;
     }
 
     if (e->orig) {
         if (!_zip_read_local_ef(za, idx)) {
-            return -1;
+            return false;
         }
     }
 
     if (e->changes == NULL) {
         if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-            return -1;
+            return false;
         }
     }
 
     _zip_extra_fields_clone(&e->changes->extra_fields, &za->error);
     e->changes->changed |= ZIP_DIRENT_EXTRA_FIELD;
 
-    return 0;
+    return true;
 }
