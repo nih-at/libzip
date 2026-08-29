@@ -473,7 +473,7 @@ static int replace_file_contents(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
     content = argv[1];
-    if ((s = zip_source_buffer(za, content, strlen(content), 0)) == NULL || zip_file_replace(za, idx, s, 0) < 0) {
+    if ((s = zip_source_buffer(za, content, strlen(content), 0)) == NULL || !zip_file_replace(za, idx, s, 0)) {
         zip_source_free(s);
         fprintf(stderr, "error replacing file data: %s\n", zip_strerror(za));
         return -1;

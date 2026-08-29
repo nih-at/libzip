@@ -296,7 +296,7 @@ static int copy_file(zip_t *destination_archive, zip_int64_t destination_index, 
     }
 
     if (destination_index >= 0) {
-        if (zip_file_replace(destination_archive, (zip_uint64_t)destination_index, source, 0) < 0) {
+        if (!zip_file_replace(destination_archive, (zip_uint64_t)destination_index, source, 0)) {
             zip_source_free(source);
             return -1;
         }
