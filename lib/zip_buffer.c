@@ -211,15 +211,15 @@ zip_uint8_t *_zip_buffer_peek(zip_buffer_t *buffer, zip_uint64_t length) {
     return data;
 }
 
-int _zip_buffer_put(zip_buffer_t *buffer, const void *src, size_t length) {
+bool _zip_buffer_put(zip_buffer_t *buffer, const void *src, size_t length) {
     zip_uint8_t *dst = _zip_buffer_get(buffer, length);
 
     if (dst == NULL) {
-        return -1;
+        return false;
     }
 
     (void)memcpy_s(dst, length, src, length);
-    return 0;
+    return true;
 }
 
 
