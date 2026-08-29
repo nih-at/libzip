@@ -491,7 +491,7 @@ static int set_extra(char *argv[]) {
     eidx = (zip_uint16_t)strtoull(argv[2], NULL, 10);
     geflags = get_flags(argv[3]);
     efdata = (zip_uint8_t *)argv[4];
-    if ((zip_file_extra_field_set(za, idx, eid, eidx, efdata, (zip_uint16_t)strlen((const char *)efdata), geflags)) < 0) {
+    if (!zip_file_extra_field_set(za, idx, eid, eidx, efdata, (zip_uint16_t)strlen((const char *)efdata), geflags)) {
         fprintf(stderr, "can't set extra field data for file at index '%" PRIu64 "', extra field id '%d', index '%d': %s\n", idx, eid, eidx, zip_strerror(za));
         return -1;
     }

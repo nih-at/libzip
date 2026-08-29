@@ -219,32 +219,32 @@ ZIP_EXTERN zip_int16_t zip_file_extra_fields_count_by_id(zip_t *za, zip_uint64_t
 }
 
 
-ZIP_EXTERN int zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags) {
+ZIP_EXTERN bool zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_flags_t flags) {
     if ((flags & ZIP_EF_BOTH) == 0) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL) {
-        return -1;
+        return false;
     }
 
     if (ZIP_IS_RDONLY(za)) {
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+        return false;
     }
     if (ZIP_WANT_TORRENTZIP(za)) {
         zip_error_set(&za->error, ZIP_ER_NOT_ALLOWED, 0);
-        return -1;
+        return false;
     }
 
     if (ZIP_EF_IS_INTERNAL(ef_id)) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     if (_zip_file_extra_field_prepare_for_change(za, idx) < 0) {
-        return -1;
+        return false;
     }
 
     return _zip_extra_fields_set(&za->entry[idx].changes->extra_fields, flags, ef_id, ef_idx, data, len, &za->error);
