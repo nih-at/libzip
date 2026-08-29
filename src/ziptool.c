@@ -557,7 +557,7 @@ static int set_file_encryption(char *argv[]) {
     if (strlen(password) == 0) {
         password = NULL;
     }
-    if (zip_file_set_encryption(za, idx, method, password) < 0) {
+    if (!zip_file_set_encryption(za, idx, method, password)) {
         fprintf(stderr, "can't set file encryption method at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
         return -1;
     }

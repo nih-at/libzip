@@ -45,7 +45,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
         zip_discard(archive);
         return -1;
     }
-    if (zip_file_set_encryption(archive, index, ZIP_EM_AES_256, password) < 0) {
+    if (!zip_file_set_encryption(archive, index, ZIP_EM_AES_256, password)) {
         fprintf(stderr, "failed to set file encryption: %s\n", zip_strerror(archive));
         zip_discard(archive);
         return -1;
