@@ -486,7 +486,7 @@ ZIP_EXTERN void zip_source_free(zip_source_t *_Nullable);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_function(zip_t *_Nonnull, zip_source_callback _Nonnull, void *_Nullable);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_function_create(zip_source_callback _Nonnull, void *_Nullable, zip_error_t *_Nullable);
 ZIP_EXTERN bool zip_source_get_file_attributes(zip_source_t *_Nonnull, zip_file_attributes_t *_Nonnull);
-ZIP_EXTERN int zip_source_is_deleted(zip_source_t *_Nonnull);
+ZIP_EXTERN bool zip_source_is_deleted(zip_source_t *_Nonnull);
 ZIP_EXTERN bool zip_source_is_seekable(zip_source_t *_Nonnull);
 ZIP_EXTERN void zip_source_keep(zip_source_t *_Nonnull);
 ZIP_EXTERN zip_source_t *_Nullable zip_source_layered(zip_t *_Nullable, zip_source_t *_Nonnull, zip_source_layered_callback _Nonnull, void *_Nullable);
