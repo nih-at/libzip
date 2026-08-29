@@ -3,3 +3,5 @@ program exact_read_integrity
 return 0
 file broken.zip broken.zip
 file hmac-error.zip hmac-error.zip
+file empty-badmac-aes256.zip empty-badmac-aes256.zip
+file encrypt-aes256.zip encrypt-aes256.zip
