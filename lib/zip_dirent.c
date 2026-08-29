@@ -1250,7 +1250,7 @@ zip_dirent_t *_zip_get_dirent(zip_t *za, zip_uint64_t idx, zip_flags_t flags, zi
 }
 
 
-int _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
+bool _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
     struct tm *tpm;
     struct tm tm;
     tpm = zip_localtime(&intime, &tm);
@@ -1261,7 +1261,7 @@ int _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
         if (ze) {
             zip_error_set(ze, ZIP_ER_INVAL, errno);
         }
-        return -1;
+        return false;
     }
     if (tpm->tm_year < 80) {
         tpm->tm_year = 80;
@@ -1270,7 +1270,7 @@ int _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
     dtime->date = (zip_uint16_t)(((tpm->tm_year + 1900 - 1980) << 9) + ((tpm->tm_mon + 1) << 5) + tpm->tm_mday);
     dtime->time = (zip_uint16_t)(((tpm->tm_hour) << 11) + ((tpm->tm_min) << 5) + ((tpm->tm_sec) >> 1));
 
-    return 0;
+    return true;
 }
 
 

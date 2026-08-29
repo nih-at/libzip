@@ -116,7 +116,7 @@ static int decrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
             return 0;
         }
 
-        if (_zip_u2d_time(st.mtime, &dostime, &ctx->error) < 0) {
+        if (!_zip_u2d_time(st.mtime, &dostime, &ctx->error)) {
             return -1;
         }
     }

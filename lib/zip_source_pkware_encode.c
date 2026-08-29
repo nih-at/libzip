@@ -79,7 +79,7 @@ zip_source_t *zip_source_pkware_encode(zip_t *za, zip_source_t *src, zip_uint16_
             trad_pkware_free(ctx);
             return NULL;
         }
-        if (_zip_u2d_time((st.valid & ZIP_STAT_MTIME) ? st.mtime : time(NULL), &ctx->dostime, &za->error) < 0) {
+        if (!_zip_u2d_time((st.valid & ZIP_STAT_MTIME) ? st.mtime : time(NULL), &ctx->dostime, &za->error)) {
             trad_pkware_free(ctx);
             return NULL;
         }

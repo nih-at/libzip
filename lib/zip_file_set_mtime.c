@@ -85,7 +85,7 @@ ZIP_EXTERN bool zip_file_set_dostime(zip_t *za, zip_uint64_t idx, zip_uint16_t d
 ZIP_EXTERN bool zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags) {
     zip_dostime_t dostime;
 
-    if (_zip_u2d_time(mtime, &dostime, &za->error) < 0) {
+    if (!_zip_u2d_time(mtime, &dostime, &za->error)) {
         return false;
     }
 

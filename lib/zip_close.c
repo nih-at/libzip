@@ -408,7 +408,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
             else {
                 time(&mtime_before_copy);
             }
-            if (_zip_u2d_time(mtime_before_copy, &de->last_mod, &za->error) < 0) {
+            if (!_zip_u2d_time(mtime_before_copy, &de->last_mod, &za->error)) {
                 return -1;
             }
         }
@@ -584,7 +584,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
         if ((de->changed & ZIP_DIRENT_LAST_MOD) == 0 && !have_dos_time) {
             if (st.valid & ZIP_STAT_MTIME) {
                 if (st.mtime != mtime_before_copy) {
-                    if (_zip_u2d_time(st.mtime, &de->last_mod, &za->error) < 0) {
+                    if (!_zip_u2d_time(st.mtime, &de->last_mod, &za->error)) {
                         return -1;
                     }
                     dirent_changed = true;
@@ -728,20 +728,20 @@ static int write_cdir(zip_t *za, const zip_filelist_t *filelist, zip_uint64_t su
 }
 
 
-int _zip_changed(const zip_t *za, zip_uint64_t *survivorsp) {
-    int changed;
+bool _zip_changed(const zip_t *za, zip_uint64_t *survivorsp) {
+    bool changed;
     zip_uint64_t i, survivors;
 
-    changed = 0;
+    changed = false;
     survivors = 0;
 
     if (za->comment_changed || (ZIP_WANT_TORRENTZIP(za) && !ZIP_IS_TORRENTZIP(za))) {
-        changed = 1;
+        changed = true;
     }
 
     for (i = 0; i < za->nentry; i++) {
         if (ZIP_ENTRY_HAS_CHANGES(&za->entry[i])) {
-            changed = 1;
+            changed = true;
         }
         if (!za->entry[i].deleted) {
             survivors++;
