@@ -46,7 +46,7 @@ int zip_source_remove(zip_source_t *src) {
     }
 
     if (ZIP_SOURCE_IS_OPEN_READING(src)) {
-        if (zip_source_close(src) < 0) {
+        if (!zip_source_close(src)) {
             return -1;
         }
     }

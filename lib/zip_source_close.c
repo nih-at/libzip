@@ -35,12 +35,12 @@
 #include "zipint.h"
 
 
-int zip_source_close(zip_source_t *src) {
-    int ret = 0;
+bool zip_source_close(zip_source_t *src) {
+    bool ret = true;
 
     if (!ZIP_SOURCE_IS_OPEN_READING(src)) {
         zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     src->open_count--;
@@ -48,21 +48,21 @@ int zip_source_close(zip_source_t *src) {
         src->have_next_byte = false;
 
         if (_zip_source_call(src, NULL, 0, ZIP_SOURCE_CLOSE) < 0) {
-            ret = -1;
+            ret = false;
         }
 
         if (ZIP_SOURCE_IS_LAYERED(src)) {
             if (!ZIP_SOURCE_IS_OPEN_READING(src->src)) {
-                if (ret == 0) {
+                if (ret) {
                     zip_error_set(&src->error, ZIP_ER_INTERNAL, 0);
                 }
-                return -1;
+                return false;
             }
-            if (zip_source_close(src->src) < 0) {
-                if (ret == 0) {
+            if (!zip_source_close(src->src)) {
+                if (ret) {
                     zip_error_set_from_source(&src->error, src->src);
                 }
-                ret = -1;
+                ret = false;
             }
         }
     }

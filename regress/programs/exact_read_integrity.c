@@ -166,7 +166,7 @@ check_nonseekable_reopen(void) {
         return 1;
     }
 
-    if (zip_source_open(source) < 0 || zip_source_read(source, output, 1) != 1 || zip_source_at_eof(source) != 0 || zip_source_close(source) < 0) {
+    if (zip_source_open(source) < 0 || zip_source_read(source, output, 1) != 1 || zip_source_at_eof(source) != 0 || !zip_source_close(source)) {
         fprintf(stderr, "can't prime non-seekable source\n");
         zip_source_free(source);
         zip_error_fini(&ctx.error);
@@ -218,7 +218,7 @@ check_reopened_source(void) {
         zip_error_fini(&error);
         return 1;
     }
-    if (zip_source_close(source) < 0) {
+    if (!zip_source_close(source)) {
         fprintf(stderr, "closing reopened source failed: %s\n", zip_error_strerror(zip_source_error(source)));
         zip_source_free(source);
         zip_error_fini(&error);

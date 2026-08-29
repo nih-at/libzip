@@ -46,7 +46,7 @@ ZIP_EXTERN int zip_fclose(zip_file_t *zf) {
 
     if (zf->src) {
         if (ZIP_SOURCE_IS_OPEN_READING(zf->src)) {
-            if (zip_source_close(zf->src) < 0) {
+            if (!zip_source_close(zf->src)) {
                 zip_error_set_from_source(&zf->error, zf->src);
             }
         }

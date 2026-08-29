@@ -129,7 +129,7 @@ static int cat_impl_backend(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t l
         zip_source_free(src);
         return -1;
     }
-    if (zip_source_close(src) < 0) {
+    if (!zip_source_close(src)) {
         fprintf(stderr, "can't close file at index '%" PRIu64 "': %s\n", idx, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
         return -1;
