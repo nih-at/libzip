@@ -522,7 +522,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     }
 
     if (!ZIP_WANT_TORRENTZIP(za)) {
-        if (zip_source_get_file_attributes(src_final, &attributes) != 0) {
+        if (!zip_source_get_file_attributes(src_final, &attributes)) {
             zip_error_set_from_source(&za->error, src_final);
             zip_source_free(src_final);
             return -1;
@@ -550,7 +550,7 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     }
 
     if (!ZIP_WANT_TORRENTZIP(za)) {
-        if (zip_source_get_file_attributes(src_final, &attributes) != 0) {
+        if (!zip_source_get_file_attributes(src_final, &attributes)) {
             zip_error_set_from_source(&za->error, src_final);
             ret = -1;
         }

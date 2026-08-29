@@ -38,20 +38,20 @@ ZIP_EXTERN void zip_file_attributes_init(zip_file_attributes_t *attributes) {
     attributes->version = 1;
 }
 
-int zip_source_get_file_attributes(zip_source_t *src, zip_file_attributes_t *attributes) {
+bool zip_source_get_file_attributes(zip_source_t *src, zip_file_attributes_t *attributes) {
     if (src->source_closed) {
-        return -1;
+        return false;
     }
     if (attributes == NULL) {
         zip_error_set(&src->error, ZIP_ER_INVAL, 0);
-        return -1;
+        return false;
     }
 
     zip_file_attributes_init(attributes);
 
     if (src->supports & ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_GET_FILE_ATTRIBUTES)) {
         if (_zip_source_call(src, attributes, sizeof(*attributes), ZIP_SOURCE_GET_FILE_ATTRIBUTES) < 0) {
-            return -1;
+            return false;
         }
     }
 
@@ -60,9 +60,9 @@ int zip_source_get_file_attributes(zip_source_t *src, zip_file_attributes_t *att
 
         zip_file_attributes_init(&lower_attributes);
 
-        if (zip_source_get_file_attributes(src->src, &lower_attributes) < 0) {
+        if (!zip_source_get_file_attributes(src->src, &lower_attributes)) {
             zip_error_set_from_source(&src->error, src->src);
-            return -1;
+            return false;
         }
 
         if ((lower_attributes.valid & ZIP_FILE_ATTRIBUTES_HOST_SYSTEM) && (attributes->valid & ZIP_FILE_ATTRIBUTES_HOST_SYSTEM) == 0) {
@@ -102,5 +102,5 @@ int zip_source_get_file_attributes(zip_source_t *src, zip_file_attributes_t *att
         }
     }
 
-    return 0;
+    return true;
 }

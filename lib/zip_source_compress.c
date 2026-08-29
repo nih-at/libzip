@@ -327,7 +327,7 @@ static zip_int64_t compress_callback(zip_source_t *src, void *ud, void *data, zi
         ctx->is_stored = false;
         ctx->first_read = -1;
 
-        if (zip_source_stat(src, &st) < 0 || zip_source_get_file_attributes(src, &attributes) < 0) {
+        if (zip_source_stat(src, &st) < 0 || !zip_source_get_file_attributes(src, &attributes)) {
             zip_error_set_from_source(&ctx->error, src);
             return -1;
         }
