@@ -35,12 +35,12 @@
 #include "zipint.h"
 
 
-ZIP_EXTERN int zip_unchange_all(zip_t *za) {
-    int ret;
+ZIP_EXTERN bool zip_unchange_all(zip_t *za) {
+    bool ret;
     zip_uint64_t i;
 
     if (!_zip_hash_revert(za->names, &za->error)) {
-        return -1;
+        return false;
     }
 
     ret = 0;

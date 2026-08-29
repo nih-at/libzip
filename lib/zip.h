@@ -518,8 +518,8 @@ ZIP_EXTERN bool zip_stat(zip_t *_Nonnull, const char *_Nonnull, zip_flags_t, zip
 ZIP_EXTERN bool zip_stat_index(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_stat_t *_Nonnull);
 ZIP_EXTERN void zip_stat_init(zip_stat_t *_Nonnull);
 ZIP_EXTERN const char *_Nonnull zip_strerror(zip_t *_Nonnull);
-ZIP_EXTERN int zip_unchange(zip_t *_Nonnull, zip_uint64_t);
-ZIP_EXTERN int zip_unchange_all(zip_t *_Nonnull);
+ZIP_EXTERN bool zip_unchange(zip_t *_Nonnull, zip_uint64_t);
+ZIP_EXTERN bool zip_unchange_all(zip_t *_Nonnull);
 ZIP_EXTERN int zip_unchange_archive(zip_t *_Nonnull);
 ZIP_EXTERN int zip_compression_method_supported(zip_int32_t method, int compress);
 ZIP_EXTERN int zip_encryption_method_supported(zip_uint16_t method, int encode);

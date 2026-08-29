@@ -239,7 +239,7 @@ static int regress_fseek(char *argv[]) {
 }
 
 static int unchange_all(char *argv[]) {
-    if (zip_unchange_all(za) < 0) {
+    if (!zip_unchange_all(za)) {
         fprintf(stderr, "can't revert changes to archive: %s\n", zip_strerror(za));
         return -1;
     }
