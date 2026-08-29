@@ -315,12 +315,12 @@ int _zip_ef_write(zip_t *za, const zip_extra_field_t *ef) {
             _zip_buffer_free(buffer);
             return -1;
         }
-        if (_zip_write(za, b, 4) < 0) {
+        if (!_zip_write(za, b, 4)) {
             _zip_buffer_free(buffer);
             return -1;
         }
         if (ef->size > 0) {
-            if (_zip_write(za, ef->data, ef->size) < 0) {
+            if (!_zip_write(za, ef->data, ef->size)) {
                 _zip_buffer_free(buffer);
                 return -1;
             }

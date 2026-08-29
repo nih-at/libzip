@@ -112,16 +112,16 @@ zip_string_t *_zip_read_string(zip_buffer_t *buffer, zip_source_t *src, zip_uint
 }
 
 
-int _zip_write(zip_t *za, const void *data, zip_uint64_t length) {
+bool _zip_write(zip_t *za, const void *data, zip_uint64_t length) {
     zip_int64_t n;
 
     if ((n = zip_source_write(za->src, data, length)) < 0) {
         zip_error_set_from_source(&za->error, za->src);
-        return -1;
+        return false;
     }
     if ((zip_uint64_t)n != length) {
         zip_error_set(&za->error, ZIP_ER_WRITE, EINTR);
-        return -1;
+        return false;
     }
 
     if (za->write_crc != NULL) {
@@ -134,5 +134,5 @@ int _zip_write(zip_t *za, const void *data, zip_uint64_t length) {
         }
     }
 
-    return 0;
+    return true;
 }

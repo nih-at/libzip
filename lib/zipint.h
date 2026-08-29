@@ -681,7 +681,7 @@ const zip_uint8_t *_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip
 bool _zip_string_is_ascii(const zip_string_t *string);
 zip_uint16_t _zip_string_length(const zip_string_t *string);
 zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error);
-int _zip_string_write(zip_t *za, const zip_string_t *string);
+bool _zip_string_write(zip_t *za, const zip_string_t *string);
 bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
 bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
 bool _zip_winzip_aes_finish(zip_winzip_aes_t *ctx, zip_uint8_t *hmac);
@@ -706,6 +706,6 @@ bool _zip_set_name(zip_t *, zip_uint64_t, const char *, zip_flags_t);
 bool _zip_u2d_time(time_t, zip_dostime_t *, zip_error_t *);
 bool _zip_unchange(zip_t *, zip_uint64_t, int);
 void _zip_unchange_data(zip_entry_t *);
-int _zip_write(zip_t *za, const void *data, zip_uint64_t length);
+bool _zip_write(zip_t *za, const void *data, zip_uint64_t length);
 
 #endif /* _HAD_ZIPINT_H */

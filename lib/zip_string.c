@@ -189,9 +189,9 @@ zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_f
 }
 
 
-int _zip_string_write(zip_t *za, const zip_string_t *s) {
+bool _zip_string_write(zip_t *za, const zip_string_t *s) {
     if (s == NULL) {
-        return 0;
+        return true;
     }
 
     return _zip_write(za, s->raw, s->length);

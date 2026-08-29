@@ -183,7 +183,7 @@ zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint6
         return -1;
     }
 
-    if (_zip_write(za, _zip_buffer_data(buffer), _zip_buffer_offset(buffer)) < 0) {
+    if (!_zip_write(za, _zip_buffer_data(buffer), _zip_buffer_offset(buffer))) {
         _zip_buffer_free(buffer);
         return -1;
     }
@@ -194,12 +194,12 @@ zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint6
         char torrentzip_comment[TORRENTZIP_SIGNATURE_LENGTH + TORRENTZIP_CRC_LENGTH + 1];
         snprintf(torrentzip_comment, sizeof(torrentzip_comment), TORRENTZIP_SIGNATURE "%08X", cdir_crc);
 
-        if (_zip_write(za, torrentzip_comment, strlen(torrentzip_comment)) < 0) {
+        if (!_zip_write(za, torrentzip_comment, strlen(torrentzip_comment))) {
             return -1;
         }
     }
     else if (comment != NULL) {
-        if (_zip_write(za, comment->raw, comment->length) < 0) {
+        if (!_zip_write(za, comment->raw, comment->length)) {
             return -1;
         }
     }
@@ -1123,7 +1123,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
         return -1;
     }
 
-    if (_zip_write(za, buf, _zip_buffer_offset(buffer)) < 0) {
+    if (!_zip_write(za, buf, _zip_buffer_offset(buffer))) {
         _zip_buffer_free(buffer);
         _zip_ef_free(ef);
         return -1;
@@ -1132,7 +1132,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     _zip_buffer_free(buffer);
 
     if (de->filename) {
-        if (_zip_string_write(za, de->filename) < 0) {
+        if (!_zip_string_write(za, de->filename)) {
             _zip_ef_free(ef);
             return -1;
         }
@@ -1154,7 +1154,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
     if ((flags & ZIP_FL_LOCAL) == 0 && !ZIP_WANT_TORRENTZIP(za)) {
         if (de->comment) {
-            if (_zip_string_write(za, de->comment) < 0) {
+            if (!_zip_string_write(za, de->comment)) {
                 return -1;
             }
         }

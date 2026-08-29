@@ -47,7 +47,7 @@ static int copy_data(zip_t *, zip_uint64_t);
 static int copy_source(zip_t *, zip_source_t *, zip_source_t *, zip_int64_t);
 static int torrentzip_compare_names(const void *a, const void *b);
 static int write_cdir(zip_t *, const zip_filelist_t *, zip_uint64_t);
-static int write_data_descriptor(zip_t *za, const zip_dirent_t *dirent, int is_zip64);
+static bool write_data_descriptor(zip_t *za, const zip_dirent_t *dirent, int is_zip64);
 
 ZIP_EXTERN bool zip_close(zip_t *za) {
     zip_uint64_t i, j, survivors, unchanged_offset;
@@ -642,7 +642,7 @@ static int copy_data(zip_t *za, zip_uint64_t len) {
             return -1;
         }
 
-        if (_zip_write(za, buf, n) < 0) {
+        if (!_zip_write(za, buf, n)) {
             byte_array_fini(buf);
             return -1;
         }
@@ -678,7 +678,7 @@ static int copy_source(zip_t *za, zip_source_t *src, zip_source_t *src_for_lengt
     ret = 0;
     current = 0;
     while ((n = zip_source_read(src, buf, BUFSIZE)) > 0) {
-        if (_zip_write(za, buf, (zip_uint64_t)n) < 0) {
+        if (!_zip_write(za, buf, (zip_uint64_t)n)) {
             ret = -1;
             break;
         }
@@ -755,13 +755,13 @@ bool _zip_changed(const zip_t *za, zip_uint64_t *survivorsp) {
     return changed;
 }
 
-static int write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64) {
+static bool write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64) {
     zip_buffer_t *buffer = _zip_buffer_new(NULL, MAX_DATA_DESCRIPTOR_LENGTH);
-    int ret = 0;
+    bool ret = true;
 
     if (buffer == NULL) {
         zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-        return -1;
+        return false;
     }
 
     _zip_buffer_put(buffer, DATADES_MAGIC, 4);
@@ -777,7 +777,7 @@ static int write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64
 
     if (!_zip_buffer_ok(buffer)) {
         zip_error_set(&za->error, ZIP_ER_INTERNAL, 0);
-        ret = -1;
+        ret = false;
     }
     else {
         ret = _zip_write(za, _zip_buffer_data(buffer), _zip_buffer_offset(buffer));
