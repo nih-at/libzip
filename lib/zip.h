@@ -396,7 +396,7 @@ ZIP_DEPRECATED("use 'zip_file_get_comment' instead") ZIP_EXTERN const char *_Nul
 ZIP_DEPRECATED("use 'zip_get_num_entries' instead") ZIP_EXTERN int zip_get_num_files(zip_t *_Nonnull);
 ZIP_DEPRECATED("use 'zip_file_rename' instead") ZIP_EXTERN bool zip_rename(zip_t *_Nonnull, zip_uint64_t, const char *_Nonnull);
 ZIP_DEPRECATED("use 'zip_file_replace' instead") ZIP_EXTERN int zip_replace(zip_t *_Nonnull, zip_uint64_t, zip_source_t *_Nonnull);
-ZIP_DEPRECATED("use 'zip_file_set_comment' instead") ZIP_EXTERN int zip_set_file_comment(zip_t *_Nonnull, zip_uint64_t, const char *_Nullable, int);
+ZIP_DEPRECATED("use 'zip_file_set_comment' instead") ZIP_EXTERN bool zip_set_file_comment(zip_t *_Nonnull, zip_uint64_t, const char *_Nullable, int);
 ZIP_DEPRECATED("use 'zip_error_init_with_code' and 'zip_error_system_type' instead") ZIP_EXTERN int zip_error_get_sys_type(int);
 ZIP_DEPRECATED("use 'zip_get_error' instead") ZIP_EXTERN void zip_error_get(zip_t *_Nonnull, int *_Nullable, int *_Nullable);
 ZIP_DEPRECATED("use 'zip_error_strerror' instead") ZIP_EXTERN int zip_error_to_str(char *_Nonnull, zip_uint64_t, int, int);
@@ -441,7 +441,7 @@ ZIP_EXTERN bool zip_file_get_external_attributes(zip_t *_Nonnull, zip_uint64_t, 
 ZIP_EXTERN bool zip_file_is_seekable(zip_file_t *_Nonnull);
 ZIP_EXTERN bool zip_file_rename(zip_t *_Nonnull, zip_uint64_t, const char *_Nonnull, zip_flags_t);
 ZIP_EXTERN bool zip_file_replace(zip_t *_Nonnull, zip_uint64_t, zip_source_t *_Nonnull, zip_flags_t);
-ZIP_EXTERN int zip_file_set_comment(zip_t *_Nonnull, zip_uint64_t, const char *_Nullable, zip_uint16_t, zip_flags_t);
+ZIP_EXTERN bool zip_file_set_comment(zip_t *_Nonnull, zip_uint64_t, const char *_Nullable, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_set_dostime(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, zip_uint16_t, zip_flags_t);
 ZIP_EXTERN int zip_file_set_encryption(zip_t *_Nonnull, zip_uint64_t, zip_uint16_t, const char *_Nullable);
 ZIP_EXTERN int zip_file_set_external_attributes(zip_t *_Nonnull, zip_uint64_t, zip_flags_t, zip_uint8_t, zip_uint32_t);

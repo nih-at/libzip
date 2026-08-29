@@ -526,7 +526,7 @@ static int set_archive_flag(char *argv[]) {
 static int set_file_comment(char *argv[]) {
     zip_uint64_t idx;
     idx = strtoull(argv[0], NULL, 10);
-    if (zip_file_set_comment(za, idx, argv[1], (zip_uint16_t)strlen(argv[1]), 0) < 0) {
+    if (!zip_file_set_comment(za, idx, argv[1], (zip_uint16_t)strlen(argv[1]), 0)) {
         fprintf(stderr, "can't set file comment at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
         return -1;
     }
