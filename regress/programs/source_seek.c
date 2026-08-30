@@ -31,6 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <stdint.h>
 #include <stdio.h>
 
 #include "zip.h"
@@ -160,10 +161,45 @@ test_large_fragment_source(void) {
 }
 
 
+static int
+test_past_end_zip_source(const char *archive_name) {
+    zip_error_t error;
+    zip_source_t *source;
+    zip_t *archive;
+    int ze;
+
+    ze = 0;
+    if ((archive = zip_open(archive_name, ZIP_RDONLY, &ze)) == NULL) {
+        fprintf(stderr, "can't open test archive: %d\n", ze);
+        return -1;
+    }
+
+    zip_error_init(&error);
+    source = zip_source_zip_file_create(archive, 0, 0, UINT64_MAX, -1, NULL, &error);
+    if (source != NULL) {
+        fprintf(stderr, "zip source allowed start past end of file\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        zip_discard(archive);
+        return -1;
+    }
+    if (zip_error_code_zip(&error) != ZIP_ER_INVAL) {
+        fprintf(stderr, "zip source returned wrong error for start past end of file\n");
+        zip_error_fini(&error);
+        zip_discard(archive);
+        return -1;
+    }
+
+    zip_error_fini(&error);
+    zip_discard(archive);
+    return 0;
+}
+
+
 int
 main(int argc, char *argv[]) {
-    if (argc > 2) {
-        fprintf(stderr, "usage: %s [ignored]\n", argv[0]);
+    if (argc != 2) {
+        fprintf(stderr, "usage: %s archive\n", argv[0]);
         return 1;
     }
 
@@ -171,6 +207,9 @@ main(int argc, char *argv[]) {
         return 1;
     }
     if (test_large_fragment_source() < 0) {
+        return 1;
+    }
+    if (test_past_end_zip_source(argv[1]) < 0) {
         return 1;
     }
 

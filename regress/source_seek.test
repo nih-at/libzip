@@ -1,4 +1,5 @@
 # test seek edge cases for sources and unknown-length windows
 program source_seek
-arguments ignored
+arguments aaaaaaaa-stored.zip
 return 0
+file aaaaaaaa-stored.zip aaaaaaaa-stored.zip

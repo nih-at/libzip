@@ -98,7 +98,7 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
 
     have_size = (st.valid & ZIP_STAT_SIZE) != 0;
     /* overflow or past end of file */
-    if (len >= 0 && ((start > 0 && start + len < start) || (have_size && start + len > st.size))) {
+    if ((have_size && start > st.size) || (len >= 0 && ((start > 0 && start + len < start) || (have_size && start + len > st.size)))) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
