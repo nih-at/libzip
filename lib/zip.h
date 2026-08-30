@@ -80,6 +80,7 @@ extern "C" {
 #include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
+#include "compat.h"
 
 /* flags for zip_open */
 
