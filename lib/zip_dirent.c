@@ -506,20 +506,6 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
                 return -1;
             }
         }
-
-        if (check_consistency) {
-            zip_uint8_t *p;
-
-            for (p = zde->filename->raw; p < zde->filename->raw + zde->filename->length; p++) {
-                if (*p == 0) {
-                    zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_NUL_IN_FILENAME);
-                    if (!from_buffer) {
-                        _zip_buffer_free(buffer);
-                    }
-                    return -1;
-                }
-            }
-        }
     }
 
     if (ef_len) {
@@ -571,6 +557,23 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
         return -1;
     }
     zde->filename = utf8_string;
+
+    /* Check for a NUL byte in the final name; the Info-ZIP Unicode Path extra
+       field can replace zde->filename above, so this must run after that. */
+    if (check_consistency && zde->filename != NULL) {
+        zip_uint8_t *p;
+
+        for (p = zde->filename->raw; p < zde->filename->raw + zde->filename->length; p++) {
+            if (*p == 0) {
+                zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_NUL_IN_FILENAME);
+                if (!from_buffer) {
+                    _zip_buffer_free(buffer);
+                }
+                return -1;
+            }
+        }
+    }
+
     if (!local) {
         if ((utf8_string = _zip_dirent_process_ef_utf_8(zde, ZIP_EF_UTF_8_COMMENT, zde->comment, check_consistency)) == NULL && zde->comment != NULL) {
             zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_UTF8_COMMENT_MISMATCH);
