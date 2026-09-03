@@ -90,6 +90,10 @@ static zip_int64_t crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint6
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
         ctx->position = 0;
+        ctx->crc_position = 0;
+        ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
+        ctx->crc_complete = 0;
+        ctx->size = 0;
         return 0;
 
     case ZIP_SOURCE_READ:
