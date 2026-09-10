@@ -225,6 +225,11 @@ ZIP_EXTERN int zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_
         return -1;
     }
 
+    if (len > 0 && data == NULL) {
+        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+        return -1;
+    }
+
     if (_zip_get_dirent(za, idx, 0, NULL) == NULL) {
         return -1;
     }
