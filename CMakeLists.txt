@@ -26,6 +26,16 @@ option(ENABLE_FDOPEN "Enable zip_fdopen, which is not allowed in Microsoft CRT s
 
 option(ENABLE_COVERAGE "Enable code coverage reporting of test suite" OFF)
 
+# Optional Clang -fbounds-safety. Default OFF: ZIP_*SIZED_BY* / ZIP_*COUNTED_BY*
+# macros in lib/zip_bounds_safety.h are inert and the ABI/build is unchanged.
+# When ON, requires a Clang that provides -fbounds-safety / <ptrcheck.h>.
+option(ENABLE_FBOUNDS_SAFETY "Enable experimental Clang -fbounds-safety annotations (OFF by default)" OFF)
+if(ENABLE_FBOUNDS_SAFETY)
+  message(STATUS "ENABLE_FBOUNDS_SAFETY enabled")
+else()
+  message(STATUS "ENABLE_FBOUNDS_SAFETY disabled")
+endif()
+
 option(LIMIT_LZMA_WINDOW "Set limit for LZMA window size. Without a limit, LZMA compression can use up to 4GiB of memory" OFF)
 
 option(BUILD_TOOLS "Build tools in the src directory (zipcmp, zipmerge, ziptool)" ON)

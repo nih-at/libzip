@@ -163,8 +163,9 @@ zip_buffer_t *_zip_buffer_new(zip_uint8_t *data, zip_uint64_t size) {
     }
 
     buffer->ok = true;
-    buffer->data = data;
+    /* Capacity before pointer so sized_by invariants hold under -fbounds-safety. */
     buffer->size = size;
+    buffer->data = data;
     buffer->offset = 0;
     buffer->free_data = free_data;
 
