@@ -74,6 +74,7 @@ static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t length, zip_error_t
 static zip_uint64_t buffer_find_fragment(const buffer_t *buffer, zip_uint64_t offset);
 static void buffer_free(buffer_t *buffer);
 static bool buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *error);
+static bool buffer_make_writable(buffer_t *buffer, zip_uint64_t first_fragment, zip_error_t *error);
 static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int free_data, zip_error_t *error);
 static zip_int64_t buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length);
 static int buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error);
@@ -443,6 +444,35 @@ static bool buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_e
 }
 
 
+static bool buffer_make_writable(buffer_t *buffer, zip_uint64_t first_fragment, zip_error_t *error) {
+    zip_uint64_t i;
+
+    /* Keep the shared fragments as a prefix so a partial allocation failure leaves ownership unambiguous. */
+    for (i = buffer->shared_fragments; i > first_fragment; i--) {
+        zip_uint64_t fragment = i - 1;
+        zip_uint8_t *data;
+
+#if ZIP_UINT64_MAX > SIZE_MAX
+        if (buffer->fragments[fragment].length > SIZE_MAX) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            return false;
+        }
+#endif
+        if ((data = malloc((size_t)buffer->fragments[fragment].length)) == NULL) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            return false;
+        }
+        (void)memcpy_s(data, (size_t)buffer->fragments[fragment].length, buffer->fragments[fragment].data, (size_t)buffer->fragments[fragment].length);
+        buffer->fragments[fragment].data = data;
+        buffer->first_owned_fragment = ZIP_MIN(buffer->first_owned_fragment, fragment);
+        buffer->shared_fragments = fragment;
+        buffer->shared_buffer->shared_fragments = fragment;
+    }
+
+    return true;
+}
+
+
 static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int free_data, zip_error_t *error) {
     buffer_t *buffer;
     bool have_empty_fragment = false;
@@ -611,6 +641,10 @@ static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_u
             capacity += WRITE_FRAGMENT_SIZE;
             buffer->fragment_offsets[buffer->nfragments] = capacity;
         }
+    }
+
+    if (length > 0 && !buffer_make_writable(buffer, buffer->current_fragment, error)) {
+        return -1;
     }
 
     i = buffer->current_fragment;
