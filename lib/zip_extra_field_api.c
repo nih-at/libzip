@@ -34,6 +34,8 @@
 
 #include "zipint.h"
 
+static const zip_uint8_t *_zip_file_extra_field_get(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *ef_id, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags);
+static bool _zip_file_extra_field_get_one(zip_extra_field_t *ef, zip_uint16_t *idx, zip_uint16_t *id, zip_uint16_t *idp, const zip_uint8_t **data, zip_uint16_t *len);
 
 ZIP_EXTERN int zip_file_extra_field_delete(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_flags_t flags) {
     zip_dirent_t *de;
@@ -107,71 +109,12 @@ ZIP_EXTERN int zip_file_extra_field_delete_by_id(zip_t *za, zip_uint64_t idx, zi
 
 
 ZIP_EXTERN const zip_uint8_t *zip_file_extra_field_get(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags) {
-    static const zip_uint8_t empty[1] = {'\0'};
-
-    zip_dirent_t *de;
-    zip_extra_field_t *ef;
-
-    if ((flags & ZIP_EF_BOTH) == 0 || ((flags & ZIP_EF_BOTH) == ZIP_EF_BOTH)) {
-        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return NULL;
-    }
-
-    if ((de = _zip_get_dirent(za, idx, flags, &za->error)) == NULL) {
-        return NULL;
-    }
-
-    if (flags & ZIP_FL_LOCAL) {
-        if (_zip_read_local_ef(za, idx) < 0) {
-            return NULL;
-        }
-    }
-
-    ef = (flags & ZIP_FL_LOCAL) ? de->extra_fields.local : de->extra_fields.central;
-    while (ef_idx > 0 && ef) {
-        ef = ef->next;
-        ef_idx--;
-    }
-
-    if (ef) {
-        if (idp) {
-            *idp = ef->id;
-        }
-        if (lenp) {
-            *lenp = ef->size;
-        }
-        if (ef->size > 0) {
-            return ef->data;
-        }
-        else {
-            return empty;
-        }
-    }
-
-    zip_error_set(&za->error, ZIP_ER_NOENT, 0);
-    return NULL;
+    return _zip_file_extra_field_get(za, idx, ef_idx, NULL, idp, lenp, flags);
 }
 
 
 ZIP_EXTERN const zip_uint8_t *zip_file_extra_field_get_by_id(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_id, zip_uint16_t ef_idx, zip_uint16_t *lenp, zip_flags_t flags) {
-    zip_dirent_t *de;
-
-    if ((flags & ZIP_EF_BOTH) == 0) {
-        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return NULL;
-    }
-
-    if ((de = _zip_get_dirent(za, idx, flags, &za->error)) == NULL) {
-        return NULL;
-    }
-
-    if (flags & ZIP_FL_LOCAL) {
-        if (_zip_read_local_ef(za, idx) < 0) {
-            return NULL;
-        }
-    }
-
-    return _zip_extra_fields_get_by_id(&de->extra_fields, lenp, ef_id, ef_idx, flags, &za->error);
+    return _zip_file_extra_field_get(za, idx, ef_idx, &ef_id, NULL, lenp, flags);
 }
 
 
@@ -287,4 +230,66 @@ int _zip_file_extra_field_prepare_for_change(zip_t *za, zip_uint64_t idx) {
     e->changes->changed |= ZIP_DIRENT_EXTRA_FIELD;
 
     return 0;
+}
+
+static const zip_uint8_t *_zip_file_extra_field_get(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *ef_id, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags) {
+    static const zip_uint8_t empty[1] = {'\0'};
+
+    zip_dirent_t *de;
+    const zip_uint8_t *data = empty;
+
+    if ((flags & ZIP_EF_BOTH) == 0) {
+        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+        return NULL;
+    }
+
+    if ((de = _zip_get_dirent(za, idx, flags, &za->error)) == NULL) {
+        return NULL;
+    }
+
+    if ((flags & ZIP_EF_CENTRAL)) {
+        if (_zip_file_extra_field_get_one(de->extra_fields.central, &ef_idx, ef_id, idp, &data, lenp)) {
+            return data;
+        }
+    }
+
+
+    if (flags & ZIP_FL_LOCAL) {
+        if (_zip_read_local_ef(za, idx) < 0) {
+            return NULL;
+        }
+        if (_zip_file_extra_field_get_one(de->extra_fields.local, &ef_idx, ef_id, idp, &data, lenp)) {
+            return data;
+        }
+    }
+
+    zip_error_set(&za->error, ZIP_ER_NOENT, 0);
+    return NULL;
+}
+
+static bool _zip_file_extra_field_get_one(zip_extra_field_t *ef, zip_uint16_t *idx, zip_uint16_t *id, zip_uint16_t *idp, const zip_uint8_t **data, zip_uint16_t *len) {
+    while (ef) {
+        if (id == NULL || ef->id == *id) {
+            if (*idx == 0) {
+                if (idp) {
+                    *idp = ef->id;
+                }
+                if (len) {
+                    *len = ef->size;
+                }
+                if (ef->size > 0) {
+                    if (data) {
+                        *data = ef->data;
+                    }
+                }
+                return true;
+            }
+            else {
+                (*idx)--;
+            }
+        }
+        ef = ef->next;
+    }
+
+    return false;
 }
