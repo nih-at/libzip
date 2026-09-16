@@ -64,7 +64,7 @@ environment:
 
 before_build:
   cmd: >-
-    py -m pip install nihtest
+    py -3.11 -m pip install nihtest
 
     mkdir build
 
@@ -86,7 +86,7 @@ test_script:
   cmd: >-
     set VERBOSE=yes
 
-    IF %RUN_TESTS%==yes ( ctest -C %CMAKE_CONFIG% --output-on-failure )
+    IF %RUN_TESTS%==yes ( ctest -C %CMAKE_CONFIG% --output-on-failure --no-tests=error )
 
 cache:
   - c:\vcpkg.cache -> vcpkg.json

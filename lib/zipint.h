@@ -523,14 +523,29 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #define ZIP_WANT_TORRENTZIP(za) ((za)->ch_flags & ZIP_AFL_WANT_TORRENTZIP)
 
 
+#include <string.h>
+
 #ifdef HAVE_EXPLICIT_MEMSET
 #define _zip_crypto_clear(b, l) explicit_memset((b), 0, (l))
 #else
 #ifdef HAVE_EXPLICIT_BZERO
 #define _zip_crypto_clear(b, l) explicit_bzero((b), (l))
 #else
-#include <string.h>
-#define _zip_crypto_clear(b, l) memset((b), 0, (l))
+#ifdef _MSC_VER
+static __inline
+#else
+static inline
+#endif
+    void
+    _zip_crypto_clear(void *buffer, size_t length) {
+    volatile unsigned char *p = (volatile unsigned char *)buffer;
+
+    /* Keep the clearing stores observable even when the buffer is no longer used. */
+    while (length > 0) {
+        *p++ = 0;
+        length--;
+    }
+}
 #endif
 #endif
 
