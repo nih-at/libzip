@@ -1,6 +1,5 @@
 # 1.12 [Unreleased]
 
-* Fix return value of `zip_file_extra_field_set()`.
 * Keep order of local extra fields, even if an identical extra field is present in the central directory.
 * Add `zip_source_at_eof()` and `ZIP_SOURCE_AT_EOF`.
 * Consistently report CRC and decryption errors when reading exactly to end-of-file.
