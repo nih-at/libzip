@@ -1,0 +1,6 @@
+description preserve POSIX access ACL when replacing archive
+program acl_preserve
+return 0
+stdout
+POSIX access ACL preserved
+end-of-inline-data

@@ -9,6 +9,10 @@ set(TEST_PROGRAMS
   source_seek
 )
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_GETXATTR AND HAVE_SETXATTR)
+  list(APPEND TEST_PROGRAMS acl_preserve)
+endif()
+
 set(GETOPT_USERS
   fread
   tryopen
