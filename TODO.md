@@ -1,3 +1,11 @@
+## Tests
+
+- Make `ziptool` take command from stdin, one command per line.
+- Add option to `ziptool` to not abort on errors.
+- Find framework for C unit tests.
+- Add test program for testing sources, which takes commands from stdin.
+- Switch existing dedicated test programs to one of the above, where possible.
+
 ## Fuzzing
 
 - improve AES and PKWARE encryption tests
