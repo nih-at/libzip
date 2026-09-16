@@ -1,0 +1,7 @@
+# start read past EOF
+return 1
+arguments test.zip cat_partial 0 10 -1
+file test.zip test.zip
+stderr
+can't open file at index '0': Invalid argument
+end-of-inline-data
