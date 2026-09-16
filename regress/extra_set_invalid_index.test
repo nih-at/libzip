@@ -1,0 +1,7 @@
+# reject an invalid extra field index
+arguments encrypt.zip set_extra 0 2345 0 c data
+return 1
+file encrypt.zip encrypt.zip encrypt.zip
+stderr
+can't set extra field data for file at index '0', extra field id '2345', index '0': Invalid argument
+end-of-inline-data

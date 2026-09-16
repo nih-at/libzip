@@ -195,7 +195,7 @@ ZIP_EXTERN int zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_
         return -1;
     }
 
-    return _zip_extra_fields_set(&za->entry[idx].changes->extra_fields, flags, ef_id, ef_idx, data, len, &za->error);
+    return _zip_extra_fields_set(&za->entry[idx].changes->extra_fields, flags, ef_id, ef_idx, data, len, &za->error) ? 0 : -1;
 }
 
 
