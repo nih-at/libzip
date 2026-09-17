@@ -204,6 +204,16 @@ if (ENABLE_COVERAGE)
 endif()
 
 
+# Optional -fbounds-safety (inert macros unless ENABLE_FBOUNDS_SAFETY)
+if(ENABLE_FBOUNDS_SAFETY)
+  foreach(_zip_tgt IN ITEMS zip zip_nonrandom)
+    if(TARGET ${_zip_tgt})
+      target_compile_definitions(${_zip_tgt} PRIVATE ZIP_SUPPORT_FBOUNDS_SAFETY)
+      target_compile_options(${_zip_tgt} PRIVATE -fbounds-safety)
+    endif()
+  endforeach()
+endif()
+
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zip
     EXPORT ${PROJECT_NAME}-targets
