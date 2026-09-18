@@ -16,6 +16,7 @@ set(ZIP_SOURCES
   zip_add_dir.c
   zip_add_entry.c
   zip_algorithm_deflate.c
+  zip_allocate.c
   zip_buffer.c
   zip_close.c
   zip_delete.c

@@ -262,7 +262,8 @@ static zip_uint32_t _zip_unicode_to_utf8(zip_uint32_t codepoint, zip_uint8_t *bu
 zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t *const _cp437buf, zip_uint32_t len, zip_uint32_t *utf8_lenp, zip_error_t *error) {
     zip_uint8_t *cp437buf = (zip_uint8_t *)_cp437buf;
     zip_uint8_t *utf8buf;
-    zip_uint32_t buflen, i, offset;
+    zip_uint64_t buflen;
+    zip_uint32_t i, offset;
 
     if (len == 0) {
         if (utf8_lenp) {
@@ -271,13 +272,18 @@ zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t *const _cp437buf, zip_uint32_t
         return NULL;
     }
 
+    /* Each of the at most ZIP_UINT32_MAX input bytes expands to at most 4 UTF-8 bytes, so the sum fits into 64 bits. */
     buflen = 1;
     for (i = 0; i < len; i++) {
         buflen += _zip_unicode_to_utf8_len(_cp437_to_unicode[cp437buf[i]]);
     }
 
-    if ((utf8buf = (zip_uint8_t *)malloc(buflen)) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
+    if (buflen - 1 > ZIP_UINT32_MAX) {
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
+    }
+
+    if ((utf8buf = (zip_uint8_t *)_zip_allocate(buflen, 1, 0, error)) == NULL) {
         return NULL;
     }
 
@@ -288,7 +294,7 @@ zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t *const _cp437buf, zip_uint32_t
 
     utf8buf[buflen - 1] = 0;
     if (utf8_lenp) {
-        *utf8_lenp = buflen - 1;
+        *utf8_lenp = (zip_uint32_t)(buflen - 1);
     }
     return utf8buf;
 }

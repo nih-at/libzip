@@ -61,7 +61,10 @@ ZIP_EXTERN const char *zip_error_strerror(zip_error_t *err) {
 
         switch (_zip_err_str[err->zip_err].type) {
         case ZIP_ET_SYS: {
-            size_t len = strerrorlen_s(err->sys_err) + 1;
+            size_t len;
+            if (!_zip_size_of_array(strerrorlen_s(err->sys_err), 1, 1, &len, NULL)) {
+                return _zip_err_str[ZIP_ER_MEMORY].description;
+            }
             system_error_buffer = malloc(len);
             if (system_error_buffer == NULL) {
                 return _zip_err_str[ZIP_ER_MEMORY].description;
@@ -119,13 +122,13 @@ ZIP_EXTERN const char *zip_error_strerror(zip_error_t *err) {
         size_t length = strlen(system_error_string);
         if (zip_error_string) {
             size_t length_error = strlen(zip_error_string);
-            if (length + length_error + 2 < length) {
+            if (ZIP_CHECK_ADD_OVERFLOW_CAPPED(length_error, (size_t)2, SIZE_MAX) || ZIP_CHECK_ADD_OVERFLOW_CAPPED(length, length_error + 2, SIZE_MAX)) {
                 free(system_error_buffer);
                 return _zip_err_str[ZIP_ER_MEMORY].description;
             }
             length += length_error + 2;
         }
-        if (length == SIZE_MAX || (s = (char *)malloc(length + 1)) == NULL) {
+        if ((s = (char *)_zip_allocate(length, 1, 1, NULL)) == NULL) {
             free(system_error_buffer);
             return _zip_err_str[ZIP_ER_MEMORY].description;
         }
