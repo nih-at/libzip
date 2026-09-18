@@ -78,7 +78,9 @@ ZIP_EXTERN zip_source_t *zip_source_win32a_create(const char *fname, zip_uint64_
 
 
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp) {
-    *lengthp = strlen(name) + extra_chars;
+    if (!_zip_size_of_array(strlen(name), 1, extra_chars, lengthp, NULL)) {
+        return NULL;
+    }
     return (char *)malloc(*lengthp);
 }
 

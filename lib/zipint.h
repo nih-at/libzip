@@ -537,6 +537,9 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 
 zip_int64_t _zip_add_entry(zip_t *);
 
+void *_zip_allocate(zip_uint64_t nmemb, zip_uint64_t element_size, zip_uint64_t extra_bytes, zip_error_t *error);
+bool _zip_size_of_array(zip_uint64_t nmemb, zip_uint64_t element_size, zip_uint64_t extra_bytes, size_t *sizep, zip_error_t *error);
+
 zip_uint8_t *_zip_buffer_data(zip_buffer_t *buffer);
 bool _zip_buffer_eof(zip_buffer_t *buffer);
 void _zip_buffer_free(zip_buffer_t *buffer);

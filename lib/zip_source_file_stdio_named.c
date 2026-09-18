@@ -302,7 +302,10 @@ static int create_temp_file(zip_source_file_context_t *ctx, bool create_file) {
         mode = 0666;
     }
 
-    size_t temp_size = strlen(ctx->fname) + 13;
+    size_t temp_size;
+    if (!_zip_size_of_array(strlen(ctx->fname), 1, 13, &temp_size, &ctx->error)) {
+        return -1;
+    }
     if ((temp = (char *)malloc(temp_size)) == NULL) {
         zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
         return -1;

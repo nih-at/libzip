@@ -87,7 +87,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         return -1;
     }
 
-    if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
+    if ((filelist = (zip_filelist_t *)_zip_allocate(survivors, sizeof(filelist[0]), 0, &za->error)) == NULL) {
         return -1;
     }
 
