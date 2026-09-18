@@ -32,7 +32,7 @@ jobs:
 
       - name: install latest CMake and Ninja for lukka/run-vcpkg (Windows)
         if: ${{ runner.os == 'Windows' }}
-        uses: lukka/get-cmake@latest
+        uses: lukka/get-cmake@fffaaafeea488556c2c12dad60690008bc1caacb # latest
 
       - name: install dependencies (Windows)
         if: ${{ runner.os == 'Windows' }}
