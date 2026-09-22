@@ -70,7 +70,7 @@ before_build:
 
     cd build
 
-    cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .. -G "%GENERATOR%" -A "%PLATFORM%" %CMAKE_OPTS%
+    cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=%TRIPLET% .. -G "%GENERATOR%" -A "%PLATFORM%" %CMAKE_OPTS%
 
     appveyor PushArtifact config.h
 
