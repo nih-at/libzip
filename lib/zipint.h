@@ -529,8 +529,8 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #ifdef HAVE_EXPLICIT_BZERO
 #define _zip_crypto_clear(b, l) explicit_bzero((b), (l))
 #else
-#include <string.h>
-#define _zip_crypto_clear(b, l) memset((b), 0, (l))
+#define USE_OWN_CRYPTO_CLEAR
+void _zip_crypto_clear(void *b, size_t l);
 #endif
 #endif
 

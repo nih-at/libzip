@@ -27,6 +27,8 @@
 #cmakedefine HAVE_CLONEFILE
 #cmakedefine HAVE_COMMONCRYPTO
 #cmakedefine HAVE_CRYPTO
+#cmakedefine HAVE_EXPLICIT_BZERO
+#cmakedefine HAVE_EXPLICIT_MEMSET
 #cmakedefine HAVE_FICLONERANGE
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FCHMOD
