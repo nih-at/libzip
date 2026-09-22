@@ -1,3 +1,7 @@
+# We only use CI builds to find errors, we don't use the compiled results, so they can't be used for supply chain attacks.
+# Therefore, we'd rather automatically get fixes committed to the used actions than exact reproducibility.
+# That is why we use version tags instead of commit hashes.
+
 name: CIFuzz
 on: [pull_request]
 permissions:
@@ -6,20 +10,20 @@ jobs:
   Fuzzing:
     runs-on: ubuntu-latest
     steps:
-    - name: Build Fuzzers
-      uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master
-      with:
-        oss-fuzz-project-name: 'libzip'
-        dry-run: false
-    - name: Run Fuzzers
-      uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
-      with:
-        oss-fuzz-project-name: 'libzip'
-        fuzz-seconds: 600
-        dry-run: false
-    - name: Upload Crash
-      uses: actions/upload-artifact@v7
-      if: failure()
-      with:
-        name: artifacts
-        path: ./out/artifacts
+      - name: Build Fuzzers
+        uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master
+        with:
+          oss-fuzz-project-name: "libzip"
+          dry-run: false
+      - name: Run Fuzzers
+        uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
+        with:
+          oss-fuzz-project-name: "libzip"
+          fuzz-seconds: 600
+          dry-run: false
+      - name: Upload Crash
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: artifacts
+          path: ./out/artifacts

@@ -1,3 +1,7 @@
+# We only use CI builds to find errors, we don't use the compiled results, so they can't be used for supply chain attacks.
+# Therefore, we'd rather automatically get fixes committed to the used actions than exact reproducibility.
+# That is why we use version tags instead of commit hashes.
+
 name: build
 on: [push]
 permissions:
