@@ -22,7 +22,11 @@
 
 ## Prefixes
 
-For example for adding extractors for self-extracting zip archives.
+The zip format allows for a prefix before the zip archive.  This is used by some applications to store additional data before the zip archive, e.g. self-extracting archives.  libzip can open such archives, but currently does not support creating such archives and deletes the prefix if the archive is modified.
+
+According to the zip format specification, the offsets in archives with a prefix are relative to the start of the file, not the start of the zip archive itself. 
+
+Suggestions for the API:
 ````c
 zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t length);
 const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
