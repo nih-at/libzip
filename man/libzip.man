@@ -173,6 +173,9 @@ zip_get_archive_comment(3)
 zip_get_archive_flag(3)
 .TP 4n
 \fB\(bu\fR
+zip_get_archive_prefix_length(3)
+.TP 4n
+\fB\(bu\fR
 zip_get_num_entries(3)
 .PD
 .SS "Find Files"
