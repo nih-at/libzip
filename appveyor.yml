@@ -34,14 +34,14 @@ environment:
       RUN_TESTS: no
       TOXENV: py311
     - GENERATOR: "Visual Studio 16 2019"
-      PLATFORM: ARM
+      PLATFORM: "ARM,version=10.0.19041.0"
       TRIPLET: arm-windows
       CMAKE_OPTS: "-DENABLE_OPENSSL=off"
       CMAKE_CONFIG: Release
       RUN_TESTS: no
       TOXENV: py311
     - GENERATOR: "Visual Studio 16 2019"
-      PLATFORM: ARM
+      PLATFORM: "ARM,version=10.0.19041.0"
       TRIPLET: arm-uwp
       CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DENABLE_OPENSSL=off"
       CMAKE_CONFIG: Release
