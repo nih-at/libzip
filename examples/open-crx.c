@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    header_size = crx3_header[8] | (crx3_header[9] << 8) | (crx3_header[10] << 16) | (crx3_header[11] << 24) + CRX_FIXED_HEADER_SIZE;
+    header_size = (crx3_header[8] | (crx3_header[9] << 8) | (crx3_header[10] << 16) | (crx3_header[11] << 24)) + CRX_FIXED_HEADER_SIZE;
 
     /* We're done reading from the source. */
     if (zip_source_close(file_src) < 0) {
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Create window source with the zip archive portion of the CRX file. */
-    window_src = zip_source_window_create(file_src, header_size + CRX_FIXED_HEADER_SIZE, -1, &error);
+    window_src = zip_source_window_create(file_src, header_size, -1, &error);
     if (!window_src) {
         fprintf(stderr, "%s: can't create window source for '%s': %s\n", argv[0], crx_file, zip_error_strerror(&error));
         zip_source_free(file_src);
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
     zip_error_fini(&error);
 
     /* Use za here. */
-    printf("Successfully opened zip archive from CRX file '%s' with %" PRIu64 " bytes header and %" PRId64 " entries.\n", crx_file, header_size + CRX_FIXED_HEADER_SIZE, zip_get_num_entries(za, 0));
+    printf("Successfully opened zip archive from CRX file '%s' with %" PRIu64 " bytes header and %" PRId64 " entries.\n", crx_file, header_size, zip_get_num_entries(za, 0));
 
     zip_close(za);
     /* za owns and frees window_source. */
