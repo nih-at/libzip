@@ -91,8 +91,16 @@ int main(int argc, char *argv[]) {
         errno = 0;
 
         if ((z = zip_open(fname, flags, &ze)) != NULL) {
+            zip_int64_t prefix_length;
+
             count = zip_get_num_entries(z, 0);
-            printf("opening '%s' succeeded, %" PRIu64 " entries\n", fname, count);
+            prefix_length = zip_get_archive_prefix_length(z);
+            if (prefix_length > 0) {
+                printf("opening '%s' succeeded, %" PRIu64 " entries, %" PRId64 " bytes of prefix data\n", fname, count, prefix_length);
+            }
+            else {
+                printf("opening '%s' succeeded, %" PRIu64 " entries\n", fname, count);
+            }
             zip_close(z);
             continue;
         }

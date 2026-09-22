@@ -9,6 +9,7 @@
 * Use SipHash hash function with per-table random keys. This prevents hash flooding attacks.
 * Add compile time option to limit LZMA window size.
 * Add more comprehensive fuzzers for metadata and write code paths.
+* Support opening zip archives with data prepended (e.g. self-extractor stubs); add `zip_get_archive_prefix_length()` to retrieve the prefix length.
 
 # 1.11.4 [2025-05-23]
 

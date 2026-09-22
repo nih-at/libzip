@@ -1,0 +1,8 @@
+# zip_open: file with data prepended passes strict consistency checks
+program tryopen
+arguments -c test.pfx
+return 0
+file test.pfx test-prefix.zip
+stdout
+opening 'test.pfx' succeeded, 3 entries, 55 bytes of prefix data
+end-of-inline-data

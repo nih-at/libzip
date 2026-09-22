@@ -72,6 +72,11 @@ In other words, handle it the same way as an empty archive.
 Open archive in read-only mode.
 .El
 .Pp
+The archive may be prefixed by arbitrary data, e.g. a stub program prepended to a self-extracting archive.
+If the offset stored in the archive's central directory does not point to the start of the central directory, but the central directory can be found by using the archive's actual size instead, the difference is assumed to be the length of the prefix data and is applied to all offsets read from the archive.
+The prefix length can be retrieved with
+.Xr zip_get_archive_prefix_length 3 .
+.Pp
 If an error occurs and
 .Ar errorp
 is
@@ -200,6 +205,7 @@ be reported then.
 and
 .Fn zip_open_from_source
 were added in libzip 1.0.
+Support for archives prefixed by arbitrary data was added in libzip 1.12.
 .Sh AUTHORS
 .An -nosplit
 .An Dieter Baron Aq Mt dillo@nih.at

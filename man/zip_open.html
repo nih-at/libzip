@@ -98,6 +98,14 @@
   <dd>Open archive in read-only mode.</dd>
 </dl>
 </div>
+<p class="Pp">The archive may be prefixed by arbitrary data, e.g. a stub program
+    prepended to a self-extracting archive. If the offset stored in the
+    archive's central directory does not point to the start of the central
+    directory, but the central directory can be found by using the archive's
+    actual size instead, the difference is assumed to be the length of the
+    prefix data and is applied to all offsets read from the archive. The prefix
+    length can be retrieved with
+    <a class="Xr" href="zip_get_archive_prefix_length.html">zip_get_archive_prefix_length(3)</a>.</p>
 <p class="Pp">If an error occurs and <var class="Ar">errorp</var> is
     non-<code class="Dv">NULL</code>, it will be set to the corresponding error
     code.</p>
@@ -198,7 +206,9 @@ For newly created archives, <code class="Fn">zip_open</code>() does not try to
 <section class="Sh">
 <h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
 <p class="Pp"><code class="Fn">zip_open</code>() and
-    <code class="Fn">zip_open_from_source</code>() were added in libzip 1.0.</p>
+    <code class="Fn">zip_open_from_source</code>() were added in libzip 1.0.
+    Support for archives prefixed by arbitrary data was added in libzip
+  1.12.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
@@ -211,7 +221,7 @@ For newly created archives, <code class="Fn">zip_open</code>() does not try to
 <table class="foot">
   <tr>
     <td class="foot-date">September 16, 2025</td>
-    <td class="foot-os">NiH</td>
+    <td class="foot-os">Ubuntu</td>
   </tr>
 </table>
 </body>

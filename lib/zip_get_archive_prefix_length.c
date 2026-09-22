@@ -1,6 +1,6 @@
 /*
-  zip_new.c -- create and init struct zip
-  Copyright (C) 1999-2024 Dieter Baron and Thomas Klausner
+  zip_get_archive_prefix_length.c -- get length of data prepended before zip data
+  Copyright (C) 2026 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -32,43 +32,13 @@
 */
 
 
-#include <stdlib.h>
-
 #include "zipint.h"
 
 
-/* _zip_new:
-   creates a new zipfile struct, and sets the contents to zero; returns
-   the new struct. */
-
-zip_t *_zip_new(zip_error_t *error) {
-    zip_t *za;
-
-    za = (zip_t *)malloc(sizeof(struct zip));
+ZIP_EXTERN zip_int64_t zip_get_archive_prefix_length(zip_t *za) {
     if (za == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+        return -1;
     }
 
-    if ((za->names = _zip_hash_new(error)) == NULL) {
-        free(za);
-        return NULL;
-    }
-
-    za->src = NULL;
-    za->open_flags = 0;
-    zip_error_init(&za->error);
-    za->flags = za->ch_flags = 0;
-    za->default_password = NULL;
-    za->comment_orig = za->comment_changes = NULL;
-    za->comment_changed = 0;
-    za->nentry = za->nentry_alloc = 0;
-    za->entry = NULL;
-    za->nopen_source = za->nopen_source_alloc = 0;
-    za->open_source = NULL;
-    za->progress = NULL;
-    za->torrent_mtime = 0;
-    za->prefix_length = 0;
-
-    return za;
+    return (zip_int64_t)za->prefix_length;
 }
