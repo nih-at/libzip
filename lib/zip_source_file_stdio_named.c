@@ -38,6 +38,7 @@
 
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>

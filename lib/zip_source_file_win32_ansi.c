@@ -33,6 +33,8 @@
 
 #include "zip_source_file_win32.h"
 
+#include <string.h>
+
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static HANDLE __stdcall ansi_create_file(const void *name, DWORD access, DWORD share_mode, PSECURITY_ATTRIBUTES security_attributes, DWORD creation_disposition, DWORD file_attributes, HANDLE template_file);
 static BOOL __stdcall ansi_delete_file(const void *name);
