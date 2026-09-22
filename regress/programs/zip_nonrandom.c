@@ -1,5 +1,7 @@
 #include "zipint.h"
 
+#include <string.h>
+
 #ifndef REGRESSION_NO_RANDOM
 #error "This file should only be compiled when REGRESSION_NO_RANDOM is defined"
 #endif
