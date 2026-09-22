@@ -25,4 +25,4 @@ jobs:
           run: |
             cmake -B ${{runner.workspace}}/build ${{github.workspace}}
             cmake --build ${{runner.workspace}}/build --config Release
-            ctest --test-dir ${{runner.workspace}}/build --output-on-failure -V -C Release
+            ctest --test-dir ${{runner.workspace}}/build --output-on-failure --no-tests=error -V -C Release
