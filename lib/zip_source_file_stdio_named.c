@@ -114,9 +114,9 @@ static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx) {
     bool ok = true;
 
     /* On some systems, a write clears setuid/setgid bits, so make sure fclose doesn't write after copying permissions. */
-    if (fflush(ctx->fout) < 0) {
+    if (fflush((FILE *)ctx->fout) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
-        (void)fclose(ctx->fout);
+        (void)fclose((FILE *)ctx->fout);
         (void)remove(ctx->tmpname);
         return -1;
     }
@@ -125,7 +125,7 @@ static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx) {
         ok = copy_permissions(ctx);
     }
 
-    if (fclose(ctx->fout) < 0) {
+    if (fclose((FILE *)ctx->fout) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         (void)remove(ctx->tmpname);
         return -1;
@@ -275,7 +275,7 @@ static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx) {
 
 static void _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx) {
     if (ctx->fout) {
-        fclose(ctx->fout);
+        fclose((FILE *)ctx->fout);
     }
     (void)remove(ctx->tmpname);
 }
@@ -405,7 +405,7 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
 
     /* Prefer fstat over stat when possible. */
     if (ctx->f != NULL) {
-        if (zip_os_fstat(fileno(ctx->f), &st) < 0) {
+        if (zip_os_fstat(fileno((FILE *)ctx->f), &st) < 0) {
             ok = false;
         }
     }
@@ -420,7 +420,7 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
     }
 
     /* Use file descriptor and not file name to avoid an exploitable race condition. */
-    if (fchmod(fileno(ctx->fout), st.st_mode) < 0) {
+    if (fchmod(fileno((FILE *)ctx->fout), st.st_mode) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
