@@ -142,15 +142,15 @@ zip_uint64_t _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *data, zip_uint6
 zip_buffer_t *_zip_buffer_new(zip_uint8_t *data, zip_uint64_t size) {
     bool free_data = (data == NULL);
     zip_buffer_t *buffer;
+    size_t buffer_size;
 
-#if ZIP_UINT64_MAX > SIZE_MAX
-    if (size > SIZE_MAX) {
+    /* The buffer is accessed via size_t offsets, so its size has to fit into one. */
+    if (!_zip_size_of_array(size, 1, 0, &buffer_size, NULL)) {
         return NULL;
     }
-#endif
 
     if (data == NULL) {
-        if ((data = (zip_uint8_t *)malloc((size_t)size)) == NULL) {
+        if ((data = (zip_uint8_t *)malloc(buffer_size)) == NULL) {
             return NULL;
         }
     }

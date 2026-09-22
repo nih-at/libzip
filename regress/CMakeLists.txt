@@ -2,6 +2,7 @@ check_function_exists(getopt HAVE_GETOPT)
 
 set(TEST_PROGRAMS
   add_from_filep
+  allocate
   can_clone_file
   exact_read_integrity
   fopen_unchanged
@@ -48,6 +49,9 @@ endif(NOT HAVE_GETOPT)
 foreach(PROGRAM IN LISTS HOLE_USERS)
   target_sources(${PROGRAM} PRIVATE programs/source_hole.c)
 endforeach()
+
+# allocate tests internal functions, which are not exported by the library
+target_sources(allocate PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_allocate.c ${PROJECT_SOURCE_DIR}/lib/zip_realloc.c)
 
 foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
   target_sources(${PROGRAM} PRIVATE programs/fuzz_main.c)
