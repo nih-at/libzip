@@ -88,5 +88,15 @@ test_script:
 
     IF %RUN_TESTS%==yes ( ctest -C %CMAKE_CONFIG% --output-on-failure --no-tests=error )
 
+on_failure:
+  - ps: |
+      if ($env:TRIPLET -in @('arm-windows', 'arm-uwp')) {
+        Get-ChildItem 'C:\Tools\vcpkg\buildtrees' -Recurse -File -Filter "config-$($env:TRIPLET)-out.log" -ErrorAction SilentlyContinue |
+          ForEach-Object {
+            Write-Host "vcpkg configure diagnostics: $($_.FullName)"
+            Get-Content $_.FullName -Tail 100
+          }
+      }
+
 cache:
   - c:\vcpkg.cache -> vcpkg.json
