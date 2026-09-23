@@ -6,6 +6,20 @@ environment:
   VCPKG_BINARY_SOURCES: clear;files,C:\vcpkg.cache,readwrite
   matrix:
     - GENERATOR: "Visual Studio 16 2019"
+      PLATFORM: ARM
+      TRIPLET: arm-windows
+      CMAKE_OPTS: "-DENABLE_OPENSSL=off"
+      CMAKE_CONFIG: Release
+      RUN_TESTS: no
+      TOXENV: py311
+    - GENERATOR: "Visual Studio 16 2019"
+      PLATFORM: ARM
+      TRIPLET: arm-uwp
+      CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DENABLE_OPENSSL=off"
+      CMAKE_CONFIG: Release
+      RUN_TESTS: no
+      TOXENV: py311
+    - GENERATOR: "Visual Studio 16 2019"
       PLATFORM: x64
       TRIPLET: x64-windows
       CMAKE_OPTS: "-DBUILD_SHARED_LIBS=off"
@@ -30,20 +44,6 @@ environment:
       PLATFORM: Win32
       TRIPLET: x86-uwp
       CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0"
-      CMAKE_CONFIG: Release
-      RUN_TESTS: no
-      TOXENV: py311
-    - GENERATOR: "Visual Studio 16 2019"
-      PLATFORM: ARM
-      TRIPLET: arm-windows
-      CMAKE_OPTS: "-DENABLE_OPENSSL=off"
-      CMAKE_CONFIG: Release
-      RUN_TESTS: no
-      TOXENV: py311
-    - GENERATOR: "Visual Studio 16 2019"
-      PLATFORM: ARM
-      TRIPLET: arm-uwp
-      CMAKE_OPTS: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DENABLE_OPENSSL=off"
       CMAKE_CONFIG: Release
       RUN_TESTS: no
       TOXENV: py311
@@ -94,6 +94,9 @@ test_script:
     set VERBOSE=yes
 
     IF %RUN_TESTS%==yes ( ctest -C %CMAKE_CONFIG% --output-on-failure --no-tests=error )
+
+on_failure:
+  - cmd: if "%PLATFORM%"=="ARM" py -3.11 "%APPVEYOR_BUILD_FOLDER%\.github\arm-sdk-diagnostics.py"
 
 cache:
   - c:\vcpkg.cache -> vcpkg.json
