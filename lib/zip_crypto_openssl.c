@@ -39,7 +39,6 @@
 
 #include <limits.h>
 #include <openssl/rand.h>
-#include <string.h>
 
 #ifdef USE_OPENSSL_3_API
 static _zip_crypto_hmac_t *hmac_new() {

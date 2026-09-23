@@ -523,7 +523,16 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #define ZIP_WANT_TORRENTZIP(za) ((za)->ch_flags & ZIP_AFL_WANT_TORRENTZIP)
 
 
-void _zip_crypto_clear(void *buffer, size_t length);
+#ifdef HAVE_EXPLICIT_MEMSET
+#define _zip_crypto_clear(b, l) explicit_memset((b), 0, (l))
+#else
+#ifdef HAVE_EXPLICIT_BZERO
+#define _zip_crypto_clear(b, l) explicit_bzero((b), (l))
+#else
+#define USE_OWN_CRYPTO_CLEAR
+void _zip_crypto_clear(void *b, size_t l);
+#endif
+#endif
 
 
 zip_int64_t _zip_add_entry(zip_t *);

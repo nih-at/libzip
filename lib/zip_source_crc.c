@@ -48,6 +48,9 @@ struct crc_context {
     zip_uint32_t crc;
 };
 
+static void crc_context_free(struct crc_context *ctx);
+static struct crc_context *crc_context_new(void);
+static void crc_context_read_init(struct crc_context *ctx);
 static zip_int64_t crc_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 static zip_int64_t validate_crc(struct crc_context *ctx, zip_source_t *src);
 
@@ -60,17 +63,11 @@ zip_source_t *zip_source_crc_create(zip_source_t *src, int validate, zip_error_t
         return NULL;
     }
 
-    if ((ctx = (struct crc_context *)malloc(sizeof(*ctx))) == NULL) {
+    if ((ctx = crc_context_new()) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
-
-    zip_error_init(&ctx->error);
     ctx->validate = validate;
-    ctx->crc_complete = 0;
-    ctx->crc_position = 0;
-    ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
-    ctx->size = 0;
 
     new_src = zip_source_layered_create(src, crc_read, ctx, error);
     if (new_src == NULL) {
@@ -89,7 +86,7 @@ static zip_int64_t crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint6
 
     switch (cmd) {
     case ZIP_SOURCE_OPEN:
-        ctx->position = 0;
+        crc_context_read_init(ctx);
         return 0;
 
     case ZIP_SOURCE_READ:
@@ -168,7 +165,7 @@ static zip_int64_t crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint6
         return zip_error_to_data(&ctx->error, data, len);
 
     case ZIP_SOURCE_FREE:
-        free(ctx);
+        crc_context_free(ctx);
         return 0;
 
     case ZIP_SOURCE_SUPPORTS: {
@@ -241,4 +238,35 @@ zip_int64_t validate_crc(struct crc_context *ctx, zip_source_t *src) {
     }
 
     return 0;
+}
+
+static struct crc_context *crc_context_new(void) {
+    struct crc_context *ctx;
+
+    if ((ctx = (struct crc_context *)malloc(sizeof(*ctx))) == NULL) {
+        return NULL;
+    }
+
+    zip_error_init(&ctx->error);
+    ctx->validate = 0;
+    crc_context_read_init(ctx);
+
+    return ctx;
+}
+
+static void crc_context_free(struct crc_context *ctx) {
+    if (ctx == NULL) {
+        return;
+    }
+
+    zip_error_fini(&ctx->error);
+    free(ctx);
+}
+
+static void crc_context_read_init(struct crc_context *ctx) {
+    ctx->position = 0;
+    ctx->crc_complete = 0;
+    ctx->crc_position = 0;
+    ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
+    ctx->size = 0;
 }

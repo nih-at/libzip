@@ -146,6 +146,86 @@ check_case(const char *archive, const char *password, const char *name, int expe
 
 
 static int
+check_clone_rollback(void) {
+    static const char initial[] = "abcdefghi";
+    static const char committed[] = "abcdWXYZ";
+    char first[] = "abc";
+    char second[] = "def";
+    char third[] = "ghi";
+    char output[sizeof(initial)] = {0};
+    const char replacement[] = "WXYZ";
+    zip_buffer_fragment_t fragments[3];
+    zip_error_t error;
+    zip_int64_t n;
+    zip_source_t *source;
+
+    fragments[0].data = (zip_uint8_t *)first;
+    fragments[0].length = 3;
+    fragments[1].data = (zip_uint8_t *)second;
+    fragments[1].length = 3;
+    fragments[2].data = (zip_uint8_t *)third;
+    fragments[2].length = 3;
+
+    zip_error_init(&error);
+    source = zip_source_buffer_fragment_create(fragments, 3, 0, &error);
+    if (source == NULL) {
+        fprintf(stderr, "can't create fragmented buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    if (zip_source_begin_write_cloning(source, 8) < 0 || zip_source_seek_write(source, 4, SEEK_SET) < 0 || zip_source_write(source, replacement, sizeof(replacement) - 1) != sizeof(replacement) - 1) {
+        fprintf(stderr, "can't write to cloned buffer source: %s\n", zip_error_strerror(zip_source_error(source)));
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (memcmp(first, initial, 3) != 0 || memcmp(second, initial + 3, 3) != 0 || memcmp(third, initial + 6, 3) != 0) {
+        fprintf(stderr, "cloned write modified caller buffers before rollback\n");
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    zip_source_rollback_write(source);
+
+    if (zip_source_open(source) < 0 || (n = zip_source_read(source, output, sizeof(initial) - 1)) != sizeof(initial) - 1 || memcmp(output, initial, sizeof(initial) - 1) != 0 || zip_source_close(source) < 0) {
+        fprintf(stderr, "rollback did not restore fragmented buffer source\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    if (zip_source_begin_write_cloning(source, 8) < 0 || zip_source_seek_write(source, 4, SEEK_SET) < 0 || zip_source_write(source, replacement, sizeof(replacement) - 1) != sizeof(replacement) - 1 || zip_source_commit_write(source) < 0) {
+        fprintf(stderr, "can't commit cloned buffer source: %s\n", zip_error_strerror(zip_source_error(source)));
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (memcmp(first, initial, 3) != 0 || memcmp(second, initial + 3, 3) != 0 || memcmp(third, initial + 6, 3) != 0) {
+        fprintf(stderr, "cloned commit modified caller buffers\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    memset(output, 0, sizeof(output));
+    if (zip_source_open(source) < 0 || (n = zip_source_read(source, output, sizeof(committed) - 1)) != sizeof(committed) - 1 || memcmp(output, committed, sizeof(committed) - 1) != 0 || zip_source_close(source) < 0) {
+        fprintf(stderr, "committed fragmented buffer source contains wrong data\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    zip_source_free(source);
+    zip_error_fini(&error);
+    return 0;
+}
+
+
+static int
 check_nonseekable_reopen(void) {
     static const char input[] = "abc";
     char output[sizeof(input)] = {0};
@@ -328,6 +408,7 @@ main(void) {
     int fail;
 
     fail = 0;
+    fail += check_clone_rollback();
     fail += check_case("broken.zip", NULL, "storedok", 0);
     fail += check_case("broken.zip", NULL, "storedcrcerror", ZIP_ER_CRC);
     fail += check_case("broken.zip", NULL, "deflatecrcerror", ZIP_ER_CRC);

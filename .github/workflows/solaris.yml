@@ -1,3 +1,7 @@
+# We only use CI builds to find errors, we don't use the compiled results, so they can't be used for supply chain attacks.
+# Therefore, we'd rather automatically get fixes committed to the used actions than exact reproducibility.
+# That is why we use version tags instead of commit hashes.
+
 name: Solaris
 on: [push]
 permissions:
@@ -6,20 +10,20 @@ jobs:
   Solaris:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v6
-    - name: Solaris test
-      uses: vmactions/solaris-vm@v1
-      with:
-        release: "11.4-gcc"
-        usesh: true
-        copyback: false
-        prepare: |
-          python -m venv nihtest-venv
-          source nihtest-venv/bin/activate
-          pip install nihtest
-        run: |
-          source nihtest-venv/bin/activate
-          cmake -B ${{runner.workspace}}/build ${{github.workspace}}
-          cmake --build ${{runner.workspace}}/build --config Release
-          ctest --test-dir ${{runner.workspace}}/build --output-on-failure -V -C Release
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Solaris test
+        uses: vmactions/solaris-vm@v1
+        with:
+          release: "11.4-gcc"
+          usesh: true
+          copyback: false
+          prepare: |
+            python -m venv nihtest-venv
+            source nihtest-venv/bin/activate
+            pip install nihtest
+          run: |
+            source nihtest-venv/bin/activate
+            cmake -B ${{runner.workspace}}/build ${{github.workspace}}
+            cmake --build ${{runner.workspace}}/build --config Release
+            ctest --test-dir ${{runner.workspace}}/build --output-on-failure --no-tests=error -V -C Release

@@ -38,8 +38,8 @@ foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 endforeach()
 
-# The internal symbol is hidden when zip is a shared library.
-target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto_clear.c)
+# The internal symbol is hidden when zip is a shared library, so link against the file directly.
+target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 
 # both programs using source_hole.c also use getopt
 if(NOT HAVE_GETOPT)

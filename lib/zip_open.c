@@ -370,7 +370,7 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
                 return true;
             }
             if (tail_len < comment_len) {
-                comment_len = tail_len;
+                comment_len = (zip_uint16_t)tail_len;
             }
         }
 
@@ -815,9 +815,9 @@ static bool check_eocd(zip_cdir_t *cd, unsigned int flags, zip_error_t *error) {
     }
 
     if ((flags & ZIP_CHECKCONS) && cd->offset + cd->size != cd->eocd_offset) {
-            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD);
-            return false;
-        }
+        zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_OVERLAPS_EOCD);
+        return false;
+    }
 
     return true;
 }

@@ -1,3 +1,7 @@
+# We only use CI builds to find errors, we don't use the compiled results, so they can't be used for supply chain attacks.
+# Therefore, we'd rather automatically get fixes committed to the used actions than exact reproducibility.
+# That is why we use version tags instead of commit hashes.
+
 name: BSD
 on: [push]
 permissions:
@@ -6,19 +10,19 @@ jobs:
   NetBSD:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v6
-    - name: NetBSD test
-      uses: vmactions/netbsd-vm@v1
-      with:
-        usesh: true
-        copyback: false
-        prepare: |
-          /usr/sbin/pkg_add cmake zstd py313-pip
-          /usr/pkg/bin/pip-3.13 install nihtest
-          # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-system-path
-          echo "/usr/pkg/bin" >> "$GITHUB_PATH"
-        run: |
-          cmake -B ${{runner.workspace}}/build ${{github.workspace}}
-          cmake --build ${{runner.workspace}}/build --config Release
-          ctest --test-dir ${{runner.workspace}}/build --output-on-failure -V -C Release
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: NetBSD test
+        uses: vmactions/netbsd-vm@v1
+        with:
+          usesh: true
+          copyback: false
+          prepare: |
+            /usr/sbin/pkg_add cmake zstd py313-pip
+            /usr/pkg/bin/pip-3.13 install nihtest
+            # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-system-path
+            echo "/usr/pkg/bin" >> "$GITHUB_PATH"
+          run: |
+            cmake -B ${{runner.workspace}}/build ${{github.workspace}}
+            cmake --build ${{runner.workspace}}/build --config Release
+            ctest --test-dir ${{runner.workspace}}/build --output-on-failure --no-tests=error -V -C Release
