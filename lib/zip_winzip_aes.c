@@ -50,6 +50,27 @@ struct _zip_winzip_aes {
     int pad_offset;
 };
 
+bool _zip_winzip_aes_seek(zip_winzip_aes_t *ctx, zip_uint64_t position) {
+    zip_uint64_t counter = position / AES_BLOCK_SIZE + 1; /* block 0 uses counter value 1, see aes_crypt() */
+    size_t i;
+
+    /* The counter occupies only the first 8 bytes of the 16-byte counter
+       block; aes_crypt()'s increment loop never touches the rest, so they
+       stay zero, as set by _zip_winzip_aes_new()'s initial memset(). */
+    for (i = 0; i < 8; i++) {
+        ctx->counter[i] = (zip_uint8_t)(counter & 0xff);
+        counter >>= 8;
+    }
+
+    if (!_zip_crypto_aes_encrypt_block(ctx->aes, ctx->counter, ctx->pad)) {
+        return false;
+    }
+    ctx->pad_offset = (int)(position % AES_BLOCK_SIZE);
+
+    return true;
+}
+
+
 static bool aes_crypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
     zip_uint64_t i, j;
 
@@ -139,8 +160,17 @@ bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint6
 }
 
 
-bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length) {
-    return _zip_crypto_hmac(ctx->hmac, data, length) && aes_crypt(ctx, data, length);
+bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length, zip_uint64_t hmac_skip) {
+    /* The HMAC is computed over the ciphertext, in order, from the start of
+       the file. hmac_skip lets the caller decrypt a chunk that isn't fully
+       contiguous with what's been authenticated so far (e.g. after a seek)
+       while still feeding whatever suffix of it is contiguous. */
+    if (hmac_skip < length) {
+        if (!_zip_crypto_hmac(ctx->hmac, data + hmac_skip, length - hmac_skip)) {
+            return false;
+        }
+    }
+    return aes_crypt(ctx, data, length);
 }
 
 

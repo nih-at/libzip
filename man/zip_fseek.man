@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_FSEEK" "3" "September 11, 2024" "NiH" "Library Functions Manual"
+.TH "ZIP_FSEEK" "3" "September 23, 2026" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -66,8 +66,15 @@ just like
 fseek(3).
 .PP
 \fBzip_fseek\fR
-only works on uncompressed (stored), unencrypted data.
-When called on compressed or encrypted data it will return an error.
+only works on uncompressed (stored) data.
+It also works on data encrypted with WinZip AES, but not on data encrypted
+with the traditional PKWARE encryption.
+When called on compressed data, or on data encrypted with an unsupported
+method, it will return an error.
+.PP
+For WinZip AES encrypted data, seeking means the file's authentication code
+can no longer be verified unless the whole file ends up being read,
+contiguously, from the start.
 .PP
 The
 \fBzip_file_is_seekable\fR()
@@ -93,6 +100,7 @@ zip_ftell(3)
 was added in libzip 1.2.0.
 \fBzip_file_is_seekable\fR()
 was added in libzip 1.9.0.
+Support for seeking in data encrypted with WinZip AES was added in libzip 1.12.
 .SH "AUTHORS"
 Dieter Baron <\fIdillo@nih.at\fR>
 and

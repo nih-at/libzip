@@ -80,8 +80,13 @@
     <var class="Ar">whence</var>, just like
     <a class="Xr" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/fseek.html">fseek(3)</a>.</p>
 <p class="Pp"><code class="Nm">zip_fseek</code> only works on uncompressed
-    (stored), unencrypted data. When called on compressed or encrypted data it
-    will return an error.</p>
+    (stored) data. It also works on data encrypted with WinZip AES, but not on
+    data encrypted with the traditional PKWARE encryption. When called on
+    compressed data, or on data encrypted with an unsupported method, it will
+    return an error.</p>
+<p class="Pp">For WinZip AES encrypted data, seeking means the file's
+    authentication code can no longer be verified unless the whole file ends up
+    being read, contiguously, from the start.</p>
 <p class="Pp" id="zip_file_is_seekable">The
     <a class="permalink" href="#zip_file_is_seekable"><code class="Fn">zip_file_is_seekable</code></a>()
     function returns 1 if a file is seekable.</p>
@@ -107,8 +112,9 @@
 <section class="Sh">
 <h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
 <p class="Pp"><code class="Fn">zip_fseek</code>() was added in libzip 1.2.0.
-    <code class="Fn">zip_file_is_seekable</code>() was added in libzip
-  1.9.0.</p>
+    <code class="Fn">zip_file_is_seekable</code>() was added in libzip 1.9.0.
+    Support for seeking in data encrypted with WinZip AES was added in libzip
+    1.12.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
@@ -120,8 +126,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 11, 2024</td>
-    <td class="foot-os">NiH</td>
+    <td class="foot-date">September 23, 2026</td>
+    <td class="foot-os">Ubuntu</td>
   </tr>
 </table>
 </body>

@@ -9,6 +9,7 @@
 * Use SipHash hash function with per-table random keys. This prevents hash flooding attacks.
 * Add compile time option to limit LZMA window size.
 * Add more comprehensive fuzzers for metadata and write code paths.
+* Support `zip_fseek()`/`zip_file_is_seekable()` for stored (uncompressed) entries encrypted with WinZip AES. Seeking means the entry's authentication code can no longer be verified unless it ends up being read fully, contiguously, from the start.
 
 # 1.11.4 [2025-05-23]
 
