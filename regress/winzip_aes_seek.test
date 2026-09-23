@@ -1,0 +1,10 @@
+# zip_fseek: stored (uncompressed) WinZip AES encrypted entries are seekable
+features HAVE_CRYPTO
+return 0
+arguments encrypt.zzip  set_password foofoofoo  is_seekable 1  fopen encrypted  fseek 0 5 set  fread 0 5
+file encrypt.zzip encrypt-aes128.zip
+stdout
+1: seekable
+opened 'encrypted' as file 0
+pted
+end-of-inline-data
