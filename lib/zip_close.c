@@ -89,7 +89,16 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         return -1;
     }
 
-    if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
+    if (survivors > SIZE_MAX / sizeof(filelist[0])) {
+        zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+        return -1;
+    }
+
+    if (survivors == 0) {
+        filelist = NULL;
+    }
+    else if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
+        zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
         return -1;
     }
 
@@ -119,7 +128,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         return -1;
     }
 
-    if (ZIP_WANT_TORRENTZIP(za)) {
+    if (ZIP_WANT_TORRENTZIP(za) && survivors > 0) {
         qsort(filelist, (size_t)survivors, sizeof(filelist[0]), torrentzip_compare_names);
     }
 
