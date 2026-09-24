@@ -160,6 +160,46 @@ test_large_fragment_source(void) {
 }
 
 
+static int
+test_unknown_length_window_stat_past_end(void) {
+    zip_error_t error;
+    zip_source_t *base, *window;
+    zip_stat_t st;
+    char data = 'x';
+
+    zip_error_init(&error);
+
+    if ((base = zip_source_buffer_create(&data, 1, 0, &error)) == NULL) {
+        fprintf(stderr, "can't create buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return -1;
+    }
+    if ((window = zip_source_window_create(base, 2, -1, &error)) == NULL) {
+        fprintf(stderr, "can't create window source: %s\n", zip_error_strerror(&error));
+        zip_source_free(base);
+        zip_error_fini(&error);
+        return -1;
+    }
+    zip_error_fini(&error);
+    zip_source_free(base);
+
+    zip_stat_init(&st);
+    if (zip_source_stat(window, &st) == 0) {
+        fprintf(stderr, "window source reported a size for a start past the source end\n");
+        zip_source_free(window);
+        return -1;
+    }
+    if (zip_error_code_zip(zip_source_error(window)) != ZIP_ER_INVAL) {
+        fprintf(stderr, "window source returned wrong error for a start past the source end\n");
+        zip_source_free(window);
+        return -1;
+    }
+    zip_source_free(window);
+
+    return 0;
+}
+
+
 int
 main(int argc, char *argv[]) {
     if (argc > 2) {
@@ -171,6 +211,9 @@ main(int argc, char *argv[]) {
         return 1;
     }
     if (test_large_fragment_source() < 0) {
+        return 1;
+    }
+    if (test_unknown_length_window_stat_past_end() < 0) {
         return 1;
     }
 
