@@ -683,6 +683,11 @@ bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_u
     if (zde->comp_size == ZIP_UINT32_MAX) {
         zde->comp_size = _zip_buffer_get_64(ef_buffer);
     }
+    else if (local) {
+        /* From appnote.txt: This entry in the Local header MUST
+           include BOTH original and compressed file size fields. */
+        (void)_zip_buffer_skip(ef_buffer, 8); /* error is caught by _zip_buffer_eof() call */
+    }
     if (!local) {
         if (zde->offset == ZIP_UINT32_MAX) {
             zde->offset = _zip_buffer_get_64(ef_buffer);
