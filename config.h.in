@@ -32,9 +32,12 @@
 #cmakedefine HAVE_FICLONERANGE
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FCHMOD
+#cmakedefine HAVE_FREMOVEXATTR
 #cmakedefine HAVE_FSEEKO
+#cmakedefine HAVE_FSETXATTR
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_GETPROGNAME
+#cmakedefine HAVE_GETXATTR
 #cmakedefine HAVE_GETSECURITYINFO
 #cmakedefine HAVE_GNUTLS
 #cmakedefine HAVE_LIBBZ2
@@ -45,7 +48,9 @@
 #cmakedefine HAVE_MEMCPY_S
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_OPENSSL
+#cmakedefine HAVE_REMOVEXATTR
 #cmakedefine HAVE_SETMODE
+#cmakedefine HAVE_SETXATTR
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_SNPRINTF_S
 #cmakedefine HAVE_STRCASECMP
