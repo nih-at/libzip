@@ -107,7 +107,10 @@ zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t 
     ctx->pad_offset = ZIP_CRYPTO_AES_BLOCK_LENGTH;
 
     if (!_zip_crypto_pbkdf2(password, password_length, salt, key_length / 2, PBKDF2_ITERATIONS, buffer, 2 * key_length + WINZIP_AES_PASSWORD_VERIFY_LENGTH)) {
+        _zip_crypto_clear(buffer, sizeof(buffer));
+        _zip_crypto_clear(ctx, sizeof(*ctx));
         free(ctx);
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
         return NULL;
     }
 
