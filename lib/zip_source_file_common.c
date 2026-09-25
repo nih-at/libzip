@@ -141,6 +141,8 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
     zip_source_file_stat_init(&sb);
     if (!ops->stat(ctx, &sb)) {
         _zip_error_copy(error, &ctx->error);
+        zip_error_fini(&ctx->stat_error);
+        zip_error_fini(&ctx->error);
         free(ctx->fname);
         free(ctx);
         return NULL;
@@ -153,7 +155,9 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
             zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
         }
         else {
-            zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
+            zip_error_set(error, ZIP_ER_READ, ENOENT);
+            zip_error_fini(&ctx->stat_error);
+            zip_error_fini(&ctx->error);
             free(ctx->fname);
             free(ctx);
             return NULL;
@@ -169,6 +173,8 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
 
             if (ctx->start + ctx->len > sb.size) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
+                zip_error_fini(&ctx->stat_error);
+                zip_error_fini(&ctx->error);
                 free(ctx->fname);
                 free(ctx);
                 return NULL;
@@ -203,6 +209,8 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
     }
 
     if ((zs = zip_source_function_create(read_file, ctx, error)) == NULL) {
+        zip_error_fini(&ctx->stat_error);
+        zip_error_fini(&ctx->error);
         free(ctx->fname);
         free(ctx);
         return NULL;
@@ -276,6 +284,8 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
         if (ctx->f) {
             ctx->ops->close(ctx);
         }
+        zip_error_fini(&ctx->stat_error);
+        zip_error_fini(&ctx->error);
         free(ctx);
         return 0;
 

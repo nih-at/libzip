@@ -71,7 +71,7 @@ zip_source_t *zip_source_crc_create(zip_source_t *src, int validate, zip_error_t
 
     new_src = zip_source_layered_create(src, crc_read, ctx, error);
     if (new_src == NULL) {
-        free(ctx);
+        crc_context_free(ctx);
         return NULL;
     }
     return new_src;
