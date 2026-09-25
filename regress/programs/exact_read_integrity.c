@@ -146,6 +146,86 @@ check_case(const char *archive, const char *password, const char *name, int expe
 
 
 static int
+check_clone_rollback(void) {
+    static const char initial[] = "abcdefghi";
+    static const char committed[] = "abcdWXYZ";
+    char first[] = "abc";
+    char second[] = "def";
+    char third[] = "ghi";
+    char output[sizeof(initial)] = {0};
+    const char replacement[] = "WXYZ";
+    zip_buffer_fragment_t fragments[3];
+    zip_error_t error;
+    zip_int64_t n;
+    zip_source_t *source;
+
+    fragments[0].data = (zip_uint8_t *)first;
+    fragments[0].length = 3;
+    fragments[1].data = (zip_uint8_t *)second;
+    fragments[1].length = 3;
+    fragments[2].data = (zip_uint8_t *)third;
+    fragments[2].length = 3;
+
+    zip_error_init(&error);
+    source = zip_source_buffer_fragment_create(fragments, 3, 0, &error);
+    if (source == NULL) {
+        fprintf(stderr, "can't create fragmented buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    if (zip_source_begin_write_cloning(source, 8) < 0 || zip_source_seek_write(source, 4, SEEK_SET) < 0 || zip_source_write(source, replacement, sizeof(replacement) - 1) != sizeof(replacement) - 1) {
+        fprintf(stderr, "can't write to cloned buffer source: %s\n", zip_error_strerror(zip_source_error(source)));
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (memcmp(first, initial, 3) != 0 || memcmp(second, initial + 3, 3) != 0 || memcmp(third, initial + 6, 3) != 0) {
+        fprintf(stderr, "cloned write modified caller buffers before rollback\n");
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    zip_source_rollback_write(source);
+
+    if (zip_source_open(source) < 0 || (n = zip_source_read(source, output, sizeof(initial) - 1)) != sizeof(initial) - 1 || memcmp(output, initial, sizeof(initial) - 1) != 0 || zip_source_close(source) < 0) {
+        fprintf(stderr, "rollback did not restore fragmented buffer source\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    if (zip_source_begin_write_cloning(source, 8) < 0 || zip_source_seek_write(source, 4, SEEK_SET) < 0 || zip_source_write(source, replacement, sizeof(replacement) - 1) != sizeof(replacement) - 1 || zip_source_commit_write(source) < 0) {
+        fprintf(stderr, "can't commit cloned buffer source: %s\n", zip_error_strerror(zip_source_error(source)));
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (memcmp(first, initial, 3) != 0 || memcmp(second, initial + 3, 3) != 0 || memcmp(third, initial + 6, 3) != 0) {
+        fprintf(stderr, "cloned commit modified caller buffers\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    memset(output, 0, sizeof(output));
+    if (zip_source_open(source) < 0 || (n = zip_source_read(source, output, sizeof(committed) - 1)) != sizeof(committed) - 1 || memcmp(output, committed, sizeof(committed) - 1) != 0 || zip_source_close(source) < 0) {
+        fprintf(stderr, "committed fragmented buffer source contains wrong data\n");
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    zip_source_free(source);
+    zip_error_fini(&error);
+    return 0;
+}
+
+
+static int
 check_nonseekable_reopen(void) {
     static const char input[] = "abc";
     char output[sizeof(input)] = {0};
@@ -231,17 +311,113 @@ check_reopened_source(void) {
 }
 
 
+/* WinZip AE-2 entries rely on their HMAC for integrity, including after reopening a source. */
+static int
+check_reopened_aes(const char *archive, zip_uint64_t index, const char *password, int expected_first_error, int expected_second_error) {
+    char *buffer;
+    int close_error;
+    int close_result;
+    int cycle_error;
+    int err;
+    int fail;
+    int expected_error;
+    int cycle;
+    zip_int64_t n;
+    zip_error_t error;
+    zip_source_t *source;
+    zip_stat_t st;
+    zip_t *za;
+
+    buffer = NULL;
+    fail = 0;
+    err = 0;
+    za = zip_open(archive, 0, &err);
+    if (za == NULL) {
+        zip_error_t open_error;
+
+        zip_error_init_with_code(&open_error, err);
+        fprintf(stderr, "can't open '%s': %s\n", archive, zip_error_strerror(&open_error));
+        zip_error_fini(&open_error);
+        return 1;
+    }
+
+    zip_stat_init(&st);
+    if (zip_stat_index(za, index, 0, &st) < 0) {
+        fprintf(stderr, "can't stat index %llu in '%s': %s\n", (unsigned long long)index, archive, zip_strerror(za));
+        zip_discard(za);
+        return 1;
+    }
+    if (st.size > 0 && (buffer = (char *)malloc((size_t)st.size)) == NULL) {
+        fprintf(stderr, "malloc failed for index %llu in '%s'\n", (unsigned long long)index, archive);
+        zip_discard(za);
+        return 1;
+    }
+
+    zip_error_init(&error);
+    source = zip_source_zip_file_create(za, index, 0, 0, -1, password, &error);
+    if (source == NULL) {
+        fprintf(stderr, "can't create source for '%s': %s\n", archive, zip_error_strerror(&error));
+        free(buffer);
+        zip_error_fini(&error);
+        zip_discard(za);
+        return 1;
+    }
+
+    for (cycle = 0; cycle < 2; cycle++) {
+        expected_error = cycle == 0 ? expected_first_error : expected_second_error;
+
+        if (zip_source_open(source) < 0) {
+            fprintf(stderr, "can't open source cycle %d for '%s': %s\n", cycle + 1, archive, zip_error_strerror(zip_source_error(source)));
+            fail = 1;
+            break;
+        }
+
+        cycle_error = ZIP_ER_OK;
+        if (st.size > 0) {
+            n = zip_source_read(source, buffer, st.size);
+            if (n < 0) {
+                cycle_error = zip_error_code_zip(zip_source_error(source));
+            }
+            else if (n != (zip_int64_t)st.size) {
+                fprintf(stderr, "source read cycle %d returned %lld instead of %llu for '%s'\n", cycle + 1, (long long)n, (unsigned long long)st.size, archive);
+                fail = 1;
+            }
+        }
+
+        close_result = zip_source_close(source);
+        close_error = close_result < 0 ? zip_error_code_zip(zip_source_error(source)) : ZIP_ER_OK;
+        if (cycle_error == ZIP_ER_OK) {
+            cycle_error = close_error;
+        }
+        if (cycle_error != expected_error) {
+            fprintf(stderr, "source cycle %d returned error %d instead of %d for '%s'\n", cycle + 1, cycle_error, expected_error, archive);
+            fail = 1;
+        }
+    }
+
+    zip_source_free(source);
+    free(buffer);
+    zip_error_fini(&error);
+    zip_discard(za);
+    return fail;
+}
+
+
 int
 main(void) {
     int fail;
 
     fail = 0;
+    fail += check_clone_rollback();
     fail += check_case("broken.zip", NULL, "storedok", 0);
     fail += check_case("broken.zip", NULL, "storedcrcerror", ZIP_ER_CRC);
     fail += check_case("broken.zip", NULL, "deflatecrcerror", ZIP_ER_CRC);
     fail += check_case("hmac-error.zip", "1234", "test.txt", ZIP_ER_CRC);
     fail += check_nonseekable_reopen();
     fail += check_reopened_source();
+    fail += check_reopened_aes("empty-badmac-aes256.zip", 0, "password", ZIP_ER_CRC, ZIP_ER_CRC);
+    fail += check_reopened_aes("encrypt-aes256.zip", 1, "foofoofoo", ZIP_ER_OK, ZIP_ER_OK);
+    fail += check_reopened_aes("hmac-error.zip", 0, "1234", ZIP_ER_CRC, ZIP_ER_CRC);
 
     return fail ? 1 : 0;
 }

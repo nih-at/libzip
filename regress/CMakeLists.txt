@@ -3,13 +3,14 @@ check_function_exists(getopt HAVE_GETOPT)
 set(TEST_PROGRAMS
   add_from_filep
   can_clone_file
+  crypto_clear
   exact_read_integrity
   fopen_unchanged
   fseek
   source_seek
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_GETXATTR AND HAVE_SETXATTR)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_GETXATTR AND HAVE_SETXATTR AND HAVE_REMOVEXATTR AND HAVE_FSETXATTR AND HAVE_FREMOVEXATTR)
   list(APPEND TEST_PROGRAMS acl_preserve)
 endif()
 
@@ -40,6 +41,9 @@ foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   endif()
   target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 endforeach()
+
+# The internal symbol is hidden when zip is a shared library, so link against the file directly.
+target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 
 # both programs using source_hole.c also use getopt
 if(NOT HAVE_GETOPT)
@@ -96,6 +100,11 @@ string(REPLACE ";" "\\;" path "${path}")
 # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
 file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
+if(TARGET acl_preserve)
+  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+  add_test(NAME acl-preserve COMMAND acl_preserve)
+  set_tests_properties(acl-preserve PROPERTIES SKIP_RETURN_CODE 77 WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+endif()
 foreach(FULL_CASE IN LISTS EXTRA_TESTS)
   get_filename_component(CASE ${FULL_CASE} NAME)
   add_test(NAME ${CASE} COMMAND ${NIHTEST} -v ${CASE})

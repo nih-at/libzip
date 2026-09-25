@@ -27,10 +27,14 @@
 #cmakedefine HAVE_CLONEFILE
 #cmakedefine HAVE_COMMONCRYPTO
 #cmakedefine HAVE_CRYPTO
+#cmakedefine HAVE_EXPLICIT_BZERO
+#cmakedefine HAVE_EXPLICIT_MEMSET
 #cmakedefine HAVE_FICLONERANGE
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FCHMOD
+#cmakedefine HAVE_FREMOVEXATTR
 #cmakedefine HAVE_FSEEKO
+#cmakedefine HAVE_FSETXATTR
 #cmakedefine HAVE_FTELLO
 #cmakedefine HAVE_GETPROGNAME
 #cmakedefine HAVE_GETXATTR
@@ -44,6 +48,7 @@
 #cmakedefine HAVE_MEMCPY_S
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_OPENSSL
+#cmakedefine HAVE_REMOVEXATTR
 #cmakedefine HAVE_SETMODE
 #cmakedefine HAVE_SETXATTR
 #cmakedefine HAVE_SNPRINTF

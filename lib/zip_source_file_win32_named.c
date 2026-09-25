@@ -68,26 +68,29 @@ static zip_int64_t _zip_win32_named_op_commit_write(zip_source_file_context_t *c
     zip_win32_file_operations_t *file_ops = (zip_win32_file_operations_t *)ctx->ops_userdata;
     DWORD attributes;
 
-    if (!CloseHandle((HANDLE)ctx->fout)) {
-        zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
-        return -1;
-    }
-
     attributes = file_ops->get_file_attributes(ctx->tmpname);
     if (attributes == INVALID_FILE_ATTRIBUTES) {
         zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_win32_error_to_errno(GetLastError()));
+        CloseHandle((HANDLE)ctx->fout);
         return -1;
     }
 
     if (attributes & FILE_ATTRIBUTE_TEMPORARY) {
         if (!file_ops->set_file_attributes(ctx->tmpname, attributes & ~FILE_ATTRIBUTE_TEMPORARY)) {
             zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_win32_error_to_errno(GetLastError()));
+            CloseHandle((HANDLE)ctx->fout);
             return -1;
         }
     }
 
     if (!file_ops->move_file(ctx->tmpname, ctx->fname, MOVEFILE_REPLACE_EXISTING)) {
         zip_error_set(&ctx->error, ZIP_ER_RENAME, _zip_win32_error_to_errno(GetLastError()));
+        CloseHandle((HANDLE)ctx->fout);
+        return -1;
+    }
+
+    if (!CloseHandle((HANDLE)ctx->fout)) {
+        zip_error_set(&ctx->error, ZIP_ER_WRITE, _zip_win32_error_to_errno(GetLastError()));
         return -1;
     }
 
@@ -274,7 +277,8 @@ static HANDLE win32_named_open(zip_source_file_context_t *ctx, const char *name,
 
     if (temporary) {
         access = GENERIC_READ | GENERIC_WRITE;
-        share_mode = FILE_SHARE_READ;
+        /* Keep the replacement private while allowing MoveFileEx before close. */
+        share_mode = FILE_SHARE_DELETE;
         creation_disposition = CREATE_NEW;
         file_attributes = FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_TEMPORARY;
     }

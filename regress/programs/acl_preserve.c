@@ -11,11 +11,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/xattr.h>
+#include <unistd.h>
 
 #include "zip.h"
 
 #define ACL_EA_ACCESS "system.posix_acl_access"
+#define ACL_EA_DEFAULT "system.posix_acl_default"
 #define ACL_EA_VERSION 0x0002
 #define ACL_UNDEFINED_ID UINT32_MAX
 
@@ -51,16 +54,21 @@ static void set_entry(struct acl_entry *entry, uint16_t tag, uint16_t permission
 
 int main(void) {
     static const char archive_name[] = "acl-preserve.zip";
+    static const char default_dir[] = "acl-preserve-default";
+    static const char inherited_name[] = "acl-preserve-default/acl-preserve.zip";
     static const char contents[] = "data";
     unsigned char before[sizeof(struct test_acl)];
     unsigned char after[sizeof(struct test_acl)];
     struct test_acl acl;
+    struct stat st;
+    FILE *file = NULL;
     zip_source_t *source = NULL;
     zip_t *archive = NULL;
     zip_error_t error;
     ssize_t before_length;
     ssize_t after_length;
     int error_code;
+    int default_dir_created = 0;
     int result = 1;
 
     (void)remove(archive_name);
@@ -154,6 +162,69 @@ int main(void) {
         goto done;
     }
 
+    if (mkdir(default_dir, 0700) < 0) {
+        perror("mkdir");
+        goto done;
+    }
+    default_dir_created = 1;
+    if (setxattr(default_dir, ACL_EA_DEFAULT, &acl, sizeof(acl), 0) < 0) {
+        if (errno == ENOTSUP || errno == EOPNOTSUPP || errno == EPERM) {
+            result = 77;
+            goto done;
+        }
+        perror("setxattr default ACL");
+        goto done;
+    }
+    file = fopen(inherited_name, "wb");
+    if (file == NULL || fwrite(contents, 1, sizeof(contents) - 1, file) != sizeof(contents) - 1) {
+        perror("create inherited file");
+        goto done;
+    }
+    if (fclose(file) < 0) {
+        file = NULL;
+        perror("close inherited file");
+        goto done;
+    }
+    file = NULL;
+    if (getxattr(inherited_name, ACL_EA_ACCESS, NULL, 0) <= 0) {
+        fprintf(stderr, "source did not inherit the directory default ACL\n");
+        goto done;
+    }
+    if (removexattr(inherited_name, ACL_EA_ACCESS) < 0 || chmod(inherited_name, 0640) < 0) {
+        perror("clear inherited ACL and set source mode");
+        goto done;
+    }
+    if (getxattr(inherited_name, ACL_EA_ACCESS, NULL, 0) != -1 || errno != ENODATA) {
+        fprintf(stderr, "source still has an access ACL before replacement\n");
+        goto done;
+    }
+
+    zip_error_init(&error);
+    source = zip_source_file_create(inherited_name, 0, -1, &error);
+    if (source == NULL) {
+        fprintf(stderr, "cannot create ACL-free file source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        goto done;
+    }
+    if (zip_source_begin_write(source) < 0 || zip_source_write(source, contents, sizeof(contents) - 1) != sizeof(contents) - 1 || zip_source_commit_write(source) < 0) {
+        fprintf(stderr, "cannot replace ACL-free file source: %s\n", zip_error_strerror(zip_source_error(source)));
+        zip_source_free(source);
+        source = NULL;
+        zip_error_fini(&error);
+        goto done;
+    }
+    zip_source_free(source);
+    source = NULL;
+    zip_error_fini(&error);
+    if (getxattr(inherited_name, ACL_EA_ACCESS, NULL, 0) != -1 || errno != ENODATA) {
+        fprintf(stderr, "replacement inherited a directory access ACL\n");
+        goto done;
+    }
+    if (stat(inherited_name, &st) < 0 || (st.st_mode & 0777) != 0640) {
+        fprintf(stderr, "replacement did not retain the source mode\n");
+        goto done;
+    }
+
     puts("POSIX access ACL preserved");
     result = 0;
 
@@ -163,6 +234,13 @@ done:
     }
     if (source != NULL) {
         zip_source_free(source);
+    }
+    if (file != NULL) {
+        fclose(file);
+    }
+    if (default_dir_created) {
+        (void)remove(inherited_name);
+        (void)rmdir(default_dir);
     }
     (void)remove(archive_name);
     return result;

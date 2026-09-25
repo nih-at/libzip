@@ -175,6 +175,7 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
 
     case ZIP_SOURCE_OPEN:
         ctx->hmac_verify_failed = false;
+        ctx->hmac_verified = false;
         if (decrypt_header(src, ctx) < 0) {
             return -1;
         }

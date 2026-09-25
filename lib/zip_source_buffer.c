@@ -40,16 +40,21 @@
 #define WRITE_FRAGMENT_SIZE (64 * 1024)
 #endif
 
+
+struct buffer_fragment {
+    zip_uint8_t *data;
+    zip_uint64_t length;
+    bool free_data; /* whether to free data when freeing fragment */
+};
+typedef struct buffer_fragment buffer_fragment_t;
+
 struct buffer {
-    zip_buffer_fragment_t *fragments; /* fragments */
-    zip_uint64_t *fragment_offsets;   /* offset of each fragment from start of buffer, nfragments+1 entries */
-    zip_uint64_t nfragments;          /* number of allocated fragments */
-    zip_uint64_t fragments_capacity;  /* size of fragments (number of pointers) */
+    buffer_fragment_t *fragments;    /* fragments */
+    zip_uint64_t *fragment_offsets;  /* offset of each fragment from start of buffer, nfragments+1 entries */
+    zip_uint64_t nfragments;         /* number of allocated fragments */
+    zip_uint64_t fragments_capacity; /* size of fragments (number of pointers) */
 
-    zip_uint64_t first_owned_fragment; /* first fragment to free data from */
-
-    zip_uint64_t shared_fragments; /* number of shared fragments */
-    struct buffer *shared_buffer;  /* buffer fragments are shared with */
+    struct buffer *shared_buffer; /* buffer fragments are shared with */
 
     zip_uint64_t size;             /* size of buffer */
     zip_uint64_t offset;           /* current offset in buffer */
@@ -66,6 +71,10 @@ struct read_data {
     buffer_t *out;
 };
 
+/* TODO:
+    buffer_write
+*/
+
 #define buffer_capacity(buffer) ((buffer)->fragment_offsets[(buffer)->nfragments])
 #define buffer_size(buffer) ((buffer)->size)
 
@@ -74,6 +83,8 @@ static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t length, zip_error_t
 static zip_uint64_t buffer_find_fragment(const buffer_t *buffer, zip_uint64_t offset);
 static void buffer_free(buffer_t *buffer);
 static bool buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *error);
+static bool buffer_is_fragment_shared(const buffer_t *buffer, zip_uint64_t fragment_index);
+static bool buffer_make_fragment_writable(buffer_t *buffer, zip_uint64_t fragment_index, zip_error_t *error);
 static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int free_data, zip_error_t *error);
 static zip_int64_t buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length);
 static int buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error_t *error);
@@ -318,6 +329,7 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
 static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
     zip_uint64_t fragment, fragment_offset, waste;
     buffer_t *clone;
+    size_t i;
 
     if (offset == 0) {
         return buffer_new(NULL, 0, 1, error);
@@ -341,30 +353,35 @@ static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t
         fragment_offset = buffer->fragments[fragment].length;
     }
 
-    /* TODO: This should also consider the length of the fully shared fragments */
     waste = buffer->fragments[fragment].length - fragment_offset;
     if (waste > offset) {
         zip_error_set(error, ZIP_ER_OPNOTSUPP, 0);
         return NULL;
     }
 
-    if ((clone = buffer_new(buffer->fragments, fragment + 1, 0, error)) == NULL) {
+    if ((clone = buffer_new(NULL, 0, 1, error)) == NULL) {
         return NULL;
+    }
+    if (!buffer_grow_fragments(clone, fragment + 1, error)) {
+        buffer_free(clone);
+        return NULL;
+    }
+
+    for (i = 0; i <= fragment; i++) {
+        clone->fragments[i] = buffer->fragments[i];
+        clone->fragment_offsets[i] = buffer->fragment_offsets[i];
     }
 
 #ifndef __clang_analyzer__
     /* clone->fragments can't be null, since it was created with at least one fragment */
     clone->fragments[fragment].length = fragment_offset;
 #endif
+    clone->nfragments = fragment + 1;
     clone->fragment_offsets[clone->nfragments] = offset;
     clone->size = offset;
 
-    clone->first_owned_fragment = ZIP_MIN(buffer->first_owned_fragment, clone->nfragments);
-
     buffer->shared_buffer = clone;
     clone->shared_buffer = buffer;
-    buffer->shared_fragments = fragment + 1;
-    clone->shared_fragments = fragment + 1;
 
     return clone;
 }
@@ -404,15 +421,13 @@ static void buffer_free(buffer_t *buffer) {
         return;
     }
 
+    for (i = 0; i < buffer->nfragments; i++) {
+        if (buffer->fragments[i].free_data && !buffer_is_fragment_shared(buffer, i)) {
+            free(buffer->fragments[i].data);
+        }
+    }
     if (buffer->shared_buffer != NULL) {
         buffer->shared_buffer->shared_buffer = NULL;
-        buffer->shared_buffer->shared_fragments = 0;
-
-        buffer->first_owned_fragment = ZIP_MAX(buffer->first_owned_fragment, buffer->shared_fragments);
-    }
-
-    for (i = buffer->first_owned_fragment; i < buffer->nfragments; i++) {
-        free(buffer->fragments[i].data);
     }
     free(buffer->fragments);
     free(buffer->fragment_offsets);
@@ -452,14 +467,12 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
     }
 
     buffer->offset = 0;
-    buffer->first_owned_fragment = 0;
     buffer->size = 0;
     buffer->fragments = NULL;
     buffer->fragment_offsets = NULL;
     buffer->nfragments = 0;
     buffer->fragments_capacity = 0;
     buffer->shared_buffer = NULL;
-    buffer->shared_fragments = 0;
 
     if (nfragments == 0) {
         if ((buffer->fragment_offsets = malloc(sizeof(buffer->fragment_offsets[0]))) == NULL) {
@@ -493,6 +506,7 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
             }
             buffer->fragments[j].data = fragments[i].data;
             buffer->fragments[j].length = fragments[i].length;
+            buffer->fragments[j].free_data = free_data;
             buffer->fragment_offsets[j] = offset;
             if (offset + fragments[i].length < offset) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -503,7 +517,6 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
             j++;
         }
         buffer->nfragments = j;
-        buffer->first_owned_fragment = free_data ? 0 : buffer->nfragments;
         buffer->fragment_offsets[buffer->nfragments] = offset;
         buffer->size = offset;
 
@@ -607,6 +620,7 @@ static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_u
                 return -1;
             }
             buffer->fragments[buffer->nfragments].length = WRITE_FRAGMENT_SIZE;
+            buffer->fragments[buffer->nfragments].free_data = true;
             buffer->nfragments++;
             capacity += WRITE_FRAGMENT_SIZE;
             buffer->fragment_offsets[buffer->nfragments] = capacity;
@@ -622,6 +636,9 @@ static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_u
         n = ZIP_MIN(n, SIZE_MAX);
 #endif
 
+        if (!buffer_make_fragment_writable(buffer, i, error)) {
+            return -1;
+        }
         (void)memcpy_s(buffer->fragments[i].data + fragment_offset, (size_t)n, data + copied, (size_t)n);
 
         if (n == buffer->fragments[i].length - fragment_offset) {
@@ -641,4 +658,38 @@ static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_u
     }
 
     return (zip_int64_t)copied;
+}
+
+
+static bool buffer_is_fragment_shared(const buffer_t *buffer, zip_uint64_t fragment_index) {
+    if (buffer->shared_buffer == NULL) {
+        return false;
+    }
+
+    if (fragment_index >= buffer->shared_buffer->nfragments) {
+        return false;
+    }
+
+    return buffer->fragments[fragment_index].data == buffer->shared_buffer->fragments[fragment_index].data;
+}
+
+
+static bool buffer_make_fragment_writable(buffer_t *buffer, zip_uint64_t fragment_index, zip_error_t *error) {
+    if (!buffer_is_fragment_shared(buffer, fragment_index)) {
+        return true;
+    }
+
+    zip_uint8_t *new_data = malloc(buffer->fragments[fragment_index].length);
+    if (new_data == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
+    }
+
+    (void)memcpy_s(new_data, buffer->fragments[fragment_index].length, buffer->fragments[fragment_index].data, buffer->fragments[fragment_index].length);
+
+    /* Since the fragment was shared, we don't need to free the old data. */
+    buffer->fragments[fragment_index].data = new_data;
+    buffer->fragments[fragment_index].free_data = true;
+
+    return true;
 }

@@ -38,8 +38,9 @@
 
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
-#if defined(__linux__) && defined(HAVE_GETXATTR) && defined(HAVE_SETXATTR)
+#if defined(__linux__) && defined(HAVE_GETXATTR) && defined(HAVE_FSETXATTR) && defined(HAVE_FREMOVEXATTR)
 #define USE_ACL
 #include <sys/xattr.h>
 #endif
@@ -115,17 +116,32 @@ ZIP_EXTERN zip_source_t *zip_source_file_create(const char *fname, zip_uint64_t 
 
 
 static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx) {
-    if (fclose(ctx->fout) < 0) {
+    bool ok = true;
+
+    /* On some systems, a write clears setuid/setgid bits, so make sure fclose doesn't write after copying permissions. */
+    if (fflush((FILE *)ctx->fout) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_WRITE, errno);
+        (void)fclose((FILE *)ctx->fout);
+        (void)remove(ctx->tmpname);
         return -1;
     }
+
     if (!ctx->temp_output_created) {
-        if (!copy_permissions(ctx)) {
-            return -1;
-        }
+        ok = copy_permissions(ctx);
+    }
+
+    if (fclose((FILE *)ctx->fout) < 0) {
+        zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
+        (void)remove(ctx->tmpname);
+        return -1;
+    }
+    if (!ok) {
+        (void)remove(ctx->tmpname);
+        return -1;
     }
     if (rename(ctx->tmpname, ctx->fname) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+        (void)remove(ctx->tmpname);
         return -1;
     }
 
@@ -264,7 +280,7 @@ static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx) {
 
 static void _zip_stdio_op_rollback_write(zip_source_file_context_t *ctx) {
     if (ctx->fout) {
-        fclose(ctx->fout);
+        fclose((FILE *)ctx->fout);
     }
     (void)remove(ctx->tmpname);
 }
@@ -390,9 +406,21 @@ static FILE *_zip_fopen_close_on_exec(const char *name, bool writeable) {
 
 static bool copy_permissions(zip_source_file_context_t *ctx) {
     zip_os_stat_t st;
+    bool ok = true;
 
-    if (zip_os_stat(ctx->fname, &st) < 0) {
-        zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+    /* Prefer fstat over stat when possible. */
+    if (ctx->f != NULL) {
+        if (zip_os_fstat(fileno((FILE *)ctx->f), &st) < 0) {
+            ok = false;
+        }
+    }
+    else {
+        if (zip_os_stat(ctx->fname, &st) < 0) {
+            ok = false;
+        }
+    }
+    if (!ok) {
+        zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
 #ifdef USE_ACL
@@ -401,13 +429,18 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
     ssize_t acl_size;
 
     acl_size = getxattr(ctx->fname, acl_name, NULL, 0);
-    if (acl_size < 0) {
-        if (errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
+    if (acl_size < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
+        zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+        return false;
+    }
+    if (acl_size <= 0) {
+        /* A new temporary file can inherit a default ACL even when the original has none. */
+        if (fremovexattr(fileno((FILE *)ctx->fout), acl_name) < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
             zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
             return false;
         }
     }
-    else if (acl_size > 0) {
+    else {
         if ((acl_data = malloc((size_t)acl_size)) == NULL) {
             zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
             return false;
@@ -419,7 +452,7 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
             zip_error_set(&ctx->error, ZIP_ER_RENAME, saved_errno);
             return false;
         }
-        if (setxattr(ctx->tmpname, acl_name, acl_data, (size_t)acl_size, 0) < 0) {
+        if (fsetxattr(fileno((FILE *)ctx->fout), acl_name, acl_data, (size_t)acl_size, 0) < 0) {
             int saved_errno = errno;
             free(acl_data);
             zip_error_set(&ctx->error, ZIP_ER_RENAME, saved_errno);
@@ -428,8 +461,10 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
         free(acl_data);
     }
 #endif
-    if (chmod(ctx->tmpname, st.st_mode) < 0) {
-        zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+
+    /* Use file descriptor and not file name to avoid an exploitable race condition. */
+    if (fchmod(fileno((FILE *)ctx->fout), st.st_mode) < 0) {
+        zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
     return true;

@@ -37,6 +37,7 @@
 #include <limits.h>
 #include <lzma.h>
 #include <stdlib.h>
+#include <string.h>
 #include <zlib.h>
 
 enum header_state {

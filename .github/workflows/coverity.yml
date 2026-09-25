@@ -1,3 +1,7 @@
+# We only use CI builds to find errors, we don't use the compiled results, so they can't be used for supply chain attacks.
+# Therefore, we'd rather automatically get fixes committed to the used actions than exact reproducibility.
+# That is why we use version tags instead of commit hashes.
+
 name: Coverity
 
 on:
@@ -24,59 +28,58 @@ jobs:
       COV_RESULTS: cov-int
 
     steps:
-    - name: Check Secret
-      run: |
-        [ -n "${{ secrets.COVERITY_TOKEN }}" ]
+      - name: Check Secret
+        run: |
+          [ -n "${{ secrets.COVERITY_TOKEN }}" ]
 
-    - name: Checkout Code
-      uses: actions/checkout@v6
+      - name: Checkout Code
+        uses: actions/checkout@v6
 
-    - name: Install Dependencies
-      run: |
-        sudo apt-get install libzstd-dev
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install libzstd-dev
 
-    - name: Configure
-      run: |
-        cmake ${{github.workspace}}
+      - name: Configure
+        run: |
+          cmake ${{github.workspace}}
 
-    - name: Download Coverity
-      run: |
-        wget --quiet https://scan.coverity.com/download/linux64 --post-data "token=$TOKEN&project=$PROJECT" -O "$COV_TOOLS.tar.gz"
-        mkdir "$COV_TOOLS"
-        tar xzf "$COV_TOOLS.tar.gz" --strip 1 -C "$COV_TOOLS"
-        ls -l "$COV_TOOLS"
+      - name: Download Coverity
+        run: |
+          wget --quiet https://scan.coverity.com/download/linux64 --post-data "token=$TOKEN&project=$PROJECT" -O "$COV_TOOLS.tar.gz"
+          mkdir "$COV_TOOLS"
+          tar xzf "$COV_TOOLS.tar.gz" --strip 1 -C "$COV_TOOLS"
+          ls -l "$COV_TOOLS"
 
-    - name: Build with Coverity
-      run: |
-        export PATH="$(pwd)/$COV_TOOLS/bin:$PATH"
-        cov-build --dir $COV_RESULTS make -j
-        # Filter out private info
-        sed -E -i 's/TOKEN=([-_A-Za-z0-9]+)/TOKEN=XXX/g' cov-int/build-log.txt
+      - name: Build with Coverity
+        run: |
+          export PATH="$(pwd)/$COV_TOOLS/bin:$PATH"
+          cov-build --dir $COV_RESULTS make -j
+          # Filter out private info
+          sed -E -i 's/TOKEN=([-_A-Za-z0-9]+)/TOKEN=XXX/g' cov-int/build-log.txt
 
-    - name: Upload build log
-      uses: actions/upload-artifact@v7
-      with:
-        name: build-log
-        path: cov-int/build-log.txt
-        retention-days: 10
+      - name: Upload build log
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-log
+          path: cov-int/build-log.txt
+          retention-days: 10
 
-    - name: Submit Results
-      run: |
-        tar -czf $SHORT_PROJECT.tgz $COV_RESULTS
-        ls -lh $SHORT_PROJECT.tgz
-        git config --global --add safe.directory "$GITHUB_WORKSPACE"
-        GIT_HASH="$(git rev-parse --short HEAD)"
-        echo "HASH: $GIT_HASH"
-        GIT_DESC="$(git log -n1 --format="%s" $GIT_HASH)"
-        echo "DESC: $GIT_DESC"
-        curl --fail --output curl.log \
-          --form token=$TOKEN \
-          --form email=$EMAIL \
-          --form file=@$SHORT_PROJECT.tgz \
-          --form version="$GIT_HASH" \
-          --form description="$GIT_DESC" \
-          https://scan.coverity.com/builds?project=$PROJECT
-        # If we go over quota, alert the user
-        cat curl.log
-        grep -qv "quota.*reached" curl.log || false
-
+      - name: Submit Results
+        run: |
+          tar -czf $SHORT_PROJECT.tgz $COV_RESULTS
+          ls -lh $SHORT_PROJECT.tgz
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          GIT_HASH="$(git rev-parse --short HEAD)"
+          echo "HASH: $GIT_HASH"
+          GIT_DESC="$(git log -n1 --format="%s" $GIT_HASH)"
+          echo "DESC: $GIT_DESC"
+          curl --fail --output curl.log \
+            --form token=$TOKEN \
+            --form email=$EMAIL \
+            --form file=@$SHORT_PROJECT.tgz \
+            --form version="$GIT_HASH" \
+            --form description="$GIT_DESC" \
+            https://scan.coverity.com/builds?project=$PROJECT
+          # If we go over quota, alert the user
+          cat curl.log
+          grep -qv "quota.*reached" curl.log || false
