@@ -1,0 +1,7 @@
+# partial read of stored entry without data
+return 1
+arguments -- test.zip cat_partial 0 1 -1
+file test.zip incons-stored-data-empty.zip
+stderr
+can't open file at index '0': Zip archive inconsistent: entry 0: compressed and uncompressed sizes don't match for stored file
+end-of-inline-data

@@ -195,6 +195,11 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
             source_index = 0;
         }
         else {
+            /* Check that start and end are within the data in the archive. */
+            if (start + (zip_uint64_t)data_len > st.comp_size) {
+                zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_STORED_SIZE_MISMATCH, srcidx));
+                return NULL;
+            }
             src = srcza->src;
             source_archive = srcza;
             source_index = srcidx;
