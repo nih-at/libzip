@@ -1,0 +1,11 @@
+# WinZip AES AE-2 entry (no CRC) decrypts to more data than the uncompressed size in its header
+features HAVE_CRYPTO
+arguments test.zip set_password foofoofoo cat 1
+return 1
+file test.zip incons-aes-ae2-data-longer.zip
+stdout
+encrypted
+end-of-inline-data
+stderr
+can't read file at index '1': Zip archive inconsistent: file length in header doesn't match actual file length
+end-of-inline-data
