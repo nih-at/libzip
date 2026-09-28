@@ -666,6 +666,7 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
 
 bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64_t got_len, bool local, zip_error_t *error) {
     zip_buffer_t *ef_buffer;
+    bool disk_number_from_ef = false;
 
     if ((ef_buffer = _zip_buffer_new((zip_uint8_t *)ef, got_len)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -689,6 +690,7 @@ bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_u
         }
         if (zde->disk_number == ZIP_UINT16_MAX) {
             zde->disk_number = _zip_buffer_get_32(ef_buffer);
+            disk_number_from_ef = true;
         }
     }
 
@@ -703,6 +705,11 @@ bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_u
             }
             /* fallthrough */
         case 24:
+            if (got_len == 24 && disk_number_from_ef) {
+                /* no room for disk number */
+                ok = false;
+                break;
+            }
             _zip_buffer_set_offset(ef_buffer, 0);
             if ((zde->uncomp_size != _zip_buffer_get_64(ef_buffer)) || (zde->comp_size != _zip_buffer_get_64(ef_buffer)) || (zde->offset != _zip_buffer_get_64(ef_buffer))) {
                 ok = false;
