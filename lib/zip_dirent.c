@@ -43,7 +43,7 @@
 
 static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_uint16_t id, zip_string_t *str, bool check_consistency);
 static zip_extra_field_t *_zip_ef_utf8(zip_uint16_t, zip_string_t *, zip_error_t *);
-static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error);
+static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, bool check_consistency, zip_error_t *error);
 
 
 void _zip_cdir_free(zip_cdir_t *cd) {
@@ -654,7 +654,7 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
         return -1;
     }
 
-    if (!_zip_dirent_process_winzip_aes(zde, error)) {
+    if (!_zip_dirent_process_winzip_aes(zde, check_consistency, error)) {
         return -1;
     }
 
@@ -766,7 +766,7 @@ static zip_string_t *_zip_dirent_process_ef_utf_8(const zip_dirent_t *de, zip_ui
 }
 
 
-static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error) {
+static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, bool check_consistency, zip_error_t *error) {
     zip_uint16_t ef_len;
     zip_buffer_t *buffer;
     const zip_uint8_t *ef;
@@ -799,7 +799,12 @@ static bool _zip_dirent_process_winzip_aes(zip_dirent_t *de, zip_error_t *error)
 
     case 2:
         crc_valid = false;
-        /* TODO: When checking consistency, check that crc is 0. */
+        /* For AE-2, the CRC field must be zero (WinZip AE spec / appnote.txt J.2). */
+        if (check_consistency && de->crc != 0) {
+            zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_AE2_NON_ZERO_CRC);
+            _zip_buffer_free(buffer);
+            return false;
+        }
         break;
 
     default:

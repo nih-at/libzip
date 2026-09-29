@@ -1,0 +1,13 @@
+# zip_open: a WinZip AES entry using AE-2 (extra field 0x9901 version 2) must
+# have a zero CRC field. Here entry 1 is an AE-256 AE-2 entry whose local and
+# central CRC fields are both 0x12345678, which is rejected under ZIP_CHECKCONS.
+program tryopen
+arguments -c -s test.zzip
+file test.zzip incons-ae2-nonzero-crc.zip
+return 1
+stdout
+opening 'test.zzip' returned error Zip archive inconsistent: entry 1: CRC not zero for AE-2 encrypted entry
+end-of-inline-data
+stderr
+1 errors
+end-of-inline-data
