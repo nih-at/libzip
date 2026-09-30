@@ -57,7 +57,13 @@ ZIP_EXTERN zip_t *zip_fdopen(int fd_orig, int _flags, int *zep) {
     /* We dup() here to avoid messing with the passed in fd.
        We could not restore it to the original state in case of error. */
 
-    if ((fd = dup(fd_orig)) < 0) {
+    /* Keep the internal descriptor out of executed programs where supported. */
+#ifdef F_DUPFD_CLOEXEC
+    fd = fcntl(fd_orig, F_DUPFD_CLOEXEC, 0);
+#else
+    fd = dup(fd_orig);
+#endif
+    if (fd < 0) {
         _zip_set_open_error(zep, NULL, ZIP_ER_OPEN);
         return NULL;
     }
