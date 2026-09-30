@@ -1,0 +1,15 @@
+# zip_open with consistency checking must reject an entry whose name contains a
+# NUL byte. Here the header name is "A", but an Info-ZIP Unicode Path extra
+# field (0x7075) with a matching CRC replaces it with the bytes 00 C3 A9
+# (U+0000 U+00E9), so the NUL only appears in the final name. The check must
+# run after the extra field is applied.
+program tryopen
+arguments -c -s test.zzip
+file test.zzip incons-utf8-nul-in-name.zip
+return 1
+stdout
+opening 'test.zzip' returned error Zip archive inconsistent: entry 0: NUL byte in file name
+end-of-inline-data
+stderr
+1 errors
+end-of-inline-data
