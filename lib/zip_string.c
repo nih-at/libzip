@@ -166,6 +166,7 @@ zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_f
     }
 
     if ((s->raw = (zip_uint8_t *)malloc((size_t)length + 1)) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
         free(s);
         return NULL;
     }

@@ -120,6 +120,7 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
 
     if (st) {
         if (_zip_stat_merge(&ctx->stat, st, error) < 0) {
+            zip_error_fini(&ctx->error);
             free(ctx);
             return NULL;
         }
@@ -127,6 +128,7 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
 
     window_source = zip_source_layered_create(src, window_read, ctx, error);
     if (window_source == NULL) {
+        zip_error_fini(&ctx->error);
         free(ctx);
         return NULL;
     }
@@ -176,6 +178,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         return zip_error_to_data(&ctx->error, data, len);
 
     case ZIP_SOURCE_FREE:
+        zip_error_fini(&ctx->error);
         free(ctx);
         return 0;
 

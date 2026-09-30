@@ -175,6 +175,7 @@ zip_source_t *zip_source_buffer_fragment_with_attributes_create(const zip_buffer
 
     if ((zs = zip_source_function_create(read_data, ctx, error)) == NULL) {
         buffer_free(ctx->in);
+        zip_error_fini(&ctx->error);
         free(ctx);
         return NULL;
     }
@@ -225,6 +226,7 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
     case ZIP_SOURCE_FREE:
         buffer_free(ctx->in);
         buffer_free(ctx->out);
+        zip_error_fini(&ctx->error);
         free(ctx);
         return 0;
 
@@ -463,6 +465,7 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
     bool have_empty_fragment = false;
 
     if ((buffer = malloc(sizeof(*buffer))) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
 

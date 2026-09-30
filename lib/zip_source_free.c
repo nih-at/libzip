@@ -67,5 +67,6 @@ ZIP_EXTERN void zip_source_free(zip_source_t *src) {
         zip_source_free(src->src);
     }
 
+    zip_error_fini(&src->error);
     free(src);
 }
