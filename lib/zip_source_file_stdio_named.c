@@ -40,6 +40,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#if defined(__linux__) && defined(HAVE_GETXATTR) && defined(HAVE_FSETXATTR) && defined(HAVE_FREMOVEXATTR)
+#define USE_ACL
+#include <sys/xattr.h>
+#endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -419,14 +423,49 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
+#ifdef USE_ACL
+    static const char acl_name[] = "system.posix_acl_access";
+    void *acl_data;
+    ssize_t acl_size;
+
+    acl_size = getxattr(ctx->fname, acl_name, NULL, 0);
+    if (acl_size < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
+        zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+        return false;
+    }
+    if (acl_size <= 0) {
+        /* A new temporary file can inherit a default ACL even when the original has none. */
+        if (fremovexattr(fileno((FILE *)ctx->fout), acl_name) < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
+            zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+            return false;
+        }
+    }
+    else {
+        if ((acl_data = malloc((size_t)acl_size)) == NULL) {
+            zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
+            return false;
+        }
+        acl_size = getxattr(ctx->fname, acl_name, acl_data, (size_t)acl_size);
+        if (acl_size < 0) {
+            int saved_errno = errno;
+            free(acl_data);
+            zip_error_set(&ctx->error, ZIP_ER_RENAME, saved_errno);
+            return false;
+        }
+        if (fsetxattr(fileno((FILE *)ctx->fout), acl_name, acl_data, (size_t)acl_size, 0) < 0) {
+            int saved_errno = errno;
+            free(acl_data);
+            zip_error_set(&ctx->error, ZIP_ER_RENAME, saved_errno);
+            return false;
+        }
+        free(acl_data);
+    }
+#endif
 
     /* Use file descriptor and not file name to avoid an exploitable race condition. */
     if (fchmod(fileno((FILE *)ctx->fout), st.st_mode) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
-
-    /* TODO: copy ACLs */
-
     return true;
 }
