@@ -325,7 +325,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 st->size = ctx->end - ctx->start;
             }
             else if (st->valid & ZIP_STAT_SIZE) {
-                st->size -= ctx->start;
+                st->size = st->size >= ctx->start ? st->size - ctx->start : 0;
             }
         }
 

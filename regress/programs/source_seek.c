@@ -31,6 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <inttypes.h>
 #include <stdio.h>
 
 #include "zip.h"
@@ -115,6 +116,47 @@ test_unknown_length_window(void) {
 
 
 static int
+test_window_start_past_end(void) {
+    zip_error_t error;
+    zip_source_t *base, *window;
+    char data[] = "0123456789";
+    zip_stat_t st;
+
+    zip_error_init(&error);
+
+    if ((base = zip_source_buffer_create(data, sizeof(data) - 1, 0, &error)) == NULL) {
+        fprintf(stderr, "can't create buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return -1;
+    }
+    /* Unknown-length window starting past the end of the base source. */
+    if ((window = zip_source_window_create(base, 20, -1, &error)) == NULL) {
+        fprintf(stderr, "can't create window source: %s\n", zip_error_strerror(&error));
+        zip_source_free(base);
+        zip_error_fini(&error);
+        return -1;
+    }
+    zip_error_fini(&error);
+    zip_source_free(base);
+
+    zip_stat_init(&st);
+    if (zip_source_stat(window, &st) < 0) {
+        fprintf(stderr, "can't stat window source\n");
+        zip_source_free(window);
+        return -1;
+    }
+    if ((st.valid & ZIP_STAT_SIZE) && st.size > sizeof(data) - 1) {
+        fprintf(stderr, "window source stat size underflowed to %" PRIu64 "\n", st.size);
+        zip_source_free(window);
+        return -1;
+    }
+    zip_source_free(window);
+
+    return 0;
+}
+
+
+static int
 test_large_fragment_source(void) {
     zip_error_t error;
     zip_source_t *source;
@@ -168,6 +210,9 @@ main(int argc, char *argv[]) {
     }
 
     if (test_unknown_length_window() < 0) {
+        return 1;
+    }
+    if (test_window_start_past_end() < 0) {
         return 1;
     }
     if (test_large_fragment_source() < 0) {
