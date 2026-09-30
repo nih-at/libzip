@@ -1,0 +1,3 @@
+description allocation sizes are computed without overflow
+program allocate
+return 0

@@ -225,10 +225,16 @@ BOOL pbkdf2(PUCHAR pbPassword, ULONG cbPassword, PUCHAR pbSalt, ULONG cbSalt, DW
     DWORD l, r, dwULen, i, j;
     BYTE Ti[DIGEST_SIZE];
     BYTE V[DIGEST_SIZE];
-    LPBYTE U = malloc(max((cbSalt + 4), DIGEST_SIZE));
+    size_t salt_buffer_size;
+    LPBYTE U;
     PRF_CTX prfCtx = {0};
 
-    if (U == NULL) {
+    /* U holds the salt plus a four byte block index, or one digest. */
+    if (!_zip_size_of_array(cbSalt, 1, 4, &salt_buffer_size, NULL)) {
+        return FALSE;
+    }
+
+    if ((U = malloc(ZIP_MAX(salt_buffer_size, (size_t)DIGEST_SIZE))) == NULL) {
         return FALSE;
     }
 
