@@ -68,14 +68,25 @@ ZIP_EXTERN zip_source_t *zip_source_window_create(zip_source_t *src, zip_uint64_
 zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length, zip_stat_t *st, zip_uint64_t st_invalid, zip_file_attributes_t *attributes, zip_dostime_t *dostime, zip_t *source_archive, zip_uint64_t source_index, bool take_ownership, zip_error_t *error) {
     zip_source_t *window_source;
     struct window *ctx;
+    zip_stat_t lower_st;
 
     if (src == NULL || length < -1 || (source_archive == NULL && source_index != 0)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
 
-    if (length >= 0) {
+    if (length > 0) {
         if (start + (zip_uint64_t)length < start) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return NULL;
+        }
+    }
+
+    zip_stat_init(&lower_st);
+    (void)zip_source_stat(src, &lower_st);
+
+    if (lower_st.valid & ZIP_STAT_SIZE) {
+        if (start > lower_st.size || (length > 0 && start + (zip_uint64_t)length > lower_st.size)) {
             zip_error_set(error, ZIP_ER_INVAL, 0);
             return NULL;
         }
@@ -238,6 +249,10 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         if (ctx->needs_seek) {
             if (zip_source_seek(src, (zip_int64_t)ctx->offset, SEEK_SET) < 0) {
                 zip_error_set_from_source(&ctx->error, src);
+                if (zip_error_code_zip(&ctx->error) == ZIP_ER_INVAL) {
+                    /* We validated ctx->offset in ZIP_SEEK. */
+                    zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
+                }
                 return -1;
             }
         }
@@ -284,7 +299,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
             return 0;
         }
 
-        /* 
+        /*
           If we don't know the length, we disable the end check in zip_source_seek_compute_offset by passing in the largest possible value and seek in the lower source to validate the new offset.
         */
         length = ctx->end_valid ? (ctx->end - ctx->start) : ZIP_INT64_MAX;
@@ -325,7 +340,12 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 st->size = ctx->end - ctx->start;
             }
             else if (st->valid & ZIP_STAT_SIZE) {
-                st->size -= ctx->start;
+                if (st->size < ctx->start) {
+                    st->valid &= ~ZIP_STAT_SIZE;
+                }
+                else {
+                    st->size -= ctx->start;
+                }
             }
         }
 
