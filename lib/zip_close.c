@@ -89,8 +89,14 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         return -1;
     }
 
-    if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
-        return -1;
+    if (survivors == 0) {
+        filelist = NULL;
+    }
+    else {
+        /* This can't overflow because survivors <= za->nentry and sizeof(filelist[0]) < za->entry[0] */
+        if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
+            return -1;
+        }
     }
 
     unchanged_offset = ZIP_UINT64_MAX;
@@ -119,7 +125,7 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         return -1;
     }
 
-    if (ZIP_WANT_TORRENTZIP(za)) {
+    if (ZIP_WANT_TORRENTZIP(za) && survivors > 1) {
         qsort(filelist, (size_t)survivors, sizeof(filelist[0]), torrentzip_compare_names);
     }
 
