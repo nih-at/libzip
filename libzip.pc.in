@@ -12,3 +12,5 @@ Version: @PROJECT_VERSION@
 Libs: @PKG_CONFIG_RPATH@ -L${libdir} -lzip
 Libs.private: @LIBS@
 Cflags: -I${includedir}
+
+Requires.private: openssl liblzma libzstd zlib
