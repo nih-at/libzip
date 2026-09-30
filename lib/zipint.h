@@ -47,6 +47,7 @@
 #endif
 
 #include "zip.h"
+#include "zip_bounds_safety.h" /* optional -fbounds-safety macros */
 
 #define CENTRAL_MAGIC "PK\1\2"
 #define LOCAL_MAGIC "PK\3\4"
@@ -486,7 +487,12 @@ struct zip_buffer {
     bool ok;
     bool free_data;
 
-    zip_uint8_t *data;
+    /* size is the capacity companion for data (bytes).
+     * Field order is preserved (pointer before size); update sites assign
+     * capacity before the pointer so sized-by invariants hold under
+     * optional -fbounds-safety builds.
+     */
+    zip_uint8_t *ZIP_SIZED_BY(size) data;
     zip_uint64_t size;
     zip_uint64_t offset;
 };
