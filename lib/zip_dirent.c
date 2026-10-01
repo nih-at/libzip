@@ -1367,6 +1367,13 @@ void zip_dirent_torrentzip_normalize(zip_dirent_t *de) {
 }
 
 int zip_dirent_check_consistency(zip_dirent_t *dirent) {
+    /* libzip only supports single-disk archives (multi-disk is rejected while
+       reading the end of central directory), so every entry must start on the
+       first disk. A non-zero disk number start points at a disk that isn't
+       there, leaving the entry's data unlocatable. */
+    if (dirent->disk_number != 0) {
+        return ZIP_ER_DETAIL_INVALID_DISK_NUMBER;
+    }
     if (dirent->comp_method == ZIP_CM_STORE) {
         zip_uint64_t header_size = 0;
         switch (dirent->encryption_method) {
