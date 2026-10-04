@@ -1,0 +1,3 @@
+# the Zip64 records must be written when the entry count is exactly 0xffff
+program cdir_zip64_boundary
+return 0

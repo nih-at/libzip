@@ -143,7 +143,11 @@ zip_int64_t _zip_cdir_write(zip_t *za, const zip_filelist_t *filelist, zip_uint6
         return -1;
     }
 
-    if (survivors > ZIP_UINT16_MAX || offset > ZIP_UINT32_MAX || size > ZIP_UINT32_MAX) {
+    /* 0xffff and 0xffffffff in the end of central directory record
+       are escape values directing readers to the Zip64 record, so the
+       Zip64 record must also be written when a value equals its
+       escape value exactly. */
+    if (survivors >= ZIP_UINT16_MAX || offset >= ZIP_UINT32_MAX || size >= ZIP_UINT32_MAX) {
         _zip_buffer_put(buffer, EOCD64_MAGIC, 4);
         _zip_buffer_put_64(buffer, EOCD64LEN - 12);
         _zip_buffer_put_16(buffer, 45);
