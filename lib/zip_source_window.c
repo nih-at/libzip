@@ -156,6 +156,10 @@ int _zip_source_set_source_archive(zip_source_t *src, zip_t *za) {
 
 /* called by zip_discard to avoid operating on file from closed archive */
 void _zip_source_invalidate(zip_source_t *src) {
+    if (ZIP_SOURCE_IS_OPEN_READING(src)) {
+        (void)zip_source_close(src);
+    }
+
     src->source_closed = 1;
 
     if (zip_error_code_zip(&src->error) == ZIP_ER_OK) {
