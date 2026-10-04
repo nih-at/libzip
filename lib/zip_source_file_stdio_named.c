@@ -235,6 +235,7 @@ static zip_int64_t _zip_stdio_op_create_temp_output_cloning(zip_source_file_cont
 #endif
 
     if (ftruncate(fileno(tfp), (off_t)offset) < 0) {
+        zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
         (void)fclose(tfp);
         (void)remove(ctx->tmpname);
         free(ctx->tmpname);
@@ -395,6 +396,7 @@ static FILE *_zip_fopen_close_on_exec(const char *name, bool writeable) {
         return NULL;
     }
     if ((fp = fdopen(fd, writeable ? "r+b" : "rb")) == NULL) {
+        close(fd);
         return NULL;
     }
     return fp;
