@@ -47,7 +47,16 @@ struct ctx {
 
 
 static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
-    zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.006);
+    /*
+     * bzip2 expands data it cannot compress: the bzip2 manual
+     * documents an expansion of around 0.5 per cent for random data,
+     * plus a constant overhead of about 50 bytes, and incompressible
+     * data expands by about 0.9 per cent when using the smallest
+     * block size. The previous bound of 1.006 was below that, so it
+     * was not an upper bound for the compressed data. Leave about
+     * twice the documented margin, using exact integer math.
+     */
+    zip_uint64_t compressed_size = uncompressed_size + uncompressed_size / 64 + 1024;
 
     if (compressed_size < uncompressed_size) {
         return ZIP_UINT64_MAX;

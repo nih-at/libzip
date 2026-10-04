@@ -1,0 +1,4 @@
+# bzip2 roundtrip of expanding data must fit the sized buffer
+features HAVE_LIBBZ2
+program bzip2_bound_roundtrip
+return 0
