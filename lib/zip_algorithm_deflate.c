@@ -101,6 +101,15 @@ static void *decompress_allocate(zip_uint16_t method, zip_uint32_t compression_f
 static void deallocate(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
+    /* end() releases the zlib stream, but only runs after a successful
+       OPEN/CLOSE cycle; freeing a source while it is open (e.g. via
+       zip_discard()) leaked the zlib-allocated stream state. */
+    if (ctx->compress) {
+        (void)deflateEnd(&ctx->zstr);
+    }
+    else {
+        (void)inflateEnd(&ctx->zstr);
+    }
     free(ctx);
 }
 

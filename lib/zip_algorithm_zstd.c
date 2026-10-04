@@ -96,6 +96,15 @@ static void *decompress_allocate(zip_uint16_t method, zip_uint32_t compression_f
 
 static void deallocate(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
+    /* end() frees the stream, but it is only called after a successful
+       OPEN/CLOSE cycle; a failed start() or a source freed while open
+       (e.g. zip_discard()) would otherwise leak the zstd stream. */
+    if (ctx->compress) {
+        ZSTD_freeCStream(ctx->zcstream);
+    }
+    else {
+        ZSTD_freeDStream(ctx->zdstream);
+    }
     free(ctx);
 }
 
@@ -151,6 +160,8 @@ static bool start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
         ret = ZSTD_initCStream(ctx->zcstream, ctx->compression_flags);
         if (ZSTD_isError(ret)) {
             zip_error_set(ctx->error, ZIP_ER_ZLIB, map_error(ret));
+            ZSTD_freeCStream(ctx->zcstream);
+            ctx->zcstream = NULL;
             return false;
         }
     }

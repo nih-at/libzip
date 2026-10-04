@@ -96,6 +96,15 @@ static void *decompress_allocate(zip_uint16_t method, zip_uint32_t compression_f
 static void deallocate(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
+    /* end() releases the bzip2 stream, but only runs after a successful
+       OPEN/CLOSE cycle; freeing a source while it is open (e.g. via
+       zip_discard()) leaked the bzip2-allocated stream state. */
+    if (ctx->compress) {
+        (void)BZ2_bzCompressEnd(&ctx->zstr);
+    }
+    else {
+        (void)BZ2_bzDecompressEnd(&ctx->zstr);
+    }
     free(ctx);
 }
 

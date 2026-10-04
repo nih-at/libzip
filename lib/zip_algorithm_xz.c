@@ -151,6 +151,12 @@ static void *decompress_allocate(zip_uint16_t method, zip_uint32_t compression_f
 
 static void deallocate(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
+    /* end() releases the lzma stream, but only runs after a successful
+       OPEN/CLOSE cycle; freeing a source while it is open (e.g. via
+       zip_discard()) leaked the lzma-allocated stream state. */
+    if (ctx->zstr.internal != NULL) {
+        lzma_end(&ctx->zstr);
+    }
     free(ctx);
 }
 

@@ -39,18 +39,10 @@
 
 ZIP_EXTERN int zip_fclose(zip_file_t *zf) {
     int ret;
+    zip_uint64_t i;
 
     if (zf == NULL) {
         return ZIP_ER_INVAL;
-    }
-
-    if (zf->src) {
-        if (ZIP_SOURCE_IS_OPEN_READING(zf->src)) {
-            if (zip_source_close(zf->src) < 0) {
-                zip_error_set_from_source(&zf->error, zf->src);
-            }
-        }
-        zip_source_free(zf->src);
     }
 
     ret = 0;
@@ -61,7 +53,27 @@ ZIP_EXTERN int zip_fclose(zip_file_t *zf) {
         }
     }
 
+    if (zf->za != NULL) {
+        for (i = 0; i < zf->za->nopen_file; i++) {
+            if (zf->za->open_file[i] == zf) {
+                zf->za->open_file[i] = zf->za->open_file[--zf->za->nopen_file];
+                break;
+            }
+        }
+    }
+
+    if (zf->src) {
+        if (ZIP_SOURCE_IS_OPEN_READING(zf->src)) {
+            if (zip_source_close(zf->src) < 0 && ret == 0) {
+                zip_error_set_from_source(&zf->error, zf->src);
+                ret = zf->error.zip_err;
+            }
+        }
+        zip_source_free(zf->src);
+    }
+
     zip_error_fini(&zf->error);
     free(zf);
+
     return ret;
 }

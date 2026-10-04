@@ -79,6 +79,35 @@ static zip_file_t *_zip_file_new(zip_t *za) {
 
     zip_error_init(&zf->error);
     zf->src = NULL;
+    zf->za = za;
+
+    if (za->nopen_file == za->nopen_file_alloc) {
+        zip_uint64_t new_alloc = za->nopen_file_alloc == 0 ? 8 : za->nopen_file_alloc * 2;
+        zip_file_t **new_open_file = (zip_file_t **)realloc(za->open_file, new_alloc * sizeof(*new_open_file));
+        if (new_open_file == NULL) {
+            zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            free(zf);
+            return NULL;
+        }
+        za->open_file = new_open_file;
+        za->nopen_file_alloc = new_alloc;
+    }
+    za->open_file[za->nopen_file++] = zf;
 
     return zf;
+}
+
+void _zip_file_free(zip_file_t *zf) {
+    if (zf == NULL) {
+        return;
+    }
+
+    if (zf->src) {
+        if (ZIP_SOURCE_IS_OPEN_READING(zf->src)) {
+            zip_source_close(zf->src);
+        }
+        zip_source_free(zf->src);
+    }
+    zip_error_fini(&zf->error);
+    free(zf);
 }

@@ -49,6 +49,13 @@ void zip_discard(zip_t *za) {
         return;
     }
 
+    /* Free open file handles. Their sources are freed while still open,
+       which the compression sources' deallocate path handles. */
+    for (i = 0; i < za->nopen_file; i++) {
+        _zip_file_free(za->open_file[i]);
+    }
+    free(za->open_file);
+
     if (za->src) {
         zip_source_close(za->src);
         zip_source_free(za->src);

@@ -2,6 +2,7 @@ check_function_exists(getopt HAVE_GETOPT)
 
 set(TEST_PROGRAMS
   add_from_filep
+  compress_stream_leak
   can_clone_file
   crypto_clear
   exact_read_integrity

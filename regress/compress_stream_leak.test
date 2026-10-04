@@ -1,0 +1,3 @@
+# exercise freeing an open compression source; must not leak stream state
+program compress_stream_leak
+return 0

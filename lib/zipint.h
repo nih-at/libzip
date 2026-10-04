@@ -315,6 +315,9 @@ struct zip {
     zip_uint64_t nopen_source;       /* number of open sources using archive */
     zip_uint64_t nopen_source_alloc; /* number of sources allocated */
     zip_source_t **open_source;      /* open sources using archive */
+    zip_uint64_t nopen_file;         /* number of open files */
+    zip_uint64_t nopen_file_alloc;   /* number of file pointers allocated */
+    zip_file_t **open_file;          /* open files using archive */
 
     zip_hash_t *names; /* hash table for name lookup */
 
@@ -329,6 +332,7 @@ struct zip {
 struct zip_file {
     zip_error_t error; /* error information */
     zip_source_t *src; /* data source */
+    zip_t *za;         /* archive it belongs to */
 };
 
 /* zip archive directory entry (central or local) */
@@ -572,6 +576,7 @@ bool _zip_dirent_apply_attributes(zip_dirent_t *, zip_file_attributes_t *, bool)
 int zip_dirent_check_consistency(zip_dirent_t *dirent);
 zip_dirent_t *_zip_dirent_clone(const zip_dirent_t *);
 void _zip_dirent_free(zip_dirent_t *);
+void _zip_file_free(zip_file_t *);
 void _zip_dirent_finalize(zip_dirent_t *);
 time_t zip_dirent_get_last_mod_mtime(zip_dirent_t *de);
 void _zip_dirent_init(zip_dirent_t *);
