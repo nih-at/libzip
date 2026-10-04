@@ -628,10 +628,10 @@ zip_dirent_t *_zip_get_dirent(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *)
 enum zip_encoding_type _zip_guess_encoding(zip_string_t *, enum zip_encoding_type);
 zip_uint8_t *_zip_cp437_to_utf8(const zip_uint8_t *const, zip_uint32_t, zip_uint32_t *, zip_error_t *);
 
-bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index, zip_flags_t flags, zip_error_t *error);
-bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *key, zip_error_t *error);
+bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint32_t name_length, zip_uint64_t index, zip_flags_t flags, zip_error_t *error);
+bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *key, zip_uint32_t name_length, zip_error_t *error);
 void _zip_hash_free(zip_hash_t *hash);
-zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, zip_error_t *error);
+zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_uint32_t name_length, zip_flags_t flags, zip_error_t *error);
 zip_hash_t *_zip_hash_new(zip_error_t *error);
 bool _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t *error);
 bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error);
@@ -696,6 +696,7 @@ void _zip_pkware_keys_reset(zip_pkware_keys_t *keys);
 
 int _zip_changed(const zip_t *, zip_uint64_t *);
 const char *_zip_get_name(zip_t *, zip_uint64_t, zip_flags_t, zip_error_t *);
+const char *_zip_get_name_len(zip_t *, zip_uint64_t, zip_flags_t, zip_uint32_t *lengthp, zip_error_t *);
 int _zip_local_header_read(zip_t *, int);
 void *_zip_memdup(const void *, size_t, zip_error_t *);
 zip_int64_t _zip_name_locate(zip_t *, const char *, zip_flags_t, zip_error_t *);

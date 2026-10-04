@@ -234,7 +234,8 @@ zip_t *_zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
     _zip_hash_reserve_capacity(za->names, za->nentry, &za->error);
 
     for (idx = 0; idx < za->nentry; idx++) {
-        const zip_uint8_t *name = _zip_string_get(za->entry[idx].orig->filename, NULL, 0, error);
+        zip_uint32_t name_length;
+        const zip_uint8_t *name = _zip_string_get(za->entry[idx].orig->filename, &name_length, 0, error);
         if (name == NULL) {
             /* keep src so discard does not get rid of it */
             zip_source_keep(src);
@@ -242,7 +243,7 @@ zip_t *_zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
             return NULL;
         }
 
-        if (_zip_hash_add(za->names, name, idx, ZIP_FL_UNCHANGED, &za->error) == false) {
+        if (_zip_hash_add(za->names, name, name_length, idx, ZIP_FL_UNCHANGED, &za->error) == false) {
             if (za->error.zip_err != ZIP_ER_EXISTS || (flags & ZIP_CHECKCONS)) {
                 _zip_error_copy(error, &za->error);
                 /* keep src so discard does not get rid of it */

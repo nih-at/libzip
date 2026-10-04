@@ -20,6 +20,7 @@
 #cmakedefine HAVE__STAT64
 #cmakedefine HAVE__STRDUP
 #cmakedefine HAVE__STRICMP
+#cmakedefine HAVE__STRNICMP
 #cmakedefine HAVE__STRTOI64
 #cmakedefine HAVE__STRTOUI64
 #cmakedefine HAVE__UNLINK
@@ -49,10 +50,12 @@
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_SNPRINTF_S
 #cmakedefine HAVE_STRCASECMP
+#cmakedefine HAVE_STRNCASECMP
 #cmakedefine HAVE_STRDUP
 #cmakedefine HAVE_STRERROR_S
 #cmakedefine HAVE_STRERRORLEN_S
 #cmakedefine HAVE_STRICMP
+#cmakedefine HAVE_STRNICMP
 #cmakedefine HAVE_STRNCPY_S
 #cmakedefine HAVE_STRTOLL
 #cmakedefine HAVE_STRTOULL

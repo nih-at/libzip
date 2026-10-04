@@ -218,6 +218,14 @@ typedef long zip_off_t;
 #endif
 #endif
 
+#if !defined(HAVE_STRNCASECMP)
+#if defined(HAVE__STRNICMP)
+#define strncasecmp _strnicmp
+#elif defined(HAVE_STRNICMP)
+#define strncasecmp strnicmp
+#endif
+#endif
+
 #ifndef HAVE_STRNCPY_S
 #define strncpy_s(dest, destsz, src, count) (strncpy((dest), (src), (count)), 0)
 #endif
