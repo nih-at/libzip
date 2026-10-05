@@ -48,6 +48,8 @@ ZIP_EXTERN int zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
     zip_error_init(&error);
     zip_error_set(&error, ze, se);
 
+    error_string = zip_error_strerror(&error);
+
     if (buf == NULL || len == 0) {
         ret = (int)strlen(error_string);
     }
