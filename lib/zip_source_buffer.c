@@ -679,9 +679,8 @@ static bool buffer_make_fragment_writable(buffer_t *buffer, zip_uint64_t fragmen
         return true;
     }
 
-    zip_uint8_t *new_data = malloc(buffer->fragments[fragment_index].length);
+    zip_uint8_t *new_data = _zip_allocate(buffer->fragments[fragment_index].length, 1, 0, error);
     if (new_data == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }
 

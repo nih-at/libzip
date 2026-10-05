@@ -58,8 +58,7 @@ ZIP_EXTERN zip_source_t *zip_source_file_create(const char *fname, zip_uint64_t 
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
-    if ((wfname = (wchar_t *)malloc(sizeof(wchar_t) * size)) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
+    if ((wfname = (wchar_t *)_zip_allocate((zip_uint64_t)size, sizeof(wchar_t), 0, error)) == NULL) {
         return NULL;
     }
     MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, fname, -1, wfname, size);
