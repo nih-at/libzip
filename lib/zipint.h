@@ -246,6 +246,7 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_COMPRESSED_DATA_TRAILING_GARBAGE 25 /* G garbage at end of compressed data */
 #define ZIP_ER_DETAIL_NUL_IN_FILENAME 26                  /* E NUL byte in file name */
 #define ZIP_ER_DETAIL_MISSING_ZIP64_EF 27                 /* E missing Zip64 extra field */
+#define ZIP_ER_DETAIL_NUL_IN_COMMENT 28                   /* E NUL byte in file comment */
 
 
 /* directory entry: general purpose bit flags */

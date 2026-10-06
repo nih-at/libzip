@@ -583,6 +583,23 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
             return -1;
         }
         zde->comment = utf8_string;
+
+        /* Check for a NUL byte in the final comment; the Info-ZIP Unicode
+           Comment extra field can replace zde->comment above, so this must
+           run after that. */
+        if (check_consistency && zde->comment != NULL) {
+            zip_uint8_t *p;
+
+            for (p = zde->comment->raw; p < zde->comment->raw + zde->comment->length; p++) {
+                if (*p == 0) {
+                    zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_NUL_IN_COMMENT);
+                    if (!from_buffer) {
+                        _zip_buffer_free(buffer);
+                    }
+                    return -1;
+                }
+            }
+        }
     }
 
     /* Zip64 */
