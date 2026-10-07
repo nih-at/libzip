@@ -6,6 +6,8 @@
 - Add test program for testing sources, which takes commands from stdin.
 - Switch existing dedicated test programs to one of the above, where possible.
 
+- Add CI build with sanitizers enabled.
+
 ## Fuzzing
 
 - improve AES and PKWARE encryption tests
