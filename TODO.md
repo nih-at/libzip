@@ -51,6 +51,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Features
 
+* Let sources create extra fields, remove WinZip AES special case from `zip_dirent_write()`.
+
 * consistently use `_zip_crypto_clear()` for passwords
 * support setting extra fields from `zip_source`
   * introduce layers of extra fields:

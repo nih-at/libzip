@@ -905,7 +905,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     zip_int32_t ef_size, de_ef_size;
     bool is_zip64;
     bool is_really_zip64;
-    bool is_winzip_aes;
+    zip_uint16_t winzip_aes_version;
     zip_uint8_t buf[CDENTRYSIZE];
     zip_buffer_t *buffer;
 
@@ -945,7 +945,18 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
     is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
     is_zip64 = (flags & (ZIP_FL_LOCAL | ZIP_FL_FORCE_ZIP64)) == (ZIP_FL_LOCAL | ZIP_FL_FORCE_ZIP64) || is_really_zip64;
-    is_winzip_aes = de->encryption_method == ZIP_EM_AES_128 || de->encryption_method == ZIP_EM_AES_192 || de->encryption_method == ZIP_EM_AES_256;
+    if (de->encryption_method == ZIP_EM_AES_128 || de->encryption_method == ZIP_EM_AES_192 || de->encryption_method == ZIP_EM_AES_256) {
+        /* TODO: WinZip also uses AE-2 for bzip compressed files and maybe others? */
+        if (de->uncomp_size < 20) {
+            winzip_aes_version = 2;
+        }
+        else {
+            winzip_aes_version = 1;
+        }
+    }
+    else {
+        winzip_aes_version = 0;
+    }
 
     if (is_zip64) {
         zip_uint8_t ef_zip64[EFZIP64SIZE];
@@ -994,7 +1005,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
         ef = ef64;
     }
 
-    if (is_winzip_aes) {
+    if (winzip_aes_version > 0) {
         zip_uint8_t data[EF_WINZIP_AES_SIZE];
         zip_buffer_t *ef_buffer = _zip_buffer_new(data, sizeof(data));
         zip_extra_field_t *ef_winzip;
@@ -1005,7 +1016,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
             return -1;
         }
 
-        _zip_buffer_put_16(ef_buffer, 2);
+        _zip_buffer_put_16(ef_buffer, winzip_aes_version);
         _zip_buffer_put(ef_buffer, "AE", 2);
         _zip_buffer_put_8(ef_buffer, (zip_uint8_t)(de->encryption_method & 0xff));
         _zip_buffer_put_16(ef_buffer, (zip_uint16_t)de->comp_method);
@@ -1041,7 +1052,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     }
     _zip_buffer_put_16(buffer, ZIP_MAX(is_really_zip64 ? 45 : 0, de->version_needed));
     _zip_buffer_put_16(buffer, de->bitflags);
-    if (is_winzip_aes) {
+    if (winzip_aes_version > 0) {
         _zip_buffer_put_16(buffer, ZIP_CM_WINZIP_AES);
     }
     else {
@@ -1058,7 +1069,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
     _zip_buffer_put_16(buffer, dostime.time);
     _zip_buffer_put_16(buffer, dostime.date);
 
-    if (is_winzip_aes && de->uncomp_size < 20) {
+    if (winzip_aes_version == 2) {
         _zip_buffer_put_32(buffer, 0);
     }
     else {

@@ -9,6 +9,7 @@
 * Use SipHash hash function with per-table random keys. This prevents hash flooding attacks.
 * Add compile time option to limit LZMA window size.
 * Add more comprehensive fuzzers for metadata and write code paths.
+* Fix `zip_source_is_seekable()`.
 
 # 1.11.4 [2025-05-23]
 
