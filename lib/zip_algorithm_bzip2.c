@@ -47,7 +47,8 @@ struct ctx {
 
 
 static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
-    zip_uint64_t compressed_size = (zip_uint64_t)((double)uncompressed_size * 1.006);
+    /* According to the bzip2 man page, random data is coded at about 8.05 bits per byte, giving an expansion of around 0.5%. However, in practice the per-block overhead doubles the factor for compression level 1. Add an additional safety factor. */
+    zip_uint64_t compressed_size = uncompressed_size + uncompressed_size / 64 + 1024;
 
     if (compressed_size < uncompressed_size) {
         return ZIP_UINT64_MAX;
