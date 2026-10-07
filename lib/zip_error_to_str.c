@@ -50,7 +50,12 @@ ZIP_EXTERN int zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
 
     error_string = zip_error_strerror(&error);
 
-    ret = snprintf_s(buf, ZIP_MIN(len, SIZE_MAX), error_string, strlen(error_string));
+    if (buf == NULL || len == 0) {
+        ret = (int)strlen(error_string);
+    }
+    else {
+        ret = snprintf_s(buf, ZIP_MIN(len, SIZE_MAX), "%s", error_string);
+    }
 
     zip_error_fini(&error);
 
