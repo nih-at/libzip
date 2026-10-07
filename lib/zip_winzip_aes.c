@@ -111,6 +111,7 @@ zip_winzip_aes_t *_zip_winzip_aes_new(const zip_uint8_t *password, zip_uint64_t 
 
     if (!_zip_crypto_pbkdf2(password, password_length, salt, key_length / 2, PBKDF2_ITERATIONS, buffer, 2 * key_length + WINZIP_AES_PASSWORD_VERIFY_LENGTH)) {
         zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        _zip_crypto_clear(buffer, sizeof(buffer));
         _zip_winzip_aes_free(ctx);
         return NULL;
     }

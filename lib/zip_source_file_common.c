@@ -252,12 +252,7 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
         return zip_error_to_data(&ctx->error, data, len);
 
     case ZIP_SOURCE_FREE:
-        free(ctx->fname);
-        free(ctx->tmpname);
-        if (ctx->f) {
-            ctx->ops->close(ctx);
-        }
-        free(ctx);
+        zip_source_file_context_free(ctx);
         return 0;
 
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES:
@@ -412,7 +407,12 @@ void zip_source_file_context_free(zip_source_file_context_t *ctx) {
         return;
     }
 
+    if (ctx->f) {
+        ctx->ops->close(ctx);
+    }
     free(ctx->fname);
+    zip_error_fini(&ctx->error);
+    zip_error_fini(&ctx->stat_error);
     free(ctx->tmpname);
     free(ctx);
 }
