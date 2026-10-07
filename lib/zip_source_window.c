@@ -57,6 +57,11 @@ struct window {
     bool needs_seek;
 };
 
+typedef struct window window_t;
+
+static window_t *window_new(void);
+static void window_free(window_t *ctx);
+
 static zip_int64_t window_read(zip_source_t *, void *, void *, zip_uint64_t, zip_source_cmd_t);
 
 
@@ -105,24 +110,16 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
         ctx->end = start + (zip_uint64_t)length;
         ctx->end_valid = true;
     }
-    zip_stat_init(&ctx->stat);
     ctx->stat_invalid = st_invalid;
     if (attributes != NULL) {
         (void)memcpy_s(&ctx->attributes, sizeof(ctx->attributes), attributes, sizeof(ctx->attributes));
-    }
-    else {
-        zip_file_attributes_init(&ctx->attributes);
     }
     if (dostime != NULL) {
         ctx->dostime = *dostime;
         ctx->dostime_valid = true;
     }
-    else {
-        ctx->dostime_valid = false;
-    }
     ctx->source_archive = source_archive;
     ctx->source_index = source_index;
-    zip_error_init(&ctx->error);
     ctx->supports = (zip_source_supports(src) & (ZIP_SOURCE_SUPPORTS_SEEKABLE | ZIP_SOURCE_SUPPORTS_REOPEN)) | (zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_GET_DOS_TIME, ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, ZIP_SOURCE_FREE, -1));
     if (ctx->end_valid) {
         ctx->supports |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(ZIP_SOURCE_AT_EOF);
@@ -131,14 +128,14 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
 
     if (st) {
         if (_zip_stat_merge(&ctx->stat, st, error) < 0) {
-            free(ctx);
+            window_free(ctx);
             return NULL;
         }
     }
 
     window_source = zip_source_layered_create(src, window_read, ctx, error);
     if (window_source == NULL) {
-        free(ctx);
+        window_free(ctx);
         return NULL;
     }
     if (!take_ownership) {
@@ -191,7 +188,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
         return zip_error_to_data(&ctx->error, data, len);
 
     case ZIP_SOURCE_FREE:
-        free(ctx);
+        window_free(ctx);
         return 0;
 
     case ZIP_SOURCE_OPEN:
@@ -415,4 +412,37 @@ int _zip_register_source(zip_t *za, zip_source_t *src) {
     za->open_source[za->nopen_source++] = src;
 
     return 0;
+}
+
+static window_t *window_new(void) {
+    window_t *ctx;
+
+    if ((ctx = (window_t *)malloc(sizeof(window_t))) == NULL) {
+        return NULL;
+    }
+
+    ctx->start = 0;
+    ctx->end = 0;
+    ctx->end_valid = false;
+    ctx->source_archive = NULL;
+    ctx->source_index = 0;
+    ctx->offset = 0;
+    zip_stat_init(&ctx->stat);
+    ctx->stat_invalid = 0;
+    zip_file_attributes_init(&ctx->attributes);
+    ctx->dostime_valid = false;
+    zip_error_init(&ctx->error);
+    ctx->supports = 0;
+    ctx->needs_seek = false;
+
+    return ctx;
+}
+
+static void window_free(window_t *ctx) {
+    if (ctx == NULL) {
+        return;
+    }
+
+    zip_error_fini(&ctx->error);
+    free(ctx);
 }

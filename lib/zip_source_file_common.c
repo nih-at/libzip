@@ -96,18 +96,14 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         return NULL;
     }
 
-    if ((ctx = (zip_source_file_context_t *)malloc(sizeof(zip_source_file_context_t))) == NULL) {
+    if ((ctx = zip_source_file_context_new(ops, ops_userdata)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
-
-    ctx->ops = ops;
-    ctx->ops_userdata = ops_userdata;
-    ctx->fname = NULL;
     if (fname) {
         if ((ctx->fname = ops->string_duplicate(ctx, fname)) == NULL) {
             zip_error_set(error, ZIP_ER_MEMORY, 0);
-            free(ctx);
+            zip_source_file_context_free(ctx);
             return NULL;
         }
     }
@@ -119,30 +115,18 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         ctx->st.name = NULL;
         ctx->st.valid &= ~ZIP_STAT_NAME;
     }
-    else {
-        zip_stat_init(&ctx->st);
-    }
 
     if (ctx->len > 0) {
         ctx->st.size = ctx->len;
         ctx->st.valid |= ZIP_STAT_SIZE;
     }
 
-    zip_error_init(&ctx->stat_error);
-
-    ctx->tmpname = NULL;
-    ctx->fout = NULL;
-
-    zip_error_init(&ctx->error);
-    zip_file_attributes_init(&ctx->attributes);
-
     ctx->supports = ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_SUPPORTS, ZIP_SOURCE_TELL, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     zip_source_file_stat_init(&sb);
     if (!ops->stat(ctx, &sb)) {
         _zip_error_copy(error, &ctx->error);
-        free(ctx->fname);
-        free(ctx);
+        zip_source_file_context_free(ctx);
         return NULL;
     }
 
@@ -153,9 +137,8 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
             zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
         }
         else {
-            zip_error_set(&ctx->stat_error, ZIP_ER_READ, ENOENT);
-            free(ctx->fname);
-            free(ctx);
+            zip_error_set(error, ZIP_ER_READ, ENOENT);
+            zip_source_file_context_free(ctx);
             return NULL;
         }
     }
@@ -169,8 +152,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
 
             if (ctx->start + ctx->len > sb.size) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
-                free(ctx->fname);
-                free(ctx);
+                zip_source_file_context_free(ctx);
                 return NULL;
             }
 
@@ -203,8 +185,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
     }
 
     if ((zs = zip_source_function_create(read_file, ctx, error)) == NULL) {
-        free(ctx->fname);
-        free(ctx);
+        zip_source_file_context_free(ctx);
         return NULL;
     }
 
@@ -398,4 +379,40 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
         zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
         return -1;
     }
+}
+
+zip_source_file_context_t *zip_source_file_context_new(zip_source_file_operations_t *ops, void *ops_userdata) {
+    zip_source_file_context_t *ctx;
+
+    if ((ctx = (zip_source_file_context_t *)malloc(sizeof(zip_source_file_context_t))) == NULL) {
+        return NULL;
+    }
+
+    zip_error_init(&ctx->error);
+    ctx->supports = 0;
+    ctx->fname = NULL;
+    ctx->f = NULL;
+    zip_stat_init(&ctx->st);
+    zip_file_attributes_init(&ctx->attributes);
+    zip_error_init(&ctx->stat_error);
+    ctx->start = 0;
+    ctx->len = 0;
+    ctx->offset = 0;
+    ctx->tmpname = NULL;
+    ctx->fout = NULL;
+    ctx->temp_output_created = false;
+
+    ctx->ops = ops;
+    ctx->ops_userdata = ops_userdata;
+
+    return ctx;
+}
+void zip_source_file_context_free(zip_source_file_context_t *ctx) {
+    if (ctx == NULL) {
+        return;
+    }
+
+    free(ctx->fname);
+    free(ctx->tmpname);
+    free(ctx);
 }

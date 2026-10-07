@@ -71,6 +71,11 @@ struct read_data {
     buffer_t *out;
 };
 
+typedef struct read_data read_data_t;
+
+static read_data_t *read_data_new(void);
+static void read_data_free(read_data_t *ctx);
+
 /* TODO:
     buffer_write
 */
@@ -143,7 +148,7 @@ ZIP_EXTERN zip_source_t *zip_source_buffer_fragment_create(const zip_buffer_frag
 }
 
 zip_source_t *zip_source_buffer_fragment_with_attributes_create(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int freep, zip_file_attributes_t *attributes, zip_error_t *error) {
-    struct read_data *ctx;
+    read_data_t *ctx;
     zip_source_t *zs;
     buffer_t *buffer;
 
@@ -156,26 +161,19 @@ zip_source_t *zip_source_buffer_fragment_with_attributes_create(const zip_buffer
         return NULL;
     }
 
-    if ((ctx = (struct read_data *)malloc(sizeof(*ctx))) == NULL) {
+    if ((ctx = read_data_new()) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         buffer_free(buffer);
         return NULL;
     }
 
     ctx->in = buffer;
-    ctx->out = NULL;
-    ctx->mtime = time(NULL);
     if (attributes) {
         (void)memcpy_s(&ctx->attributes, sizeof(ctx->attributes), attributes, sizeof(ctx->attributes));
     }
-    else {
-        zip_file_attributes_init(&ctx->attributes);
-    }
-    zip_error_init(&ctx->error);
 
     if ((zs = zip_source_function_create(read_data, ctx, error)) == NULL) {
-        buffer_free(ctx->in);
-        free(ctx);
+        read_data_free(ctx);
         return NULL;
     }
 
@@ -188,7 +186,7 @@ zip_source_t *zip_source_buffer_with_attributes(zip_t *za, const void *data, zip
 }
 
 static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
-    struct read_data *ctx = (struct read_data *)state;
+    read_data_t *ctx = (read_data_t *)state;
 
     switch (cmd) {
     case ZIP_SOURCE_AT_EOF:
@@ -223,9 +221,7 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
         return zip_error_to_data(&ctx->error, data, len);
 
     case ZIP_SOURCE_FREE:
-        buffer_free(ctx->in);
-        buffer_free(ctx->out);
-        free(ctx);
+        read_data_free(ctx);
         return 0;
 
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
@@ -463,6 +459,7 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
     bool have_empty_fragment = false;
 
     if ((buffer = malloc(sizeof(*buffer))) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
 
@@ -692,4 +689,31 @@ static bool buffer_make_fragment_writable(buffer_t *buffer, zip_uint64_t fragmen
     buffer->fragments[fragment_index].free_data = true;
 
     return true;
+}
+
+static read_data_t *read_data_new(void) {
+    read_data_t *ctx = (read_data_t *)malloc(sizeof(read_data_t));
+    if (ctx == NULL) {
+        return NULL;
+    }
+
+    zip_error_init(&ctx->error);
+    ctx->in = NULL;
+    ctx->out = NULL;
+    ctx->mtime = time(NULL);
+    zip_file_attributes_init(&ctx->attributes);
+    return ctx;
+}
+
+static void read_data_free(read_data_t *ctx) {
+    if (ctx == NULL) {
+        return;
+    }
+
+    zip_error_fini(&ctx->error);
+    buffer_free(ctx->in);
+    buffer_free(ctx->out);
+    /* TODO: attributes */
+
+    free(ctx);
 }
