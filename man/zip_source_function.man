@@ -9,19 +9,19 @@
 .\" modification, are permitted provided that the following conditions
 .\" are met:
 .\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer.
+.\" notice, this list of conditions and the following disclaimer.
 .\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in
-.\"    the documentation and/or other materials provided with the
-.\"    distribution.
+.\" notice, this list of conditions and the following disclaimer in
+.\" the documentation and/or other materials provided with the
+.\" distribution.
 .\" 3. The names of the authors may not be used to endorse or promote
-.\"    products derived from this software without specific prior
-.\"    written permission.
+.\" products derived from this software without specific prior
+.\" written permission.
 .\"
 .\" THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
 .\" OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 .\" WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+.\" ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
 .\" DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 .\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
 .\" GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -30,7 +30,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.TH "ZIP_SOURCE_FUNCTION" "3" "January 5, 2023" "NiH" "Library Functions Manual"
+.TH "ZIP_SOURCE_FUNCTION" "3" "August 5, 2026" "NiH" "Library Functions Manual"
 .nh
 .if n .ad l
 .SH "NAME"
@@ -137,6 +137,10 @@ again after calling
 Return 1 if an empty source should be accepted as a valid zip archive.
 This is the default if this command is not supported by a source.
 File system backed sources should return 0.
+.SS "\fRZIP_SOURCE_AT_EOF\fR"
+Return 1 if the source is at end-of-file, 0 if not.
+If the source does not support this command, the library will try to read one byte to check for end-of-file.
+This byte will be returned on the next read.
 .SS "\fRZIP_SOURCE_BEGIN_WRITE\fR"
 Prepare the source for writing.
 Use this to create any temporary file(s).
@@ -244,7 +248,7 @@ of size
 \fIlen\fR.
 Return the number of bytes placed into
 \fIdata\fR
-on success, and zero for end-of-file.
+on success, zero for end-of-file, \-1 for error.
 .SS "\fRZIP_SOURCE_REMOVE\fR"
 Remove the underlying file.
 This is called if a zip archive is empty when closed.
@@ -264,8 +268,8 @@ to decode the arguments into the following struct:
 .sp
 .RS 0n
 struct zip_source_args_seek {
-    zip_int64_t offset;
-    int whence;
+zip_int64_t offset;
+int whence;
 };
 .RE
 .fi

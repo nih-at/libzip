@@ -108,10 +108,14 @@
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
   VALUES</a></h1>
-<p class="Pp">Upon successful completion, a <var class="Ft">struct
-    zip_file</var> pointer is returned. Otherwise, <code class="Dv">NULL</code>
-    is returned and the error code in <var class="Ar">archive</var> is set to
-    indicate the error.</p>
+<p class="Pp">Upon successful completion, a <var class="Ft">zip_file_t</var>
+    pointer is returned. Otherwise, <code class="Dv">NULL</code> is returned and
+    the error code in <var class="Ar">archive</var> is set to indicate the
+    error.</p>
+<p class="Pp">The returned <var class="Ft">zip_file_t</var> is owned by the
+    caller and must be closed with
+    <a class="Xr" href="zip_fclose.html">zip_fclose(3)</a> when no longer
+    needed.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
@@ -172,7 +176,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 18, 2017</td>
+    <td class="foot-date">October 4, 2026</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>
