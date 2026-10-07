@@ -97,7 +97,7 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
         }
     }
 
-    if ((ctx = (struct window *)malloc(sizeof(*ctx))) == NULL) {
+    if ((ctx = window_new()) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
