@@ -1,0 +1,7 @@
+# invalid zip archive (compressed size too small): partial read of stored entry past compressed data
+return 1
+arguments -- test.zip  cat_partial 0 5 -1
+file test.zip incons-stored-data-shorter.zip
+stderr
+can't open file at index '0': Zip archive inconsistent: entry 0: compressed and uncompressed sizes don't match for stored file
+end-of-inline-data
