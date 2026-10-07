@@ -1,6 +1,6 @@
 /*
-  zip_dir_add.c -- add directory
-  Copyright (C) 1999-2025 Dieter Baron and Thomas Klausner
+  zip_allocate.c -- allocate memory for an array, checking for overflow
+  Copyright (C) 2026 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -31,60 +31,46 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <stdlib.h>
+
 #include "zipint.h"
 
-#include <stdlib.h>
-#include <string.h>
+/* Compute nmemb * element_size + extra_bytes as a size_t.
 
+   Returns false and sets error to ZIP_ER_MEMORY if the result would
+   overflow size_t; the computation itself never overflows and never
+   divides by zero, so it is safe for arbitrary (for example, archive
+   derived) arguments. error may be NULL. */
 
-/* NOTE: Signed due to -1 on error.  See zip_add.c for more details. */
+bool _zip_size_of_array(zip_uint64_t nmemb, zip_uint64_t element_size, zip_uint64_t extra_bytes, size_t *sizep, zip_error_t *error) {
+    zip_uint64_t max_size = (zip_uint64_t)SIZE_MAX;
 
-ZIP_EXTERN zip_int64_t zip_dir_add(zip_t *za, const char *name, zip_flags_t flags) {
-    size_t len;
-    zip_int64_t idx;
-    char *s;
-    zip_source_t *source;
-
-    if (ZIP_IS_RDONLY(za)) {
-        zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
-        return -1;
+    if (extra_bytes > max_size || (element_size > 0 && nmemb > (max_size - extra_bytes) / element_size)) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return false;
     }
 
-    if (name == NULL) {
-        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-        return -1;
+    *sizep = (size_t)(nmemb * element_size + extra_bytes);
+
+    return true;
+}
+
+
+/* Allocate nmemb * element_size + extra_bytes bytes, checking the size
+   computation for overflow. error may be NULL. */
+
+void *_zip_allocate(zip_uint64_t nmemb, zip_uint64_t element_size, zip_uint64_t extra_bytes, zip_error_t *error) {
+    size_t size;
+    void *memory;
+
+    if (!_zip_size_of_array(nmemb, element_size, extra_bytes, &size, error)) {
+        return NULL;
     }
 
-    s = NULL;
-    len = strlen(name);
-
-    if (len == 0 || name[len - 1] != '/') {
-        if ((s = (char *)_zip_allocate(len, 1, 2, &za->error)) == NULL) {
-            return -1;
-        }
-        (void)strncpy_s(s, len + 2, name, len);
-        s[len] = '/';
-        s[len + 1] = '\0';
+    if ((memory = malloc(size)) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
-    if ((source = zip_source_buffer(za, NULL, 0, 0)) == NULL) {
-        free(s);
-        return -1;
-    }
-
-    idx = _zip_file_replace(za, ZIP_UINT64_MAX, s ? s : name, source, flags);
-
-    free(s);
-
-    if (idx < 0) {
-        zip_source_free(source);
-    }
-    else {
-        if (zip_file_set_external_attributes(za, (zip_uint64_t)idx, 0, ZIP_OPSYS_DEFAULT, ZIP_EXT_ATTRIB_DEFAULT_DIR) < 0) {
-            zip_delete(za, (zip_uint64_t)idx);
-            return -1;
-        }
-    }
-
-    return idx;
+    return memory;
 }

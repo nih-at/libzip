@@ -67,9 +67,8 @@ zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t leng
         return NULL;
     }
 
-    r = (zip_uint8_t *)malloc(length + (nulp ? 1 : 0));
+    r = (zip_uint8_t *)_zip_allocate(length, 1, nulp ? 1 : 0, error);
     if (r == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
 
