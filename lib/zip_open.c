@@ -524,6 +524,7 @@ static bool check_magic(zip_uint64_t offset, zip_buffer_t *buffer, zip_uint64_t 
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
     zip_uint64_t i;
     zip_uint64_t min, max, j, tail_length;
+    zip_int64_t local_metadata_size;
     struct zip_dirent temp;
     int detail;
 
@@ -556,8 +557,10 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        tail_length = _zip_string_length(cd->entry[i].orig->filename) + LENTRYSIZE;
-        if (ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size, tail_length) || ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->offset + tail_length, cd->entry[i].orig->comp_size)) {
+        /* Check the minimum local entry size before using the compressed size
+           to locate a possible data descriptor. */
+        tail_length = LENTRYSIZE;
+        if (cd->entry[i].orig->offset > cd->offset || tail_length > cd->offset - cd->entry[i].orig->offset || cd->entry[i].orig->comp_size > cd->offset - cd->entry[i].orig->offset - tail_length) {
             zip_error_set(error, ZIP_ER_NOZIP, 0);
             return -1;
         }
@@ -576,7 +579,7 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        if (_zip_dirent_read(&temp, za->src, NULL, true, cd->is_zip64, cd->entry[i].orig->comp_size, true, error) == -1) {
+        if ((local_metadata_size = _zip_dirent_read(&temp, za->src, NULL, true, cd->is_zip64, cd->entry[i].orig->comp_size, true, error)) == -1) {
             if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
                 zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), i));
             }
@@ -586,6 +589,26 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
 
         if (_zip_headercomp(cd->entry[i].orig, &temp) != 0) {
             zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_HEADER_MISMATCH, i));
+            _zip_dirent_finalize(&temp);
+            return -1;
+        }
+
+        /* The local filename, extra fields, and data descriptor can differ
+           from their central directory counterparts. Use the actual local
+           metadata size for the final bound. */
+        tail_length = (zip_uint64_t)local_metadata_size;
+        if (cd->entry[i].orig->offset > cd->offset || tail_length > cd->offset - cd->entry[i].orig->offset || cd->entry[i].orig->comp_size > cd->offset - cd->entry[i].orig->offset - tail_length) {
+            zip_error_set(error, ZIP_ER_NOZIP, 0);
+            _zip_dirent_finalize(&temp);
+            return -1;
+        }
+        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + tail_length;
+
+        if (j > max) {
+            max = j;
+        }
+        if (max > (zip_uint64_t)cd->offset) {
+            zip_error_set(error, ZIP_ER_NOZIP, 0);
             _zip_dirent_finalize(&temp);
             return -1;
         }
