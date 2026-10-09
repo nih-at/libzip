@@ -1,0 +1,4 @@
+# 2026-10-04：尚未压缩的空条目不应被当作缺失的 deflate 数据流。
+description read an empty changed entry before compression
+arguments -n pending.zip add empty.txt "" set_file_compression 0 deflate 0 cat 0 cat_partial 0 0 0 unchange_all
+return 0
