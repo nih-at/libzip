@@ -58,7 +58,11 @@ ZIP_EXTERN int zip_file_extra_field_delete(zip_t *za, zip_uint64_t idx, zip_uint
         zip_error_set(&za->error, ZIP_ER_RDONLY, 0);
         return -1;
     }
-    if (ZIP_WANT_TORRENTZIP(za)) {
+    /*
+      Since torrentzip does not allow extra fields, allow deleting all of them.
+      Also, this is used internally by zip_file_replace().
+     */
+    if (ZIP_WANT_TORRENTZIP(za) && (ef_idx != ZIP_EXTRA_FIELD_ALL || (flags & ZIP_EF_BOTH) != ZIP_EF_BOTH)) {
         zip_error_set(&za->error, ZIP_ER_NOT_ALLOWED, 0);
         return -1;
     }

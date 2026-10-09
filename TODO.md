@@ -1,12 +1,20 @@
 ## Tests
 
+### Infrastructure
+
 - Make `ziptool` take command from stdin, one command per line.
 - Add option to `ziptool` to not abort on errors.
 - Find framework for C unit tests.
 - Add test program for testing sources, which takes commands from stdin.
 - Switch existing dedicated test programs to one of the above, where possible.
 
+### CI
+
 - Add CI build with sanitizers enabled.
+
+### Specific Tests
+
+- Add test to add/replace/remove files in torrentzip archives.
 
 ## Fuzzing
 
@@ -14,7 +22,7 @@
 - add more
 - review memset() uses
 
-### Torrentzip
+## Torrentzip
 
 - Handle data sources with unknown uncompressed size: if we forced ZIP64 and don't need it, return specific error (so calling code can decide what to do (e. g. clear torrentzip flag and call `zip_close()` again)).
 
