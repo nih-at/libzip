@@ -7,6 +7,7 @@ set(TEST_PROGRAMS
   exact_read_integrity
   fopen_unchanged
   fseek
+  hash_nul_name
   source_seek
 )
 

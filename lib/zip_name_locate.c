@@ -46,7 +46,6 @@ ZIP_EXTERN zip_int64_t zip_name_locate(zip_t *za, const char *fname, zip_flags_t
 
 
 zip_int64_t _zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zip_error_t *error) {
-    int (*cmp)(const char *, const char *);
     size_t fname_length;
     zip_string_t *str = NULL;
     const char *fn, *p;
@@ -69,35 +68,45 @@ zip_int64_t _zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zi
     }
 
     if ((flags & (ZIP_FL_ENC_UTF_8 | ZIP_FL_ENC_RAW)) == 0 && fname[0] != '\0') {
+        zip_uint32_t converted_length;
+
         if ((str = _zip_string_new((const zip_uint8_t *)fname, (zip_uint16_t)strlen(fname), flags, error)) == NULL) {
             return -1;
         }
-        if ((fname = (const char *)_zip_string_get(str, NULL, 0, error)) == NULL) {
+        if ((fname = (const char *)_zip_string_get(str, &converted_length, 0, error)) == NULL) {
             _zip_string_free(str);
             return -1;
         }
+        fname_length = converted_length;
     }
 
     if (flags & (ZIP_FL_NOCASE | ZIP_FL_NODIR | ZIP_FL_ENC_RAW | ZIP_FL_ENC_STRICT)) {
         /* can't use hash table */
-        cmp = (flags & ZIP_FL_NOCASE) ? strcasecmp : strcmp;
 
         for (i = 0; i < za->nentry; i++) {
-            fn = _zip_get_name(za, i, flags, error);
+            zip_uint32_t fn_length;
+            size_t fn_compare_length;
+
+            fn = _zip_get_name_len(za, i, flags, &fn_length, error);
 
             /* newly added (partially filled) entry or error */
             if (fn == NULL) {
                 continue;
             }
 
+            fn_compare_length = fn_length;
+
             if (flags & ZIP_FL_NODIR) {
                 p = strrchr(fn, '/');
                 if (p) {
+                    fn_compare_length -= (size_t)(p + 1 - fn);
                     fn = p + 1;
                 }
             }
 
-            if (cmp(fname, fn) == 0) {
+            /* compare against the full name, so that a name which only
+               matches up to an embedded NUL byte is not found */
+            if (fn_compare_length == fname_length && ((flags & ZIP_FL_NOCASE) ? strncasecmp(fname, fn, fname_length) : memcmp(fname, fn, fname_length)) == 0) {
                 _zip_error_clear(error);
                 _zip_string_free(str);
                 return (zip_int64_t)i;
@@ -109,7 +118,7 @@ zip_int64_t _zip_name_locate(zip_t *za, const char *fname, zip_flags_t flags, zi
         return -1;
     }
     else {
-        zip_int64_t ret = _zip_hash_lookup(za->names, (const zip_uint8_t *)fname, flags, error);
+        zip_int64_t ret = _zip_hash_lookup(za->names, (const zip_uint8_t *)fname, (zip_uint32_t)fname_length, flags, error);
         _zip_string_free(str);
         return ret;
     }
