@@ -1,3 +1,8 @@
+# 1.12.1 [Unreleased]
+
+* Fix compile issue on MinGW.
+* Fix adding and replacing files in torrentzip archives.
+
 # 1.12 [2026-10-07]
 
 * Keep order of local extra fields, even if an identical extra field is present in the central directory.
