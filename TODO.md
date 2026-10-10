@@ -36,14 +36,18 @@
 
 ## Prefixes
 
-The zip format allows for a prefix before the zip archive.  This is used by some applications to store additional data before the zip archive, e.g. self-extracting archives.  libzip can open such archives, but currently does not support creating such archives and deletes the prefix if the archive is modified.
+Reading is done: archives with data prepended (e.g. a self-extractor stub, or
+Chrome CRX files) are now opened transparently, and the prefix length can be
+retrieved with `zip_get_archive_prefix_length()`.
 
-According to the zip format specification, the offsets in archives with a prefix are relative to the start of the file, not the start of the zip archive itself. 
+Still missing:
 
-Suggestions for the API:
+* retrieve the raw prefix data, not just its length
+* `zip_close()` silently drops any existing prefix when rewriting an archive
+* set/attach a prefix when writing an archive, e.g. for adding extractors to
+  self-extracting zip archives:
 ````c
 zip_set_archive_prefix(struct zip *za, const zip_uint8_t *data, zip_uint64_t length);
-const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp);
 ````
 
 ## Compression

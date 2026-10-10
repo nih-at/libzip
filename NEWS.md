@@ -2,6 +2,7 @@
 
 * Fix compile issue on MinGW.
 * Fix adding and replacing files in torrentzip archives.
+* Support opening zip archives with data prepended (e.g. self-extractor stubs); add `zip_get_archive_prefix_length()` to retrieve the prefix length.
 
 # 1.12 [2026-10-07]
 
