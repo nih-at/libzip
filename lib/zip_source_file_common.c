@@ -40,6 +40,7 @@
 #include "zip_source_file.h"
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
+static void free_context_keep_file(zip_source_file_context_t *ctx);
 
 static void zip_source_file_stat_init(zip_source_file_stat_t *st) {
     st->size = 0;
@@ -126,7 +127,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
     zip_source_file_stat_init(&sb);
     if (!ops->stat(ctx, &sb)) {
         _zip_error_copy(error, &ctx->error);
-        zip_source_file_context_free(ctx);
+        free_context_keep_file(ctx);
         return NULL;
     }
 
@@ -138,7 +139,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         }
         else {
             zip_error_set(error, ZIP_ER_READ, ENOENT);
-            zip_source_file_context_free(ctx);
+            free_context_keep_file(ctx);
             return NULL;
         }
     }
@@ -152,7 +153,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
 
             if (ctx->start + ctx->len > sb.size) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
-                zip_source_file_context_free(ctx);
+                free_context_keep_file(ctx);
                 return NULL;
             }
 
@@ -185,7 +186,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
     }
 
     if ((zs = zip_source_function_create(read_file, ctx, error)) == NULL) {
-        zip_source_file_context_free(ctx);
+        free_context_keep_file(ctx);
         return NULL;
     }
 
@@ -402,6 +403,13 @@ zip_source_file_context_t *zip_source_file_context_new(zip_source_file_operation
 
     return ctx;
 }
+/* Free a context whose source was never created.  The caller still owns
+   the file it passed in and closes it itself. */
+static void free_context_keep_file(zip_source_file_context_t *ctx) {
+    ctx->f = NULL;
+    zip_source_file_context_free(ctx);
+}
+
 void zip_source_file_context_free(zip_source_file_context_t *ctx) {
     if (ctx == NULL) {
         return;
