@@ -5,6 +5,7 @@ set(TEST_PROGRAMS
   can_clone_file
   crypto_clear
   exact_read_integrity
+  fdopen_cloexec
   fopen_unchanged
   fseek
   source_seek
@@ -92,6 +93,13 @@ if (TARGET zlib)
   set(path "$<TARGET_FILE_DIR:zlib>;${path}")
 endif()
 string(REPLACE ";" "\\;" path "${path}")
+
+# Exercise the descriptor owned by zip_fdopen on platforms supporting atomic
+# close-on-exec duplication. The program returns 77 when that API is unavailable.
+add_test(NAME fdopen_cloexec COMMAND fdopen_cloexec
+  ${CMAKE_CURRENT_SOURCE_DIR}/data/aaaaaaaa-stored.zip
+  ${CMAKE_CURRENT_SOURCE_DIR}/data/bogus.zip)
+set_tests_properties(fdopen_cloexec PROPERTIES SKIP_RETURN_CODE 77 ENVIRONMENT "PATH=${path}")
 
 # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
