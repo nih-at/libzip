@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+import sys
+
+# This script adds a name to the `THANKS` file.
+# It checks if the name is already present and only adds it if it's not.
+# If a similar name is found, it will ask for confirmation before adding it.
+
+THANKS_FILE = "THANKS"
+END_OF_HEADER = "Thanks to these people for suggestions, testing, and bug reports:"
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"Usage: python3 {sys.argv[0]} <name>", file=sys.stderr)
+        sys.exit(1)
+
+    name_to_add = sys.argv[1].strip()
+    header = []
+    header_found = False
+    existing_names = []
+
+    try:
+        with open(THANKS_FILE, "r") as f:
+            for line in f:
+                line = line.strip()
+                header.append(line)
+                if line == END_OF_HEADER:
+                    header_found = True
+                    break
+
+            if not header_found:
+                print(f"{sys.argv[0]}: end of header not found in {THANKS_FILE}", file=sys.stderr)
+                sys.exit(1)
+
+            for line in f:
+                line = line.strip()
+                if line:
+                    existing_names.append(line.strip())
+    except Exception as e:
+        print(f"{sys.argv[0]}: can't open {THANKS_FILE}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    
+    if name_to_add in existing_names:
+        print(f"{name_to_add} is already in the THANKS file.")
+        sys.exit(0)
+
+    similar_names = find_similar_names(name_to_add, existing_names)
+    if similar_names:
+        print(f"Similar names found: {', '.join(similar_names)}")
+        response = input(f"Do you still want to add '{name_to_add}'? (y/N): ")
+        if not response.lower().startswith('y'):
+            print("Aborting.")
+            sys.exit(0)
+
+    existing_names.append(name_to_add)
+    existing_names = sorted(existing_names)
+
+    with open(THANKS_FILE, "w") as f:
+        f.writelines(header)
+        print("", file=f)
+        for name in existing_names:
+            print(name, file=f)
+    print(f"Added '{name_to_add}' to the THANKS file.")
+
+def find_similar_names(name, existing_names):
+    similar_names = []
+
+    # This could be improved with more sophisticated similarity checks.
+    # Currently it ignores case and spaces and checks for whole word prefix matches.
+
+    lower_name = name.lower()
+    no_spaces_name = lower_name.replace(" ", "")
+
+    for existing_name in existing_names:
+        lower_existing_name = existing_name.lower()
+        no_spaces_existing_name = lower_existing_name.replace(" ", "")
+
+        if lower_name == lower_existing_name or no_spaces_name == no_spaces_existing_name or lower_existing_name.startswith(f"{lower_name} ") or lower_name.startswith(f"{lower_existing_name} "):
+            similar_names.append(existing_name)
+
+    return sorted(similar_names)
+
+if __name__ == "__main__":
+    main()
