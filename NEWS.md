@@ -2,6 +2,7 @@
 
 * Fix compile issue on MinGW.
 * Fix adding and replacing files in torrentzip archives.
+* Support `zip_fseek()`/`zip_file_is_seekable()` for stored (uncompressed) entries encrypted with WinZip AES. Seeking means the entry's authentication code can no longer be verified unless it ends up being read fully, contiguously, from the start.
 
 # 1.12 [2026-10-07]
 
