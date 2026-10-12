@@ -1,7 +1,8 @@
 # 1.12.1 [Unreleased]
 
-* Fix compile issue on MinGW.
+* Fix compile issues.
 * Fix adding and replacing files in torrentzip archives.
+* Fix error handling in `zip_source_filep_create()`.
 
 # 1.12 [2026-10-07]
 

@@ -52,6 +52,7 @@ struct zip_source_file_context {
     /* reading */
     char *fname;                      /* name of file to read from */
     void *f;                          /* file to read from */
+    bool close_file;                  /* whether to close file f on free */
     zip_stat_t st;                    /* stat information passed in */
     zip_file_attributes_t attributes; /* additional file attributes */
     zip_error_t stat_error;           /* error returned for stat */

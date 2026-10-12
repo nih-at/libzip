@@ -5,6 +5,7 @@ set(TEST_PROGRAMS
   can_clone_file
   crypto_clear
   exact_read_integrity
+  filep_error
   fopen_unchanged
   fseek
   source_seek

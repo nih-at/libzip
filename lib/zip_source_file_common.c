@@ -108,6 +108,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         }
     }
     ctx->f = file;
+    ctx->close_file = false; /* Avoid closing the file on error returns. */
     ctx->start = start;
     ctx->len = length;
     if (st) {
@@ -189,6 +190,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         return NULL;
     }
 
+    ctx->close_file = true; /* On success, the file is owned by ctx. */
     return zs;
 }
 
@@ -387,6 +389,7 @@ zip_source_file_context_t *zip_source_file_context_new(zip_source_file_operation
     ctx->supports = 0;
     ctx->fname = NULL;
     ctx->f = NULL;
+    ctx->close_file = true;
     zip_stat_init(&ctx->st);
     zip_file_attributes_init(&ctx->attributes);
     zip_error_init(&ctx->stat_error);
@@ -407,7 +410,7 @@ void zip_source_file_context_free(zip_source_file_context_t *ctx) {
         return;
     }
 
-    if (ctx->f) {
+    if (ctx->f && ctx->close_file) {
         ctx->ops->close(ctx);
     }
     free(ctx->fname);
