@@ -265,6 +265,7 @@ ZIP_EXTERN void zip_register_progress_callback(zip_t *za, zip_progress_callback_
 
     if (progress_callback == NULL) {
         zip_register_progress_callback_with_state(za, 0, NULL, NULL, NULL);
+        return;
     }
 
     if ((ud = (struct legacy_ud *)malloc(sizeof(*ud))) == NULL) {
