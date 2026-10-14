@@ -1,0 +1,3 @@
+# deflate stream is truncated but its emitted data matches the CRC and size
+program truncated_compressed_data
+return 0
