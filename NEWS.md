@@ -1,3 +1,7 @@
+# 1.13 [Unreleased]
+
+* Include website in repository and source distribution.
+
 # 1.12.1 [2026-10-14]
 
 * Protect against denial of service attack (advisory GHSA-m3wq-j48p-jxwh, actually fixed in 1.12).
