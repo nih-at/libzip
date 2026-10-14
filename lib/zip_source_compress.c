@@ -261,7 +261,8 @@ static zip_int64_t compress_read(zip_source_t *src, struct context *ctx, void *d
 
         case ZIP_COMPRESSION_NEED_DATA:
             if (ctx->end_of_input) {
-                /* TODO: error: stream not ended, but no more input */
+                /* stream not ended, but no more input: compressed data is truncated */
+                zip_error_set(&ctx->error, ZIP_ER_INCONS, ZIP_ER_DETAIL_COMPRESSED_DATA_TRUNCATED);
                 end = true;
                 break;
             }
