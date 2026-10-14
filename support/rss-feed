@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+
+import argparse
+import datetime
+from markdown import Markdown
+from feedgen.feed import FeedGenerator
+from zoneinfo import ZoneInfo
+
+class LineReader:
+    def __init__(self, file):
+        self.file = file
+        self.ungot_line = None
+
+    def readline(self):
+        if self.ungot_line is not None:
+            line = self.ungot_line
+            self.ungot_line = None
+            return line
+        else:
+            return self.file.readline()
+    
+    def unget_line(self, line):
+        self.ungot_line = line
+    
+class Post:
+    def __init__(self, title: str, text: str, date: datetime.datetime|None = None, id: str|None = None):
+        self.title = title
+        self.date = date
+        self.text = text
+        if id is None:
+            if title.startswith("Released libzip "):
+                version = title[len("Released libzip "):].strip()
+                id = f"release-{version}"
+            else:
+                id = title.replace(" ", "-").lower()
+        self.id = "https://libzip.org/news/" + id
+        self.link = "https://libzip.org/news/#" + title.replace(" ", "-").replace(".", "").lower()
+
+
+class RSSBuilder:
+    def __init__(self, news_file, output_file, cutoff_days):
+        self.news_file = news_file
+        self.output_file = output_file
+        self.site_url = "https://libzip.org/"
+        self.cutoff_days = cutoff_days
+
+    def run(self):
+        news_filename = self.news_file
+
+        posts = []
+        newest_date = None
+        now = datetime.datetime.now().replace(tzinfo=ZoneInfo('UTC'))
+
+        with open(news_filename, "r") as f:
+            reader = LineReader(f)
+            while True:
+                line = reader.readline()
+                if not line:
+                    break
+
+                if line.startswith("## "):
+                    title = line[3:].strip()
+                    date_line = reader.readline().strip()
+                    if date_line.startswith("<p class=\"post-date\">") and date_line.endswith("</p>"):
+                        date = date_line[21:-4].strip()
+                        date = datetime.datetime.strptime(date, "%B %d, %Y").replace(tzinfo=ZoneInfo('UTC'))
+                        if newest_date is None or date > newest_date:
+                            newest_date = date
+                    else:
+                        reader.unget_line(date_line)
+                        date = None
+                    
+                    lines = []
+                    while True:
+                        line = reader.readline()
+                        if not line or line.startswith("## "):
+                            if line.startswith("## "):
+                                reader.unget_line(line)
+                            break
+                        elif line.startswith("!download "):
+                            args = line[len("!download "):].strip().split()
+                            if not args:
+                                print(f"Warning: !download directive with no arguments in post '{title}'")
+                            else:
+                                version = args[0]
+                                if len(args) > 1:
+                                    formats = args[1:]
+                                else:
+                                    formats = ["xz", "gz"]
+                                lines.append("Download release:\n\n")
+                                for format in formats:
+                                    filename = f"libzip-{version}.tar.{format}"
+                                    lines.append(f"- [{filename}]({self.site_url}download/{filename})\n")
+                                lines.append("\n")
+                        else:
+                            lines.append(line)
+
+                    if date is not None and (now-date).days > self.cutoff_days:
+                        continue
+                    text = "".join(lines)
+                    post = Post(title, text, date)
+                    posts.append(post)
+
+        feed_url = self.output_file
+        if feed_url.startswith("site/"):
+            feed_url = feed_url[len("site/"):]
+        feed_url = self.site_url + feed_url
+        feed = FeedGenerator()
+        feed.id(feed_url)
+        feed.title("libzip")
+        feed.subtitle("A C library for reading, creating, and modifying zip archives.")
+        feed.link(href=self.site_url, rel="alternate")
+        feed.link(href=feed_url, rel="self")
+        feed.updated(newest_date)
+
+        for post in posts:
+            entry = feed.add_entry()
+            entry.id(post.id)
+            entry.title(post.title)
+            entry.link(href=post.link)
+            if post.date is not None:
+                entry.published(post.date)
+            entry.content(Markdown().convert(post.text), type="html")
+
+        feed.atom_file(self.output_file)
+
+def main():
+    argparser = argparse.ArgumentParser(description="Build RSS feed for libzip.")
+    argparser.add_argument("--cutoff-days", type=int, default=365 * 3, help="Number of days to include posts from.")
+    args = argparser.parse_args()
+    builder = RSSBuilder("docs/news.md", "site/feed.xml", args.cutoff_days)
+    builder.run()
+
+if __name__ == "__main__":
+    main()
+

@@ -1,0 +1,1 @@
+!man zip_register_progress_callback_with_state

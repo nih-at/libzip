@@ -1,0 +1,1 @@
+!man zip_fdopen

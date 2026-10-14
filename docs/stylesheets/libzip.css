@@ -1,0 +1,129 @@
+:root {
+    --header-background: #202020;
+    --header-color: rgba(255, 255, 255, 0.75);
+}
+
+body {
+    font-family: Merriweather;
+    font-weight: 400;
+    color: rgb(81, 81, 81);
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+    font-family: MerriweatherSans;
+    font-weight: bold;
+    text-transform: none;
+}
+
+p.subtitle {
+    font-family: MerriweatherSans;
+    font-weight: bold;
+    font-size: 1.25em;
+    margin-top: -1.5em;
+}
+
+.md-typeset {
+    a {
+        color: #268bd2;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #268bd2;
+        text-decoration: underline;
+    }
+}
+
+a.md-nav__link[href^="http://"],
+a.md-nav__link[href^="https://"] {
+
+    span:after {
+        content: "";
+        display: inline-block;
+        height: 1em;
+        width: 1em;
+        vertical-align: middle;
+        color: inherit;
+        background-color: currentColor;
+        mask-image: var(--md-icon-external);
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+    }
+}
+
+.md-header__extra {
+    margin-left: 2rem;
+    height: 1.25rem;
+
+    svg {
+        height: 100%;
+    }
+}
+
+div.manual-text {
+
+    h1.Sh,
+    h2.Ss {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+}
+
+.md-sidebar__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+
+    /*    nav {
+        flex: 1;
+    }*/
+}
+
+div.md-nav__footer {
+    margin-top: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+div.md-nav__header {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-left: 1em;
+    margin-right: 1em;
+
+    .title {
+        margin-top: auto;
+        font-weight: var(--font-weight-heavy);
+        font-size: 4em;
+        margin-bottom: .5em;
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+    }
+
+    .subtitle {
+        font-size: 2.25em;
+        margin-bottom: .75em;
+    }
+
+    .version {
+        font-size: 1.5em;
+        margin-bottom: 2em;
+    }
+}
+
+p.post-date {
+    margin-top: -0.6rem;
+    margin-bottom: 0.83rem;
+    color: rgba(81, 81, 81, 0.75);
+}

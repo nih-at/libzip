@@ -1,0 +1,12 @@
+BIN_DIR=$(dirname "$(readlink -f "$0")")
+ROOT_DIR=$(dirname "$BIN_DIR")
+
+if [ -z "$PYTHONPATH" ]; then
+    PYTHONPATH=$ROOT_DIR/support/packages
+else
+    PYTHONPATH=$ROOT_DIR/support/packages:$PYTHONPATH
+fi
+export PYTHONPATH
+
+zensical build
+$BIN_DIR/rss-feed

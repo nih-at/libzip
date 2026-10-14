@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'PTMono';
+    src: url("/assets/fonts/PTM55F.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+
+@font-face {
+    font-family: 'PTMono';
+    src: url("/assets/fonts/PTM75F.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-variant: normal;
+}

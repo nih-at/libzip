@@ -1,6 +1,11 @@
-# 1.12.1 [Unreleased]
+# 1.13 [Unreleased]
 
 * Report an error when compressed data ends before the end of the compression stream instead of silently accepting it.
+* Include website in repository and source distribution.
+
+# 1.12.1 [2026-10-14]
+
+* Protect against denial of service attack (advisory GHSA-m3wq-j48p-jxwh, actually fixed in 1.12).
 * Fix compile issues.
 * Fix adding and replacing files in torrentzip archives.
 * Fix error handling in `zip_source_filep_create()`.

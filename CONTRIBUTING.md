@@ -4,7 +4,7 @@ We welcome contributions to libzip. Whether you want to report a bug, request a 
 
 libzip is our hobby project and we work on it in our free time. It might take us a few weeks to review your contribution, so please be patient. 
 
-libzip is developed in the open on GitHub. We use GitHub issues to track bugs and feature requests, and pull requests for code contributions. Before starting a contribution, please check the existing issues and discussions to avoid duplication. Also, please follow the [coding guidelines](CODING.md).
+libzip is developed in the open on GitHub. We use GitHub issues to track bugs and feature requests, and pull requests for code contributions. Before starting a contribution, please check the existing issues and discussions to avoid duplication. Also, please follow the [coding guidelines](https://libzip.org/explanations/coding/).
 
 ## Ways to Get in Touch
 

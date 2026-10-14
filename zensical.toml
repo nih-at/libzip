@@ -1,0 +1,91 @@
+[project]
+site_name = "libzip"
+site_description = "A C library for reading, creating, and modifying zip archives."
+site_author = "Dieter Baron and Thomas Klausner"
+site_url = "https://new.libzip.org/"
+repo_url = "https://github.com/nih-at/libzip"
+copyright = "&copy; 2026 by Dieter Baron and Thomas Klausner"
+
+nav = [
+  { "libzip" = "index.md" },
+  { "Download" = "download/index.md" },
+  { "Tutorials" = [
+    { "index.md" = "tutorials/index.md" },
+  ]},
+  { "How-To Guides" = [
+    { "index.md" = "guides/index.md" },
+    { "Building libzip" = "guides/building.md" },
+  ]},
+  { "Reference" = "documentation/index.md" },
+  { "Explanations" = [
+    { "index.md" = "explanations/index.md" },
+    { "Coding Guidelines" = "guides/coding.md" },
+    { "Thread Safety" = "explanations/threads.md" },
+    { "API Changes" = "explanations/api-changes.md" },
+  ]},
+  { "News" = "news.md" },
+  { "License" = "license.md" },
+  { "Repository" = "https://github.com/nih-at/libzip" },
+  { "Security" = "security/index.md" },
+  { "Specifications" = "specifications/index.md" },
+  { "Projects Using libzip" = "users.md" },
+  { "Packages" = "packages.md" },
+  { "Contributing" = "contributing.md" },
+]
+
+extra_css = [
+  "stylesheets/merriweather.css",
+  "stylesheets/ptmono.css",
+  "stylesheets/libzip.css"
+]
+#extra_javascript = ["javascripts/extra.js"]
+
+
+[project.extra]
+generator = false
+icons = { "external" = "octicons/link-external-16" }
+version = "1.12.1"
+release_date = "October 14, 2026"
+
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.nih.download]
+url_prefix = "https://libzip.org/download/"
+[project.markdown_extensions.nih.man_pages]
+path = ["man"]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.emoji]
+emoji_index = "zensical.extensions.emoji.twemoji"
+emoji_generator = "zensical.extensions.emoji.to_svg"
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.snippets]
+check_paths = true
+restrict_base_path = false
+[project.markdown_extensions.pymdownx.superfences]
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions.zensical.extensions.macros]
+
+
+[project.theme]
+custom_dir = "docs/.overrides"
+favicon = "assets/images/favicon.ico"
+font = false
+#logo = "assets/logo.png"
+features = [
+    "navigation.indexes",
+    "toc.integrate",
+]
+
+
+
+[project.theme.icon]
+logo = "nih"
+repo = "fontawesome/brands/github"
+
+[project.theme.palette]
+primary = "custom"
+
