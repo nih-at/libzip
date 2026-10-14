@@ -1,0 +1,10 @@
+# invalid zip archive (deflate stream truncated): report truncated compressed data, not CRC error
+return 1
+arguments -c test.zip cat 0
+file test.zip incons-deflate-data-truncated.zip
+stdout
+test
+end-of-inline-data
+stderr
+can't read file at index '0': Zip archive inconsistent: compressed data truncated
+end-of-inline-data
