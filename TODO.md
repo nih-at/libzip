@@ -28,8 +28,6 @@
 
 ## Other
 
-- Document website building process and dependencies.
-
 - Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
 
 - Integrate website into main repository.
