@@ -9,6 +9,7 @@ set(TEST_PROGRAMS
   fopen_unchanged
   fseek
   source_seek
+  truncated_compressed_data
 )
 
 set(GETOPT_USERS
