@@ -61,6 +61,8 @@ file [API-CHANGES.md](API-CHANGES.md).
 
 More information and the latest version can always be found on [libzip.org](https://libzip.org). The official repository is at [GitHub](https://github.com/nih-at/libzip/).
 
+If you want to contribute to libzip, please read the [contributing](CONTRIBUTING.md) and [coding](CODING.md) guidelines first.
+
 If you want to reach the authors in private, use <info@libzip.org>.
 
 [![Packaging status](https://repology.org/badge/tiny-repos/libzip.svg)](https://repology.org/project/libzip/versions)
