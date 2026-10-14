@@ -244,6 +244,10 @@ static zip_compression_status_t process(void *ud, zip_uint8_t *data, zip_uint64_
     }
 
     *length = ctx->out.pos;
+    if (!ctx->compress && ret == 0) {
+        /* decompression: ret == 0 means the frame is completely decoded */
+        return ZIP_COMPRESSION_END;
+    }
     if (ctx->in.pos == ctx->in.size) {
         return ZIP_COMPRESSION_NEED_DATA;
     }
