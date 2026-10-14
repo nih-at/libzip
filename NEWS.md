@@ -1,5 +1,6 @@
 # 1.12.1 [Unreleased]
 
+* Report an error when compressed data ends before the end of the compression stream instead of silently accepting it.
 * Fix compile issues.
 * Fix adding and replacing files in torrentzip archives.
 * Fix error handling in `zip_source_filep_create()`.
