@@ -40,9 +40,7 @@
 
 #include "config.h"
 
-#ifndef HAVE_GETOPT
-#include "getopt.h"
-#endif
+#include "compat/compat.h"
 
 #include "zip.h"
 

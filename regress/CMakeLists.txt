@@ -11,11 +11,6 @@ set(TEST_PROGRAMS
   source_seek
 )
 
-set(GETOPT_USERS
-  fread
-  tryopen
-)
-
 set(HOLE_USERS
   hole
   ziptool_regress
@@ -31,12 +26,16 @@ foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   else()
     add_executable(${PROGRAM} programs/${PROGRAM}.c)
     target_link_libraries(${PROGRAM} zip)
+    
     if (ENABLE_COVERAGE)
       target_compile_options(${PROGRAM} PRIVATE -coverage)
       target_link_options(${PROGRAM} PRIVATE -coverage)
     endif()
   endif()
-  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
+  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+  if (COMPAT_SOURCES)
+    target_link_libraries(${PROGRAM} compat)
+  endif()
 endforeach()
 
 # The internal symbol is hidden when zip is a shared library, so link against the file directly.

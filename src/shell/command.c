@@ -1,9 +1,9 @@
-#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "shell.h"
 
+#include "compat/compat.h"
 
 const command_t *find_command(const char *name) {
     size_t i;

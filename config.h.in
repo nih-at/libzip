@@ -34,6 +34,8 @@
 #cmakedefine HAVE_FCHMOD
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
+#cmakedefine HAVE_GETOPT
+#cmakedefine HAVE_GETOPT_LONG
 #cmakedefine HAVE_GETPROGNAME
 #cmakedefine HAVE_GETSECURITYINFO
 #cmakedefine HAVE_GNUTLS
@@ -60,6 +62,7 @@
 #cmakedefine HAVE_STDBOOL_H
 #cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
+#cmakedefine HAVE_VASPRINTF
 #cmakedefine HAVE_WINDOWS_CRYPTO
 #cmakedefine SIZEOF_OFF_T ${SIZEOF_OFF_T}
 #cmakedefine SIZEOF_SIZE_T ${SIZEOF_SIZE_T}
