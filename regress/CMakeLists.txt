@@ -7,8 +7,10 @@ set(TEST_PROGRAMS
   exact_read_integrity
   filep_error
   fopen_unchanged
+  fread
   fseek
   source_seek
+  tryopen
 )
 
 set(HOLE_USERS
@@ -17,7 +19,7 @@ set(HOLE_USERS
   ziptool_regress_nonrandom
 )
 
-set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${GETOPT_USERS} ${HOLE_USERS})
+set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
 
 foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
