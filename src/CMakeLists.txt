@@ -15,13 +15,13 @@ set(ZIPSH_SOURCES
 
 set(COMPAT_SOURCES)
 if (NOT HAVE_GETOPT)
-  list(APPEND COMPAT_SOURCES getopt.c)
+  list(APPEND COMPAT_SOURCES compat/getopt.c)
 endif()
 if (NOT HAVE_VASPRINTF)
-  list(APPEND COMPAT_SOURCES vasprintf.c)
+  list(APPEND COMPAT_SOURCES compat/vasprintf.c)
 endif()
 if (NOT HAVE_GETOPT_LONG)
-  list(APPEND COMPAT_SOURCES getopt_long.c)
+  list(APPEND COMPAT_SOURCES compat/getopt_long.c)
 endif()
 
 if (COMPAT_SOURCES)
