@@ -1,4 +1,7 @@
-#include "compat/compat.h"
+#include "compat/src_compat.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 int vasprintf(char **strp, const char *fmt, va_list ap) {
     int size = vsnprintf(NULL, 0, fmt, ap);

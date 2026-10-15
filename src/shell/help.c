@@ -8,7 +8,7 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
     for (size_t i = 0; i < n_commands; i++) {
         size_t len = strlen(commands[i]->name);
         if (len > longest_command_name) {
-            longest_command_name = len;
+            longest_command_name = (int)len;
         }
     }
     const char *command_name = invocation->arguments[0].string;
@@ -57,7 +57,7 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
                     }
                 }
                 if (len > longest_option_name) {
-                    longest_option_name = len;
+                    longest_option_name = (int)len;
                 }
             }
             printf("\nOptions:\n");
@@ -73,12 +73,12 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
                     printf("    ");
                 }
                 if (cmd->options[i].long_name) {
-                    width += strlen(cmd->options[i].long_name) + 4;
+                    width += (int)strlen(cmd->options[i].long_name) + 4;
                     printf(" --%s", cmd->options[i].long_name);
                 }
                 if (cmd->options[i].argument_type != ARGUMENT_TYPE_BOOL) {
                     if (cmd->options[i].argument_name) {
-                        width += strlen(cmd->options[i].argument_name) + 1;
+                        width += (int)strlen(cmd->options[i].argument_name) + 1;
                         printf(" %s", cmd->options[i].argument_name);
                     }
                     else {
@@ -97,7 +97,7 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
             for (size_t i = 0; i < cmd->n_arguments; i++) {
                 size_t len = strlen(cmd->arguments[i].name);
                 if (len > longest_argument_name) {
-                    longest_argument_name = len;
+                    longest_argument_name = (int)len;
                 }
             }
             printf("\nArguments:\n");

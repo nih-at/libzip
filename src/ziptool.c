@@ -48,7 +48,7 @@
 #endif
 #endif
 
-#include "compat/compat.h"
+#include "compat/src_compat.h"
 
 #include "zip.h"
 

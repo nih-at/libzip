@@ -14,6 +14,9 @@ set(ZIPSH_SOURCES
 )
 
 set(COMPAT_SOURCES)
+if (NOT HAVE_GETLINE)
+  list(APPEND COMPAT_SOURCES compat/getline.c)
+endif()
 if (NOT HAVE_GETOPT)
   list(APPEND COMPAT_SOURCES compat/getopt.c)
 endif()
@@ -26,7 +29,7 @@ endif()
 
 if (COMPAT_SOURCES)
   add_library(compat STATIC ${COMPAT_SOURCES})
-  target_include_directories(compat PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+  target_include_directories(compat PRIVATE ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 endif()
 
 add_library(shell STATIC ${SHELL_SOURCES})

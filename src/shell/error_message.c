@@ -4,6 +4,8 @@
 
 #include "shell.h"
 
+#include "compat/src_compat.h"
+
 error_message_t *error_message_new(const char *message) {
     error_message_t *error = malloc(sizeof(error_message_t));
     if (error == NULL) {

@@ -17,7 +17,7 @@ set(COMMANDS help)
 
 foreach(source_file ${SOURCES})
   file(READ ${source_file} source_content)
-  string(REGEX MATCHALL "COMMAND[_A-Z]*\\(([^,]+), ([^\\)]+)" command_matches ${source_content})
+  string(REGEX MATCHALL "COMMAND[_A-Z]*\\(([^,]+), ([^\\)]+)" command_matches "${source_content}")
   foreach(match ${command_matches})
     list(APPEND COMMANDS ${CMAKE_MATCH_1})
   endforeach()

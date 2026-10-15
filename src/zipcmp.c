@@ -49,7 +49,7 @@
 
 #include "zip.h"
 
-#include "compat/compat.h"
+#include "compat/src_compat.h"
 
 #include "diff_output.h"
 

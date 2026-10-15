@@ -34,6 +34,7 @@
 #cmakedefine HAVE_FCHMOD
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
+#cmakedefine HAVE_GETLINE
 #cmakedefine HAVE_GETOPT
 #cmakedefine HAVE_GETOPT_LONG
 #cmakedefine HAVE_GETPROGNAME

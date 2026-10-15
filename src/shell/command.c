@@ -3,7 +3,7 @@
 
 #include "shell.h"
 
-#include "compat/compat.h"
+#include "compat/src_compat.h"
 
 const command_t *find_command(const char *name) {
     size_t i;
@@ -20,9 +20,15 @@ const command_t *find_command(const char *name) {
 int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *invocation, error_message_t **error_message) {
     char short_options[256];
     char *p = short_options;
-    struct option long_options[cmd->n_options + 1];
+    struct option *long_options;
     int long_options_index = 0;
     int c;
+
+    long_options = (struct option *)malloc((cmd->n_options + 1) * sizeof(struct option));
+    if (!long_options) {
+        *error_message = error_message_new("out of memory");
+        return -1;
+    }
 
     for (size_t i = 0; i < cmd->n_options; i++) {
         if (cmd->options[i].long_name) {
@@ -52,18 +58,16 @@ int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *inv
                     value.b = true;
                 }
                 else if (optarg == NULL) {
-                    if (error_message) {
-                        *error_message = error_message_new_format("Missing argument for option %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'});
-                    }
+                    *error_message = error_message_new_format("Missing argument for option %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'});
+                    free(long_options);
                     return -1;
                 }
                 else {
                     error_message_t *local_error_message = NULL;
                     if (!convert_argument(optarg, &value, cmd->options[i].argument_type, &local_error_message)) {
-                        if (error_message) {
-                            *error_message = error_message_new_format("Invalid argument for option %s: %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'}, error_message_get(local_error_message));
-                        }
+                        *error_message = error_message_new_format("Invalid argument for option %s: %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'}, error_message_get(local_error_message));
                         error_message_free(local_error_message);
+                        free(long_options);
                         return -1;
                     }
                 }
@@ -72,9 +76,8 @@ int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *inv
             }
         }
         if (!found) {
-            if (error_message) {
-                *error_message = error_message_new_format("Unknown option: %s", argv[optind - 1]);
-            }
+            *error_message = error_message_new_format("Unknown option: %s", argv[optind - 1]);
+            free(long_options);
             return -1;
         }
     }

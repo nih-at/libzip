@@ -1,10 +1,12 @@
+#include "compat/src_compat.h"
+
 /* This code is public domain -- Will Hartung 4/9/09 */
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "compat/src_compat.h"
 
-ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
+zip_int64_t getline(char **lineptr, size_t *n, FILE *stream) {
     char *bufptr = NULL;
     char *p = bufptr;
     size_t size;
@@ -35,7 +37,7 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
     }
     p = bufptr;
     while (c != EOF) {
-        if ((p - bufptr) > (size - 1)) {
+        if ((size_t)(p - bufptr) > (size - 1)) {
             size = size + 128;
             bufptr = realloc(bufptr, size);
             if (bufptr == NULL) {
@@ -53,5 +55,5 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
     *lineptr = bufptr;
     *n = size;
 
-    return p - bufptr - 1;
+    return (zip_int64_t)(p - bufptr - 1);
 }

@@ -37,6 +37,8 @@
 
 #include "shell.h"
 
+#include "compat/src_compat.h"
+
 words_t *words = NULL;
 
 bool execute_line(char *line, error_message_t **error_message) {
@@ -55,7 +57,7 @@ bool execute_line(char *line, error_message_t **error_message) {
             }
             ok = false;
         }
-        else if (!execute_command(cmd, words->n_words, words->words, &local_error_message)) {
+        else if (!execute_command(cmd, (int)words->n_words, words->words, &local_error_message)) {
             if (error_message) {
                 *error_message = error_message_new_format("%s: %s", words->words[0], error_message_get(local_error_message));
                 error_message_free(local_error_message);
