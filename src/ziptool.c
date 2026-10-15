@@ -48,10 +48,7 @@
 #endif
 #endif
 
-#ifndef HAVE_GETOPT
-#include "getopt.h"
-#endif
-extern int optopt;
+#include "compat/compat.h"
 
 #include "zip.h"
 
