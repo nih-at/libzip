@@ -1,5 +1,3 @@
-check_function_exists(getopt HAVE_GETOPT)
-
 set(TEST_PROGRAMS
   add_from_filep
   can_clone_file
@@ -42,14 +40,6 @@ endforeach()
 
 # The internal symbol is hidden when zip is a shared library, so link against the file directly.
 target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
-
-# both programs using source_hole.c also use getopt
-if(NOT HAVE_GETOPT)
-  foreach(PROGRAM IN LISTS GETOPT_USERS HOLE_USERS)
-    target_sources(${PROGRAM} PRIVATE ../src/getopt.c)
-    target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
-  endforeach()
-endif(NOT HAVE_GETOPT)
 
 foreach(PROGRAM IN LISTS HOLE_USERS)
   target_sources(${PROGRAM} PRIVATE programs/source_hole.c)
