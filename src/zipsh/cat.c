@@ -74,7 +74,7 @@ argument_definition_t cat_arguments[] = {
 };
 
 option_definition_t cat_options[] = {
-    {'i', "index", "file argument is index instead of name", ARGUMENT_TYPE_BOOL},
+    {'i', "index", NULL, "file argument is index instead of name", ARGUMENT_TYPE_BOOL},
 };
 
 COMMAND(cat, "show contents of file in archive");

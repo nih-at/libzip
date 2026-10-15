@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "zipsh.h"
+#include "shell.h"
 
 error_message_t *error_message_new(const char *message) {
     error_message_t *error = malloc(sizeof(error_message_t));

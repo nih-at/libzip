@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zipsh.h"
+#include "shell.h"
 
 #define convert_int8(out, str, error_message) convert_int(out, str, sizeof(int8_t), error_message)
 #define convert_int16(out, str, error_message) convert_int(out, str, sizeof(int16_t), error_message)

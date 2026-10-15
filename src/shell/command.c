@@ -2,18 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zipsh.h"
+#include "shell.h"
 
-bool help(invocation_t *invocation, error_message_t **error_message);
-
-/* clang-format off */
-argument_definition_t help_arguments[] = {
-    {"command", "command to display help for", ARGUMENT_TYPE_STRING, false, {.string = NULL}},
-};
-
-COMMAND_NO_OPTIONS(help, "display help information");
-
-/* clang-format on */
 
 const command_t *find_command(const char *name) {
     size_t i;
@@ -99,9 +89,7 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
     int first_argument;
 
     if (invocation == NULL) {
-        if (error_message) {
-            *error_message = error_message_new("Out of memory");
-        }
+        *error_message = error_message_new("out of memory");
         return false;
     }
 
@@ -112,9 +100,7 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
     }
 
     if (argc - first_argument > cmd->n_arguments) {
-        if (error_message) {
-            *error_message = error_message_new("Too many arguments for command");
-        }
+        *error_message = error_message_new("Too many arguments for command");
         invocation_free(invocation);
         return false;
     }
@@ -123,8 +109,7 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
         if (i + first_argument < argc) {
             error_message_t *local_error_message = NULL;
             if (!convert_argument(argv[i + first_argument], &invocation->arguments[i], cmd->arguments[i].type, &local_error_message)) {
-                fprintf(stderr, "Invalid argument for %s: %s\n", cmd->arguments[i].name, error_message_get(local_error_message));
-                error_message_free(local_error_message);
+                *error_message = error_message_new_format("Invalid argument for %s: %s", cmd->arguments[i].name, error_message_get(local_error_message));
                 invocation_free(invocation);
                 return false;
             }
@@ -133,9 +118,7 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
             invocation->arguments[i] = cmd->arguments[i].default_value;
         }
         else {
-            if (error_message) {
-                *error_message = error_message_new_format("Missing argument: %s", cmd->arguments[i].name);
-            }
+            *error_message = error_message_new_format("Missing argument: %s", cmd->arguments[i].name);
             invocation_free(invocation);
             return false;
         }
@@ -143,66 +126,4 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
     ok = cmd->function(invocation, error_message);
     invocation_free(invocation);
     return ok;
-}
-
-bool help(invocation_t *invocation, error_message_t **error_message) {
-    const char *command_name = invocation->arguments[0].string;
-    if (command_name == NULL) {
-        printf("Available commands:\n");
-        for (size_t i = 0; i < n_commands; i++) {
-            printf("  %s: %s\n", commands[i]->name, commands[i]->help);
-        }
-    }
-    else {
-        const command_t *cmd = find_command(command_name);
-        if (cmd == NULL) {
-            if (error_message) {
-                *error_message = error_message_new_format("Unknown command: %s", command_name);
-            }
-            return false;
-        }
-        // Display help for the specific command
-        printf("Usage: %s", cmd->name);
-        if (cmd->n_options > 0) {
-            printf(" [options]");
-        }
-        for (size_t i = 0; i < cmd->n_arguments; i++) {
-            if (cmd->arguments[i].required) {
-                printf(" %s", cmd->arguments[i].name);
-            }
-            else {
-                printf(" [%s]", cmd->arguments[i].name);
-            }
-        }
-        printf("\n");
-        printf("%s\n", cmd->help);
-        if (cmd->n_options > 0) {
-            printf("Options:\n");
-            for (size_t i = 0; i < cmd->n_options; i++) {
-                if (cmd->options[i].id < 256) {
-                    printf("  -%c", cmd->options[i].id);
-                    if (cmd->options[i].long_name) {
-                        printf(",");
-                    }
-                }
-                else {
-                    printf("     ");
-                }
-                if (cmd->options[i].long_name) {
-                    printf(" --%s", cmd->options[i].long_name);
-                }
-                if (cmd->options[i].argument_type != ARGUMENT_TYPE_BOOL) {
-                    printf(" arg");
-                }
-                printf(": %s\n", cmd->options[i].help);
-            }
-        }
-        if (cmd->n_arguments > 0) {
-            printf("Arguments:\n");
-            for (size_t i = 0; i < cmd->n_arguments; i++) {
-                printf("  %s: %s\n", cmd->arguments[i].name, cmd->arguments[i].help);
-            }
-        }
-    }
-    return true;
 }

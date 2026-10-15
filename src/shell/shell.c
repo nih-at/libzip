@@ -35,64 +35,35 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "zipconf.h"
-#include "zipsh.h"
+#include "shell.h"
 
-zip_t *archive = NULL;
+words_t *words = NULL;
 
 bool execute_line(char *line, error_message_t **error_message) {
-    wordexp_t words;
     bool ok = true;
-    size_t len = strlen(line);
 
-    if (len == 0) {
-        return true;
-    }
-    if (line[len - 1] == '\n') {
-        line[len - 1] = '\0';
-    }
-
-    int ret = wordexp(line, &words, 0);
-    if (ret != 0) {
-        if (error_message) {
-            switch (ret) {
-            case WRDE_BADCHAR:
-                *error_message = error_message_new("bad character in input");
-                break;
-            case WRDE_BADVAL:
-                *error_message = error_message_new("bad value in input");
-                break;
-            case WRDE_NOSPACE:
-                *error_message = error_message_new("no space for wordexp");
-                break;
-            case WRDE_SYNTAX:
-                *error_message = error_message_new("syntax error in input");
-                break;
-            default:
-                *error_message = error_message_new("unknown syntax error");
-                break;
-            }
-        }
+    if (!words_parse(words, line, error_message)) {
         return false;
     }
-    if (words.we_wordc > 0) {
+
+    if (words->n_words > 0) {
         error_message_t *local_error_message = NULL;
-        const command_t *cmd = find_command(words.we_wordv[0]);
+        const command_t *cmd = find_command(words->words[0]);
         if (cmd == NULL) {
             if (error_message) {
-                *error_message = error_message_new_format("unknown command '%s'", words.we_wordv[0]);
+                *error_message = error_message_new_format("unknown command '%s'", words->words[0]);
             }
             ok = false;
         }
-        else if (!execute_command(cmd, words.we_wordc, words.we_wordv, &local_error_message)) {
+        else if (!execute_command(cmd, words->n_words, words->words, &local_error_message)) {
             if (error_message) {
-                *error_message = error_message_new_format("%s: %s", words.we_wordv[0], error_message_get(local_error_message));
+                *error_message = error_message_new_format("%s: %s", words->words[0], error_message_get(local_error_message));
                 error_message_free(local_error_message);
             }
             ok = false;
         }
     }
-    wordfree(&words);
+
     return ok;
 }
 
@@ -118,37 +89,28 @@ bool execute_lines(const char *filename, FILE *input) {
 }
 
 
-int main(int argc, char *argv[]) {
-    /* Process command-line arguments and open zip archive. */
-
+bool shell_loop(const char *script_filename) {
     FILE *input = stdin;
     const char *file_name = "*stdin*";
-    archive = NULL;
 
-    switch (argc) {
-    case 3:
-        input = fopen(argv[2], "r");
-        if (input == NULL) {
-            fprintf(stderr, "Failed to open file: %s\n", argv[2]);
-            exit(1);
-        }
-        file_name = argv[2];
-        // fall through
-    case 2:
-        archive = zip_open(argv[1], 0, NULL);
-        if (archive == NULL) {
-            fprintf(stderr, "Failed to open archive: %s\n", argv[1]);
-            exit(1);
-        }
-        break;
-    default:
-        fprintf(stderr, "Usage: %s archive [command_file]\n", argv[0]);
+    if ((words = words_new()) == NULL) {
+        fprintf(stderr, "Failed to allocate words structure\n");
         exit(1);
+    }
+
+    if (script_filename != NULL) {
+        input = fopen(script_filename, "r");
+        if (input == NULL) {
+            fprintf(stderr, "Failed to open file: %s\n", script_filename);
+            exit(1);
+        }
+        file_name = script_filename;
     }
 
     bool ok = execute_lines(file_name, input);
     if (input != stdin) {
         fclose(input);
     }
-    return ok ? 0 : 1;
+    words_free(words);
+    return ok;
 }
