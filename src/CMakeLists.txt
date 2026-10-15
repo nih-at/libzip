@@ -27,7 +27,7 @@ if (NOT HAVE_GETOPT_LONG)
   list(APPEND COMPAT_SOURCES compat/getopt_long.c)
 endif()
 
-if (TARGET compat)
+if (COMPAT_SOURCES)
   add_library(compat STATIC ${COMPAT_SOURCES})
   target_include_directories(compat PRIVATE ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 endif()
