@@ -149,3 +149,14 @@ If you are building on a 32-bit Linux system it might be necessary
 to define `_FILE_OFFSET_BITS` to `64`. Your distro will need to provide
 a `fts.h` file that is new enough to support this, or the build
 will break in `zipcmp`.
+
+
+## Building the Website
+
+The website uses [Zensical](https://zensical.org/).
+
+It currently only works with Zensical version 0.0.40, we're working on making it compatible with newer versions.
+
+Install it with `pip install zensical==0.0.40`.
+
+To view the website locally, run `./support/serve` and open `http://localhost:8002` in your web browser.

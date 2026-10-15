@@ -11,19 +11,19 @@
    modification, are permitted provided that the following conditions
    are met:
    1. Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+   notice, this list of conditions and the following disclaimer.
    2. Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in
-      the documentation and/or other materials provided with the
-      distribution.
+   notice, this list of conditions and the following disclaimer in
+   the documentation and/or other materials provided with the
+   distribution.
    3. The names of the authors may not be used to endorse or promote
-      products derived from this software without specific prior
-      written permission.
+   products derived from this software without specific prior
+   written permission.
   
    THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
    OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+   ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
    GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -140,6 +140,12 @@
     File system backed sources should return 0.</p>
 </section>
 <section class="Ss">
+<h2 class="Ss" id="ZIP_SOURCE_AT_EOF"><a class="permalink" href="#ZIP_SOURCE_AT_EOF"><code class="Dv">ZIP_SOURCE_AT_EOF</code></a></h2>
+<p class="Pp">Return 1 if the source is at end-of-file, 0 if not. If the source
+    does not support this command, the library will try to read one byte to
+    check for end-of-file. This byte will be returned on the next read.</p>
+</section>
+<section class="Ss">
 <h2 class="Ss" id="ZIP_SOURCE_BEGIN_WRITE"><a class="permalink" href="#ZIP_SOURCE_BEGIN_WRITE"><code class="Dv">ZIP_SOURCE_BEGIN_WRITE</code></a></h2>
 <p class="Pp">Prepare the source for writing. Use this to create any temporary
     file(s).</p>
@@ -229,7 +235,8 @@
 <h2 class="Ss" id="ZIP_SOURCE_READ"><a class="permalink" href="#ZIP_SOURCE_READ"><code class="Dv">ZIP_SOURCE_READ</code></a></h2>
 <p class="Pp">Read data into the buffer <var class="Ar">data</var> of size
     <var class="Ar">len</var>. Return the number of bytes placed into
-    <var class="Ar">data</var> on success, and zero for end-of-file.</p>
+    <var class="Ar">data</var> on success, zero for end-of-file, -1 for
+  error.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="ZIP_SOURCE_REMOVE"><a class="permalink" href="#ZIP_SOURCE_REMOVE"><code class="Dv">ZIP_SOURCE_REMOVE</code></a></h2>
@@ -250,8 +257,8 @@
     decode the arguments into the following struct:</p>
 <div class="Bd Pp Li">
 <pre>struct zip_source_args_seek {
-    zip_int64_t offset;
-    int whence;
+zip_int64_t offset;
+int whence;
 };</pre>
 </div>
 <p class="Pp">If the size of the source's data is known, use
@@ -400,7 +407,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">January 5, 2023</td>
+    <td class="foot-date">August 5, 2026</td>
     <td class="foot-os">NiH</td>
   </tr>
 </table>

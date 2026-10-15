@@ -1,4 +1,15 @@
-# 1.12 [Unreleased]
+# 1.13 [Unreleased]
+
+* Include website in repository and source distribution.
+
+# 1.12.1 [2026-10-14]
+
+* Protect against denial of service attack (advisory GHSA-m3wq-j48p-jxwh, actually fixed in 1.12).
+* Fix compile issues.
+* Fix adding and replacing files in torrentzip archives.
+* Fix error handling in `zip_source_filep_create()`.
+
+# 1.12 [2026-10-07]
 
 * Keep order of local extra fields, even if an identical extra field is present in the central directory.
 * Add `zip_source_at_eof()` and `ZIP_SOURCE_AT_EOF`.
@@ -9,6 +20,9 @@
 * Use SipHash hash function with per-table random keys. This prevents hash flooding attacks.
 * Add compile time option to limit LZMA window size.
 * Add more comprehensive fuzzers for metadata and write code paths.
+* Fix `zip_source_is_seekable()`.
+* Fix setting incorrect WinZIP AES version in some cases.
+* Further improvements to overall stability and other minor adjustments have been made.
 
 # 1.11.4 [2025-05-23]
 

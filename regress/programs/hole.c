@@ -36,9 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef HAVE_GETOPT
-#include "getopt.h"
-#endif
+#include "compat/src_compat.h"
 
 #include "zip.h"
 

@@ -1,0 +1,9 @@
+# a failed zip_source_filep_create leaves the file open for the caller
+program filep_error
+arguments test.zip
+return 0
+file test.zip test.zip
+stdout
+Invalid argument
+closed
+end-of-inline-data

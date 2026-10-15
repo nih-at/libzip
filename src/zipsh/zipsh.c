@@ -1,9 +1,6 @@
-#ifndef _HAD_GETOPT_H
-#define _HAD_GETOPT_H
-
 /*
-  getopt.h -- header for getopt() replacement function
-  Copyright (C) 1999-2024 Dieter Baron and Thomas Klausner
+  zipsh.c -- shell for interacting with zip archives in multiple ways
+  Copyright (C) 2012-2025 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -34,18 +31,36 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-extern char *optarg;
-extern int optind;
-extern int opterr;
+#include "zipconf.h"
+#include "zipsh.h"
 
-extern int getopt(int, char *const *, const char *);
+zip_t *archive = NULL;
 
-#ifdef __cplusplus
+int main(int argc, char *argv[]) {
+    /* Process command-line arguments and open zip archive. */
+
+    const char *script_filename = NULL;
+    archive = NULL;
+
+    switch (argc) {
+    case 3:
+        script_filename = argv[2];
+        // fall through
+    case 2:
+        archive = zip_open(argv[1], 0, NULL);
+        if (archive == NULL) {
+            fprintf(stderr, "Failed to open archive: %s\n", argv[1]);
+            exit(1);
+        }
+        break;
+    default:
+        fprintf(stderr, "Usage: %s archive [command_file]\n", argv[0]);
+        exit(1);
+    }
+
+    exit(shell_loop(script_filename) ? 0 : 1);
 }
-#endif
-
-#endif /* _HAD_GETOPT_H */

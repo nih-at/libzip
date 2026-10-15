@@ -1,0 +1,11 @@
+# zip_open with ZIP_CHECKCONS: a Zip64 local header must carry both the
+# original and compressed size fields, even when only the uncompressed size
+# needs Zip64. Such an entry must open, not be rejected as an invalid Zip64
+# extra field.
+program tryopen
+arguments -s -c test.zip
+file test.zip zip64-local-both-sizes.zip
+return 0
+stdout
+opening 'test.zip' succeeded, 1 entries
+end-of-inline-data

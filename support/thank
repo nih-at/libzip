@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+
+import enum
+import sys
+import unicodedata
+
+# This script adds a name to the `THANKS` file.
+# It checks if the name is already present and only adds it if it's not.
+# If a similar name is found, it will ask for confirmation before adding it.
+
+THANKS_FILE = "THANKS"
+END_OF_HEADER = "Thanks to these people for suggestions, testing, and bug reports:"
+
+class Similarity(enum.Enum):
+    NONE = 0
+    SIMILAR = 1
+    EXACT = 2
+
+### Class representing a name with various normalized forms for comparison.
+###
+### Attributes:
+### - name: Original name as provided, used for display.
+### - lowercase: Lowercased version of the name, used for exact comparison
+### - normalized: Unicode normalized (NFKD) lowercase name, used for prefix checks.
+### - no_spaces: Normalized name with spaces removed, used for sorting and similarity checks.
+class Name:
+    def __init__(self, name: str):
+        self.name = name.strip()
+        self.lowercase = self.name.lower()
+        self.normalized = remove_accents(self.lowercase)
+        self.no_spaces = self.normalized.replace(" ", "").replace("-", "")
+
+    def __str__(self):
+        return self.name
+
+    def __lt__(self, other: "Name") -> bool:
+        return self.no_spaces < other.no_spaces
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Name):
+            return NotImplemented
+        return self.lowercase == other.lowercase
+
+    ### Determine the similarity between two names.
+    ###
+    ### Args:
+    ### - other: other name to compare with.
+    ###
+    ### Returns:
+    ### - Similarity: the similarity level between the two names.
+    def similarity(self, other: "Name") -> Similarity:
+        # This could be improved with more sophisticated similarity checks.
+        # Currently it ignores accents, case, and spaces and checks for whole word prefix matches.
+
+        if not isinstance(other, Name):
+            return NotImplemented
+        if self.lowercase == other.lowercase:
+            return Similarity.EXACT
+        elif self.no_spaces == other.no_spaces:
+            return Similarity.SIMILAR
+        elif (self.normalized.startswith(f"{other.normalized} ") or
+              other.normalized.startswith(f"{self.normalized} ")):
+            return Similarity.SIMILAR
+        else:
+            return Similarity.NONE
+
+def main():
+    if len(sys.argv) < 2:
+        print(f"Usage: python3 {sys.argv[0]} <name ...>", file=sys.stderr)
+        sys.exit(1)
+
+    name_to_add = Name(" ".join(sys.argv[1:]).strip())
+    header = []
+    header_found = False
+    names = []
+
+    try:
+        with open(THANKS_FILE, "r") as f:
+            for line in f:
+                line = line.strip()
+                header.append(line)
+                if line == END_OF_HEADER:
+                    header_found = True
+                    break
+
+            if not header_found:
+                print(f"{sys.argv[0]}: end of header not found in {THANKS_FILE}", file=sys.stderr)
+                sys.exit(1)
+
+            for line in f:
+                line = line.strip()
+                if line:
+                    names.append(Name(line.strip()))
+    except Exception as e:
+        print(f"{sys.argv[0]}: can't open {THANKS_FILE}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+    (similarity, similar_names) = find_similar_names(name_to_add, names)
+    if similarity == Similarity.EXACT:
+        print(f"{name_to_add} is already in the THANKS file.")
+        sys.exit(0)
+
+    if similarity == Similarity.SIMILAR:
+        print(f"Similar names found: {', '.join(map(str, similar_names))}")
+        response = input(f"Do you still want to add '{name_to_add}'? (y/N): ")
+        if not response.lower().startswith('y'):
+            print("Aborting.")
+            sys.exit(0)
+
+    names.append(name_to_add)
+    names = sorted(names)
+
+    with open(THANKS_FILE, "w") as f:
+        for line in header:
+            print(line, file=f)
+        print("", file=f)
+        for name in names:
+            print(name, file=f)
+    print(f"Added '{name_to_add}' to the THANKS file.")
+
+### Find all names with best similarity to the given name.
+###
+### Args:
+### - name: The Name object to compare against existing names.
+### - existing_names: A list of Name objects representing the existing names.
+###
+### Returns:
+### - A tuple containing:
+###   - best similarity level found.
+###   - names with the best similarity.
+def find_similar_names(name: Name, existing_names: list[Name]) -> tuple[Similarity, list[Name]]:
+    similar_names = []
+    best_similarity = Similarity.NONE
+
+    for existing_name in existing_names:
+        similarity = name.similarity(existing_name)
+        if similarity.value > best_similarity.value:
+            best_similarity = similarity
+            similar_names = [existing_name]
+        elif similarity == best_similarity:
+            similar_names.append(existing_name)
+
+    return (best_similarity, sorted(similar_names))
+
+### Remove accents from a string.
+###
+### Args:
+### - text: The input string potentially containing accented characters.
+###
+### Returns:
+### - The input string with accents removed.
+def remove_accents(text: str) -> str:
+    # First, strip combining marks like ä -> a, é -> e
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+
+    # Then handle special cases that don't decompose as expected
+    replacements = {
+        "ł": "l",
+        "Ł": "L",
+        "ø": "o",
+        "Ø": "O",
+        "æ": "ae",
+        "Æ": "AE",
+        "œ": "oe",
+        "Œ": "OE",
+        "ß": "ss",
+    }
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    return text
+
+if __name__ == "__main__":
+    main()
+

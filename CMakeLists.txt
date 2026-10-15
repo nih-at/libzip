@@ -6,7 +6,7 @@ if (${CMAKE_VERSION} VERSION_LESS "3.17.0")
 endif()
 
 project(libzip
-  VERSION 1.11.4
+  VERSION 1.12.1
   LANGUAGES C)
 
 if(NOT libzip_VERSION_PATCH)
@@ -124,6 +124,9 @@ check_function_exists(fremovexattr HAVE_FREMOVEXATTR)
 check_function_exists(fseeko HAVE_FSEEKO)
 check_function_exists(fsetxattr HAVE_FSETXATTR)
 check_function_exists(ftello HAVE_FTELLO)
+check_function_exists(getline HAVE_GETLINE)
+check_function_exists(getopt HAVE_GETOPT)
+check_function_exists(getopt_long HAVE_GETOPT_LONG)
 check_function_exists(getprogname HAVE_GETPROGNAME)
 check_function_exists(getxattr HAVE_GETXATTR)
 check_function_exists(GetSecurityInfo HAVE_GETSECURITYINFO)
@@ -144,6 +147,7 @@ check_function_exists(stricmp HAVE_STRICMP)
 check_function_exists(strncpy_s HAVE_STRNCPY_S)
 check_function_exists(strtoll HAVE_STRTOLL)
 check_function_exists(strtoull HAVE_STRTOULL)
+check_function_exists(vasprintf HAVE_VASPRINTF)
 
 check_include_files("sys/types.h;sys/stat.h;fts.h" HAVE_FTS_H)
 # fts functions may be in external library

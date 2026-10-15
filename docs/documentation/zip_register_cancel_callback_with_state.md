@@ -1,0 +1,1 @@
+!man zip_register_cancel_callback_with_state

@@ -47,13 +47,9 @@
 #endif
 #include <zlib.h>
 
-#ifndef HAVE_GETOPT
-#include "getopt.h"
-#endif
-
 #include "zip.h"
 
-#include "compat.h"
+#include "compat/src_compat.h"
 
 #include "diff_output.h"
 
@@ -95,62 +91,61 @@ typedef struct {
 
 const enum_map_t comp_methods[] = {{0, "Stored (no compression)"}, {1, "Shrunk"}, {2, "Reduced with compression factor 1"}, {3, "Reduced with compression factor 2"}, {4, "Reduced with compression factor 3"}, {5, "Reduced with compression factor 4"}, {6, "Imploded"}, {7, "Reserved for Tokenizing compression algorithm"}, {8, "Deflated"}, {9, "Enhanced Deflating using Deflate64(tm)"}, {10, "PKWARE Data Compression Library Imploding (old IBM TERSE)"}, {11, "11 (Reserved by PKWARE)"}, {12, "BZIP2"}, {13, "13 (Reserved by PKWARE)"}, {14, "LZMA (EFS)"}, {15, "15 (Reserved by PKWARE)"}, {16, "16 (Reserved by PKWARE)"}, {17, "17 (Reserved by PKWARE)"}, {18, "IBM TERSE (new)"}, {19, "IBM LZ77 z Architecture (PFS)"}, {20, "Zstandard compressed data (obsolete)"}, {93, "Zstandard compressed data"}, {95, "XZ compressed data"}, {97, "WavPack compressed data"}, {98, "PPMd version I, Rev 1"}, {99, "WinZIP AES Encryption"}, {UINT32_MAX, NULL}};
 
-const enum_map_t extra_fields[] = {
-    /* PKWARE defined */
-    {0x0001, "Zip64 extended information"},
-    {0x0007, "AV Info"},
-    {0x0008, "Reserved for extended language encoding data (PFS)"},
-    {0x0009, "OS/2"},
-    {0x000a, "NTFS"},
-    {0x000c, "OpenVMS"},
-    {0x000d, "UNIX"},
-    {0x000e, "Reserved for file stream and fork descriptors"},
-    {0x000f, "Patch Descriptor"},
-    {0x0014, "PKCS#7 Store for X.509 Certificates"},
-    {0x0015, "X.509 Certificate ID and Signature for individual file"},
-    {0x0016, "X.509 Certificate ID for Central Directory"},
-    {0x0017, "Strong Encryption Header"},
-    {0x0018, "Record Management Controls"},
-    {0x0019, "PKCS#7 Encryption Recipient Certificate List"},
-    {0x0065, "IBM S/390 (Z390), AS/400 (I400) attributes - uncompressed"},
-    {0x0066, "Reserved for IBM S/390 (Z390), AS/400 (I400) attributes - compressed"},
-    {0x4690, "POSZIP 4690 (reserved)"},
+const enum_map_t extra_fields[] = {/* PKWARE defined */
+                                   {0x0001, "Zip64 extended information"},
+                                   {0x0007, "AV Info"},
+                                   {0x0008, "Reserved for extended language encoding data (PFS)"},
+                                   {0x0009, "OS/2"},
+                                   {0x000a, "NTFS"},
+                                   {0x000c, "OpenVMS"},
+                                   {0x000d, "UNIX"},
+                                   {0x000e, "Reserved for file stream and fork descriptors"},
+                                   {0x000f, "Patch Descriptor"},
+                                   {0x0014, "PKCS#7 Store for X.509 Certificates"},
+                                   {0x0015, "X.509 Certificate ID and Signature for individual file"},
+                                   {0x0016, "X.509 Certificate ID for Central Directory"},
+                                   {0x0017, "Strong Encryption Header"},
+                                   {0x0018, "Record Management Controls"},
+                                   {0x0019, "PKCS#7 Encryption Recipient Certificate List"},
+                                   {0x0065, "IBM S/390 (Z390), AS/400 (I400) attributes - uncompressed"},
+                                   {0x0066, "Reserved for IBM S/390 (Z390), AS/400 (I400) attributes - compressed"},
+                                   {0x4690, "POSZIP 4690 (reserved)"},
 
-    /* Third-Party defined; see InfoZIP unzip sources proginfo/extrafld.txt */
-    {0x07c8, "Info-ZIP Macintosh (old)"},
-    {0x2605, "ZipIt Macintosh (first version)"},
-    {0x2705, "ZipIt Macintosh 1.3.5+ (w/o full filename)"},
-    {0x2805, "ZipIt Macintosh 1.3.5+"},
-    {0x334d, "Info-ZIP Macintosh (new)"},
-    {0x4154, "Tandem NSK"},
-    {0x4341, "Acorn/SparkFS"},
-    {0x4453, "Windows NT security descriptor"},
-    {0x4704, "VM/CMS"},
-    {0x470f, "MVS"},
-    {0x4854, "Theos, old unofficial port"},
-    {0x4b46, "FWKCS MD5"},
-    {0x4c41, "OS/2 access control list (text ACL)"},
-    {0x4d49, "Info-ZIP OpenVMS (obsolete)"},
-    {0x4d63, "Macintosh SmartZIP"},
-    {0x4f4c, "Xceed original location extra field"},
-    {0x5356, "AOS/VS (ACL)"},
-    {0x5455, "extended timestamp"},
-    {0x554e, "Xceed unicode extra field"},
-    {0x5855, "Info-ZIP UNIX (original)"},
-    {0x6375, "Info-ZIP UTF-8 comment field"},
-    {0x6542, "BeOS (BeBox, PowerMac, etc.)"},
-    {0x6854, "Theos"},
-    {0x7075, "Info-ZIP UTF-8 name field"},
-    {0x7441, "AtheOS (AtheOS/Syllable attributes)"},
-    {0x756e, "ASi UNIX"},
-    {0x7855, "Info-ZIP UNIX"},
-    {0x7875, "Info-ZIP UNIX 3rd generation"},
-    {0x9901, "WinZIP AES encryption"},
-    {0xa220, "Microsoft Open Packaging Growth Hint"},
-    {0xcafe, "executable Java JAR file"},
-    {0xfb4a, "SMS/QDOS"}, /* per InfoZIP extrafld.txt */
-    {0xfd4a, "SMS/QDOS"}, /* per appnote.txt */
-    {UINT32_MAX, NULL}};
+                                   /* Third-Party defined; see InfoZIP unzip sources proginfo/extrafld.txt */
+                                   {0x07c8, "Info-ZIP Macintosh (old)"},
+                                   {0x2605, "ZipIt Macintosh (first version)"},
+                                   {0x2705, "ZipIt Macintosh 1.3.5+ (w/o full filename)"},
+                                   {0x2805, "ZipIt Macintosh 1.3.5+"},
+                                   {0x334d, "Info-ZIP Macintosh (new)"},
+                                   {0x4154, "Tandem NSK"},
+                                   {0x4341, "Acorn/SparkFS"},
+                                   {0x4453, "Windows NT security descriptor"},
+                                   {0x4704, "VM/CMS"},
+                                   {0x470f, "MVS"},
+                                   {0x4854, "Theos, old unofficial port"},
+                                   {0x4b46, "FWKCS MD5"},
+                                   {0x4c41, "OS/2 access control list (text ACL)"},
+                                   {0x4d49, "Info-ZIP OpenVMS (obsolete)"},
+                                   {0x4d63, "Macintosh SmartZIP"},
+                                   {0x4f4c, "Xceed original location extra field"},
+                                   {0x5356, "AOS/VS (ACL)"},
+                                   {0x5455, "extended timestamp"},
+                                   {0x554e, "Xceed unicode extra field"},
+                                   {0x5855, "Info-ZIP UNIX (original)"},
+                                   {0x6375, "Info-ZIP UTF-8 comment field"},
+                                   {0x6542, "BeOS (BeBox, PowerMac, etc.)"},
+                                   {0x6854, "Theos"},
+                                   {0x7075, "Info-ZIP UTF-8 name field"},
+                                   {0x7441, "AtheOS (AtheOS/Syllable attributes)"},
+                                   {0x756e, "ASi UNIX"},
+                                   {0x7855, "Info-ZIP UNIX"},
+                                   {0x7875, "Info-ZIP UNIX 3rd generation"},
+                                   {0x9901, "WinZIP AES encryption"},
+                                   {0xa220, "Microsoft Open Packaging Growth Hint"},
+                                   {0xcafe, "executable Java JAR file"},
+                                   {0xfb4a, "SMS/QDOS"}, /* per InfoZIP extrafld.txt */
+                                   {0xfd4a, "SMS/QDOS"}, /* per appnote.txt */
+                                   {UINT32_MAX, NULL}};
 
 
 const char *progname;
