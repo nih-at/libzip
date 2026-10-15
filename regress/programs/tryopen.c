@@ -36,7 +36,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include "compat/compat.h"
+#include "compat/src_compat.h"
 
 #include "zip.h"
 #define TRYOPEN_USAGE                  \
