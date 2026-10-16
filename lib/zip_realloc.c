@@ -45,7 +45,7 @@ bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t ele
 
     new_alloced_elements = *alloced_elements + additional_elements;
 
-    if (new_alloced_elements < additional_elements || new_alloced_elements > SIZE_MAX / element_size) {
+    if (ZIP_CHECK_ADD_OVERFLOW(*alloced_elements, additional_elements) || ZIP_CHECK_MULTIPLY_OVERFLOW_CAPPED(new_alloced_elements, element_size, SIZE_MAX)) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }

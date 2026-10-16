@@ -935,7 +935,7 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
         _zip_buffer_free(buffer);
     }
 
-    if (offset > ZIP_INT64_MAX || offset + size < offset) {
+    if (offset > ZIP_INT64_MAX || ZIP_CHECK_ADD_OVERFLOW(offset, size)) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return CDIR_INVALID;
     }

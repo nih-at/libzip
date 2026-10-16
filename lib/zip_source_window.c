@@ -199,7 +199,7 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 return -1;
             }
             if (ctx->end_valid) {
-                if (ctx->end + offset < ctx->end) {
+                if (ZIP_CHECK_ADD_OVERFLOW(ctx->end, offset)) {
                     /* zip archive data claims end of data past zip64 limits */
                     zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, ctx->source_index));
                     return -1;
