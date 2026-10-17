@@ -3,43 +3,31 @@
 
 #include "zipsh.h"
 
-bool cat(invocation_t *invocation, error_message_t **error_message) {
+bool cat_implementation(invocation_t *invocation, error_message_t **error_message) {
     zip_error_t error;
     zip_source_t *src;
     zip_int64_t n;
     char buf[8192];
-    argument_t *index_option = invocation_get_option(invocation, 'i');
-
-    /* TODO: Use filename or index in error messages. */
-
-    zip_uint64_t index;
-    if (index_option && index_option->b) {
-        if (!convert_uint64(&index, invocation->arguments[0].string, error_message)) {
-            return false;
-        }
-    }
-    else {
-        zip_int64_t idx = zip_name_locate(archive, invocation->arguments[0].string, 0);
-        index = (zip_uint64_t)idx;
-        if (idx < 0) {
-            *error_message = error_message_new_format("file not found: %s", invocation->arguments[0].string);
-            return false;
-        }
-    }
     zip_uint64_t start = invocation->arguments[1].u64;
     zip_int64_t len = invocation->arguments[2].i64;
+    file_reference_t *file_ref = file_reference_create(invocation, error_message);
+    if (!file_ref) {
+        return false;
+    }
 
     zip_error_init(&error);
-    if ((src = zip_source_zip_file_create(archive, index, 0, start, len, NULL, &error)) == NULL) {
-        *error_message = error_message_new_format("can't open file at index '%" PRId64 "': %s", index, zip_error_strerror(&error));
+    if ((src = zip_source_zip_file_create(archive, file_ref->index, 0, start, len, NULL, &error)) == NULL) {
+        *error_message = error_message_new_format("can't open file %s: %s", file_ref->error_info, zip_error_strerror(&error));
         zip_error_fini(&error);
+        file_reference_free(file_ref);
         return false;
     }
     zip_error_fini(&error);
 
     if (zip_source_open(src) < 0) {
-        *error_message = error_message_new_format("can't open file at index '%" PRId64 "': %s", index, zip_error_strerror(zip_source_error(src)));
+        *error_message = error_message_new_format("can't open file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
+        file_reference_free(file_ref);
         return false;
     }
     while ((n = zip_source_read(src, buf, sizeof(buf))) > 0) {
@@ -48,20 +36,24 @@ bool cat(invocation_t *invocation, error_message_t **error_message) {
                 *error_message = error_message_new_format("can't write file contents: %s", strerror(errno));
             }
             zip_source_free(src);
+            file_reference_free(file_ref);
             return false;
         }
     }
     if (n == -1) {
-        *error_message = error_message_new_format("can't read file at index '%" PRId64 "': %s", index, zip_error_strerror(zip_source_error(src)));
+        *error_message = error_message_new_format("can't read file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
+        file_reference_free(file_ref);
         return false;
     }
     if (zip_source_close(src) < 0) {
-        *error_message = error_message_new_format("can't close file at index '%" PRId64 "': %s", index, zip_error_strerror(zip_source_error(src)));
+        *error_message = error_message_new_format("can't close file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
+        file_reference_free(file_ref);
         return false;
     }
     zip_source_free(src);
+    file_reference_free(file_ref);
 
     return true;
 }
@@ -76,7 +68,6 @@ argument_definition_t cat_arguments[] = {
 option_definition_t cat_options[] = {
     {'i', "index", NULL, "file argument is index instead of name", ARGUMENT_TYPE_BOOL},
 };
+/* clang-format on */
 
 COMMAND(cat, "show contents of file in archive");
-
-/* clang-format on */

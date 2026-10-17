@@ -9,6 +9,9 @@ set(SHELL_SOURCES
 
 set(ZIPSH_SOURCES
   zipsh/cat.c
+  zipsh/delete.c
+  zipsh/file_reference.c
+  zipsh/rename.c
   zipsh/set_default_password.c
   zipsh/zipsh.c
 )

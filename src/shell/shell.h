@@ -115,8 +115,8 @@ struct words {
 typedef struct words words_t;
 
 
-#define COMMAND(name, help) command_t command_##name = {#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name}
-#define COMMAND_NO_OPTIONS(name, help) command_t command_##name = {#name, help, NULL, 0, name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name}
+#define COMMAND(name, help) command_t command_##name = {#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name##_implementation}
+#define COMMAND_NO_OPTIONS(name, help) command_t command_##name = {#name, help, NULL, 0, name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name##_implementation}
 
 extern command_t *commands[];
 extern size_t n_commands;

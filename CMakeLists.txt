@@ -21,6 +21,7 @@ option(ENABLE_WINDOWS_CRYPTO "Enable use of Windows cryptography libraries" ON)
 option(ENABLE_BZIP2 "Enable use of BZip2" ON)
 option(ENABLE_LZMA "Enable use of LZMA" ON)
 option(ENABLE_ZSTD "Enable use of Zstandard" ON)
+option(ENABLE_READLINE "Enable use of readline library" ON)
 
 option(ENABLE_FDOPEN "Enable zip_fdopen, which is not allowed in Microsoft CRT secure libraries" ON)
 
@@ -60,6 +61,7 @@ if(WIN32)
     set(WINDOWS_CRYPTO_FOUND TRUE)
   endif()
 endif()
+
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(LIBZIP_DO_INSTALL "Install libzip and the related files" ON)
@@ -276,6 +278,17 @@ if(ENABLE_ZSTD)
   endif(zstd_FOUND)
 endif(ENABLE_ZSTD)
 
+if (BUILD_TOOLS)
+  if(ENABLE_READLINE)
+    find_package(Readline)
+    if (READLINE_FOUND)
+      set(HAVE_READLINE 1)
+    else()
+      message(WARNING "-- readline library not found; command editing in zipsh disabled")
+    endif()
+  endif()
+endif()
+  
 if (COMMONCRYPTO_FOUND)
   set(HAVE_CRYPTO 1)
   set(HAVE_COMMONCRYPTO 1)

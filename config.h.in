@@ -48,6 +48,7 @@
 #cmakedefine HAVE_MEMCPY_S
 #cmakedefine HAVE_MKSTEMP
 #cmakedefine HAVE_OPENSSL
+#cmakedefine HAVE_READLINE
 #cmakedefine HAVE_SETMODE
 #cmakedefine HAVE_SNPRINTF
 #cmakedefine HAVE_SNPRINTF_S

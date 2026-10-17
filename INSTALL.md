@@ -21,6 +21,8 @@ For supporting lzma- and xz-compressed zip archives, you need
 For supporting zstd-compressed zip archives, you need
 [zstd](https://github.com/facebook/zstd/).
 
+For command line editing support in the zip shell (`zipsh`), you need readline or a compatible library.
+
 For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 

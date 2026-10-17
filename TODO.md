@@ -30,6 +30,8 @@
 
 - Implement `getopt_long` compatibility fallback.
 
+- Fix readline library detection on macOS.
+
 - Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
 
 - Integrate website into main repository.

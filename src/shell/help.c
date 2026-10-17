@@ -3,7 +3,7 @@
 
 #include "shell.h"
 
-bool help(invocation_t *invocation, error_message_t **error_message) {
+bool help_implementation(invocation_t *invocation, error_message_t **error_message) {
     int longest_command_name = 0;
     for (size_t i = 0; i < n_commands; i++) {
         size_t len = strlen(commands[i]->name);
