@@ -1,0 +1,11 @@
+# 2026-10-04：目标压缩方式改变后，提交前仍应读取缓冲源中的原始内容。
+description read new data before applying requested compression
+arguments -n pending.zip add entry.txt "pending data\n" cat 0 set_file_compression 0 store 0 cat 0 set_file_compression 0 deflate 0 cat 0 cat_partial 0 8 5 cat 0 unchange_all
+return 0
+stdout
+pending data
+pending data
+pending data
+data
+pending data
+end-of-inline-data

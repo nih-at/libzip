@@ -91,6 +91,19 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         return NULL;
     }
 
+    /* 2026-10-04：解码当前源数据时使用其真实压缩属性，不能套用尚未提交的目标压缩设置。 */
+    if (changed_data) {
+        zip_stat_t source_stat;
+
+        if (zip_source_stat(srcza->entry[srcidx].source, &source_stat) < 0) {
+            zip_error_set_from_source(error, srcza->entry[srcidx].source);
+            return NULL;
+        }
+        st.comp_method = source_stat.comp_method;
+        st.comp_size = source_stat.comp_size;
+        st.valid = (st.valid & ~(ZIP_STAT_COMP_METHOD | ZIP_STAT_COMP_SIZE)) | (source_stat.valid & (ZIP_STAT_COMP_METHOD | ZIP_STAT_COMP_SIZE));
+    }
+
     if ((start > 0 || len >= 0) && (flags & ZIP_FL_COMPRESSED)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
