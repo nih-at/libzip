@@ -41,9 +41,11 @@
 zip_t *archive = NULL;
 
 int main(int argc, char *argv[]) {
-    /* Process command-line arguments and open zip archive. */
-
     const char *script_filename = NULL;
+    const char *archive_name = NULL;
+    int err;
+    bool ok;
+
     archive = NULL;
 
     switch (argc) {
@@ -51,9 +53,13 @@ int main(int argc, char *argv[]) {
         script_filename = argv[2];
         // fall through
     case 2:
-        archive = zip_open(argv[1], 0, NULL);
+        archive_name = argv[1];
+        archive = zip_open(archive_name, 0, &err);
         if (archive == NULL) {
-            fprintf(stderr, "Failed to open archive: %s\n", argv[1]);
+            zip_error_t error;
+            zip_error_init_with_code(&error, err);
+            fprintf(stderr, "can't open archive '%s': %s\n", archive_name, zip_error_strerror(&error));
+            zip_error_fini(&error);
             exit(1);
         }
         break;
@@ -62,5 +68,11 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    exit(shell_loop(script_filename) ? 0 : 1);
+    ok = shell_loop(script_filename);
+
+    if (zip_close(archive) < 0) {
+        fprintf(stderr, "can't close '%s': %s\n", archive_name, zip_strerror(archive));
+        zip_discard(archive);
+    }
+    return ok ? 0 : 1;
 }

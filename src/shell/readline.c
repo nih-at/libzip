@@ -1,13 +1,15 @@
+#include "shell_int.h"
+
+#ifdef USE_READLINE
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include <unistd.h>
 
 #include <readline/history.h>
 #include <readline/readline.h>
 
-#include "shell_int.h"
-
-#ifdef USE_READLINE
 bool use_readline(const char *script_filename) {
     return script_filename == NULL && isatty(fileno(stdin));
 }

@@ -10,6 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/src/zipsh",
             "args": [
+                "test.zip",
                 "cmds",
             ],
             "stopAtEntry": false,
