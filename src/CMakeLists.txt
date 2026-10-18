@@ -3,6 +3,7 @@ set(SHELL_SOURCES
   shell/command.c
   shell/error_message.c
   shell/help.c
+  shell/readline.c
   shell/shell.c
   shell/words.c
 )
@@ -65,6 +66,9 @@ target_link_libraries(zipcmp ${FTS_LIB} ZLIB::ZLIB)
 
 add_executable(zipsh ${ZIPSH_SOURCES} zipsh_commands.c)
 target_link_libraries(zipsh shell zip)
+if (USE_READLINE)
+  target_link_libraries(zipsh readline::readline)
+endif()
 if (TARGET compat)
   target_link_libraries(zipsh compat)
 endif()

@@ -98,7 +98,7 @@ else()
 endif()
 
 set(_previous_suffixes ${CMAKE_FIND_LIBRARY_SUFFIXES})
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".dylib" ".dll.a" ".lib")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".dylib" ".dll.a" ".lib" ".tbd")
 find_library(READLINE_SHARED_LIBRARY
   NAMES readline ${_readline_win_shared_name}
   HINTS ${PC_READLINE_LIBDIR}
@@ -169,6 +169,15 @@ if(READLINE_FOUND AND READLINE_STATIC_LIBRARY AND NOT TARGET readline::libreadli
     INTERFACE_COMPILE_OPTIONS "${PC_READLINE_CFLAGS_OTHER}"
     INTERFACE_INCLUDE_DIRECTORIES "${READLINE_INCLUDE_DIR}"
   )
+endif()
+
+# Create an alias target for convenience: prefer shared over static
+if(READLINE_FOUND AND NOT TARGET readline::readline)
+  if(READLINE_SHARED_LIBRARY AND TARGET readline::libreadline_shared)
+    add_library(readline::readline ALIAS readline::libreadline_shared)
+  elseif(READLINE_STATIC_LIBRARY AND TARGET readline::libreadline_static)
+    add_library(readline::readline ALIAS readline::libreadline_static)
+  endif()
 endif()
 
 mark_as_advanced(

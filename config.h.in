@@ -41,6 +41,7 @@
 #cmakedefine HAVE_GETPROGNAME
 #cmakedefine HAVE_GETSECURITYINFO
 #cmakedefine HAVE_GNUTLS
+#cmakedefine HAVE_ISATTY
 #cmakedefine HAVE_LIBBZ2
 #cmakedefine HAVE_LIBLZMA
 #cmakedefine HAVE_LIBZSTD
@@ -75,6 +76,7 @@
 #cmakedefine HAVE_SYS_DIR_H
 #cmakedefine HAVE_SYS_NDIR_H
 #cmakedefine WORDS_BIGENDIAN
+#cmakedefine USE_READLINE
 #cmakedefine HAVE_SHARED
 #cmakedefine LZMA_WINDOW_LIMIT ${LZMA_WINDOW_LIMIT}
 /* END DEFINES */
