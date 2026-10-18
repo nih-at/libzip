@@ -17,6 +17,9 @@ set(ZIPSH_SOURCES
 )
 
 set(COMPAT_SOURCES)
+if (NOT HAVE_ASPRINTF)
+  list(APPEND COMPAT_SOURCES compat/asprintf.c)
+endif()
 if (NOT HAVE_GETLINE)
   list(APPEND COMPAT_SOURCES compat/getline.c)
 endif()

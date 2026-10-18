@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+#ifndef HAVE_ASPRINTF
+int asprintf(char **strp, const char *fmt, ...);
+#endif
+
 #ifndef HAVE_GETLINE
 #include <stdio.h>
 #include <stdlib.h>
