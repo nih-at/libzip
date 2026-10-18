@@ -48,6 +48,7 @@ int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *inv
     *p = '\0';
     long_options[long_options_index].name = NULL;
 
+    optind = 1;
     while ((c = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
         bool found = false;
         for (size_t i = 0; i < cmd->n_options; i++) {
