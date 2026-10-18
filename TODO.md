@@ -30,7 +30,7 @@
 
 - Implement `getopt_long` compatibility fallback.
 
-- Fix readline library detection on macOS.
+- Fix readline library detection to include needed libraries like curses (e. g. Solaris CI build).
 
 - Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
 
