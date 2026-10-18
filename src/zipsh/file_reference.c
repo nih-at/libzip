@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "compat/src_compat.h"
 #include "zipsh.h"
 
 file_reference_t *file_reference_create(invocation_t *invocation, error_message_t **error) {
