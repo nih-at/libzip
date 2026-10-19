@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     }
 
     if ((zf = zip_fopen_index(z, index, 0)) == NULL) {
-        fprintf(stderr, "%s: can't open file in archive '%s': %s\n", progname, archive, zip_error_strerror(zip_file_get_error(zf)));
+        fprintf(stderr, "%s: can't open file in archive '%s': %s\n", progname, archive, zip_error_strerror(zip_get_error(z)));
         zip_close(z);
         return 1;
     }
