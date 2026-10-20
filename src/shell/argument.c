@@ -122,7 +122,7 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
 const argument_type_t argument_type_bool_instance = ARGUMENT_TYPE_ENUM("bool", bool_entries);
 
 const argument_type_t argument_type_string_instance = {
-    "string", NULL, NULL, NULL, NULL
+    "string", NULL, NULL, NULL, {.pointer = NULL}
 };
 
 const argument_type_t argument_type_int8_instance = {
