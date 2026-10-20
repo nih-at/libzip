@@ -60,13 +60,13 @@ bool cat_implementation(invocation_t *invocation, error_message_t **error_messag
 
 /* clang-format off */
 argument_definition_t cat_arguments[] = {
-    {"file", "file to display", ARGUMENT_TYPE_STRING, true, {.string = NULL}},
-    {"start", "starting offset in the file", ARGUMENT_TYPE_UINT64, false, {.u64 = 0}},
-    {"length", "number of bytes to read from the file", ARGUMENT_TYPE_INT64, false, {.i64 = -1}},
+    {"file", "file to display", argument_type_filename, true, {.string = NULL}},
+    {"start", "starting offset in the file", argument_type_uint64, false, {.u64 = 0}},
+    {"length", "number of bytes to read from the file", argument_type_int64, false, {.i64 = -1}},
 };
 
 option_definition_t cat_options[] = {
-    {'i', "index", NULL, "file argument is index instead of name", ARGUMENT_TYPE_BOOL},
+    {'i', "index", NULL, "file argument is index instead of name", NULL},
 };
 /* clang-format on */
 

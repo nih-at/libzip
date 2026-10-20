@@ -10,7 +10,7 @@ bool set_default_password_implementation(invocation_t *invocation, error_message
 
 /* clang-format off */
 argument_definition_t set_default_password_arguments[] = {
-    {"password", "password to set for the archive", ARGUMENT_TYPE_STRING, false, {.string = NULL}},
+    {"password", "password to set for the archive", argument_type_string, false, {.string = NULL}},
 };
 /* clang-format on */
 

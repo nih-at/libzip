@@ -22,12 +22,12 @@ bool rename_implementation(invocation_t *invocation, error_message_t **error_mes
 
 /* clang-format off */
 argument_definition_t rename_arguments[] = {
-    {"file", "file to rename", ARGUMENT_TYPE_STRING, true, {.string = NULL}},
-    {"new_name", "new name for the file in the archive", ARGUMENT_TYPE_STRING, false, {.string = NULL}},
+    {"file", "file to rename", argument_type_filename, true, {.string = NULL}},
+    {"new_name", "new name for the file in the archive", argument_type_string, false, {.string = NULL}},
 };
 
 option_definition_t rename_options[] = {
-    {'i', "index", NULL, "file argument is index instead of name", ARGUMENT_TYPE_BOOL},
+    {'i', "index", NULL, "file argument is index instead of name", NULL},
 };
 /* clang-format on */
 

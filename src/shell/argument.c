@@ -3,16 +3,9 @@
 
 #include "shell.h"
 
-#define convert_int8(out, str, error_message) convert_int(out, str, sizeof(int8_t), error_message)
-#define convert_int16(out, str, error_message) convert_int(out, str, sizeof(int16_t), error_message)
-#define convert_int32(out, str, error_message) convert_int(out, str, sizeof(int32_t), error_message)
-#define convert_int64(out, str, error_message) convert_int(out, str, sizeof(int64_t), error_message)
-#define convert_uint8(out, str, error_message) convert_uint(out, str, sizeof(uint8_t), error_message)
-#define convert_uint16(out, str, error_message) convert_uint(out, str, sizeof(uint16_t), error_message)
-#define convert_uint32(out, str, error_message) convert_uint(out, str, sizeof(uint32_t), error_message)
-#define convert_uint64(out, str, error_message) convert_uint(out, str, sizeof(uint64_t), error_message)
+argument_type_enum_entry_t bool_entries[] = {{"true", {.boolean = true}}, {"false", {.boolean = false}}, {"on", {.boolean = true}}, {"off", {.boolean = false}}, {"yes", {.boolean = true}}, {"no", {.boolean = false}}, {NULL, {0}}};
 
-bool convert_int(void *out, const char *str, int size, error_message_t **error_message) {
+bool convert_int(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
     char *endptr;
     zip_int64_t value = strtoll(str, &endptr, 0);
 
@@ -23,7 +16,7 @@ bool convert_int(void *out, const char *str, int size, error_message_t **error_m
         return false;
     }
 
-    switch (size) {
+    switch (type->ud.u64) {
     case sizeof(int8_t):
         if (value < INT8_MIN || value > INT8_MAX) {
             if (error_message) {
@@ -31,7 +24,7 @@ bool convert_int(void *out, const char *str, int size, error_message_t **error_m
             }
             return false;
         }
-        *(int8_t *)out = (int8_t)value;
+        out->i8 = (int8_t)value;
         break;
 
     case sizeof(int16_t):
@@ -41,7 +34,7 @@ bool convert_int(void *out, const char *str, int size, error_message_t **error_m
             }
             return false;
         }
-        *(int16_t *)out = (int16_t)value;
+        out->i16 = (int16_t)value;
         break;
 
     case sizeof(int32_t):
@@ -51,11 +44,11 @@ bool convert_int(void *out, const char *str, int size, error_message_t **error_m
             }
             return false;
         }
-        *(int32_t *)out = (int32_t)value;
+        out->i32 = (int32_t)value;
         break;
 
     case sizeof(int64_t):
-        *(int64_t *)out = value;
+        out->i64 = value;
         break;
 
     default:
@@ -68,7 +61,7 @@ bool convert_int(void *out, const char *str, int size, error_message_t **error_m
     return true;
 }
 
-bool convert_uint(void *out, const char *str, int size, error_message_t **error_message) {
+bool convert_uint(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
     char *endptr;
     zip_uint64_t value = strtoull(str, &endptr, 0);
 
@@ -79,7 +72,7 @@ bool convert_uint(void *out, const char *str, int size, error_message_t **error_
         return false;
     }
 
-    switch (size) {
+    switch (type->ud.u64) {
     case sizeof(uint8_t):
         if (value > UINT8_MAX) {
             if (error_message) {
@@ -87,7 +80,7 @@ bool convert_uint(void *out, const char *str, int size, error_message_t **error_
             }
             return false;
         }
-        *(uint8_t *)out = (uint8_t)value;
+        out->u8 = (uint8_t)value;
         break;
 
     case sizeof(uint16_t):
@@ -97,7 +90,7 @@ bool convert_uint(void *out, const char *str, int size, error_message_t **error_
             }
             return false;
         }
-        *(uint16_t *)out = (uint16_t)value;
+        out->u16 = (uint16_t)value;
         break;
 
     case sizeof(uint32_t):
@@ -107,11 +100,11 @@ bool convert_uint(void *out, const char *str, int size, error_message_t **error_
             }
             return false;
         }
-        *(uint32_t *)out = (uint32_t)value;
+        out->u32 = (uint32_t)value;
         break;
 
     case sizeof(uint64_t):
-        *(uint64_t *)out = value;
+        out->u64 = value;
         break;
 
     default:
@@ -124,48 +117,61 @@ bool convert_uint(void *out, const char *str, int size, error_message_t **error_
     return true;
 }
 
-bool convert_argument(const char *str, argument_t *arg, argument_type_t type, error_message_t **error_message) {
-    switch (type) {
-    case ARGUMENT_TYPE_BOOL:
-        if (strcasecmp(str, "true") == 0 || strcmp(str, "1") == 0 || strcasecmp(str, "yes") == 0 || strcasecmp(str, "on") == 0) {
-            arg->b = true;
-        }
-        else if (strcasecmp(str, "false") == 0 || strcmp(str, "0") == 0 || strcasecmp(str, "no") == 0 || strcasecmp(str, "off") == 0) {
-            arg->b = false;
-        }
-        else {
-            if (error_message) {
-                *error_message = error_message_new_format("invalid boolean value '%s'", str);
-            }
-            return false;
-        }
-        break;
 
-    case ARGUMENT_TYPE_STRING:
-        arg->string = str;
-        break;
+/* clang-format off */
+const argument_type_t argument_type_bool_instance = ARGUMENT_TYPE_ENUM("bool", bool_entries);
 
-    case ARGUMENT_TYPE_INT8:
-        return convert_int8(&arg->i8, str, error_message);
-    case ARGUMENT_TYPE_INT16:
-        return convert_int16(&arg->i16, str, error_message);
-    case ARGUMENT_TYPE_INT32:
-        return convert_int32(&arg->i32, str, error_message);
-    case ARGUMENT_TYPE_INT64:
-        return convert_int64(&arg->i64, str, error_message);
-    case ARGUMENT_TYPE_UINT8:
-        return convert_uint8(&arg->u8, str, error_message);
-    case ARGUMENT_TYPE_UINT16:
-        return convert_uint16(&arg->u16, str, error_message);
-    case ARGUMENT_TYPE_UINT32:
-        return convert_uint32(&arg->u32, str, error_message);
-    case ARGUMENT_TYPE_UINT64:
-        return convert_uint64(&arg->u64, str, error_message);
-    default:
-        *error_message = error_message_new("internal error: unknown argument type");
-        return false;
+const argument_type_t argument_type_string_instance = {
+    "string", NULL, NULL, NULL, NULL
+};
+
+const argument_type_t argument_type_int8_instance = {
+    "int8",convert_int, NULL, NULL, {.u64 = sizeof(int8_t)}
+};
+
+const argument_type_t argument_type_int16_instance = {
+    "int16", convert_int, NULL, NULL, {.u64 = sizeof(int16_t)}
+};
+
+const argument_type_t argument_type_int32_instance = {
+    "int32", convert_int, NULL, NULL, {.u64 = sizeof(int32_t)}
+};
+
+const argument_type_t argument_type_int64_instance = {
+    "int64", convert_int, NULL, NULL, {.u64 = sizeof(int64_t)}
+};
+
+const argument_type_t argument_type_uint8_instance = {
+    "uint8", convert_uint, NULL, NULL, {.u64 = sizeof(uint8_t)}
+};
+
+const argument_type_t argument_type_uint16_instance = {
+    "uint16", convert_uint, NULL, NULL, {.u64 = sizeof(uint16_t)}
+};
+
+const argument_type_t argument_type_uint32_instance = {
+    "uint32", convert_uint, NULL, NULL, {.u64 = sizeof(uint32_t)}
+};
+
+const argument_type_t argument_type_uint64_instance = {
+    "uint64", convert_uint, NULL, NULL, {.u64 = sizeof(uint64_t)}
+};
+/* clang-format on */
+
+
+bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
+    if (type->convert == NULL) {
+        out->string = (char *)str;
+        return true;
     }
-    return true;
+    return type->convert(type, out, str, error_message);
+}
+
+char **complete_argument(const argument_type_t *type, const char *str) {
+    if (type->complete == NULL) {
+        return no_matches();
+    }
+    return type->complete(type, str);
 }
 
 invocation_t *invocation_new(size_t options_capacity, size_t arguments_capacity) {
@@ -245,4 +251,49 @@ argument_t *invocation_get_option(invocation_t *invocation, int id) {
         }
     }
     return NULL;
+}
+
+
+bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
+    argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
+    for (size_t i = 0; entries[i].string != NULL; i++) {
+        if (strcmp(entries[i].string, str) == 0) {
+            *out = entries[i].value;
+            return true;
+        }
+    }
+    if (error_message) {
+        *error_message = error_message_new_format("invalid %s '%s'", type->name, str);
+    }
+    return false;
+}
+
+char **complete_enum(const argument_type_t *type, const char *str) {
+    argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
+    size_t count = 0;
+    for (size_t i = 0; entries[i].string != NULL; i++) {
+        if (strncmp(entries[i].string, str, strlen(str)) == 0) {
+            count++;
+        }
+    }
+    char **matches = malloc((count + 1) * sizeof(char *));
+    if (matches == NULL) {
+        return NULL;
+    }
+    size_t j = 0;
+    for (size_t i = 0; entries[i].string != NULL; i++) {
+        if (strncmp(entries[i].string, str, strlen(str)) == 0) {
+            matches[j++] = strdup(entries[i].string);
+        }
+    }
+    matches[j] = NULL;
+    return matches;
+}
+
+char **no_matches(void) {
+    char **matches = malloc(sizeof(char *));
+    if (matches != NULL) {
+        matches[0] = NULL;
+    }
+    return matches;
 }

@@ -22,11 +22,11 @@ bool delete_implementation(invocation_t *invocation, error_message_t **error_mes
 
 /* clang-format off */
 argument_definition_t delete_arguments[] = {
-    {"file", "file to delete", ARGUMENT_TYPE_STRING, true, {.string = NULL}},
+    {"file", "file to delete", argument_type_filename, true, {.string = NULL}},
 };
 
 option_definition_t delete_options[] = {
-    {'i', "index", NULL, "file argument is index instead of name", ARGUMENT_TYPE_BOOL},
+    {'i', "index", NULL, "file argument is index instead of name", NULL},
 };
 /* clang-format on */
 
