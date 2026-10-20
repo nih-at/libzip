@@ -160,6 +160,11 @@ if(HAVE_LIBZSTD)
   set(ZIP_LIBRARIES ${ZIP_LIBRARIES} ${zstd_TARGET})
 endif()
 
+if(HAVE_LIBINFLATE)
+  set(ZIP_SOURCES ${ZIP_SOURCES} zip_algorithm_deflate64.c)
+  set(ZIP_LIBRARIES ${ZIP_LIBRARIES} inflatelib::inflatelib)
+endif()
+
 if(HAVE_COMMONCRYPTO)
   set(ZIP_SOURCES ${ZIP_SOURCES} zip_crypto_commoncrypto.c)
 elseif(HAVE_WINDOWS_CRYPTO)

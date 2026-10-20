@@ -9,6 +9,7 @@ if (NOT IS_SHARED)
   set(ENABLE_BZIP2 "@BZIP2_FOUND@")
   set(ENABLE_LZMA "@LIBLZMA_FOUND@")
   set(ENABLE_ZSTD "@ZSTD_FOUND@")
+  set(ENABLE_DEFLATE64 "@inflatelib_FOUND@")
   set(ENABLE_GNUTLS "@GNUTLS_FOUND@")
   set(ENABLE_OPENSSL "@OPENSSL_FOUND@")
 
@@ -23,6 +24,10 @@ if (NOT IS_SHARED)
 
   if(ENABLE_ZSTD)
     find_dependency(zstd 1.3.6)
+  endif()
+
+  if(ENABLE_DEFLATE64)
+    find_dependency(inflatelib)
   endif()
 
   if(ENABLE_GNUTLS)
