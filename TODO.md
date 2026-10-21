@@ -26,15 +26,20 @@
 
 - Handle data sources with unknown uncompressed size: if we forced ZIP64 and don't need it, return specific error (so calling code can decide what to do (e. g. clear torrentzip flag and call `zip_close()` again)).
 
+## Documentation
+
+- Integrate coding and contributing guidelines into the website. 
+
+- Improve internal documentation: directory layout, compatibility layer, shell API.
+
+
 ## Other
 
 - Implement `getopt_long` compatibility fallback.
 
-- Fix readline library detection to include needed libraries like curses (e. g. Solaris CI build).
+- Prefer `readline` over `editline` but reject editline's readline compatibility layer.
 
 - Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
-
-- Integrate website into main repository.
 
 - split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`).
 

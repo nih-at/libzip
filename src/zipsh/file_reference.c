@@ -22,6 +22,10 @@ char **complete_filename(const argument_type_t *type, const char *str) {
         }
     }
 
+    if (count == 0) {
+        return NULL;
+    }
+
     matches = malloc((count + 1) * sizeof(char *));
     if (matches == NULL) {
         return NULL;
@@ -33,7 +37,6 @@ char **complete_filename(const argument_type_t *type, const char *str) {
             matches[count++] = strdup(name);
         }
     }
-    printf("Found %" PRIu64 " matches for '%s'\n", count, str);
     matches[count] = NULL;
     return matches;
 }

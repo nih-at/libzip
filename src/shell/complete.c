@@ -1,8 +1,11 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "shell_int.h"
 
 words_t *completion_words = NULL;
 
-char **complete(const char *line, size_t position) {
+char **complete(const char *line, size_t position, size_t *last_word_length) {
     const command_t *cmd;
     size_t i, arg_index;
 
@@ -16,6 +19,15 @@ char **complete(const char *line, size_t position) {
             error_message_free(error_message);
         }
         return NULL;
+    }
+
+    if (last_word_length) {
+        if (completion_words->n_words == 0) {
+            *last_word_length = 0;
+        }
+        else {
+            *last_word_length = strlen(completion_words->words[completion_words->n_words - 1]);
+        }
     }
 
     if (completion_words->n_words < 2) {
@@ -40,4 +52,16 @@ char **complete(const char *line, size_t position) {
         return NULL;
     }
     return complete_argument(cmd->arguments[arg_index].type, completion_words->words[arg_index]);
+}
+
+void free_completions(char **matches) {
+    size_t i;
+
+    if (matches == NULL) {
+        return;
+    }
+    for (i = 0; matches[i] != NULL; i++) {
+        free(matches[i]);
+    }
+    free(matches);
 }

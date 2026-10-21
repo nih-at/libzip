@@ -16,6 +16,49 @@ static char *prompt_func(EditLine *el) {
     return "zipsh> ";
 }
 
+static unsigned char complete_wrapper(EditLine *el, int ch) {
+    const LineInfo *line_info = el_line(el);
+    size_t position = line_info->cursor - line_info->buffer;
+    size_t last_word_length;
+    char **matches = complete(line_info->buffer, position, &last_word_length);
+    char *prefix;
+    size_t prefix_length, i;
+
+    if (matches == NULL || matches[0] == NULL) {
+        free_completions(matches);
+        return CC_ERROR;
+    }
+
+    prefix = matches[0];
+    prefix_length = strlen(prefix);
+
+    for (i = 0; matches[i] != NULL; i++) {
+        size_t match_length = 0;
+        for (match_length = 0; matches[i][match_length] != '\0' && match_length < prefix_length; match_length++) {
+            if (matches[i][match_length] != prefix[match_length]) {
+                break;
+            }
+        }
+        if (match_length < prefix_length) {
+            prefix_length = match_length;
+        }
+    }
+
+    if (prefix_length > last_word_length) {
+        prefix[prefix_length] = '\0';
+        el_insertstr(el, prefix + last_word_length);
+        free_completions(matches);
+        return CC_REFRESH;
+    }
+
+    /* TODO: sort matches, display them in a user-friendly way, limit number of matches displayed */
+    for (i = 0; matches[i] != NULL; i++) {
+        fprintf(stdout, "%s\n", matches[i]);
+    }
+    free_completions(matches);
+    return CC_REDISPLAY;
+}
+
 bool execute_lines_readline() {
     int line_len;
     EditLine *el;
@@ -36,7 +79,8 @@ bool execute_lines_readline() {
     el_set(el, EL_EDITOR, "emacs");
     el_set(el, EL_SIGNAL, 1);
     el_source(el, NULL);
-    /* TODO: set up completion function */
+    el_set(el, EL_ADDFN, "complete", "completion function", complete_wrapper);
+    el_set(el, EL_BIND, "\t", "complete", NULL);
 
     while (true) {
         const char *line = el_gets(el, &line_len);

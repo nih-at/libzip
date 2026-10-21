@@ -9,6 +9,7 @@ bool use_readline(const char *script_filename);
 bool execute_lines_readline();
 bool execute_line(const char *line, error_message_t **error_message);
 
-char **complete(const char *text, size_t position);
+char **complete(const char *text, size_t position, size_t *last_word_length);
+void free_completions(char **matches);
 
 #endif /* _HAD_SHELL_INT_H */

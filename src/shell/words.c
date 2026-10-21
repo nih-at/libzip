@@ -145,12 +145,18 @@ bool words_parse_partial(words_t *words, const char *line, const char *end, erro
         p++;
     }
 
-    /* For partial parsing, unclosed quotes are okay. */
-    if (quote != '\0' && end == NULL) {
-        if (error_message) {
-            *error_message = error_message_new_format("unmatched quote %c", quote);
+    if (end == NULL) {
+        if (quote != '\0' && end == NULL) {
+            if (error_message) {
+                *error_message = error_message_new_format("unmatched quote %c", quote);
+            }
+            return false;
         }
-        return false;
+    }
+    else {
+        /* For partial parsing, unclosed quotes are okay. */
+        /* But we want to know if the last word was complete. */
+        add_empty = true;
     }
 
     return words_add_word(words, add_empty, error_message);

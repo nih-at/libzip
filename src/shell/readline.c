@@ -10,7 +10,7 @@
 #include <readline/readline.h>
 
 static char **complete_wrapper(const char *text, int start, int end) {
-    char **matches = complete(text, start);
+    char **matches = complete(text, start, NULL);
 
     /* Don't fall back to filename matching if no matches were found. */
     if (matches == NULL) {
