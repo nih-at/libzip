@@ -169,7 +169,7 @@ bool convert_argument(const argument_type_t *type, argument_t *out, const char *
 
 char **complete_argument(const argument_type_t *type, const char *str) {
     if (type->complete == NULL) {
-        return no_matches();
+        return NULL;
     }
     return type->complete(type, str);
 }
@@ -287,13 +287,5 @@ char **complete_enum(const argument_type_t *type, const char *str) {
         }
     }
     matches[j] = NULL;
-    return matches;
-}
-
-char **no_matches(void) {
-    char **matches = malloc(sizeof(char *));
-    if (matches != NULL) {
-        matches[0] = NULL;
-    }
     return matches;
 }

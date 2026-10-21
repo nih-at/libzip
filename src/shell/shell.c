@@ -41,7 +41,7 @@
 
 words_t *words = NULL;
 
-bool execute_line(char *line, error_message_t **error_message) {
+bool execute_line(const char *line, error_message_t **error_message) {
     bool ok = true;
 
     if (!words_parse(words, line, error_message)) {

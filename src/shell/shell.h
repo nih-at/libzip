@@ -154,8 +154,6 @@ const command_t *find_command(const char *name);
 bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
 char **complete_argument(const argument_type_t *type, const char *str);
 
-char **no_matches(void);
-
 error_message_t *error_message_new(const char *message);
 error_message_t *error_message_new_format(const char *fmt, ...) PRINTF_LIKE(1, 2);
 const char *error_message_get(error_message_t *error);

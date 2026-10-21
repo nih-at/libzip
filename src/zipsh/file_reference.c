@@ -12,7 +12,7 @@ char **complete_filename(const argument_type_t *type, const char *str) {
     char **matches;
 
     if ((n = zip_get_num_entries(archive, 0)) < 0) {
-        return no_matches();
+        return NULL;
     }
 
     for (i = 0; i < n; i++) {

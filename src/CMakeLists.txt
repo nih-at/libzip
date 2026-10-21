@@ -1,9 +1,9 @@
 set(SHELL_SOURCES
   shell/argument.c
   shell/command.c
+  shell/complete.c
   shell/error_message.c
   shell/help.c
-  shell/readline.c
   shell/shell.c
   shell/words.c
 )
@@ -42,6 +42,15 @@ endif()
 
 add_library(shell STATIC ${SHELL_SOURCES})
 target_include_directories(shell PRIVATE shell ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
+if (HAVE_EDITLINE)
+  target_link_libraries(shell editline::editline)
+  target_sources(shell PRIVATE shell/editline.c)
+elseif (HAVE_READLINE)
+  target_link_libraries(shell readline::readline)
+  target_sources(shell PRIVATE shell/readline.c)
+else()
+  target_sources(shell PRIVATE shell/no_line_editing.c)
+endif()
 if (ENABLE_COVERAGE)
   target_compile_options(shell PRIVATE -coverage)
   target_link_options(shell PRIVATE -coverage)
@@ -67,9 +76,6 @@ target_link_libraries(zipcmp ${FTS_LIB} ZLIB::ZLIB)
 
 add_executable(zipsh ${ZIPSH_SOURCES} zipsh_commands.c)
 target_link_libraries(zipsh shell zip)
-if (USE_READLINE)
-  target_link_libraries(zipsh readline::readline)
-endif()
 if (TARGET compat)
   target_link_libraries(zipsh compat)
 endif()

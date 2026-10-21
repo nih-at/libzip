@@ -118,6 +118,53 @@ else()
   set(_READLINE_LIBRARY ${READLINE_STATIC_LIBRARY})
 endif()
 
+if(_READLINE_LIBRARY AND READLINE_INCLUDE_DIR)
+  # Check if readline links without additional libraries, or if it needs additional libraries.
+  set(_READLINE_LINK_LIBRARIES)
+  if(NOT WIN32 AND NOT CYGWIN AND _READLINE_LIBRARY AND READLINE_INCLUDE_DIR)
+    include(CheckSymbolExists)
+    set(_previous_required_includes ${CMAKE_REQUIRED_INCLUDES})
+    set(_previous_required_libraries ${CMAKE_REQUIRED_LIBRARIES})
+    set(CMAKE_REQUIRED_INCLUDES ${READLINE_INCLUDE_DIR})
+    set(CMAKE_REQUIRED_LIBRARIES ${_READLINE_LIBRARY})
+
+    # Test if readline links without additional libraries
+    check_symbol_exists(readline readline/readline.h _READLINE_LINKS)
+
+    if(NOT _READLINE_LINKS)
+      for(lib in curses termcap)
+        if(lib eq curses)
+          find_package(Curses QUIET)
+          if(CURSES_FOUND)
+            set(additional_libraries ${CURSES_LIBRARIES})
+          endif()
+        elsif(lib eq termcap)
+          find_library(additional_libraries NAMES termcap)
+        endif()
+        if(additional_libraries)
+          set(_READLINE_LINKS)
+          set(CMAKE_REQUIRED_LIBRARIES ${_READLINE_LIBRARY} ${additional_libraries})
+          check_symbol_exists(readline readline/readline.h _READLINE_LINKS)
+          if(_READLINE_LINKS)
+            set(_READLINE_LINK_LIBRARIES ${additional_libraries})
+            break()
+          endif()
+        endif()
+        set(_READLINE_LINKS FALSE)
+        set(additional_libraries)
+      endfor()
+    endif()
+
+    set(CMAKE_REQUIRED_LIBRARIES ${_previous_required_libraries})
+    set(CMAKE_REQUIRED_INCLUDES ${_previous_required_includes})
+  endif()
+endif()
+
+if (NOT _READLINE_LINKS)
+  # We couldn't find required dependencies, so we can't use the readline library.
+  set(_READLINE_LIBRARY)
+endif()
+
 # Extract version information from the header file
 if(READLINE_INCLUDE_DIR)
   # #define RL_READLINE_VERSION 	0x0402
@@ -160,6 +207,12 @@ if(READLINE_FOUND AND READLINE_SHARED_LIBRARY AND NOT TARGET readline::libreadli
     INTERFACE_COMPILE_OPTIONS "${PC_READLINE_CFLAGS_OTHER}"
     INTERFACE_INCLUDE_DIRECTORIES "${READLINE_INCLUDE_DIR}"
   )
+
+  if(_READLINE_LINK_LIBRARIES)
+    set_target_properties(readline::libreadline_shared PROPERTIES
+      INTERFACE_LINK_LIBRARIES "${_READLINE_LINK_LIBRARIES}"
+    )
+  endif()
 endif()
 
 if(READLINE_FOUND AND READLINE_STATIC_LIBRARY AND NOT TARGET readline::libreadline_static)
@@ -169,6 +222,12 @@ if(READLINE_FOUND AND READLINE_STATIC_LIBRARY AND NOT TARGET readline::libreadli
     INTERFACE_COMPILE_OPTIONS "${PC_READLINE_CFLAGS_OTHER}"
     INTERFACE_INCLUDE_DIRECTORIES "${READLINE_INCLUDE_DIR}"
   )
+
+  if(_READLINE_LINK_LIBRARIES)
+    set_target_properties(readline::libreadline_static PROPERTIES
+      INTERFACE_LINK_LIBRARIES "${_READLINE_LINK_LIBRARIES}"
+    )
+  endif()
 endif()
 
 # Create an alias target for convenience: prefer shared over static
@@ -185,4 +244,5 @@ mark_as_advanced(
   READLINE_DLL
   READLINE_SHARED_LIBRARY
   READLINE_STATIC_LIBRARY
+  _READLINE_TERMCAP_LIBRARY
 )

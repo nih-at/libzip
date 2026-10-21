@@ -28,6 +28,7 @@
 #cmakedefine HAVE_CLONEFILE
 #cmakedefine HAVE_COMMONCRYPTO
 #cmakedefine HAVE_CRYPTO
+#cmakedefine HAVE_EDITLINE
 #cmakedefine HAVE_EXPLICIT_BZERO
 #cmakedefine HAVE_EXPLICIT_MEMSET
 #cmakedefine HAVE_FICLONERANGE
@@ -76,7 +77,7 @@
 #cmakedefine HAVE_SYS_DIR_H
 #cmakedefine HAVE_SYS_NDIR_H
 #cmakedefine WORDS_BIGENDIAN
-#cmakedefine USE_READLINE
+#cmakedefine USE_LINE_EDITING
 #cmakedefine HAVE_SHARED
 #cmakedefine LZMA_WINDOW_LIMIT ${LZMA_WINDOW_LIMIT}
 /* END DEFINES */
