@@ -1404,7 +1404,7 @@ int zip_dirent_check_consistency(zip_dirent_t *dirent) {
         default:
             return 0;
         }
-        if (dirent->uncomp_size + header_size < dirent->uncomp_size || dirent->comp_size != dirent->uncomp_size + header_size) {
+        if (ZIP_CHECK_ADD_OVERFLOW(dirent->uncomp_size, header_size) || dirent->comp_size != dirent->uncomp_size + header_size) {
             return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
         }
     }

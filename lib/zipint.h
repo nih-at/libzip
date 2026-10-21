@@ -36,6 +36,10 @@
 
 #include "compat.h"
 
+#ifdef HAVE_STDCKDINT_H
+#include <stdckdint.h>
+#endif
+
 #ifdef ZIP_ALLOCATE_BUFFER
 #include <stdlib.h>
 #endif
@@ -508,8 +512,22 @@ struct _zip_pkware_keys {
 };
 typedef struct _zip_pkware_keys zip_pkware_keys_t;
 
+/* Central overflow checks for size computations on untrusted data.
+   Use these instead of open-coding wrap-around tests. When C23
+   <stdckdint.h> is available, the checks use ckd_add()/ckd_mul();
+   otherwise, portable fallback implementations are used. The macros
+   may evaluate their arguments more than once, so the arguments
+   must not have side effects. All checks operate on zip_uint64_t
+   values. */
+#ifdef HAVE_STDCKDINT_H
+#define ZIP_CHECK_ADD_OVERFLOW(a, b) ckd_add(&(zip_uint64_t){0}, (a), (b))
+#define ZIP_CHECK_MULTIPLY_OVERFLOW(a, b) ckd_mul(&(zip_uint64_t){0}, (a), (b))
+#else
 #define ZIP_CHECK_ADD_OVERFLOW(a, b) ((a) + (b) < (a))
+#define ZIP_CHECK_MULTIPLY_OVERFLOW(a, b) ((a) != 0 && (b) > ZIP_UINT64_MAX / (a))
+#endif
 #define ZIP_CHECK_ADD_OVERFLOW_CAPPED(a, b, cap) ((a) > (cap) - (b))
+#define ZIP_CHECK_MULTIPLY_OVERFLOW_CAPPED(a, b, cap) ((a) != 0 && (b) > (cap) / (a))
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))

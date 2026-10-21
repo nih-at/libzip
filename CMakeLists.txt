@@ -168,6 +168,7 @@ else()
 endif()
 
 check_include_files(stdbool.h HAVE_STDBOOL_H)
+check_include_files(stdckdint.h HAVE_STDCKDINT_H)
 check_include_files(strings.h HAVE_STRINGS_H)
 check_include_files(unistd.h HAVE_UNISTD_H)
 

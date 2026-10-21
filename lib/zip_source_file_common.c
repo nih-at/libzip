@@ -91,7 +91,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         length = (zip_uint64_t)len;
     }
 
-    if (start > ZIP_INT64_MAX || start + length < start) {
+    if (start > ZIP_INT64_MAX || ZIP_CHECK_ADD_OVERFLOW(start, length)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
