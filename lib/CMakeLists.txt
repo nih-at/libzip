@@ -205,14 +205,12 @@ if (ENABLE_COVERAGE)
 endif()
 
 
-# Optional -fbounds-safety (inert macros unless ENABLE_FBOUNDS_SAFETY)
+# Optional -fbounds-safety, scoped to zip_buffer.c only (other sources see
+# inert ZIP_*SIZED_BY* macros, so the default build and ABI are unchanged).
 if(ENABLE_FBOUNDS_SAFETY)
-  foreach(_zip_tgt IN ITEMS zip zip_nonrandom)
-    if(TARGET ${_zip_tgt})
-      target_compile_definitions(${_zip_tgt} PRIVATE ZIP_SUPPORT_FBOUNDS_SAFETY)
-      target_compile_options(${_zip_tgt} PRIVATE -fbounds-safety)
-    endif()
-  endforeach()
+  set_source_files_properties(zip_buffer.c PROPERTIES
+    COMPILE_DEFINITIONS ZIP_SUPPORT_FBOUNDS_SAFETY
+    COMPILE_OPTIONS -fbounds-safety)
 endif()
 
 if(LIBZIP_DO_INSTALL)
