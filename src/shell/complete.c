@@ -32,7 +32,7 @@ char **complete(const char *line, size_t position, size_t *last_word_length) {
 
     if (completion_words->n_words < 2) {
         /* Completing command. */
-        return complete_command(argument_type_string, line);
+        return complete_command(argument_type_string, completion_words->words[0]);
     }
 
     cmd = find_command(completion_words->words[0]);
@@ -51,7 +51,7 @@ char **complete(const char *line, size_t position, size_t *last_word_length) {
     if (arg_index >= cmd->n_arguments) {
         return NULL;
     }
-    return complete_argument(cmd->arguments[arg_index].type, completion_words->words[arg_index]);
+    return complete_argument(cmd->arguments[arg_index].type, completion_words->words[completion_words->n_words - 1]);
 }
 
 void free_completions(char **matches) {

@@ -1,16 +1,24 @@
 ## Tests
 
+### zipsh
+
+- editline: Handle spaces when inserting common match prefix.
+- Documentation.
+- Add more commands.
+- Add `-c` option to take command from the command line arguments.
+- Switch tests to `zipsh`.
+- Deprecate `ziptool`.
+
 ### Infrastructure
 
-- Make `ziptool` take command from stdin, one command per line.
-- Add option to `ziptool` to not abort on errors.
-- Find framework for C unit tests.
-- Add test program for testing sources, which takes commands from stdin.
+- Find framework for C unit tests (e.g. CMocka). Should support data driven tests.
+- Add test program for testing `zip_source_t` API using the `shell` library.
 - Switch existing dedicated test programs to one of the above, where possible.
 
 ### CI
 
 - Add CI build with sanitizers enabled.
+- Add cmake option to fail if dependencies for tests are missing, use in CI builds.
 
 ### Specific Tests
 
@@ -36,8 +44,6 @@
 ## Other
 
 - Implement `getopt_long` compatibility fallback.
-
-- Prefer `readline` over `editline` but reject editline's readline compatibility layer.
 
 - Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
 
