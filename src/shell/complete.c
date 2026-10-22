@@ -31,8 +31,8 @@ char **complete(const char *line, size_t position, size_t *last_word_length) {
     }
 
     if (completion_words->n_words < 2) {
-        /* Completing command. */
-        return complete_command(argument_type_string, completion_words->words[0]);
+        const char *word = completion_words->n_words > 0 ? completion_words->words[0] : "";
+        return complete_command(argument_type_string, word);
     }
 
     cmd = find_command(completion_words->words[0]);
