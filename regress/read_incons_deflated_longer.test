@@ -1,0 +1,10 @@
+# deflated entry decompresses to more data than the uncompressed size in its header, CRC matches the data
+arguments test.zip cat 0
+return 1
+file test.zip incons-deflated-data-longer.zip
+stdout
+This entry inflates to more bytes than its header claims.
+end-of-inline-data
+stderr
+can't read file at index '0': Zip archive inconsistent: file length in header doesn't match actual file length
+end-of-inline-data
