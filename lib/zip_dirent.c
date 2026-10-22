@@ -371,18 +371,21 @@ zip_dirent_t *_zip_dirent_new(void) {
 
    If local is true, it reads a local header instead of a central directory entry.
 
-   Returns size of dirent read if successful. On error, error is filled in and -1 is returned.
+   Returns the size of the directory entry metadata if successful. For local
+   entries this includes a data descriptor, but not the compressed data. On
+   error, error is filled in and -1 is returned.
 */
 
 zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t *buffer, bool local, bool is_zip64, zip_uint64_t central_compressed_size, bool check_consistency, zip_error_t *error) {
     zip_uint8_t buf[CDENTRYSIZE];
-    zip_uint32_t size, variable_size;
+    zip_uint32_t data_descriptor_size, size, variable_size;
     zip_uint16_t filename_len, comment_len, ef_len;
     zip_string_t *utf8_string;
     zip_extra_field_t **efp;
 
     bool from_buffer = (buffer != NULL);
 
+    data_descriptor_size = 0;
     size = local ? LENTRYSIZE : CDENTRYSIZE;
 
     if (buffer) {
@@ -627,8 +630,10 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
         if (zip_source_seek(src, central_compressed_size, SEEK_CUR) != 0 || (buffer = _zip_buffer_new_from_source(src, MAX_DATA_DESCRIPTOR_LENGTH, buf, error)) == NULL) {
             return -1;
         }
+        data_descriptor_size = 4 + (is_zip64 ? 16 : 8);
         if (memcmp(_zip_buffer_peek(buffer, MAGIC_LEN), DATADES_MAGIC, MAGIC_LEN) == 0) {
             _zip_buffer_skip(buffer, MAGIC_LEN);
+            data_descriptor_size += MAGIC_LEN;
         }
         df_crc = _zip_buffer_get_32(buffer);
         df_comp_size = is_zip64 ? _zip_buffer_get_64(buffer) : _zip_buffer_get_32(buffer);
@@ -664,7 +669,7 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
     efp = local ? &zde->extra_fields.local : &zde->extra_fields.central;
     *efp = _zip_ef_remove_internal(*efp);
 
-    return (zip_int64_t)size + (zip_int64_t)variable_size;
+    return (zip_int64_t)size + (zip_int64_t)variable_size + (zip_int64_t)data_descriptor_size;
 }
 
 bool zip_dirent_process_ef_zip64(zip_dirent_t *zde, const zip_uint8_t *ef, zip_uint64_t got_len, bool local, zip_error_t *error) {
