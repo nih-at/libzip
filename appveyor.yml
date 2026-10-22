@@ -62,15 +62,24 @@ environment:
       RUN_TESTS: no
       TOXENV: py311
 
+# Match the vcpkg snapshot in .github/workflows/build.yml. It includes the
+# liblzma workaround for old MSVC x86 CLMUL CRC miscompilation.
+install:
+  - cmd: git -C C:\tools\vcpkg fetch --depth 1 https://github.com/microsoft/vcpkg.git f3e10653cc27d62a37a3763cd84b38bca07c6075
+  - cmd: git -C C:\tools\vcpkg checkout --detach f3e10653cc27d62a37a3763cd84b38bca07c6075
+  - cmd: C:\tools\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+
 before_build:
   cmd: >-
     py -3.11 -m pip install nihtest
+
+    call "%APPVEYOR_BUILD_FOLDER%\.github\appveyor-arm.cmd"
 
     mkdir build
 
     cd build
 
-    cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .. -G "%GENERATOR%" -A "%PLATFORM%" %CMAKE_OPTS%
+    cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .. -G "%GENERATOR%" -A "%GENERATOR_PLATFORM%" %CMAKE_OPTS%
 
     appveyor PushArtifact config.h
 
