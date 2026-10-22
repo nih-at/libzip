@@ -3,7 +3,16 @@
 
 #include "shell.h"
 
-argument_type_enum_entry_t bool_entries[] = {{"true", {.boolean = true}}, {"false", {.boolean = false}}, {"on", {.boolean = true}}, {"off", {.boolean = false}}, {"yes", {.boolean = true}}, {"no", {.boolean = false}}, {NULL, {0}}};
+/* clang-format off */
+argument_type_enum_entry_t bool_entries[] = {
+    {"true", {.boolean = true}}, 
+    {"false", {.boolean = false}},
+     {"on", {.boolean = true}}, 
+     {"off", {.boolean = false}}, 
+     {"yes", {.boolean = true}}, 
+     {"no", {.boolean = false}}, 
+     {NULL, {0}}};
+/* clang-format on */
 
 bool convert_int(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
     char *endptr;

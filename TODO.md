@@ -5,6 +5,8 @@
 - editline: Handle spaces when inserting common match prefix.
 - Documentation.
 - Add more commands.
+- enum argument types: match case insensitive? default case?
+- Add support for changing argument type depending on options (e.g. `cat -i`)?
 - Add `-c` option to take command from the command line arguments.
 - Switch tests to `zipsh`.
 - Deprecate `ziptool`.

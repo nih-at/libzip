@@ -9,6 +9,7 @@ set(SHELL_SOURCES
 )
 
 set(ZIPSH_SOURCES
+  zipsh/argument_types.c
   zipsh/cat.c
   zipsh/delete.c
   zipsh/file_reference.c
