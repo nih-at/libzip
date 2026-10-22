@@ -48,6 +48,7 @@
 
 struct zip_hash_entry {
     const zip_uint8_t *name;
+    zip_uint32_t name_length;
     zip_int64_t orig_index;
     zip_int64_t current_index;
     struct zip_hash_entry *next;
@@ -184,7 +185,7 @@ void _zip_hash_free(zip_hash_t *hash) {
 
 
 /* insert into hash, return error on existence or memory issues */
-bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index, zip_flags_t flags, zip_error_t *error) {
+bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint32_t name_length, zip_uint64_t index, zip_flags_t flags, zip_error_t *error) {
     zip_uint64_t hash_value;
     zip_uint32_t table_index;
     zip_hash_entry_t *entry;
@@ -200,11 +201,11 @@ bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index
         }
     }
 
-    hash_value = siphash(name, hash->hash_key);
+    hash_value = siphash(name, name_length, hash->hash_key);
     table_index = hash_value % hash->table_size;
 
     for (entry = hash->table[table_index]; entry != NULL; entry = entry->next) {
-        if (entry->hash_value == hash_value && strcmp((const char *)name, (const char *)entry->name) == 0) {
+        if (entry->hash_value == hash_value && entry->name_length == name_length && memcmp(name, entry->name, name_length) == 0) {
             if (((flags & ZIP_FL_UNCHANGED) && entry->orig_index != -1) || entry->current_index != -1) {
                 zip_error_set(error, ZIP_ER_EXISTS, 0);
                 return false;
@@ -221,6 +222,7 @@ bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index
             return false;
         }
         entry->name = name;
+        entry->name_length = name_length;
         entry->next = hash->table[table_index];
         hash->table[table_index] = entry;
         entry->hash_value = hash_value;
@@ -243,7 +245,7 @@ bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index
 
 
 /* remove entry from hash, error if not found */
-bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *error) {
+bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_uint32_t name_length, zip_error_t *error) {
     zip_uint64_t hash_value;
     zip_uint32_t index;
     zip_hash_entry_t *entry, *previous;
@@ -254,12 +256,12 @@ bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *er
     }
 
     if (hash->nentries > 0) {
-        hash_value = siphash(name, hash->hash_key);
+        hash_value = siphash(name, name_length, hash->hash_key);
         index = hash_value % hash->table_size;
         previous = NULL;
         entry = hash->table[index];
         while (entry) {
-            if (entry->hash_value == hash_value && strcmp((const char *)name, (const char *)entry->name) == 0) {
+            if (entry->hash_value == hash_value && entry->name_length == name_length && memcmp(name, entry->name, name_length) == 0) {
                 if (entry->orig_index == -1) {
                     if (previous) {
                         previous->next = entry->next;
@@ -291,7 +293,7 @@ bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *er
 
 
 /* find value for entry in hash, -1 if not found */
-zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flags_t flags, zip_error_t *error) {
+zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_uint32_t name_length, zip_flags_t flags, zip_error_t *error) {
     zip_uint64_t hash_value;
     zip_uint32_t index;
     zip_hash_entry_t *entry;
@@ -302,10 +304,10 @@ zip_int64_t _zip_hash_lookup(zip_hash_t *hash, const zip_uint8_t *name, zip_flag
     }
 
     if (hash->nentries > 0) {
-        hash_value = siphash(name, hash->hash_key);
+        hash_value = siphash(name, name_length, hash->hash_key);
         index = hash_value % hash->table_size;
         for (entry = hash->table[index]; entry != NULL; entry = entry->next) {
-            if (strcmp((const char *)name, (const char *)entry->name) == 0) {
+            if (entry->name_length == name_length && memcmp(name, entry->name, name_length) == 0) {
                 if (flags & ZIP_FL_UNCHANGED) {
                     if (entry->orig_index != -1) {
                         return entry->orig_index;
