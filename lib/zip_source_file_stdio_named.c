@@ -56,6 +56,7 @@
 #endif
 
 static bool copy_permissions(zip_source_file_context_t *ctx);
+static int set_permissions(zip_source_file_context_t *ctx, mode_t mode);
 static int create_temp_file(zip_source_file_context_t *ctx, bool create_file);
 
 static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx);
@@ -422,8 +423,7 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
         return false;
     }
 
-    /* Use file descriptor and not file name to avoid an exploitable race condition. */
-    if (fchmod(fileno((FILE *)ctx->fout), st.st_mode) < 0) {
+    if (set_permissions(ctx, st.st_mode) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
@@ -431,4 +431,13 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
     /* TODO: copy ACLs */
 
     return true;
+}
+
+static int set_permissions(zip_source_file_context_t *ctx, mode_t mode) {
+#ifdef HAVE_FCHMOD
+    /* Use file descriptor and not file name to avoid an exploitable race condition. */
+    return fchmod(fileno((FILE *)ctx->fout), mode);
+#else
+    return chmod(ctx->tmpname, mode);
+#endif
 }
