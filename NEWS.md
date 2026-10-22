@@ -1,6 +1,7 @@
 # 1.13 [Unreleased]
 
 * Include website in repository and source distribution.
+* Add support for reading Deflate64-compressed files, using inflatelib.
 
 # 1.12.1 [2026-10-14]
 

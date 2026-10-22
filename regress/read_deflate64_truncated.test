@@ -1,0 +1,10 @@
+# read deflate64 compressed file whose compressed data ends before end of stream
+features HAVE_LIBINFLATE
+program zipcmp
+return 0
+arguments -t testfile-deflate64-truncated.zip testfile-deflate64-truncated.zip
+file testfile-deflate64-truncated.zip testfile-deflate64-truncated.zip
+stderr
+testfile-deflate64-truncated.zip: error reading file d64.txt (index 0): Compressed data invalid
+testfile-deflate64-truncated.zip: error reading file d64.txt (index 0): Compressed data invalid
+end-of-inline-data
