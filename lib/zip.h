@@ -456,6 +456,7 @@ ZIP_EXTERN zip_int8_t zip_fseek(zip_file_t *_Nonnull, zip_int64_t, int);
 ZIP_EXTERN zip_int64_t zip_ftell(zip_file_t *_Nonnull);
 ZIP_EXTERN const char *_Nullable zip_get_archive_comment(zip_t *_Nonnull, int *_Nullable, zip_flags_t);
 ZIP_EXTERN int zip_get_archive_flag(zip_t *_Nonnull, zip_flags_t, zip_flags_t);
+ZIP_EXTERN zip_int64_t zip_get_archive_prefix_length(zip_t *_Nonnull);
 ZIP_EXTERN const char *_Nullable zip_get_name(zip_t *_Nonnull, zip_uint64_t, zip_flags_t);
 ZIP_EXTERN zip_int64_t zip_get_num_entries(zip_t *_Nonnull, zip_flags_t);
 ZIP_EXTERN const char *_Nonnull zip_libzip_version(void);
