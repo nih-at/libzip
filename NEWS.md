@@ -1,6 +1,7 @@
 # 1.13 [Unreleased]
 
 * Include website in repository and source distribution.
+* Support `zip_fseek()`/`zip_file_is_seekable()` for stored (uncompressed) entries encrypted with WinZip AES. Seeking means the entry's authentication code can no longer be verified unless it ends up being read fully, contiguously, from the start.
 
 # 1.12.1 [2026-10-14]
 
