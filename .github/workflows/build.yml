@@ -32,7 +32,8 @@ jobs:
       - name: install dependencies (Linux)
         if: ${{ runner.os == 'Linux' }}
         run: |
-          sudo apt-get install bzip2 libbz2-dev libzstd-dev liblzma-dev libreadline-dev
+          sudo apt-get update
+          sudo apt-get install -y bzip2 libbz2-dev libzstd-dev liblzma-dev libreadline-dev
 
       - name: install latest CMake and Ninja for lukka/run-vcpkg (Windows)
         if: ${{ runner.os == 'Windows' }}
