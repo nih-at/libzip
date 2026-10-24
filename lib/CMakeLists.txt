@@ -128,7 +128,7 @@ set(ZIP_SOURCES
   ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
   )
 
-if(WIN32)
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
   set(ZIP_SOURCES ${ZIP_SOURCES}
     zip_source_file_win32.c
     zip_source_file_win32_named.c
@@ -141,9 +141,9 @@ if(WIN32)
     set(ZIP_SOURCES ${ZIP_SOURCES} zip_source_file_win32_ansi.c zip_random_win32.c)
     set(ZIP_LIBRARIES ${ZIP_LIBRARIES} advapi32)
   endif()
-else(WIN32)
+else()
   set(ZIP_SOURCES ${ZIP_SOURCES} zip_source_file_stdio_named.c zip_random_unix.c)
-endif(WIN32)
+endif()
 
 if(HAVE_LIBBZ2)
   set(ZIP_SOURCES ${ZIP_SOURCES} zip_algorithm_bzip2.c)
@@ -182,7 +182,7 @@ add_library(libzip::zip ALIAS zip)
 target_link_libraries(zip PRIVATE ${ZIP_LIBRARIES})
 target_include_directories(zip PUBLIC ${ZIP_INCLUDE_DIRS})
 
-if(WIN32)
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
   target_compile_definitions(zip PRIVATE WIN32_LEAN_AND_MEAN)
 endif()
 

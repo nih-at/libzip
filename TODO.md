@@ -8,7 +8,8 @@
 - enum argument types: match case insensitive? default case?
 - Add support for changing argument type depending on options (e.g. `cat -i`)?
 - Add `-c` option to take command from the command line arguments.
-- Switch tests to `zipsh`.
+- Build `zipsh_regress` and `zipsh_regress_nonrandom`
+- Switch tests to `zipsh_regress`.
 - Deprecate `ziptool`.
 
 ### Infrastructure
