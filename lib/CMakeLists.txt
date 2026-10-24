@@ -128,7 +128,7 @@ set(ZIP_SOURCES
   ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
   )
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+if(IS_WINDOWS)
   set(ZIP_SOURCES ${ZIP_SOURCES}
     zip_source_file_win32.c
     zip_source_file_win32_named.c
@@ -182,7 +182,7 @@ add_library(libzip::zip ALIAS zip)
 target_link_libraries(zip PRIVATE ${ZIP_LIBRARIES})
 target_include_directories(zip PUBLIC ${ZIP_INCLUDE_DIRS})
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+if(IS_WINDOWS)
   target_compile_definitions(zip PRIVATE WIN32_LEAN_AND_MEAN)
 endif()
 

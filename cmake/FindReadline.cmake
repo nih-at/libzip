@@ -80,11 +80,17 @@ find_path(READLINE_INCLUDE_DIR
   HINTS ${PC_READLINE_INCLUDE_DIRS}
 )
 
+# Make sure the file actually exists, otherwise the version extraction fails with a fatal error.
+if (NOT EXISTS "${READLINE_INCLUDE_DIR}/readline/readline.h")
+  unset(READLINE_INCLUDE_DIR)
+endif()
+
 find_file(READLINE_DLL
   NAMES libreadline.dll readline.dll
   PATH_SUFFIXES bin
   HINTS ${PC_READLINE_PREFIX}
 )
+
 
 # On Windows, we manually define the library names to avoid mistaking the
 # implib for the static library
