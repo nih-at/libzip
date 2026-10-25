@@ -103,41 +103,58 @@ static zip_progress_t *_zip_progress_new(zip_t *za) {
     return progress;
 }
 
+/* Clear the callback before calling ud_free, which may re-enter the registration functions. */
 static void _zip_progress_free_progress_callback(zip_progress_t *progress) {
-    if (progress->ud_progress_free) {
-        progress->ud_progress_free(progress->ud_progress);
-    }
+    void (*ud_free)(void *) = progress->ud_progress_free;
+    void *ud = progress->ud_progress;
 
     progress->callback_progress = NULL;
     progress->ud_progress = NULL;
     progress->ud_progress_free = NULL;
+
+    if (ud_free) {
+        ud_free(ud);
+    }
 }
 
 static void _zip_progress_free_cancel_callback(zip_progress_t *progress) {
-    if (progress->ud_cancel_free) {
-        progress->ud_cancel_free(progress->ud_cancel);
-    }
+    void (*ud_free)(void *) = progress->ud_cancel_free;
+    void *ud = progress->ud_cancel;
 
     progress->callback_cancel = NULL;
     progress->ud_cancel = NULL;
     progress->ud_cancel_free = NULL;
+
+    if (ud_free) {
+        ud_free(ud);
+    }
 }
 
 static void _zip_progress_set_progress_callback(zip_progress_t *progress, double precision, zip_progress_callback callback, void (*ud_free)(void *), void *ud) {
-    _zip_progress_free_progress_callback(progress);
+    void (*old_ud_free)(void *) = progress->ud_progress_free;
+    void *old_ud = progress->ud_progress;
 
     progress->callback_progress = callback;
     progress->ud_progress_free = ud_free;
     progress->ud_progress = ud;
     progress->precision = precision;
+
+    if (old_ud_free) {
+        old_ud_free(old_ud);
+    }
 }
 
 void _zip_progress_set_cancel_callback(zip_progress_t *progress, zip_cancel_callback callback, void (*ud_free)(void *), void *ud) {
-    _zip_progress_free_cancel_callback(progress);
+    void (*old_ud_free)(void *) = progress->ud_cancel_free;
+    void *old_ud = progress->ud_cancel;
 
     progress->callback_cancel = callback;
     progress->ud_cancel_free = ud_free;
     progress->ud_cancel = ud;
+
+    if (old_ud_free) {
+        old_ud_free(old_ud);
+    }
 }
 
 int _zip_progress_start(zip_progress_t *progress) {
@@ -208,14 +225,9 @@ ZIP_EXTERN int zip_register_progress_callback_with_state(zip_t *za, double preci
         _zip_progress_set_progress_callback(za->progress, precision, callback, ud_free, ud);
     }
     else {
+        /* Don't free za->progress here: this may be called from a callback while it is in use. It is freed in zip_discard(). */
         if (za->progress != NULL) {
-            if (za->progress->callback_cancel == NULL) {
-                _zip_progress_free(za->progress);
-                za->progress = NULL;
-            }
-            else {
-                _zip_progress_free_progress_callback(za->progress);
-            }
+            _zip_progress_free_progress_callback(za->progress);
         }
     }
 
@@ -234,14 +246,9 @@ ZIP_EXTERN int zip_register_cancel_callback_with_state(zip_t *za, zip_cancel_cal
         _zip_progress_set_cancel_callback(za->progress, callback, ud_free, ud);
     }
     else {
+        /* See zip_register_progress_callback_with_state(). */
         if (za->progress != NULL) {
-            if (za->progress->callback_progress == NULL) {
-                _zip_progress_free(za->progress);
-                za->progress = NULL;
-            }
-            else {
-                _zip_progress_free_cancel_callback(za->progress);
-            }
+            _zip_progress_free_cancel_callback(za->progress);
         }
     }
 
