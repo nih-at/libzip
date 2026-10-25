@@ -1,18 +1,23 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "shell.h"
+#include "shell_int.h"
 
-bool help(invocation_t *invocation, error_message_t **error_message) {
-    int longest_command_name = 0;
-    for (size_t i = 0; i < n_commands; i++) {
-        size_t len = strlen(commands[i]->name);
-        if (len > longest_command_name) {
-            longest_command_name = (int)len;
-        }
-    }
+const argument_type_t argument_type_help_instance = {"help", NULL, complete_command, NULL, {0}};
+#define argument_type_help (&argument_type_help_instance)
+
+
+bool help_implementation(invocation_t *invocation, error_message_t **error_message) {
     const char *command_name = invocation->arguments[0].string;
+
     if (command_name == NULL) {
+        int longest_command_name = 0;
+        for (size_t i = 0; i < n_commands; i++) {
+            size_t len = strlen(commands[i]->name);
+            if (len > longest_command_name) {
+                longest_command_name = (int)len;
+            }
+        }
         printf("Available commands:\n");
         for (size_t i = 0; i < n_commands; i++) {
             printf("  %-*s  %s\n", (int)longest_command_name, commands[i]->name, commands[i]->help);
@@ -48,7 +53,7 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
                 if (cmd->options[i].long_name) {
                     len += strlen(cmd->options[i].long_name) + 4;
                 }
-                if (cmd->options[i].argument_type != ARGUMENT_TYPE_BOOL) {
+                if (cmd->options[i].argument_type != NULL) {
                     if (cmd->options[i].argument_name) {
                         len += strlen(cmd->options[i].argument_name) + 1;
                     }
@@ -76,7 +81,7 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
                     width += (int)strlen(cmd->options[i].long_name) + 4;
                     printf(" --%s", cmd->options[i].long_name);
                 }
-                if (cmd->options[i].argument_type != ARGUMENT_TYPE_BOOL) {
+                if (cmd->options[i].argument_type != NULL) {
                     if (cmd->options[i].argument_name) {
                         width += (int)strlen(cmd->options[i].argument_name) + 1;
                         printf(" %s", cmd->options[i].argument_name);
@@ -111,7 +116,7 @@ bool help(invocation_t *invocation, error_message_t **error_message) {
 
 /* clang-format off */
 argument_definition_t help_arguments[] = {
-    {"command", "command to display help for", ARGUMENT_TYPE_STRING, false, {.string = NULL}},
+    {"command", "command to display help for", argument_type_help, false, {.string = NULL}},
 };
 /* clang-format on */
 

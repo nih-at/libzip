@@ -16,6 +16,8 @@ If you want to contribute code, the best way is to submit a [pull request on Git
 
 If your change is large or complex, it is recommended to open an issue first to discuss the proposed changes. This helps ensure that your contribution aligns with the project's goals and gets accepted.
 
+If you submit a pull request, don't open an issue for the same change. We keep track of pull requests and issues, so this would create a duplicate.
+
 ### Issues
 
 If you found a bug or have a feature request, please open an [issue on GitHub](https://github.com/nih-at/libzip/issues). Make sure to provide as much detail as possible, including steps to reproduce the issue, expected behavior, and actual behavior.

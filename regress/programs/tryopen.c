@@ -113,6 +113,7 @@ int main(int argc, char *argv[]) {
             }
         }
         printf("\n");
+        zip_error_fini(&error);
         error_count++;
     }
 

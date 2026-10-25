@@ -2,7 +2,7 @@
 
 This guide shows how to build libzip from source. It assumes basic familiarity with using the command line and building software from source.
 
-This guide uses cmake to invoke all required commands to be platform-independent. You can, of course, also use the underlying commands directly.
+This guide uses cmake to invoke all required commands to be platform-independent. You can, of course, also use the commands appropriate for your platform directly.
 
 
 ## Dependencies
@@ -20,6 +20,8 @@ For supporting lzma- and xz-compressed zip archives, you need
 
 For supporting zstd-compressed zip archives, you need
 [zstd](https://github.com/facebook/zstd/).
+
+For command line editing support in the zip shell (`zipsh`), you need readline or a compatible library.
 
 For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
@@ -41,14 +43,14 @@ For code coverage report of the test suite, you need to have [lcov](https://gith
 
 All dependencies except cmake and zlib are optional. If they are not found, the corresponding features will be disabled, but libzip will still build and work.
 
-How to install the dependencies depends on your operating system. On Linux, you can usually install them via your package manager. On macOS, you can use Homebrew or Mac Ports. On Windows, you can use vcpkg. Details on how to use these package managers is beyond the scope of this guide, but should be easy to find online.
+How to install the dependencies depends on your operating system. On Linux, you can usually install them via your package manager; you will need to install the `-dev` packages for libraries. On macOS, you can use Homebrew or Mac Ports. On Windows, you can use vcpkg. Details on how to use these package managers is beyond the scope of this guide, but should be easy to find online.
 
 
 ## Building libzip
 
 ### 1. Download the source code.
 
-The newest release can be found on the [download page](download/) or on [GitHub](https://github.com/nih-at/libzip/releases/latest).
+The newest release can be found on the [download page](https://libzip.org/download/) or on [GitHub](https://github.com/nih-at/libzip/releases/latest).
 
 
 ### 2. Unpack the source code and navigate to the source directory.
@@ -68,6 +70,8 @@ cmake -E make_directory build
 cd build
 ```
 
+Please note that building directly in the source directory is not supported. Always create a separate build directory as shown above.
+
 
 ### 4. Run cmake to configure the build system.
 
@@ -81,6 +85,9 @@ If you want to customize the build, you can pass additional parameters to cmake 
 
 `CMAKE_INSTALL_PREFIX`
 : for setting the installation path
+
+`CMAKE_C_FLAGS`
+: for setting custom compiler flags, for example `-DCMAKE_C_FLAGS="-DMY_CUSTOM_FLAG"`
   
 `DOCUMENTATION_FORMAT`
 : choose one of `man`, `mdoc`, and `html` for  the installed documentation (default: decided by cmake depending on available tools)
@@ -90,12 +97,6 @@ If you want to customize the build, you can pass additional parameters to cmake 
 
 `LIMIT_LZMA_WINDOW`
 : If set to a number, limits the LZMA window size to that number of bytes. Without a limit, LZMA compression can use up to 4GiB of memory. Defaults to no limit.
-
-If you want to compile with custom `CFLAGS`, set them in the environment
-before running `cmake`:
-```sh
-cmake -DCMAKE_C_FLAGS="-DMY_CUSTOM_FLAG" ..
-```
 
 You can also check the [cmake FAQ](https://gitlab.kitware.com/cmake/community/-/wikis/FAQ) for more information.
 
@@ -131,7 +132,7 @@ Installing to the default location may require root privileges. You can specify 
 
 To enable collecting code coverage, pass `-DENABLE_COVERAGE=ON` to `cmake`. After running the tests with `ctest`, run `cmake --build . --target coverage` to create the report in `coverage/index.html`.
 
-Please note that this builds libzip with coverage gathering enabled. You should not use such a build in production.
+Please note that this builds libzip with coverage gathering enabled, which has a noticeable performance impact. You should not use such a build in production.
 
 
 ## Special System Requirements
@@ -141,7 +142,7 @@ Please note that this builds libzip with coverage gathering enabled. You should 
 For efficiency, libzip allocates buffers on the stack by default. These buffers are small enough to fit on the stack on modern systems, but especially on embedded systems, they might exhaust available stack space. 
 
 If you are compiling on a system with a small stack size, add
-`-DZIP_ALLOCATE_BUFFER` to `CFLAGS`. This causes libzip to allocate buffers on the heap instead. The performance impact should not be significant.
+`-DZIP_ALLOCATE_BUFFER` to `CMAKE_C_FLAGS`. This causes libzip to allocate buffers on the heap instead. The performance impact should not be significant.
 
 ### 32-bit Linux
 
@@ -155,8 +156,8 @@ will break in `zipcmp`.
 
 The website uses [Zensical](https://zensical.org/).
 
-It currently only works with Zensical version 0.0.40, we're working on making it compatible with newer versions.
-
-Install it with `pip install zensical==0.0.40`.
+Install it with `pip install zensical`.
 
 To view the website locally, run `./support/serve` and open `http://localhost:8002` in your web browser.
+
+Note: There was a bug in zensical versions 0.0.68 to 0.0.70 inclusive that prevented the website from being served correctly.

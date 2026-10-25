@@ -6,7 +6,7 @@ name: Coverity
 
 on:
   schedule:
-    - cron: '0 3 * * 1'
+    - cron: "0 3 * * 1"
       # Mondays at 03:00
   workflow_dispatch:
 
@@ -39,9 +39,13 @@ jobs:
         run: |
           sudo apt-get install libzstd-dev
 
+      - name: Prepare Build Directory
+        run: |
+          cmake -E make_directory ${{runner.workspace}}/build
+
       - name: Configure
         run: |
-          cmake ${{github.workspace}}
+          cmake -S ${{github.workspace}} -B ${{runner.workspace}}/build
 
       - name: Download Coverity
         run: |
@@ -53,7 +57,7 @@ jobs:
       - name: Build with Coverity
         run: |
           export PATH="$(pwd)/$COV_TOOLS/bin:$PATH"
-          cov-build --dir $COV_RESULTS make -j
+          cov-build --dir $COV_RESULTS make -C ${{runner.workspace}}/build -j
           # Filter out private info
           sed -E -i 's/TOKEN=([-_A-Za-z0-9]+)/TOKEN=XXX/g' cov-int/build-log.txt
 

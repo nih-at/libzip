@@ -18,27 +18,8 @@ typedef struct error_message error_message_t;
 #define PRINTF_LIKE(n, m)
 #endif
 
-
-enum argument_type {
-    ARGUMENT_TYPE_BOOL,
-    ARGUMENT_TYPE_STRING,
-    ARGUMENT_TYPE_INT8,
-    ARGUMENT_TYPE_INT16,
-    ARGUMENT_TYPE_INT32,
-    ARGUMENT_TYPE_INT64,
-    ARGUMENT_TYPE_UINT8,
-    ARGUMENT_TYPE_UINT16,
-    ARGUMENT_TYPE_UINT32,
-    ARGUMENT_TYPE_UINT64,
-
-    ARGUMENT_TYPE_COMPRESSION_METHOD,
-    ARGUMENT_TYPE_ENCRYPTION_METHOD
-};
-
-typedef enum argument_type argument_type_t;
-
 union argument {
-    bool b;
+    bool boolean;
     const char *string;
     zip_int8_t i8;
     zip_int16_t i16;
@@ -48,6 +29,7 @@ union argument {
     zip_uint16_t u16;
     zip_uint32_t u32;
     zip_uint64_t u64;
+    void *pointer;
 };
 
 typedef union argument argument_t;
@@ -69,11 +51,21 @@ struct invocation {
 };
 typedef struct invocation invocation_t;
 
+typedef struct argument_type argument_type_t;
+
+struct argument_type {
+    char *name;
+    bool (*convert)(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
+    char **(*complete)(const argument_type_t *type, const char *str);
+    void (*free_ud)(argument_t ud);
+    argument_t ud;
+};
+
 
 struct argument_definition {
     const char *name;
     const char *help;
-    argument_type_t type;
+    const argument_type_t *type;
     bool required;
     argument_t default_value;
 };
@@ -85,7 +77,7 @@ struct option_definition {
     const char *long_name;
     const char *argument_name;
     const char *help;
-    argument_type_t argument_type;
+    const argument_type_t *argument_type;
 };
 
 typedef struct option_definition option_definition_t;
@@ -95,7 +87,7 @@ struct command {
     const char *help;
     option_definition_t *options;
     size_t n_options;
-    argument_definition_t *arguments;
+    const argument_definition_t *arguments;
     size_t n_arguments;
     bool (*function)(invocation_t *invocation, error_message_t **error_message);
 };
@@ -114,9 +106,44 @@ struct words {
 };
 typedef struct words words_t;
 
+extern const argument_type_t argument_type_bool_instance;
+extern const argument_type_t argument_type_string_instance;
+extern const argument_type_t argument_type_int8_instance;
+extern const argument_type_t argument_type_int16_instance;
+extern const argument_type_t argument_type_int32_instance;
+extern const argument_type_t argument_type_int64_instance;
+extern const argument_type_t argument_type_uint8_instance;
+extern const argument_type_t argument_type_uint16_instance;
+extern const argument_type_t argument_type_uint32_instance;
+extern const argument_type_t argument_type_uint64_instance;
+#define argument_type_bool (&argument_type_bool_instance)
+#define argument_type_string (&argument_type_string_instance)
+#define argument_type_int8 (&argument_type_int8_instance)
+#define argument_type_int16 (&argument_type_int16_instance)
+#define argument_type_int32 (&argument_type_int32_instance)
+#define argument_type_int64 (&argument_type_int64_instance)
+#define argument_type_uint8 (&argument_type_uint8_instance)
+#define argument_type_uint16 (&argument_type_uint16_instance)
+#define argument_type_uint32 (&argument_type_uint32_instance)
+#define argument_type_uint64 (&argument_type_uint64_instance)
 
-#define COMMAND(name, help) command_t command_##name = {#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name}
-#define COMMAND_NO_OPTIONS(name, help) command_t command_##name = {#name, help, NULL, 0, name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name}
+struct argument_type_enum_entry {
+    const char *string;
+    argument_t value;
+};
+
+typedef struct argument_type_enum_entry argument_type_enum_entry_t;
+
+#define ARGUMENT_TYPE_ENUM(name, entries) { name, convert_enum, complete_enum, NULL, {.pointer=entries} }
+
+bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
+char **complete_enum(const argument_type_t *type, const char *str);
+
+
+#define COMMAND(name, help) command_t command_##name = {#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name##_implementation}
+#define COMMAND_NO_ARGUMENTS(name, help) command_t command_##name = {#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), NULL, 0, name##_implementation}
+#define COMMAND_NO_ARGUMENTS_OR_OPTIONS(name, help) command_t command_##name = {#name, help, NULL, 0, NULL, 0, name##_implementation}
+#define COMMAND_NO_OPTIONS(name, help) command_t command_##name = {#name, help, NULL, 0, name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name##_implementation}
 
 extern command_t *commands[];
 extern size_t n_commands;
@@ -124,19 +151,8 @@ extern size_t n_commands;
 bool execute_command(const command_t *cmd, int argc, char **argv, error_message_t **error_message);
 const command_t *find_command(const char *name);
 
-bool convert_argument(const char *str, argument_t *arg, argument_type_t type, error_message_t **error_message);
-
-#define convert_int8(out, str, error_message) convert_int(out, str, sizeof(int8_t), error_message)
-#define convert_int16(out, str, error_message) convert_int(out, str, sizeof(int16_t), error_message)
-#define convert_int32(out, str, error_message) convert_int(out, str, sizeof(int32_t), error_message)
-#define convert_int64(out, str, error_message) convert_int(out, str, sizeof(int64_t), error_message)
-#define convert_uint8(out, str, error_message) convert_uint(out, str, sizeof(uint8_t), error_message)
-#define convert_uint16(out, str, error_message) convert_uint(out, str, sizeof(uint16_t), error_message)
-#define convert_uint32(out, str, error_message) convert_uint(out, str, sizeof(uint32_t), error_message)
-#define convert_uint64(out, str, error_message) convert_uint(out, str, sizeof(uint64_t), error_message)
-
-bool convert_int(void *out, const char *str, int size, error_message_t **error_message);
-bool convert_uint(void *out, const char *str, int size, error_message_t **error_message);
+bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
+char **complete_argument(const argument_type_t *type, const char *str);
 
 error_message_t *error_message_new(const char *message);
 error_message_t *error_message_new_format(const char *fmt, ...) PRINTF_LIKE(1, 2);
@@ -154,6 +170,7 @@ bool shell_loop(const char *script_filename);
 words_t *words_new(void);
 void words_free(words_t *words);
 bool words_parse(words_t *words, const char *line, error_message_t **error_message);
+bool words_parse_partial(words_t *words, const char *line, const char *end, error_message_t **error_message);
 void words_clear(words_t *words);
 
 #endif /* SHELL_H */

@@ -1,6 +1,7 @@
 set(SHELL_SOURCES
   shell/argument.c
   shell/command.c
+  shell/complete.c
   shell/error_message.c
   shell/help.c
   shell/shell.c
@@ -8,12 +9,20 @@ set(SHELL_SOURCES
 )
 
 set(ZIPSH_SOURCES
+  zipsh/argument_types.c
   zipsh/cat.c
+  zipsh/delete.c
+  zipsh/file_reference.c
+  zipsh/list.c
+  zipsh/rename.c
   zipsh/set_default_password.c
   zipsh/zipsh.c
 )
 
 set(COMPAT_SOURCES)
+if (NOT HAVE_ASPRINTF)
+  list(APPEND COMPAT_SOURCES compat/asprintf.c)
+endif()
 if (NOT HAVE_GETLINE)
   list(APPEND COMPAT_SOURCES compat/getline.c)
 endif()
@@ -34,6 +43,15 @@ endif()
 
 add_library(shell STATIC ${SHELL_SOURCES})
 target_include_directories(shell PRIVATE shell ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
+if (HAVE_EDITLINE)
+  target_link_libraries(shell editline::editline)
+  target_sources(shell PRIVATE shell/editline.c)
+elseif (HAVE_READLINE)
+  target_link_libraries(shell readline::readline)
+  target_sources(shell PRIVATE shell/readline.c)
+else()
+  target_sources(shell PRIVATE shell/no_line_editing.c)
+endif()
 if (ENABLE_COVERAGE)
   target_compile_options(shell PRIVATE -coverage)
   target_link_options(shell PRIVATE -coverage)
@@ -62,7 +80,7 @@ target_link_libraries(zipsh shell zip)
 if (TARGET compat)
   target_link_libraries(zipsh compat)
 endif()
-target_include_directories(zipsh PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib shell zipsh ${PROJECT_BINARY_DIR})
+target_include_directories(zipsh PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} shell zipsh ${PROJECT_BINARY_DIR})
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zipsh EXPORT ${PROJECT_NAME}-bin-targets DESTINATION bin)
 endif()

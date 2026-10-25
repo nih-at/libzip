@@ -33,14 +33,14 @@ int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *inv
     for (size_t i = 0; i < cmd->n_options; i++) {
         if (cmd->options[i].long_name) {
             long_options[long_options_index].name = cmd->options[i].long_name;
-            long_options[long_options_index].has_arg = (cmd->options[i].argument_type == ARGUMENT_TYPE_BOOL) ? no_argument : required_argument;
+            long_options[long_options_index].has_arg = (cmd->options[i].argument_type == NULL) ? no_argument : required_argument;
             long_options[long_options_index].flag = NULL;
             long_options[long_options_index].val = cmd->options[i].id;
             long_options_index++;
         }
         if (cmd->options[i].id < 256) {
             *p++ = cmd->options[i].id;
-            if (cmd->options[i].argument_type != ARGUMENT_TYPE_BOOL) {
+            if (cmd->options[i].argument_type != NULL) {
                 *p++ = ':';
             }
         }
@@ -48,14 +48,15 @@ int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *inv
     *p = '\0';
     long_options[long_options_index].name = NULL;
 
+    optind = 1;
     while ((c = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
         bool found = false;
         for (size_t i = 0; i < cmd->n_options; i++) {
             if (c == cmd->options[i].id) {
                 argument_t value;
                 found = true;
-                if (cmd->options[i].argument_type == ARGUMENT_TYPE_BOOL) {
-                    value.b = true;
+                if (cmd->options[i].argument_type == NULL) {
+                    value.boolean = true;
                 }
                 else if (optarg == NULL) {
                     *error_message = error_message_new_format("Missing argument for option %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'});
@@ -64,7 +65,7 @@ int parse_options(const command_t *cmd, int argc, char **argv, invocation_t *inv
                 }
                 else {
                     error_message_t *local_error_message = NULL;
-                    if (!convert_argument(optarg, &value, cmd->options[i].argument_type, &local_error_message)) {
+                    if (!convert_argument(cmd->options[i].argument_type, &value, optarg, &local_error_message)) {
                         *error_message = error_message_new_format("Invalid argument for option %s: %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'}, error_message_get(local_error_message));
                         error_message_free(local_error_message);
                         free(long_options);
@@ -111,7 +112,7 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
     for (size_t i = 0; i < cmd->n_arguments; i++) {
         if (i + first_argument < argc) {
             error_message_t *local_error_message = NULL;
-            if (!convert_argument(argv[i + first_argument], &invocation->arguments[i], cmd->arguments[i].type, &local_error_message)) {
+            if (!convert_argument(cmd->arguments[i].type, &invocation->arguments[i], argv[i + first_argument], &local_error_message)) {
                 *error_message = error_message_new_format("Invalid argument for %s: %s", cmd->arguments[i].name, error_message_get(local_error_message));
                 invocation_free(invocation);
                 return false;
@@ -129,4 +130,29 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
     ok = cmd->function(invocation, error_message);
     invocation_free(invocation);
     return ok;
+}
+
+
+char **complete_command(const argument_type_t *type, const char *str) {
+    size_t count = 0;
+    char **matches = NULL;
+
+    for (size_t i = 0; i < n_commands; i++) {
+        if (strncmp(commands[i]->name, str, strlen(str)) == 0) {
+            count++;
+        }
+    }
+
+    matches = malloc((count + 1) * sizeof(char *));
+    if (matches) {
+        size_t j = 0;
+        for (size_t i = 0; i < n_commands; i++) {
+            if (strncmp(commands[i]->name, str, strlen(str)) == 0) {
+                matches[j++] = strdup(commands[i]->name);
+            }
+        }
+        matches[j] = NULL;
+    }
+
+    return matches;
 }

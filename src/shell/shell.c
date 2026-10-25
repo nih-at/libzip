@@ -35,13 +35,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "shell.h"
+#include "shell_int.h"
 
 #include "compat/src_compat.h"
 
 words_t *words = NULL;
 
-bool execute_line(char *line, error_message_t **error_message) {
+bool execute_line(const char *line, error_message_t **error_message) {
     bool ok = true;
 
     if (!words_parse(words, line, error_message)) {
@@ -94,6 +94,7 @@ bool execute_lines(const char *filename, FILE *input) {
 bool shell_loop(const char *script_filename) {
     FILE *input = stdin;
     const char *file_name = "*stdin*";
+    bool ok = true;
 
     if ((words = words_new()) == NULL) {
         fprintf(stderr, "Failed to allocate words structure\n");
@@ -109,7 +110,12 @@ bool shell_loop(const char *script_filename) {
         file_name = script_filename;
     }
 
-    bool ok = execute_lines(file_name, input);
+    if (use_readline(script_filename)) {
+        ok = execute_lines_readline();
+    }
+    else {
+        ok = execute_lines(file_name, input);
+    }
     if (input != stdin) {
         fclose(input);
     }
