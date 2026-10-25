@@ -7,6 +7,7 @@ set(TEST_PROGRAMS
   fopen_unchanged
   fread
   fseek
+  source_buffer_oom
   source_seek
   tryopen
 )
@@ -95,6 +96,11 @@ foreach(FULL_CASE IN LISTS EXTRA_TESTS)
   set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
   set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
 endforeach()
+
+# source_buffer_oom replaces malloc/free and needs them interposed on the
+# library to test anything; where they are not, it reports ctest's skip code.
+add_test(NAME source_buffer_oom COMMAND source_buffer_oom)
+set_tests_properties(source_buffer_oom PROPERTIES SKIP_RETURN_CODE 77)
 
 set(XFAIL_TESTS
 #  zipcmp_zip_dir_slash.test
