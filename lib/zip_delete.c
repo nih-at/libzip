@@ -37,6 +37,7 @@
 
 ZIP_EXTERN int zip_delete(zip_t *za, zip_uint64_t idx) {
     const char *name;
+    zip_uint32_t name_length;
 
     if (idx >= za->nentry) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
@@ -48,11 +49,11 @@ ZIP_EXTERN int zip_delete(zip_t *za, zip_uint64_t idx) {
         return -1;
     }
 
-    if ((name = _zip_get_name(za, idx, 0, &za->error)) == NULL) {
+    if ((name = _zip_get_name_len(za, idx, 0, &name_length, &za->error)) == NULL) {
         return -1;
     }
 
-    if (!_zip_hash_delete(za->names, (const zip_uint8_t *)name, &za->error)) {
+    if (!_zip_hash_delete(za->names, (const zip_uint8_t *)name, name_length, &za->error)) {
         return -1;
     }
 

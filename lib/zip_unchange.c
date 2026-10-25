@@ -55,9 +55,11 @@ int _zip_unchange(zip_t *za, zip_uint64_t idx, int allow_duplicates) {
     if (!allow_duplicates && (renamed || za->entry[idx].deleted)) {
         const char *orig_name = NULL;
         const char *changed_name = NULL;
+        zip_uint32_t orig_name_length = 0;
+        zip_uint32_t changed_name_length = 0;
 
         if (za->entry[idx].orig != NULL) {
-            if ((orig_name = _zip_get_name(za, idx, ZIP_FL_UNCHANGED, &za->error)) == NULL) {
+            if ((orig_name = _zip_get_name_len(za, idx, ZIP_FL_UNCHANGED, &orig_name_length, &za->error)) == NULL) {
                 return -1;
             }
 
@@ -69,19 +71,19 @@ int _zip_unchange(zip_t *za, zip_uint64_t idx, int allow_duplicates) {
         }
 
         if (renamed) {
-            if ((changed_name = _zip_get_name(za, idx, 0, &za->error)) == NULL) {
+            if ((changed_name = _zip_get_name_len(za, idx, 0, &changed_name_length, &za->error)) == NULL) {
                 return -1;
             }
         }
 
         if (orig_name) {
-            if (_zip_hash_add(za->names, (const zip_uint8_t *)orig_name, idx, 0, &za->error) == false) {
+            if (_zip_hash_add(za->names, (const zip_uint8_t *)orig_name, orig_name_length, idx, 0, &za->error) == false) {
                 return -1;
             }
         }
         if (changed_name) {
-            if (_zip_hash_delete(za->names, (const zip_uint8_t *)changed_name, &za->error) == false) {
-                _zip_hash_delete(za->names, (const zip_uint8_t *)orig_name, NULL);
+            if (_zip_hash_delete(za->names, (const zip_uint8_t *)changed_name, changed_name_length, &za->error) == false) {
+                _zip_hash_delete(za->names, (const zip_uint8_t *)orig_name, orig_name_length, NULL);
                 return -1;
             }
         }
