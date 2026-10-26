@@ -1,3 +1,10 @@
 # deflate stream is truncated but its emitted data matches the CRC and size
-program truncated_compressed_data
-return 0
+arguments -c test.zip cat 0
+return 1
+file test.zip incons-deflate-truncated.zip
+stdout
+test
+end-of-inline-data
+stderr
+can't read file at index '0': Zip archive inconsistent: compressed data truncated
+end-of-inline-data
