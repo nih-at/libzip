@@ -43,6 +43,7 @@
 
 - Improve internal documentation: directory layout, compatibility layer, shell API.
 
+- Document that edge cases that are not explicitly allowed should be assumed not to work.
 
 ## Other
 
