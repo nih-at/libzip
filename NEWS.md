@@ -1,5 +1,6 @@
 # 1.13 [Unreleased]
 
+* Report an error when compressed data ends before the end of the compression stream instead of silently accepting it (only with `ZIP_CHECKCONS`).
 * Include website in repository and source distribution.
 
 # 1.12.1 [2026-10-14]
