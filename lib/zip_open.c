@@ -58,7 +58,7 @@ static void zip_check_torrentzip(zip_t *za, const zip_cdir_t *cdir);
 static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len);
 static exists_t _zip_file_exists(zip_source_t *src, zip_error_t *error);
 static int _zip_headercomp(const zip_dirent_t *, const zip_dirent_t *);
-static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_cdir_t **cdirp, zip_error_t *error);
+static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_cdir_t **cdirp, bool allow_prefix, zip_error_t *error);
 static zip_cdir_t *_zip_read_eocd(zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_error_t *error);
 static cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offset, unsigned int flags, zip_error_t *error);
 static const unsigned char *find_eocd(zip_buffer_t *buffer, const unsigned char *last);
@@ -285,7 +285,7 @@ void _zip_set_open_error(int *zep, const zip_error_t *err, int ze) {
    Returns a struct zip_cdir which contains the central directory
    entries, or NULL if unsuccessful. */
 
-static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_cdir_t **cdirp, zip_error_t *error) {
+static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_offset, zip_cdir_t **cdirp, bool allow_prefix, zip_error_t *error) {
     zip_cdir_t *cd;
     zip_uint16_t comment_len;
     zip_uint64_t i, left;
@@ -335,8 +335,26 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
             /* An empty archive doesn't contain central directory entries. */
         }
         else if (!check_magic(cd->offset, buffer, buf_offset, za->src, CENTRAL_MAGIC)) {
-            _zip_cdir_free(cd);
-            return false;
+            bool prefix_found = false;
+
+            if (allow_prefix && cd->eocd_offset >= cd->size) {
+                zip_uint64_t actual_offset = cd->eocd_offset - cd->size;
+
+                /* The central directory offset stored in the EOCD doesn't point to the central
+                   directory, but the central directory can be found using the archive's actual
+                   layout instead. Assume the difference is the length of data prepended to the
+                   archive (e.g. a self-extractor stub) and apply it to all offsets we read. */
+                if (actual_offset > cd->offset && check_magic(actual_offset, buffer, buf_offset, za->src, CENTRAL_MAGIC)) {
+                    za->prefix_length = actual_offset - cd->offset;
+                    cd->offset = actual_offset;
+                    prefix_found = true;
+                }
+            }
+
+            if (!prefix_found) {
+                _zip_cdir_free(cd);
+                return false;
+            }
         }
     }
 
@@ -463,6 +481,15 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
         _zip_buffer_free(cd_buffer);
         _zip_cdir_free(cd);
         return true;
+    }
+
+    if (za->prefix_length > 0) {
+        /* Local header offsets read from the central directory are relative to the start of
+           the zip data, same as cd->offset was before it got adjusted above; shift them the
+           same way. */
+        for (i = 0; i < cd->nentry; i++) {
+            cd->entry[i].orig->offset += za->prefix_length;
+        }
     }
 
     if (za->open_flags & ZIP_CHECKCONS) {
@@ -720,15 +747,37 @@ static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len) {
     }
     zip_error_set(&error, ZIP_ER_NOZIP, 0);
 
+    /* Try every candidate EOCD strictly first (central directory offset must point exactly
+       where the EOCD says it does). Archives can contain more than one EOCD-like signature,
+       e.g. inside another entry's data or in the archive comment (see zip-in-archive-comment.zip
+       in the test suite); preferring a strict match everywhere over a looser one keeps us from
+       being fooled into picking the wrong one when an unambiguous, correctly-addressed central
+       directory exists somewhere in the file. Only if no candidate parses at all under strict
+       rules do we retry allowing for a constant offset added by data prepended to the archive
+       (e.g. a self-extractor stub). */
     match = NULL;
     while ((match = find_eocd(buffer, match)) != NULL) {
         _zip_buffer_set_offset(buffer, (zip_uint64_t)(match - _zip_buffer_data(buffer)));
-        if (_zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &cdir, &error)) {
+        if (_zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &cdir, false, &error)) {
             if (cdir != NULL && (za->open_flags & ZIP_CHECKCONS) && _zip_checkcons(za, cdir, &error) < 0) {
                 _zip_cdir_free(cdir);
                 cdir = NULL;
             }
             break;
+        }
+    }
+
+    if (cdir == NULL) {
+        match = NULL;
+        while ((match = find_eocd(buffer, match)) != NULL) {
+            _zip_buffer_set_offset(buffer, (zip_uint64_t)(match - _zip_buffer_data(buffer)));
+            if (_zip_read_cdir(za, buffer, (zip_uint64_t)buf_offset, &cdir, true, &error)) {
+                if (cdir != NULL && (za->open_flags & ZIP_CHECKCONS) && _zip_checkcons(za, cdir, &error) < 0) {
+                    _zip_cdir_free(cdir);
+                    cdir = NULL;
+                }
+                break;
+            }
         }
     }
 
