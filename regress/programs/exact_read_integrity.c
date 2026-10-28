@@ -403,6 +403,74 @@ check_reopened_aes(const char *archive, zip_uint64_t index, const char *password
 }
 
 
+static int
+check_write_at_limit(zip_uint64_t clone_offset, const char *name) {
+    zip_buffer_fragment_t fragments[3];
+    zip_error_t error;
+    zip_source_t *source;
+    zip_uint8_t byte = 'x';
+
+    fragments[0].data = &byte;
+    fragments[0].length = ZIP_INT64_MAX;
+    fragments[1].data = &byte;
+    fragments[1].length = ZIP_INT64_MAX;
+    fragments[2].data = &byte;
+    fragments[2].length = 1;
+
+    zip_error_init(&error);
+    source = zip_source_buffer_fragment_create(fragments, 3, 0, &error);
+    if (source == NULL) {
+        fprintf(stderr, "can't create maximum-size buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    if (zip_source_begin_write_cloning(source, clone_offset) < 0) {
+        fprintf(stderr, "can't clone buffer source for %s: %s\n", name, zip_error_strerror(zip_source_error(source)));
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (zip_source_write(source, &byte, 1) != -1) {
+        fprintf(stderr, "%s write succeeded\n", name);
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (zip_error_code_zip(zip_source_error(source)) != ZIP_ER_INVAL) {
+        fprintf(stderr, "%s write returned error %d instead of %d\n", name, zip_error_code_zip(zip_source_error(source)), ZIP_ER_INVAL);
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (zip_source_write(source, NULL, 0) != 0) {
+        fprintf(stderr, "zero-length write failed after rejecting %s\n", name);
+        zip_source_rollback_write(source);
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    zip_source_rollback_write(source);
+    zip_source_free(source);
+    zip_error_fini(&error);
+    return 0;
+}
+
+
+static int
+check_max_write(void) {
+    int fail = 0;
+
+    fail += check_write_at_limit(ZIP_UINT64_MAX, "write-end overflow");
+    fail += check_write_at_limit(ZIP_UINT64_MAX - 1, "allocation-rounding overflow");
+
+    return fail;
+}
+
+
 int
 main(void) {
     int fail;
@@ -418,6 +486,7 @@ main(void) {
     fail += check_reopened_aes("empty-badmac-aes256.zip", 0, "password", ZIP_ER_CRC, ZIP_ER_CRC);
     fail += check_reopened_aes("encrypt-aes256.zip", 1, "foofoofoo", ZIP_ER_OK, ZIP_ER_OK);
     fail += check_reopened_aes("hmac-error.zip", 0, "1234", ZIP_ER_CRC, ZIP_ER_CRC);
+    fail += check_max_write();
 
     return fail ? 1 : 0;
 }
