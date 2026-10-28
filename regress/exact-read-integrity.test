@@ -5,3 +5,5 @@ file broken.zip broken.zip
 file hmac-error.zip hmac-error.zip
 file empty-badmac-aes256.zip empty-badmac-aes256.zip
 file encrypt-aes256.zip encrypt-aes256.zip
+file trailing-data-aes256.zip trailing-data-aes256.zip
+file trailing-data-badmac-aes256.zip trailing-data-badmac-aes256.zip
