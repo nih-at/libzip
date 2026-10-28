@@ -583,16 +583,22 @@ static int buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error
 
 
 static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
-    zip_uint64_t copied, i, fragment_offset, capacity;
+    zip_uint64_t copied, i, fragment_offset, capacity, end;
 
-    if (buffer->offset + length + WRITE_FRAGMENT_SIZE - 1 < length) {
+    if (length > ZIP_UINT64_MAX - buffer->offset) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return -1;
     }
 
+    end = buffer->offset + length;
+
     /* grow buffer if needed */
     capacity = buffer_capacity(buffer);
-    if (buffer->offset + length > capacity) {
+    if (end > capacity) {
+        if (end > ZIP_UINT64_MAX - (WRITE_FRAGMENT_SIZE - 1)) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
         zip_uint64_t needed_fragments = buffer->nfragments + (length - (capacity - buffer->offset) + WRITE_FRAGMENT_SIZE - 1) / WRITE_FRAGMENT_SIZE;
 
         if (needed_fragments > buffer->fragments_capacity) {
