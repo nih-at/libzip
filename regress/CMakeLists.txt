@@ -11,6 +11,10 @@ set(TEST_PROGRAMS
   tryopen
 )
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_GETXATTR AND HAVE_SETXATTR AND HAVE_REMOVEXATTR AND HAVE_FSETXATTR AND HAVE_FREMOVEXATTR)
+  list(APPEND TEST_PROGRAMS acl_preserve)
+endif()
+
 set(HOLE_USERS
   hole
   ziptool_regress
@@ -26,7 +30,7 @@ foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
   else()
     add_executable(${PROGRAM} programs/${PROGRAM}.c)
     target_link_libraries(${PROGRAM} zip)
-    
+
     if (ENABLE_COVERAGE)
       target_compile_options(${PROGRAM} PRIVATE -coverage)
       target_link_options(${PROGRAM} PRIVATE -coverage)
@@ -88,6 +92,11 @@ string(REPLACE ";" "\\;" path "${path}")
 # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
 file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
+if(TARGET acl_preserve)
+  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+  add_test(NAME acl-preserve COMMAND acl_preserve)
+  set_tests_properties(acl-preserve PROPERTIES SKIP_RETURN_CODE 77 WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+endif()
 foreach(FULL_CASE IN LISTS EXTRA_TESTS)
   get_filename_component(CASE ${FULL_CASE} NAME)
   add_test(NAME ${CASE} COMMAND ${NIHTEST} -v ${CASE})
