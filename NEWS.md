@@ -1,6 +1,7 @@
 # 1.13 [Unreleased]
 
 * Include website in repository and source distribution.
+* Fix use after free and double free when a progress or cancel callback, or its `ud_free` function, unregisters a callback.
 
 # 1.12.1 [2026-10-14]
 

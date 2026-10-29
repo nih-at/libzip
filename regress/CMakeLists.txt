@@ -7,6 +7,7 @@ set(TEST_PROGRAMS
   fopen_unchanged
   fread
   fseek
+  progress_reentrant
   source_seek
   tryopen
 )
