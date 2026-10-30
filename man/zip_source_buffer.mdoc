@@ -55,7 +55,12 @@ of size
 .Ar len .
 If
 .Ar freep
-is non-zero, the buffer will be freed when it is no longer needed.
+is non-zero, the buffer will be freed when it is no longer needed; if
+.Ar len
+is zero, it is freed when the source is created.
+If the functions fail, the buffer is not freed, even if
+.Ar freep
+is non-zero, and freeing it remains the responsibility of the caller.
 .Ar data
 must remain valid for the lifetime of the created source.
 .Pp

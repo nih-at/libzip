@@ -69,6 +69,13 @@ point to must remain valid for the lifetime of the created source.
 .Ar fragments
 itself can be discarded once the source is created.
 .Pp
+Data of zero length fragments is not kept; if
+.Ar freep
+is non-zero, it is freed when the source is created.
+If the functions fail, no fragment data is freed, even if
+.Ar freep
+is non-zero, and freeing it remains the responsibility of the caller.
+.Pp
 The source can be used to open a zip archive from.
 .Sh RETURN VALUES
 Upon successful completion, the created source is returned.
