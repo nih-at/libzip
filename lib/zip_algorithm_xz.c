@@ -87,6 +87,37 @@ struct ctx {
 };
 
 
+/* 256 MiB: above the 64 MiB dictionary used by the highest standard xz/lzma preset
+   (-9e), used as the decoder memory limit when LIMIT_LZMA_WINDOW is unset and we
+   can't query physical memory. */
+#define XZ_DECODER_MEMLIMIT_CEILING ((zip_uint64_t)256 * 1024 * 1024)
+
+/* LZMA_WINDOW_LIMIT is UINT64_MAX unless LIMIT_LZMA_WINDOW was set at build time, and
+   liblzma takes that to mean "no decoder memory limit". The LZMA/XZ header in a zip
+   entry carries an attacker-controlled dictionary size of up to ~4 GiB, so with no
+   limit a few hundred bytes of compressed data can make liblzma attempt a multi-
+   gigabyte allocation before any actual decompression happens.
+
+   Keep an explicitly configured limit unchanged. Otherwise use a quarter of physical
+   memory, capped at the ceiling above; a quarter of physical memory is liblzma's own
+   suggested default when the caller has no better value (see memlimit_threading in
+   lzma/container.h). */
+static zip_uint64_t decoder_memlimit(void) {
+    zip_uint64_t limit = LZMA_WINDOW_LIMIT;
+
+    if (limit == ZIP_UINT64_MAX) {
+        zip_uint64_t physmem = lzma_physmem();
+
+        limit = XZ_DECODER_MEMLIMIT_CEILING;
+        if (physmem > 0 && physmem / 4 < limit) {
+            limit = physmem / 4;
+        }
+    }
+
+    return limit;
+}
+
+
 static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
     /*
      According to https://sourceforge.net/p/sevenzip/discussion/45797/thread/b6bd62f8/
@@ -215,10 +246,10 @@ static bool start(void *ud, zip_stat_t *st, zip_file_attributes_t *attributes) {
     }
     else {
         if (ctx->method == ZIP_CM_LZMA) {
-            ret = lzma_alone_decoder(&ctx->zstr, LZMA_WINDOW_LIMIT);
+            ret = lzma_alone_decoder(&ctx->zstr, decoder_memlimit());
         }
         else {
-            ret = lzma_stream_decoder(&ctx->zstr, LZMA_WINDOW_LIMIT, LZMA_CONCATENATED);
+            ret = lzma_stream_decoder(&ctx->zstr, decoder_memlimit(), LZMA_CONCATENATED);
         }
     }
 
