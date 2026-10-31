@@ -714,7 +714,10 @@ static int copy_source(zip_t *za, zip_source_t *src, zip_source_t *src_for_lengt
 
     byte_array_fini(buf);
 
-    zip_source_close(src);
+    if (zip_source_close(src) < 0 && ret == 0) {
+        zip_error_set_from_source(&za->error, src);
+        ret = -1;
+    }
 
     return ret;
 }
