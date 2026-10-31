@@ -35,6 +35,10 @@ option(BUILD_OSSFUZZ "Build fuzzers for ossfuzz" ON)
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_DOC "Build documentation" ON)
 
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "In-source build is not supported. Please create a separate build directory and run CMake from there.")
+endif()
+
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
