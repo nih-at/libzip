@@ -7,6 +7,7 @@ set(TEST_PROGRAMS
   fopen_unchanged
   fread
   fseek
+  hash_nul_name
   source_seek
   tryopen
 )

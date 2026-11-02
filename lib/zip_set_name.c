@@ -44,6 +44,7 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
     bool same_as_orig;
     zip_int64_t i;
     const zip_uint8_t *old_name, *new_name;
+    zip_uint32_t old_name_length = 0, new_name_length = 0;
     zip_string_t *old_str;
 
     if (idx >= za->nentry) {
@@ -103,7 +104,7 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
         }
     }
 
-    if ((new_name = _zip_string_get(same_as_orig ? e->orig->filename : str, NULL, 0, &za->error)) == NULL) {
+    if ((new_name = _zip_string_get(same_as_orig ? e->orig->filename : str, &new_name_length, 0, &za->error)) == NULL) {
         _zip_string_free(str);
         return -1;
     }
@@ -119,7 +120,7 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
     }
 
     if (old_str) {
-        if ((old_name = _zip_string_get(old_str, NULL, 0, &za->error)) == NULL) {
+        if ((old_name = _zip_string_get(old_str, &old_name_length, 0, &za->error)) == NULL) {
             _zip_string_free(str);
             return -1;
         }
@@ -128,12 +129,12 @@ int _zip_set_name(zip_t *za, zip_uint64_t idx, const char *name, zip_flags_t fla
         old_name = NULL;
     }
 
-    if (_zip_hash_add(za->names, new_name, idx, 0, &za->error) == false) {
+    if (_zip_hash_add(za->names, new_name, new_name_length, idx, 0, &za->error) == false) {
         _zip_string_free(str);
         return -1;
     }
     if (old_name) {
-        _zip_hash_delete(za->names, old_name, NULL);
+        _zip_hash_delete(za->names, old_name, old_name_length, NULL);
     }
 
     if (same_as_orig) {

@@ -1,0 +1,3 @@
+# file names containing NUL bytes must not be found by truncated lookups
+program hash_nul_name
+return 0

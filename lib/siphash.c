@@ -62,10 +62,10 @@
 /*
     Computes a SipHash value
 */
-zip_uint64_t siphash(const zip_uint8_t *data, const zip_uint8_t *key) {
+zip_uint64_t siphash(const zip_uint8_t *data, size_t length, const zip_uint8_t *key) {
     const zip_uint8_t *ni = data;
     const zip_uint8_t *kk = key;
-    size_t inlen = strlen((const char *)data);
+    size_t inlen = length;
     zip_uint64_t out;
 
     zip_uint64_t v0 = UINT64_C(0x736f6d6570736575);
