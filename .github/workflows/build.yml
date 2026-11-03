@@ -59,13 +59,13 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         working-directory: ${{runner.workspace}}/build
         run: |
-          cmake ${{ matrix.cmake_extra }} ${{github.workspace}}
+          cmake ${{ matrix.cmake_extra }} -DREQUIRE_ALL_TESTS=ON ${{github.workspace}}
 
       - name: configure (Windows)
         if: ${{ runner.os == 'Windows' }}
         working-directory: ${{runner.workspace}}/build
         run: |
-          cmake ${{ matrix.cmake_extra }} -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
+          cmake ${{ matrix.cmake_extra }} -DREQUIRE_ALL_TESTS=ON -DCMAKE_TOOLCHAIN_FILE=${{env.VCPKG_ROOT}}/scripts/buildsystems/vcpkg.cmake ${{github.workspace}}
 
       - name: build
         working-directory: ${{runner.workspace}}/build
