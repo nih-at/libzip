@@ -1,0 +1,6 @@
+# read deflate64 compressed file, check size and CRC
+features HAVE_LIBINFLATE
+program zipcmp
+return 0
+arguments -t testfile-deflate64.zip testfile-deflate64.zip
+file testfile-deflate64.zip testfile-deflate64.zip
