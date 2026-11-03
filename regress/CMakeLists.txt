@@ -11,6 +11,9 @@ if (CMOCKA_FOUND)
 
     add_test(NAME ${PROGRAM} COMMAND ${PROGRAM})
   endforeach()
+
+  # The internal symbol is hidden when zip is a shared library, so link against the file directly.
+  target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 endif()
 
 if (NIHTEST)
@@ -52,9 +55,6 @@ if (NIHTEST)
       target_link_libraries(${PROGRAM} compat)
     endif()
   endforeach()
-
-  # The internal symbol is hidden when zip is a shared library, so link against the file directly.
-  target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 
   foreach(PROGRAM IN LISTS HOLE_USERS)
     target_sources(${PROGRAM} PRIVATE programs/source_hole.c)
