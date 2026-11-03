@@ -384,7 +384,7 @@ if(BUILD_REGRESS AND NOT NIHTEST)
 endif()
 
 if(BUILD_REGRESS)
-  find_package(CMocka REQUIRED)
+  find_package(CMocka)
   find_program(NIHTEST nihtest)
 
   if (REQUIRE_ALL_TESTS AND (NOT CMOCKA_FOUND OR NOT NIHTEST))

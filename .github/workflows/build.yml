@@ -33,7 +33,12 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt-get update
-          sudo apt-get install -y bzip2 libbz2-dev libzstd-dev liblzma-dev libreadline-dev
+          sudo apt-get install -y bzip2 libbz2-dev libzstd-dev liblzma-dev libreadline-dev libcmocka-dev
+
+      - name: install dependencies (macOS)
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          brew install cmocka
 
       - name: install latest CMake and Ninja for lukka/run-vcpkg (Windows)
         if: ${{ runner.os == 'Windows' }}
