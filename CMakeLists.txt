@@ -29,11 +29,17 @@ option(ENABLE_COVERAGE "Enable code coverage reporting of test suite" OFF)
 
 option(LIMIT_LZMA_WINDOW "Set limit for LZMA window size. Without a limit, LZMA compression can use up to 4GiB of memory" OFF)
 
+option(REQUIRE_ALL_TESTS "Require all tests to be available" OFF)
+
 option(BUILD_TOOLS "Build tools in the src directory (zipcmp, zipmerge, ziptool)" ON)
 option(BUILD_REGRESS "Build regression tests" ON)
 option(BUILD_OSSFUZZ "Build fuzzers for ossfuzz" ON)
 option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_DOC "Build documentation" ON)
+
+if (REQUIRE_ALL_TESTS AND (NOT BUILD_REGRESS OR NOT BUILD_TOOLS))
+  message(FATAL_ERROR "-- REQUIRE_ALL_TESTS is ON, but regression tests or tools are explicitly disabled")
+endif()
 
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source build is not supported. Please create a separate build directory and run CMake from there.")
@@ -378,9 +384,26 @@ if(BUILD_REGRESS AND NOT NIHTEST)
 endif()
 
 if(BUILD_REGRESS)
-  include(CTest)
-  add_subdirectory(regress)
-endif()
+  find_package(CMocka REQUIRED)
+  find_program(NIHTEST nihtest)
+
+  if (REQUIRE_ALL_TESTS AND (NOT CMOCKA_FOUND OR NOT NIHTEST))
+    message(FATAL_ERROR "-- REQUIRE_ALL_TESTS is ON, but not all test dependencies are available")
+  endif()
+
+  if(NOT CMOCKA_FOUND AND NOT NIHTEST)
+    message(WARNING "-- neither CMocka nor nihtest found, regression testing disabled")
+    set(BUILD_REGRESS OFF)
+  else()
+    include(CTest)
+    add_subdirectory(regress)
+    if(NOT CMOCKA_FOUND)
+      message(WARNING "-- CMocka not found, unit tests disabled")
+    elseif(NOT NIHTEST)
+      message(WARNING "-- nihtest not found, program tests disabled")
+    endif()
+  endif()
+endif(BUILD_REGRESS)
 
 if(BUILD_OSSFUZZ)
   add_subdirectory(ossfuzz)

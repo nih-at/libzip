@@ -34,38 +34,40 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "cmocka_utilities.h"
+
 #include "zipint.h"
 
+#define TEST_DATA_SIZE 6
 
-static int check_range(size_t start, size_t length) {
-    static const unsigned char expected[] = {0xa5, 0x11, 0x22, 0x33, 0x44, 0x5a};
-    unsigned char buffer[sizeof(expected)];
-    size_t i;
-    int ret = 0;
+struct test_data {
+    size_t start;
+    size_t length;
+    zip_uint8_t input[TEST_DATA_SIZE];
+    zip_uint8_t output[TEST_DATA_SIZE];
+};
 
-    if (start > sizeof(buffer) || length > sizeof(buffer) - start) {
-        fprintf(stderr, "invalid crypto clear test range\n");
-        return -1;
-    }
-    memcpy(buffer, expected, sizeof(buffer));
-    _zip_crypto_clear(buffer + start, length);
+typedef struct test_data test_data_t;
 
-    for (i = 0; i < sizeof(buffer); i++) {
-        unsigned char wanted = i >= start && i - start < length ? 0 : expected[i];
-        if (buffer[i] != wanted) {
-            fprintf(stderr, "crypto clear (%zu, %zu) byte %zu: expected %u, got %u\n", start, length, i, wanted, buffer[i]);
-            ret = -1;
-        }
-    }
+/* clang-format off */
+const test_data_t test_data[] = {
+    {.start = 1, .length = 4, .input = {0xa5, 0x11, 0x22, 0x33, 0x44, 0x5a}, .output = {0xa5, 0, 0, 0, 0, 0x5a}},
+    {.start = 2, .length = 0, .input = {0xa5, 0x11, 0x22, 0x33, 0x44, 0x5a}, .output = {0xa5, 0x11, 0x22, 0x33, 0x44, 0x5a}}, 
+    {.start = 0, .length = 6, .input = {0xa5, 0x11, 0x22, 0x33, 0x44, 0x5a}, .output = {0, 0, 0, 0, 0, 0}}};
+/* clang-format on */
 
-    return ret;
+size_t test_data_count = sizeof(test_data) / sizeof(test_data[0]);
+
+void run_test(void **state) {
+    test_data_t *test = (test_data_t *)*state;
+    zip_uint8_t buffer[TEST_DATA_SIZE];
+
+    memcpy(buffer, test->input, TEST_DATA_SIZE);
+    _zip_crypto_clear(buffer + test->start, test->length);
+
+    assert_memory_equal(buffer, test->output, TEST_DATA_SIZE);
 }
 
-
 int main(void) {
-    int ret = 0;
-    ret |= check_range(1, 4);
-    ret |= check_range(2, 0);
-    ret |= check_range(0, 6);
-    return ret == 0 ? 0 : 1;
+    return run_test_table("crypto_clear", run_test, (void *)test_data, sizeof(test_data[0]), test_data_count);
 }
