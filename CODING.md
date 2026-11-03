@@ -113,13 +113,13 @@ ZIP_EXTERN const char *_Nonnull zip_libzip_version(void);
 
 ## Testing
 
-We use [nihtest](https://nih.at/nihtest/) for testing. It is a framework to test command-line programs, allowing to set up input files and comparing output against expected results.
+For tests reading input files or creating output files, we use [nihtest](https://nih.at/nihtest/). It is a framework to test command-line programs, allowing to set up input files and comparing output against expected results.
+
+For unit tests, we use [CMocka](https://cmocka.org/).
 
 We prefer data driven tests over one-off programs. For API level tests, use `ziptool_regress`.
 
 We plan to add tools that allow testing of other components, e.g. sources. These will take commands from stdin, one command per line, and be able to run a series of commands in a single test. This allows for more complex testing scenarios and better coverage of the codebase.
-
-We plan to use a framework for C unit tests. This will make writing tests not covered by the methods above easier and more consistent. 
 
 ### Test Interface
 
