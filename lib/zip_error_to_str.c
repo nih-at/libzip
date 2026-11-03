@@ -54,7 +54,7 @@ ZIP_EXTERN int zip_error_to_str(char *buf, zip_uint64_t len, int ze, int se) {
     if (buf != NULL && len > 0) {
         copy_len = ZIP_MIN(len - 1, error_string_len);
         /* Since all string copy functions are not portable and/or deprecated, use memcpy_s(). */
-        memcpy_s(buf, len, error_string, copy_len);
+        (void)memcpy_s(buf, len, error_string, copy_len);
         buf[copy_len] = '\0';
     }
 
