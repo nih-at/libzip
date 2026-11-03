@@ -7,6 +7,7 @@ set(TEST_PROGRAMS
   fopen_unchanged
   fread
   fseek
+  pkware_keys_clear
   source_seek
   tryopen
 )
@@ -40,6 +41,7 @@ endforeach()
 
 # The internal symbol is hidden when zip is a shared library, so link against the file directly.
 target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
+target_sources(pkware_keys_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_pkware.c ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 
 foreach(PROGRAM IN LISTS HOLE_USERS)
   target_sources(${PROGRAM} PRIVATE programs/source_hole.c)

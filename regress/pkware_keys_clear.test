@@ -1,0 +1,3 @@
+# test PKWARE keystream clearing helper used by trad_pkware_free
+program pkware_keys_clear
+return 0

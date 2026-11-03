@@ -187,6 +187,10 @@ static zip_int64_t pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_u
         st->encryption_method = ZIP_EM_TRAD_PKWARE;
         st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
         if (st->valid & ZIP_STAT_COMP_SIZE) {
+            if (ZIP_CHECK_ADD_OVERFLOW(st->comp_size, ZIP_CRYPTO_PKWARE_HEADERLEN)) {
+                zip_error_set(&ctx->error, ZIP_ER_DATA_LENGTH, 0);
+                return -1;
+            }
             st->comp_size += ZIP_CRYPTO_PKWARE_HEADERLEN;
         }
 
@@ -258,6 +262,8 @@ static void trad_pkware_free(struct trad_pkware *ctx) {
 
     _zip_crypto_clear(ctx->password, strlen(ctx->password));
     free(ctx->password);
+    /* Password-derived keystream state is sensitive key material. */
+    _zip_crypto_clear(&ctx->keys, sizeof(ctx->keys));
     _zip_buffer_free(ctx->buffer);
     zip_error_fini(&ctx->error);
     free(ctx);
