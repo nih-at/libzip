@@ -60,7 +60,9 @@ about API changes and how to adapt your code for them in [API Changes](explanati
 
 ## Staying in Touch
 
-The official repository is at [GitHub](https://github.com/nih-at/libzip/). You can submit bug reports and feature requests via the [issue tracker](https://github.com/nih-at/libzip/issues), or submit [pull requests](https://github.com/nih-at/libzip/pulls) as well.
+The official repository is at [GitHub](https://github.com/nih-at/libzip/).
+
+If you want to contribute to libzip, please refer to the [Contributing guidelines](explanations/contributing.md).
 
 If you have questions about using libzip, you can use the [discussions](https://github.com/nih-at/libzip/discussions).
 

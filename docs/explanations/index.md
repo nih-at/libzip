@@ -4,6 +4,10 @@ This section contains explanations of the design and rationale behind libzip. It
 
 For a comprehensive reference manual, see the [Reference](../documentation/index.md) section. To get started, refer to the [Tutorials](../tutorials/index.md) section. For examples of using libzip and how to approach various programming problems, see the [How-To Guides](../guides/index.md) section.
 
+## [Contributing to libzip](contributing.md)
+
+These guidelines provide instructions and best practices for contributing to the libzip project, including how to report issues, submit patches, and what to do before making contributions.
+
 ## [Coding Guidelines](coding.md)
 
 These guidelines outline the coding standards and best practices for contributing to the libzip project. Following these guidelines helps maintain code quality, readability, and consistency across the project.

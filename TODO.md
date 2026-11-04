@@ -1,8 +1,16 @@
+## TODOs
+
+Overhaul TODO file:
+
+- Indicate which tasks we consider good candidates for contributions, noting if details should be discussed with the maintainers before starting.
+- Categorize and prioritize tasks.
+- Remove completed or obsolete tasks.
+
 ## Tests
 
 ### zipsh
 
-- editline: Handle spaces when inserting common match prefix.
+- editline: Handle spaces and quotes when inserting common match prefix.
 - Documentation.
 - Add more commands.
 - enum argument types: match case insensitive? default case?
@@ -14,14 +22,12 @@
 
 ### Infrastructure
 
-- Find framework for C unit tests (e.g. CMocka). Should support data driven tests.
 - Add test program for testing `zip_source_t` API using the `shell` library.
-- Switch existing dedicated test programs to one of the above, where possible.
+- Switch existing dedicated test programs to sources shell or CMocka, where possible.
 
 ### CI
 
 - Add CI build with sanitizers enabled.
-- Add cmake option to fail if dependencies for tests are missing, use in CI builds.
 
 ### Specific Tests
 
@@ -38,8 +44,6 @@
 - Handle data sources with unknown uncompressed size: if we forced ZIP64 and don't need it, return specific error (so calling code can decide what to do (e. g. clear torrentzip flag and call `zip_close()` again)).
 
 ## Documentation
-
-- Integrate coding and contributing guidelines into the website. 
 
 - Improve internal documentation: directory layout, compatibility layer, shell API.
 
@@ -134,7 +138,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 ## Documentation
 
 * document valid file paths
-* document: `ZIP_SOURCE_CLOSE` implementation can't return error
 * keep error codes in man pages in sync
 * document error codes in new man pages
 
@@ -147,7 +150,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   - [Github Community Profile](https://github.com/nih-at/libzip/community)
 * test different crypto backends with GitHub actions.
 * improve man page formatting of tagged lists on webpage (`<dl>`)
-* rewrite `make_zip_errors.sh` in cmake
 * script to check if all exported symbols are marked with `ZIP_EXTERN`, add to `make distcheck`
 
 ## macOS / iOS framework

@@ -132,3 +132,9 @@ If it is run in verbose mode, it should print details of each failure, including
 ## Documentation
 
 All public functions, types, and macros should be documented in the provided man pages, which also serve as the reference section of the website.
+
+Note that any documented aspect is part of the public API and should be considered stable and subject to the project's compatibility guarantees.  Aspects that are not documented are undefined behavior, which means users should not rely on them and they may be defined as needed later. Therefore implementation details we don't want to guarantee going forward should not be documented.
+
+The reference documentation should be written with the user's perspective in mind: it should clearly explain which prerequisites have to be met when calling a function, what the function does, the meaning of its arguments, the expected return values, and any potential side effects or error conditions. Avoid documenting internal implementation details and keep the documented prerequisites simple and easy to understand.
+
+The reader is expected to have a basic understanding of C programming and conventions. Use your judgment what should be obvious (e. g. an argument may only be `NULL` if explicitly allowed by the documentation) and what should be explicitly documented.
