@@ -141,8 +141,8 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
     needs_decrypt = ((flags & ZIP_FL_ENCRYPTED) == 0) && encrypted;
     compressed = (st.valid & ZIP_STAT_COMP_METHOD) && (st.comp_method != ZIP_CM_STORE);
     needs_decompress = ((flags & ZIP_FL_COMPRESSED) == 0) && compressed;
-    /* when reading the whole file, check for CRC errors */
-    needs_crc = ((flags & ZIP_FL_COMPRESSED) == 0 || !compressed) && !partial_data && (st.valid & ZIP_STAT_CRC) != 0;
+    /* when reading the whole file, check for CRC errors; for decrypted data without CRC (WinZip AES AE-2), still check the length */
+    needs_crc = ((flags & ZIP_FL_COMPRESSED) == 0 || !compressed) && !partial_data && ((st.valid & ZIP_STAT_CRC) != 0 || needs_decrypt);
 
     if (needs_decrypt) {
         if (password == NULL) {

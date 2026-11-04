@@ -152,11 +152,15 @@ static zip_int64_t crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint6
             /* TODO: Set comp_size, comp_method, encryption_method?
                     After all, this only works for uncompressed data. */
             st->size = ctx->size;
-            st->crc = ctx->crc;
             st->comp_size = ctx->size;
             st->comp_method = ZIP_CM_STORE;
             st->encryption_method = ZIP_EM_NONE;
-            st->valid |= ZIP_STAT_SIZE | ZIP_STAT_CRC | ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD | ZIP_STAT_ENCRYPTION_METHOD;
+            st->valid |= ZIP_STAT_SIZE | ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD | ZIP_STAT_ENCRYPTION_METHOD;
+            /* When validating, don't report a CRC for data that has none (WinZip AES AE-2). */
+            if (!ctx->validate || (st->valid & ZIP_STAT_CRC)) {
+                st->crc = ctx->crc;
+                st->valid |= ZIP_STAT_CRC;
+            }
         }
         return 0;
     }
