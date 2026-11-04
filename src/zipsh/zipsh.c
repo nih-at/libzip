@@ -40,6 +40,8 @@
 
 zip_t *archive = NULL;
 
+zip_flags_t default_flags = 0;
+
 int main(int argc, char *argv[]) {
     const char *script_filename = NULL;
     const char *archive_name = NULL;

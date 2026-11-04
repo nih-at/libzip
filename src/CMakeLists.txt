@@ -16,6 +16,7 @@ set(ZIPSH_SOURCES
   zipsh/list.c
   zipsh/rename.c
   zipsh/set_default_password.c
+  zipsh/standard_flags.c
   zipsh/zipsh.c
 )
 

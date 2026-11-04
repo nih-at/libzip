@@ -66,7 +66,7 @@ argument_definition_t cat_arguments[] = {
 };
 
 option_definition_t cat_options[] = {
-    {'i', "index", NULL, "file argument is index instead of name", NULL},
+    FILE_REFERENCE_OPTIONS
 };
 /* clang-format on */
 

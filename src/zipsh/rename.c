@@ -27,7 +27,7 @@ argument_definition_t rename_arguments[] = {
 };
 
 option_definition_t rename_options[] = {
-    {'i', "index", NULL, "file argument is index instead of name", NULL},
+    FILE_REFERENCE_OPTIONS
 };
 /* clang-format on */
 

@@ -11,6 +11,7 @@ Overhaul TODO file:
 ### zipsh
 
 - editline: Handle spaces and quotes when inserting common match prefix.
+- Sort options in help output.
 - Documentation.
 - Add more commands.
 - enum argument types: match case insensitive? default case?

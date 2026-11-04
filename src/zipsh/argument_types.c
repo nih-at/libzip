@@ -31,7 +31,18 @@ static argument_type_enum_entry_t encryption_method_entries[] = {
     {"AES-256", {.u16 = ZIP_EM_AES_256 } },
     {NULL, {0}}
 };
+
+// guess, utf-8, CP437, raw
+static argument_type_enum_entry_t encoding_entries[] = {
+    {"guess", {.u32 = 0 } },
+    {"UTF-8", {.u32 = ZIP_FL_ENC_UTF_8 } },
+    {"CP437", {.u32 = ZIP_FL_ENC_CP437 } },
+    {"raw", {.u32 = ZIP_FL_ENC_RAW } },
+    {NULL, {0}}
+};
+
 /* clang-format on */
 
 const argument_type_t argument_type_compression_method_instance = ARGUMENT_TYPE_ENUM("compression_method", compression_method_entries);
 const argument_type_t argument_type_encryption_method_instance = ARGUMENT_TYPE_ENUM("encryption_method", encryption_method_entries);
+const argument_type_t argument_type_encoding_instance = ARGUMENT_TYPE_ENUM("encoding", encoding_entries);

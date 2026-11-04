@@ -75,7 +75,7 @@ bool help_implementation(invocation_t *invocation, error_message_t **error_messa
                     }
                 }
                 else {
-                    printf("    ");
+                    printf("     ");
                 }
                 if (cmd->options[i].long_name) {
                     width += (int)strlen(cmd->options[i].long_name) + 4;
