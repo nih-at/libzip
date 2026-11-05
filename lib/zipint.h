@@ -47,6 +47,7 @@
 #endif
 
 #include "zip.h"
+#include "zip_bounds_safety.h" /* optional -fbounds-safety macros */
 
 #define CENTRAL_MAGIC "PK\1\2"
 #define LOCAL_MAGIC "PK\3\4"
@@ -486,7 +487,12 @@ struct zip_buffer {
     bool ok;
     bool free_data;
 
-    zip_uint8_t *data;
+    /* size is the capacity companion for data (bytes).
+     * Field order is preserved (pointer before size); update sites assign
+     * capacity before the pointer so sized-by invariants hold under
+     * optional -fbounds-safety builds.
+     */
+    zip_uint8_t *ZIP_SIZED_BY(size) data;
     zip_uint64_t size;
     zip_uint64_t offset;
 };
@@ -542,23 +548,23 @@ zip_int64_t _zip_add_entry(zip_t *);
 zip_uint8_t *_zip_buffer_data(zip_buffer_t *buffer);
 bool _zip_buffer_eof(zip_buffer_t *buffer);
 void _zip_buffer_free(zip_buffer_t *buffer);
-zip_uint8_t *_zip_buffer_get(zip_buffer_t *buffer, zip_uint64_t length);
+zip_uint8_t *ZIP_SIZED_BY_OR_NULL(length) _zip_buffer_get(zip_buffer_t *buffer, zip_uint64_t length);
 zip_uint16_t _zip_buffer_get_16(zip_buffer_t *buffer);
 zip_uint32_t _zip_buffer_get_32(zip_buffer_t *buffer);
 zip_uint64_t _zip_buffer_get_64(zip_buffer_t *buffer);
 zip_uint8_t _zip_buffer_get_8(zip_buffer_t *buffer);
 zip_uint64_t _zip_buffer_left(zip_buffer_t *buffer);
-zip_buffer_t *_zip_buffer_new(zip_uint8_t *data, zip_uint64_t size);
-zip_buffer_t *_zip_buffer_new_from_source(zip_source_t *src, zip_uint64_t size, zip_uint8_t *buf, zip_error_t *error);
+zip_buffer_t *_zip_buffer_new(zip_uint8_t *ZIP_SIZED_BY_OR_NULL(size) data, zip_uint64_t size);
+zip_buffer_t *_zip_buffer_new_from_source(zip_source_t *src, zip_uint64_t size, zip_uint8_t *ZIP_SIZED_BY_OR_NULL(size) buf, zip_error_t *error);
 zip_uint64_t _zip_buffer_offset(zip_buffer_t *buffer);
 bool _zip_buffer_ok(zip_buffer_t *buffer);
-zip_uint8_t *_zip_buffer_peek(zip_buffer_t *buffer, zip_uint64_t length);
-int _zip_buffer_put(zip_buffer_t *buffer, const void *src, size_t length);
+zip_uint8_t *ZIP_SIZED_BY_OR_NULL(length) _zip_buffer_peek(zip_buffer_t *buffer, zip_uint64_t length);
+int _zip_buffer_put(zip_buffer_t *buffer, const void *ZIP_SIZED_BY(length) src, size_t length);
 int _zip_buffer_put_16(zip_buffer_t *buffer, zip_uint16_t i);
 int _zip_buffer_put_32(zip_buffer_t *buffer, zip_uint32_t i);
 int _zip_buffer_put_64(zip_buffer_t *buffer, zip_uint64_t i);
 int _zip_buffer_put_8(zip_buffer_t *buffer, zip_uint8_t i);
-zip_uint64_t _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length);
+zip_uint64_t _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *ZIP_SIZED_BY(length) data, zip_uint64_t length);
 int _zip_buffer_skip(zip_buffer_t *buffer, zip_uint64_t length);
 int _zip_buffer_set_offset(zip_buffer_t *buffer, zip_uint64_t offset);
 zip_uint64_t _zip_buffer_size(zip_buffer_t *buffer);
@@ -653,7 +659,7 @@ bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t ele
 bool zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length);
 zip_uint32_t zip_random_uint32(void);
 
-int _zip_read(zip_source_t *src, zip_uint8_t *data, zip_uint64_t length, zip_error_t *error);
+int _zip_read(zip_source_t *src, zip_uint8_t *ZIP_SIZED_BY(length) data, zip_uint64_t length, zip_error_t *error);
 int _zip_read_at_offset(zip_source_t *src, zip_uint64_t offset, unsigned char *b, size_t length, zip_error_t *error);
 zip_uint8_t *_zip_read_data(zip_buffer_t *buffer, zip_source_t *src, size_t length, bool nulp, zip_error_t *error);
 int _zip_read_local_ef(zip_t *, zip_uint64_t);
