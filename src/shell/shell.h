@@ -1,9 +1,9 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <stdio.h>
-
 #include "compat.h"
+
+#include <stdio.h>
 
 struct error_message {
     char *message;

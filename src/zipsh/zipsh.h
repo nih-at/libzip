@@ -1,9 +1,9 @@
 #ifndef ZIPSH_H
 #define ZIPSH_H
 
-#include <zip.h>
+#include "shell.h" /* Include first, so we include compat.h before zip.h. */
 
-#include "shell.h"
+#include <zip.h>
 
 extern zip_t *archive;
 extern zip_flags_t default_flags;
@@ -20,6 +20,14 @@ enum long_options {
 
 #define ENCODING_FLAGS_OPTIONS \
     {OPTION_ENCODING, "encoding", "encoding", "specify encoding for file name lookup", argument_type_encoding}
+
+#define EXTRA_FIELD_OPTIONS \
+    {'c', "central", NULL, "operate on central directory extra fields", NULL}, \
+    {'l', "local", NULL, "operate on local extra fields", NULL}
+
+#define EXTRA_FIELD_ID_OPTIONS \
+    EXTRA_FIELD_OPTIONS, \
+    {'I', "id", "id", "specify extra field ID", argument_type_uint16}
 
 #define FLAGS_OPTIONS \
     ENCODING_FLAGS_OPTIONS, \
