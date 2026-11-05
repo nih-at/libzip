@@ -1,6 +1,5 @@
 #include <errno.h>
 #include <string.h>
-#include <time.h>
 
 #include "zipsh.h"
 

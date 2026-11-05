@@ -13,16 +13,17 @@
 + count -- count number of entries in archive
 + archive_flags [-c] [flags] -- lists flags if flags not provided, sets flags if provided, clears flags if -c is used
 + default_flags [flags] -- get or set default flags for file lookup / access
++ extra_field_count [std_flags] [-i] [-cl] [-I id] file
++ extra_field_get [std_flags] [-i] [-cl] [-I id] file index
++ extra_field_delete [std_flags] [-i] [-cl] [-I id] file index
++ extra_field_set [std_flags] [-i] [-cl] file id [index] data
 
 - lookup [std_flags] file
 - unchange [std_flags] [-i] file -- discard changes made to the file
 - extract [std_flags] [-i] [-j] [-o output] file [start] [length] -- better name for -j (junk paths)
+
 - file_dostime [std_flags] [-i] file [date] -- get if time and date are not provided, set if time and date are provided
 - file_mtime [std_flags] [-i] file [timestamp] -- get if timestamp is not provided, set if timestamp is provided
-- extra_field_count [std_flags] [-i] [-cl] [-I id] file
-- extra_field_get [std_flags] [-i] [-cl] [-I id] file index
-- extra_field_delete [std_flags] [-i] [-cl] [-I id] file index
-- extra_field_set [std_flags] [-i] [-cl] file id [index] data
 
 
 

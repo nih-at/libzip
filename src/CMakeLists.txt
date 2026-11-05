@@ -14,6 +14,11 @@ set(ZIPSH_SOURCES
   zipsh/cat.c
   zipsh/count.c
   zipsh/delete.c
+  zipsh/extra_field.c
+  zipsh/extra_field_count.c
+  zipsh/extra_field_delete.c
+  zipsh/extra_field_get.c
+  zipsh/extra_field_set.c
   zipsh/file_comment.c
   zipsh/file_compression.c
   zipsh/file_encryption.c

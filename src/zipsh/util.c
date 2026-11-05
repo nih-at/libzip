@@ -17,7 +17,7 @@ static int decode_hex_byte(const char *hex, error_message_t **error_message) {
     return (high << 4) | low;
 }
 
-char *decode_hex(const char *hex, error_message_t **error_message) {
+zip_uint8_t *decode_hex(const char *hex, error_message_t **error_message) {
     if (!hex) {
         *error_message = error_message_new("hex string is NULL");
         return NULL;
@@ -28,7 +28,7 @@ char *decode_hex(const char *hex, error_message_t **error_message) {
         return NULL;
     }
     size_t decoded_len = len / 2;
-    char *decoded = malloc(decoded_len);
+    zip_uint8_t *decoded = malloc(decoded_len);
     if (!decoded) {
         *error_message = error_message_new("memory allocation failed");
         return NULL;
@@ -39,12 +39,12 @@ char *decode_hex(const char *hex, error_message_t **error_message) {
             free(decoded);
             return NULL;
         }
-        decoded[i] = (char)byte;
+        decoded[i] = (zip_uint8_t)byte;
     }
     return decoded;
 }
 
-void print_hex(const char *data, size_t len) {
+void print_hex(const zip_uint8_t *data, size_t len) {
     for (size_t i = 0; i < len; i++) {
         printf("%02x", (unsigned char)data[i]);
     }

@@ -65,12 +65,22 @@ struct file_reference {
 
 typedef struct file_reference file_reference_t;
 
+struct extra_field_options {
+    zip_uint16_t id;
+    bool id_specified;
+    zip_flags_t flags;
+};
+
+typedef struct extra_field_options extra_field_options_t;
+
 file_reference_t *file_reference_create(invocation_t *invocation, error_message_t **error);
 void file_reference_free(file_reference_t *file_ref);
 zip_flags_t get_flags(invocation_t *invocation);
+extra_field_options_t *extra_field_options_create(invocation_t *invocation, error_message_t **error_message);
+void extra_field_options_free(extra_field_options_t *extra_field_options);
 
-char *decode_hex(const char *hex, error_message_t **error_message);
-void print_hex(const char *data, size_t len);
+zip_uint8_t *decode_hex(const char *hex, error_message_t **error_message);
+void print_hex(const zip_uint8_t *data, size_t len);
 const char* format_mtime(time_t mtime);
 
 #endif /* ZIPSH_H */
