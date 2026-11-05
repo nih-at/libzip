@@ -22,7 +22,7 @@ bool delete_implementation(invocation_t *invocation, error_message_t **error_mes
 
 /* clang-format off */
 argument_definition_t delete_arguments[] = {
-    {"file", "file to delete", argument_type_filename, true, {.string = NULL}},
+    FILE_REFERENCE_ARGUMENTS,
 };
 
 option_definition_t delete_options[] = {

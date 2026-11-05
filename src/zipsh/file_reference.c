@@ -5,7 +5,7 @@
 #include "zip.h"
 #include "zipsh.h"
 
-char **complete_filename(const argument_type_t *type, const char *str) {
+char **complete_archive_filename(const argument_type_t *type, const char *str) {
     size_t str_length = strlen(str);
     zip_uint64_t count = 0;
     zip_int64_t i, n;
@@ -41,7 +41,7 @@ char **complete_filename(const argument_type_t *type, const char *str) {
     return matches;
 }
 
-const argument_type_t argument_type_filename_instance = {"filename", NULL, complete_filename, NULL, {.pointer = NULL}};
+const argument_type_t argument_type_archive_filename_instance = {"filename", NULL, complete_archive_filename, NULL, {.pointer = NULL}};
 
 file_reference_t *file_reference_create(invocation_t *invocation, error_message_t **error) {
     argument_t *index_option = invocation_get_option(invocation, 'i');

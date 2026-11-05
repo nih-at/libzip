@@ -126,6 +126,12 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
     return true;
 }
 
+char **complete_filename(const argument_type_t *type, const char *str) {
+    /* TODO: implement */
+    (void)type;
+    (void)str;
+    return NULL;
+}
 
 /* clang-format off */
 const argument_type_t argument_type_bool_instance = ARGUMENT_TYPE_ENUM("bool", bool_entries);
@@ -164,6 +170,10 @@ const argument_type_t argument_type_uint32_instance = {
 
 const argument_type_t argument_type_uint64_instance = {
     "uint64", convert_uint, NULL, NULL, {.u64 = sizeof(uint64_t)}
+};
+
+const argument_type_t argument_type_filename_instance = {
+    "filename", NULL, complete_filename, NULL, {.pointer = NULL}
 };
 /* clang-format on */
 
@@ -297,4 +307,19 @@ char **complete_enum(const argument_type_t *type, const char *str) {
     }
     matches[j] = NULL;
     return matches;
+}
+
+const char *enum_argument_to_string(const argument_type_t *type, argument_t value, bool string_for_unknown) {
+    static char unknown_string[64];
+    argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
+    for (size_t i = 0; entries[i].string != NULL; i++) {
+        if (memcmp(&entries[i].value, &value, sizeof(argument_t)) == 0) {
+            return entries[i].string;
+        }
+    }
+    if (string_for_unknown) {
+        snprintf(unknown_string, sizeof(unknown_string), "unknown(%llu)", (unsigned long long)value.u64);
+        return unknown_string;
+    }
+    return NULL;
 }

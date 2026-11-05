@@ -22,7 +22,7 @@ bool rename_implementation(invocation_t *invocation, error_message_t **error_mes
 
 /* clang-format off */
 argument_definition_t rename_arguments[] = {
-    {"file", "file to rename", argument_type_filename, true, {.string = NULL}},
+    FILE_REFERENCE_ARGUMENTS,
     {"new_name", "new name for the file in the archive", argument_type_string, false, {.string = NULL}},
 };
 

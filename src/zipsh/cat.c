@@ -60,7 +60,7 @@ bool cat_implementation(invocation_t *invocation, error_message_t **error_messag
 
 /* clang-format off */
 argument_definition_t cat_arguments[] = {
-    {"file", "file to display", argument_type_filename, true, {.string = NULL}},
+    FILE_REFERENCE_ARGUMENTS,
     {"start", "starting offset in the file", argument_type_uint64, false, {.u64 = 0}},
     {"length", "number of bytes to read from the file", argument_type_int64, false, {.i64 = -1}},
 };

@@ -116,6 +116,7 @@ extern const argument_type_t argument_type_uint8_instance;
 extern const argument_type_t argument_type_uint16_instance;
 extern const argument_type_t argument_type_uint32_instance;
 extern const argument_type_t argument_type_uint64_instance;
+extern const argument_type_t argument_type_filename_instance;
 #define argument_type_bool (&argument_type_bool_instance)
 #define argument_type_string (&argument_type_string_instance)
 #define argument_type_int8 (&argument_type_int8_instance)
@@ -126,6 +127,7 @@ extern const argument_type_t argument_type_uint64_instance;
 #define argument_type_uint16 (&argument_type_uint16_instance)
 #define argument_type_uint32 (&argument_type_uint32_instance)
 #define argument_type_uint64 (&argument_type_uint64_instance)
+#define argument_type_filename (&argument_type_filename_instance)
 
 struct argument_type_enum_entry {
     const char *string;
@@ -172,5 +174,7 @@ void words_free(words_t *words);
 bool words_parse(words_t *words, const char *line, error_message_t **error_message);
 bool words_parse_partial(words_t *words, const char *line, const char *end, error_message_t **error_message);
 void words_clear(words_t *words);
+
+const char* enum_argument_to_string(const argument_type_t *type, argument_t value, bool string_for_unknown);
 
 #endif /* SHELL_H */

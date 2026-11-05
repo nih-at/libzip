@@ -9,14 +9,21 @@ set(SHELL_SOURCES
 )
 
 set(ZIPSH_SOURCES
+  zipsh/add_directory.c
   zipsh/argument_types.c
   zipsh/cat.c
+  zipsh/count.c
   zipsh/delete.c
+  zipsh/file_comment.c
+  zipsh/file_compression.c
+  zipsh/file_encryption.c
   zipsh/file_reference.c
   zipsh/list.c
   zipsh/rename.c
   zipsh/set_default_password.c
   zipsh/standard_flags.c
+  zipsh/stat.c
+  zipsh/util.c
   zipsh/zipsh.c
 )
 
