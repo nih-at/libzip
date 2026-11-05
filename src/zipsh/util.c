@@ -1,10 +1,9 @@
+#include "zipsh.h" /* Include first so the necessary feature defines are set for the standard library headers. */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "zipsh.h"
 
 #define decode_hex_digit(c) ((c) >= '0' && (c) <= '9' ? (c) - '0' : (c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : -1)
 
