@@ -64,7 +64,7 @@ bool zipsh_setup(invocation_t *invocation, error_message_t **error_message) {
     if (archive == NULL) {
         zip_error_t error;
         zip_error_init_with_code(&error, err);
-        fprintf(stderr, "can't open archive '%s': %s\n", archive_name, zip_error_strerror(&error));
+        *error_message = error_message_new_format("can't open archive '%s': %s", archive_name, zip_error_strerror(&error));
         zip_error_fini(&error);
         return false;
     }
@@ -75,7 +75,7 @@ bool zipsh_setup(invocation_t *invocation, error_message_t **error_message) {
 bool zipsh_cleanup(bool ok, error_message_t **error_message) {
     if (archive != NULL) {
         if (zip_close(archive) < 0) {
-            fprintf(stderr, "can't close archive: %s\n", zip_strerror(archive));
+            *error_message = error_message_new_format("can't close archive: %s", zip_strerror(archive));
             zip_discard(archive);
             return false;
         }
