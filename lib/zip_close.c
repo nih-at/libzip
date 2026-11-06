@@ -93,7 +93,10 @@ ZIP_EXTERN int zip_close(zip_t *za) {
         filelist = NULL;
     }
     else {
-        /* This can't overflow because survivors <= za->nentry and sizeof(filelist[0]) < za->entry[0] */
+        if (ZIP_CHECK_MUL_OVERFLOW((size_t)survivors, sizeof(filelist[0]))) {
+            zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+            return -1;
+        }
         if ((filelist = (zip_filelist_t *)malloc(sizeof(filelist[0]) * (size_t)survivors)) == NULL) {
             return -1;
         }

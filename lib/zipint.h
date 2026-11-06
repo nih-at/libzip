@@ -510,6 +510,9 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 
 #define ZIP_CHECK_ADD_OVERFLOW(a, b) ((a) + (b) < (a))
 #define ZIP_CHECK_ADD_OVERFLOW_CAPPED(a, b, cap) ((a) > (cap) - (b))
+/* True if the size_t product a*b would overflow SIZE_MAX. Mirrors ZIP_CHECK_ADD_OVERFLOW
+   and the growth check in zip_realloc(); use before any malloc(a * b). */
+#define ZIP_CHECK_MUL_OVERFLOW(a, b) ((b) != 0 && (size_t)(a) > SIZE_MAX / (size_t)(b))
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))

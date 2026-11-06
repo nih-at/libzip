@@ -82,6 +82,9 @@ ZIP_EXTERN zip_source_t *zip_source_win32w_create(const wchar_t *fname, zip_uint
 
 static char *utf16_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp) {
     *lengthp = wcslen((const wchar_t *)name) + extra_chars;
+    if (ZIP_CHECK_MUL_OVERFLOW(*lengthp, sizeof(wchar_t))) {
+        return NULL;
+    }
     return (char *)malloc(*lengthp * sizeof(wchar_t));
 }
 

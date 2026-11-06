@@ -58,6 +58,10 @@ ZIP_EXTERN zip_source_t *zip_source_file_create(const char *fname, zip_uint64_t 
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
+    if (ZIP_CHECK_MUL_OVERFLOW((size_t)size, sizeof(wchar_t))) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
+    }
     if ((wfname = (wchar_t *)malloc(sizeof(wchar_t) * size)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
