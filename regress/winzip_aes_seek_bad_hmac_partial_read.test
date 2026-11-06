@@ -1,0 +1,12 @@
+# zip_fseek: a partial (seeked) read of a WinZip AES entry does not verify
+# the authentication code, so it succeeds even for a file with a tampered
+# one - exactly like zip_source_crc.c already does for the CRC of an
+# unencrypted stored entry that isn't read fully and contiguously
+features HAVE_CRYPTO
+return 0
+arguments encrypt.zzip  set_password foofoofoo  fopen encrypted  fseek 0 5 set  fread 0 5
+file encrypt.zzip encrypt-aes128-bad-hmac.zip
+stdout
+opened 'encrypted' as file 0
+pted
+end-of-inline-data
