@@ -43,7 +43,7 @@ enum long_options {
     {'i', "index", NULL, "file argument is index instead of name", NULL}
 
 #define FILE_REFERENCE_ARGUMENTS \
-    {"file", "file or index to operate on", argument_type_archive_filename, true, {.string = NULL}}
+    {"file|index", "file or index to operate on", argument_type_archive_filename, ARGUMENT_REQUIRED, {.string = NULL}}
 
 extern const argument_type_t argument_type_compression_method_instance;
 extern const argument_type_t argument_type_encryption_method_instance;

@@ -1,15 +1,31 @@
 #include <errno.h>
 #include <string.h>
 
+#include "shell.h"
 #include "zipsh.h"
+
+#define ARGUMENT_START 1
+#define ARGUMENT_LENGTH 2
+
+/* clang-format off */
+argument_definition_t cat_arguments[] = {
+    FILE_REFERENCE_ARGUMENTS,
+    {"start", "starting offset in the file", argument_type_uint64, ARGUMENT_OPTIONAL, {.u64 = 0}},
+    {"length", "number of bytes to read from the file", argument_type_int64, ARGUMENT_OPTIONAL, {.i64 = -1}},
+};
+
+option_definition_t cat_options[] = {
+    FILE_REFERENCE_OPTIONS
+};
+/* clang-format on */
 
 bool cat_implementation(invocation_t *invocation, error_message_t **error_message) {
     zip_error_t error;
     zip_source_t *src;
     zip_int64_t n;
     char buf[8192];
-    zip_uint64_t start = invocation->arguments[1].u64;
-    zip_int64_t len = invocation->arguments[2].i64;
+    zip_uint64_t start = invocation->arguments[ARGUMENT_START].u64;
+    zip_int64_t len = invocation->arguments[ARGUMENT_LENGTH].i64;
     file_reference_t *file_ref = file_reference_create(invocation, error_message);
     if (!file_ref) {
         return false;
@@ -57,17 +73,5 @@ bool cat_implementation(invocation_t *invocation, error_message_t **error_messag
 
     return true;
 }
-
-/* clang-format off */
-argument_definition_t cat_arguments[] = {
-    FILE_REFERENCE_ARGUMENTS,
-    {"start", "starting offset in the file", argument_type_uint64, false, {.u64 = 0}},
-    {"length", "number of bytes to read from the file", argument_type_int64, false, {.i64 = -1}},
-};
-
-option_definition_t cat_options[] = {
-    FILE_REFERENCE_OPTIONS
-};
-/* clang-format on */
 
 COMMAND(cat, "show contents of file in archive");

@@ -3,6 +3,17 @@
 
 #include "zipsh.h"
 
+
+/* clang-format off */
+argument_definition_t stat_arguments[] = {
+    FILE_REFERENCE_ARGUMENTS,
+};
+
+option_definition_t stat_options[] = {
+    FILE_REFERENCE_OPTIONS
+};
+/* clang-format on */
+
 bool stat_implementation(invocation_t *invocation, error_message_t **error_message) {
     zip_stat_t stat;
     file_reference_t *file_ref = file_reference_create(invocation, error_message);
@@ -28,15 +39,5 @@ bool stat_implementation(invocation_t *invocation, error_message_t **error_messa
 
     return true;
 }
-
-/* clang-format off */
-argument_definition_t stat_arguments[] = {
-    FILE_REFERENCE_ARGUMENTS,
-};
-
-option_definition_t stat_options[] = {
-    FILE_REFERENCE_OPTIONS
-};
-/* clang-format on */
 
 COMMAND(stat, "show information of file in archive");

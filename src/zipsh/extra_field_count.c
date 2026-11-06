@@ -5,6 +5,17 @@
 #include "zip.h"
 #include "zipsh.h"
 
+/* clang-format off */
+argument_definition_t extra_field_count_arguments[] = {
+    FILE_REFERENCE_ARGUMENTS,
+};
+
+option_definition_t extra_field_count_options[] = {
+    FILE_REFERENCE_OPTIONS,
+    EXTRA_FIELD_ID_OPTIONS,
+};
+/* clang-format on */
+
 bool extra_field_count_implementation(invocation_t *invocation, error_message_t **error_message) {
     bool result = true;
     file_reference_t *file_ref;
@@ -38,16 +49,5 @@ bool extra_field_count_implementation(invocation_t *invocation, error_message_t 
 
     return result;
 }
-
-/* clang-format off */
-argument_definition_t extra_field_count_arguments[] = {
-    FILE_REFERENCE_ARGUMENTS,
-};
-
-option_definition_t extra_field_count_options[] = {
-    FILE_REFERENCE_OPTIONS,
-    EXTRA_FIELD_ID_OPTIONS,
-};
-/* clang-format on */
 
 COMMAND(extra_field_count, "get count of extra fields for file in archive");

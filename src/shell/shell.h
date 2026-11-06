@@ -61,12 +61,19 @@ struct argument_type {
     argument_t ud;
 };
 
+enum argument_cardinality {
+    ARGUMENT_OPTIONAL,
+    ARGUMENT_REQUIRED,
+    ARGUMENT_COLLECT
+};
+
+typedef enum argument_cardinality argument_cardinality_t;
 
 struct argument_definition {
     const char *name;
     const char *help;
     const argument_type_t *type;
-    bool required;
+    argument_cardinality_t cardinality;
     argument_t default_value;
 };
 
@@ -161,7 +168,7 @@ error_message_t *error_message_new_format(const char *fmt, ...) PRINTF_LIKE(1, 2
 const char *error_message_get(error_message_t *error);
 void error_message_free(error_message_t *error);
 
-invocation_t *invocation_new(size_t options_capacity, size_t arguments_capacity);
+invocation_t *invocation_new(const command_t *cmd, int argc, char **argv, int *early_exit_options, error_message_t **error_message);
 void invocation_free(invocation_t *invocation);
 bool invocation_add_option(invocation_t *invocation, int id, argument_t value);
 bool invocation_add_argument(invocation_t *invocation, argument_t value);
@@ -175,6 +182,32 @@ bool words_parse(words_t *words, const char *line, error_message_t **error_messa
 bool words_parse_partial(words_t *words, const char *line, const char *end, error_message_t **error_message);
 void words_clear(words_t *words);
 
+void print_command_help(const command_t *cmd, const char *prog_name);
+
 const char* enum_argument_to_string(const argument_type_t *type, argument_t value, bool string_for_unknown);
+
+#define VERSION_OPTION_ID 256
+
+#define SHELL_OPTIONS \
+    {'c', "command", NULL, "Execute command from command line", NULL}, \
+    {'h', "help", NULL, "Show help message", NULL}, \
+    {VERSION_OPTION_ID, "version", NULL, "Show version information", NULL}
+
+#define SHELL_ARGUMENT \
+    {"command|file", "Command to execute or file to read commands from", argument_type_string, ARGUMENT_COLLECT, NULL}
+
+struct shell_command {
+    command_t command;
+    int shell_argument_index;
+    bool (*setup)(invocation_t *, error_message_t **);
+    bool (*cleanup)(bool ok, error_message_t **);
+};
+
+typedef struct shell_command shell_command_t;
+
+#define SHELL_MAIN(name, help, index) \
+    shell_command_t shell_command_##name = {{#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), NULL}, index, name##_setup, name##_cleanup};
+
+    int shell_main(shell_command_t *shell, int argc, char *argv[]);
 
 #endif /* SHELL_H */

@@ -3,6 +3,7 @@ set(SHELL_SOURCES
   shell/command.c
   shell/complete.c
   shell/error_message.c
+  shell/invocation.c
   shell/help.c
   shell/shell.c
   shell/words.c
@@ -15,10 +16,11 @@ set(ZIPSH_SOURCES
   zipsh/count.c
   zipsh/delete.c
   zipsh/extra_field.c
+  zipsh/extra_field_add.c
   zipsh/extra_field_count.c
   zipsh/extra_field_delete.c
   zipsh/extra_field_get.c
-  zipsh/extra_field_set.c
+  zipsh/extra_field_replace.c
   zipsh/file_comment.c
   zipsh/file_compression.c
   zipsh/file_encryption.c

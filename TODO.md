@@ -1,6 +1,6 @@
 ## TODOs
 
-Overhaul TODO file:
+Overhaul TODO file to make it more usable for contributors:
 
 - Indicate which tasks we consider good candidates for contributions, noting if details should be discussed with the maintainers before starting.
 - Categorize and prioritize tasks.
@@ -11,7 +11,6 @@ Overhaul TODO file:
 ### zipsh
 
 - editline: Handle spaces and quotes when inserting common match prefix.
-- Sort options in help output.
 - Documentation.
 - Add more commands.
 - enum argument types: match case insensitive? default case?
@@ -24,7 +23,7 @@ Overhaul TODO file:
 ### Infrastructure
 
 - Add test program for testing `zip_source_t` API using the `shell` library.
-- Switch existing dedicated test programs to sources shell or CMocka, where possible.
+- Switch existing dedicated test programs to `zipsh_regress` sources shell or CMocka, where possible.
 
 ### CI
 
@@ -46,7 +45,7 @@ Overhaul TODO file:
 
 ## Documentation
 
-- Improve internal documentation: directory layout, compatibility layer, shell API.
+- Create section for developers and contributors, add directory layout, compatibility layer, shell API.
 
 - Document that edge cases that are not explicitly allowed should be assumed not to work.
 

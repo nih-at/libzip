@@ -10,8 +10,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/src/zipsh",
             "args": [
+                "-c",
                 "test.zip",
-                "cmds",
+                "help",
+                "extra_field_get"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/src",

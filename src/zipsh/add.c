@@ -4,15 +4,34 @@
 #include "zip.h"
 #include "zipsh.h"
 
+#define ARGUMENT_NAME 0
+#define ARGUMENT_FILE 1
+#define ARGUMENT_START 2
+#define ARGUMENT_LENGTH 3
+
+/* clang-format off */
+argument_definition_t add_arguments[] = {
+    {"name", "name of new file in archive", argument_type_string, ARGUMENT_REQUIRED, {.string = NULL}},
+    {"file", "file or data to add", argument_type_filename, ARGUMENT_REQUIRED, {.string = NULL}},
+    {"start", "starting offset in the file", argument_type_uint64, ARGUMENT_OPTIONAL, {.u64 = 0}},
+    {"length", "number of bytes to read from the file", argument_type_int64, ARGUMENT_OPTIONAL, {.i64 = -1}},
+};
+
+option_definition_t add_options[] = {
+    ENCODING_FLAGS_OPTIONS,
+    {'d', "data", NULL, ""}
+};
+/* clang-format on */
+
 bool add_implementation(invocation_t *invocation, error_message_t **error_message) {
     zip_source_t *source;
     bool is_data = invocation_get_option(invocation, 'd');
-    zip_uint64_t start = invocation->arguments[2].u64;
-    zip_int64_t len = invocation->arguments[3].i64;
+    zip_uint64_t start = invocation->arguments[ARGUMENT_START].u64;
+    zip_int64_t len = invocation->arguments[ARGUMENT_LENGTH].i64;
 
 
     if (is_data) {
-        const char *data = invocation->arguments[1].string;
+        const char *data = invocation->arguments[ARGUMENT_FILE].string;
         size_t data_length = strlen(data);
         if (start > data_length) {
             if (error_message) {
@@ -32,7 +51,7 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
         source = zip_source_buffer(archive, data + start, len, 0);
     }
     else {
-        source = zip_source_file(archive, invocation->arguments[1].string, start, len);
+        source = zip_source_file(archive, invocation->arguments[ARGUMENT_FILE].string, start, len);
     }
     if (source == NULL) {
         if (error_message) {
@@ -40,7 +59,7 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
         }
         return false;
     }
-    if (zip_file_add(archive, invocation->arguments[1].string, source, get_flags(invocation)) < 0) {
+    if (zip_file_add(archive, invocation->arguments[ARGUMENT_NAME].string, source, get_flags(invocation)) < 0) {
         if (error_message) {
             *error_message = error_message_new_format("failed to add file to archive: '%s'", zip_strerror(archive));
         }
@@ -50,19 +69,5 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
 
     return true;
 }
-
-/* clang-format off */
-argument_definition_t add_arguments[] = {
-    {"name", "name of new file in archive", argument_type_string, true, {.string = NULL}},
-    {"file", "file or data to add", argument_type_filename, true, {.string = NULL}},
-    {"start", "starting offset in the file", argument_type_uint64, false, {.u64 = 0}},
-    {"length", "number of bytes to read from the file", argument_type_int64, false, {.i64 = -1}},
-};
-
-option_definition_t add_options[] = {
-    ENCODING_FLAGS_OPTIONS,
-    {'d', "data", NULL, ""}
-};
-/* clang-format on */
 
 COMMAND(add, "add file to archive");

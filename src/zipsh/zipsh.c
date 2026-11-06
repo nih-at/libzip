@@ -42,39 +42,49 @@ zip_t *archive = NULL;
 
 zip_flags_t default_flags = 0;
 
-int main(int argc, char *argv[]) {
-    const char *script_filename = NULL;
-    const char *archive_name = NULL;
+#define ARGUMENT_ARCHIVE 0
+#define ARGUMENT_SHELL 1
+
+/* clang-format off */
+argument_definition_t zipsh_arguments[] = {
+    {"archive", "ZIP archive to open", argument_type_string, ARGUMENT_REQUIRED, NULL},
+     SHELL_ARGUMENT
+};
+
+option_definition_t zipsh_options[] = {
+    SHELL_OPTIONS
+};
+/* clang-format on */
+
+bool zipsh_setup(invocation_t *invocation, error_message_t **error_message) {
+    const char *archive_name = invocation->arguments[ARGUMENT_ARCHIVE].string;
     int err;
-    bool ok;
 
-    archive = NULL;
+    archive = zip_open(archive_name, 0, &err);
+    if (archive == NULL) {
+        zip_error_t error;
+        zip_error_init_with_code(&error, err);
+        fprintf(stderr, "can't open archive '%s': %s\n", archive_name, zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return false;
+    }
 
-    switch (argc) {
-    case 3:
-        script_filename = argv[2];
-        // fall through
-    case 2:
-        archive_name = argv[1];
-        archive = zip_open(archive_name, 0, &err);
-        if (archive == NULL) {
-            zip_error_t error;
-            zip_error_init_with_code(&error, err);
-            fprintf(stderr, "can't open archive '%s': %s\n", archive_name, zip_error_strerror(&error));
-            zip_error_fini(&error);
-            exit(1);
+    return true;
+}
+
+bool zipsh_cleanup(bool ok, error_message_t **error_message) {
+    if (archive != NULL) {
+        if (zip_close(archive) < 0) {
+            fprintf(stderr, "can't close archive: %s\n", zip_strerror(archive));
+            zip_discard(archive);
+            return false;
         }
-        break;
-    default:
-        fprintf(stderr, "Usage: %s archive [command_file]\n", argv[0]);
-        exit(1);
     }
+    return true;
+}
 
-    ok = shell_loop(script_filename);
+SHELL_MAIN(zipsh, NULL, ARGUMENT_SHELL)
 
-    if (zip_close(archive) < 0) {
-        fprintf(stderr, "can't close '%s': %s\n", archive_name, zip_strerror(archive));
-        zip_discard(archive);
-    }
-    return ok ? 0 : 1;
+int main(int argc, char *argv[]) {
+    return shell_main(&shell_command_zipsh, argc, argv);
 }

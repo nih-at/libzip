@@ -91,9 +91,6 @@ bool words_parse_partial(words_t *words, const char *line, const char *end, erro
         case '\r':
         case '\n':
             if (quote == '\0') {
-                if (!words_add_char(words, '\0', error_message)) {
-                    return false;
-                }
                 if (!words_add_word(words, add_empty, error_message)) {
                     return false;
                 }

@@ -3,6 +3,17 @@
 
 #include "zipsh.h"
 
+/* clang-format off */
+argument_definition_t delete_arguments[] = {
+    FILE_REFERENCE_ARGUMENTS,
+};
+
+option_definition_t delete_options[] = {
+    FILE_REFERENCE_OPTIONS
+};
+/* clang-format on */
+
+
 bool delete_implementation(invocation_t *invocation, error_message_t **error_message) {
     bool result = true;
     file_reference_t *file_ref = file_reference_create(invocation, error_message);
@@ -19,15 +30,5 @@ bool delete_implementation(invocation_t *invocation, error_message_t **error_mes
 
     return result;
 }
-
-/* clang-format off */
-argument_definition_t delete_arguments[] = {
-    FILE_REFERENCE_ARGUMENTS,
-};
-
-option_definition_t delete_options[] = {
-    FILE_REFERENCE_OPTIONS
-};
-/* clang-format on */
 
 COMMAND(delete, "delete file from archive");
