@@ -322,6 +322,8 @@ struct zip {
 
     zip_uint32_t *write_crc; /* have _zip_write() compute CRC */
     time_t torrent_mtime;
+
+    zip_uint64_t prefix_length; /* bytes of data prepended before the zip data proper, 0 if none */
 };
 
 /* file in zip archive, part of API */
