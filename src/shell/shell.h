@@ -194,7 +194,7 @@ const char* enum_argument_to_string(const argument_type_t *type, argument_t valu
     {VERSION_OPTION_ID, "version", NULL, "Show version information", NULL}
 
 #define SHELL_ARGUMENT \
-    {"command|file", "Command to execute or file to read commands from", argument_type_string, ARGUMENT_COLLECT, NULL}
+    {"command|file", "Command to execute or file to read commands from", argument_type_string, ARGUMENT_COLLECT, {.string = NULL}}
 
 struct shell_command {
     command_t command;

@@ -47,7 +47,7 @@ zip_flags_t default_flags = 0;
 
 /* clang-format off */
 argument_definition_t zipsh_arguments[] = {
-    {"archive", "ZIP archive to open", argument_type_string, ARGUMENT_REQUIRED, NULL},
+    {"archive", "ZIP archive to open", argument_type_string, ARGUMENT_REQUIRED, {.string = NULL}},
      SHELL_ARGUMENT
 };
 

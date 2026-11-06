@@ -21,6 +21,10 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
     bool ok = true;
     invocation_t *invocation = invocation_new(cmd, argc, argv, NULL, error_message);
 
+    if (invocation == NULL) {
+        return false;
+    }
+
     ok = cmd->function(invocation, error_message);
     invocation_free(invocation);
     return ok;
