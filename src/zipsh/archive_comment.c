@@ -26,7 +26,12 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
     if (comment == NULL) {
         int comment_len;
         const char *existing_comment = zip_get_archive_comment(archive, &comment_len, get_flags(invocation));
-        if (existing_comment) {
+        if (existing_comment == NULL) {
+            *error_message = error_message_new_format("can't get archive comment: %s", zip_strerror(archive));
+            return false;
+        }
+
+        if (comment_len > 0) {
             if (hex) {
                 print_hex((const zip_uint8_t *)existing_comment, comment_len);
             }
