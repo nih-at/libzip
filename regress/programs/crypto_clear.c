@@ -58,7 +58,7 @@ const test_data_t test_data[] = {
 
 size_t test_data_count = sizeof(test_data) / sizeof(test_data[0]);
 
-void run_test(void **state) {
+static void check_crypto_clear(void **state) {
     test_data_t *test = (test_data_t *)*state;
     zip_uint8_t buffer[TEST_DATA_SIZE];
 
@@ -69,5 +69,5 @@ void run_test(void **state) {
 }
 
 int main(void) {
-    return run_test_table("crypto_clear", run_test, (void *)test_data, sizeof(test_data[0]), test_data_count);
+    return run_test_table("crypto_clear", check_crypto_clear, (void *)test_data, sizeof(test_data[0]), test_data_count);
 }

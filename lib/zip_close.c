@@ -102,8 +102,12 @@ ZIP_EXTERN int zip_close(zip_t *za) {
     unchanged_offset = ZIP_UINT64_MAX;
     /* create list of files with index into original archive  */
     for (i = j = 0; i < za->nentry; i++) {
-        if (za->entry[i].orig != NULL && ZIP_ENTRY_HAS_CHANGES(&za->entry[i])) {
-            unchanged_offset = ZIP_MIN(unchanged_offset, za->entry[i].orig->offset);
+        zip_dirent_t *original = za->entry[i].orig;
+
+        /* Equality-sized descriptors may use either width on disk. Rewrite
+           these records rather than guessing their end for a cloned prefix. */
+        if (original != NULL && (ZIP_ENTRY_HAS_CHANGES(&za->entry[i]) || ((original->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) && (original->uncomp_size == ZIP_UINT32_MAX || original->comp_size == ZIP_UINT32_MAX) && !_zip_dirent_needs_zip64(original, 0)))) {
+            unchanged_offset = ZIP_MIN(unchanged_offset, original->offset);
         }
         if (za->entry[i].deleted) {
             continue;

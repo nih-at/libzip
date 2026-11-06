@@ -1,0 +1,6 @@
+# Rewriting exact-boundary size metadata must not create an empty Zip64 field.
+# Use the byte comparator, never decompress the synthetic entry data.
+# Memory sources rebuild both headers; .bin selects binary equality comparison.
+arguments -m boundary.bin set_archive_comment hi
+file boundary.bin zip64-boundary.zip zip64-boundary-rewritten.zip
+return 0

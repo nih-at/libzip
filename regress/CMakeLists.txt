@@ -4,6 +4,11 @@ if (CMOCKA_FOUND)
     crypto_clear
   )
 
+  # Directory-entry tests use internal symbols hidden in shared builds.
+  if(NOT BUILD_SHARED_LIBS)
+    list(APPEND CMOCKA_TEST_PROGRAMS dirent_zip64)
+  endif()
+
   foreach(PROGRAM IN LISTS CMOCKA_TEST_PROGRAMS)
     add_executable(${PROGRAM} programs/${PROGRAM}.c programs/cmocka_utilities.c)
     target_link_libraries(${PROGRAM} zip ${CMOCKA_LIBRARIES})
