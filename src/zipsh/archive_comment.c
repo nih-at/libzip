@@ -5,16 +5,16 @@
 #include "zip.h"
 #include "zipsh.h"
 
-#define ARGUMENT_COMMENT 1
+#define ARGUMENT_COMMENT 0
 
 /* clang-format off */
 argument_definition_t archive_comment_arguments[] = {
-    FILE_REFERENCE_ARGUMENTS,
     {"comment", "comment for the file in the archive", argument_type_string, ARGUMENT_OPTIONAL, {.string = NULL}},
 };
 
 option_definition_t archive_comment_options[] = {
-    {'h', "hex", "use hexadecimal format for comment"}
+    CHANGED_FLAGS_OPTIONS, \
+    {'h', "hex", NULL, "use hexadecimal format for comment", NULL}
 };
 /* clang-format on */
 

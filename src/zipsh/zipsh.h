@@ -21,6 +21,10 @@ enum long_options {
 #define ENCODING_FLAGS_OPTIONS \
     {OPTION_ENCODING, "encoding", "encoding", "specify encoding for file name lookup", argument_type_encoding}
 
+#define CHANGED_FLAGS_OPTIONS \
+    {OPTION_CHANGED, "changed", NULL, "operate on changed files", NULL}, \
+    {OPTION_ORIGINAL, "original", NULL, "operate on original files", NULL}
+
 #define EXTRA_FIELD_OPTIONS \
     {'c', "central", NULL, "operate on central directory extra fields", NULL}, \
     {'l', "local", NULL, "operate on local extra fields", NULL}
@@ -31,11 +35,10 @@ enum long_options {
 
 #define FLAGS_OPTIONS \
     ENCODING_FLAGS_OPTIONS, \
+    CHANGED_FLAGS_OPTIONS, \
     {OPTION_CASE_INSENSITIVE, "case-insensitive", NULL, "ignore case in file name lookup", NULL}, \
     {OPTION_CASE_SENSITIVE, "case-sensitive", NULL, "match case in file name lookup", NULL}, \
-    {OPTION_CHANGED, "changed", NULL, "operate on changed files", NULL}, \
     {OPTION_IGNORE_DIRECTORY, "ignore-directory", NULL, "ignore directories in file name lookup", NULL}, \
-    {OPTION_ORIGINAL, "original", NULL, "operate on original files", NULL}, \
     {OPTION_NO_IGNORE_DIRECTORY, "no-ignore-directory", NULL, "consider directories in file name lookup", NULL}
 
 #define FILE_REFERENCE_OPTIONS \

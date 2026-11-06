@@ -15,7 +15,7 @@ argument_definition_t file_comment_arguments[] = {
 
 option_definition_t file_comment_options[] = {
     FILE_REFERENCE_OPTIONS,
-    {'h', "hex", "use hexadecimal format for comment"}
+    {'h', "hex", NULL, "use hexadecimal format for comment", NULL}
 };
 /* clang-format on */
 
