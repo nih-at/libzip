@@ -10,7 +10,9 @@ set(SHELL_SOURCES
 )
 
 set(ZIPSH_SOURCES
+  zipsh/add.c
   zipsh/add_directory.c
+  zipsh/archive_comment.c
   zipsh/argument_types.c
   zipsh/cat.c
   zipsh/count.c
@@ -23,6 +25,7 @@ set(ZIPSH_SOURCES
   zipsh/extra_field_replace.c
   zipsh/file_comment.c
   zipsh/file_compression.c
+  zipsh/file_crc.c
   zipsh/file_encryption.c
   zipsh/file_reference.c
   zipsh/list.c

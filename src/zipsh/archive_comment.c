@@ -44,7 +44,7 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
     else {
         char *decoded_comment = NULL;
         if (hex) {
-            decoded_comment = decode_hex(comment, error_message);
+            decoded_comment = (char *)decode_hex(comment, error_message);
             if (!decoded_comment) {
                 *error_message = error_message_new_format("invalid hex comment");
                 return false;
