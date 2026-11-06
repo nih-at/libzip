@@ -121,6 +121,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
             }
             invocation_index++;
             argument_index++;
+            argv_index++;
         }
         else if (cmd->arguments[argument_index].cardinality != ARGUMENT_REQUIRED) {
             invocation->arguments[invocation_index] = cmd->arguments[argument_index].default_value;
