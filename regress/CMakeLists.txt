@@ -2,6 +2,7 @@
 if (CMOCKA_FOUND)
   set(CMOCKA_TEST_PROGRAMS
     crypto_clear
+    dirent_zip64
   )
 
   foreach(PROGRAM IN LISTS CMOCKA_TEST_PROGRAMS)
@@ -14,6 +15,23 @@ if (CMOCKA_FOUND)
 
   # The internal symbol is hidden when zip is a shared library, so link against the file directly.
   target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
+
+  # Compile private implementations into the test, including for shared builds.
+  target_sources(dirent_zip64 PRIVATE
+    ${PROJECT_SOURCE_DIR}/lib/zip_buffer.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_dirent.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_entry.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_extra_field.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_io_util.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_memdup.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_realloc.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_source_supports.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_string.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_unchange_data.c
+    ${PROJECT_SOURCE_DIR}/lib/zip_utf-8.c
+  )
+  target_link_libraries(dirent_zip64 ZLIB::ZLIB)
 endif()
 
 if (NIHTEST)
