@@ -44,6 +44,12 @@ struct option {
 int getopt_long(int argc, char * const argv[], const char *optstring, const struct option *longopts, int *longindex);
 #endif
 
+#ifndef HAVE_ISATTY
+#ifdef HAVE__ISATTY
+#define isatty(fd) _isatty(fd)
+#endif
+#endif
+
 #ifndef HAVE_VASPRINTF
 #include <stdarg.h>
 int vasprintf(char **strp, const char *fmt, va_list ap);

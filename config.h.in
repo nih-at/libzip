@@ -13,6 +13,7 @@
 #cmakedefine HAVE__FSEEKI64
 #cmakedefine HAVE__FSTAT64
 #cmakedefine HAVE__FTELLI64
+#cmakedefine HAVE__ISATTY
 #cmakedefine HAVE__SETMODE
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__SNPRINTF_S
@@ -36,6 +37,7 @@
 #cmakedefine HAVE_FCHMOD
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FTELLO
+#cmakedefine HAVE_GETCONSOLEMODE
 #cmakedefine HAVE_GETLINE
 #cmakedefine HAVE_GETOPT
 #cmakedefine HAVE_GETOPT_LONG
