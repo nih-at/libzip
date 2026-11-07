@@ -50,15 +50,8 @@ static unsigned char complete_wrapper(EditLine *el, int ch) {
     if (prefix_length > last_word_length) {
         char s[3];
         char *p = prefix + last_word_length;
-        bool need_escape = false;
         while (p < prefix + last_word_length + prefix_length) {
-            if (open_quote != '\0') {
-                need_escape = (*p == open_quote || *p == '\\');
-            }
-            else {
-                need_escape = (*p == ' ' || *p == '\\');
-            }
-            if (need_escape) {
+            if (*p == '\\' || *p == (open_quote ? open_quote : ' ')) {
                 s[0] = '\\';
                 s[1] = *p;
                 s[2] = '\0';
