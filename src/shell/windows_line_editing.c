@@ -1,3 +1,4 @@
+#include "compat/src_compat.h"
 #include "shell_int.h"
 #include <io.h>
 #include <stdio.h>
