@@ -11,6 +11,12 @@ extern "C" {
 int asprintf(char **strp, const char *fmt, ...);
 #endif
 
+#ifdef HAVE_FNMATCH
+#include <fnmatch.h>
+#else
+#include "fnmatch.h"
+#endif
+
 #ifndef HAVE_GETLINE
 #include <stdio.h>
 #include <stdlib.h>

@@ -14,18 +14,18 @@ option_definition_t stat_options[] = {
 };
 /* clang-format on */
 
-bool stat_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool stat_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
     zip_stat_t stat;
-    file_reference_t *file_ref = file_reference_create(invocation, error_message);
-    if (!file_ref) {
-        return false;
-    }
+    (void)context;
+    (void)matches;
     if (zip_stat_index(archive, file_ref->index, 0, &stat) < 0) {
         *error_message = error_message_new_format("can't get file info for %s: %s", file_ref->error_info, zip_strerror(archive));
-        file_reference_free(file_ref);
         return false;
     }
 
+    if (file_matches_get_index(matches, file_ref) > 0) {
+        printf("\n");
+    }
     printf("Name: %s\n", stat.name);
     printf("Index: %" PRIu64 "\n", file_ref->index);
     printf("Size: %" PRIu64 "\n", stat.size);
@@ -35,9 +35,12 @@ bool stat_implementation(invocation_t *invocation, error_message_t **error_messa
     printf("Compression Method: %s\n", enum_argument_to_string(argument_type_compression_method, (argument_t){.u64 = stat.comp_method}, true));
     printf("Encryption Method: %s\n", enum_argument_to_string(argument_type_encryption_method, (argument_t){.u16 = stat.encryption_method}, true));
 
-    file_reference_free(file_ref);
-
     return true;
+}
+
+bool stat_implementation(invocation_t *invocation, error_message_t **error_message) {
+    file_reference_command_t command = {NULL, stat_execute, NULL, NULL};
+    return file_reference_command_execute(&command, invocation, error_message);
 }
 
 COMMAND(stat, "show information of file in archive");

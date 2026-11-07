@@ -197,3 +197,7 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
 
     return ok ? 0 : 1;
 }
+
+bool is_pattern(const char *str) {
+    return strchr(str, '*') != NULL || strchr(str, '?') != NULL || strchr(str, '[') != NULL;
+}

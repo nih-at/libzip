@@ -212,4 +212,6 @@ typedef struct shell_command shell_command_t;
 
     int shell_main(shell_command_t *shell, int argc, char *argv[]);
 
+bool is_pattern(const char *str);
+
 #endif /* SHELL_H */

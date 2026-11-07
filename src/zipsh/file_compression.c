@@ -20,16 +20,11 @@ option_definition_t file_compression_options[] = {
 };
 /* clang-format on */
 
-bool file_compression_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool file_compression_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
     bool result = true;
-    file_reference_t *file_ref = file_reference_create(invocation, error_message);
-    if (!file_ref) {
-        return false;
-    }
-
     if (invocation->arguments[ARGUMENT_METHOD].u64 == ZIP_UINT64_MAX) {
         zip_stat_t stat;
-        if (zip_stat_index(archive, file_ref->index, get_flags(invocation), &stat) < 0) {
+        if (zip_stat_index(archive, file_ref->index, matches->flags, &stat) < 0) {
             *error_message = error_message_new_format("can't get file info for %s: %s", file_ref->error_info, zip_strerror(archive));
             return false;
         }
@@ -46,9 +41,12 @@ bool file_compression_implementation(invocation_t *invocation, error_message_t *
         }
     }
 
-    file_reference_free(file_ref);
-
     return result;
+}
+
+bool file_compression_implementation(invocation_t *invocation, error_message_t **error_message) {
+    file_reference_command_t command = {NULL, file_compression_execute, NULL, NULL};
+    return file_reference_command_execute(&command, invocation, error_message);
 }
 
 COMMAND(file_compression, "get or set compression method for file in archive");

@@ -6,21 +6,22 @@ Overhaul TODO file to make it more usable for contributors:
 - Categorize and prioritize tasks.
 - Remove completed or obsolete tasks.
 
-## Tests
-
-### zipsh
+## zipsh
 
 - Documentation.
 - Add more commands.
 - enum argument types: match case insensitive? default case?
+- fnmatch(): error handling, honor case sensitivity from flags, use FNM_PATHNAME, FNM_PERIOD?
 - Add support for changing argument type depending on options (e.g. `cat -i`)?
 - Build `zipsh_regress` and `zipsh_regress_nonrandom`
 - Switch tests to `zipsh_regress`.
 
+## Tests
+
 ### Infrastructure
 
 - Add test program for testing `zip_source_t` API using the `shell` library.
-- Switch existing dedicated test programs to `zipsh_regress` sources shell or CMocka, where possible.
+- Switch existing one-off test programs to `zipsh_regress`, sources shell, or CMocka, where possible.
 
 ### CI
 
