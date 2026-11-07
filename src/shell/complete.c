@@ -5,7 +5,7 @@
 
 words_t *completion_words = NULL;
 
-char **complete(const char *line, size_t position, size_t *last_word_length) {
+char **complete(const char *line, size_t position, size_t *last_word_length, char *open_quote) {
     const command_t *cmd;
     size_t i, arg_index;
 
@@ -28,6 +28,9 @@ char **complete(const char *line, size_t position, size_t *last_word_length) {
         else {
             *last_word_length = strlen(completion_words->words[completion_words->n_words - 1]);
         }
+    }
+    if (open_quote) {
+        *open_quote = completion_words->open_quote;
     }
 
     if (completion_words->n_words < 2) {

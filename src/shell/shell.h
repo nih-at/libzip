@@ -102,15 +102,17 @@ struct command {
 typedef struct command command_t;
 
 struct words {
-    char **words;
-    size_t n_words;
+    char **words;       /* array of parsed words */
+    size_t n_words;     /* number of parsed words */
+    char open_quote;    /* currently open quote character, NUL if none (only for partial parse) */
 
-    size_t words_capacity;
-    char *text;
-    size_t text_capacity;
-    size_t next_word_start;
-    size_t next_char;
+    size_t words_capacity;  /* capacity of the words array */
+    char *text;             /* buffer holding the parsed text */
+    size_t text_capacity;   /* capacity of the text buffer */
+    size_t next_word_start; /* start index of the word currently being parsed in the text buffer */
+    size_t next_char;       /* index of the next character to be parsed in the text buffer */
 };
+
 typedef struct words words_t;
 
 extern const argument_type_t argument_type_bool_instance;

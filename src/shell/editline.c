@@ -20,7 +20,8 @@ static unsigned char complete_wrapper(EditLine *el, int ch) {
     const LineInfo *line_info = el_line(el);
     size_t position = line_info->cursor - line_info->buffer;
     size_t last_word_length;
-    char **matches = complete(line_info->buffer, position, &last_word_length);
+    char open_quote = '\0';
+    char **matches = complete(line_info->buffer, position, &last_word_length, &open_quote);
     char *prefix;
     size_t prefix_length, i, full_match;
 
@@ -47,9 +48,34 @@ static unsigned char complete_wrapper(EditLine *el, int ch) {
     }
 
     if (prefix_length > last_word_length) {
-        prefix[prefix_length] = '\0';
-        el_insertstr(el, prefix + last_word_length);
+        char s[3];
+        char *p = prefix + last_word_length;
+        bool need_escape = false;
+        while (p < prefix + last_word_length + prefix_length) {
+            if (open_quote != '\0') {
+                need_escape = (*p == open_quote || *p == '\\');
+            }
+            else {
+                need_escape = (*p == ' ' || *p == '\\');
+            }
+            if (need_escape) {
+                s[0] = '\\';
+                s[1] = *p;
+                s[2] = '\0';
+            }
+            else {
+                s[0] = *p;
+                s[1] = '\0';
+            }
+            el_insertstr(el, s);
+            p++;
+        }
         if (full_match && matches[1] == NULL) {
+            if (open_quote != '\0') {
+                s[0] = open_quote;
+                s[1] = '\0';
+                el_insertstr(el, s);
+            }
             el_insertstr(el, " ");
         }
         free_completions(matches);
