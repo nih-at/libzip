@@ -62,6 +62,48 @@ typedef char bool;
 #define false 0
 #endif
 
+#if defined(HAVE_STDCKDINT_H) || defined(HAVE___BUILTIN_ADD_OVERFLOW)
+#ifdef HAVE_STDCKDINT_H
+#include <stdckdint.h>
+#else
+#define ckd_add(R, A, B) __builtin_add_overflow((A), (B), (R))
+#define ckd_mul(R, A, B) __builtin_mul_overflow((A), (B), (R))
+#define ckd_sub(R, A, B) __builtin_sub_overflow((A), (B), (R))
+#endif
+#define ckd_add_signed ckd_add
+#define ckd_add_unsigned ckd_add
+#define ckd_mul_signed ckd_mul
+#define ckd_mul_unsigned ckd_mul
+#define ckd_sub_signed ckd_sub
+#define ckd_sub_unsigned ckd_sub
+#else
+#define ckd_add_signed(R, A, B) \
+    ((*(R) = (A) + (B)), \
+     (((A) > 0 && (B) > 0 && *(R) < 0) || \
+      ((A) < 0 && (B) < 0 && *(R) > 0)))
+
+#define ckd_add_unsigned(R, A, B) \
+    ((*(R) = (A) + (B)), (*(R) < (A)))
+
+#define ckd_sub_signed(R, A, B) \
+    ((*(R) = (A) - (B)), \
+     (((A) >= 0 && (B) < 0 && *(R) <= 0) || \
+      ((A) < 0 && (B) > 0 && *(R) >= 0)))
+
+#define ckd_sub_unsigned(R, A, B) \
+    ((*(R) = (A) - (B)), ((A) < (B)))
+
+#define ckd_mul_signed(R, A, B) \
+    ((*(R) = (A) * (B)), \
+     (((A) > 0 && (B) > 0 && *(R) <= 0) || \
+      ((A) < 0 && (B) < 0 && *(R) <= 0) || \
+      ((A) > 0 && (B) < 0 && *(R) >= 0) || \
+      ((A) < 0 && (B) > 0 && *(R) >= 0)))
+
+#define ckd_mul_unsigned(R, A, B) \
+    (((B) == 0) ? (*(R) = 0, 0) : ((*(R) = (A) * (B)), (*(R) / (B) != (A))))
+#endif
+
 #include <errno.h>
 
 /* at least MinGW does not provide EOPNOTSUPP, see

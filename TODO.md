@@ -53,7 +53,7 @@ Overhaul TODO file to make it more usable for contributors:
 
 - Implement `getopt_long` compatibility fallback.
 
-- Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
+- Use macros with overflow checks instead of ad-hoc implementations.
 
 - split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`).
 

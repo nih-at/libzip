@@ -29,7 +29,7 @@ option(ENABLE_COVERAGE "Enable code coverage reporting of test suite" OFF)
 
 option(LIMIT_LZMA_WINDOW "Set limit for LZMA window size. Without a limit, LZMA compression can use up to 4GiB of memory" OFF)
 
-option(REQUIRE_ALL_TESTS "Require all tests to be available" OFF)
+option(REQUIRE_ALL_TESTS "Require all test dependencies to be available" OFF)
 
 option(BUILD_TOOLS "Build tools in the src directory (zipcmp, zipmerge, ziptool)" ON)
 option(BUILD_REGRESS "Build regression tests" ON)
@@ -184,7 +184,15 @@ else()
   set(FTS_LIB "" CACHE INTERNAL "")
 endif()
 
+check_c_source_compiles("
+int main(void) {
+    int a = 1, b = 2, result;
+    return __builtin_add_overflow(a, b, &result);
+}
+" HAVE___BUILTIN_ADD_OVERFLOW)
+
 check_include_files(stdbool.h HAVE_STDBOOL_H)
+check_include_files(stdckdint.h HAVE_STDCKDINT_H)
 check_include_files(strings.h HAVE_STRINGS_H)
 check_include_files(unistd.h HAVE_UNISTD_H)
 

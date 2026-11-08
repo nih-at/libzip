@@ -5,6 +5,7 @@
 #endif
 /* BEGIN DEFINES */
 #cmakedefine ENABLE_FDOPEN
+#cmakedefine HAVE___BUILTIN_ADD_OVERFLOW
 #cmakedefine HAVE___PROGNAME
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
@@ -68,6 +69,7 @@
 #cmakedefine HAVE_STRTOULL
 #cmakedefine HAVE_STRUCT_TM_TM_ZONE
 #cmakedefine HAVE_STDBOOL_H
+#cmakedefine HAVE_STDCKDINT_H
 #cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
 #cmakedefine HAVE_VASPRINTF
