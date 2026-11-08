@@ -536,6 +536,8 @@ void _zip_crypto_clear(void *b, size_t l);
 #endif
 #endif
 
+bool _zip_crypto_equal(const void *a, const void *b, size_t length);
+
 
 zip_int64_t _zip_add_entry(zip_t *);
 

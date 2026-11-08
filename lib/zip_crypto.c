@@ -35,6 +35,31 @@
 
 #include <string.h>
 
+bool _zip_crypto_equal(const void *a, const void *b, size_t length) {
+#ifndef HAVE_TIMINGSAFE_BCMP
+    const volatile zip_uint8_t *left = (const volatile zip_uint8_t *)a;
+    const volatile zip_uint8_t *right = (const volatile zip_uint8_t *)b;
+    volatile zip_uint8_t difference = 0;
+    size_t i;
+#endif
+
+    if (length == 0) {
+        return true;
+    }
+
+#ifdef HAVE_TIMINGSAFE_BCMP
+    return timingsafe_bcmp(a, b, length) == 0;
+#else
+    /* Keep every input read and accumulator update observable, rather than allowing an early-exit comparison. */
+    for (i = 0; i < length; i++) {
+        difference = (zip_uint8_t)(difference | (left[i] ^ right[i]));
+    }
+
+    return difference == 0;
+#endif
+}
+
+
 #ifdef USE_OWN_CRYPTO_CLEAR
 void _zip_crypto_clear(void *b, size_t l) {
     volatile unsigned char *p = (volatile unsigned char *)b;

@@ -163,6 +163,7 @@ check_function_exists(stricmp HAVE_STRICMP)
 check_function_exists(strncpy_s HAVE_STRNCPY_S)
 check_function_exists(strtoll HAVE_STRTOLL)
 check_function_exists(strtoull HAVE_STRTOULL)
+check_symbol_exists(timingsafe_bcmp string.h HAVE_TIMINGSAFE_BCMP)
 check_function_exists(vasprintf HAVE_VASPRINTF)
 
 check_include_files("sys/types.h;sys/stat.h;fts.h" HAVE_FTS_H)
