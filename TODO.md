@@ -10,10 +10,12 @@ Overhaul TODO file to make it more usable for contributors:
 
 - Documentation.
 - Add more commands.
+- Make `*_command.c` generation more easily callable.
 - enum argument types: match case insensitive? default case?
 - fnmatch(): error handling, honor case sensitivity from flags, use FNM_PATHNAME, FNM_PERIOD?
+- Handle options in completion.
 - Add support for changing argument type depending on options (e.g. `cat -i`)?
-- Build `zipsh_regress` and `zipsh_regress_nonrandom`
+- Share more code between `zipsh.c` and `zipsh_regress.c`.
 - Switch tests to `zipsh_regress`.
 
 ## Tests

@@ -45,7 +45,6 @@ bool extra_field_get_cleanup(invocation_t *invocation, void *context_v, file_mat
 
 bool extra_field_get_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
     context_t *context = (context_t *)context_v;
-    int ret;
     zip_uint16_t length;
     const zip_uint8_t *data;
 

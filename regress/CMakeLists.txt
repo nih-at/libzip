@@ -35,6 +35,25 @@ if (NIHTEST)
     ziptool_regress_nonrandom
   )
 
+  set(ZIPSH_REGRESS_SOURCES
+    programs/zipsh/add_nul.c
+    programs/zipsh/source_nul.c
+    programs/zipsh/zipsh_regress.c
+  )
+
+  add_library(zipsh_regress_common STATIC ${ZIPSH_REGRESS_SOURCES})
+  target_link_libraries(zipsh_regress_common zipsh_common)
+  target_include_directories(zipsh_regress_common PUBLIC programs/zipsh_regress ${PROJECT_BINARY_DIR})
+
+  foreach(PROGRAM in zipsh_regress zipsh_regress_nonrandom)
+    add_executable(${PROGRAM} zipsh_regress_commands.c)
+    target_link_libraries(${PROGRAM} zip zipsh_regress_common)
+    if (ENABLE_COVERAGE)
+      target_compile_options(${PROGRAM} PRIVATE -coverage)
+      target_link_options(${PROGRAM} PRIVATE -coverage)
+    endif()
+  endforeach()
+
   set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
 
   foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
@@ -133,3 +152,26 @@ if(ENABLE_COVERAGE)
           COMMAND ${CMAKE_COMMAND} -E cmake_echo_color "Open coverage/index.html in browser to view results."
   )
 endif()
+
+
+# create zipsh_regress_commands.c from sources
+set(ZIPSH_REGRESS_SOURCES_ABSOLUTE)
+foreach(source IN LISTS ZIPSH_REGRESS_SOURCES)
+  list(APPEND ZIPSH_REGRESS_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
+endforeach()
+# Preserve list elements when forwarding to script mode via -D.
+string(REPLACE ";" "\\;" ZIPSH_REGRESS_SOURCES_ABS_ESCAPED "${ZIPSH_REGRESS_SOURCES_ABSOLUTE}")
+
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zipsh_regress_commands.c
+  COMMAND "${CMAKE_COMMAND}"
+    "-DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}"
+    "-DCMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}"
+    "-DSOURCES=${ZIPSH_REGRESS_SOURCES_ABS_ESCAPED}"
+    "-DOUTPUT_FILE=zipsh_regress_commands.c"
+    "-P" "${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake"
+  DEPENDS
+    ${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake
+    ${ZIPSH_REGRESS_SOURCES_ABSOLUTE}
+  COMMENT "Generating zipsh_regress_commands.c"
+)

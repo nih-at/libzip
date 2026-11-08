@@ -28,13 +28,13 @@ set(ZIPSH_SOURCES
   zipsh/file_crc.c
   zipsh/file_encryption.c
   zipsh/file_reference.c
+  zipsh/global.c
   zipsh/list.c
   zipsh/rename.c
   zipsh/set_default_password.c
   zipsh/standard_flags.c
   zipsh/stat.c
   zipsh/util.c
-  zipsh/zipsh.c
 )
 
 set(COMPAT_SOURCES)
@@ -102,12 +102,15 @@ endforeach()
 target_sources(zipcmp PRIVATE diff_output.c)
 target_link_libraries(zipcmp ${FTS_LIB} ZLIB::ZLIB)
 
-add_executable(zipsh ${ZIPSH_SOURCES} zipsh_commands.c)
-target_link_libraries(zipsh shell zip)
+add_library(zipsh_common STATIC ${ZIPSH_SOURCES})
+target_link_libraries(zipsh_common shell zip)
 if (TARGET compat)
-  target_link_libraries(zipsh compat)
+  target_link_libraries(zipsh_common compat)
 endif()
-target_include_directories(zipsh PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} shell zipsh ${PROJECT_BINARY_DIR})
+target_include_directories(zipsh_common PUBLIC ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} shell zipsh ${PROJECT_BINARY_DIR})
+
+add_executable(zipsh zipsh/zipsh.c zipsh_commands.c)
+target_link_libraries(zipsh zipsh_common shell zip)
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zipsh EXPORT ${PROJECT_NAME}-bin-targets DESTINATION bin)
 endif()
