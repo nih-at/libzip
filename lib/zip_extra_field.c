@@ -501,7 +501,10 @@ zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, z
     /* If we are updating an existing field with its current data pointer, just update the size.
        This also ensures that data remains valid, which is needed if we set both local and central extra fields. */
     if (ef && ef->data == data) {
-        /* Since ef->data can be user supplied, we don't know its allocation size, so a bigger len may be fine. */
+        if (len > ef->size) {
+            zip_error_set(error, ZIP_ER_INVAL, 0);
+            return NULL;
+        }
         ef->size = len;
         return ef_head;
     }
