@@ -144,7 +144,7 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
     }
 
     if (invocation_get_option(invocation, 'h')) {
-        if (!print_command_help(&shell_command->command, argv[0], error_message)) {
+        if (!print_command_help(&shell_command->command, argv[0], &error_message)) {
             fprintf(stderr, "%s: %s\n", argv[0], error_message_get(error_message));
             error_message_free(error_message);
             return 1;
