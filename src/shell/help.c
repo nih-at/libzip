@@ -39,7 +39,7 @@ int compare_option(const void *a, const void *b) {
     return ret;
 }
 
-void print_command_help(const command_t *cmd, const char *prog_name) {
+bool print_command_help(const command_t *cmd, const char *prog_name, error_message_t **error) {
     printf("Usage: %s", prog_name ? prog_name : cmd->name);
     if (cmd->n_options > 0) {
         printf(" [options]");
@@ -69,7 +69,10 @@ void print_command_help(const command_t *cmd, const char *prog_name) {
         int longest_option_name = 0;
 
         /* Sort options. */
-        options = (option_definition_t **)malloc(cmd->n_options * sizeof(option_definition_t *));
+        if ((options = (option_definition_t **)malloc(cmd->n_options * sizeof(option_definition_t *))) == NULL) {
+            *error = error_message_new("out of memory");
+            return false;
+        }
         for (size_t i = 0; i < cmd->n_options; i++) {
             options[i] = &cmd->options[i];
         }
@@ -174,7 +177,9 @@ bool help_implementation(invocation_t *invocation, error_message_t **error_messa
             }
             return false;
         }
-        print_command_help(cmd, NULL);
+        if (!print_command_help(cmd, NULL, error_message)) {
+            return false;
+        }
     }
     return true;
 }

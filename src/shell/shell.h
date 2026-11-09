@@ -184,7 +184,7 @@ bool words_parse(words_t *words, const char *line, error_message_t **error_messa
 bool words_parse_partial(words_t *words, const char *line, const char *end, error_message_t **error_message);
 void words_clear(words_t *words);
 
-void print_command_help(const command_t *cmd, const char *prog_name);
+bool print_command_help(const command_t *cmd, const char *prog_name, error_message_t **error_message);
 
 const char* enum_argument_to_string(const argument_type_t *type, argument_t value, bool string_for_unknown);
 
