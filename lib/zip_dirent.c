@@ -344,7 +344,7 @@ void _zip_dirent_init(zip_dirent_t *de) {
 
 
 bool _zip_dirent_needs_zip64(const zip_dirent_t *de, zip_flags_t flags) {
-    if (de->uncomp_size >= ZIP_UINT32_MAX || de->comp_size >= ZIP_UINT32_MAX || ((flags & ZIP_FL_CENTRAL) && de->offset >= ZIP_UINT32_MAX)) {
+    if (de->uncomp_size > ZIP_UINT32_MAX || de->comp_size > ZIP_UINT32_MAX || ((flags & ZIP_FL_CENTRAL) && de->offset > ZIP_UINT32_MAX)) {
         return true;
     }
 
@@ -1081,7 +1081,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
         _zip_buffer_put_32(buffer, de->crc);
     }
 
-    if (((flags & ZIP_FL_LOCAL) == ZIP_FL_LOCAL) && ((de->comp_size >= ZIP_UINT32_MAX) || (de->uncomp_size >= ZIP_UINT32_MAX))) {
+    if (is_zip64 && ((flags & ZIP_FL_LOCAL) == ZIP_FL_LOCAL) && ((de->comp_size >= ZIP_UINT32_MAX) || (de->uncomp_size >= ZIP_UINT32_MAX))) {
         /* In local headers, if a ZIP64 EF is written, it MUST contain
          * both compressed and uncompressed sizes (even if one of the
          * two is smaller than 0xFFFFFFFF); on the other hand, those

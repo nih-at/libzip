@@ -1,0 +1,6 @@
+# Rewriting exact-boundary size metadata must not create an empty Zip64 field.
+# Use the byte comparator, never decompress the synthetic entry data.
+# Memory sources rebuild both headers; use the .zzip byte-comparison convention.
+arguments -m boundary.zzip set_archive_comment hi
+file boundary.zzip zip64-boundary.zip zip64-boundary-rewritten.zip
+return 0
