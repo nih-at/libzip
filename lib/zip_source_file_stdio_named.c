@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#if defined(__linux__) && defined(HAVE_GETXATTR) && defined(HAVE_FSETXATTR) && defined(HAVE_FREMOVEXATTR)
+#if defined(__linux__) && defined(HAVE_FGETXATTR) && defined(HAVE_GETXATTR) && defined(HAVE_FSETXATTR) && defined(HAVE_FREMOVEXATTR)
 #define USE_ACL
 #include <sys/xattr.h>
 #endif
@@ -427,10 +427,12 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
     }
 #ifdef USE_ACL
     static const char acl_name[] = "system.posix_acl_access";
+    const int source_fd = ctx->f != NULL ? fileno((FILE *)ctx->f) : -1;
     void *acl_data;
     ssize_t acl_size;
 
-    acl_size = getxattr(ctx->fname, acl_name, NULL, 0);
+    /* shortcut: direct named sources have no open input descriptor; use the path until the source API retains one. */
+    acl_size = source_fd >= 0 ? fgetxattr(source_fd, acl_name, NULL, 0) : getxattr(ctx->fname, acl_name, NULL, 0);
     if (acl_size < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
         zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
         return false;
@@ -447,7 +449,7 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
             zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
             return false;
         }
-        acl_size = getxattr(ctx->fname, acl_name, acl_data, (size_t)acl_size);
+        acl_size = source_fd >= 0 ? fgetxattr(source_fd, acl_name, acl_data, (size_t)acl_size) : getxattr(ctx->fname, acl_name, acl_data, (size_t)acl_size);
         if (acl_size < 0) {
             int saved_errno = errno;
             free(acl_data);

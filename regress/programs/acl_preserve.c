@@ -54,6 +54,7 @@ static void set_entry(struct acl_entry *entry, uint16_t tag, uint16_t permission
 
 int main(void) {
     static const char archive_name[] = "acl-preserve.zip";
+    static const char swapped_name[] = "acl-preserve-original.zip";
     static const char default_dir[] = "acl-preserve-default";
     static const char inherited_name[] = "acl-preserve-default/acl-preserve.zip";
     static const char contents[] = "data";
@@ -72,6 +73,7 @@ int main(void) {
     int result = 1;
 
     (void)remove(archive_name);
+    (void)remove(swapped_name);
 
     archive = zip_open(archive_name, ZIP_CREATE | ZIP_TRUNCATE, &error_code);
     if (archive == NULL) {
@@ -137,6 +139,44 @@ int main(void) {
         fprintf(stderr, "POSIX access ACL changed during archive replacement\n");
         goto done;
     }
+
+    archive = zip_open(archive_name, 0, &error_code);
+    if (archive == NULL || rename(archive_name, swapped_name) < 0) {
+        fprintf(stderr, "cannot prepare pathname-swap check\n");
+        goto done;
+    }
+    file = fopen(archive_name, "wb");
+    if (file == NULL) {
+        perror("open replacement pathname");
+        goto done;
+    }
+    if (fwrite(contents, 1, sizeof(contents) - 1, file) != sizeof(contents) - 1) {
+        fprintf(stderr, "cannot write replacement pathname\n");
+        goto done;
+    }
+    if (fclose(file) < 0) {
+        file = NULL;
+        perror("close replacement pathname");
+        goto done;
+    }
+    file = NULL;
+    if (removexattr(archive_name, ACL_EA_ACCESS) < 0 && errno != ENODATA) {
+        perror("clear replacement ACL");
+        goto done;
+    }
+    if (zip_set_archive_comment(archive, "swapped", 7) < 0 || zip_close(archive) < 0) {
+        fprintf(stderr, "cannot update archive after pathname swap\n");
+        zip_discard(archive);
+        archive = NULL;
+        goto done;
+    }
+    archive = NULL;
+    after_length = getxattr(archive_name, ACL_EA_ACCESS, after, sizeof(after));
+    if (after_length != before_length || memcmp(before, after, (size_t)before_length) != 0) {
+        fprintf(stderr, "POSIX access ACL came from the swapped pathname instead of the open archive\n");
+        goto done;
+    }
+    (void)remove(swapped_name);
 
     zip_error_init(&error);
     source = zip_source_file_create(archive_name, 0, -1, &error);
@@ -243,5 +283,6 @@ done:
         (void)rmdir(default_dir);
     }
     (void)remove(archive_name);
+    (void)remove(swapped_name);
     return result;
 }

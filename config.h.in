@@ -36,6 +36,7 @@
 #cmakedefine HAVE_FICLONERANGE
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FCHMOD
+#cmakedefine HAVE_FGETXATTR
 #cmakedefine HAVE_FREMOVEXATTR
 #cmakedefine HAVE_FNMATCH
 #cmakedefine HAVE_FSEEKO
