@@ -178,6 +178,25 @@ int main(void) {
     }
     (void)remove(swapped_name);
 
+    archive = zip_open(archive_name, 0, &error_code);
+    if (archive == NULL || rename(archive_name, swapped_name) < 0) {
+        fprintf(stderr, "cannot prepare missing-path check\n");
+        goto done;
+    }
+    if (zip_set_archive_comment(archive, "moved", 5) < 0 || zip_close(archive) < 0) {
+        fprintf(stderr, "cannot update archive after pathname move\n");
+        zip_discard(archive);
+        archive = NULL;
+        goto done;
+    }
+    archive = NULL;
+    after_length = getxattr(archive_name, ACL_EA_ACCESS, after, sizeof(after));
+    if (after_length != before_length || memcmp(before, after, (size_t)before_length) != 0) {
+        fprintf(stderr, "POSIX access ACL was lost after the source pathname moved\n");
+        goto done;
+    }
+    (void)remove(swapped_name);
+
     zip_error_init(&error);
     source = zip_source_file_create(archive_name, 0, -1, &error);
     if (source == NULL) {
