@@ -1,5 +1,6 @@
 # 1.13 [Unreleased]
 
+* Introduce `zipsh` for interacting with zip archives. The API is still evolving, feedback is welcome. `ziptool` will be deprecated once `zipsh` stabilizes.
 * Include website in repository and source distribution.
 
 # 1.12.1 [2026-10-14]

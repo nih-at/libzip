@@ -1,109 +1,145 @@
-set(TEST_PROGRAMS
-  add_from_filep
-  can_clone_file
-  crypto_clear
-  exact_read_integrity
-  filep_error
-  fopen_unchanged
-  fread
-  fseek
-  source_seek
-  tryopen
-)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_GETXATTR AND HAVE_SETXATTR AND HAVE_REMOVEXATTR AND HAVE_FSETXATTR AND HAVE_FREMOVEXATTR)
-  list(APPEND TEST_PROGRAMS acl_preserve)
+if (CMOCKA_FOUND)
+  set(CMOCKA_TEST_PROGRAMS
+    crypto_clear
+  )
+
+  foreach(PROGRAM IN LISTS CMOCKA_TEST_PROGRAMS)
+    add_executable(${PROGRAM} programs/${PROGRAM}.c programs/cmocka_utilities.c)
+    target_link_libraries(${PROGRAM} zip ${CMOCKA_LIBRARIES})
+    target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR} ${CMOCKA_INCLUDE_DIRS}) 
+
+    add_test(NAME ${PROGRAM} COMMAND ${PROGRAM})
+  endforeach()
+
+  # The internal symbol is hidden when zip is a shared library, so link against the file directly.
+  target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 endif()
 
-set(HOLE_USERS
-  hole
-  ziptool_regress
-  ziptool_regress_nonrandom
-)
+if (NIHTEST)
+  set(TEST_PROGRAMS
+    add_from_filep
+    can_clone_file
+    exact_read_integrity
+    filep_error
+    fopen_unchanged
+    fread
+    fseek
+    source_seek
+    tryopen
+  )
 
-set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_GETXATTR AND HAVE_SETXATTR AND HAVE_REMOVEXATTR AND HAVE_FSETXATTR AND HAVE_FREMOVEXATTR)
+    list(APPEND TEST_PROGRAMS acl_preserve)
+  endif()
 
-foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
-  if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
-    add_executable(${PROGRAM} programs/ziptool_regress.c)
-    target_link_libraries(${PROGRAM} zip_nonrandom)
-  else()
-    add_executable(${PROGRAM} programs/${PROGRAM}.c)
-    target_link_libraries(${PROGRAM} zip)
+  set(HOLE_USERS
+    hole
+    ziptool_regress
+    ziptool_regress_nonrandom
+  )
 
+  set(ZIPSH_REGRESS_SOURCES
+    programs/zipsh/add_nul.c
+    programs/zipsh/source_nul.c
+    programs/zipsh/zipsh_regress.c
+  )
+
+  add_library(zipsh_regress_common STATIC ${ZIPSH_REGRESS_SOURCES})
+  target_link_libraries(zipsh_regress_common zipsh_common)
+  target_include_directories(zipsh_regress_common PUBLIC programs/zipsh_regress ${PROJECT_BINARY_DIR})
+
+  foreach(PROGRAM in zipsh_regress zipsh_regress_nonrandom)
+    add_executable(${PROGRAM} zipsh_regress_commands.c)
+    target_link_libraries(${PROGRAM} zip zipsh_regress_common)
     if (ENABLE_COVERAGE)
       target_compile_options(${PROGRAM} PRIVATE -coverage)
       target_link_options(${PROGRAM} PRIVATE -coverage)
     endif()
+  endforeach()
+
+  set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
+
+  foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
+    if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
+      add_executable(${PROGRAM} programs/ziptool_regress.c)
+      target_link_libraries(${PROGRAM} zip_nonrandom)
+    else()
+      add_executable(${PROGRAM} programs/${PROGRAM}.c)
+      target_link_libraries(${PROGRAM} zip)
+      
+      if (ENABLE_COVERAGE)
+        target_compile_options(${PROGRAM} PRIVATE -coverage)
+        target_link_options(${PROGRAM} PRIVATE -coverage)
+      endif()
+    endif()
+    target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
+    if (TARGET compat)
+      target_link_libraries(${PROGRAM} compat)
+    endif()
+  endforeach()
+
+  foreach(PROGRAM IN LISTS HOLE_USERS)
+    target_sources(${PROGRAM} PRIVATE programs/source_hole.c)
+  endforeach()
+
+  foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
+    target_sources(${PROGRAM} PRIVATE programs/fuzz_main.c)
+  endforeach()
+
+  add_executable(files_differ programs/files_differ.c)
+
+  # for including ziptool.c
+  target_include_directories(ziptool_regress PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
+  target_include_directories(ziptool_regress_nonrandom PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
+
+
+  add_custom_target(cleanup
+      COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/support/cleanup.cmake
+      )
+
+  add_custom_target(testinput
+    ALL
+    VERBATIM
+    COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/data/manyfiles-zip.zip
+    COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/data/bigzero-zip.zip
+    DEPENDS ${PROJECT_SOURCE_DIR}/regress/data/manyfiles-zip.zip ${PROJECT_SOURCE_DIR}/regress/data/bigzero-zip.zip
+  )
+
+  set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+    bigzero.zip
+    manyfiles-133000.zip
+    manyfiles-65536.zip
+    manyfiles-fewer.zip
+    manyfiles-more.zip
+    manyfiles-zip64-modulo.zip
+    manyfiles-zip64.zip
+    manyfiles.zip
+  )
+
+  set(path "$<TARGET_FILE_DIR:zip>;$ENV{PATH}")
+  if (TARGET zlib)
+    set(path "$<TARGET_FILE_DIR:zlib>;${path}")
   endif()
-  target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
-  if (TARGET compat)
-    target_link_libraries(${PROGRAM} compat)
+  string(REPLACE ";" "\\;" path "${path}")
+
+  # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
+
+  if(TARGET acl_preserve)
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+    add_test(NAME acl-preserve COMMAND acl_preserve)
+    set_tests_properties(acl-preserve PROPERTIES SKIP_RETURN_CODE 77 WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
   endif()
-endforeach()
 
-# The internal symbol is hidden when zip is a shared library, so link against the file directly.
-target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
-
-foreach(PROGRAM IN LISTS HOLE_USERS)
-  target_sources(${PROGRAM} PRIVATE programs/source_hole.c)
-endforeach()
-
-foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
-  target_sources(${PROGRAM} PRIVATE programs/fuzz_main.c)
-endforeach()
-
-add_executable(files_differ programs/files_differ.c)
-
-# for including ziptool.c
-target_include_directories(ziptool_regress PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
-target_include_directories(ziptool_regress_nonrandom PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/src)
-
-
-add_custom_target(cleanup
-    COMMAND ${CMAKE_COMMAND} -DDIR=${PROJECT_BINARY_DIR}/regress -P ${PROJECT_SOURCE_DIR}/regress/support/cleanup.cmake
-    )
-
-add_custom_target(testinput
-  ALL
-  VERBATIM
-  COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/data/manyfiles-zip.zip
-  COMMAND ${CMAKE_COMMAND} -E tar x ${PROJECT_SOURCE_DIR}/regress/data/bigzero-zip.zip
-  DEPENDS ${PROJECT_SOURCE_DIR}/regress/data/manyfiles-zip.zip ${PROJECT_SOURCE_DIR}/regress/data/bigzero-zip.zip
-)
-
-set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-  bigzero.zip
-  manyfiles-133000.zip
-  manyfiles-65536.zip
-  manyfiles-fewer.zip
-  manyfiles-more.zip
-  manyfiles-zip64-modulo.zip
-  manyfiles-zip64.zip
-  manyfiles.zip
-)
-
-set(path "$<TARGET_FILE_DIR:zip>;$ENV{PATH}")
-if (TARGET zlib)
-  set(path "$<TARGET_FILE_DIR:zlib>;${path}")
-endif()
-string(REPLACE ";" "\\;" path "${path}")
-
-# set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
-
-file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
-if(TARGET acl_preserve)
-  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
-  add_test(NAME acl-preserve COMMAND acl_preserve)
-  set_tests_properties(acl-preserve PROPERTIES SKIP_RETURN_CODE 77 WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
-endif()
-foreach(FULL_CASE IN LISTS EXTRA_TESTS)
-  get_filename_component(CASE ${FULL_CASE} NAME)
-  add_test(NAME ${CASE} COMMAND ${NIHTEST} -v ${CASE})
-  # TODO: add --bin-sub-directory $<CONFIG>
-  set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
-  set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
-endforeach()
+  file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
+  foreach(FULL_CASE IN LISTS EXTRA_TESTS)
+    get_filename_component(CASE ${FULL_CASE} NAME)
+    add_test(NAME ${CASE} COMMAND ${NIHTEST} -v ${CASE})
+    # TODO: add --bin-sub-directory $<CONFIG>
+    set_tests_properties(${CASE} PROPERTIES SKIP_RETURN_CODE 77)
+    set_tests_properties(${CASE} PROPERTIES ENVIRONMENT "PATH=${path}")
+  endforeach()
+endif(NIHTEST)
 
 set(XFAIL_TESTS
 #  zipcmp_zip_dir_slash.test
@@ -126,3 +162,26 @@ if(ENABLE_COVERAGE)
           COMMAND ${CMAKE_COMMAND} -E cmake_echo_color "Open coverage/index.html in browser to view results."
   )
 endif()
+
+
+# create zipsh_regress_commands.c from sources
+set(ZIPSH_REGRESS_SOURCES_ABSOLUTE)
+foreach(source IN LISTS ZIPSH_REGRESS_SOURCES)
+  list(APPEND ZIPSH_REGRESS_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
+endforeach()
+# Preserve list elements when forwarding to script mode via -D.
+string(REPLACE ";" "\\;" ZIPSH_REGRESS_SOURCES_ABS_ESCAPED "${ZIPSH_REGRESS_SOURCES_ABSOLUTE}")
+
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zipsh_regress_commands.c
+  COMMAND "${CMAKE_COMMAND}"
+    "-DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}"
+    "-DCMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}"
+    "-DSOURCES=${ZIPSH_REGRESS_SOURCES_ABS_ESCAPED}"
+    "-DOUTPUT_FILE=zipsh_regress_commands.c"
+    "-P" "${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake"
+  DEPENDS
+    ${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake
+    ${ZIPSH_REGRESS_SOURCES_ABSOLUTE}
+  COMMENT "Generating zipsh_regress_commands.c"
+)

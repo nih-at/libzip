@@ -1283,7 +1283,16 @@ int _zip_u2d_time(time_t intime, zip_dostime_t *dtime, zip_error_t *ze) {
         return -1;
     }
     if (tpm->tm_year < 80) {
-        tpm->tm_year = 80;
+        /* earliest time in DOS format: 1980-01-01 00:00:00 */
+        dtime->date = (1 << 5) + 1;
+        dtime->time = 0;
+        return 0;
+    }
+    if (tpm->tm_year > 207) {
+        /* latest time in DOS format: 2107-12-31 23:59:58 */
+        dtime->date = (127 << 9) + (12 << 5) + 31;
+        dtime->time = (23 << 11) + (59 << 5) + 29;
+        return 0;
     }
 
     dtime->date = (zip_uint16_t)(((tpm->tm_year + 1900 - 1980) << 9) + ((tpm->tm_mon + 1) << 5) + tpm->tm_mday);

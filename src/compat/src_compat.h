@@ -11,6 +11,12 @@ extern "C" {
 int asprintf(char **strp, const char *fmt, ...);
 #endif
 
+#ifdef HAVE_FNMATCH
+#include <fnmatch.h>
+#else
+#include "fnmatch.h"
+#endif
+
 #ifndef HAVE_GETLINE
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +48,12 @@ struct option {
 #define optional_argument 2
 
 int getopt_long(int argc, char * const argv[], const char *optstring, const struct option *longopts, int *longindex);
+#endif
+
+#ifndef HAVE_ISATTY
+#ifdef HAVE__ISATTY
+#define isatty(fd) _isatty(fd)
+#endif
 #endif
 
 #ifndef HAVE_VASPRINTF

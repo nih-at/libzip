@@ -16,28 +16,26 @@ For supporting bzip2-compressed zip archives, you need
 [bzip2](http://bzip.org/).
 
 For supporting lzma- and xz-compressed zip archives, you need
-[liblzma](https://tukaani.org/xz/) which is part of xz, at least version 5.2.
+[liblzma](https://tukaani.org/xz/) which is part of xz (at least version 5.2).
 
 For supporting zstd-compressed zip archives, you need
 [zstd](https://github.com/facebook/zstd/).
 
-For command line editing support in the zip shell (`zipsh`), you need readline or a compatible library.
+For command line editing support in the zip shell (`zipsh`), you need readline or editline.
 
 For AES (encryption) support, you need one of these cryptographic libraries,
 listed in order of preference:
 
 - Apple's CommonCrypto (available on macOS and iOS)
 - Microsoft Windows Cryptography Framework
-- [OpenSSL](https://www.openssl.org/) >= 1.0.
+- [OpenSSL](https://www.openssl.org/) (at least version 1.0)
 - [GnuTLS](https://www.gnutls.org/) and [Nettle](https://www.lysator.liu.se/~nisse/nettle/) (at least nettle 3.0)
 
 If you don't want to use a library even if it is installed, you can
 pass `-DENABLE_<LIBRARY>=OFF` to cmake, where `<LIBRARY>` is one of
 `COMMONCRYPTO`, `GNUTLS`, or `OPENSSL`.
 
-For running the tests, you need to have
-[Python](https://www.python.org/) and
-[nihtest](https://pypi.org/project/nihtest/) installed.
+For running the tests, you need to have [Python](https://www.python.org/), [nihtest](https://pypi.org/project/nihtest/), and [CMocka](https://cmocka.org/) installed.
 
 For code coverage report of the test suite, you need to have [lcov](https://github.com/linux-test-project/lcov) installed.
 

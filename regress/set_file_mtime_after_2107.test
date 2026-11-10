@@ -1,0 +1,4 @@
+# set mtime after 2107, stored as the latest DOS time
+return 0
+arguments testfile set_file_mtime 0 4418000000
+file testfile testfile.zip testfile2107.zip

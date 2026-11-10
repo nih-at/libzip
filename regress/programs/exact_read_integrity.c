@@ -311,6 +311,52 @@ check_reopened_source(void) {
 }
 
 
+static int
+check_write_arguments(void) {
+    static const char input = 'x';
+    int fail;
+    zip_error_t error;
+    zip_source_t *source;
+
+    fail = 0;
+    zip_error_init(&error);
+    source = zip_source_buffer_create(NULL, 0, 0, &error);
+    if (source == NULL) {
+        fprintf(stderr, "can't create empty buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        return 1;
+    }
+
+    if (zip_source_begin_write(source) < 0) {
+        fprintf(stderr, "can't begin writing buffer source: %s\n", zip_error_strerror(zip_source_error(source)));
+        zip_source_free(source);
+        zip_error_fini(&error);
+        return 1;
+    }
+    if (zip_source_write(source, NULL, 0) != 0) {
+        fprintf(stderr, "zero-length write with NULL data failed: %s\n", zip_error_strerror(zip_source_error(source)));
+        fail = 1;
+    }
+    if (zip_source_write(source, NULL, 1) != -1) {
+        fprintf(stderr, "positive-length write with NULL data succeeded\n");
+        fail = 1;
+    }
+    else if (zip_error_code_zip(zip_source_error(source)) != ZIP_ER_INVAL) {
+        fprintf(stderr, "positive-length write with NULL data returned error %d instead of %d\n", zip_error_code_zip(zip_source_error(source)), ZIP_ER_INVAL);
+        fail = 1;
+    }
+    if (zip_source_write(source, &input, 1) != 1) {
+        fprintf(stderr, "valid write after rejected write failed: %s\n", zip_error_strerror(zip_source_error(source)));
+        fail = 1;
+    }
+
+    zip_source_rollback_write(source);
+    zip_source_free(source);
+    zip_error_fini(&error);
+    return fail;
+}
+
+
 /* WinZip AE-2 entries rely on their HMAC for integrity, including after reopening a source. */
 static int
 check_reopened_aes(const char *archive, zip_uint64_t index, const char *password, int expected_first_error, int expected_second_error) {
@@ -415,6 +461,7 @@ main(void) {
     fail += check_case("hmac-error.zip", "1234", "test.txt", ZIP_ER_CRC);
     fail += check_nonseekable_reopen();
     fail += check_reopened_source();
+    fail += check_write_arguments();
     fail += check_reopened_aes("empty-badmac-aes256.zip", 0, "password", ZIP_ER_CRC, ZIP_ER_CRC);
     fail += check_reopened_aes("encrypt-aes256.zip", 1, "foofoofoo", ZIP_ER_OK, ZIP_ER_OK);
     fail += check_reopened_aes("hmac-error.zip", 0, "1234", ZIP_ER_CRC, ZIP_ER_CRC);

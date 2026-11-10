@@ -1,3 +1,0 @@
-description internal crypto clear zeroes only the requested range
-program crypto_clear
-return 0

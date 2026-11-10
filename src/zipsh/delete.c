@@ -3,31 +3,29 @@
 
 #include "zipsh.h"
 
-bool delete_implementation(invocation_t *invocation, error_message_t **error_message) {
-    bool result = true;
-    file_reference_t *file_ref = file_reference_create(invocation, error_message);
-    if (!file_ref) {
-        return false;
-    }
-
-    if (zip_delete(archive, file_ref->index) < 0) {
-        *error_message = error_message_new_format("can't delete %s: %s", file_ref->error_info, zip_strerror(archive));
-        result = false;
-    }
-
-    file_reference_free(file_ref);
-
-    return result;
-}
-
 /* clang-format off */
 argument_definition_t delete_arguments[] = {
-    {"file", "file to delete", argument_type_filename, true, {.string = NULL}},
+    FILE_REFERENCE_ARGUMENTS,
 };
 
 option_definition_t delete_options[] = {
-    {'i', "index", NULL, "file argument is index instead of name", NULL},
+    FILE_REFERENCE_OPTIONS
 };
 /* clang-format on */
+
+
+bool delete_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+    if (zip_delete(archive, file_ref->index) < 0) {
+        *error_message = error_message_new_format("can't delete %s: %s", file_ref->error_info, zip_strerror(archive));
+        return false;
+    }
+
+    return true;
+}
+
+bool delete_implementation(invocation_t *invocation, error_message_t **error_message) {
+    file_reference_command_t delete_command = {NULL, delete_execute, NULL, NULL};
+    return file_reference_command_execute(&delete_command, invocation, error_message);
+}
 
 COMMAND(delete, "delete file from archive");

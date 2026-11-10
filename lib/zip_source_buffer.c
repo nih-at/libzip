@@ -74,7 +74,7 @@ struct read_data {
 typedef struct read_data read_data_t;
 
 static read_data_t *read_data_new(void);
-static void read_data_free(read_data_t *ctx);
+static void read_data_free(read_data_t *ctx, bool success);
 
 /* TODO:
     buffer_write
@@ -86,7 +86,7 @@ static void read_data_free(read_data_t *ctx);
 static zip_int64_t buffer_at_eof(const buffer_t *buffer);
 static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t length, zip_error_t *error);
 static zip_uint64_t buffer_find_fragment(const buffer_t *buffer, zip_uint64_t offset);
-static void buffer_free(buffer_t *buffer);
+static void buffer_free(buffer_t *buffer, bool success);
 static bool buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *error);
 static bool buffer_is_fragment_shared(const buffer_t *buffer, zip_uint64_t fragment_index);
 static bool buffer_make_fragment_writable(buffer_t *buffer, zip_uint64_t fragment_index, zip_error_t *error);
@@ -151,6 +151,7 @@ zip_source_t *zip_source_buffer_fragment_with_attributes_create(const zip_buffer
     read_data_t *ctx;
     zip_source_t *zs;
     buffer_t *buffer;
+    zip_uint64_t i;
 
     if (fragments == NULL && nfragments > 0) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
@@ -163,7 +164,7 @@ zip_source_t *zip_source_buffer_fragment_with_attributes_create(const zip_buffer
 
     if ((ctx = read_data_new()) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
-        buffer_free(buffer);
+        buffer_free(buffer, false);
         return NULL;
     }
 
@@ -173,8 +174,17 @@ zip_source_t *zip_source_buffer_fragment_with_attributes_create(const zip_buffer
     }
 
     if ((zs = zip_source_function_create(read_data, ctx, error)) == NULL) {
-        read_data_free(ctx);
+        read_data_free(ctx, false);
         return NULL;
+    }
+
+    if (freep) {
+        /* We don't keep zero length fragments, so their data is no longer needed once the source is created. */
+        for (i = 0; i < nfragments; i++) {
+            if (fragments[i].length == 0 && fragments[i].data != NULL) {
+                free(fragments[i].data);
+            }
+        }
     }
 
     return zs;
@@ -212,7 +222,7 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
         return 0;
 
     case ZIP_SOURCE_COMMIT_WRITE:
-        buffer_free(ctx->in);
+        buffer_free(ctx->in, true);
         ctx->in = ctx->out;
         ctx->out = NULL;
         return 0;
@@ -221,7 +231,7 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
         return zip_error_to_data(&ctx->error, data, len);
 
     case ZIP_SOURCE_FREE:
-        read_data_free(ctx);
+        read_data_free(ctx, true);
         return 0;
 
     case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
@@ -253,13 +263,13 @@ static zip_int64_t read_data(void *state, void *data, zip_uint64_t len, zip_sour
             return -1;
         }
 
-        buffer_free(ctx->in);
+        buffer_free(ctx->in, true);
         ctx->in = empty;
         return 0;
     }
 
     case ZIP_SOURCE_ROLLBACK_WRITE:
-        buffer_free(ctx->out);
+        buffer_free(ctx->out, true);
         ctx->out = NULL;
         return 0;
 
@@ -359,7 +369,7 @@ static buffer_t *buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t
         return NULL;
     }
     if (!buffer_grow_fragments(clone, fragment + 1, error)) {
-        buffer_free(clone);
+        buffer_free(clone, false);
         return NULL;
     }
 
@@ -410,16 +420,18 @@ static zip_uint64_t buffer_find_fragment(const buffer_t *buffer, zip_uint64_t of
 }
 
 
-static void buffer_free(buffer_t *buffer) {
+static void buffer_free(buffer_t *buffer, bool success) {
     zip_uint64_t i;
 
     if (buffer == NULL) {
         return;
     }
 
-    for (i = 0; i < buffer->nfragments; i++) {
-        if (buffer->fragments[i].free_data && !buffer_is_fragment_shared(buffer, i)) {
-            free(buffer->fragments[i].data);
+    if (success) {
+        for (i = 0; i < buffer->nfragments; i++) {
+            if (buffer->fragments[i].free_data && !buffer_is_fragment_shared(buffer, i)) {
+                free(buffer->fragments[i].data);
+            }
         }
     }
     if (buffer->shared_buffer != NULL) {
@@ -456,7 +468,6 @@ static bool buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_e
 
 static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t nfragments, int free_data, zip_error_t *error) {
     buffer_t *buffer;
-    bool have_empty_fragment = false;
 
     if ((buffer = malloc(sizeof(*buffer))) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -484,21 +495,18 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
 
         if (!buffer_grow_fragments(buffer, nfragments, NULL)) {
             zip_error_set(error, ZIP_ER_MEMORY, 0);
-            buffer_free(buffer);
+            buffer_free(buffer, false);
             return NULL;
         }
 
         offset = 0;
         for (i = 0, j = 0; i < nfragments; i++) {
             if (fragments[i].length == 0) {
-                if (fragments[i].data != NULL && free_data) {
-                    have_empty_fragment = true;
-                }
                 continue;
             }
             if (fragments[i].data == NULL) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
-                buffer_free(buffer);
+                buffer_free(buffer, false);
                 return NULL;
             }
             buffer->fragments[j].data = fragments[i].data;
@@ -507,7 +515,7 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
             buffer->fragment_offsets[j] = offset;
             if (offset + fragments[i].length < offset) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
-                buffer_free(buffer);
+                buffer_free(buffer, false);
                 return NULL;
             }
             offset += fragments[i].length;
@@ -516,14 +524,6 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
         buffer->nfragments = j;
         buffer->fragment_offsets[buffer->nfragments] = offset;
         buffer->size = offset;
-
-        if (have_empty_fragment) {
-            for (i = 0; i < nfragments; i++) {
-                if (fragments[i].length == 0 && fragments[i].data != NULL) {
-                    free(fragments[i].data);
-                }
-            }
-        }
     }
 
     return buffer;
@@ -705,14 +705,14 @@ static read_data_t *read_data_new(void) {
     return ctx;
 }
 
-static void read_data_free(read_data_t *ctx) {
+static void read_data_free(read_data_t *ctx, bool success) {
     if (ctx == NULL) {
         return;
     }
 
     zip_error_fini(&ctx->error);
-    buffer_free(ctx->in);
-    buffer_free(ctx->out);
+    buffer_free(ctx->in, success);
+    buffer_free(ctx->out, true);
     /* TODO: attributes */
 
     free(ctx);

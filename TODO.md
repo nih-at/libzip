@@ -1,27 +1,33 @@
-## Tests
+## TODOs
 
-### zipsh
+Overhaul TODO file to make it more usable for contributors:
 
-- editline: Handle spaces when inserting common match prefix.
+- Indicate which tasks we consider good candidates for contributions, noting if details should be discussed with the maintainers before starting.
+- Categorize and prioritize tasks.
+- Remove completed or obsolete tasks.
+
+## zipsh
+
 - Documentation.
 - Add more commands.
+- Make `*_command.c` generation more easily callable.
 - enum argument types: match case insensitive? default case?
+- fnmatch(): error handling, honor case sensitivity from flags, use FNM_PATHNAME, FNM_PERIOD?
+- Handle options in completion.
 - Add support for changing argument type depending on options (e.g. `cat -i`)?
-- Add `-c` option to take command from the command line arguments.
-- Build `zipsh_regress` and `zipsh_regress_nonrandom`
+- Share more code between `zipsh.c` and `zipsh_regress.c`.
 - Switch tests to `zipsh_regress`.
-- Deprecate `ziptool`.
+
+## Tests
 
 ### Infrastructure
 
-- Find framework for C unit tests (e.g. CMocka). Should support data driven tests.
 - Add test program for testing `zip_source_t` API using the `shell` library.
-- Switch existing dedicated test programs to one of the above, where possible.
+- Switch existing one-off test programs to `zipsh_regress`, sources shell, or CMocka, where possible.
 
 ### CI
 
 - Add CI build with sanitizers enabled.
-- Add cmake option to fail if dependencies for tests are missing, use in CI builds.
 
 ### Specific Tests
 
@@ -39,16 +45,15 @@
 
 ## Documentation
 
-- Integrate coding and contributing guidelines into the website. 
+- Create section for developers and contributors, add directory layout, compatibility layer, shell API.
 
-- Improve internal documentation: directory layout, compatibility layer, shell API.
-
+- Document that edge cases that are not explicitly allowed should be assumed not to work.
 
 ## Other
 
 - Implement `getopt_long` compatibility fallback.
 
-- Add central overflow check macros, maybe based on C23 `<stdckdint.h>` with fallback backwards compatibility implementation.
+- Use macros with overflow checks instead of ad-hoc implementations.
 
 - split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`).
 
@@ -133,8 +138,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 ## Documentation
 
 * document valid file paths
-* document: `zip_source_write()`: length can't be > `ZIP_INT64_MAX`
-* document: `ZIP_SOURCE_CLOSE` implementation can't return error
 * keep error codes in man pages in sync
 * document error codes in new man pages
 
@@ -147,7 +150,6 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   - [Github Community Profile](https://github.com/nih-at/libzip/community)
 * test different crypto backends with GitHub actions.
 * improve man page formatting of tagged lists on webpage (`<dl>`)
-* rewrite `make_zip_errors.sh` in cmake
 * script to check if all exported symbols are marked with `ZIP_EXTERN`, add to `make distcheck`
 
 ## macOS / iOS framework

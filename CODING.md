@@ -113,13 +113,13 @@ ZIP_EXTERN const char *_Nonnull zip_libzip_version(void);
 
 ## Testing
 
-We use [nihtest](https://nih.at/nihtest/) for testing. It is a framework to test command-line programs, allowing to set up input files and comparing output against expected results.
+For tests reading input files or creating output files, we use [nihtest](https://nih.at/nihtest/). It is a framework to test command-line programs, allowing to set up input files and comparing output against expected results.
+
+For unit tests, we use [CMocka](https://cmocka.org/).
 
 We prefer data driven tests over one-off programs. For API level tests, use `ziptool_regress`.
 
 We plan to add tools that allow testing of other components, e.g. sources. These will take commands from stdin, one command per line, and be able to run a series of commands in a single test. This allows for more complex testing scenarios and better coverage of the codebase.
-
-We plan to use a framework for C unit tests. This will make writing tests not covered by the methods above easier and more consistent. 
 
 ### Test Interface
 
@@ -132,3 +132,9 @@ If it is run in verbose mode, it should print details of each failure, including
 ## Documentation
 
 All public functions, types, and macros should be documented in the provided man pages, which also serve as the reference section of the website.
+
+Note that any documented aspect is part of the public API and should be considered stable and subject to the project's compatibility guarantees.  Aspects that are not documented are undefined behavior, which means users should not rely on them and they may be defined as needed later. Therefore implementation details we don't want to guarantee going forward should not be documented.
+
+The reference documentation should be written with the user's perspective in mind: it should clearly explain which prerequisites have to be met when calling a function, what the function does, the meaning of its arguments, the expected return values, and any potential side effects or error conditions. Avoid documenting internal implementation details and keep the documented prerequisites simple and easy to understand.
+
+The reader is expected to have a basic understanding of C programming and conventions. Use your judgment what should be obvious (e. g. an argument may only be `NULL` if explicitly allowed by the documentation) and what should be explicitly documented.

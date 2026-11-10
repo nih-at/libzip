@@ -42,7 +42,7 @@ ZIP_EXTERN const char *zip_get_archive_comment(zip_t *za, int *lenp, zip_flags_t
     zip_uint32_t len;
     const zip_uint8_t *str;
 
-    if ((flags & ZIP_FL_UNCHANGED) || (za->comment_changes == NULL)) {
+    if ((flags & ZIP_FL_UNCHANGED) || !za->comment_changed) {
         comment = za->comment_orig;
     }
     else {

@@ -1,0 +1,53 @@
+
+
++ add [-d] name data [start] [length] -- data is filename, or literal data if -d
++ add_directory name
++ cat [std_flags] [-i] file [start] [length]
++ delete [std_flags] [-i] file
++ list [std_flags] [name]
++ rename [std_flags] [-i] file new_name
++ set_default_password [password]
++ file_comment [std_flags] [-i] file [comment] -- get if comment is not provided, set if comment is provided
++ archive_comment [comment] -- get if comment is not provided, set if comment is provided
++ file_compression [std_flags] [-i] file [method] [flags] -- get if method is not provided, set if method is provided
++ file_encryption [std_flags] [-i] file [method] [password] -- get if method is not provided, set if method is provided
+- file_size [std_flags] [-i] file
+- file_crc [std_flags] [-i] file -- get CRC of file
+- file_compressed_size [std_flags] [-i] file -- get compressed size of file
++ stat [std_flags] [-i] file -- show information about file
++ count -- count number of entries in archive
++ archive_flags [-c] [flags] -- lists flags if flags not provided, sets flags if provided, clears flags if -c is used
++ default_flags [flags] -- get or set default flags for file lookup / access
++ extra_field_add [std_flags] [-i] [-cl] file id data
++ extra_field_count [std_flags] [-i] [-cl] [-I id] file
++ extra_field_get [std_flags] [-i] [-cl] [-I id] file index
++ extra_field_delete [std_flags] [-i] [-cl] [-I id] file index
++ extra_field_replace [std_flags] [-i] [-cl] file id index data
+
+- lookup [std_flags] file
+- unchange [std_flags] [-i] file -- discard changes made to the file
+- extract [std_flags] [-r] [-i] [-j] [-o output] file [start] [length] -- better name for -j (junk paths)
+
+- file_dostime [std_flags] [-i] file [date] -- get if time and date are not provided, set if time and date are provided
+- file_mtime [std_flags] [-i] file [timestamp] -- get if timestamp is not provided, set if timestamp is provided
+
+
+
+--original
+--changed (default)
+--encoding encoding --  guess, utf-8, CP437, raw, strict (default: guess)
+--case-sensitive (default)
+--case-insensitive
+--ignore-directory
+--no-ignore-directory (default)
+
+
+
+Supported commands and arguments are:
+	add_from_zip name archivename index offset len
+	    add file from another archive, len bytes starting from offset
+
+	print_progress  -- replace with command line option
+	    print progress during zip_close()
+
+copy old_archive.zip test/* 

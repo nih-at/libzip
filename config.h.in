@@ -5,6 +5,7 @@
 #endif
 /* BEGIN DEFINES */
 #cmakedefine ENABLE_FDOPEN
+#cmakedefine HAVE___BUILTIN_ADD_OVERFLOW
 #cmakedefine HAVE___PROGNAME
 #cmakedefine HAVE__CLOSE
 #cmakedefine HAVE__DUP
@@ -13,6 +14,7 @@
 #cmakedefine HAVE__FSEEKI64
 #cmakedefine HAVE__FSTAT64
 #cmakedefine HAVE__FTELLI64
+#cmakedefine HAVE__ISATTY
 #cmakedefine HAVE__SETMODE
 #cmakedefine HAVE__SNPRINTF
 #cmakedefine HAVE__SNPRINTF_S
@@ -35,9 +37,11 @@
 #cmakedefine HAVE_FILENO
 #cmakedefine HAVE_FCHMOD
 #cmakedefine HAVE_FREMOVEXATTR
+#cmakedefine HAVE_FNMATCH
 #cmakedefine HAVE_FSEEKO
 #cmakedefine HAVE_FSETXATTR
 #cmakedefine HAVE_FTELLO
+#cmakedefine HAVE_GETCONSOLEMODE
 #cmakedefine HAVE_GETLINE
 #cmakedefine HAVE_GETOPT
 #cmakedefine HAVE_GETOPT_LONG
@@ -70,6 +74,7 @@
 #cmakedefine HAVE_STRTOULL
 #cmakedefine HAVE_STRUCT_TM_TM_ZONE
 #cmakedefine HAVE_STDBOOL_H
+#cmakedefine HAVE_STDCKDINT_H
 #cmakedefine HAVE_STRINGS_H
 #cmakedefine HAVE_UNISTD_H
 #cmakedefine HAVE_VASPRINTF
