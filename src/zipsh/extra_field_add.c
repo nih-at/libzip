@@ -47,7 +47,7 @@ bool extra_field_add_setup(invocation_t *invocation, void *context_v, file_match
             *error_message = error_message_new_format("data too long");
             return false;
         }
-        context->length = data_length;
+        context->length = (zip_uint16_t)data_length;
     }
 
     return true;

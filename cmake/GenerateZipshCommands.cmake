@@ -1,4 +1,4 @@
-# create zip_err_str.c from zip.h and zipint.h
+# Create command table for shell.
 set(commands_str [=[
 /*
   This file was generated automatically by CMake

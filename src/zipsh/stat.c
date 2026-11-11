@@ -33,7 +33,7 @@ bool stat_execute(invocation_t *invocation, void *context, file_matches_t *match
     printf("Modification Time: %s\n", format_mtime(stat.mtime));
     printf("CRC: %08x\n", (unsigned int)stat.crc);
     printf("Compression Method: %s\n", enum_argument_to_string(argument_type_compression_method, (argument_t){.u64 = stat.comp_method}, true));
-    printf("Encryption Method: %s\n", enum_argument_to_string(argument_type_encryption_method, (argument_t){.u16 = stat.encryption_method}, true));
+    printf("Encryption Method: %s\n", enum_argument_to_string(argument_type_encryption_method, (argument_t){.u64 = stat.encryption_method}, true));
 
     return true;
 }

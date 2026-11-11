@@ -121,7 +121,9 @@ if (NIHTEST)
   if (TARGET zlib)
     set(path "$<TARGET_FILE_DIR:zlib>;${path}")
   endif()
+  if (NOT IS_WINDOWS)
   string(REPLACE ";" "\\;" path "${path}")
+  endif()
 
   # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 

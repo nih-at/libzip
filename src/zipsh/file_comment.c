@@ -35,7 +35,6 @@ bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_
     context->hex = invocation_get_option(invocation, 'h');
     context->comment = invocation->arguments[ARGUMENT_COMMENT].string;
     comment_length = context->comment ? strlen(context->comment) : 0;
-    context->comment_len = comment_length;
     context->free_comment = false;
 
     if (context->hex && context->comment) {
@@ -50,7 +49,7 @@ bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_
         *error_message = error_message_new_format("comment too long");
         return false;
     }
-    context->comment_len = comment_length;
+    context->comment_len = (zip_uint32_t)comment_length;
     return true;
 }
 

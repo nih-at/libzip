@@ -239,7 +239,7 @@ const char *enum_argument_to_string(const argument_type_t *type, argument_t valu
         }
     }
     if (string_for_unknown) {
-        snprintf(unknown_string, sizeof(unknown_string), "unknown(%llu)", (unsigned long long)value.u64);
+        snprintf(unknown_string, sizeof(unknown_string), "unknown (%llu)", (unsigned long long)value.u64);
         return unknown_string;
     }
     return NULL;
