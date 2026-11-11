@@ -2,6 +2,7 @@
 if (CMOCKA_FOUND)
   set(CMOCKA_TEST_PROGRAMS
     crypto_clear
+    source_stat
   )
 
   foreach(PROGRAM IN LISTS CMOCKA_TEST_PROGRAMS)

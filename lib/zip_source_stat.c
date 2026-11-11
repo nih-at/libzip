@@ -46,6 +46,7 @@ ZIP_EXTERN int zip_source_stat(zip_source_t *src, zip_stat_t *st) {
 
     if (src->write_state == ZIP_SOURCE_WRITE_REMOVED) {
         zip_error_set(&src->error, ZIP_ER_READ, ENOENT);
+        return -1;
     }
 
     zip_stat_init(st);
