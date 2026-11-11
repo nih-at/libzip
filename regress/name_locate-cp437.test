@@ -1,3 +1,4 @@
+program ziptool_regress
 description tests for various encoding flags for zip_name_locate
 arguments -x test.zip  name_locate "9192939495969798999A9B9C9D9E9FA0" 0  name_locate "9192939495969798999A9B9C9D9E9FA0" 4  name_locate "9192939495969798999A9B9C9D9E9FA0" 8  name_locate "9192939495969798999A9B9C9D9E9FA0" r  name_locate "9192939495969798999A9B9C9D9E9FA0" s
 return 0

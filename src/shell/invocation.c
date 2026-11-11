@@ -59,7 +59,7 @@ static int parse_options(const command_t *cmd, int argc, char **argv, invocation
                 else {
                     error_message_t *local_error_message = NULL;
                     if (!convert_argument(cmd->options[i].argument_type, &value, optarg, &local_error_message)) {
-                        *error_message = error_message_new_format("Invalid argument for option %s: %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'}, error_message_get(local_error_message));
+                        *error_message = error_message_new_format("invalid value for argument option %s: %s", cmd->options[i].long_name ? cmd->options[i].long_name : (char[]){(char)cmd->options[i].id, '\0'}, error_message_get(local_error_message));
                         error_message_free(local_error_message);
                         free(long_options);
                         return -1;
@@ -108,7 +108,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                 for (; argv_index < argc; argv_index++) {
                     error_message_t *local_error_message = NULL;
                     if (!convert_argument(cmd->arguments[argument_index].type, &invocation->arguments[invocation_index], argv[argv_index], &local_error_message)) {
-                        *error_message = error_message_new_format("Invalid argument for %s: %s", cmd->arguments[argument_index].name, error_message_get(local_error_message));
+                        *error_message = error_message_new_format("invalid value for argument %s: %s", cmd->arguments[argument_index].name, error_message_get(local_error_message));
                         return false;
                     }
                     invocation_index++;
@@ -116,7 +116,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                 break;
             }
             if (!convert_argument(cmd->arguments[argument_index].type, &invocation->arguments[invocation_index], argv[argv_index], &local_error_message)) {
-                *error_message = error_message_new_format("Invalid argument for %s: %s", cmd->arguments[argument_index].name, error_message_get(local_error_message));
+                *error_message = error_message_new_format("invalid value for argument %s: %s", cmd->arguments[argument_index].name, error_message_get(local_error_message));
                 return false;
             }
             invocation_index++;
@@ -130,13 +130,13 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
         }
         else {
             /* TODO: Handle ARGUMENT_COLLECT case */
-            *error_message = error_message_new_format("Missing argument: %s", cmd->arguments[argument_index].name);
+            *error_message = error_message_new_format("missing argument %s", cmd->arguments[argument_index].name);
             return false;
         }
     }
 
     if (argv_index < argc) {
-        *error_message = error_message_new("Too many arguments for command");
+        *error_message = error_message_new("too many arguments for command");
         return false;
     }
 

@@ -1,4 +1,5 @@
 # add stdin to zip
+program ziptool_regress
 arguments -- teststdin.zip add_file teststring.txt /dev/stdin 0 -1
 return 0
 file teststdin.zip {} teststdin.zip

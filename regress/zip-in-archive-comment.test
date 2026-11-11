@@ -1,4 +1,5 @@
 # stat file in zip that contains archive comment to find out if it detected the right one of the two
+program ziptool_regress
 arguments zip-in-archive-comment.zip stat 0
 file zip-in-archive-comment.zip zip-in-archive-comment.zip
 return 0

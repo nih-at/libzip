@@ -1,4 +1,5 @@
 # test archive with junk at start of file
+program ziptool_regress
 arguments -o 4 junk-at-start.zzip get_num_entries 0
 return 0
 file junk-at-start.zzip junk-at-start.zip

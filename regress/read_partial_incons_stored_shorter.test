@@ -1,10 +1,14 @@
 # invalid zip archive (compressed size too small): partial read past end of stored data
 return 1
-arguments -- test.zip  cat_partial 0 0 4  cat_partial 0 0 5
+arguments test.zip
+stdin
+cat -i 0 0 4
+cat -i 0 0 5
+end-of-inline-data
 file test.zip incons-stored-data-shorter.zip
 stdout
 AAAA
 end-of-inline-data
 stderr
-can't open file at index '0': Zip archive inconsistent: entry 0: compressed and uncompressed sizes don't match for stored file
+*stdin*:2: cat: can't open file at index 0: Zip archive inconsistent: entry 0: compressed and uncompressed sizes don't match for stored file
 end-of-inline-data

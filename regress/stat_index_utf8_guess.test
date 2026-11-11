@@ -1,4 +1,5 @@
 # guess UTF-8 file names
+program ziptool_regress
 arguments test-utf8.zip stat 0
 return 0
 file test-utf8.zip test-utf8.zip

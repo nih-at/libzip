@@ -1,4 +1,5 @@
 # set file comment to UTF-8 for CP437 encoded filename (adds InfoZIP extra field)
+program ziptool_regress
 return 0
 arguments -i testfile.zip dummy
 stdin

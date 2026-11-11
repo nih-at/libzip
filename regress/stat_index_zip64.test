@@ -1,4 +1,5 @@
 # stat file in zip64 zip file
+program ziptool_regress
 arguments bigzero stat 0
 file bigzero bigzero.zip
 return 0

@@ -4,8 +4,12 @@
 # file.
 features HAVE_CRYPTO
 return 1
-arguments empty-badmac-aes256.zzip  set_password password  cat 0
+arguments empty-badmac-aes256.zzip
+stdin
+set_default_password password
+cat -i 0
+end-of-inline-data
 file empty-badmac-aes256.zzip empty-badmac-aes256.zip
 stderr
-can't read file at index '0': CRC error
+*stdin*:2: cat: can't read file at index 0: CRC error
 end-of-inline-data

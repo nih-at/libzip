@@ -15,7 +15,6 @@ set(ZIPSH_SOURCES
   zipsh/archive_comment.c
   zipsh/argument_types.c
   zipsh/cat.c
-  zipsh/count.c
   zipsh/delete.c
   zipsh/extra_field.c
   zipsh/extra_field_add.c

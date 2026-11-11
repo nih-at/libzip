@@ -1,5 +1,5 @@
 # change method from stored to zstd-compressed
 features HAVE_LIBZSTD
 return 0
-arguments test.zip  set_file_compression 0 zstd 0
+arguments -c test.zip -- file_compression -i 0 zstd
 file test.zip testfile-stored-dos.zip testfile-zstd.zip

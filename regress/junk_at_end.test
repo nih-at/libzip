@@ -1,4 +1,5 @@
 # test archive with junk at end of file
+program ziptool_regress
 arguments -l 412 junk-at-end.zzip get_num_entries 0
 return 0
 file junk-at-end.zzip junk-at-end.zip

@@ -1,4 +1,10 @@
 # change file comments in a zip archive
 return 0
-arguments testcomment.zip  set_file_comment 0 "File comment no 0"  set_file_comment 1 "File comment no 1"  set_file_comment 3 "File comment no 3"  set_file_comment 2 ""  
+arguments testcomment.zip
+stdin
+file_comment -i 0 "File comment no 0"
+file_comment -i 1 "File comment no 1"
+file_comment -i 3 "File comment no 3"
+file_comment -i 2 ""
+end-of-inline-data
 file testcomment.zip testcomment.zip testchangedlocal.zip

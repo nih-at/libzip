@@ -1,4 +1,5 @@
 # check if file is torrentzip, succeeds
+program ziptool_regress
 return 0
 arguments testfile.zzip get_archive_flag is-torrentzip
 file testfile.zzip testfile-torrentzip.zip

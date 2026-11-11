@@ -1,4 +1,5 @@
 # test reading from a buffer fragment source
+program ziptool_regress
 return 0
 arguments -mF 1024 test.zip  cat 1
 file test.zip cm-default.zip

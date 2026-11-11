@@ -49,35 +49,20 @@ argument_definition_t zipsh_arguments[] = {
 };
 
 option_definition_t zipsh_options[] = {
-    SHELL_OPTIONS
+    SHELL_OPTIONS,
+    ZIPSH_OPTIONS
 };
 /* clang-format on */
 
+
 bool zipsh_setup(invocation_t *invocation, error_message_t **error_message) {
-    const char *archive_name = invocation->arguments[ARGUMENT_ARCHIVE].string;
-    int err;
+    archive_name = invocation->arguments[ARGUMENT_ARCHIVE].string;
 
-    archive = zip_open(archive_name, 0, &err);
-    if (archive == NULL) {
-        zip_error_t error;
-        zip_error_init_with_code(&error, err);
-        *error_message = error_message_new_format("can't open archive '%s': %s", archive_name, zip_error_strerror(&error));
-        zip_error_fini(&error);
-        return false;
-    }
-
-    return true;
+    return open_archive(invocation, error_message);
 }
 
 bool zipsh_cleanup(bool ok, error_message_t **error_message) {
-    if (archive != NULL) {
-        if (zip_close(archive) < 0) {
-            *error_message = error_message_new_format("can't close archive: %s", zip_strerror(archive));
-            zip_discard(archive);
-            return false;
-        }
-    }
-    return true;
+    return close_archive(error_message);
 }
 
 SHELL_MAIN(zipsh, NULL, ARGUMENT_SHELL)

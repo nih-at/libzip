@@ -1,5 +1,6 @@
 # delete entry in zip archive then add file of same name
 # time is now(), so use zipcmp
+program ziptool_regress
 return 0
 arguments testfile.zip delete 0 add testfile.txt test
 file testfile.zip testfile.zip test2.zip

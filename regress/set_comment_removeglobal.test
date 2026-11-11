@@ -1,4 +1,4 @@
 # remove archive comment
 return 0
-arguments testcomment.zip  set_archive_comment ""
+arguments -c testcomment.zip -- archive_comment ""
 file testcomment.zip testcomment.zip testcommentremoved.zip

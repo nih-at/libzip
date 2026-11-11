@@ -7,6 +7,7 @@
 
 extern zip_t *archive;
 extern zip_flags_t default_flags;
+extern const char *archive_name;
 
 enum long_options {
     OPTION_CASE_INSENSITIVE = 300,
@@ -15,8 +16,15 @@ enum long_options {
     OPTION_ENCODING,
     OPTION_IGNORE_DIRECTORY,
     OPTION_ORIGINAL,
-    OPTION_NO_IGNORE_DIRECTORY
+    OPTION_NO_IGNORE_DIRECTORY,
+    OPTION_READ_ONLY
 };
+
+#define OPTION_CHECK_CONSISTENCY 'C'
+
+#define ZIPSH_OPTIONS \
+    {OPTION_CHECK_CONSISTENCY, "check-consistency", "Check consistency of the archive"}, \
+    {OPTION_READ_ONLY, "read-only", "Open the archive in read-only mode"}
 
 #define ENCODING_FLAGS_OPTIONS \
     {OPTION_ENCODING, "encoding", "encoding", "specify encoding for file name lookup", argument_type_encoding}
@@ -104,5 +112,8 @@ struct file_reference_command {
 typedef struct file_reference_command file_reference_command_t;
 
 bool file_reference_command_execute(file_reference_command_t *command, invocation_t *invocation, error_message_t **error_message);
+int get_archive_flags(invocation_t *invocation);
+bool open_archive(invocation_t *invocation, error_message_t **error_message);
+bool close_archive(error_message_t **error_message);
 
 #endif /* ZIPSH_H */

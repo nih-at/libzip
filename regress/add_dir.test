@@ -1,4 +1,8 @@
 # add directories to zip
 return 0
-arguments testdir.zip   add_dir testdir/   add_dir testdir-noslash
+arguments testdir.zip
+stdin
+add_directory testdir/
+add_directory testdir-noslash
+end-of-inline-data
 file testdir.zip {} testdir.zip

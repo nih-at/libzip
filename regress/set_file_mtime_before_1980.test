@@ -1,4 +1,5 @@
 # set mtime before 1980, stored as the earliest DOS time
+program ziptool_regress
 return 0
 arguments testfile set_file_mtime 0 170000000
 file testfile testfile.zip testfile1980.zip

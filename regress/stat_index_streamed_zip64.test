@@ -1,4 +1,5 @@
 # stat file in streamed zip file
+program ziptool_regress
 arguments streamed stat 0
 file streamed streamed-zip64.zip
 return 0

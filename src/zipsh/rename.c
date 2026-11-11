@@ -21,7 +21,7 @@ bool rename_execute(invocation_t *invocation, void *context, file_matches_t *mat
     (void)matches;
 
     if (zip_file_rename(archive, file_ref->index, invocation->arguments[ARGUMENT_NEW_NAME].string, 0) < 0) {
-        *error_message = error_message_new_format("can't rename %s to '%s': %s", file_ref->error_info, invocation->arguments[ARGUMENT_NEW_NAME].string, zip_strerror(archive));
+        *error_message = error_message_new_format("can't rename file %s to '%s': %s", file_ref->error_info, invocation->arguments[ARGUMENT_NEW_NAME].string, zip_strerror(archive));
         return false;
     }
 

@@ -1,4 +1,5 @@
 # rename file to UTF-8 name in zip archive
+program ziptool_regress
 return 0
 arguments -i testfile dummy
 stdin

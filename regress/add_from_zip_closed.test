@@ -1,4 +1,5 @@
 # add deflated file from zip to zip, but close the source before it can be read
+program ziptool_regress
 return 1
 arguments -- testfile.zip   add_from_zip abac-repeat.txt testdeflated.zzip 0 0 -1  zin_close 0
 file testdeflated.zzip testdeflated.zip

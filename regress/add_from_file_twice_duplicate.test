@@ -1,4 +1,5 @@
 # add file to zip twice, making duplicate names
+program ziptool_regress
 return 1
 arguments -- testfile.zip   add_file testfile.txt testfile.txt 0 -1   add_file testfile.txt testfile.txt 0 -1
 file testfile.txt testfile.txt

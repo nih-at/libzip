@@ -1,5 +1,6 @@
 # delete renamed entry in zip archive then rename file to same name
 # file date is now(), so use zipcmp
+program ziptool_regress
 return 0
 arguments testfile.zip rename 0 something  add test test  delete 0  rename 1 testfile.txt
 file testfile.zip testfile.zip test2.zip

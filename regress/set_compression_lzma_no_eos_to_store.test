@@ -1,5 +1,5 @@
 # change method from lzma-compressed (id 14) without EOS/EOPM marker to stored
 features HAVE_LIBLZMA
 return 0
-arguments test.zip  set_file_compression 0 store 0
+arguments -c test.zip -- file_compression -i 0 store
 file test.zip lzma-no-eos.zip stored-no-eos.zip

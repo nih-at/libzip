@@ -1,7 +1,10 @@
 # get archive comment after removing it
 return 0
-arguments testcomment.zip  set_archive_comment ""  get_archive_comment
+arguments testcomment.zip
+stdin
+archive_comment ""
+archive_comment
+end-of-inline-data
 file testcomment.zip testcomment.zip testcommentremoved.zip
 stdout
-No archive comment
 end-of-inline-data

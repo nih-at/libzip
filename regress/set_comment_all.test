@@ -1,4 +1,11 @@
 # change local and global comments in a zip archive
 return 0
-arguments testcomment.zip  set_archive_comment "This is the new,\r\nmultiline archive comment.\r\nAin't it nice?"  set_file_comment 0 "File comment no 0"  set_file_comment 1 "File comment no 1"  set_file_comment 2 "File comment no 2"  set_file_comment 3 "File comment no 3"
+arguments testcomment.zip 
+stdin
+archive_comment "This is the new,\r\nmultiline archive comment.\r\nAin't it nice?"
+file_comment -i 0 "File comment no 0"
+file_comment -i 1 "File comment no 1"
+file_comment -i 2 "File comment no 2"
+file_comment -i 3 "File comment no 3"
+end-of-inline-data
 file testcomment.zip testcomment.zip testchanged.zip

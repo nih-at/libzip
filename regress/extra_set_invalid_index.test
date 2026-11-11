@@ -1,4 +1,5 @@
 # reject an invalid extra field index
+program ziptool_regress
 arguments encrypt.zip set_extra 0 2345 0 c data
 return 1
 file encrypt.zip encrypt.zip encrypt.zip

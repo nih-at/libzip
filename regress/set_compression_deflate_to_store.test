@@ -1,4 +1,4 @@
 # change method from deflated to stored
 return 0
-arguments test.zip  set_file_compression 0 store 0
+arguments -c test.zip -- file_compression -i 0 store
 file test.zip testdeflated.zip teststored.zip

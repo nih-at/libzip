@@ -1,7 +1,7 @@
 # change method to unknown
 return 1
-arguments test.zip  set_file_compression 0 unknown 0
+arguments -c test.zip -- file_compression -i 0 unknown
 file test.zip teststored.zip
 stderr
-can't set file compression method at index '0' to 'unknown', flags '0': Compression method not supported
+invalid value for argument method: invalid compression_method 'unknown'
 end-of-inline-data

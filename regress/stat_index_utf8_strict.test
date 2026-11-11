@@ -1,5 +1,6 @@
 # follow strict rules and convert UTF-8 as if it was CP437, but not
 # if the files are marked as having UTF-8 names
+program ziptool_regress
 arguments -s test-utf8.zip stat 0
 return 0
 file test-utf8.zip test-utf8.zip

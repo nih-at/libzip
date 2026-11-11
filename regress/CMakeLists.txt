@@ -37,6 +37,8 @@ if (NIHTEST)
 
   set(ZIPSH_REGRESS_SOURCES
     programs/zipsh/add_nul.c
+    programs/zipsh/count.c
+    programs/zipsh/echo.c
     programs/zipsh/source_nul.c
     programs/zipsh/zipsh_regress.c
   )
@@ -47,12 +49,14 @@ if (NIHTEST)
 
   foreach(PROGRAM in zipsh_regress zipsh_regress_nonrandom)
     add_executable(${PROGRAM} zipsh_regress_commands.c)
-    target_link_libraries(${PROGRAM} zip zipsh_regress_common)
+    target_link_libraries(${PROGRAM} zipsh_regress_common)
     if (ENABLE_COVERAGE)
       target_compile_options(${PROGRAM} PRIVATE -coverage)
       target_link_options(${PROGRAM} PRIVATE -coverage)
     endif()
   endforeach()
+  target_link_libraries(zipsh_regress zip)
+  target_link_libraries(zipsh_regress_nonrandom zip_nonrandom)
 
   set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
 

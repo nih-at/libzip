@@ -16,7 +16,7 @@ option_definition_t delete_options[] = {
 
 bool delete_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
     if (zip_delete(archive, file_ref->index) < 0) {
-        *error_message = error_message_new_format("can't delete %s: %s", file_ref->error_info, zip_strerror(archive));
+        *error_message = error_message_new_format("can't delete file %s: %s", file_ref->error_info, zip_strerror(archive));
         return false;
     }
 

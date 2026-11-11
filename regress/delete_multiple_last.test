@@ -1,4 +1,10 @@
 # delete multiple entries in zip archive, emptying it
 return 0
-arguments testfile.zzip delete 0 delete 1 delete 2 delete 3
+arguments testfile.zzip
+stdin
+delete -i 0
+delete -i 1 
+delete -i 2
+delete -i 3
+end-of-inline-data
 file testfile.zzip testcomment.zip {}

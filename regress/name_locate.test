@@ -1,4 +1,5 @@
 # various tests for zip_name_locate
+program ziptool_regress
 arguments test.zip  name_locate nosuchfile 0  name_locate test 0  name_locate "" 0  name_locate TeSt 0  name_locate TeSt C  name_locate testdir/test2 0  name_locate tesTdir/tESt2 C  name_locate testdir/test2 d  name_locate tesTdir/tESt2 dC  name_locate test2 0  name_locate test2 d  name_locate TeST2 dC  delete 0  name_locate test 0  name_locate test u  add new teststring  name_locate new 0  name_locate new u  add "" teststring  name_locate "" 0  unchange_all  name_locate test 0  name_locate new 0
 # delete 0
 # add "new"

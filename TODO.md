@@ -25,6 +25,16 @@ Overhaul TODO file to make it more usable for contributors:
 - Add test program for testing `zip_source_t` API using the `shell` library.
 - Switch existing one-off test programs to `zipsh_regress`, sources shell, or CMocka, where possible.
 
+### zipsh shortcomings
+
+- add API
+- archive_flags
+- unchange all
+- progress/cancel callbacks
+- mtime/dostime
+- fopen &c
+- zip archive hole, buffer
+
 ### CI
 
 - Add CI build with sanitizers enabled.
@@ -56,6 +66,8 @@ Overhaul TODO file to make it more usable for contributors:
 - Use macros with overflow checks instead of ad-hoc implementations.
 
 - split `zip_source_t` in main part and reference so we can keep track which reference called open and we can invalidate references if the underlying source gets invalidated (e. g. by `zip_close`).
+
+- Add source command to tell lower layer that we've reached EOF. Use in WinZip AES to trigger HMAC check (or error if too much unread data remains).
 
 ## Prefixes
 

@@ -1,4 +1,5 @@
 # add buffer contents as file to zip
+program ziptool_regress
 return 0
 arguments testbuffer.zip add teststring.txt "This is a test, and it seems to have been successful.\n"
 file testbuffer.zip {} testbuffer.zip
