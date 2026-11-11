@@ -35,6 +35,7 @@ set(ZIPSH_SOURCES
   zipsh/standard_flags.c
   zipsh/stat.c
   zipsh/util.c
+  CACHE INTERNAL "ZIPSH_SOURCES"
 )
 
 set(COMPAT_SOURCES)

@@ -159,6 +159,9 @@ set(ZIPSH_REGRESS_SOURCES_ABSOLUTE)
 foreach(source IN LISTS ZIPSH_REGRESS_SOURCES)
   list(APPEND ZIPSH_REGRESS_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
 endforeach()
+foreach (sources IN LISTS ZIPSH_SOURCES)
+  list(APPEND ZIPSH_REGRESS_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sources}")
+endforeach()
 # Preserve list elements when forwarding to script mode via -D.
 string(REPLACE ";" "\\;" ZIPSH_REGRESS_SOURCES_ABS_ESCAPED "${ZIPSH_REGRESS_SOURCES_ABSOLUTE}")
 
