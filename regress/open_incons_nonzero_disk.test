@@ -1,0 +1,15 @@
+# zip_open with consistency checking must reject an entry whose central
+# directory "disk number start" field is not zero. libzip only supports
+# single-disk archives (multi-disk is rejected when reading the EOCD), so an
+# entry claiming to start on another disk references a disk that isn't there.
+# Here the single stored entry "A" has disk number start set to 1.
+program tryopen
+arguments -c -s test.zip
+file test.zip incons-nonzero-disk.zip
+return 1
+stdout
+opening 'test.zip' returned error Zip archive inconsistent: entry 0: invalid disk number start
+end-of-inline-data
+stderr
+1 errors
+end-of-inline-data
