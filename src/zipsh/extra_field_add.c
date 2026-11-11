@@ -42,7 +42,12 @@ bool extra_field_add_setup(invocation_t *invocation, void *context_v, file_match
         return false;
     }
     else {
-        context->length = strlen((const char *)context->data) / 2;
+        size_t data_length = strlen(invocation->arguments[ARGUMENT_DATA].string) / 2;
+        if (data_length > ZIP_UINT16_MAX) {
+            *error_message = error_message_new_format("data too long");
+            return false;
+        }
+        context->length = data_length;
     }
 
     return true;

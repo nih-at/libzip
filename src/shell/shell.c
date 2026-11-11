@@ -173,7 +173,7 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
             return 1;
         }
 
-        command_argc = invocation->n_arguments - (shell_command->shell_argument_index);
+        command_argc = (int)(invocation->n_arguments - (shell_command->shell_argument_index));
         command_argv = malloc(command_argc * sizeof(char *));
         for (int i = 0; i < command_argc; i++) {
             command_argv[i] = (char *)invocation->arguments[shell_command->shell_argument_index + i].string;

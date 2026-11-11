@@ -143,6 +143,8 @@ bool print_command_help(const command_t *cmd, const char *prog_name, error_messa
             printf("  %-*s  %s\n", longest_argument_name, cmd->arguments[i].name, cmd->arguments[i].help);
         }
     }
+
+    return true;
 }
 
 #define ARGUMENT_COMMAND 0

@@ -43,6 +43,7 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
     }
     else {
         char *decoded_comment = NULL;
+        size_t comment_length = strlen(comment);
         if (hex) {
             decoded_comment = (char *)decode_hex(comment, error_message);
             if (!decoded_comment) {
@@ -50,8 +51,13 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
                 return false;
             }
             comment = decoded_comment;
+            comment_length /= 2;
         }
-        if (zip_set_archive_comment(archive, comment, strlen(comment)) < 0) {
+        if (comment_length > ZIP_UINT16_MAX) {
+            *error_message = error_message_new_format("comment too long");
+            return false;
+        }
+        if (zip_set_archive_comment(archive, comment, (zip_uint16_t)comment_length) < 0) {
             *error_message = error_message_new_format("can't set archive comment: %s", zip_strerror(archive));
             result = false;
         }

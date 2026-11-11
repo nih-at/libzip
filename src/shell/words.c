@@ -145,7 +145,7 @@ bool words_parse_partial(words_t *words, const char *line, const char *end, erro
                 break;
             default:
                 *error_message = error_message_new_format("unknown escape sequence \\%c", *p);
-                break;
+                return false;
             }
             if (!words_add_char(words, c, error_message)) {
                 return false;

@@ -30,10 +30,12 @@ typedef struct context context_t;
 
 bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
     context_t *context = (context_t *)context_v;
+    size_t comment_length;
 
     context->hex = invocation_get_option(invocation, 'h');
     context->comment = invocation->arguments[ARGUMENT_COMMENT].string;
-    context->comment_len = context->comment ? strlen(context->comment) : 0;
+    comment_length = context->comment ? strlen(context->comment) : 0;
+    context->comment_len = comment_length;
     context->free_comment = false;
 
     if (context->hex && context->comment) {
@@ -41,9 +43,14 @@ bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_
         if (!context->comment) {
             return false;
         }
-        context->comment_len /= 2;
+        comment_length /= 2;
         context->free_comment = true;
     }
+    if (comment_length > ZIP_UINT32_MAX) {
+        *error_message = error_message_new_format("comment too long");
+        return false;
+    }
+    context->comment_len = comment_length;
     return true;
 }
 
