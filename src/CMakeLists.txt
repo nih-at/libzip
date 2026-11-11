@@ -127,6 +127,8 @@ endforeach()
 # Preserve list elements when forwarding to script mode via -D.
 if (NOT IS_WINDOWS)
   string(REPLACE ";" "\\;" ZIPSH_SOURCES_ABS_ESCAPED "${ZIPSH_SOURCES_ABSOLUTE}")
+else()
+  set(ZIPSH_SOURCES_ABS_ESCAPED "${ZIPSH_SOURCES_ABSOLUTE}")
 endif()
 
 add_custom_command(
