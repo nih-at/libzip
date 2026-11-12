@@ -1,0 +1,22 @@
+# zip_open with ZIP_CHECKCONS must use the complete local record extent when
+# checking that file data and metadata do not overlap the central directory.
+program tryopen
+file extra.zzip incons-local-extra-overlap.zip
+file normalized-name.zzip incons-local-normalized-name-overlap.zip
+file descriptor.zzip incons-local-descriptor-overlap-no-signature.zip
+file descriptor-signature.zzip incons-local-descriptor-overlap-signature.zip
+file zip64-descriptor.zzip incons-local-zip64-descriptor-overlap-no-signature.zip
+file zip64-descriptor-signature.zzip incons-local-zip64-descriptor-overlap-signature.zip
+arguments -s -c extra.zzip normalized-name.zzip descriptor.zzip descriptor-signature.zzip zip64-descriptor.zzip zip64-descriptor-signature.zzip
+return 1
+stdout
+opening 'extra.zzip' returned error Possibly truncated or corrupted zip archive
+opening 'normalized-name.zzip' returned error Possibly truncated or corrupted zip archive
+opening 'descriptor.zzip' returned error Possibly truncated or corrupted zip archive
+opening 'descriptor-signature.zzip' returned error Possibly truncated or corrupted zip archive
+opening 'zip64-descriptor.zzip' returned error Possibly truncated or corrupted zip archive
+opening 'zip64-descriptor-signature.zzip' returned error Possibly truncated or corrupted zip archive
+end-of-inline-data
+stderr
+6 errors
+end-of-inline-data
