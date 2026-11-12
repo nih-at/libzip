@@ -37,17 +37,7 @@ extern int optopt;
 #ifdef HAVE_GETOPT_LONG
 #include <getopt.h>
 #else
-struct option {
-  const char *name;
-  int has_arg;
-  int *flag;
-  int val;
-};
-#define no_argument 0
-#define required_argument 1
-#define optional_argument 2
-
-int getopt_long(int argc, char * const argv[], const char *optstring, const struct option *longopts, int *longindex);
+#include "getopt_long.h"
 #endif
 
 #ifndef HAVE_ISATTY

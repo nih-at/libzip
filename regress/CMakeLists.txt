@@ -1,4 +1,6 @@
 
+include(GenerateCommandTable)
+
 if (CMOCKA_FOUND)
   set(CMOCKA_TEST_PROGRAMS
     crypto_clear
@@ -160,31 +162,13 @@ if(ENABLE_COVERAGE)
 endif()
 
 
-# create zipsh_regress_commands.c from sources
-set(ZIPSH_REGRESS_SOURCES_ABSOLUTE)
-foreach(source IN LISTS ZIPSH_REGRESS_SOURCES)
-  list(APPEND ZIPSH_REGRESS_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
+# Generate zipsh_regress_commands.c from command definitions in source files
+set(ZIPSH_REGRESS_COMMAND_SOURCES ${ZIPSH_REGRESS_SOURCES})
+foreach(source IN LISTS ZIPSH_SOURCES)
+  list(APPEND ZIPSH_REGRESS_COMMAND_SOURCES "../src/${source}")
 endforeach()
-foreach (sources IN LISTS ZIPSH_SOURCES)
-  list(APPEND ZIPSH_REGRESS_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sources}")
-endforeach()
-# Preserve list elements when forwarding to script mode via -D.
-if (NOT IS_WINDOWS)
-  string(REPLACE ";" "\\;" ZIPSH_REGRESS_SOURCES_ABS_ESCAPED "${ZIPSH_REGRESS_SOURCES_ABSOLUTE}")
-else()
-  set(ZIPSH_REGRESS_SOURCES_ABS_ESCAPED "${ZIPSH_REGRESS_SOURCES_ABSOLUTE}")
-endif()
 
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zipsh_regress_commands.c
-  COMMAND "${CMAKE_COMMAND}"
-    "-DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}"
-    "-DCMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}"
-    "-DSOURCES=${ZIPSH_REGRESS_SOURCES_ABS_ESCAPED}"
-    "-DOUTPUT_FILE=zipsh_regress_commands.c"
-    "-P" "${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake"
-  DEPENDS
-    ${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake
-    ${ZIPSH_REGRESS_SOURCES_ABSOLUTE}
-  COMMENT "Generating zipsh_regress_commands.c"
+generate_command_table(
+  OUTPUT_FILE zipsh_regress_commands.c
+  SOURCES ${ZIPSH_REGRESS_COMMAND_SOURCES}
 )

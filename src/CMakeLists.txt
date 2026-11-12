@@ -1,3 +1,5 @@
+include(GenerateCommandTable)
+
 set(SHELL_SOURCES
   shell/argument.c
   shell/command.c
@@ -119,28 +121,8 @@ if (ENABLE_COVERAGE)
   target_link_options(zipsh PRIVATE -coverage)
 endif()
 
-# create zipsh_commands.c from sources
-set(ZIPSH_SOURCES_ABSOLUTE)
-foreach(source IN LISTS ZIPSH_SOURCES)
-  list(APPEND ZIPSH_SOURCES_ABSOLUTE "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
-endforeach()
-# Preserve list elements when forwarding to script mode via -D.
-if (NOT IS_WINDOWS)
-  string(REPLACE ";" "\\;" ZIPSH_SOURCES_ABS_ESCAPED "${ZIPSH_SOURCES_ABSOLUTE}")
-else()
-  set(ZIPSH_SOURCES_ABS_ESCAPED "${ZIPSH_SOURCES_ABSOLUTE}")
-endif()
-
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zipsh_commands.c
-  COMMAND "${CMAKE_COMMAND}"
-    "-DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}"
-    "-DCMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}"
-    "-DSOURCES=${ZIPSH_SOURCES_ABS_ESCAPED}"
-    "-DOUTPUT_FILE=zipsh_commands.c"
-    "-P" "${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake"
-  DEPENDS
-    ${PROJECT_SOURCE_DIR}/cmake/GenerateZipshCommands.cmake
-    ${ZIPSH_SOURCES_ABSOLUTE}
-  COMMENT "Generating zipsh_commands.c"
+# Generate zipsh_commands.c from command definitions in source files
+generate_command_table(
+  OUTPUT_FILE zipsh_commands.c
+  SOURCES ${ZIPSH_SOURCES}
 )
