@@ -1,0 +1,8 @@
+# zip_open: file with data prepended (e.g. a self-extractor stub) opens without any special flag
+program tryopen
+arguments test.pfx
+return 0
+file test.pfx test-prefix.zip
+stdout
+opening 'test.pfx' succeeded, 3 entries, 55 bytes of prefix data
+end-of-inline-data

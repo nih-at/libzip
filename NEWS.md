@@ -2,6 +2,7 @@
 
 * Introduce `zipsh` for interacting with zip archives. The API is still evolving, feedback is welcome. `ziptool` will be deprecated once `zipsh` stabilizes.
 * Include website in repository and source distribution.
+* Support opening zip archives with data prepended (e.g. self-extractor stubs); add `zip_get_archive_prefix_length()` to retrieve the prefix length.
 
 # 1.12.1 [2026-10-14]
 
