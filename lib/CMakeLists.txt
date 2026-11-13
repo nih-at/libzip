@@ -205,6 +205,14 @@ if (ENABLE_COVERAGE)
 endif()
 
 
+# Optional -fbounds-safety, scoped to zip_buffer.c only (other sources see
+# inert ZIP_*SIZED_BY* macros, so the default build and ABI are unchanged).
+if(ENABLE_FBOUNDS_SAFETY)
+  set_source_files_properties(zip_buffer.c PROPERTIES
+    COMPILE_DEFINITIONS ZIP_SUPPORT_FBOUNDS_SAFETY
+    COMPILE_OPTIONS -fbounds-safety)
+endif()
+
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zip
     EXPORT ${PROJECT_NAME}-targets
