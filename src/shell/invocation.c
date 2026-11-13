@@ -266,7 +266,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
     return true;
 }
 
-invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, int argc, char **argv, error_message_t **error_message, completions_t **completions) {
+invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size_t argc, char **argv, error_message_t **error_message, completions_t **completions) {
     invocation_t *invocation = malloc(sizeof(invocation_t));
     if (invocation == NULL) {
         *error_message = error_message_new("out of memory");

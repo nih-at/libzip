@@ -64,12 +64,12 @@ static bool string_not_equal_save_display_error(const char *const left, const ch
 
 void _assert_string_equal_save(const char *const a, const char *const b, const char *const file, const size_t line) {
     if (!string_equal_save_display_error(a, b)) {
-        _fail(file, line);
+        _fail(file, (int)line);
     }
 }
 
 void _assert_string_not_equal_save(const char *const a, const char *const b, const char *const file, const size_t line) {
     if (!string_not_equal_save_display_error(a, b)) {
-        _fail(file, line);
+        _fail(file, (int)line);
     }
 }

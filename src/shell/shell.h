@@ -184,7 +184,7 @@ error_message_t *error_message_new_format(const char *fmt, ...) PRINTF_LIKE(1, 2
 const char *error_message_get(error_message_t *error);
 void error_message_free(error_message_t *error);
 
-invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, int argc, char **argv, error_message_t **error_message, completions_t **completions);
+invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size_t argc, char **argv, error_message_t **error_message, completions_t **completions);
 void invocation_free(invocation_t *invocation);
 bool invocation_add_option(invocation_t *invocation, int id, argument_t value);
 bool invocation_add_argument(invocation_t *invocation, argument_t value);

@@ -22,10 +22,10 @@ typedef struct test_data test_data_t;
 /* clang-format off */
 
 static argument_type_enum_entry_t my_enum[] = {
-    {"a", {NULL}},
-    {"b", {NULL}},
-    {"ba", {NULL}},
-    {"bb", {NULL}},
+    {"a", {false}},
+    {"b", {false}},
+    {"ba", {false}},
+    {"bb", {false}},
     {NULL, {0}}
 };
 

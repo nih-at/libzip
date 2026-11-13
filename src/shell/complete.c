@@ -1,8 +1,8 @@
+#include "compat/src_compat.h"
+#include "shell_int.h"
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "shell.h"
-#include "shell_int.h"
 
 words_t *completion_words = NULL;
 
