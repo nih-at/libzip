@@ -1,0 +1,13 @@
+# The compressed data of this WinZip AES entry ends more than one buffer before
+# the end of its encrypted data, and its 10-byte HMAC is corrupted. Reading it
+# with the correct password must fail instead of returning the entry as valid.
+features HAVE_CRYPTO
+return 1
+arguments trailing-data-badmac-aes256.zzip  set_password 1234  cat 0
+file trailing-data-badmac-aes256.zzip trailing-data-badmac-aes256.zip
+stdout
+The quick brown fox jumps over the lazy dog
+end-of-inline-data
+stderr
+can't close file at index '0': CRC error
+end-of-inline-data
