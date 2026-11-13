@@ -24,6 +24,7 @@ endif()
 if (NIHTEST)
   set(TEST_PROGRAMS
     add_from_filep
+    crypto_equal
     can_clone_file
     exact_read_integrity
     filep_error
@@ -91,6 +92,9 @@ if (NIHTEST)
   foreach(PROGRAM IN LISTS FUZZ_PROGRAMS)
     target_sources(${PROGRAM} PRIVATE programs/fuzz_main.c)
   endforeach()
+
+  # The internal symbol is hidden when zip is a shared library, so link against the file directly.
+  target_sources(crypto_equal PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
 
   add_executable(files_differ programs/files_differ.c)
 

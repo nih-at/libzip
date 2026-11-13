@@ -46,3 +46,18 @@ void _zip_crypto_clear(void *b, size_t l) {
     }
 }
 #endif
+
+bool _zip_crypto_equal(const zip_uint8_t *a, const zip_uint8_t *b, size_t length) {
+    /* Constant-time comparison for authentication values (HMAC, password
+       verification). Every byte is always examined; the accumulated
+       difference is kept in a volatile object so the loop cannot be
+       short-circuited or elided by the compiler. */
+    volatile zip_uint8_t difference = 0;
+    size_t i;
+
+    for (i = 0; i < length; i++) {
+        difference |= (zip_uint8_t)(a[i] ^ b[i]);
+    }
+
+    return difference == 0;
+}

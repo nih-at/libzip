@@ -121,7 +121,7 @@ static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     if ((ctx->aes_ctx = _zip_winzip_aes_new((zip_uint8_t *)ctx->password, strlen(ctx->password), header, ctx->encryption_method, password_verification, &ctx->error)) == NULL) {
         return -1;
     }
-    if (memcmp(password_verification, header + SALT_LENGTH(ctx->encryption_method), WINZIP_AES_PASSWORD_VERIFY_LENGTH) != 0) {
+    if (!_zip_crypto_equal(password_verification, header + SALT_LENGTH(ctx->encryption_method), WINZIP_AES_PASSWORD_VERIFY_LENGTH)) {
         _zip_winzip_aes_free(ctx->aes_ctx);
         ctx->aes_ctx = NULL;
         zip_error_set(&ctx->error, ZIP_ER_WRONGPASSWD, 0);
@@ -153,7 +153,9 @@ static void verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
     _zip_winzip_aes_free(ctx->aes_ctx);
     ctx->aes_ctx = NULL;
 
-    if (memcmp(from_file, computed, HMAC_LENGTH) != 0) {
+    /* Authentication value: compare in constant time, the position of a
+       mismatch must not be observable. */
+    if (!_zip_crypto_equal(from_file, computed, HMAC_LENGTH)) {
         zip_error_set(&ctx->error, ZIP_ER_CRC, 0);
         ctx->hmac_verify_failed = true;
         return;

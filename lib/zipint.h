@@ -537,6 +537,11 @@ void _zip_crypto_clear(void *b, size_t l);
 #endif
 #endif
 
+/* Compare two authentication values in constant time. The number of examined
+   bytes depends only on the length, not on where the values differ, so a
+   caller cannot learn a valid value byte by byte from the comparison time. */
+bool _zip_crypto_equal(const zip_uint8_t *a, const zip_uint8_t *b, size_t length);
+
 
 zip_int64_t _zip_add_entry(zip_t *);
 

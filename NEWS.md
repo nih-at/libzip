@@ -2,6 +2,7 @@
 
 * Introduce `zipsh` for interacting with zip archives. The API is still evolving, feedback is welcome. `ziptool` will be deprecated once `zipsh` stabilizes.
 * Include website in repository and source distribution.
+* Compare authentication values (WinZip AES HMAC and password verification) in constant time.
 
 # 1.12.1 [2026-10-14]
 

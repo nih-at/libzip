@@ -1,0 +1,6 @@
+# test constant time comparison of authentication values
+program crypto_equal
+return 0
+stdout
+OK
+end-of-inline-data
