@@ -16,16 +16,19 @@ static char *prompt_func(EditLine *el) {
     return "zipsh> ";
 }
 
+/* TODO: use completions directly instead of converting to matches */
 static unsigned char complete_wrapper(EditLine *el, int ch) {
     const LineInfo *line_info = el_line(el);
     size_t position = line_info->cursor - line_info->buffer;
     size_t last_word_length;
     char open_quote = '\0';
-    char **matches = complete(line_info->buffer, position, &last_word_length, &open_quote);
+    completions_t *completions = complete(line_info->buffer, position, &last_word_length, &open_quote);
+    char **matches = completions_get_matches(completions);
     char *prefix;
     size_t prefix_length, i, full_match;
 
     if (matches == NULL || matches[0] == NULL) {
+        completions_free(completions);
         free_completions(matches);
         return CC_ERROR;
     }
@@ -71,6 +74,7 @@ static unsigned char complete_wrapper(EditLine *el, int ch) {
             }
             el_insertstr(el, " ");
         }
+        completions_free(completions);
         free_completions(matches);
         return CC_REFRESH;
     }
@@ -80,6 +84,7 @@ static unsigned char complete_wrapper(EditLine *el, int ch) {
     for (i = 0; matches[i] != NULL; i++) {
         printf("%s\n", matches[i]);
     }
+    completions_free(completions);
     free_completions(matches);
     return CC_REDISPLAY;
 }

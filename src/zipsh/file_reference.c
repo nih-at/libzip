@@ -34,40 +34,21 @@ void file_reference_init(file_reference_t *file_ref, const char *name, zip_uint6
     }
 }
 
-char **complete_archive_filename(const argument_type_t *type, const char *str) {
+void complete_archive_filename(completions_t *completions, const argument_type_t *type, const char *str) {
     size_t str_length = strlen(str);
-    zip_uint64_t count = 0;
     zip_int64_t i, n;
-    char **matches;
 
     if ((n = zip_get_num_entries(archive, 0)) < 0) {
-        return NULL;
+        return;
     }
 
     for (i = 0; i < n; i++) {
         const char *name = zip_get_name(archive, i, 0);
         if (name && strncmp(name, str, str_length) == 0) {
-            count++;
+            completions_add(completions, name);
         }
     }
-
-    if (count == 0) {
-        return NULL;
-    }
-
-    matches = malloc((count + 1) * sizeof(char *));
-    if (matches == NULL) {
-        return NULL;
-    }
-    count = 0;
-    for (i = 0; i < n; i++) {
-        const char *name = zip_get_name(archive, i, 0);
-        if (name && strncmp(name, str, str_length) == 0) {
-            matches[count++] = strdup(name);
-        }
-    }
-    matches[count] = NULL;
-    return matches;
+    return;
 }
 
 const argument_type_t argument_type_archive_filename_instance = {"filename", NULL, complete_archive_filename, NULL, {.pointer = NULL}};

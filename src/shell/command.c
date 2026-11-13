@@ -19,7 +19,7 @@ const command_t *find_command(const char *name) {
 
 bool execute_command(const command_t *cmd, int argc, char **argv, error_message_t **error_message) {
     bool ok = true;
-    invocation_t *invocation = invocation_new(cmd, argc, argv, NULL, error_message);
+    invocation_t *invocation = invocation_new(cmd, NULL, argc, argv, error_message, NULL);
 
     if (invocation == NULL) {
         return false;
@@ -31,26 +31,29 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
 }
 
 
-char **complete_command(const argument_type_t *type, const char *str) {
-    size_t count = 0;
-    char **matches = NULL;
-
+void complete_command(completions_t *completions, const argument_type_t *type, const char *str) {
     for (size_t i = 0; i < n_commands; i++) {
         if (strncmp(commands[i]->name, str, strlen(str)) == 0) {
-            count++;
+            completions_add(completions, commands[i]->name);
         }
     }
+}
 
-    matches = malloc((count + 1) * sizeof(char *));
-    if (matches) {
-        size_t j = 0;
-        for (size_t i = 0; i < n_commands; i++) {
-            if (strncmp(commands[i]->name, str, strlen(str)) == 0) {
-                matches[j++] = strdup(commands[i]->name);
-            }
+
+option_definition_t *command_find_short_option(const command_t *cmd, char short_name) {
+    for (size_t i = 0; i < cmd->n_options; i++) {
+        if (cmd->options[i].id == short_name) {
+            return &cmd->options[i];
         }
-        matches[j] = NULL;
     }
+    return NULL;
+}
 
-    return matches;
+option_definition_t *command_find_long_option(const command_t *cmd, const char *long_name, size_t long_name_length) {
+    for (size_t i = 0; i < cmd->n_options; i++) {
+        if (strncmp(cmd->options[i].long_name, long_name, long_name_length) == 0) {
+            return &cmd->options[i];
+        }
+    }
+    return NULL;
 }

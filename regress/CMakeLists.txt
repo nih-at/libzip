@@ -4,6 +4,7 @@ include(GenerateCommandTable)
 if (CMOCKA_FOUND)
   set(CMOCKA_TEST_PROGRAMS
     crypto_clear
+    shell_completion
   )
 
   foreach(PROGRAM IN LISTS CMOCKA_TEST_PROGRAMS)
@@ -16,6 +17,8 @@ if (CMOCKA_FOUND)
 
   # The internal symbol is hidden when zip is a shared library, so link against the file directly.
   target_sources(crypto_clear PRIVATE ${PROJECT_SOURCE_DIR}/lib/zip_crypto.c)
+
+  target_link_libraries(shell_completion shell)
 endif()
 
 if (NIHTEST)

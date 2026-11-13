@@ -34,12 +34,6 @@ extern int getopt(int, char *const *, const char *);
 #endif
 extern int optopt;
 
-#ifdef HAVE_GETOPT_LONG
-#include <getopt.h>
-#else
-#include "getopt_long.h"
-#endif
-
 #ifndef HAVE_ISATTY
 #ifdef HAVE__ISATTY
 #define isatty(fd) _isatty(fd)

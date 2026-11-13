@@ -42,7 +42,6 @@
 #cmakedefine HAVE_GETCONSOLEMODE
 #cmakedefine HAVE_GETLINE
 #cmakedefine HAVE_GETOPT
-#cmakedefine HAVE_GETOPT_LONG
 #cmakedefine HAVE_GETPROGNAME
 #cmakedefine HAVE_GETSECURITYINFO
 #cmakedefine HAVE_GNUTLS

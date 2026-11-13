@@ -137,7 +137,7 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
 
     opterr = 0;
 
-    if ((invocation = invocation_new(&shell_command->command, argc, argv, early_exit_options, &error_message)) == NULL) {
+    if ((invocation = invocation_new(&shell_command->command, early_exit_options, argc, argv, &error_message, NULL)) == NULL) {
         fprintf(stderr, "%s: %s\n", argv[0], error_message_get(error_message));
         error_message_free(error_message);
         return 1;

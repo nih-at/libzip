@@ -12,6 +12,16 @@ struct error_message {
 
 typedef struct error_message error_message_t;
 
+struct completions {
+    char *prefix;
+    char **matches;
+    size_t n_matches;
+    size_t matches_capacity;
+};
+
+typedef struct completions completions_t;
+
+
 #if defined(__GNUC__) && __GNUC__ >= 4
 #define PRINTF_LIKE(n, m) __attribute__((__format__(__printf__, n, m)))
 #else
@@ -56,7 +66,7 @@ typedef struct argument_type argument_type_t;
 struct argument_type {
     char *name;
     bool (*convert)(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
-    char **(*complete)(const argument_type_t *type, const char *str);
+    void (*complete)(completions_t *completions, const argument_type_t *type, const char *str);
     void (*free_ud)(argument_t ud);
     argument_t ud;
 };
@@ -145,10 +155,12 @@ struct argument_type_enum_entry {
 
 typedef struct argument_type_enum_entry argument_type_enum_entry_t;
 
+
+
 #define ARGUMENT_TYPE_ENUM(name, entries) { name, convert_enum, complete_enum, NULL, {.pointer=entries} }
 
 bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
-char **complete_enum(const argument_type_t *type, const char *str);
+void complete_enum(completions_t *completions, const argument_type_t *type, const char *str);
 
 
 #define COMMAND(name, help) command_t command_##name = {#name, help, name##_options, sizeof(name##_options) / sizeof(name##_options[0]), name##_arguments, sizeof(name##_arguments) / sizeof(name##_arguments[0]), name##_implementation}
@@ -163,14 +175,16 @@ bool execute_command(const command_t *cmd, int argc, char **argv, error_message_
 const command_t *find_command(const char *name);
 
 bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
-char **complete_argument(const argument_type_t *type, const char *str);
+completions_t *complete_argument(const argument_type_t *type, const char *str, size_t prefix_length);
+option_definition_t *command_find_short_option(const command_t *cmd, char short_name);
+option_definition_t *command_find_long_option(const command_t *cmd, const char *long_name, size_t long_name_len);
 
 error_message_t *error_message_new(const char *message);
 error_message_t *error_message_new_format(const char *fmt, ...) PRINTF_LIKE(1, 2);
 const char *error_message_get(error_message_t *error);
 void error_message_free(error_message_t *error);
 
-invocation_t *invocation_new(const command_t *cmd, int argc, char **argv, int *early_exit_options, error_message_t **error_message);
+invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, int argc, char **argv, error_message_t **error_message, completions_t **completions);
 void invocation_free(invocation_t *invocation);
 bool invocation_add_option(invocation_t *invocation, int id, argument_t value);
 bool invocation_add_argument(invocation_t *invocation, argument_t value);
@@ -213,5 +227,11 @@ typedef struct shell_command shell_command_t;
     int shell_main(shell_command_t *shell, int argc, char *argv[]);
 
 bool is_pattern(const char *str);
+
+completions_t *completions_new(const char *prefix, size_t prefix_length);
+void completions_free(completions_t *completions);
+void completions_sort(completions_t *completions);
+bool completions_add(completions_t *completions, const char *match);
+char **completions_get_matches(const completions_t *completions);
 
 #endif /* SHELL_H */

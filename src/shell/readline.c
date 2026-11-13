@@ -10,14 +10,16 @@
 #include <readline/readline.h>
 
 static char **complete_wrapper(const char *text, int start, int end) {
-    char **matches = complete(text, start, NULL, NULL);
+    completions_t *completions = complete(text, start, NULL, NULL);
 
     /* Don't fall back to filename matching if no matches were found. */
-    if (matches == NULL) {
-        matches = malloc(sizeof(char *));
+    if (completions == NULL || completions->n_matches == 0) {
+        char **matches = malloc(sizeof(char *));
         matches[0] = NULL;
+        return matches;
     }
-    return matches;
+
+    return completions_get_matches(completions);
 }
 
 bool use_readline(const char *script_filename) {

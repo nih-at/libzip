@@ -5,16 +5,42 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "zipsh",
+            "name": "shell_completion",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/src/zipsh",
+            "program": "${workspaceFolder}/build/regress/shell_completion",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/regress",
+            "environment": [],
+            "externalConsole": false,
+            "console": "integratedTerminal",
+            "MIMode": "lldb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for lldb",
+                    "text": "command script import lldb.macosx.heap",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "zipsh_regress",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/regress/zipsh_regress",
             "args": [
+                "-c",
                 "../regress/foo.zip",
-                "cmds"
+                "count"
             ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/src",
+            "cwd": "${workspaceFolder}/build/regress",
             "environment": [],
             "externalConsole": false,
             "console": "integratedTerminal",

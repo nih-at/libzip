@@ -126,11 +126,10 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
     return true;
 }
 
-char **complete_filename(const argument_type_t *type, const char *str) {
+void complete_filename(completions_t *completions, const argument_type_t *type, const char *str) {
     /* TODO: implement */
     (void)type;
     (void)str;
-    return NULL;
 }
 
 /* clang-format off */
@@ -186,11 +185,14 @@ bool convert_argument(const argument_type_t *type, argument_t *out, const char *
     return type->convert(type, out, str, error_message);
 }
 
-char **complete_argument(const argument_type_t *type, const char *str) {
+completions_t *complete_argument(const argument_type_t *type, const char *str, size_t prefix_length) {
+    completions_t *completions;
     if (type->complete == NULL) {
         return NULL;
     }
-    return type->complete(type, str);
+    completions = completions_new(str, prefix_length);
+    type->complete(completions, type, str + prefix_length);
+    return completions;
 }
 
 
@@ -208,26 +210,13 @@ bool convert_enum(const argument_type_t *type, argument_t *out, const char *str,
     return false;
 }
 
-char **complete_enum(const argument_type_t *type, const char *str) {
+void complete_enum(completions_t *completions, const argument_type_t *type, const char *str) {
     argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
-    size_t count = 0;
     for (size_t i = 0; entries[i].string != NULL; i++) {
         if (strncmp(entries[i].string, str, strlen(str)) == 0) {
-            count++;
+            completions_add(completions, entries[i].string);
         }
     }
-    char **matches = malloc((count + 1) * sizeof(char *));
-    if (matches == NULL) {
-        return NULL;
-    }
-    size_t j = 0;
-    for (size_t i = 0; entries[i].string != NULL; i++) {
-        if (strncmp(entries[i].string, str, strlen(str)) == 0) {
-            matches[j++] = strdup(entries[i].string);
-        }
-    }
-    matches[j] = NULL;
-    return matches;
 }
 
 const char *enum_argument_to_string(const argument_type_t *type, argument_t value, bool string_for_unknown) {
