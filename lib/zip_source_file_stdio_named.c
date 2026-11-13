@@ -40,6 +40,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#if defined(__linux__) && defined(HAVE_FGETXATTR) && defined(HAVE_GETXATTR) && defined(HAVE_FSETXATTR) && defined(HAVE_FREMOVEXATTR)
+#define USE_ACL
+#include <sys/xattr.h>
+#endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -57,6 +61,7 @@
 
 static bool copy_permissions(zip_source_file_context_t *ctx);
 static int create_temp_file(zip_source_file_context_t *ctx, bool create_file);
+static void _zip_stdio_op_close_named(zip_source_file_context_t *ctx);
 
 static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx);
 static zip_int64_t _zip_stdio_op_create_temp_output(zip_source_file_context_t *ctx);
@@ -72,7 +77,7 @@ static FILE *_zip_fopen_close_on_exec(const char *name, bool writeable);
 
 /* clang-format off */
 static zip_source_file_operations_t ops_stdio_named = {
-    _zip_stdio_op_close,
+    _zip_stdio_op_close_named,
     _zip_stdio_op_commit_write,
     _zip_stdio_op_create_temp_output,
 #ifdef CAN_CLONE
@@ -122,7 +127,10 @@ static zip_int64_t _zip_stdio_op_commit_write(zip_source_file_context_t *ctx) {
         return -1;
     }
 
-    if (!ctx->temp_output_created) {
+    if (ctx->acl_source_fd == -2) {
+        ok = false;
+    }
+    else if (!ctx->temp_output_created) {
         ok = copy_permissions(ctx);
     }
 
@@ -266,6 +274,21 @@ static bool _zip_stdio_op_open(zip_source_file_context_t *ctx) {
 }
 
 
+static void _zip_stdio_op_close_named(zip_source_file_context_t *ctx) {
+#ifdef USE_ACL
+    if (ctx->fout != NULL && ctx->acl_source_fd == -1) {
+        ctx->acl_source_fd = fcntl(fileno((FILE *)ctx->f), F_DUPFD_CLOEXEC, 0);
+        if (ctx->acl_source_fd < 0) {
+            int saved_errno = errno;
+            ctx->acl_source_fd = -2;
+            zip_error_set(&ctx->error, ZIP_ER_CLOSE, saved_errno);
+        }
+    }
+#endif
+    _zip_stdio_op_close(ctx);
+}
+
+
 static zip_int64_t _zip_stdio_op_remove(zip_source_file_context_t *ctx) {
     if (remove(ctx->fname) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_REMOVE, errno);
@@ -308,8 +331,12 @@ static int create_temp_file(zip_source_file_context_t *ctx, bool create_file) {
     int fd = 0;
     char *start, *end;
 
+#ifdef USE_ACL
+    if (ctx->f != NULL || zip_os_stat(ctx->fname, &st) == 0) {
+#else
     if (zip_os_stat(ctx->fname, &st) == 0) {
-        /* If the file already exists, we copy permissions on commit, so err on the side of caution. */
+#endif
+        /* An open source still supplies metadata if its pathname was moved. */
         ctx->temp_output_created = false;
         mode = 0600;
     }
@@ -404,11 +431,17 @@ static FILE *_zip_fopen_close_on_exec(const char *name, bool writeable) {
 
 static bool copy_permissions(zip_source_file_context_t *ctx) {
     zip_os_stat_t st;
+    int source_fd;
     bool ok = true;
 
-    /* Prefer fstat over stat when possible. */
-    if (ctx->f != NULL) {
-        if (zip_os_fstat(fileno((FILE *)ctx->f), &st) < 0) {
+    if (ctx->acl_source_fd == -2) {
+        return false;
+    }
+    source_fd = ctx->acl_source_fd >= 0 ? ctx->acl_source_fd : (ctx->f != NULL ? fileno((FILE *)ctx->f) : -1);
+
+    /* Copy mode and ACL from the same opened source when one is available. */
+    if (source_fd >= 0) {
+        if (zip_os_fstat(source_fd, &st) < 0) {
             ok = false;
         }
     }
@@ -421,14 +454,50 @@ static bool copy_permissions(zip_source_file_context_t *ctx) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
+#ifdef USE_ACL
+    static const char acl_name[] = "system.posix_acl_access";
+    void *acl_data;
+    ssize_t acl_size;
+
+    /* Direct named sources never opened for reading lack a stable descriptor; the pathname fallback can race with replacement. */
+    acl_size = source_fd >= 0 ? fgetxattr(source_fd, acl_name, NULL, 0) : getxattr(ctx->fname, acl_name, NULL, 0);
+    if (acl_size < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
+        zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+        return false;
+    }
+    if (acl_size <= 0) {
+        /* A new temporary file can inherit a default ACL even when the original has none. */
+        if (fremovexattr(fileno((FILE *)ctx->fout), acl_name) < 0 && errno != ENODATA && errno != ENOTSUP && errno != EOPNOTSUPP) {
+            zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+            return false;
+        }
+    }
+    else {
+        if ((acl_data = malloc((size_t)acl_size)) == NULL) {
+            zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
+            return false;
+        }
+        acl_size = source_fd >= 0 ? fgetxattr(source_fd, acl_name, acl_data, (size_t)acl_size) : getxattr(ctx->fname, acl_name, acl_data, (size_t)acl_size);
+        if (acl_size < 0) {
+            int saved_errno = errno;
+            free(acl_data);
+            zip_error_set(&ctx->error, ZIP_ER_RENAME, saved_errno);
+            return false;
+        }
+        if (fsetxattr(fileno((FILE *)ctx->fout), acl_name, acl_data, (size_t)acl_size, 0) < 0) {
+            int saved_errno = errno;
+            free(acl_data);
+            zip_error_set(&ctx->error, ZIP_ER_RENAME, saved_errno);
+            return false;
+        }
+        free(acl_data);
+    }
+#endif
 
     /* Use file descriptor and not file name to avoid an exploitable race condition. */
     if (fchmod(fileno((FILE *)ctx->fout), st.st_mode) < 0) {
         zip_error_set(&ctx->error, ZIP_ER_CLOSE, errno);
         return false;
     }
-
-    /* TODO: copy ACLs */
-
     return true;
 }

@@ -34,6 +34,10 @@ if (NIHTEST)
     tryopen
   )
 
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND HAVE_FGETXATTR AND HAVE_GETXATTR AND HAVE_SETXATTR AND HAVE_REMOVEXATTR AND HAVE_FSETXATTR AND HAVE_FREMOVEXATTR)
+    list(APPEND TEST_PROGRAMS acl_preserve)
+  endif()
+
   set(HOLE_USERS
     hole
     ziptool_regress
@@ -131,6 +135,12 @@ if (NIHTEST)
   endif()
 
   # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
+
+  if(TARGET acl_preserve)
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+    add_test(NAME acl-preserve COMMAND acl_preserve)
+    set_tests_properties(acl-preserve PROPERTIES SKIP_RETURN_CODE 77 WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/acl-preserve")
+  endif()
 
   file(GLOB EXTRA_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/*.test)
   foreach(FULL_CASE IN LISTS EXTRA_TESTS)
