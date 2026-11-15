@@ -64,14 +64,7 @@ bool file_comment_execute(invocation_t *invocation, void *context_v, file_matche
             return false;
         }
 
-        if (comment_len > 0) {
-            if (context->hex) {
-                print_hex((const zip_uint8_t *)existing_comment, comment_len);
-            }
-            else {
-                printf("%.*s\n", comment_len, existing_comment);
-            }
-        }
+        print_comment(existing_comment, comment_len, context->hex);
         return true;
     }
     else {
