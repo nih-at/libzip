@@ -253,11 +253,12 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
 
     if (!complete && !early_exit) {
         while (argument_index < cmd->n_arguments) {
-            if (cmd->arguments[argument_index].cardinality == ARGUMENT_OPTIONAL) {
+            if (cmd->arguments[argument_index].cardinality == ARGUMENT_OPTIONAL || cmd->arguments[argument_index].cardinality == ARGUMENT_COLLECT) {
                 invocation_add_argument(invocation, cmd->arguments[argument_index].default_value);
             }
             else {
                 *error_message = error_message_new_format("missing required argument %s", cmd->arguments[argument_index].name);
+                return false;
             }
             argument_index++;
         }

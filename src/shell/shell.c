@@ -31,6 +31,7 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,14 +98,14 @@ bool shell_loop(const char *script_filename) {
     bool ok = true;
 
     if ((words = words_new()) == NULL) {
-        fprintf(stderr, "Failed to allocate words structure\n");
+        fprintf(stderr, "out of memory\n");
         exit(1);
     }
 
     if (script_filename != NULL) {
         input = fopen(script_filename, "r");
         if (input == NULL) {
-            fprintf(stderr, "Failed to open file: %s\n", script_filename);
+            fprintf(stderr, "can't open script file '%s': %s\n", script_filename, strerror(errno));
             exit(1);
         }
         file_name = script_filename;
