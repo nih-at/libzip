@@ -71,6 +71,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
     bool in_options = true;
     bool complete = (completions != NULL);
     bool early_exit = false;
+    bool argument_collected = false;
     size_t argument_index = 0;
 
     for (size_t i = 1; i < (size_t)argc; i++) {
@@ -245,22 +246,27 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                 }
                 invocation_add_argument(invocation, value);
             }
-            if (cmd->arguments[argument_index].cardinality != ARGUMENT_COLLECT) {
+            if (cmd->arguments[argument_index].cardinality == ARGUMENT_COLLECT) {
+                argument_collected = true;
+            }
+            else {
                 argument_index++;
             }
         }
     }
 
     if (!complete && !early_exit) {
-        while (argument_index < cmd->n_arguments) {
-            if (cmd->arguments[argument_index].cardinality == ARGUMENT_OPTIONAL || cmd->arguments[argument_index].cardinality == ARGUMENT_COLLECT) {
-                invocation_add_argument(invocation, cmd->arguments[argument_index].default_value);
+        if (!argument_collected) {
+            while (argument_index < cmd->n_arguments) {
+                if (cmd->arguments[argument_index].cardinality == ARGUMENT_OPTIONAL || cmd->arguments[argument_index].cardinality == ARGUMENT_COLLECT) {
+                    invocation_add_argument(invocation, cmd->arguments[argument_index].default_value);
+                }
+                else {
+                    *error_message = error_message_new_format("missing required argument %s", cmd->arguments[argument_index].name);
+                    return false;
+                }
+                argument_index++;
             }
-            else {
-                *error_message = error_message_new_format("missing required argument %s", cmd->arguments[argument_index].name);
-                return false;
-            }
-            argument_index++;
         }
     }
 
