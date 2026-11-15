@@ -9,3 +9,5 @@
 /cmake-build-debug
 /site
 __pycache__
+/.vs
+/out

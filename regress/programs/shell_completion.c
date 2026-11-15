@@ -130,7 +130,7 @@ void run_test(void **state) {
     assert_string_equal(completions->prefix, test->prefix);
 
     /* Count expected matches. */
-    for (n_matches = 0; n_matches < MAX_COMPLETIONS && completions->matches[n_matches] != NULL; n_matches++) {
+    for (n_matches = 0; n_matches < MAX_COMPLETIONS && test->completions[n_matches] != NULL; n_matches++) {
     }
 
     assert_int_equal(n_matches, completions->n_matches);
