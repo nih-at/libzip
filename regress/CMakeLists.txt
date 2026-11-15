@@ -48,20 +48,28 @@ if (NIHTEST)
     programs/zipsh/zipsh_regress.c
   )
 
-  add_library(zipsh_regress_common STATIC ${ZIPSH_REGRESS_SOURCES})
-  target_link_libraries(zipsh_regress_common zipsh_common)
-  target_include_directories(zipsh_regress_common PUBLIC programs/zipsh_regress ${PROJECT_BINARY_DIR})
 
-  foreach(PROGRAM in zipsh_regress zipsh_regress_nonrandom)
-    add_executable(${PROGRAM} zipsh_regress_commands.c)
-    target_link_libraries(${PROGRAM} zipsh_regress_common)
-    if (ENABLE_COVERAGE)
-      target_compile_options(${PROGRAM} PRIVATE -coverage)
-      target_link_options(${PROGRAM} PRIVATE -coverage)
-    endif()
-  endforeach()
-  target_link_libraries(zipsh_regress zip)
-  target_link_libraries(zipsh_regress_nonrandom zip_nonrandom)
+set(ZIPSH_SOURCES_RELATIVE)
+foreach(source IN LISTS ZIPSH_SOURCES)
+  list(APPEND ZIPSH_SOURCES_RELATIVE "../src/${source}")
+endforeach()
+
+
+  add_executable(zipsh_regress zipsh_regress_commands.c ${ZIPSH_REGRESS_SOURCES})
+  target_include_directories(zipsh_regress PUBLIC programs/zipsh_regress ${PROJECT_BINARY_DIR})
+  target_link_libraries(zipsh_regress zipsh_common)
+  if (ENABLE_COVERAGE)
+    target_compile_options(zipsh_regress PRIVATE -coverage)
+    target_link_options(zipsh_regress PRIVATE -coverage)
+  endif()
+
+  add_executable(zipsh_regress_nonrandom zipsh_regress_commands.c ${ZIPSH_REGRESS_SOURCES} ${ZIPSH_SOURCES_RELATIVE})
+  target_include_directories(zipsh_regress_nonrandom PUBLIC programs/zipsh_regress ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/src/shell ${PROJECT_SOURCE_DIR}/src/zipsh ${PROJECT_SOURCE_DIR}/src)
+  target_link_libraries(zipsh_regress_nonrandom shell zip_nonrandom)
+  if (ENABLE_COVERAGE)
+    target_compile_options(zipsh_regress_nonrandom PRIVATE -coverage)
+    target_link_options(zipsh_regress_nonrandom PRIVATE -coverage)
+  endif()
 
   set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
 
@@ -166,10 +174,7 @@ endif()
 
 
 # Generate zipsh_regress_commands.c from command definitions in source files
-set(ZIPSH_REGRESS_COMMAND_SOURCES ${ZIPSH_REGRESS_SOURCES})
-foreach(source IN LISTS ZIPSH_SOURCES)
-  list(APPEND ZIPSH_REGRESS_COMMAND_SOURCES "../src/${source}")
-endforeach()
+set(ZIPSH_REGRESS_COMMAND_SOURCES ${ZIPSH_REGRESS_SOURCES} ${ZIPSH_SOURCES_RELATIVE})
 
 generate_command_table(
   OUTPUT_FILE zipsh_regress_commands.c
