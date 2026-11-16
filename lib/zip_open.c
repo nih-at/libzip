@@ -515,10 +515,32 @@ static bool check_magic(zip_uint64_t offset, zip_buffer_t *buffer, zip_uint64_t 
 }
 
 
+struct _zip_entry_span {
+    zip_uint64_t start; /* offset of the local header */
+    zip_uint64_t end;   /* offset just past the end of the entry's data */
+    zip_uint64_t index; /* index of the entry in the central directory */
+};
+
+
+static int _zip_entry_span_compare(const void *a, const void *b) {
+    const struct _zip_entry_span *span_a = (const struct _zip_entry_span *)a;
+    const struct _zip_entry_span *span_b = (const struct _zip_entry_span *)b;
+
+    if (span_a->start != span_b->start) {
+        return span_a->start < span_b->start ? -1 : 1;
+    }
+    if (span_a->end != span_b->end) {
+        return span_a->end > span_b->end ? -1 : 1;
+    }
+    return 0;
+}
+
+
 /* _zip_checkcons:
    Checks the consistency of the central directory by comparing central
-   directory entries with local headers and checking for plausible
-   file and header offsets. Returns -1 if not plausible, else the
+   directory entries with local headers, checking for plausible
+   file and header offsets, and checking that the local headers and
+   data of the entries do not overlap. Returns -1 if not plausible, else the
    difference between the lowest and the highest fileposition reached */
 
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
@@ -600,6 +622,42 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(detail, i));
             return -1;
         }
+    }
+
+    if (cd->nentry > 1) {
+        /* The local headers and the data of two entries must not overlap.
+           Overlapping entries are a hallmark of zip bombs, where many
+           entries share the same compressed data, but do not occur in
+           archives written sequentially. The local extra fields have
+           been read for all entries at this point, so the exact offset
+           of each entry's data can be computed. */
+        struct _zip_entry_span *spans;
+        zip_uint64_t k;
+
+        if ((spans = (struct _zip_entry_span *)malloc(cd->nentry * sizeof(*spans))) == NULL) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            return -1;
+        }
+
+        for (k = 0; k < cd->nentry; k++) {
+            zip_uint64_t data_offset = cd->entry[k].orig->offset + LENTRYSIZE + _zip_string_length(cd->entry[k].orig->filename) + (zip_uint64_t)_zip_ef_size(cd->entry[k].orig->extra_fields.local);
+
+            spans[k].start = cd->entry[k].orig->offset;
+            spans[k].end = data_offset + cd->entry[k].orig->comp_size;
+            spans[k].index = k;
+        }
+
+        qsort(spans, (size_t)cd->nentry, sizeof(*spans), _zip_entry_span_compare);
+
+        for (k = 1; k < cd->nentry; k++) {
+            if (spans[k].start < spans[k - 1].end) {
+                zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_OVERLAPS_ENTRY, spans[k].index));
+                free(spans);
+                return -1;
+            }
+        }
+
+        free(spans);
     }
 
     return (max - min) < ZIP_INT64_MAX ? (zip_int64_t)(max - min) : ZIP_INT64_MAX;
