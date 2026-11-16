@@ -18,7 +18,7 @@ set(command_table [=[
 command_t *commands[] = {
 ]=])
 
-set(COMMANDS help)
+set(COMMANDS exit help)
 
 foreach(source_file IN LISTS SOURCES)
   file(READ "${source_file}" source_content)

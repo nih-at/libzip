@@ -40,13 +40,20 @@
 
 #include "compat/src_compat.h"
 
+bool exit_implementation(invocation_t *invocation, error_message_t **error_message) {
+    *error_message = error_message_new("internal error: exit command function should not be called");
+    return false;
+}
+
+COMMAND_NO_ARGUMENTS_OR_OPTIONS(exit, "exit the shell");
+
 words_t *words = NULL;
 
-bool execute_line(const char *line, error_message_t **error_message) {
-    bool ok = true;
+command_status_t execute_line(const char *line, error_message_t **error_message) {
+    command_status_t status = COMMAND_STATUS_OK;
 
     if (!words_parse(words, line, error_message)) {
-        return false;
+        return COMMAND_STATUS_ERROR;
     }
 
     if (words->n_words > 0) {
@@ -56,18 +63,21 @@ bool execute_line(const char *line, error_message_t **error_message) {
             if (error_message) {
                 *error_message = error_message_new_format("unknown command '%s'", words->words[0]);
             }
-            ok = false;
+            status = COMMAND_STATUS_ERROR;
+        }
+        else if (cmd->function == exit_implementation) {
+            status = COMMAND_STATUS_EXIT;
         }
         else if (!execute_command(cmd, (int)words->n_words, words->words, &local_error_message)) {
             if (error_message) {
                 *error_message = error_message_new_format("%s: %s", words->words[0], error_message_get(local_error_message));
                 error_message_free(local_error_message);
             }
-            ok = false;
+            status = COMMAND_STATUS_ERROR;
         }
     }
 
-    return ok;
+    return status;
 }
 
 
@@ -77,10 +87,15 @@ bool execute_lines(const char *filename, FILE *input) {
     char *line = NULL;
     size_t len = 0;
     bool ok = true;
+    command_status_t status;
 
     while (getline(&line, &len, input) != -1) {
         line_number++;
-        if (!execute_line(line, &error_message)) {
+        status = execute_line(line, &error_message);
+        if (status == COMMAND_STATUS_EXIT) {
+            break;
+        }
+        else if (status == COMMAND_STATUS_ERROR) {
             fprintf(stderr, "%s:%zu: %s\n", filename, line_number, error_message_get(error_message));
             error_message_free(error_message);
             error_message = NULL;

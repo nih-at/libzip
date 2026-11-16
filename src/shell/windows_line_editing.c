@@ -14,6 +14,7 @@ bool execute_lines_readline() {
     size_t len = 0;
     HANDLE stdin_handle = GetStdHandle(STD_INPUT_HANDLE);
     DWORD original_mode, mode;
+    command_status_t status;
 
     // Enable line input mode for console
     GetConsoleMode(stdin_handle, &original_mode);
@@ -26,9 +27,13 @@ bool execute_lines_readline() {
             break;
         }
         error_message_t *error_message = NULL;
-        if (!execute_line(line, &error_message)) {
+        status = execute_line(line, &error_message);
+        if (status == COMMAND_STATUS_ERROR) {
             fprintf(stderr, "%s\n", error_message_get(error_message));
             error_message_free(error_message);
+        }
+        else if (status == COMMAND_STATUS_EXIT) {
+            break;
         }
     }
 

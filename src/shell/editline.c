@@ -94,6 +94,7 @@ bool execute_lines_readline() {
     EditLine *el;
     History *hist;
     HistEvent ev;
+    command_status_t status;
 
     if ((el = el_init("zipsh", stdin, stdout, stderr)) == NULL) {
         return false;
@@ -119,9 +120,14 @@ bool execute_lines_readline() {
         }
         history(hist, &ev, H_ENTER, line);
         error_message_t *error_message = NULL;
-        if (!execute_line(line, &error_message)) {
+
+        status = execute_line(line, &error_message);
+        if (status == COMMAND_STATUS_ERROR) {
             fprintf(stderr, "%s\n", error_message_get(error_message));
             error_message_free(error_message);
+        }
+        else if (status == COMMAND_STATUS_EXIT) {
+            break;
         }
     }
 
