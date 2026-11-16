@@ -18,6 +18,31 @@ option_definition_t archive_comment_options[] = {
 };
 /* clang-format on */
 
+void print_comment(const char *comment, size_t comment_len, bool hex) {
+    if (comment_len == 0) {
+        return;
+    }
+
+    if (hex) {
+        print_hex((const zip_uint8_t *)comment, comment_len);
+    }
+    else {
+        for (size_t i = 0; i < comment_len; i++) {
+            /* Normalize line endings. Otherwise, Windows will produce extra blank lines for DOS style line endings. */
+            if (comment[i] == '\r') {
+                if (i < comment_len - 1 && comment[i + 1] == '\n') {
+                    continue;
+                }
+                else {
+                    fputc('\n', stdout);
+                }
+            }
+            fputc(comment[i], stdout);
+        }
+        fputc('\n', stdout);
+    }
+}
+
 bool archive_comment_implementation(invocation_t *invocation, error_message_t **error_message) {
     bool result = true;
     bool hex = invocation_get_option(invocation, 'h');
@@ -31,14 +56,7 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
             return false;
         }
 
-        if (comment_len > 0) {
-            if (hex) {
-                print_hex((const zip_uint8_t *)existing_comment, comment_len);
-            }
-            else {
-                printf("%.*s\n", comment_len, existing_comment);
-            }
-        }
+        print_comment(existing_comment, comment_len, hex);
         return true;
     }
     else {

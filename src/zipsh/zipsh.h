@@ -116,4 +116,6 @@ int get_archive_flags(invocation_t *invocation);
 bool open_archive(invocation_t *invocation, error_message_t **error_message);
 bool close_archive(error_message_t **error_message);
 
+void print_comment(const char *comment, size_t comment_len, bool hex);
+
 #endif /* ZIPSH_H */
