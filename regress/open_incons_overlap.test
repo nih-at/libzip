@@ -1,0 +1,13 @@
+# zip_open: files with overlapping entries are inconsistent
+program tryopen
+file incons-overlap.zzip incons-overlap.zip
+file incons-overlap-shared-data.zzip incons-overlap-shared-data.zip
+arguments -s -c incons-overlap.zzip incons-overlap-shared-data.zzip
+return 1
+stdout
+opening 'incons-overlap.zzip' returned error Zip archive inconsistent: entry 1: local header or data overlaps another entry
+opening 'incons-overlap-shared-data.zzip' returned error Zip archive inconsistent: entry 0: local header or data overlaps another entry
+end-of-inline-data
+stderr
+2 errors
+end-of-inline-data
