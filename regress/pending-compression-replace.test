@@ -1,0 +1,11 @@
+# 2026-10-04：替换已有条目后，完整和部分读取不应误解码未来提交的压缩方式。
+description read replacement data before applying requested compression
+arguments pending.zip replace_file_contents 0 "replacement data\n" set_file_compression 0 store 0 cat 0 set_file_compression 0 default 0 cat 0 set_file_compression 0 deflate 0 cat 0 cat_partial 0 12 5 unchange_all
+file pending.zip testbuffer.zip
+return 0
+stdout
+replacement data
+replacement data
+replacement data
+data
+end-of-inline-data
