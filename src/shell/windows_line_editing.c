@@ -20,7 +20,11 @@ bool execute_lines_readline() {
     mode = original_mode | ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT;
     SetConsoleMode(stdin_handle, mode);
 
-    while (getline(&line, &len, stdin) != -1) {
+    while (true) {
+        printf("zipsh> ");
+        if (getline(&line, &len, stdin) == -1) {
+            break;
+        }
         error_message_t *error_message = NULL;
         if (!execute_line(line, &error_message)) {
             fprintf(stderr, "%s\n", error_message_get(error_message));
