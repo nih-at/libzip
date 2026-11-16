@@ -58,6 +58,8 @@ option_definition_t zipsh_options[] = {
 bool zipsh_setup(invocation_t *invocation, error_message_t **error_message) {
     archive_name = invocation->arguments[ARGUMENT_ARCHIVE].string;
 
+    shell_set_prompt("%s> ", archive_name);
+
     return open_archive(invocation, error_message);
 }
 

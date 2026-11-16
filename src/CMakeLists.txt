@@ -5,8 +5,9 @@ set(SHELL_SOURCES
   shell/command.c
   shell/complete.c
   shell/error_message.c
-  shell/invocation.c
   shell/help.c
+  shell/invocation.c
+  shell/prompt.c
   shell/shell.c
   shell/words.c
 )

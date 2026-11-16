@@ -22,7 +22,7 @@ bool execute_lines_readline() {
     SetConsoleMode(stdin_handle, mode);
 
     while (true) {
-        printf("zipsh> ");
+        printf("%s ", shell_get_prompt());
         if (getline(&line, &len, stdin) == -1) {
             break;
         }

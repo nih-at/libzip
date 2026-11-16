@@ -12,8 +12,8 @@ bool use_readline(const char *script_filename) {
     return script_filename == NULL && isatty(fileno(stdin));
 }
 
-static char *prompt_func(EditLine *el) {
-    return "zipsh> ";
+static const char *prompt_func(EditLine *el) {
+    return shell_get_prompt();
 }
 
 /* TODO: use completions directly instead of converting to matches */

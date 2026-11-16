@@ -234,4 +234,10 @@ void completions_sort(completions_t *completions);
 bool completions_add(completions_t *completions, const char *match);
 char **completions_get_matches(const completions_t *completions);
 
+typedef const char* (*shell_prompt_function_t)();
+
+const char* shell_get_prompt(void);
+void shell_set_prompt_function(shell_prompt_function_t prompt_function);
+void shell_set_prompt(const char *format, ...) PRINTF_LIKE(1, 2);
+
 #endif /* SHELL_H */

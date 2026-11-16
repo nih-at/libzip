@@ -32,7 +32,11 @@ bool execute_lines_readline() {
     command_status_t status;
 
     while (true) {
-        char *line = readline("zipsh> ");
+        char *prompt;
+        char *line = NULL;
+        asprintf(&prompt, "%s ", shell_get_prompt());
+        line = readline(prompt);
+        free(prompt);
         if (line == NULL) {
             break;
         }
@@ -45,6 +49,7 @@ bool execute_lines_readline() {
                 error_message_free(error_message);
             }
             else if (status == COMMAND_STATUS_EXIT) {
+                free(line);
                 break;
             }
         }
