@@ -20,7 +20,6 @@ jobs:
     environment: coverity
 
     env:
-      TOKEN: ${{ secrets.COVERITY_TOKEN }}
       PROJECT: libzip
       SHORT_PROJECT: libzip
       EMAIL: wiz@gatalith.at
@@ -29,8 +28,10 @@ jobs:
 
     steps:
       - name: Check Secret
+        env:
+          TOKEN: ${{ secrets.COVERITY_TOKEN }}
         run: |
-          [ -n "${{ secrets.COVERITY_TOKEN }}" ]
+          [ -n "$TOKEN" ]
 
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -48,6 +49,8 @@ jobs:
           cmake -S ${{github.workspace}} -B ${{runner.workspace}}/build
 
       - name: Download Coverity
+        env:
+          TOKEN: ${{ secrets.COVERITY_TOKEN }}
         run: |
           wget --quiet https://scan.coverity.com/download/linux64 --post-data "token=$TOKEN&project=$PROJECT" -O "$COV_TOOLS.tar.gz"
           mkdir "$COV_TOOLS"
@@ -69,6 +72,8 @@ jobs:
           retention-days: 10
 
       - name: Submit Results
+        env:
+          TOKEN: ${{ secrets.COVERITY_TOKEN }}
         run: |
           tar -czf $SHORT_PROJECT.tgz $COV_RESULTS
           ls -lh $SHORT_PROJECT.tgz
