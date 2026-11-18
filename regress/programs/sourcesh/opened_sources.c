@@ -104,7 +104,7 @@ bool convert_source(const argument_type_t *type, argument_t *argument, const cha
 void complete_source(completions_t *completions, const argument_type_t *type, const char *str) {
     size_t str_len = strlen(str);
     for (opened_source_t *p = opened_sources.next; p != NULL; p = p->next) {
-        if (p->name && (str == NULL || strnstr(p->name, str, str_len) != NULL)) {
+        if (p->name && (str == NULL || strncmp(p->name, str, str_len) == 0)) {
             completions_add(completions, p->name);
         }
     }

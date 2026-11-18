@@ -90,6 +90,7 @@ if (NIHTEST)
     programs/sourcesh/stat.c
     programs/sourcesh/tell.c
     programs/sourcesh/tell_write.c
+    programs/sourcesh/window_source.c
     programs/sourcesh/write.c
     programs/zipsh/echo.c
   )
