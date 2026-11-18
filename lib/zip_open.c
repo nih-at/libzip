@@ -547,7 +547,7 @@ static int _zip_entry_span_compare(const void *a, const void *b) {
 
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error) {
     zip_uint64_t i;
-    zip_uint64_t min, max, j, tail_length;
+    zip_uint64_t min, max, j;
     zip_entry_span_t *spans = NULL;
     zip_int64_t local_metadata_size;
     struct zip_dirent temp;
@@ -588,23 +588,6 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        tail_length = _zip_string_length(cd->entry[i].orig->filename) + LENTRYSIZE;
-        if (ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size, tail_length) || ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->offset + tail_length, cd->entry[i].orig->comp_size)) {
-            zip_error_set(error, ZIP_ER_NOZIP, 0);
-            free(spans);
-            return -1;
-        }
-        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + tail_length;
-
-        if (j > max) {
-            max = j;
-        }
-        if (max > (zip_uint64_t)cd->offset) {
-            zip_error_set(error, ZIP_ER_NOZIP, 0);
-            free(spans);
-            return -1;
-        }
-
         if (zip_source_seek(za->src, (zip_int64_t)cd->entry[i].orig->offset, SEEK_SET) < 0) {
             zip_error_set_from_source(error, za->src);
             free(spans);
@@ -627,19 +610,13 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        /* The local file name and extra fields can differ in size from
-           their central directory counterparts, and an entry using a
-           data descriptor has additional data after its compressed
-           data. _zip_dirent_read returns the size of all of the local
-           metadata, so the exact end of the entry can be computed. */
-        tail_length = (zip_uint64_t)local_metadata_size;
-        if (ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size, tail_length) || ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->offset + tail_length, cd->entry[i].orig->comp_size)) {
+        if (ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size, local_metadata_size) || ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size + local_metadata_size, cd->entry[i].orig->offset)) {
             zip_error_set(error, ZIP_ER_NOZIP, 0);
             _zip_dirent_finalize(&temp);
             free(spans);
             return -1;
         }
-        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + tail_length;
+        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + local_metadata_size;
 
         if (j > max) {
             max = j;
@@ -663,15 +640,6 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
     }
 
     if (cd->nentry > 0) {
-        /* The entries of an archive written sequentially cover the
-           archive from the first local header, which starts at the
-           beginning of the archive, up to the central directory,
-           which directly follows the last entry: their local headers
-           and data, including data descriptors, must not overlap,
-           and there must be no gaps between them. Deviations are a
-           hallmark of crafted archives like zip bombs, where many
-           entries share the same compressed data. The exact span of
-           each entry was computed in the loop above. */
         zip_uint64_t k;
 
         qsort(spans, (size_t)cd->nentry, sizeof(*spans), _zip_entry_span_compare);
@@ -689,14 +657,6 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             }
         }
 
-        for (k = 0; k < cd->nentry; k++) {
-            if (spans[k].end > (zip_uint64_t)cd->offset) {
-                zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_OVERLAPS_CDIR, spans[k].index));
-                free(spans);
-                return -1;
-            }
-        }
-
         if (spans[0].start != 0) {
             zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_GAP, spans[0].index));
             free(spans);
@@ -705,6 +665,11 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
 
         if (spans[cd->nentry - 1].end < (zip_uint64_t)cd->offset) {
             zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_GAP);
+            free(spans);
+            return -1;
+        }
+        if (spans[cd->nentry - 1].end > (zip_uint64_t)cd->offset) {
+            zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_OVERLAPS_CDIR, spans[cd->nentry - 1].index));
             free(spans);
             return -1;
         }
