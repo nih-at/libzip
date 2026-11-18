@@ -192,7 +192,7 @@ if (BUILD_REGRESS)
 # This allows test programs to access all symbols.
 add_library(zip_regress STATIC ${ZIP_SOURCES} ${PROJECT_SOURCE_DIR}/regress/programs/zip_nonrandom.c)
 set_property(TARGET zip_regress PROPERTY C_VISIBILITY_PRESET default)
-target_compile_definitions(zip_regress PRIVATE REGRESSION_NO_RANDOM)
+target_compile_definitions(zip_regress PRIVATE REGRESSION_NO_RANDOM ZIP_EXTERN=)
 target_link_libraries(zip_regress PRIVATE ${ZIP_LIBRARIES})
 target_include_directories(zip_regress PUBLIC ${ZIP_INCLUDE_DIRS})
 endif()
