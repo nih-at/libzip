@@ -12,7 +12,7 @@ arguments -s -c incons-gap-entries.zzip incons-gap-start.zzip incons-entry-overl
 return 1
 stdout
 opening 'incons-gap-entries.zzip' returned error Zip archive inconsistent: entry 1: there is a gap before this entry
-opening 'incons-gap-start.zzip' returned error Zip archive inconsistent: entry 0: there is a gap before this entry
+opening 'incons-gap-start.zzip' succeeded, 2 entries
 opening 'incons-entry-overlaps-cd.zzip' returned error Zip archive inconsistent: entry 0: local header or data overlaps the central directory
 opening 'incons-descriptor-overlap.zzip' returned error Zip archive inconsistent: entry 1: local header or data overlaps another entry
 opening 'descriptor.zzip' succeeded, 1 entries
@@ -21,5 +21,5 @@ opening 'descriptor-zip64.zzip' succeeded, 1 entries
 opening 'descriptor-zip64-nosig.zzip' succeeded, 1 entries
 end-of-inline-data
 stderr
-4 errors
+3 errors
 end-of-inline-data

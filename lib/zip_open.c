@@ -657,11 +657,7 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             }
         }
 
-        if (spans[0].start != 0) {
-            zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_ENTRY_GAP, spans[0].index));
-            free(spans);
-            return -1;
-        }
+        /* We allow data before the first entry, which is used for self extracting archives. */
 
         if (spans[cd->nentry - 1].end < (zip_uint64_t)cd->offset) {
             zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_GAP);
