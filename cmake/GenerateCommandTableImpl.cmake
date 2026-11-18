@@ -10,7 +10,7 @@ set(commands_str [=[
   Do not edit; make changes in the source files instead.
 */
 
-#include "zipsh.h"
+#include "shell.h"
 
 ]=])
 

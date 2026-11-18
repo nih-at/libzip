@@ -98,10 +98,6 @@ zip_flags_t get_flags(invocation_t *invocation);
 extra_field_options_t *extra_field_options_create(invocation_t *invocation, error_message_t **error_message);
 void extra_field_options_free(extra_field_options_t *extra_field_options);
 
-zip_uint8_t *decode_hex(const char *hex, error_message_t **error_message);
-void print_hex(const zip_uint8_t *data, size_t len);
-const char* format_mtime(time_t mtime);
-
 struct file_reference_command {
     bool (*setup)(invocation_t *invocation, void *context, file_matches_t *file_matches, error_message_t **error_message);
     bool (*execute)(invocation_t *invocation, void *context, file_matches_t *file_matches, file_reference_t *file_ref, error_message_t **error_message);
@@ -117,5 +113,6 @@ bool open_archive(invocation_t *invocation, error_message_t **error_message);
 bool close_archive(error_message_t **error_message);
 
 void print_comment(const char *comment, size_t comment_len, bool hex);
+const char* format_mtime(time_t mtime);
 
 #endif /* ZIPSH_H */

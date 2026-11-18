@@ -48,11 +48,10 @@ if (NIHTEST)
     programs/zipsh/zipsh_regress.c
   )
 
-
-set(ZIPSH_SOURCES_RELATIVE)
-foreach(source IN LISTS ZIPSH_SOURCES)
-  list(APPEND ZIPSH_SOURCES_RELATIVE "../src/${source}")
-endforeach()
+  set(ZIPSH_SOURCES_RELATIVE)
+  foreach(source IN LISTS ZIPSH_SOURCES)
+    list(APPEND ZIPSH_SOURCES_RELATIVE "../src/${source}")
+  endforeach()
 
 
   add_executable(zipsh_regress zipsh_regress_commands.c ${ZIPSH_REGRESS_SOURCES})
@@ -65,10 +64,42 @@ endforeach()
 
   add_executable(zipsh_regress_nonrandom zipsh_regress_commands.c ${ZIPSH_REGRESS_SOURCES} ${ZIPSH_SOURCES_RELATIVE})
   target_include_directories(zipsh_regress_nonrandom PUBLIC programs/zipsh_regress ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/src/shell ${PROJECT_SOURCE_DIR}/src/zipsh ${PROJECT_SOURCE_DIR}/src)
-  target_link_libraries(zipsh_regress_nonrandom shell zip_nonrandom)
+  target_link_libraries(zipsh_regress_nonrandom shell zip_regress)
   if (ENABLE_COVERAGE)
     target_compile_options(zipsh_regress_nonrandom PRIVATE -coverage)
     target_link_options(zipsh_regress_nonrandom PRIVATE -coverage)
+  endif()
+
+  set(SOURCESH_SOURCES
+    programs/sourcesh/at_eof.c
+    programs/sourcesh/begin_write.c
+    programs/sourcesh/buffer_source.c
+    programs/sourcesh/close.c
+    programs/sourcesh/commit_write.c
+    programs/sourcesh/file_source.c
+    programs/sourcesh/free.c
+    programs/sourcesh/is_seekable.c
+    programs/sourcesh/open.c
+    programs/sourcesh/opened_sources.c
+    programs/sourcesh/read.c
+    programs/sourcesh/rollback_write.c
+    programs/sourcesh/seek.c
+    programs/sourcesh/seek_write.c
+    programs/sourcesh/sourcesh.c
+    programs/sourcesh/supports.c
+    programs/sourcesh/stat.c
+    programs/sourcesh/tell.c
+    programs/sourcesh/tell_write.c
+    programs/sourcesh/write.c
+    programs/zipsh/echo.c
+  )
+
+  add_executable(sourcesh sourcesh_commands.c ${SOURCESH_SOURCES})
+  target_include_directories(sourcesh PUBLIC programs/sourcesh ${PROJECT_BINARY_DIR})
+  target_link_libraries(sourcesh shell zip_regress)
+  if (ENABLE_COVERAGE)
+    target_compile_options(sourcesh PRIVATE -coverage)
+    target_link_options(sourcesh PRIVATE -coverage)
   endif()
 
   set(ZIP_PROGRAMS ${TEST_PROGRAMS} ${HOLE_USERS})
@@ -76,7 +107,7 @@ endforeach()
   foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
     if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
       add_executable(${PROGRAM} programs/ziptool_regress.c)
-      target_link_libraries(${PROGRAM} zip_nonrandom)
+      target_link_libraries(${PROGRAM} zip_regress)
     else()
       add_executable(${PROGRAM} programs/${PROGRAM}.c)
       target_link_libraries(${PROGRAM} zip)
@@ -179,4 +210,9 @@ set(ZIPSH_REGRESS_COMMAND_SOURCES ${ZIPSH_REGRESS_SOURCES} ${ZIPSH_SOURCES_RELAT
 generate_command_table(
   OUTPUT_FILE zipsh_regress_commands.c
   SOURCES ${ZIPSH_REGRESS_COMMAND_SOURCES}
+)
+
+generate_command_table(
+  OUTPUT_FILE sourcesh_commands.c
+  SOURCES ${SOURCESH_SOURCES}
 )

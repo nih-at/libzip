@@ -240,4 +240,7 @@ const char* shell_get_prompt(void);
 void shell_set_prompt_function(shell_prompt_function_t prompt_function);
 void shell_set_prompt(const char *format, ...) PRINTF_LIKE(1, 2);
 
+zip_uint8_t *decode_hex(const char *hex, error_message_t **error_message);
+void print_hex(const zip_uint8_t *data, size_t len);
+
 #endif /* SHELL_H */

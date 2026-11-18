@@ -1,5 +1,4 @@
 #include "shell.h"
-#include "zipsh.h"
 
 /* clang-format off */
 argument_definition_t echo_arguments[] = {

@@ -6,6 +6,7 @@ set(SHELL_SOURCES
   shell/complete.c
   shell/error_message.c
   shell/help.c
+  shell/hex.c
   shell/invocation.c
   shell/prompt.c
   shell/shell.c
@@ -63,7 +64,7 @@ if (COMPAT_SOURCES)
 endif()
 
 add_library(shell STATIC ${SHELL_SOURCES})
-target_include_directories(shell PRIVATE shell ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
+target_include_directories(shell PUBLIC shell ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 if (USE_LINE_EDITING)
 if (HAVE_EDITLINE)
   target_link_libraries(shell editline::editline)
