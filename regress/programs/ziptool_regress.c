@@ -100,7 +100,9 @@ zip_t *ziptool_open(const char *archive, int flags, zip_error_t *error, zip_uint
 int get_stdin_commands(void) {
     int argc = 0;
     char *p, *word;
-    fgets(stdin_line, sizeof(stdin_line), stdin);
+    if (fgets(stdin_line, sizeof(stdin_line), stdin) == NULL) {
+        return 0;
+    }
     word = p = stdin_line;
     while (1) {
         if (*p == ' ' || *p == '\n') {
