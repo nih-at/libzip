@@ -15,7 +15,7 @@ const argument_type_t argument_type_seek_whence_instance = ARGUMENT_TYPE_ENUM("s
 
 argument_definition_t seek_arguments[] = {
     SOURCE_ARGUMENTS,
-    {"offset", "offset to seek to", argument_type_int64,ARGUMENT_REQUIRED, NULL },
+    {"offset", "offset to seek to", argument_type_int64,ARGUMENT_REQUIRED, {.u64 = 0} },
     {"whence", "seek whence", argument_type_seek_whence, ARGUMENT_OPTIONAL, { .i16 = SEEK_SET } }
 };
 /* clang-format on */
