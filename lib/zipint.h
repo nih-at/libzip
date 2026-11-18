@@ -247,6 +247,10 @@ extern const int _zip_err_details_count;
 #define ZIP_ER_DETAIL_NUL_IN_FILENAME 26                  /* E NUL byte in file name */
 #define ZIP_ER_DETAIL_MISSING_ZIP64_EF 27                 /* E missing Zip64 extra field */
 #define ZIP_ER_DETAIL_INVALID_DISK_NUMBER 28              /* E invalid disk number start */
+#define ZIP_ER_DETAIL_ENTRY_OVERLAPS_ENTRY 29             /* E local header or data overlaps another entry */
+#define ZIP_ER_DETAIL_ENTRY_GAP 30                        /* E there is a gap before this entry */
+#define ZIP_ER_DETAIL_CDIR_GAP 31                         /* G there is a gap between the last entry and the central directory */
+#define ZIP_ER_DETAIL_ENTRY_OVERLAPS_CDIR 32              /* E local header or data overlaps the central directory */
 
 
 /* directory entry: general purpose bit flags */

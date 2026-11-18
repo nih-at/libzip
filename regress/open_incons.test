@@ -89,12 +89,12 @@ opening 'incons-eocd-magic-bad.zzip' returned error Possibly truncated or corrup
 opening 'incons-file-count-high.zzip' returned error Zip archive inconsistent: central directory count of entries is incorrect
 opening 'incons-file-count-low.zzip' returned error Zip archive inconsistent: central directory count of entries is incorrect
 opening 'incons-file-count-overflow.zzip' returned error Zip archive inconsistent: invalid value in central directory
-opening 'incons-gap-before-cd.zzip' succeeded, 1 entries
+opening 'incons-gap-before-cd.zzip' returned error Zip archive inconsistent: there is a gap between the last entry and the central directory
 opening 'incons-gap-before-eocd.zzip' returned error Zip archive inconsistent: central directory overlaps EOCD, or there is space between them
 opening 'incons-gap-before-eocd-after-eocd64loc.zzip' returned error Zip archive inconsistent: central directory overlaps EOCD, or there is space between them
 opening 'incons-gap-before-eocd64.zzip' returned error Zip archive inconsistent: central directory overlaps EOCD, or there is space between them
 opening 'incons-gap-before-eocd64loc.zzip' returned error Zip archive inconsistent: EOCD64 overlaps EOCD, or there is space between them
-opening 'incons-gap-before-local.zzip' succeeded, 2 entries
+opening 'incons-gap-before-local.zzip' returned error Zip archive inconsistent: entry 1: there is a gap before this entry
 opening 'incons-local-compression-method.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-local-compsize-larger.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
 opening 'incons-local-compsize-smaller.zzip' returned error Zip archive inconsistent: entry 0: local and central headers do not match
@@ -111,5 +111,5 @@ opening 'incons-streamed.zzip' returned error Zip archive inconsistent: entry 0:
 opening 'incons-streamed-2.zzip' returned error Zip archive inconsistent: entry 0: local header and data descriptor do not match
 end-of-inline-data
 stderr
-45 errors
+47 errors
 end-of-inline-data

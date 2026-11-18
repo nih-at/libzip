@@ -1,0 +1,25 @@
+# zip_open: entries must cover the archive without gaps or overlaps
+program tryopen
+file incons-gap-entries.zzip incons-gap-entries.zip
+file incons-gap-start.zzip incons-gap-start.zip
+file incons-entry-overlaps-cd.zzip incons-entry-overlaps-cd.zip
+file incons-descriptor-overlap.zzip incons-descriptor-overlap.zip
+file descriptor.zzip descriptor.zip
+file descriptor-signature.zzip descriptor-signature.zip
+file descriptor-zip64.zzip descriptor-zip64.zip
+file descriptor-zip64-nosig.zzip descriptor-zip64-nosig.zip
+arguments -s -c incons-gap-entries.zzip incons-gap-start.zzip incons-entry-overlaps-cd.zzip incons-descriptor-overlap.zzip descriptor.zzip descriptor-signature.zzip descriptor-zip64.zzip descriptor-zip64-nosig.zzip
+return 1
+stdout
+opening 'incons-gap-entries.zzip' returned error Zip archive inconsistent: entry 1: there is a gap before this entry
+opening 'incons-gap-start.zzip' returned error Zip archive inconsistent: entry 0: there is a gap before this entry
+opening 'incons-entry-overlaps-cd.zzip' returned error Zip archive inconsistent: entry 0: local header or data overlaps the central directory
+opening 'incons-descriptor-overlap.zzip' returned error Zip archive inconsistent: entry 1: local header or data overlaps another entry
+opening 'descriptor.zzip' succeeded, 1 entries
+opening 'descriptor-signature.zzip' succeeded, 2 entries
+opening 'descriptor-zip64.zzip' succeeded, 1 entries
+opening 'descriptor-zip64-nosig.zzip' succeeded, 1 entries
+end-of-inline-data
+stderr
+4 errors
+end-of-inline-data
