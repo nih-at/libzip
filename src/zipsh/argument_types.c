@@ -36,6 +36,7 @@ static argument_type_enum_entry_t encryption_method_entries[] = {
 static argument_type_enum_entry_t encoding_entries[] = {
     {"guess", {.u32 = 0 } },
     {"UTF-8", {.u32 = ZIP_FL_ENC_UTF_8 } },
+    {"utf8", {.u32 = ZIP_FL_ENC_UTF_8 } },
     {"CP437", {.u32 = ZIP_FL_ENC_CP437 } },
     {"raw", {.u32 = ZIP_FL_ENC_RAW } },
     {NULL, {0}}

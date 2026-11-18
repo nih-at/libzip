@@ -1,30 +1,47 @@
-## TODOs
+# TODOs
 
-Overhaul TODO file to make it more usable for contributors:
+# Contributions Welcome
 
-- Indicate which tasks we consider good candidates for contributions, noting if details should be discussed with the maintainers before starting.
-- Categorize and prioritize tasks.
-- Remove completed or obsolete tasks.
+These items are considered good candidates for contributions.
+
+## Ready for Implementation
+
+These items are clearly defined and can be directly implemented.
+
+- Enable sanitizers in CI builds.
+
+- Add test to add/replace/remove files in torrentzip archives using `zipsh`.
+
+## Discussion Needed
+
+These items need clarifications, especially regarding implementation details and expected behavior. Open a discussion before implementing them.
+
+- Add test program for testing `zip_source_t` API using the `shell` library.
+
+
+# Internal Only
+
+These items are intended for internal use only and are not meant to be implemented by external contributors.
 
 ## zipsh
 
+- move add with data, replace to `zipsh_regress`
+- move count to `zipsh`
+- add/extract
+  - option to omit directory names in target file names
+  - option for recursive
+  - option to specify target filename (error if multiple source files specified)
+  - add: option to follow/omit symbolic links?
 - Create archive by default? Calling it with non-existing file doesn't give an error, which is counterintuitive.
-- Accept options after non-option arguments?
+- Don't accept options after non-option arguments. Adapt tests.
 - Documentation.
 - Add more commands.
-- enum argument types: match case insensitive? default case?
+- enum argument types: match case insensitive. default case as looks better
 - fnmatch(): error handling, honor case sensitivity from flags, use FNM_PATHNAME, FNM_PERIOD?
-- Add support for changing argument type depending on options (e.g. `cat -i`)?
+- Add support for changing argument type depending on options (e.g. `cat -i`)
 - Switch tests to `zipsh_regress`.
 
-## Tests
-
-### Infrastructure
-
-- Add test program for testing `zip_source_t` API using the `shell` library.
-- Switch existing one-off test programs to `zipsh_regress`, sources shell, or CMocka, where possible.
-
-### zipsh shortcomings
+### zipsh shortcomings for converting tests
 
 - add API
 - archive_flags
@@ -34,13 +51,16 @@ Overhaul TODO file to make it more usable for contributors:
 - fopen &c
 - zip archive hole, buffer
 
-### CI
+## Tests
 
-- Add CI build with sanitizers enabled.
+### Infrastructure
+
+- Switch existing one-off test programs to `zipsh_regress`, sources shell, or CMocka, where possible.
+
+
 
 ### Specific Tests
 
-- Add test to add/replace/remove files in torrentzip archives.
 
 ## Fuzzing
 
