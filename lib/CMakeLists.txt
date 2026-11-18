@@ -188,8 +188,9 @@ endif()
 
 if (BUILD_REGRESS)
 # For testing encryption, we replace zip_secure_random with zip_nonrandom.
-# Also, we expose internal symbols.
-add_library(zip_regress ${ZIP_SOURCES} ${PROJECT_SOURCE_DIR}/regress/programs/zip_nonrandom.c)
+# Also, we don't hide internal symbols and build as a static library.
+# This allows test programs to access all symbols.
+add_library(zip_regress STATIC ${ZIP_SOURCES} ${PROJECT_SOURCE_DIR}/regress/programs/zip_nonrandom.c)
 set_property(TARGET zip_regress PROPERTY C_VISIBILITY_PRESET default)
 target_compile_definitions(zip_regress PRIVATE REGRESSION_NO_RANDOM)
 target_link_libraries(zip_regress PRIVATE ${ZIP_LIBRARIES})
