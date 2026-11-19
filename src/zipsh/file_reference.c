@@ -82,7 +82,7 @@ file_matches_t *file_matches_create(invocation_t *invocation, error_message_t **
         zip_int64_t n = zip_get_num_entries(archive, 0);
 
         if (n < 0) {
-            *error = error_message_new("failed to get number of entries");
+            *error = error_message_new_format("can't get number of entries: %s", zip_strerror(archive));
             file_matches_free(file_matches);
             return NULL;
         }

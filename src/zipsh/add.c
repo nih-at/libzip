@@ -55,13 +55,13 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
     }
     if (source == NULL) {
         if (error_message) {
-            *error_message = error_message_new_format("failed to create zip source: '%s'", zip_strerror(archive));
+            *error_message = error_message_new_format("can't create zip source: '%s'", zip_strerror(archive));
         }
         return false;
     }
     if (zip_file_add(archive, invocation->arguments[ARGUMENT_NAME].string, source, get_flags(invocation)) < 0) {
         if (error_message) {
-            *error_message = error_message_new_format("failed to add file to archive: '%s'", zip_strerror(archive));
+            *error_message = error_message_new_format("can't add file to archive: '%s'", zip_strerror(archive));
         }
         zip_source_free(source);
         return false;

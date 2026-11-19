@@ -218,7 +218,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                 return true;
             }
 
-            // in_options = false; /* TODO: Or do we want to allow options after positional arguments? */
+            in_options = false;
 
             if (argument_index >= cmd->n_arguments) {
                 if (!complete) {

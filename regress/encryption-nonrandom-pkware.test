@@ -2,5 +2,5 @@ features HAVE_CRYPTO
 description encrypt file by Traditional PKWARE
 program zipsh_regress_nonrandom
 return 0
-arguments -c encrypt.zzip -- file_encryption -i 1 PKWARE no-entropy
+arguments -c encrypt.zzip file_encryption -i 1 PKWARE no-entropy
 file encrypt.zzip encrypt-none.zip encrypt-pkware-noentropy.zip

@@ -1,6 +1,6 @@
 # start read past EOF
 return 1
-arguments -c test.zip -- cat -i 0 10
+arguments -c test.zip cat -i 0 10
 file test.zip test.zip
 stderr
 can't open file at index 0: Invalid argument

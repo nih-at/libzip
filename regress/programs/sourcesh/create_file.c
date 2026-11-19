@@ -4,13 +4,13 @@
 
 #define ARGUMENT_FILENAME 1
 
-const argument_definition_t file_source_arguments[] = {
+const argument_definition_t create_file_arguments[] = {
     CREATE_SOURCE_ARGUMENTS,
     { "filename", "file to use", argument_type_filename }
 };
 /* clang-format on */
 
-bool file_source_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool create_file_implementation(invocation_t *invocation, error_message_t **error_message) {
     const char *source_name = invocation->arguments[ARGUMENT_SOURCE].string;
     const char *filename = invocation->arguments[ARGUMENT_FILENAME].string;
     zip_error_t zip_error;
@@ -24,7 +24,7 @@ bool file_source_implementation(invocation_t *invocation, error_message_t **erro
     zip_error_init(&zip_error);
     source = zip_source_file_create(filename, 0, 0, &zip_error);
     if (!source) {
-        *error_message = error_message_new_format("failed to create source from file '%s': %s", filename, zip_error_strerror(&zip_error));
+        *error_message = error_message_new_format("can't create file source from '%s': %s", filename, zip_error_strerror(&zip_error));
         zip_error_fini(&zip_error);
         return false;
     }
@@ -38,4 +38,4 @@ bool file_source_implementation(invocation_t *invocation, error_message_t **erro
     return true;
 }
 
-COMMAND_NO_OPTIONS(file_source, "Create a file source");
+COMMAND_NO_OPTIONS(create_file, "Create a file source");

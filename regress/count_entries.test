@@ -1,5 +1,5 @@
 # zip_open: count entries for archive with >65k entries
-arguments -c manyfiles.zip -- count
+arguments -c manyfiles.zip count
 return 0
 file manyfiles.zip manyfiles.zip
 stdout

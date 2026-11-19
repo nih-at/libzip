@@ -1,0 +1,21 @@
+# test seek bounds check in window source
+program sourcesh
+return 1
+file test.zip test.zip
+stdin
+create_file file test.zip
+create_window bounded file 10 10
+open bounded
+seek bounded 20
+seek bounded 5
+seek bounded -10 current
+create_window unbounded file 10
+seek unbounded 1000
+create_window invalid file 10 1000
+end-of-inline-data
+stderr
+*stdin*:4: seek: can't seek: Invalid argument
+*stdin*:6: seek: can't seek: Invalid argument
+*stdin*:8: seek: can't seek: Invalid argument
+*stdin*:9: create_window: can't create window source: Invalid argument
+end-of-inline-data

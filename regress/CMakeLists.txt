@@ -73,10 +73,11 @@ if (NIHTEST)
   set(SOURCESH_SOURCES
     programs/sourcesh/at_eof.c
     programs/sourcesh/begin_write.c
-    programs/sourcesh/buffer_source.c
     programs/sourcesh/close.c
     programs/sourcesh/commit_write.c
-    programs/sourcesh/file_source.c
+    programs/sourcesh/create_buffer.c
+    programs/sourcesh/create_file.c
+    programs/sourcesh/create_window.c
     programs/sourcesh/free.c
     programs/sourcesh/is_seekable.c
     programs/sourcesh/open.c
@@ -90,7 +91,6 @@ if (NIHTEST)
     programs/sourcesh/stat.c
     programs/sourcesh/tell.c
     programs/sourcesh/tell_write.c
-    programs/sourcesh/window_source.c
     programs/sourcesh/write.c
     programs/zipsh/echo.c
   )

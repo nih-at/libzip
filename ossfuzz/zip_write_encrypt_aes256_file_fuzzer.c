@@ -33,7 +33,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     struct zip_source *source = zip_source_buffer(archive, data, size, 0);
     if (source == NULL) {
-        fprintf(stderr, "failed to create source buffer. %s\n", zip_strerror(archive));
+        fprintf(stderr, "can't create buffer source: %s\n", zip_strerror(archive));
         zip_discard(archive);
         return -1;
     }

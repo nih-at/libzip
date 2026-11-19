@@ -2,5 +2,5 @@ features HAVE_CRYPTO
 description encrypt file without entropy, to make results repeatable; write CRC for long files.
 program zipsh_regress_nonrandom
 return 0
-arguments -c encrypt.zzip -- file_encryption -i 2 AES-256 no-entropy
+arguments -c encrypt.zzip file_encryption -i 2 AES-256 no-entropy
 file encrypt.zzip cm-default.zip cm-default-aes256-noentropy.zip

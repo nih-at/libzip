@@ -1,6 +1,6 @@
 # change method to unknown
 return 1
-arguments -c test.zip -- file_compression -i 0 unknown
+arguments -c test.zip file_compression -i 0 unknown
 file test.zip teststored.zip
 stderr
 invalid value for argument method: invalid compression_method 'unknown'
