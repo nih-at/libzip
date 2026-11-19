@@ -1,4 +1,4 @@
-#include "zipsh.h"
+#include "shell_util.h"
 
 /* clang-format off */
 static argument_type_enum_entry_t compression_method_entries[] = {

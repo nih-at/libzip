@@ -3,6 +3,8 @@
 
 #include "shell.h" /* Include first, so we include compat.h before zip.h. */
 
+#include "shell_util.h"
+
 #include <zip.h>
 
 extern zip_t *archive;
@@ -56,15 +58,8 @@ enum long_options {
 #define FILE_REFERENCE_ARGUMENTS \
     {"file|index", "file or index to operate on", argument_type_archive_filename, ARGUMENT_REQUIRED, {.string = NULL}}
 
-extern const argument_type_t argument_type_compression_method_instance;
-extern const argument_type_t argument_type_encryption_method_instance;
 extern const argument_type_t argument_type_archive_filename_instance;
-extern const argument_type_t argument_type_encoding_instance;
-
-#define argument_type_compression_method (&argument_type_compression_method_instance)
-#define argument_type_encryption_method (&argument_type_encryption_method_instance)
 #define argument_type_archive_filename (&argument_type_archive_filename_instance)
-#define argument_type_encoding (&argument_type_encoding_instance)
 
 struct file_reference {
     const char *name;
@@ -113,6 +108,5 @@ bool open_archive(invocation_t *invocation, error_message_t **error_message);
 bool close_archive(error_message_t **error_message);
 
 void print_comment(const char *comment, size_t comment_len, bool hex);
-const char* format_mtime(time_t mtime);
 
 #endif /* ZIPSH_H */

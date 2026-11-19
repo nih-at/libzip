@@ -16,16 +16,7 @@ bool stat_implementation(invocation_t *invocation, error_message_t **error_messa
         return false;
     }
 
-    /* TODO: Share code to print stat information with zipsh. */
-    if (st.valid & ZIP_STAT_NAME) {
-        printf("Name: %s\n", st.name);
-    }
-    if (st.valid & ZIP_STAT_INDEX) {
-        printf("Index: %" PRIu64 "\n", st.index);
-    }
-    if (st.valid & ZIP_STAT_SIZE) {
-        printf("Size: %" PRIu64 "\n", st.size);
-    }
+    print_stat(&st);
     return true;
 }
 

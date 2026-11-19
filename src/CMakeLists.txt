@@ -6,18 +6,23 @@ set(SHELL_SOURCES
   shell/complete.c
   shell/error_message.c
   shell/help.c
-  shell/hex.c
   shell/invocation.c
   shell/prompt.c
   shell/shell.c
   shell/words.c
 )
 
+set(SHELL_UTIL_SOURCES
+  shell_util/argument_types.c
+  shell_util/hex.c
+  shell_util/mtime.c
+  shell_util/stat.c
+)
+
 set(ZIPSH_SOURCES
   zipsh/add.c
   zipsh/add_directory.c
   zipsh/archive_comment.c
-  zipsh/argument_types.c
   zipsh/cat.c
   zipsh/delete.c
   zipsh/extra_field.c
@@ -88,6 +93,10 @@ if (TARGET compat)
   target_link_libraries(shell compat)
 endif()
 
+add_library(shell_util STATIC ${SHELL_UTIL_SOURCES})
+target_include_directories(shell_util PUBLIC shell_util)
+target_link_libraries(shell_util shell)
+
 foreach(PROGRAM zipcmp zipmerge ziptool)
   add_executable(${PROGRAM} ${PROGRAM}.c)
   target_link_libraries(${PROGRAM} zip)
@@ -107,11 +116,11 @@ target_sources(zipcmp PRIVATE diff_output.c)
 target_link_libraries(zipcmp ${FTS_LIB} ZLIB::ZLIB)
 
 add_library(zipsh_common STATIC ${ZIPSH_SOURCES})
-target_link_libraries(zipsh_common shell zip)
-target_include_directories(zipsh_common PUBLIC ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} shell zipsh ${PROJECT_BINARY_DIR})
+target_link_libraries(zipsh_common shell_util zip)
+target_include_directories(zipsh_common PUBLIC ${PROJECT_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR} shell shell_util zipsh ${PROJECT_BINARY_DIR})
 
 add_executable(zipsh zipsh/zipsh.c zipsh_commands.c)
-target_link_libraries(zipsh zipsh_common shell zip)
+target_link_libraries(zipsh zipsh_common shell_util zip)
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zipsh EXPORT ${PROJECT_NAME}-bin-targets DESTINATION bin)
 endif()

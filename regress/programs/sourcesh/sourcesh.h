@@ -2,7 +2,7 @@
 #define HAD_SOURCESH_H
 
 #include "shell.h"
-#include "zip.h"
+#include "shell_util.h"
 
 zip_source_t *find_opened_source(const char *name, error_message_t **error);
 bool is_source_opened(const char *name);

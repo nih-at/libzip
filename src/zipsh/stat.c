@@ -26,14 +26,8 @@ bool stat_execute(invocation_t *invocation, void *context, file_matches_t *match
     if (file_matches_get_index(matches, file_ref) > 0) {
         printf("\n");
     }
-    printf("Name: %s\n", stat.name);
-    printf("Index: %" PRIu64 "\n", file_ref->index);
-    printf("Size: %" PRIu64 "\n", stat.size);
-    printf("Compressed Size: %" PRIu64 "\n", stat.comp_size);
-    printf("Modification Time: %s\n", format_mtime(stat.mtime));
-    printf("CRC: %08x\n", (unsigned int)stat.crc);
-    printf("Compression Method: %s\n", enum_argument_to_string(argument_type_compression_method, (argument_t){.u64 = stat.comp_method}, true));
-    printf("Encryption Method: %s\n", enum_argument_to_string(argument_type_encryption_method, (argument_t){.u64 = stat.encryption_method}, true));
+
+    print_stat(&stat);
 
     return true;
 }
