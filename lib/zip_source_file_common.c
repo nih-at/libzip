@@ -36,10 +36,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 #include "zip_source_file.h"
 
 static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
+
+static void release_acl_source_fd(zip_source_file_context_t *ctx) {
+#ifdef HAVE_UNISTD_H
+    if (ctx->acl_source_fd >= 0) {
+        close(ctx->acl_source_fd);
+    }
+#endif
+    ctx->acl_source_fd = -1;
+}
 
 static void zip_source_file_stat_init(zip_source_file_stat_t *st) {
     st->size = 0;
@@ -242,6 +254,7 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
 
     case ZIP_SOURCE_COMMIT_WRITE: {
         zip_int64_t ret = ctx->ops->commit_write(ctx);
+        release_acl_source_fd(ctx);
         ctx->fout = NULL;
         if (ret == 0) {
             free(ctx->tmpname);
@@ -306,6 +319,7 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
 
     case ZIP_SOURCE_ROLLBACK_WRITE:
         ctx->ops->rollback_write(ctx);
+        release_acl_source_fd(ctx);
         ctx->fout = NULL;
         free(ctx->tmpname);
         ctx->tmpname = NULL;
@@ -399,6 +413,7 @@ zip_source_file_context_t *zip_source_file_context_new(zip_source_file_operation
     ctx->tmpname = NULL;
     ctx->fout = NULL;
     ctx->temp_output_created = false;
+    ctx->acl_source_fd = -1;
 
     ctx->ops = ops;
     ctx->ops_userdata = ops_userdata;
@@ -413,6 +428,7 @@ void zip_source_file_context_free(zip_source_file_context_t *ctx) {
     if (ctx->f && ctx->close_file) {
         ctx->ops->close(ctx);
     }
+    release_acl_source_fd(ctx);
     free(ctx->fname);
     zip_error_fini(&ctx->error);
     zip_error_fini(&ctx->stat_error);

@@ -64,6 +64,7 @@ struct zip_source_file_context {
     char *tmpname;
     void *fout;
     bool temp_output_created;
+    int acl_source_fd; /* original input kept through commit; -2 means duplication failed */
 
     zip_source_file_operations_t *ops;
     void *ops_userdata;
