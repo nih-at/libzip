@@ -43,8 +43,16 @@ struct winzip_aes {
     char *password;
     zip_uint16_t encryption_method;
 
+    zip_uint64_t header_length; /* length of salt + password verification value, precedes the ciphertext */
     zip_uint64_t data_length;
     zip_uint64_t current_position;
+
+    /* The HMAC can only be computed over the ciphertext in order, starting
+       from the beginning. hmac_position tracks how much of it has been fed
+       to the HMAC so far, contiguously from 0; if a seek ever creates a gap
+       that never gets filled in, verification is silently skipped instead
+       of failing, exactly as zip_source_crc.c does for the CRC. */
+    zip_uint64_t hmac_position;
 
     zip_winzip_aes_t *aes_ctx;
     bool hmac_verify_failed;
@@ -118,6 +126,12 @@ static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
         return -1;
     }
 
+    /* On ZIP_SOURCE_SUPPORTS_REOPEN, this runs again on a context that may
+       still hold a crypto context from the previous open (it's no longer
+       freed right after a successful verify, so seeking after that still
+       works); free it first to avoid leaking it. */
+    _zip_winzip_aes_free(ctx->aes_ctx);
+
     if ((ctx->aes_ctx = _zip_winzip_aes_new((zip_uint8_t *)ctx->password, strlen(ctx->password), header, ctx->encryption_method, password_verification, &ctx->error)) == NULL) {
         return -1;
     }
@@ -127,6 +141,7 @@ static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
         zip_error_set(&ctx->error, ZIP_ER_WRONGPASSWD, 0);
         return -1;
     }
+    ctx->header_length = headerlen;
     return 0;
 }
 
@@ -145,13 +160,24 @@ static void verify_hmac(zip_source_t *src, struct winzip_aes *ctx) {
         return;
     }
 
+    if (ctx->hmac_position != ctx->data_length) {
+        /* The ciphertext wasn't read contiguously from the start (the caller
+           seeked around), so there's no way to compute the HMAC over the
+           whole file. Silently skip verification rather than fail, exactly
+           as zip_source_crc.c does for the CRC in the same situation. */
+        return;
+    }
+
     if (!_zip_winzip_aes_finish(ctx->aes_ctx, computed)) {
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
         ctx->hmac_verify_failed = true;
         return;
     }
-    _zip_winzip_aes_free(ctx->aes_ctx);
-    ctx->aes_ctx = NULL;
+
+    /* ctx->aes_ctx is kept alive (freed only in winzip_aes_free()), since the
+       source may still be seeked and read from after this point; only the
+       HMAC inside it is now spent and must never be fed more data, which
+       ctx->hmac_verified guards against in the ZIP_SOURCE_READ case. */
 
     if (memcmp(from_file, computed, HMAC_LENGTH) != 0) {
         zip_error_set(&ctx->error, ZIP_ER_CRC, 0);
@@ -176,6 +202,7 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
     case ZIP_SOURCE_OPEN:
         ctx->hmac_verify_failed = false;
         ctx->hmac_verified = false;
+        ctx->hmac_position = 0;
         if (decrypt_header(src, ctx) < 0) {
             return -1;
         }
@@ -186,6 +213,8 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
         len = ZIP_MIN(len, ctx->data_length - ctx->current_position);
 
         if (len > 0) {
+            zip_uint64_t hmac_skip;
+
             if ((n = zip_source_read(src, data, len)) < 0) {
                 zip_error_set_from_source(&ctx->error, src);
                 return -1;
@@ -196,12 +225,26 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
                 return -1;
             }
 
-            ctx->current_position += (zip_uint64_t)n;
+            /* Feed only the part of this read that's contiguous with what's
+               already been authenticated, exactly as zip_source_crc.c does
+               for the CRC; the rest is still decrypted, just not verified.
+               Once verify_hmac() has run once, the HMAC is spent (finalized
+               or given up on) and must never be fed again, regardless of
+               position - hence the hmac_verified check. */
+            if (!ctx->hmac_verified && ctx->current_position <= ctx->hmac_position && ctx->hmac_position < ctx->current_position + (zip_uint64_t)n) {
+                hmac_skip = ctx->hmac_position - ctx->current_position;
+                ctx->hmac_position = ctx->current_position + (zip_uint64_t)n;
+            }
+            else {
+                hmac_skip = (zip_uint64_t)n;
+            }
 
-            if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
+            if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n, hmac_skip)) {
                 zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
                 return -1;
             }
+
+            ctx->current_position += (zip_uint64_t)n;
         }
         else {
             n = 0;
@@ -243,8 +286,28 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
         return 0;
     }
 
+    case ZIP_SOURCE_SEEK: {
+        zip_int64_t new_position = zip_source_seek_compute_offset(ctx->current_position, ctx->data_length, data, len, &ctx->error);
+
+        if (new_position < 0) {
+            return -1;
+        }
+
+        if (zip_source_seek(src, (zip_int64_t)(ctx->header_length + (zip_uint64_t)new_position), SEEK_SET) < 0 || !_zip_winzip_aes_seek(ctx->aes_ctx, (zip_uint64_t)new_position)) {
+            zip_error_set_from_source(&ctx->error, src);
+            return -1;
+        }
+
+        ctx->current_position = (zip_uint64_t)new_position;
+
+        return 0;
+    }
+
+    case ZIP_SOURCE_TELL:
+        return (zip_int64_t)ctx->current_position;
+
     case ZIP_SOURCE_SUPPORTS:
-        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
+        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SUPPORTS_REOPEN, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, -1);
 
     case ZIP_SOURCE_ERROR:
         return zip_error_to_data(&ctx->error, data, len);
@@ -287,6 +350,8 @@ static struct winzip_aes *winzip_aes_new(zip_uint16_t encryption_method, const c
     }
 
     ctx->encryption_method = encryption_method;
+    ctx->header_length = 0;
+    ctx->hmac_position = 0;
     ctx->aes_ctx = NULL;
     ctx->hmac_verify_failed = false;
     ctx->hmac_verified = false;
