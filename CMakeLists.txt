@@ -27,6 +27,8 @@ option(ENABLE_FDOPEN "Enable zip_fdopen, which is not allowed in Microsoft CRT s
 
 option(ENABLE_COVERAGE "Enable code coverage reporting of test suite" OFF)
 
+option(ENABLE_FBOUNDS_SAFETY "Build zip_buffer.c with Clang -fbounds-safety (requires a Clang that supports it)" OFF)
+
 option(LIMIT_LZMA_WINDOW "Set limit for LZMA window size. Without a limit, LZMA compression can use up to 4GiB of memory" OFF)
 
 option(REQUIRE_ALL_TESTS "Require all test dependencies to be available" OFF)

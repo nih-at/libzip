@@ -211,6 +211,14 @@ if (ENABLE_COVERAGE)
 endif()
 
 
+# Optional -fbounds-safety, scoped to zip_buffer.c only. The annotations do
+# not change the ABI, and expand to nothing in all other builds.
+if(ENABLE_FBOUNDS_SAFETY)
+  set_source_files_properties(zip_buffer.c PROPERTIES
+    COMPILE_DEFINITIONS ZIP_SUPPORT_FBOUNDS_SAFETY
+    COMPILE_OPTIONS -fbounds-safety)
+endif()
+
 if(LIBZIP_DO_INSTALL)
   install(TARGETS zip
     EXPORT ${PROJECT_NAME}-targets
