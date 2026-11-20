@@ -442,6 +442,13 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
             grown = true;
         }
 
+        if (left < CDENTRYSIZE) {
+            zip_error_set(error, ZIP_ER_NOZIP, 0);
+            _zip_cdir_free(cd);
+            _zip_buffer_free(cd_buffer);
+            return true;
+        }
+
         if ((cd->entry[i].orig = _zip_dirent_new()) == NULL || (entry_size = _zip_dirent_read(cd->entry[i].orig, za->src, cd_buffer, false, cd->is_zip64, 0, za->open_flags & ZIP_CHECKCONS, error)) < 0) {
             if (zip_error_code_zip(error) == ZIP_ER_INCONS) {
                 zip_error_set(error, ZIP_ER_INCONS, ADD_INDEX_TO_DETAIL(zip_error_code_system(error), i));
@@ -449,6 +456,12 @@ static bool _zip_read_cdir(zip_t *za, zip_buffer_t *buffer, zip_uint64_t buf_off
             else if (grown && zip_error_code_zip(error) == ZIP_ER_NOZIP) {
                 zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, i));
             }
+            _zip_cdir_free(cd);
+            _zip_buffer_free(cd_buffer);
+            return true;
+        }
+        if ((zip_uint64_t)entry_size > left) {
+            zip_error_set(error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_VARIABLE_SIZE_OVERFLOW, i));
             _zip_cdir_free(cd);
             _zip_buffer_free(cd_buffer);
             return true;

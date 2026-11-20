@@ -310,11 +310,11 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
             return -1;
         }
 
-        if (new_offset + ctx->start < ctx->start) {
+        if (ctx->start > (zip_uint64_t)ZIP_INT64_MAX || (zip_uint64_t)new_offset > (zip_uint64_t)ZIP_INT64_MAX - ctx->start) {
             zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
             return -1;
         }
-        new_offset += ctx->start;
+        new_offset += (zip_int64_t)ctx->start;
 
         if (!ctx->end_valid) {
             if (zip_source_seek(src, new_offset, SEEK_SET) < 0) {
