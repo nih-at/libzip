@@ -1,0 +1,9 @@
+# The compressed data of this WinZip AES entry ends more than one buffer before
+# the end of its encrypted data; its HMAC is correct, so it reads fine.
+features HAVE_CRYPTO
+return 0
+arguments trailing-data-aes256.zzip  set_password 1234  cat 0
+file trailing-data-aes256.zzip trailing-data-aes256.zip
+stdout
+The quick brown fox jumps over the lazy dog
+end-of-inline-data

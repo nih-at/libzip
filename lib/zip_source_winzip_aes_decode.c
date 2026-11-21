@@ -53,7 +53,9 @@ struct winzip_aes {
 };
 
 
+static zip_int64_t decrypt_data(zip_source_t *src, struct winzip_aes *ctx, void *data, zip_uint64_t len);
 static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx);
+static int decrypt_rest(zip_source_t *src, struct winzip_aes *ctx);
 static void winzip_aes_free(struct winzip_aes *);
 static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip_source_cmd_t cmd);
 static struct winzip_aes *winzip_aes_new(zip_uint16_t encryption_method, const char *password, zip_error_t *error);
@@ -101,6 +103,30 @@ zip_source_t *zip_source_winzip_aes_decode(zip_t *za, zip_source_t *src, zip_uin
 }
 
 
+static zip_int64_t decrypt_data(zip_source_t *src, struct winzip_aes *ctx, void *data, zip_uint64_t len) {
+    zip_int64_t n;
+
+    if ((n = zip_source_read(src, data, len)) < 0) {
+        zip_error_set_from_source(&ctx->error, src);
+        return -1;
+    }
+
+    if (n == 0) {
+        zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
+        return -1;
+    }
+
+    ctx->current_position += (zip_uint64_t)n;
+
+    if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
+        zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+        return -1;
+    }
+
+    return n;
+}
+
+
 static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
     zip_uint8_t header[WINZIP_AES_MAX_HEADER_LENGTH];
     zip_uint8_t password_verification[WINZIP_AES_PASSWORD_VERIFY_LENGTH];
@@ -127,6 +153,31 @@ static int decrypt_header(zip_source_t *src, struct winzip_aes *ctx) {
         zip_error_set(&ctx->error, ZIP_ER_WRONGPASSWD, 0);
         return -1;
     }
+    return 0;
+}
+
+
+/* Read the data not read by the caller, so its HMAC can be computed. */
+static int decrypt_rest(zip_source_t *src, struct winzip_aes *ctx) {
+    DEFINE_BYTE_ARRAY(buffer, BUFSIZE);
+
+    if (ctx->current_position == ctx->data_length) {
+        return 0;
+    }
+
+    if (!byte_array_init(buffer, BUFSIZE)) {
+        zip_error_set(&ctx->error, ZIP_ER_MEMORY, 0);
+        return -1;
+    }
+
+    while (ctx->current_position < ctx->data_length) {
+        if (decrypt_data(src, ctx, buffer, ZIP_MIN(BUFSIZE, ctx->data_length - ctx->current_position)) < 0) {
+            byte_array_fini(buffer);
+            return -1;
+        }
+    }
+
+    byte_array_fini(buffer);
     return 0;
 }
 
@@ -186,20 +237,7 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
         len = ZIP_MIN(len, ctx->data_length - ctx->current_position);
 
         if (len > 0) {
-            if ((n = zip_source_read(src, data, len)) < 0) {
-                zip_error_set_from_source(&ctx->error, src);
-                return -1;
-            }
-
-            if (n == 0) {
-                zip_error_set(&ctx->error, ZIP_ER_EOF, 0);
-                return -1;
-            }
-
-            ctx->current_position += (zip_uint64_t)n;
-
-            if (!_zip_winzip_aes_decrypt(ctx->aes_ctx, (zip_uint8_t *)data, (zip_uint64_t)n)) {
-                zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
+            if ((n = decrypt_data(src, ctx, data, len)) < 0) {
                 return -1;
             }
         }
@@ -219,8 +257,11 @@ static zip_int64_t winzip_aes_decrypt(zip_source_t *src, void *ud, void *data, z
         }
 
     case ZIP_SOURCE_CLOSE:
-        /* For empty files, we should verify the HMAC even if no data has been read. */
-        if (ctx->current_position == ctx->data_length) {
+        /* Verify the HMAC even if the caller didn't read all data: for empty files, if the compressed data ended before the encrypted data, or if the caller stopped reading early. */
+        if (!ctx->hmac_verified) {
+            if (decrypt_rest(src, ctx) < 0) {
+                return -1;
+            }
             verify_hmac(src, ctx);
         }
         return ctx->hmac_verify_failed ? -1 : 0;
