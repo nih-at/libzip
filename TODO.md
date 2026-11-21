@@ -16,7 +16,12 @@ These items are clearly defined and can be directly implemented.
 
 These items need clarifications, especially regarding implementation details and expected behavior. Open a discussion before implementing them.
 
-- Add test program for testing `zip_source_t` API using the `shell` library.
+
+# Not Seeking Contributions
+
+These are topics we are currently discouraging contributions for.
+
+- Arithmetics overflow checks: we are in the process of centralizing overflow checks using macros. Any work on this will likely become obsolete.
 
 
 # Internal Only
@@ -25,18 +30,15 @@ These items are intended for internal use only and are not meant to be implement
 
 ## zipsh
 
-- move add with data, replace to `zipsh_regress`
-- move count to `zipsh`
 - add/extract
   - option to omit directory names in target file names
   - option for recursive
   - option to specify target filename (error if multiple source files specified)
   - add: option to follow/omit symbolic links?
+  - option to preserve timestamps, default? only for extract?
 - Create archive by default? Calling it with non-existing file doesn't give an error, which is counterintuitive.
-- Don't accept options after non-option arguments. Adapt tests.
 - Documentation.
 - Add more commands.
-- enum argument types: match case insensitive. default case as looks better
 - fnmatch(): error handling, honor case sensitivity from flags, use FNM_PATHNAME, FNM_PERIOD?
 - Add support for changing argument type depending on options (e.g. `cat -i`)
 - Switch tests to `zipsh_regress`.
@@ -50,6 +52,19 @@ These items are intended for internal use only and are not meant to be implement
 - mtime/dostime
 - fopen &c
 - zip archive hole, buffer
+
+### sourcesh
+
+#### Missing Commands
+
+- create_zip
+- begin_write_cloning
+- create_compress
+- create_decompress
+- create_encrypt
+- create_decrypt
+- create_buffer: attributes, fragments
+
 
 ## Tests
 

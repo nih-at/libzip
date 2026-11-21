@@ -199,7 +199,7 @@ completions_t *complete_argument(const argument_type_t *type, const char *str, s
 bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
     argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
     for (size_t i = 0; entries[i].string != NULL; i++) {
-        if (strcmp(entries[i].string, str) == 0) {
+        if (strcasecmp(entries[i].string, str) == 0) {
             *out = entries[i].value;
             return true;
         }
@@ -213,7 +213,7 @@ bool convert_enum(const argument_type_t *type, argument_t *out, const char *str,
 void complete_enum(completions_t *completions, const argument_type_t *type, const char *str) {
     argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
     for (size_t i = 0; entries[i].string != NULL; i++) {
-        if (strncmp(entries[i].string, str, strlen(str)) == 0) {
+        if (strncasecmp(entries[i].string, str, strlen(str)) == 0) {
             completions_add(completions, entries[i].string);
         }
     }

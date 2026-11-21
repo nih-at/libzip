@@ -41,9 +41,11 @@ if (NIHTEST)
   )
 
   set(ZIPSH_REGRESS_SOURCES
+    programs/zipsh/add_data.c
     programs/zipsh/add_nul.c
-    programs/zipsh/count.c
     programs/zipsh/echo.c
+    programs/zipsh/lookup.c
+    programs/zipsh/replace_data.c
     programs/zipsh/source_nul.c
     programs/zipsh/zipsh_regress.c
   )

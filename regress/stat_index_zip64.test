@@ -1,16 +1,14 @@
 # stat file in zip64 zip file
-program ziptool_regress
-arguments bigzero stat 0
+arguments -c bigzero stat -i 0
 file bigzero bigzero.zip
 return 0
 stdout
-name: 'bigzero'
-index: '0'
-size: '4294967296'
-compressed size: '4168157'
-mtime: 'Thu Mar 15 2012 14:54:06'
-crc: 'd202ef8d'
-compression method: '8'
-encryption method: '0'
-
+Name: bigzero
+Index: 0
+Size: 4294967296
+Compressed Size: 4168157
+Modification Time: Thu Mar 15 2012 14:54:06
+CRC: d202ef8d
+Compression Method: deflate
+Encryption Method: none
 end-of-inline-data

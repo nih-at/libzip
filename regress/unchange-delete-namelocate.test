@@ -1,8 +1,12 @@
 # namelocate after a file has been deleted and unchanged should succeed.
-program ziptool_regress
-arguments test2.zip delete  0  unchange 0  name_locate testfile.txt 0
+arguments test2.zip
 return 0
+stdin
+delete -i 0
+unchange -i 0
+lookup testfile.txt
+end-of-inline-data
 file test2.zip test2.zip
 stdout
-name 'testfile.txt' using flags '0' found at index 0
+0: testfile.txt
 end-of-inline-data

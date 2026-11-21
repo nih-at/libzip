@@ -24,6 +24,7 @@ set(ZIPSH_SOURCES
   zipsh/add_directory.c
   zipsh/archive_comment.c
   zipsh/cat.c
+  zipsh/count.c
   zipsh/delete.c
   zipsh/extra_field.c
   zipsh/extra_field_add.c
@@ -42,6 +43,7 @@ set(ZIPSH_SOURCES
   zipsh/set_default_password.c
   zipsh/standard_flags.c
   zipsh/stat.c
+  zipsh/unchange.c
   zipsh/util.c
   CACHE INTERNAL "ZIPSH_SOURCES"
 )
