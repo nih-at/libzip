@@ -21,7 +21,7 @@ option_definition_t add_data_options[] = {
 };
 /* clang-format on */
 
-bool add_data_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool add_data_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source;
     const char *input = invocation->arguments[ARGUMENT_DATA].string;
     zip_uint8_t *data = NULL;
@@ -36,7 +36,7 @@ bool add_data_implementation(invocation_t *invocation, error_message_t **error_m
     }
     else {
         if ((data = (zip_uint8_t *)malloc(length)) == NULL) {
-            *error_message = error_message_new_format("can't allocate memory");
+            error_message_set_format(error_message, "can't allocate memory");
             return false;
         }
         memcpy(data, input, length);
@@ -46,14 +46,14 @@ bool add_data_implementation(invocation_t *invocation, error_message_t **error_m
 
     if (source == NULL) {
         if (error_message) {
-            *error_message = error_message_new_format("can't create zip source: '%s'", zip_strerror(archive));
+            error_message_set_format(error_message, "can't create zip source: '%s'", zip_strerror(archive));
         }
         free(data);
         return false;
     }
     if (zip_file_add(archive, invocation->arguments[ARGUMENT_NAME].string, source, get_flags(invocation)) < 0) {
         if (error_message) {
-            *error_message = error_message_new_format("can't add file to archive: '%s'", zip_strerror(archive));
+            error_message_set_format(error_message, "can't add file to archive: '%s'", zip_strerror(archive));
         }
         zip_source_free(source);
         return false;

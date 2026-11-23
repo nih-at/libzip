@@ -9,13 +9,13 @@ argument_definition_t at_eof_arguments[] = {
 };
 /* clang-format on */
 
-bool at_eof_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool at_eof_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
     int ret;
 
 
     if ((ret = zip_source_at_eof(source)) < 0) {
-        *error_message = error_message_new_format("can't check EOF in source: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't check EOF in source: %s", zip_error_strerror(zip_source_error(source)));
         return false;
     }
 

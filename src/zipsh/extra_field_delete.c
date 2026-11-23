@@ -25,7 +25,7 @@ struct context {
 typedef struct context context_t;
 /* clang-format on */
 
-bool extra_field_delete_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
+bool extra_field_delete_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
 
     if ((context->options = extra_field_options_create(invocation, error_message)) == NULL) {
@@ -35,7 +35,7 @@ bool extra_field_delete_setup(invocation_t *invocation, void *context_v, file_ma
     return true;
 }
 
-bool extra_field_delete_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool extra_field_delete_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
     int ret;
 
@@ -46,14 +46,14 @@ bool extra_field_delete_execute(invocation_t *invocation, void *context_v, file_
         ret = zip_file_extra_field_delete(archive, file_ref->index, invocation->arguments[ARGUMENT_INDEX].u16, context->options->flags);
     }
     if (ret < 0) {
-        *error_message = error_message_new_format("can't delete extra field for %s: %s", file_ref->error_info, zip_strerror(archive));
+        error_message_set_format(error_message, "can't delete extra field for %s: %s", file_ref->error_info, zip_strerror(archive));
         return false;
     }
 
     return true;
 }
 
-bool extra_field_delete_cleanup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
+bool extra_field_delete_cleanup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
 
     extra_field_options_free(context->options);
@@ -61,7 +61,7 @@ bool extra_field_delete_cleanup(invocation_t *invocation, void *context_v, file_
     return true;
 }
 
-bool extra_field_delete_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool extra_field_delete_implementation(invocation_t *invocation, error_message_t *error_message) {
     context_t context;
     file_reference_command_t command = {extra_field_delete_setup, extra_field_delete_execute, extra_field_delete_cleanup, &context};
     return file_reference_command_execute(&command, invocation, error_message);

@@ -2,13 +2,13 @@
 
 #include <stdlib.h>
 
-extra_field_options_t *extra_field_options_create(invocation_t *invocation, error_message_t **error_message) {
+extra_field_options_t *extra_field_options_create(invocation_t *invocation, error_message_t *error_message) {
     extra_field_options_t *options;
     argument_t *arg;
 
     options = malloc(sizeof(extra_field_options_t));
     if (!options) {
-        *error_message = error_message_new("Memory allocation failed");
+        error_message_set(error_message, "Memory allocation failed");
         return NULL;
     }
 

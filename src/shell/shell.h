@@ -11,6 +11,7 @@ struct error_message {
 };
 
 typedef struct error_message error_message_t;
+#define ERROR_MESSAGE_INIT {NULL, false}
 
 struct completions {
     char *prefix;
@@ -65,7 +66,7 @@ typedef struct argument_type argument_type_t;
 
 struct argument_type {
     char *name;
-    bool (*convert)(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
+    bool (*convert)(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message);
     void (*complete)(completions_t *completions, const argument_type_t *type, const char *str);
     void (*free_ud)(argument_t ud);
     argument_t ud;
@@ -106,7 +107,7 @@ struct command {
     size_t n_options;
     const argument_definition_t *arguments;
     size_t n_arguments;
-    bool (*function)(invocation_t *invocation, error_message_t **error_message);
+    bool (*function)(invocation_t *invocation, error_message_t *error_message);
 };
 
 typedef struct command command_t;
@@ -159,7 +160,7 @@ typedef struct argument_type_enum_entry argument_type_enum_entry_t;
 
 #define ARGUMENT_TYPE_ENUM(name, entries) { name, convert_enum, complete_enum, NULL, {.pointer=entries} }
 
-bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
+bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message);
 void complete_enum(completions_t *completions, const argument_type_t *type, const char *str);
 
 
@@ -171,20 +172,21 @@ void complete_enum(completions_t *completions, const argument_type_t *type, cons
 extern command_t *commands[];
 extern size_t n_commands;
 
-bool execute_command(const command_t *cmd, int argc, char **argv, error_message_t **error_message);
+bool execute_command(const command_t *cmd, int argc, char **argv, error_message_t *error_message);
 const command_t *find_command(const char *name);
 
-bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message);
+bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message);
 completions_t *complete_argument(const argument_type_t *type, const char *str, size_t prefix_length);
 option_definition_t *command_find_short_option(const command_t *cmd, char short_name);
 option_definition_t *command_find_long_option(const command_t *cmd, const char *long_name, size_t long_name_len);
 
-error_message_t *error_message_new(const char *message);
-error_message_t *error_message_new_format(const char *fmt, ...) PRINTF_LIKE(1, 2);
-const char *error_message_get(error_message_t *error);
-void error_message_free(error_message_t *error);
+void error_message_init(error_message_t *error);
+void error_message_set(error_message_t *error, const char *message);
+void error_message_set_format(error_message_t *error, const char *fmt, ...) PRINTF_LIKE(2, 3);
+const char *error_message_get(const error_message_t *error);
+void error_message_fini(error_message_t *error);
 
-invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size_t argc, char **argv, error_message_t **error_message, completions_t **completions);
+invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size_t argc, char **argv, error_message_t *error_message, completions_t **completions);
 void invocation_free(invocation_t *invocation);
 bool invocation_add_option(invocation_t *invocation, int id, argument_t value);
 bool invocation_add_argument(invocation_t *invocation, argument_t value);
@@ -194,11 +196,11 @@ bool shell_loop(const char *script_filename);
 
 words_t *words_new(void);
 void words_free(words_t *words);
-bool words_parse(words_t *words, const char *line, error_message_t **error_message);
-bool words_parse_partial(words_t *words, const char *line, const char *end, error_message_t **error_message);
+bool words_parse(words_t *words, const char *line, error_message_t *error_message);
+bool words_parse_partial(words_t *words, const char *line, const char *end, error_message_t *error_message);
 void words_clear(words_t *words);
 
-bool print_command_help(const command_t *cmd, const char *prog_name, error_message_t **error_message);
+bool print_command_help(const command_t *cmd, const char *prog_name, error_message_t *error_message);
 
 const char* enum_argument_to_string(const argument_type_t *type, argument_t value, bool string_for_unknown);
 
@@ -215,8 +217,8 @@ const char* enum_argument_to_string(const argument_type_t *type, argument_t valu
 struct shell_command {
     command_t command;
     int shell_argument_index;
-    bool (*setup)(invocation_t *, error_message_t **);
-    bool (*cleanup)(bool ok, error_message_t **);
+    bool (*setup)(invocation_t *, error_message_t *);
+    bool (*cleanup)(bool ok, error_message_t *);
 };
 
 typedef struct shell_command shell_command_t;

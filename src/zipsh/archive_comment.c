@@ -43,7 +43,7 @@ void print_comment(const char *comment, size_t comment_len, bool hex) {
     }
 }
 
-bool archive_comment_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool archive_comment_implementation(invocation_t *invocation, error_message_t *error_message) {
     bool result = true;
     bool hex = invocation_get_option(invocation, 'h');
     const char *comment = invocation->arguments[ARGUMENT_COMMENT].string;
@@ -52,7 +52,7 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
         int comment_len;
         const char *existing_comment = zip_get_archive_comment(archive, &comment_len, get_flags(invocation));
         if (existing_comment == NULL) {
-            *error_message = error_message_new_format("can't get archive comment: %s", zip_strerror(archive));
+            error_message_set_format(error_message, "can't get archive comment: %s", zip_strerror(archive));
             return false;
         }
 
@@ -65,18 +65,18 @@ bool archive_comment_implementation(invocation_t *invocation, error_message_t **
         if (hex) {
             decoded_comment = (char *)decode_hex(comment, error_message);
             if (!decoded_comment) {
-                *error_message = error_message_new_format("invalid hex comment");
+                error_message_set(error_message, "invalid hex comment");
                 return false;
             }
             comment = decoded_comment;
             comment_length /= 2;
         }
         if (comment_length > ZIP_UINT16_MAX) {
-            *error_message = error_message_new_format("comment too long");
+            error_message_set(error_message, "comment too long");
             return false;
         }
         if (zip_set_archive_comment(archive, comment, (zip_uint16_t)comment_length) < 0) {
-            *error_message = error_message_new_format("can't set archive comment: %s", zip_strerror(archive));
+            error_message_set_format(error_message, "can't set archive comment: %s", zip_strerror(archive));
             result = false;
         }
         if (decoded_comment) {

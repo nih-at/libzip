@@ -17,14 +17,14 @@ int get_archive_flags(invocation_t *invocation) {
     return flags;
 }
 
-bool open_archive(invocation_t *invocation, error_message_t **error_message) {
+bool open_archive(invocation_t *invocation, error_message_t *error_message) {
     int err;
 
     archive = zip_open(archive_name, get_archive_flags(invocation), &err);
     if (archive == NULL) {
         zip_error_t error;
         zip_error_init_with_code(&error, err);
-        *error_message = error_message_new_format("can't open zip archive '%s': %s", archive_name, zip_error_strerror(&error));
+        error_message_set_format(error_message, "can't open zip archive '%s': %s", archive_name, zip_error_strerror(&error));
         zip_error_fini(&error);
         return false;
     }
@@ -32,10 +32,10 @@ bool open_archive(invocation_t *invocation, error_message_t **error_message) {
     return true;
 }
 
-bool close_archive(error_message_t **error_message) {
+bool close_archive(error_message_t *error_message) {
     if (archive != NULL) {
         if (zip_close(archive) < 0) {
-            *error_message = error_message_new_format("can't close zip archive '%s': %s", archive_name, zip_strerror(archive));
+            error_message_set_format(error_message, "can't close zip archive '%s': %s", archive_name, zip_strerror(archive));
             zip_discard(archive);
             return false;
         }

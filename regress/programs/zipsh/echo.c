@@ -6,7 +6,7 @@ argument_definition_t echo_arguments[] = {
 };
 /* clang-format on */
 
-bool echo_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool echo_implementation(invocation_t *invocation, error_message_t *error_message) {
     for (size_t i = 0; i < invocation->n_arguments; i++) {
         if (i > 0) {
             printf(" ");

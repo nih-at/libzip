@@ -15,17 +15,17 @@ option_definition_t add_nul_options[] = {
 };
 /* clang-format on */
 
-bool add_nul_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool add_nul_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source;
     zip_int64_t len = invocation->arguments[ARGUMENT_LENGTH].i64;
     source = source_nul(archive, len);
     if (source == NULL) {
-        *error_message = error_message_new_format("can't create NUL source: %s", zip_strerror(archive));
+        error_message_set_format(error_message, "can't create NUL source: %s", zip_strerror(archive));
         return false;
     }
 
     if (zip_file_add(archive, invocation->arguments[ARGUMENT_NAME].string, source, 0) < 0) {
-        *error_message = error_message_new_format("can't add NUL source to archive: %s", zip_strerror(archive));
+        error_message_set_format(error_message, "can't add NUL source to archive: %s", zip_strerror(archive));
         zip_source_free(source);
         return false;
     }

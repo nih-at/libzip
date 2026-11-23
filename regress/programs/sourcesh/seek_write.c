@@ -11,11 +11,11 @@ argument_definition_t seek_write_arguments[] = {
 };
 /* clang-format on */
 
-bool seek_write_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool seek_write_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
 
     if (zip_source_seek_write(source, invocation->arguments[ARGUMENT_OFFSET].i64, invocation->arguments[ARGUMENT_WHENCE].i16) < 0) {
-        *error_message = error_message_new_format("can't seek: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't seek: %s", zip_error_strerror(zip_source_error(source)));
         return false;
     }
 

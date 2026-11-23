@@ -40,8 +40,8 @@
 
 #include "compat/src_compat.h"
 
-bool exit_implementation(invocation_t *invocation, error_message_t **error_message) {
-    *error_message = error_message_new("internal error: exit command function should not be called");
+bool exit_implementation(invocation_t *invocation, error_message_t *error_message) {
+    error_message_set(error_message, "internal error: exit command function should not be called");
     return false;
 }
 
@@ -49,41 +49,37 @@ COMMAND_NO_ARGUMENTS_OR_OPTIONS(exit, "exit the shell");
 
 words_t *words = NULL;
 
-command_status_t execute_line(const char *line, error_message_t **error_message) {
+command_status_t execute_line(const char *line, error_message_t *error_message) {
     command_status_t status = COMMAND_STATUS_OK;
+    error_message_t local_error_message = ERROR_MESSAGE_INIT;
 
     if (!words_parse(words, line, error_message)) {
         return COMMAND_STATUS_ERROR;
     }
 
     if (words->n_words > 0) {
-        error_message_t *local_error_message = NULL;
         const command_t *cmd = find_command(words->words[0]);
         if (cmd == NULL) {
-            if (error_message) {
-                *error_message = error_message_new_format("unknown command '%s'", words->words[0]);
-            }
+            error_message_set_format(error_message, "unknown command '%s'", words->words[0]);
             status = COMMAND_STATUS_ERROR;
         }
         else if (cmd->function == exit_implementation) {
             status = COMMAND_STATUS_EXIT;
         }
         else if (!execute_command(cmd, (int)words->n_words, words->words, &local_error_message)) {
-            if (error_message) {
-                *error_message = error_message_new_format("%s: %s", words->words[0], error_message_get(local_error_message));
-                error_message_free(local_error_message);
-            }
+            error_message_set_format(error_message, "%s: %s", words->words[0], error_message_get(&local_error_message));
             status = COMMAND_STATUS_ERROR;
         }
     }
 
+    error_message_fini(&local_error_message);
     return status;
 }
 
 
 bool execute_lines(const char *filename, FILE *input) {
     size_t line_number = 0;
-    error_message_t *error_message = NULL;
+    error_message_t error_message = ERROR_MESSAGE_INIT;
     char *line = NULL;
     size_t len = 0;
     bool ok = true;
@@ -96,12 +92,11 @@ bool execute_lines(const char *filename, FILE *input) {
             break;
         }
         else if (status == COMMAND_STATUS_ERROR) {
-            fprintf(stderr, "%s:%zu: %s\n", filename, line_number, error_message_get(error_message));
-            error_message_free(error_message);
-            error_message = NULL;
+            fprintf(stderr, "%s:%zu: %s\n", filename, line_number, error_message_get(&error_message));
             ok = false;
         }
     }
+    error_message_fini(&error_message);
     free(line);
     return ok;
 }
@@ -148,21 +143,21 @@ static int early_exit_options[] = {
 
 int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
     invocation_t *invocation = NULL;
-    error_message_t *error_message = NULL;
+    error_message_t error_message = ERROR_MESSAGE_INIT;
     bool ok = true;
 
     opterr = 0;
 
     if ((invocation = invocation_new(&shell_command->command, early_exit_options, argc, argv, &error_message, NULL)) == NULL) {
-        fprintf(stderr, "%s: %s\n", argv[0], error_message_get(error_message));
-        error_message_free(error_message);
+        fprintf(stderr, "%s: %s\n", argv[0], error_message_get(&error_message));
+        error_message_fini(&error_message);
         return 1;
     }
 
     if (invocation_get_option(invocation, 'h')) {
         if (!print_command_help(&shell_command->command, argv[0], &error_message)) {
-            fprintf(stderr, "%s: %s\n", argv[0], error_message_get(error_message));
-            error_message_free(error_message);
+            fprintf(stderr, "%s: %s\n", argv[0], error_message_get(&error_message));
+            error_message_fini(&error_message);
             return 1;
         }
         return 0;
@@ -174,8 +169,8 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
     }
 
     if (shell_command->setup && !shell_command->setup(invocation, &error_message)) {
-        fprintf(stderr, "%s: %s\n", argv[0], error_message_get(error_message));
-        error_message_free(error_message);
+        fprintf(stderr, "%s: %s\n", argv[0], error_message_get(&error_message));
+        error_message_fini(&error_message);
         invocation_free(invocation);
         return 1;
     }
@@ -197,8 +192,7 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
 
         ok = execute_command(command, command_argc, command_argv, &error_message);
         if (!ok) {
-            fprintf(stderr, "%s: %s\n", command->name, error_message_get(error_message));
-            error_message_free(error_message);
+            fprintf(stderr, "%s: %s\n", command->name, error_message_get(&error_message));
         }
         free(command_argv);
     }
@@ -208,13 +202,13 @@ int shell_main(shell_command_t *shell_command, int argc, char *argv[]) {
     }
 
     if (shell_command->cleanup && !shell_command->cleanup(ok, &error_message)) {
-        fprintf(stderr, "%s: %s\n", argv[0], error_message_get(error_message));
-        error_message_free(error_message);
+        fprintf(stderr, "%s: %s\n", argv[0], error_message_get(&error_message));
         ok = false;
     }
 
     invocation_free(invocation);
 
+    error_message_fini(&error_message);
     return ok ? 0 : 1;
 }
 

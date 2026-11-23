@@ -41,13 +41,13 @@ const command_flag_t command_names[] = {
 };
 /* clang-format on */
 
-bool supports_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool supports_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
     bool first = true;
 
     zip_int64_t ret = zip_source_supports(source);
     if (ret < 0) {
-        *error_message = error_message_new_format("can't tell position: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't tell position: %s", zip_error_strerror(zip_source_error(source)));
         return false;
     }
 

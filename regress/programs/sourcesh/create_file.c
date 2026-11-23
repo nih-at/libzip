@@ -10,21 +10,21 @@ const argument_definition_t create_file_arguments[] = {
 };
 /* clang-format on */
 
-bool create_file_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool create_file_implementation(invocation_t *invocation, error_message_t *error_message) {
     const char *source_name = invocation->arguments[ARGUMENT_SOURCE].string;
     const char *filename = invocation->arguments[ARGUMENT_FILENAME].string;
     zip_error_t zip_error;
     zip_source_t *source;
 
     if (is_source_opened(source_name)) {
-        *error_message = error_message_new_format("source '%s' already created", source_name);
+        error_message_set_format(error_message, "source '%s' already created", source_name);
         return false;
     }
 
     zip_error_init(&zip_error);
     source = zip_source_file_create(filename, 0, 0, &zip_error);
     if (!source) {
-        *error_message = error_message_new_format("can't create file source from '%s': %s", filename, zip_error_strerror(&zip_error));
+        error_message_set_format(error_message, "can't create file source from '%s': %s", filename, zip_error_strerror(&zip_error));
         zip_error_fini(&zip_error);
         return false;
     }

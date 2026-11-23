@@ -16,13 +16,13 @@ option_definition_t file_crc_options[] = {
 /* clang-format on */
 
 
-bool file_crc_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool file_crc_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     zip_stat_t st;
 
     (void)context;
 
     if (zip_stat_index(archive, file_ref->index, matches->flags, &st) < 0) {
-        *error_message = error_message_new_format("can't stat file %s: %s", file_ref->error_info, zip_strerror(archive));
+        error_message_set_format(error_message, "can't stat file %s: %s", file_ref->error_info, zip_strerror(archive));
         return false;
     }
     else {
@@ -32,7 +32,7 @@ bool file_crc_execute(invocation_t *invocation, void *context, file_matches_t *m
     return true;
 }
 
-bool file_crc_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool file_crc_implementation(invocation_t *invocation, error_message_t *error_message) {
     file_reference_command_t command = {NULL, file_crc_execute, NULL, NULL};
     return file_reference_command_execute(&command, invocation, error_message);
 }

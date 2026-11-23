@@ -5,11 +5,11 @@
 #include "zip.h"
 #include "zipsh.h"
 
-static bool file_matches_grow(file_matches_t *file_matches, size_t new_count, error_message_t **error) {
+static bool file_matches_grow(file_matches_t *file_matches, size_t new_count, error_message_t *error) {
     size_t old_count = file_matches->count;
     file_reference_t *new_references = realloc(file_matches->references, new_count * sizeof(file_reference_t));
     if (!new_references) {
-        *error = error_message_new("out of memory");
+        error_message_set(error, "out of memory");
         return false;
     }
     file_matches->references = new_references;
@@ -53,11 +53,11 @@ void complete_archive_filename(completions_t *completions, const argument_type_t
 
 const argument_type_t argument_type_archive_filename_instance = {"filename", NULL, complete_archive_filename, NULL, {.pointer = NULL}};
 
-file_matches_t *file_matches_create(invocation_t *invocation, error_message_t **error) {
+file_matches_t *file_matches_create(invocation_t *invocation, error_message_t *error) {
     argument_t *index_option = invocation_get_option(invocation, 'i');
     file_matches_t *file_matches = (file_matches_t *)malloc(sizeof(file_matches_t));
     if (!file_matches) {
-        *error = error_message_new("out of memory");
+        error_message_set(error, "out of memory");
         return NULL;
     }
 
@@ -82,7 +82,7 @@ file_matches_t *file_matches_create(invocation_t *invocation, error_message_t **
         zip_int64_t n = zip_get_num_entries(archive, 0);
 
         if (n < 0) {
-            *error = error_message_new_format("can't get number of entries: %s", zip_strerror(archive));
+            error_message_set_format(error, "can't get number of entries: %s", zip_strerror(archive));
             file_matches_free(file_matches);
             return NULL;
         }
@@ -95,7 +95,7 @@ file_matches_t *file_matches_create(invocation_t *invocation, error_message_t **
         }
 
         if (count == 0) {
-            *error = error_message_new_format("no file matching '%s' found", invocation->arguments[0].string);
+            error_message_set_format(error, "no file matching '%s' found", invocation->arguments[0].string);
             file_matches_free(file_matches);
             return NULL;
         }
@@ -118,7 +118,7 @@ file_matches_t *file_matches_create(invocation_t *invocation, error_message_t **
         zip_int64_t idx = zip_name_locate(archive, invocation->arguments[0].string, file_matches->flags);
 
         if (idx < 0) {
-            *error = error_message_new_format("file '%s' not found", invocation->arguments[0].string);
+            error_message_set_format(error, "file '%s' not found", invocation->arguments[0].string);
             file_matches_free(file_matches);
             return NULL;
         }
@@ -145,7 +145,7 @@ void file_matches_free(file_matches_t *file_matches) {
     free(file_matches);
 }
 
-bool file_reference_command_execute(file_reference_command_t *command, invocation_t *invocation, error_message_t **error_message) {
+bool file_reference_command_execute(file_reference_command_t *command, invocation_t *invocation, error_message_t *error_message) {
     bool result = true;
     file_matches_t *matches = file_matches_create(invocation, error_message);
     if (!matches) {

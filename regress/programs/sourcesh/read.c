@@ -12,19 +12,19 @@ argument_definition_t read_arguments[] = {
 };
 /* clang-format on */
 
-bool read_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool read_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
     zip_uint64_t length = invocation->arguments[ARGUMENT_LENGTH].u64;
     zip_int64_t read_length;
     uint8_t *data = malloc(length);
 
     if (data == NULL) {
-        *error_message = error_message_new("out of buffer");
+        error_message_set(error_message, "out of buffer");
         return false;
     }
 
     if ((read_length = zip_source_read(source, data, length)) < 0) {
-        *error_message = error_message_new_format("can't read from source: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't read from source: %s", zip_error_strerror(zip_source_error(source)));
         return false;
     }
 

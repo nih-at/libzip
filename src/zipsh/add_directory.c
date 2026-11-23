@@ -13,9 +13,9 @@ argument_definition_t add_directory_arguments[] = {
 option_definition_t add_directory_options[] = {ENCODING_FLAGS_OPTIONS};
 /* clang-format on */
 
-bool add_directory_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool add_directory_implementation(invocation_t *invocation, error_message_t *error_message) {
     if (zip_dir_add(archive, invocation->arguments[ARGUMENT_NAME].string, get_flags(invocation)) < 0) {
-        *error_message = error_message_new_format("can't add directory %s: %s", invocation->arguments[ARGUMENT_NAME].string, zip_strerror(archive));
+        error_message_set_format(error_message, "can't add directory %s: %s", invocation->arguments[ARGUMENT_NAME].string, zip_strerror(archive));
         return false;
     }
 

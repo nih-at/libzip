@@ -6,7 +6,7 @@ argument_definition_t rollback_write_arguments[] = {
 };
 /* clang-format on */
 
-bool rollback_write_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool rollback_write_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
 
     zip_source_rollback_write(source);

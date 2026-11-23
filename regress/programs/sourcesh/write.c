@@ -14,7 +14,7 @@ argument_definition_t write_arguments[] = {
 
 /* clang-format on */
 
-bool write_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool write_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
     const char *hex_data = invocation->arguments[ARGUMENT_DATA].string;
     zip_uint8_t *data = decode_hex(hex_data, error_message);
@@ -27,11 +27,11 @@ bool write_implementation(invocation_t *invocation, error_message_t **error_mess
     written = zip_source_write(source, data, strlen(hex_data) / 2);
     free(data);
     if (written < 0) {
-        *error_message = error_message_new_format("can't write to source: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't write to source: %s", zip_error_strerror(zip_source_error(source)));
         return false;
     }
     else if (written != (zip_int64_t)(strlen(hex_data) / 2)) {
-        *error_message = error_message_new_format("can't write all data to source: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't write all data to source: %s", zip_error_strerror(zip_source_error(source)));
         return false;
     }
 

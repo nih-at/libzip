@@ -55,13 +55,13 @@ option_definition_t zipsh_options[] = {
 /* clang-format on */
 
 
-bool zipsh_setup(invocation_t *invocation, error_message_t **error_message) {
+bool zipsh_setup(invocation_t *invocation, error_message_t *error_message) {
     archive_name = invocation->arguments[ARGUMENT_ARCHIVE].string;
 
     return open_archive(invocation, error_message);
 }
 
-bool zipsh_cleanup(bool ok, error_message_t **error_message) {
+bool zipsh_cleanup(bool ok, error_message_t *error_message) {
     return close_archive(error_message);
 }
 

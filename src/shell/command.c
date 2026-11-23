@@ -17,7 +17,7 @@ const command_t *find_command(const char *name) {
 }
 
 
-bool execute_command(const command_t *cmd, int argc, char **argv, error_message_t **error_message) {
+bool execute_command(const command_t *cmd, int argc, char **argv, error_message_t *error_message) {
     bool ok = true;
     invocation_t *invocation = invocation_new(cmd, NULL, argc, argv, error_message, NULL);
 

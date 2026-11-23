@@ -14,12 +14,12 @@ option_definition_t stat_options[] = {
 };
 /* clang-format on */
 
-bool stat_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool stat_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     zip_stat_t stat;
     (void)context;
     (void)matches;
     if (zip_stat_index(archive, file_ref->index, 0, &stat) < 0) {
-        *error_message = error_message_new_format("can't get file info for %s: %s", file_ref->error_info, zip_strerror(archive));
+        error_message_set_format(error_message, "can't get file info for %s: %s", file_ref->error_info, zip_strerror(archive));
         return false;
     }
 
@@ -32,7 +32,7 @@ bool stat_execute(invocation_t *invocation, void *context, file_matches_t *match
     return true;
 }
 
-bool stat_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool stat_implementation(invocation_t *invocation, error_message_t *error_message) {
     file_reference_command_t command = {NULL, stat_execute, NULL, NULL};
     return file_reference_command_execute(&command, invocation, error_message);
 }

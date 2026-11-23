@@ -25,7 +25,7 @@ struct context {
 typedef struct context context_t;
 /* clang-format on */
 
-bool extra_field_get_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
+bool extra_field_get_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
 
     if ((context->options = extra_field_options_create(invocation, error_message)) == NULL) {
@@ -35,7 +35,7 @@ bool extra_field_get_setup(invocation_t *invocation, void *context_v, file_match
     return true;
 }
 
-bool extra_field_get_cleanup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
+bool extra_field_get_cleanup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
 
     extra_field_options_free(context->options);
@@ -43,7 +43,7 @@ bool extra_field_get_cleanup(invocation_t *invocation, void *context_v, file_mat
     return true;
 }
 
-bool extra_field_get_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool extra_field_get_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
     zip_uint16_t length;
     const zip_uint8_t *data;
@@ -55,7 +55,7 @@ bool extra_field_get_execute(invocation_t *invocation, void *context_v, file_mat
         data = zip_file_extra_field_get(archive, file_ref->index, invocation->arguments[ARGUMENT_INDEX].u16, &context->options->id, &length, context->options->flags);
     }
     if (data == NULL) {
-        *error_message = error_message_new_format("can't get extra field for %s: %s", file_ref->error_info, zip_strerror(archive));
+        error_message_set_format(error_message, "can't get extra field for %s: %s", file_ref->error_info, zip_strerror(archive));
         return false;
     }
     else {
@@ -68,7 +68,7 @@ bool extra_field_get_execute(invocation_t *invocation, void *context_v, file_mat
     return true;
 }
 
-bool extra_field_get_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool extra_field_get_implementation(invocation_t *invocation, error_message_t *error_message) {
     context_t context;
     file_reference_command_t command = {extra_field_get_setup, extra_field_get_execute, extra_field_get_cleanup, &context};
     return file_reference_command_execute(&command, invocation, error_message);

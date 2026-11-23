@@ -6,49 +6,60 @@
 
 #include "compat/src_compat.h"
 
-error_message_t *error_message_new(const char *message) {
-    error_message_t *error = malloc(sizeof(error_message_t));
+void error_message_init(error_message_t *error) {
     if (error == NULL) {
-        return NULL;
+        return;
     }
+    error->message = NULL;
+    error->free_message = false;
+}
+
+void error_message_set(error_message_t *error, const char *message) {
+    if (error == NULL) {
+        return;
+    }
+
+    error_message_fini(error);
     error->message = (char *)message;
     error->free_message = false;
-    return error;
 }
 
-error_message_t *error_message_new_format(const char *format, ...) {
-    error_message_t *error = malloc(sizeof(error_message_t));
-    if (error == NULL) {
-        return NULL;
-    }
+void error_message_set_format(error_message_t *error, const char *format, ...) {
+    char *message;
     va_list args;
-    va_start(args, format);
-    if (vasprintf(&error->message, format, args) == -1) {
-        va_end(args);
-        free(error);
-        return NULL;
-    }
 
-    va_end(args);
-    error->free_message = true;
-    return error;
-}
-
-void error_message_free(error_message_t *error) {
-    if (error) {
-        if (error->free_message) {
-            free(error->message);
-        }
-        free(error);
-    }
-}
-
-const char *error_message_get(error_message_t *error) {
     if (error == NULL) {
-        return "no error";
+        return;
     }
-    if (error->message == NULL) {
-        return "unknown error";
+
+    error_message_fini(error);
+
+    va_start(args, format);
+    if (vasprintf(&message, format, args) == -1) {
+        error->message = "out of memory";
+        error->free_message = false;
+    }
+    else {
+        error->message = message;
+        error->free_message = true;
+    }
+    va_end(args);
+}
+
+void error_message_fini(error_message_t *error) {
+    if (error == NULL) {
+        return;
+    }
+    if (error->free_message) {
+        free(error->message);
+    }
+    error->message = NULL;
+    error->free_message = false;
+}
+
+const char *error_message_get(const error_message_t *error) {
+    if (error == NULL || error->message == NULL) {
+        return "no error";
     }
     return error->message;
 }

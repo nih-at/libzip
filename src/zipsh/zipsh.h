@@ -85,27 +85,27 @@ struct extra_field_options {
 
 typedef struct extra_field_options extra_field_options_t;
 
-file_matches_t *file_matches_create(invocation_t *invocation, error_message_t **error);
+file_matches_t *file_matches_create(invocation_t *invocation, error_message_t *error);
 void file_matches_free(file_matches_t *file_matches);
 size_t file_matches_get_index(const file_matches_t *file_matches, const file_reference_t *file_ref);
 bool file_matches_is_multiple(const file_matches_t *file_matches);
 zip_flags_t get_flags(invocation_t *invocation);
-extra_field_options_t *extra_field_options_create(invocation_t *invocation, error_message_t **error_message);
+extra_field_options_t *extra_field_options_create(invocation_t *invocation, error_message_t *error_message);
 void extra_field_options_free(extra_field_options_t *extra_field_options);
 
 struct file_reference_command {
-    bool (*setup)(invocation_t *invocation, void *context, file_matches_t *file_matches, error_message_t **error_message);
-    bool (*execute)(invocation_t *invocation, void *context, file_matches_t *file_matches, file_reference_t *file_ref, error_message_t **error_message);
-    bool (*cleanup)(invocation_t *invocation, void *context, file_matches_t *file_matches, error_message_t **error_message);
+    bool (*setup)(invocation_t *invocation, void *context, file_matches_t *file_matches, error_message_t *error_message);
+    bool (*execute)(invocation_t *invocation, void *context, file_matches_t *file_matches, file_reference_t *file_ref, error_message_t *error_message);
+    bool (*cleanup)(invocation_t *invocation, void *context, file_matches_t *file_matches, error_message_t *error_message);
     void *context;
 };
 
 typedef struct file_reference_command file_reference_command_t;
 
-bool file_reference_command_execute(file_reference_command_t *command, invocation_t *invocation, error_message_t **error_message);
+bool file_reference_command_execute(file_reference_command_t *command, invocation_t *invocation, error_message_t *error_message);
 int get_archive_flags(invocation_t *invocation);
-bool open_archive(invocation_t *invocation, error_message_t **error_message);
-bool close_archive(error_message_t **error_message);
+bool open_archive(invocation_t *invocation, error_message_t *error_message);
+bool close_archive(error_message_t *error_message);
 
 void print_comment(const char *comment, size_t comment_len, bool hex);
 

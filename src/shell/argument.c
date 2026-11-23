@@ -14,13 +14,13 @@ argument_type_enum_entry_t bool_entries[] = {
      {NULL, {0}}};
 /* clang-format on */
 
-bool convert_int(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
+bool convert_int(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message) {
     char *endptr;
     zip_int64_t value = strtoll(str, &endptr, 0);
 
     if (*endptr != '\0') {
         if (error_message) {
-            *error_message = error_message_new_format("invalid integer value '%s'", str);
+            error_message_set_format(error_message, "invalid integer value '%s'", str);
         }
         return false;
     }
@@ -29,7 +29,7 @@ bool convert_int(const argument_type_t *type, argument_t *out, const char *str, 
     case sizeof(int8_t):
         if (value < INT8_MIN || value > INT8_MAX) {
             if (error_message) {
-                *error_message = error_message_new_format("value out of range for int8: '%s'", str);
+                error_message_set_format(error_message, "value out of range for int8: '%s'", str);
             }
             return false;
         }
@@ -39,7 +39,7 @@ bool convert_int(const argument_type_t *type, argument_t *out, const char *str, 
     case sizeof(int16_t):
         if (value < INT16_MIN || value > INT16_MAX) {
             if (error_message) {
-                *error_message = error_message_new_format("value out of range for int16: '%s'", str);
+                error_message_set_format(error_message, "value out of range for int16: '%s'", str);
             }
             return false;
         }
@@ -49,7 +49,7 @@ bool convert_int(const argument_type_t *type, argument_t *out, const char *str, 
     case sizeof(int32_t):
         if (value < INT32_MIN || value > INT32_MAX) {
             if (error_message) {
-                *error_message = error_message_new_format("value out of range for int32: '%s'", str);
+                error_message_set_format(error_message, "value out of range for int32: '%s'", str);
             }
             return false;
         }
@@ -62,7 +62,7 @@ bool convert_int(const argument_type_t *type, argument_t *out, const char *str, 
 
     default:
         if (error_message) {
-            *error_message = error_message_new("unsupported integer size");
+            error_message_set(error_message, "unsupported integer size");
         }
         return false;
     }
@@ -70,13 +70,13 @@ bool convert_int(const argument_type_t *type, argument_t *out, const char *str, 
     return true;
 }
 
-bool convert_uint(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
+bool convert_uint(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message) {
     char *endptr;
     zip_uint64_t value = strtoull(str, &endptr, 0);
 
     if (*endptr != '\0') {
         if (error_message) {
-            *error_message = error_message_new_format("invalid unsigned integer value '%s'", str);
+            error_message_set_format(error_message, "invalid unsigned integer value '%s'", str);
         }
         return false;
     }
@@ -85,7 +85,7 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
     case sizeof(uint8_t):
         if (value > UINT8_MAX) {
             if (error_message) {
-                *error_message = error_message_new_format("value out of range for uint8: '%s'", str);
+                error_message_set_format(error_message, "value out of range for uint8: '%s'", str);
             }
             return false;
         }
@@ -95,7 +95,7 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
     case sizeof(uint16_t):
         if (value > UINT16_MAX) {
             if (error_message) {
-                *error_message = error_message_new_format("value out of range for uint16: '%s'", str);
+                error_message_set_format(error_message, "value out of range for uint16: '%s'", str);
             }
             return false;
         }
@@ -105,7 +105,7 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
     case sizeof(uint32_t):
         if (value > UINT32_MAX) {
             if (error_message) {
-                *error_message = error_message_new_format("value out of range for uint32: '%s'", str);
+                error_message_set_format(error_message, "value out of range for uint32: '%s'", str);
             }
             return false;
         }
@@ -118,7 +118,7 @@ bool convert_uint(const argument_type_t *type, argument_t *out, const char *str,
 
     default:
         if (error_message) {
-            *error_message = error_message_new("unsupported unsigned integer size");
+            error_message_set(error_message, "unsupported unsigned integer size");
         }
         return false;
     }
@@ -177,7 +177,7 @@ const argument_type_t argument_type_filename_instance = {
 /* clang-format on */
 
 
-bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
+bool convert_argument(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message) {
     if (type->convert == NULL) {
         out->string = (char *)str;
         return true;
@@ -196,7 +196,7 @@ completions_t *complete_argument(const argument_type_t *type, const char *str, s
 }
 
 
-bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t **error_message) {
+bool convert_enum(const argument_type_t *type, argument_t *out, const char *str, error_message_t *error_message) {
     argument_type_enum_entry_t *entries = (argument_type_enum_entry_t *)type->ud.pointer;
     for (size_t i = 0; entries[i].string != NULL; i++) {
         if (strcasecmp(entries[i].string, str) == 0) {
@@ -205,7 +205,7 @@ bool convert_enum(const argument_type_t *type, argument_t *out, const char *str,
         }
     }
     if (error_message) {
-        *error_message = error_message_new_format("invalid %s '%s'", type->name, str);
+        error_message_set_format(error_message, "invalid %s '%s'", type->name, str);
     }
     return false;
 }

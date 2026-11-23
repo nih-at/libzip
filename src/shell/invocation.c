@@ -42,15 +42,16 @@ static completions_t *get_long_option_completions(const command_t *cmd, const ch
     return completions;
 }
 
-static bool add_option(invocation_t *invocation, const option_definition_t *option, const char *word, error_message_t **error_message) {
-    error_message_t *local_error_message = NULL;
+static bool add_option(invocation_t *invocation, const option_definition_t *option, const char *word, error_message_t *error_message) {
     argument_t value;
+    error_message_t local_error_message = ERROR_MESSAGE_INIT;
 
     if (!convert_argument(option->argument_type, &value, word, &local_error_message)) {
-        *error_message = error_message_new_format("invalid value for option '%s': %s", word, error_message_get(local_error_message));
-        error_message_free(local_error_message);
+        error_message_set_format(error_message, "invalid value for option '%s': %s", word, error_message_get(&local_error_message));
+        error_message_fini(&local_error_message);
         return false;
     }
+    error_message_fini(&local_error_message);
     invocation_add_option(invocation, option->id, value);
     return true;
 }
@@ -67,7 +68,7 @@ bool is_early_exit_option(int id, const int *early_exit_options) {
     return false;
 }
 
-static bool parse_commandline(invocation_t *invocation, const command_t *cmd, int *early_exit_options, int argc, char **argv, error_message_t **error_message, completions_t **completions) {
+static bool parse_commandline(invocation_t *invocation, const command_t *cmd, int *early_exit_options, int argc, char **argv, error_message_t *error_message, completions_t **completions) {
     bool in_options = true;
     bool complete = (completions != NULL);
     bool early_exit = false;
@@ -93,7 +94,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                     option = command_find_long_option(cmd, word + 2, equals - (word + 2));
                     if (!option) {
                         if (!complete) {
-                            *error_message = error_message_new_format("unknown option: %.*s", (int)(equals - word), word);
+                            error_message_set_format(error_message, "unknown option: %.*s", (int)(equals - word), word);
                             return false;
                         }
                     }
@@ -123,7 +124,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                                 continue;
                             }
                             else {
-                                *error_message = error_message_new_format("unknown option '%s'", word);
+                                error_message_set_format(error_message, "unknown option '%s'", word);
                                 return false;
                             }
                         }
@@ -132,7 +133,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
 
                         if (option->argument_type) {
                             if (i == argc - 1) {
-                                *error_message = error_message_new_format("missing value for option '%s'", word);
+                                error_message_set_format(error_message, "missing value for option '%s'", word);
                                 return false;
                             }
                             else {
@@ -164,7 +165,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                             continue;
                         }
                         else {
-                            *error_message = error_message_new_format("unknown option '-%c'", *p);
+                            error_message_set_format(error_message, "unknown option '-%c'", *p);
                             return false;
                         }
                     }
@@ -174,7 +175,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                     if (option->argument_type) {
                         if (*(p + 1) == '\0') {
                             if (i == argc - 1) {
-                                *error_message = error_message_new_format("missing value for option '-%c'", *p);
+                                error_message_set_format(error_message, "missing value for option '-%c'", *p);
                                 return false;
                             }
                             else {
@@ -222,7 +223,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
 
             if (argument_index >= cmd->n_arguments) {
                 if (!complete) {
-                    *error_message = error_message_new("too many arguments");
+                    error_message_set(error_message, "too many arguments");
                     return false;
                 }
                 /* Can't complete unknown arguments. */
@@ -235,14 +236,16 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                 return true;
             }
             else {
-                error_message_t *local_error_message = NULL;
                 argument_t value;
+                error_message_t local_error_message = ERROR_MESSAGE_INIT;
+
                 if (!convert_argument(argument_type, &value, word, &local_error_message)) {
                     if (!complete) {
-                        *error_message = error_message_new_format("invalid value for argument %s: %s", cmd->arguments[argument_index].name, error_message_get(local_error_message));
-                        error_message_free(local_error_message);
+                        error_message_set_format(error_message, "invalid value for argument %s: %s", cmd->arguments[argument_index].name, error_message_get(&local_error_message));
+                        error_message_fini(&local_error_message);
                         return false;
                     }
+                    error_message_fini(&local_error_message);
                 }
                 invocation_add_argument(invocation, value);
             }
@@ -262,7 +265,7 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
                     invocation_add_argument(invocation, cmd->arguments[argument_index].default_value);
                 }
                 else {
-                    *error_message = error_message_new_format("missing required argument %s", cmd->arguments[argument_index].name);
+                    error_message_set_format(error_message, "missing required argument %s", cmd->arguments[argument_index].name);
                     return false;
                 }
                 argument_index++;
@@ -273,10 +276,10 @@ static bool parse_commandline(invocation_t *invocation, const command_t *cmd, in
     return true;
 }
 
-invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size_t argc, char **argv, error_message_t **error_message, completions_t **completions) {
+invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size_t argc, char **argv, error_message_t *error_message, completions_t **completions) {
     invocation_t *invocation = malloc(sizeof(invocation_t));
     if (invocation == NULL) {
-        *error_message = error_message_new("out of memory");
+        error_message_set(error_message, "out of memory");
         return NULL;
     }
 
@@ -292,7 +295,7 @@ invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size
         invocation->options = malloc(invocation->options_capacity * sizeof(option_t));
         if (invocation->options == NULL) {
             invocation_free(invocation);
-            *error_message = error_message_new("out of memory");
+            error_message_set(error_message, "out of memory");
             return NULL;
         }
     }
@@ -300,7 +303,7 @@ invocation_t *invocation_new(const command_t *cmd, int *early_exit_options, size
         invocation->arguments = malloc(invocation->arguments_capacity * sizeof(argument_t));
         if (invocation->arguments == NULL) {
             invocation_free(invocation);
-            *error_message = error_message_new("out of memory");
+            error_message_set(error_message, "out of memory");
             return NULL;
         }
     }

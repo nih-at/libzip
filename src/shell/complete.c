@@ -104,16 +104,14 @@ void completions_sort(completions_t *completions) {
 
 completions_t *complete(const char *line, size_t position, size_t *last_word_length, char *open_quote) {
     completions_t *completions = NULL;
-    error_message_t *error_message = NULL;
+    error_message_t error_message = ERROR_MESSAGE_INIT;
 
     if (completion_words == NULL) {
         completion_words = words_new();
     }
     words_clear(completion_words);
     if (!words_parse_partial(completion_words, line, line + position, &error_message)) {
-        if (error_message) {
-            error_message_free(error_message);
-        }
+        error_message_fini(&error_message);
         return NULL;
     }
 
@@ -144,9 +142,7 @@ completions_t *complete(const char *line, size_t position, size_t *last_word_len
 
         invocation = invocation_new(cmd, NULL, completion_words->n_words, completion_words->words, &error_message, &completions);
 
-        if (error_message) {
-            error_message_free(error_message);
-        }
+        error_message_fini(&error_message);
         invocation_free(invocation);
     }
     return completions;

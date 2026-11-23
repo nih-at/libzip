@@ -23,7 +23,7 @@ option_definition_t add_options[] = {
 };
 /* clang-format on */
 
-bool add_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool add_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source;
     bool is_data = invocation_get_option(invocation, 'd');
     zip_uint64_t start = invocation->arguments[ARGUMENT_START].u64;
@@ -35,7 +35,7 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
         size_t data_length = strlen(data);
         if (start > data_length) {
             if (error_message) {
-                *error_message = error_message_new_format("start offset out of range: '%" PRIu64 "'", start);
+                error_message_set_format(error_message, "start offset out of range: '%" PRIu64 "'", start);
             }
             return false;
         }
@@ -44,7 +44,7 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
         }
         else if (start + len > data_length) {
             if (error_message) {
-                *error_message = error_message_new_format("length out of range: '%" PRId64 "'", len);
+                error_message_set_format(error_message, "length out of range: '%" PRId64 "'", len);
             }
             return false;
         }
@@ -55,13 +55,13 @@ bool add_implementation(invocation_t *invocation, error_message_t **error_messag
     }
     if (source == NULL) {
         if (error_message) {
-            *error_message = error_message_new_format("can't create zip source: '%s'", zip_strerror(archive));
+            error_message_set_format(error_message, "can't create zip source: '%s'", zip_strerror(archive));
         }
         return false;
     }
     if (zip_file_add(archive, invocation->arguments[ARGUMENT_NAME].string, source, get_flags(invocation)) < 0) {
         if (error_message) {
-            *error_message = error_message_new_format("can't add file to archive: '%s'", zip_strerror(archive));
+            error_message_set_format(error_message, "can't add file to archive: '%s'", zip_strerror(archive));
         }
         zip_source_free(source);
         return false;

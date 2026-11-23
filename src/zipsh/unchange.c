@@ -16,18 +16,18 @@ option_definition_t unchange_options[] = {
 /* clang-format on */
 
 
-bool unchange_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool unchange_execute(invocation_t *invocation, void *context, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     (void)context;
 
     if (zip_unchange(archive, file_ref->index) < 0) {
-        *error_message = error_message_new_format("can't unchange file %s: %s", file_ref->error_info, zip_strerror(archive));
+        error_message_set_format(error_message, "can't unchange file %s: %s", file_ref->error_info, zip_strerror(archive));
         return false;
     }
 
     return true;
 }
 
-bool unchange_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool unchange_implementation(invocation_t *invocation, error_message_t *error_message) {
     file_reference_command_t command = {NULL, unchange_execute, NULL, NULL};
     return file_reference_command_execute(&command, invocation, error_message);
 }

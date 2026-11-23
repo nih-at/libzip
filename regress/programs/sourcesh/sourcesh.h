@@ -4,10 +4,10 @@
 #include "shell.h"
 #include "shell_util.h"
 
-zip_source_t *find_opened_source(const char *name, error_message_t **error);
+zip_source_t *find_opened_source(const char *name, error_message_t *error);
 bool is_source_opened(const char *name);
-bool add_opened_source(const char *name, zip_source_t *source, error_message_t **error);
-bool free_opened_source(zip_source_t *source, error_message_t **error);
+bool add_opened_source(const char *name, zip_source_t *source, error_message_t *error);
+bool free_opened_source(zip_source_t *source, error_message_t *error);
 void free_all_opened_sources();
 
 extern argument_type_t source_argument_type_instance;

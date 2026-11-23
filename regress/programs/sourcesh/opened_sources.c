@@ -13,21 +13,21 @@ typedef struct opened_source_t opened_source_t;
 
 opened_source_t opened_sources = {NULL, NULL, NULL};
 
-zip_source_t *find_opened_source(const char *name, error_message_t **error) {
+zip_source_t *find_opened_source(const char *name, error_message_t *error) {
     for (opened_source_t *p = opened_sources.next; p != NULL; p = p->next) {
         if (p->name && strcmp(p->name, name) == 0) {
             if (p->source == NULL) {
-                *error = error_message_new_format("source named '%s' has been freed", name);
+                error_message_set_format(error, "source named '%s' has been freed", name);
             }
             return p->source;
         }
     }
 
-    *error = error_message_new_format("no source named '%s'", name);
+    error_message_set_format(error, "no source named '%s'", name);
     return NULL;
 }
 
-bool add_opened_source(const char *name, zip_source_t *source, error_message_t **error) {
+bool add_opened_source(const char *name, zip_source_t *source, error_message_t *error) {
     opened_source_t *new_source;
 
     for (opened_source_t *p = opened_sources.next; p != NULL; p = p->next) {
@@ -36,19 +36,19 @@ bool add_opened_source(const char *name, zip_source_t *source, error_message_t *
                 p->source = source;
                 return true;
             }
-            *error = error_message_new_format("source named '%s' already exists", name);
+            error_message_set_format(error, "source named '%s' already exists", name);
             return false;
         }
     }
 
     if ((new_source = malloc(sizeof(opened_source_t))) == NULL) {
-        *error = error_message_new_format("out of memory");
+        error_message_set_format(error, "out of memory");
         return false;
     }
     new_source->name = strdup(name);
     if (!new_source->name) {
         free(new_source);
-        *error = error_message_new_format("out of memory");
+        error_message_set_format(error, "out of memory");
         return false;
     }
     new_source->source = source;
@@ -57,7 +57,7 @@ bool add_opened_source(const char *name, zip_source_t *source, error_message_t *
     return true;
 }
 
-bool free_opened_source(zip_source_t *source, error_message_t **error) {
+bool free_opened_source(zip_source_t *source, error_message_t *error) {
     for (opened_source_t *p = opened_sources.next; p != NULL; p = p->next) {
         if (p->source == source) {
             zip_source_free(p->source);
@@ -65,7 +65,7 @@ bool free_opened_source(zip_source_t *source, error_message_t **error) {
             return true;
         }
     }
-    *error = error_message_new_format("no such source");
+    error_message_set_format(error, "no such source");
     return false;
 }
 
@@ -92,7 +92,7 @@ bool is_source_opened(const char *name) {
     return false;
 }
 
-bool convert_source(const argument_type_t *type, argument_t *argument, const char *value, error_message_t **error) {
+bool convert_source(const argument_type_t *type, argument_t *argument, const char *value, error_message_t *error) {
     zip_source_t *source = find_opened_source(value, error);
     if (!source) {
         return false;

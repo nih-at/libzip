@@ -6,12 +6,12 @@ argument_definition_t stat_arguments[] = {
 };
 /* clang-format on */
 
-bool stat_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool stat_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_source_t *source = invocation->arguments[ARGUMENT_SOURCE].pointer;
     zip_stat_t st;
 
     if (zip_source_stat(source, &st) < 0) {
-        *error_message = error_message_new_format("can't stat source: %s", zip_error_strerror(zip_source_error(source)));
+        error_message_set_format(error_message, "can't stat source: %s", zip_error_strerror(zip_source_error(source)));
         zip_source_close(source);
         return false;
     }

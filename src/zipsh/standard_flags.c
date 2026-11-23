@@ -30,7 +30,7 @@ zip_flags_t get_flags(invocation_t *invocation) {
     return flags;
 }
 
-bool default_flags_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool default_flags_implementation(invocation_t *invocation, error_message_t *error_message) {
     default_flags = get_flags(invocation);
 
     if (default_flags & ZIP_FL_NOCASE) {

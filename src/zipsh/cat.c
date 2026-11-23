@@ -26,7 +26,7 @@ struct cat_context {
 typedef struct cat_context cat_context_t;
 /* clang-format on */
 
-bool cat_setup(invocation_t *invocation, void *context, file_matches_t *matches, error_message_t **error_message) {
+bool cat_setup(invocation_t *invocation, void *context, file_matches_t *matches, error_message_t *error_message) {
     cat_context_t *cat_context = (cat_context_t *)context;
     cat_context->start = invocation->arguments[ARGUMENT_START].u64;
     cat_context->length = invocation->arguments[ARGUMENT_LENGTH].i64;
@@ -34,7 +34,7 @@ bool cat_setup(invocation_t *invocation, void *context, file_matches_t *matches,
     return true;
 }
 
-bool cat_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool cat_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     cat_context_t *context = (cat_context_t *)context_v;
     zip_error_t error;
     zip_source_t *src;
@@ -44,33 +44,33 @@ bool cat_execute(invocation_t *invocation, void *context_v, file_matches_t *matc
     zip_error_init(&error);
 
     if ((src = zip_source_zip_file_create(archive, file_ref->index, matches->flags, context->start, context->length, NULL, &error)) == NULL) {
-        *error_message = error_message_new_format("can't open file %s: %s", file_ref->error_info, zip_error_strerror(&error));
+        error_message_set_format(error_message, "can't open file %s: %s", file_ref->error_info, zip_error_strerror(&error));
         zip_error_fini(&error);
         return false;
     }
     zip_error_fini(&error);
 
     if (zip_source_open(src) < 0) {
-        *error_message = error_message_new_format("can't open file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
+        error_message_set_format(error_message, "can't open file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
         return false;
     }
     while ((n = zip_source_read(src, buf, sizeof(buf))) > 0) {
         if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
             if (error_message) {
-                *error_message = error_message_new_format("can't write file contents: %s", strerror(errno));
+                error_message_set_format(error_message, "can't write file contents: %s", strerror(errno));
             }
             zip_source_free(src);
             return false;
         }
     }
     if (n == -1) {
-        *error_message = error_message_new_format("can't read file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
+        error_message_set_format(error_message, "can't read file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
         return false;
     }
     if (zip_source_close(src) < 0) {
-        *error_message = error_message_new_format("can't close file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
+        error_message_set_format(error_message, "can't close file %s: %s", file_ref->error_info, zip_error_strerror(zip_source_error(src)));
         zip_source_free(src);
         return false;
     }
@@ -78,7 +78,7 @@ bool cat_execute(invocation_t *invocation, void *context_v, file_matches_t *matc
     return true;
 }
 
-bool cat_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool cat_implementation(invocation_t *invocation, error_message_t *error_message) {
     cat_context_t context;
     file_reference_command_t command = {cat_setup, cat_execute, NULL, &context};
     return file_reference_command_execute(&command, invocation, error_message);

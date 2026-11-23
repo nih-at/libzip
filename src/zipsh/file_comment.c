@@ -28,7 +28,7 @@ struct context {
 typedef struct context context_t;
 /* clang-format on */
 
-bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
+bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
     size_t comment_length;
 
@@ -46,21 +46,21 @@ bool file_comment_setup(invocation_t *invocation, void *context_v, file_matches_
         context->free_comment = true;
     }
     if (comment_length > ZIP_UINT32_MAX) {
-        *error_message = error_message_new_format("comment too long");
+        error_message_set(error_message, "comment too long");
         return false;
     }
     context->comment_len = (zip_uint32_t)comment_length;
     return true;
 }
 
-bool file_comment_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t **error_message) {
+bool file_comment_execute(invocation_t *invocation, void *context_v, file_matches_t *matches, file_reference_t *file_ref, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
 
     if (context->comment == NULL) {
         zip_uint32_t comment_len;
         const char *existing_comment = zip_file_get_comment(archive, file_ref->index, &comment_len, matches->flags);
         if (existing_comment == NULL) {
-            *error_message = error_message_new_format("can't get comment for %s: %s", file_ref->error_info, zip_strerror(archive));
+            error_message_set_format(error_message, "can't get comment for %s: %s", file_ref->error_info, zip_strerror(archive));
             return false;
         }
 
@@ -69,7 +69,7 @@ bool file_comment_execute(invocation_t *invocation, void *context_v, file_matche
     }
     else {
         if (zip_file_set_comment(archive, file_ref->index, context->comment, context->comment_len, get_flags(invocation)) < 0) {
-            *error_message = error_message_new_format("can't set comment for %s: %s", file_ref->error_info, zip_strerror(archive));
+            error_message_set_format(error_message, "can't set comment for %s: %s", file_ref->error_info, zip_strerror(archive));
             return false;
         }
     }
@@ -77,7 +77,7 @@ bool file_comment_execute(invocation_t *invocation, void *context_v, file_matche
     return true;
 }
 
-bool file_comment_cleanup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t **error_message) {
+bool file_comment_cleanup(invocation_t *invocation, void *context_v, file_matches_t *matches, error_message_t *error_message) {
     context_t *context = (context_t *)context_v;
     if (context->free_comment) {
         free((void *)context->comment);
@@ -85,7 +85,7 @@ bool file_comment_cleanup(invocation_t *invocation, void *context_v, file_matche
     return true;
 }
 
-bool file_comment_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool file_comment_implementation(invocation_t *invocation, error_message_t *error_message) {
     context_t context = {NULL, 0, false, false};
     file_reference_command_t command = {file_comment_setup, file_comment_execute, file_comment_cleanup, &context};
     return file_reference_command_execute(&command, invocation, error_message);

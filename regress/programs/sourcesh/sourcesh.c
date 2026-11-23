@@ -13,11 +13,11 @@ option_definition_t sourcesh_options[] = {
 };
 /* clang-format on */
 
-bool sourcesh_setup(invocation_t *invocation, error_message_t **error_message) {
+bool sourcesh_setup(invocation_t *invocation, error_message_t *error_message) {
     return true;
 }
 
-bool sourcesh_cleanup(bool ok, error_message_t **error_message) {
+bool sourcesh_cleanup(bool ok, error_message_t *error_message) {
     free_all_opened_sources();
     return true;
 }

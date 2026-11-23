@@ -30,6 +30,7 @@ bool use_readline(const char *script_filename) {
 bool execute_lines_readline() {
     rl_attempted_completion_function = complete_wrapper;
     command_status_t status;
+    error_message_t error_message = ERROR_MESSAGE_INIT;
 
     while (true) {
         char *prompt;
@@ -42,11 +43,9 @@ bool execute_lines_readline() {
         }
         if (*line != '\0') {
             add_history(line);
-            error_message_t *error_message = NULL;
             status = execute_line(line, &error_message);
             if (status == COMMAND_STATUS_ERROR) {
-                fprintf(stderr, "%s\n", error_message_get(error_message));
-                error_message_free(error_message);
+                fprintf(stderr, "%s\n", error_message_get(&error_message));
             }
             else if (status == COMMAND_STATUS_EXIT) {
                 free(line);
@@ -55,5 +54,6 @@ bool execute_lines_readline() {
         }
         free(line);
     }
+    error_message_fini(&error_message);
     return true;
 }

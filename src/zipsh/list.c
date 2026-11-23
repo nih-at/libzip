@@ -13,7 +13,7 @@ option_definition_t list_options[] = {
     CHANGED_FLAGS_OPTIONS
 };
 
-bool list_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool list_implementation(invocation_t *invocation, error_message_t *error_message) {
     zip_int64_t num_entries = zip_get_num_entries(archive, 0);
     const char *pattern = invocation->arguments[ARGUMENT_PATTERN].string;
 

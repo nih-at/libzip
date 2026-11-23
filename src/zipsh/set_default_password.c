@@ -8,9 +8,9 @@ argument_definition_t set_default_password_arguments[] = {
 };
 /* clang-format on */
 
-bool set_default_password_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool set_default_password_implementation(invocation_t *invocation, error_message_t *error_message) {
     if (zip_set_default_password(archive, invocation->arguments[ARGUMENT_PASSWORD].string) != 0) {
-        *error_message = error_message_new_format("%s", zip_strerror(archive));
+        error_message_set_format(error_message, "%s", zip_strerror(archive));
         return false;
     }
     return true;

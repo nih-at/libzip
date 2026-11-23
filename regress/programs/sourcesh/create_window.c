@@ -17,7 +17,7 @@ const argument_definition_t create_window_arguments[] = {
 };
 /* clang-format on */
 
-bool create_window_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool create_window_implementation(invocation_t *invocation, error_message_t *error_message) {
     const char *source_name = invocation->arguments[ARGUMENT_SOURCE].string;
     zip_source_t *lower_source = invocation->arguments[ARGUMENT_LOWER_SOURCE].pointer;
     zip_uint64_t start = invocation->arguments[ARGUMENT_START].u64;
@@ -26,14 +26,14 @@ bool create_window_implementation(invocation_t *invocation, error_message_t **er
     zip_source_t *source;
 
     if (is_source_opened(source_name)) {
-        *error_message = error_message_new_format("source '%s' already created", source_name);
+        error_message_set_format(error_message, "source '%s' already created", source_name);
         return false;
     }
 
     zip_error_init(&zip_error);
     source = zip_source_window_create(lower_source, start, length, &zip_error);
     if (!source) {
-        *error_message = error_message_new_format("can't create window source: %s", zip_error_strerror(&zip_error));
+        error_message_set_format(error_message, "can't create window source: %s", zip_error_strerror(&zip_error));
         zip_error_fini(&zip_error);
         return false;
     }

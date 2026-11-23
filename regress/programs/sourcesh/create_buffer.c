@@ -13,7 +13,7 @@ const argument_definition_t create_buffer_arguments[] = {
 };
 /* clang-format on */
 
-bool create_buffer_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool create_buffer_implementation(invocation_t *invocation, error_message_t *error_message) {
     const char *source_name = invocation->arguments[ARGUMENT_SOURCE].string;
     const char *hex_data = invocation->arguments[ARGUMENT_DATA].string;
     zip_uint8_t *data = decode_hex(hex_data, error_message);
@@ -25,14 +25,14 @@ bool create_buffer_implementation(invocation_t *invocation, error_message_t **er
     }
 
     if (is_source_opened(source_name)) {
-        *error_message = error_message_new_format("source '%s' already created", source_name);
+        error_message_set_format(error_message, "source '%s' already created", source_name);
         return false;
     }
 
     zip_error_init(&zip_error);
     source = zip_source_buffer_create(data, strlen(hex_data) / 2, 1, &zip_error);
     if (!source) {
-        *error_message = error_message_new_format("can't create buffer source: %s", zip_error_strerror(&zip_error));
+        error_message_set_format(error_message, "can't create buffer source: %s", zip_error_strerror(&zip_error));
         zip_error_fini(&zip_error);
         free(data);
         return false;

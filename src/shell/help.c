@@ -39,7 +39,7 @@ int compare_option(const void *a, const void *b) {
     return ret;
 }
 
-bool print_command_help(const command_t *cmd, const char *prog_name, error_message_t **error) {
+bool print_command_help(const command_t *cmd, const char *prog_name, error_message_t *error) {
     printf("Usage: %s", prog_name ? prog_name : cmd->name);
     if (cmd->n_options > 0) {
         printf(" [options]");
@@ -70,7 +70,7 @@ bool print_command_help(const command_t *cmd, const char *prog_name, error_messa
 
         /* Sort options. */
         if ((options = (option_definition_t **)malloc(cmd->n_options * sizeof(option_definition_t *))) == NULL) {
-            *error = error_message_new("out of memory");
+            error_message_set(error, "out of memory");
             return false;
         }
         for (size_t i = 0; i < cmd->n_options; i++) {
@@ -155,7 +155,7 @@ argument_definition_t help_arguments[] = {
 };
 /* clang-format on */
 
-bool help_implementation(invocation_t *invocation, error_message_t **error_message) {
+bool help_implementation(invocation_t *invocation, error_message_t *error_message) {
     const char *command_name = invocation->arguments[ARGUMENT_COMMAND].string;
 
     if (command_name == NULL) {
@@ -175,7 +175,7 @@ bool help_implementation(invocation_t *invocation, error_message_t **error_messa
         const command_t *cmd = find_command(command_name);
         if (cmd == NULL) {
             if (error_message) {
-                *error_message = error_message_new_format("Unknown command: %s", command_name);
+                error_message_set_format(error_message, "Unknown command: %s", command_name);
             }
             return false;
         }
