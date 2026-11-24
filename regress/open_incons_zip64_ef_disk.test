@@ -1,0 +1,18 @@
+# zip_open: a 24 byte Zip64 extra field has no room for the disk number,
+# so it's invalid if disk number start is 0xFFFF
+program tryopen
+file incons-zip64-ef-disk-missing.zzip incons-zip64-ef-disk-missing.zip
+file incons-zip64-ef-disk-missing-comp.zzip incons-zip64-ef-disk-missing-comp.zip
+file incons-zip64-ef-disk-missing-sizes.zzip incons-zip64-ef-disk-missing-sizes.zip
+file incons-zip64-ef-disk-missing-uncomp.zzip incons-zip64-ef-disk-missing-uncomp.zip
+arguments -s incons-zip64-ef-disk-missing.zzip incons-zip64-ef-disk-missing-comp.zzip incons-zip64-ef-disk-missing-sizes.zzip incons-zip64-ef-disk-missing-uncomp.zzip
+return 1
+stdout
+opening 'incons-zip64-ef-disk-missing.zzip' returned error Zip archive inconsistent: entry 0: invalid Zip64 extra field
+opening 'incons-zip64-ef-disk-missing-comp.zzip' returned error Zip archive inconsistent: entry 0: invalid Zip64 extra field
+opening 'incons-zip64-ef-disk-missing-sizes.zzip' returned error Zip archive inconsistent: entry 0: invalid Zip64 extra field
+opening 'incons-zip64-ef-disk-missing-uncomp.zzip' returned error Zip archive inconsistent: entry 0: invalid Zip64 extra field
+end-of-inline-data
+stderr
+4 errors
+end-of-inline-data

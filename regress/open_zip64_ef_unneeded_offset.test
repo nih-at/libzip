@@ -1,0 +1,8 @@
+# zip_open: Zip64 extra field also contains values that aren't 0xFFFFFFFF in the directory entry
+program tryopen
+arguments -c test.zip
+return 0
+file test.zip zip64-ef-unneeded-offset.zip
+stdout
+opening 'test.zip' succeeded, 1 entries
+end-of-inline-data
