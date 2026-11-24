@@ -55,8 +55,9 @@ function(Dist ARCHIVE_NAME)
   if(NOT TARGET dist AND NOT TARGET distcheck)
     add_custom_target(dist
       COMMAND git config tar.tar.xz.command "xz -c"
-      COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz HEAD
-      COMMAND git archive --prefix=${ARCHIVE_NAME}/ -o ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.xz HEAD
+      # Keep archive line endings independent of the release builder's Git configuration.
+      COMMAND git -c core.autocrlf=false -c core.eol=lf archive --prefix=${ARCHIVE_NAME}/ -o ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz HEAD
+      COMMAND git -c core.autocrlf=false -c core.eol=lf archive --prefix=${ARCHIVE_NAME}/ -o ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.xz HEAD
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
       )
     add_custom_target(distcheck
