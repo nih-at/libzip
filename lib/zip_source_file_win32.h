@@ -59,7 +59,7 @@ struct zip_win32_file_operations {
     BOOL(__stdcall *move_file)(const void *from, const void *to, DWORD flags);
     BOOL(__stdcall *set_file_attributes)(const void *name, DWORD attributes);
     char *(*string_duplicate)(const char *string);
-    HANDLE(__stdcall *find_first_file)(const void *name, void *data);
+    bool (*find_first_file)(const void *name, DWORD *reserved0);
 };
 
 typedef struct zip_win32_file_operations zip_win32_file_operations_t;
