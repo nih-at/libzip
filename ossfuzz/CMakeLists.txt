@@ -17,3 +17,9 @@ endforeach()
 add_custom_target(list-fuzzers
         COMMAND echo FUZZERS: ${FUZZ_PROGRAMS}
 )
+
+add_fuzzer(zip_write_alt_compress_fuzzer zip_write_alt_compress_fuzzer.c)
+target_link_libraries(zip_write_alt_compress_fuzzer
+  libzip
+  ${FUZZING_ENGINE}
+)
