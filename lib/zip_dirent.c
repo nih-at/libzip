@@ -898,6 +898,18 @@ zip_int32_t _zip_dirent_size(zip_source_t *src, zip_uint16_t flags, zip_error_t 
 }
 
 
+zip_uint16_t _zip_dirent_winzip_aes_version(const zip_dirent_t *de) {
+    if (de->encryption_method == ZIP_EM_AES_128 || de->encryption_method == ZIP_EM_AES_192 || de->encryption_method == ZIP_EM_AES_256) {
+        /* TODO: WinZip also uses AE-2 for bzip compressed files and maybe others? */
+        if (de->uncomp_size < 20) {
+            return 2;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+
 /* _zip_dirent_write
    Writes zip directory entry.
 
@@ -956,18 +968,7 @@ int _zip_dirent_write(zip_t *za, zip_dirent_t *de, zip_flags_t flags) {
 
     is_really_zip64 = _zip_dirent_needs_zip64(de, flags);
     is_zip64 = (flags & (ZIP_FL_LOCAL | ZIP_FL_FORCE_ZIP64)) == (ZIP_FL_LOCAL | ZIP_FL_FORCE_ZIP64) || is_really_zip64;
-    if (de->encryption_method == ZIP_EM_AES_128 || de->encryption_method == ZIP_EM_AES_192 || de->encryption_method == ZIP_EM_AES_256) {
-        /* TODO: WinZip also uses AE-2 for bzip compressed files and maybe others? */
-        if (de->uncomp_size < 20) {
-            winzip_aes_version = 2;
-        }
-        else {
-            winzip_aes_version = 1;
-        }
-    }
-    else {
-        winzip_aes_version = 0;
-    }
+    winzip_aes_version = _zip_dirent_winzip_aes_version(de);
 
     if (is_zip64) {
         zip_uint8_t ef_zip64[EFZIP64SIZE];

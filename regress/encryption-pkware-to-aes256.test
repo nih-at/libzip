@@ -1,0 +1,10 @@
+features HAVE_CRYPTO
+description re-encrypt short PKWARE entry to AES-256 without stale data descriptor
+program zipsh_regress_nonrandom
+return 0
+arguments encrypt.zzip
+stdin
+set_default_password no-entropy
+file_encryption -i 1 AES-256 no-entropy
+end-of-inline-data
+file encrypt.zzip encrypt-pkware-noentropy.zip encrypt-aes256-noentropy.zip
