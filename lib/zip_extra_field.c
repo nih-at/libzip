@@ -469,23 +469,53 @@ zip_int16_t _zip_extra_fields_count(const zip_extra_fields_t *extra_fields, zip_
 }
 
 
-zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error) {
+static bool ef_data_in_bounds(const zip_extra_field_t *ef_head, const zip_uint8_t *data, zip_uint16_t len) {
+    const zip_extra_field_t *cur;
+
+    if (len == 0 || data == NULL) {
+        return true;
+    }
+
+    for (cur = ef_head; cur != NULL; cur = cur->next) {
+        if (cur->data == NULL) {
+            continue;
+        }
+        if (cur->data == data) {
+            return len <= cur->size;
+        }
+#ifdef UINTPTR_MAX
+        if ((uintptr_t)data > (uintptr_t)cur->data && (uintptr_t)data - (uintptr_t)cur->data < cur->size) {
+            return len <= cur->size - (zip_uint16_t)((uintptr_t)data - (uintptr_t)cur->data);
+        }
+#endif
+    }
+
+    return true;
+}
+
+
+static bool ef_validate_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_extra_field_t **efp, zip_extra_field_t **ef_prevp, zip_error_t *error) {
     zip_extra_field_t *ef_prev = NULL;
-    zip_extra_field_t *ef_new, *ef;
+    zip_extra_field_t *ef;
     zip_int32_t new_len;
 
     ef = _zip_ef_find(ef_head, ef_id, ef_idx, &ef_prev);
 
     if (ef == NULL && ef_idx != ZIP_EXTRA_FIELD_NEW) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
-        return NULL;
+        return false;
+    }
+
+    if (!ef_data_in_bounds(ef_head, data, len)) {
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return false;
     }
 
     new_len = _zip_ef_size(ef_head);
     /* This should not happen, but we want to assume lengths are >= 0 later. */
     if (new_len < 0) {
         zip_error_set(error, ZIP_ER_EF_TOO_LARGE, 0);
-        return NULL;
+        return false;
     }
 
     if (ef != NULL) {
@@ -495,21 +525,26 @@ zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, z
 
     if (new_len > ZIP_UINT16_MAX) {
         zip_error_set(error, ZIP_ER_EF_TOO_LARGE, 0);
-        return NULL;
+        return false;
     }
 
-    /* If we are updating an existing field with its current data pointer, just update the size.
-       This also ensures that data remains valid, which is needed if we set both local and central extra fields. */
-    if (ef && ef->data == data) {
-        /* Since ef->data can be user supplied, we don't know its allocation size, so a bigger len may be fine. */
-        ef->size = len;
+    *efp = ef;
+    *ef_prevp = ef_prev;
+    return true;
+}
+
+
+static zip_extra_field_t *ef_commit_set(zip_extra_field_t *ef_head, zip_extra_field_t *ef, zip_extra_field_t *ef_prev, zip_extra_field_t *ef_new, zip_uint16_t len) {
+    /* Null ef_new signals an in-place shrink within the existing buffer. */
+    if (ef_new == NULL) {
+        if (ef != NULL) {
+            if (len == 0 && ef->data != NULL) {
+                free(ef->data);
+                ef->data = NULL;
+            }
+            ef->size = len;
+        }
         return ef_head;
-    }
-
-    /* Otherwise, create a new extra field. */
-    if ((ef_new = _zip_ef_new(ef_id, len, data)) == NULL) {
-        zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
     }
 
     if (ef != NULL) {
@@ -517,11 +552,11 @@ zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, z
         ef->next = NULL;
         _zip_ef_free(ef);
     }
-    else if (ef_prev) {
+    else if (ef_prev != NULL) {
         ef_new->next = ef_prev->next;
     }
 
-    if (ef_prev) {
+    if (ef_prev != NULL) {
         ef_prev->next = ef_new;
     }
     else {
@@ -531,41 +566,92 @@ zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, z
     return ef_head;
 }
 
+
+zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error) {
+    zip_extra_field_t *ef_prev = NULL;
+    zip_extra_field_t *ef = NULL;
+    zip_extra_field_t *ef_new = NULL;
+
+    if (!ef_validate_set(ef_head, ef_id, ef_idx, data, len, &ef, &ef_prev, error)) {
+        return NULL;
+    }
+
+    if (ef == NULL || ef->data != data) {
+        if ((ef_new = _zip_ef_new(ef_id, len, data)) == NULL) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            return NULL;
+        }
+    }
+
+    return ef_commit_set(ef_head, ef, ef_prev, ef_new, len);
+}
+
 bool _zip_extra_fields_set(zip_extra_fields_t *extra_fields, zip_flags_t flags, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error) {
-    zip_extra_field_t *ef;
+    zip_extra_field_t *local_ef = NULL, *local_prev = NULL, *local_new = NULL;
+    zip_extra_field_t *central_ef = NULL, *central_prev = NULL, *central_new = NULL;
 
     if (flags & ZIP_EF_LOCAL) {
-        ef = _zip_ef_set(extra_fields->local, ef_id, ef_idx, data, len, error);
-        if (ef == NULL) {
+        if (!ef_validate_set(extra_fields->local, ef_id, ef_idx, data, len, &local_ef, &local_prev, error)) {
             return false;
         }
-        extra_fields->local = ef;
+    }
+    else if (!ef_data_in_bounds(extra_fields->local, data, len)) {
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return false;
+    }
+
+    if (flags & ZIP_EF_CENTRAL) {
+        if (!ef_validate_set(extra_fields->central, ef_id, ef_idx, data, len, &central_ef, &central_prev, error)) {
+            return false;
+        }
+    }
+    else if (!ef_data_in_bounds(extra_fields->central, data, len)) {
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return false;
+    }
+
+    if ((flags & ZIP_EF_LOCAL) && (local_ef == NULL || local_ef->data != data)) {
+        if ((local_new = _zip_ef_new(ef_id, len, data)) == NULL) {
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            return false;
+        }
+    }
+    if ((flags & ZIP_EF_CENTRAL) && (central_ef == NULL || central_ef->data != data)) {
+        if ((central_new = _zip_ef_new(ef_id, len, data)) == NULL) {
+            _zip_ef_free(local_new);
+            zip_error_set(error, ZIP_ER_MEMORY, 0);
+            return false;
+        }
+    }
+
+    if (flags & ZIP_EF_LOCAL) {
+        extra_fields->local = ef_commit_set(extra_fields->local, local_ef, local_prev, local_new, len);
     }
     if (flags & ZIP_EF_CENTRAL) {
-        ef = _zip_ef_set(extra_fields->central, ef_id, ef_idx, data, len, error);
-        if (ef == NULL) {
-            return false;
-        }
-        extra_fields->central = ef;
+        extra_fields->central = ef_commit_set(extra_fields->central, central_ef, central_prev, central_new, len);
     }
 
     return true;
 }
 
 bool _zip_extra_fields_clone(zip_extra_fields_t *extra_fields, zip_error_t *error) {
+    zip_extra_field_t *local = NULL;
+    zip_extra_field_t *central = NULL;
+
     if (extra_fields->local) {
-        if ((extra_fields->local = _zip_ef_clone(extra_fields->local, error)) == NULL) {
-            /* Clear central so we don't refer to the original. */
-            extra_fields->central = NULL;
+        if ((local = _zip_ef_clone(extra_fields->local, error)) == NULL) {
             return false;
         }
     }
     if (extra_fields->central) {
-        if ((extra_fields->central = _zip_ef_clone(extra_fields->central, error)) == NULL) {
+        if ((central = _zip_ef_clone(extra_fields->central, error)) == NULL) {
+            _zip_ef_free(local);
             return false;
         }
     }
 
+    extra_fields->local = local;
+    extra_fields->central = central;
     return true;
 }
 

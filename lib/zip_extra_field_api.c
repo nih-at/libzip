@@ -34,6 +34,8 @@
 
 #include "zipint.h"
 
+static const zip_uint8_t empty[1] = {'\0'};
+
 static const zip_uint8_t *_zip_file_extra_field_get(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *ef_id, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags);
 static bool _zip_file_extra_field_get_one(zip_extra_field_t *ef, zip_uint16_t *idx, zip_uint16_t *id, zip_uint16_t *idp, const zip_uint8_t **data, zip_uint16_t *len);
 
@@ -176,7 +178,7 @@ ZIP_EXTERN int zip_file_extra_field_set(zip_t *za, zip_uint64_t idx, zip_uint16_
         return -1;
     }
 
-    if (len > 0 && data == NULL) {
+    if (len > 0 && (data == NULL || data == empty)) {
         zip_error_set(&za->error, ZIP_ER_INVAL, 0);
         return -1;
     }
@@ -234,15 +236,15 @@ int _zip_file_extra_field_prepare_for_change(zip_t *za, zip_uint64_t idx) {
         }
     }
 
-    _zip_extra_fields_clone(&e->changes->extra_fields, &za->error);
+    if (!_zip_extra_fields_clone(&e->changes->extra_fields, &za->error)) {
+        return -1;
+    }
     e->changes->changed |= ZIP_DIRENT_EXTRA_FIELD;
 
     return 0;
 }
 
 static const zip_uint8_t *_zip_file_extra_field_get(zip_t *za, zip_uint64_t idx, zip_uint16_t ef_idx, zip_uint16_t *ef_id, zip_uint16_t *idp, zip_uint16_t *lenp, zip_flags_t flags) {
-    static const zip_uint8_t empty[1] = {'\0'};
-
     zip_dirent_t *de;
     const zip_uint8_t *data = empty;
 
