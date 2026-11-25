@@ -501,7 +501,20 @@ zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, z
     /* If we are updating an existing field with its current data pointer, just update the size.
        This also ensures that data remains valid, which is needed if we set both local and central extra fields. */
     if (ef && ef->data == data) {
-        /* Since ef->data can be user supplied, we don't know its allocation size, so a bigger len may be fine. */
+        /*
+          We cannot return an error if len > ef->size. Consider this sequence:
+
+          1. Set a new extra field with length 100.
+          2. Get the data pointer of the extra field.
+          3. Update the extra field with the same data and length 50.
+          4. Update the extra field with the same data and length 60.
+
+          At step 4, we no longer know that data points to a buffer of size 100. The new length is larger than the previous length, but shorter than the allocated length.
+
+          And no, it's not worth the extra effort to keep the allocation length as well. Passing in a length that is larger than the buffer is invalid use of the API, and we cannot catch that in the general case.
+
+          Do *not* submit "fixes" for this!
+        */
         ef->size = len;
         return ef_head;
     }
