@@ -41,7 +41,7 @@ static BOOL __stdcall ansi_get_file_attributes_ex(const void *name, GET_FILEEX_I
 static void ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 static BOOL __stdcall ansi_move_file(const void *from, const void *to, DWORD flags);
 static BOOL __stdcall ansi_set_file_attributes(const void *name, DWORD attributes);
-static HANDLE __stdcall ansi_find_first_file(const void *name, void *data);
+static bool ansi_find_first_file(const void *name, DWORD *reserved0);
 
 /* clang-format off */
 zip_win32_file_operations_t ops_ansi = {
@@ -110,6 +110,15 @@ static BOOL __stdcall ansi_set_file_attributes(const void *name, DWORD attribute
     return SetFileAttributesA((const char *)name, attributes);
 }
 
-static HANDLE __stdcall ansi_find_first_file(const void *name, void *data) {
-    return FindFirstFileA((const char *)name, data);
+static bool ansi_find_first_file(const void *name, DWORD *reserved0) {
+    WIN32_FIND_DATAA find_data;
+    HANDLE find_handle = FindFirstFileA((const char *)name, &find_data);
+
+    if (find_handle == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+
+    *reserved0 = find_data.dwReserved0;
+    FindClose(find_handle);
+    return true;
 }

@@ -42,7 +42,7 @@ static void utf16_make_tempname(char *buf, size_t len, const char *name, zip_uin
 static BOOL __stdcall utf16_move_file(const void *from, const void *to, DWORD flags);
 static BOOL __stdcall utf16_set_file_attributes(const void *name, DWORD attributes);
 static char *utf16_strdup(const char *string);
-static HANDLE __stdcall utf16_find_first_file(const void *name, void *data);
+static bool utf16_find_first_file(const void *name, DWORD *reserved0);
 
 
 /* clang-format off */
@@ -131,6 +131,15 @@ static char *utf16_strdup(const char *string) {
 }
 
 
-static HANDLE __stdcall utf16_find_first_file(const void *name, void *data) {
-    return FindFirstFileW((const wchar_t *)name, data);
+static bool utf16_find_first_file(const void *name, DWORD *reserved0) {
+    WIN32_FIND_DATAW find_data;
+    HANDLE find_handle = FindFirstFileW((const wchar_t *)name, &find_data);
+
+    if (find_handle == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+
+    *reserved0 = find_data.dwReserved0;
+    FindClose(find_handle);
+    return true;
 }
