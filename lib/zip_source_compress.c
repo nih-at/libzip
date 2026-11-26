@@ -367,7 +367,8 @@ static zip_int64_t compress_callback(zip_source_t *src, void *ud, void *data, zi
             st->comp_method = ZIP_CM_STORE;
             st->valid |= ZIP_STAT_COMP_METHOD;
             st->valid &= ~ZIP_STAT_COMP_SIZE;
-            if (ctx->end_of_stream) {
+            /* Keep a size reported by the lower layer, so source_crc can check it against the actual data length. */
+            if (ctx->end_of_stream && (st->valid & ZIP_STAT_SIZE) == 0) {
                 st->size = ctx->size;
                 st->valid |= ZIP_STAT_SIZE;
             }
