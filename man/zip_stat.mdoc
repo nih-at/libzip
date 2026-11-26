@@ -29,7 +29,7 @@
 .\" OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 .\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd December 18, 2017
+.Dd November 26, 2026
 .Dt ZIP_STAT 3
 .Os
 .Sh NAME
@@ -120,6 +120,38 @@ before accessing the fields:
 .It Dv ZIP_STAT_FLAGS
 .Ar flags
 .El
+.Pp
+For an unchanged entry read from an existing archive, the default
+.Ar mtime
+is converted from the MS-DOS date and time in the central directory.
+That format stores the time in two-second increments and carries no time zone.
+Libzip interprets the value as local time.
+For example, a stored time ending in 56 seconds can correspond to a file
+whose modification time ended in 57 seconds.
+.Pp
+.Fn zip_stat
+and
+.Fn zip_stat_index
+do not use modification times stored in NTFS (0x000a) or extended timestamp
+(0x5455) extra fields, even when those fields are present.
+The extended timestamp stores UTC time in whole seconds.
+The NTFS timestamp uses 100-nanosecond units.
+The
+.Ft struct zip_stat
+has no separate subsecond field.
+To use those values, retrieve the extra fields with
+.Fn zip_file_extra_field_get_by_id
+using
+.Dv ZIP_FL_LOCAL
+or
+.Dv ZIP_FL_CENTRAL ,
+and parse their contents as described in
+.Xr zip_file_extra_field_get 3 .
+The local and central extra fields can differ, and either may be absent.
+For an entry with pending changes,
+.Ar mtime
+may instead come from its source or from a time set with
+.Xr zip_file_set_mtime 3 .
 .Sh RETURN VALUES
 Upon successful completion 0 is returned.
 Otherwise, \-1 is returned and the error information in
@@ -145,6 +177,8 @@ callback, the error information is set to
 .Er ZIP_ER_CHANGED .
 .Sh SEE ALSO
 .Xr libzip 3 ,
+.Xr zip_file_extra_field_get 3 ,
+.Xr zip_file_set_mtime 3 ,
 .Xr zip_get_num_entries 3 ,
 .Xr zip_name_locate 3 ,
 .Xr zip_stat_init 3
