@@ -61,6 +61,7 @@ static void *allocate(bool compress, zip_uint32_t compression_flags, zip_error_t
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
 
