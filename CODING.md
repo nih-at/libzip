@@ -113,21 +113,16 @@ ZIP_EXTERN const char *_Nonnull zip_libzip_version(void);
 
 ## Testing
 
-For tests reading input files or creating output files, we use [nihtest](https://nih.at/nihtest/). It is a framework to test command-line programs, allowing to set up input files and comparing output against expected results.
+For tests reading input files or creating output files, use [nihtest](https://nih.at/nihtest/). It is a framework to test command-line programs, allowing to set up input files and comparing output against expected results.
 
-For unit tests, we use [CMocka](https://cmocka.org/).
+When possible, use `zipsh_regress` or `sourcesh` instead of writing custom test programs. If your test requires functionality not provided by these tools, adding it to the tools is preferred. When in doubt, ask the maintainers first. We will not accept standalone test programs that could have been written using these tools.
 
-We prefer data driven tests over one-off programs. For API level tests, use `ziptool_regress`.
+Place input files in the `data` directory or inline in the nihtest case; do not create them dynamically within the test program.
 
-We plan to add tools that allow testing of other components, e.g. sources. These will take commands from stdin, one command per line, and be able to run a series of commands in a single test. This allows for more complex testing scenarios and better coverage of the codebase.
+For unit tests, use [CMocka](https://cmocka.org/). We will not accept unit tests that do not use CMocka.
 
-### Test Interface
+If your test directly calls internal functions, link it against `zip_regress`. If you want to run the same test function multiple times with different inputs, use `run_test_table()` provided in `cmocka_utilities.h`.
 
-If a test contains multiple sub-tests, all of them should be run, even if some fail. This ensures that all aspects of the code are tested and any issues are identified.
-
-A test program should exit with status code 0 if all sub-tests succeed, 1 if any sub-test fails, and 77 if the test was skipped. 
-
-If it is run in verbose mode, it should print details of each failure, including status and difference between expected and actual results for each sub-test.
 
 ## Documentation
 
