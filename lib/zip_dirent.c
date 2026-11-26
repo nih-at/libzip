@@ -628,7 +628,15 @@ zip_int64_t _zip_dirent_read(zip_dirent_t *zde, zip_source_t *src, zip_buffer_t 
         zip_uint32_t df_crc;
         zip_uint64_t df_comp_size, df_uncomp_size;
 
-        if (zip_source_seek(src, central_compressed_size, SEEK_CUR) != 0 || (buffer = _zip_buffer_new_from_source(src, MAX_DATA_DESCRIPTOR_LENGTH, buf, error)) == NULL) {
+        if (central_compressed_size > ZIP_INT64_MAX) {
+            zip_error_set(error, ZIP_ER_SEEK, EFBIG);
+            return -1;
+        }
+        if (zip_source_seek(src, (zip_int64_t)central_compressed_size, SEEK_CUR) != 0) {
+            zip_error_set_from_source(error, src);
+            return -1;
+        }
+        if ((buffer = _zip_buffer_new_from_source(src, MAX_DATA_DESCRIPTOR_LENGTH, buf, error)) == NULL) {
             return -1;
         }
         data_descriptor_size = 4 + (is_zip64 ? 16 : 8);
