@@ -187,7 +187,9 @@ static zip_int64_t pkware_encrypt(zip_source_t *src, void *ud, void *data, zip_u
         st->encryption_method = ZIP_EM_TRAD_PKWARE;
         st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
         if (st->valid & ZIP_STAT_COMP_SIZE) {
-            st->comp_size += ZIP_CRYPTO_PKWARE_HEADERLEN;
+            if (!ASSIGN_UNSIGNED_ADD_FITS(st->comp_size, st->comp_size, ZIP_CRYPTO_PKWARE_HEADERLEN)) {
+                st->valid &= ~ZIP_STAT_COMP_SIZE;
+            }
         }
 
         return 0;
@@ -256,6 +258,7 @@ static void trad_pkware_free(struct trad_pkware *ctx) {
         return;
     }
 
+    _zip_crypto_clear(&ctx->keys, sizeof(ctx->keys));
     _zip_crypto_clear(ctx->password, strlen(ctx->password));
     free(ctx->password);
     _zip_buffer_free(ctx->buffer);

@@ -185,7 +185,9 @@ static zip_int64_t winzip_aes_encrypt(zip_source_t *src, void *ud, void *data, z
         st->encryption_method = ctx->encryption_method;
         st->valid |= ZIP_STAT_ENCRYPTION_METHOD;
         if (st->valid & ZIP_STAT_COMP_SIZE) {
-            st->comp_size += 12 + SALT_LENGTH(ctx->encryption_method);
+            if (!ASSIGN_UNSIGNED_ADD_FITS(st->comp_size, st->comp_size, 12 + SALT_LENGTH(ctx->encryption_method))) {
+                st->valid &= ~ZIP_STAT_COMP_SIZE;
+            }
         }
 
         return 0;
@@ -224,6 +226,7 @@ static void winzip_aes_free(struct winzip_aes *ctx) {
         return;
     }
 
+    _zip_crypto_clear(ctx->data, sizeof(ctx->data));
     _zip_crypto_clear(ctx->password, strlen(ctx->password));
     free(ctx->password);
     zip_error_fini(&ctx->error);
