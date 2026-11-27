@@ -153,7 +153,6 @@ bool file_reference_command_execute(file_reference_command_t *command, invocatio
     }
 
     if (command->setup && !command->setup(invocation, command->context, matches, error_message)) {
-        file_matches_free(matches);
         result = false;
     }
     else {
