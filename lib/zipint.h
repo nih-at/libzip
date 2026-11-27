@@ -525,6 +525,8 @@ typedef struct _zip_pkware_keys zip_pkware_keys_t;
 #define ASSIGN_UNSIGNED_ADD_FITS(r, a, b) (UNSIGNED_ADD_FITS((a), (b)) ? (r) = (a) + (b), 1 : 0)
 #define ASSIGN_UNSIGNED_ADD_THREE_FITS(r, a, b, c) (UNSIGNED_ADD_THREE_FITS((a), (b), (c)) ? (r) = (a) + (b) + (c), 1 : 0)
 #define ASSIGN_UNSIGNED_ADD_FITS_CAPPED(r, a, b, cap) (UNSIGNED_ADD_FITS_CAPPED((a), (b), (cap)) ? (r) = (a) + (b), 1 : 0)
+#define ASSIGN_UNSIGNED_SUBTRACT_FITS(r, a, b) (UNSIGNED_SUBTRACT_FITS((a), (b)) ? (r) = (a) - (b), 1 : 0)
+
 #define ASSIGN_UNSIGNED_PLUS_SIGNED_FITS_CAPPED(r, a, b, cap) (UNSIGNED_PLUS_SIGNED_FITS_CAPPED((a), (b), (cap)) ? (r) = (a) + (b), 1 : 0)
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
