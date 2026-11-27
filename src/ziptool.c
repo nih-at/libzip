@@ -74,8 +74,8 @@ static const char *encode_filename(const char *name);
 #define USAGE_REGRESS ""
 #endif
 
-zip_t *za, *z_in[16];
-unsigned int z_in_count;
+zip_t *za, **z_in = NULL;
+size_t z_in_count, z_in_capacity = 0;
 zip_flags_t stat_flags;
 int hex_encoded_filenames = 0; // Can only be set in ziptool_regress.
 
@@ -205,6 +205,17 @@ static int add_from_zip(char *argv[]) {
     idx = strtoull(argv[2], NULL, 10);
     start = strtoull(argv[3], NULL, 10);
     len = strtoll(argv[4], NULL, 10);
+    if (z_in_count >= z_in_capacity) {
+        size_t new_capacity = z_in_capacity == 0 ? 16 : z_in_capacity * 2;
+        zip_t **new_z_in;
+
+        if (SIZE_MAX / sizeof(*z_in) < new_capacity || (new_z_in = realloc(z_in, new_capacity * sizeof(*z_in))) == NULL) {
+            fprintf(stderr, "size overflow or out of memory\n");
+            return -1;
+        }
+        z_in = new_z_in;
+        z_in_capacity = new_capacity;
+    }
     if ((z_in[z_in_count] = zip_open(argv[1], ZIP_CHECKCONS, &err)) == NULL) {
         zip_error_t error;
         zip_error_init_with_code(&error, err);
@@ -1077,9 +1088,9 @@ int main(int argc, char *argv[]) {
 
     if (zip_close(za) == -1) {
         fprintf(stderr, "can't close zip archive '%s': %s\n", archive, zip_strerror(za));
-        return 1;
+        err = 1;
     }
-    if (ziptool_post_close(archive) < 0) {
+    else if (ziptool_post_close(archive) < 0) {
         err = 1;
     }
 
@@ -1089,6 +1100,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    free(z_in);
+    z_in = NULL;
+    z_in_count = 0;
+    z_in_capacity = 0;
     return err;
 }
 
