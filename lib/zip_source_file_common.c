@@ -91,7 +91,7 @@ zip_source_t *zip_source_file_common_new(const char *fname, void *file, zip_uint
         length = (zip_uint64_t)len;
     }
 
-    if (start > ZIP_INT64_MAX || start + length < start) {
+    if (start > ZIP_INT64_MAX || !UNSIGNED_ADD_FITS(start, length)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return NULL;
     }
@@ -319,7 +319,7 @@ static zip_int64_t read_file(void *state, void *data, zip_uint64_t len, zip_sour
         }
 
         /* The actual offset inside the file must be representable as zip_int64_t. */
-        if (new_offset > ZIP_INT64_MAX - (zip_int64_t)ctx->start) {
+        if (!UNSIGNED_ADD_FITS_CAPPED(ctx->start, new_offset, ZIP_INT64_MAX)) {
             zip_error_set(&ctx->error, ZIP_ER_SEEK, EOVERFLOW);
             return -1;
         }

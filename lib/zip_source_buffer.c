@@ -513,12 +513,11 @@ static buffer_t *buffer_new(const zip_buffer_fragment_t *fragments, zip_uint64_t
             buffer->fragments[j].length = fragments[i].length;
             buffer->fragments[j].free_data = free_data;
             buffer->fragment_offsets[j] = offset;
-            if (offset + fragments[i].length < offset) {
+            if (!ASSIGN_UNSIGNED_ADD_FITS(offset, offset, fragments[i].length)) {
                 zip_error_set(error, ZIP_ER_INVAL, 0);
                 buffer_free(buffer, false);
                 return NULL;
             }
-            offset += fragments[i].length;
             j++;
         }
         buffer->nfragments = j;
@@ -585,7 +584,7 @@ static int buffer_seek(buffer_t *buffer, void *data, zip_uint64_t len, zip_error
 static zip_int64_t buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip_error_t *error) {
     zip_uint64_t copied, i, fragment_offset, capacity;
 
-    if (buffer->offset + length + WRITE_FRAGMENT_SIZE - 1 < length) {
+    if (!UNSIGNED_ADD_THREE_FITS(buffer->offset, length, WRITE_FRAGMENT_SIZE - 1)) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return -1;
     }

@@ -34,8 +34,6 @@
 
 #include "zipint.h"
 
-static zip_uint64_t _zip_offset_add(zip_uint64_t offset, zip_int64_t delta);
-
 ZIP_EXTERN int zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence) {
     zip_source_args_seek_t args;
 
@@ -62,6 +60,7 @@ ZIP_EXTERN int zip_source_seek(zip_source_t *src, zip_int64_t offset, int whence
 
 zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t length, void *data, zip_uint64_t data_length, zip_error_t *error) {
     zip_uint64_t new_offset;
+    zip_uint64_t reference;
     zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, data_length, error);
 
     if (args == NULL) {
@@ -70,50 +69,26 @@ zip_int64_t zip_source_seek_compute_offset(zip_uint64_t offset, zip_uint64_t len
 
     switch (args->whence) {
     case SEEK_CUR:
-        new_offset = _zip_offset_add(offset, args->offset);
+        reference = offset;
         break;
 
     case SEEK_END:
-        new_offset = _zip_offset_add(length, args->offset);
+        reference = length;
         break;
 
     case SEEK_SET:
-        if (args->offset < 0 || (zip_uint64_t)args->offset > length) {
-            new_offset = ZIP_UINT64_MAX;
-        }
-        else {
-            new_offset = (zip_uint64_t)args->offset;
-        }
+        reference = 0;
         break;
 
     default:
-        new_offset = ZIP_UINT64_MAX;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return -1;
     }
 
-    if (new_offset == ZIP_UINT64_MAX || new_offset > length) {
+    if (!ASSIGN_UNSIGNED_PLUS_SIGNED_FITS_CAPPED(new_offset, reference, args->offset, ZIP_MIN(length, ZIP_INT64_MAX))) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
         return -1;
     }
 
     return (zip_int64_t)new_offset;
-}
-
-static zip_uint64_t _zip_offset_add(zip_uint64_t offset, zip_int64_t delta) {
-    if (delta >= 0) {
-        zip_uint64_t unsigned_delta = (zip_uint64_t)delta;
-
-        if (offset > ZIP_INT64_MAX - unsigned_delta) {
-            return ZIP_UINT64_MAX;
-        }
-        return offset + unsigned_delta;
-    }
-    else {
-        /* Handle ZIP_INT64_MIN without overflowing signed arithmetic. */
-        zip_uint64_t unsigned_delta = (zip_uint64_t)(-(delta + 1)) + 1;
-
-        if (offset < unsigned_delta) {
-            return ZIP_UINT64_MAX;
-        }
-        return offset - unsigned_delta;
-    }
 }

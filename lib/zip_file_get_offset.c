@@ -65,7 +65,7 @@ zip_uint64_t _zip_file_get_offset(const zip_t *za, zip_uint64_t idx, zip_error_t
         return 0;
     }
 
-    if (offset + (zip_uint32_t)size > ZIP_INT64_MAX) {
+    if (!UNSIGNED_ADD_FITS_CAPPED((zip_uint32_t)size, offset, ZIP_INT64_MAX)) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return 0;
     }
@@ -83,11 +83,10 @@ zip_uint64_t _zip_file_get_end(const zip_t *za, zip_uint64_t index, zip_error_t 
 
     entry = za->entry[index].orig;
 
-    if (offset + entry->comp_size < offset || offset + entry->comp_size > ZIP_INT64_MAX) {
+    if (!ASSIGN_UNSIGNED_ADD_FITS_CAPPED(offset, offset, entry->comp_size, ZIP_INT64_MAX)) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return 0;
     }
-    offset += entry->comp_size;
 
     if (entry->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) {
         zip_uint8_t buf[4];

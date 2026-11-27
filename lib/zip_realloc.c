@@ -43,9 +43,7 @@ bool zip_realloc(void **memory, zip_uint64_t *alloced_elements, zip_uint64_t ele
         return true;
     }
 
-    new_alloced_elements = *alloced_elements + additional_elements;
-
-    if (new_alloced_elements < additional_elements || new_alloced_elements > SIZE_MAX / element_size) {
+    if (!ASSIGN_UNSIGNED_ADD_FITS(new_alloced_elements, *alloced_elements, additional_elements) || !UNSIGNED_MULTIPLY_FITS_CAPPED(new_alloced_elements, element_size, SIZE_MAX)) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }

@@ -84,11 +84,8 @@ zip_int64_t zip_source_read(zip_source_t *src, void *data, zip_uint64_t len) {
         bytes_read += (zip_uint64_t)n;
     }
 
-    if (src->bytes_read + bytes_read < src->bytes_read) {
+    if (!ASSIGN_UNSIGNED_ADD_FITS(src->bytes_read, src->bytes_read, bytes_read)) {
         src->bytes_read = ZIP_UINT64_MAX;
-    }
-    else {
-        src->bytes_read += bytes_read;
     }
     return (zip_int64_t)bytes_read;
 }

@@ -81,7 +81,7 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
     }
 
     if (length > 0) {
-        if (start + (zip_uint64_t)length < start) {
+        if (!UNSIGNED_ADD_FITS(length, start)) {
             zip_error_set(error, ZIP_ER_INVAL, 0);
             return NULL;
         }
@@ -199,13 +199,13 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
                 return -1;
             }
             if (ctx->end_valid) {
-                if (ctx->end + offset < ctx->end) {
+                if (!ASSIGN_UNSIGNED_ADD_FITS(ctx->end, ctx->end, offset)) {
                     /* zip archive data claims end of data past zip64 limits */
                     zip_error_set(&ctx->error, ZIP_ER_INCONS, MAKE_DETAIL_WITH_INDEX(ZIP_ER_DETAIL_CDIR_ENTRY_INVALID, ctx->source_index));
                     return -1;
                 }
-                ctx->end += offset;
             }
+            /* ctx->start <= ctx->end, so this can't overflow. */
             ctx->start += offset;
             ctx->source_archive = NULL;
         }
@@ -310,11 +310,10 @@ static zip_int64_t window_read(zip_source_t *src, void *_ctx, void *data, zip_ui
             return -1;
         }
 
-        if (new_offset + ctx->start < ctx->start) {
+        if (!ASSIGN_UNSIGNED_ADD_FITS(new_offset, new_offset, ctx->start)) {
             zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
             return -1;
         }
-        new_offset += ctx->start;
 
         if (!ctx->end_valid) {
             if (zip_source_seek(src, new_offset, SEEK_SET) < 0) {

@@ -1423,7 +1423,7 @@ int zip_dirent_check_consistency(zip_dirent_t *dirent) {
         default:
             return 0;
         }
-        if (dirent->uncomp_size + header_size < dirent->uncomp_size || dirent->comp_size != dirent->uncomp_size + header_size) {
+        if (!UNSIGNED_ADD_FITS(dirent->uncomp_size, header_size) || dirent->comp_size != dirent->uncomp_size + header_size) {
             return ZIP_ER_DETAIL_STORED_SIZE_MISMATCH;
         }
     }

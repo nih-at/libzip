@@ -513,8 +513,19 @@ struct _zip_pkware_keys {
 };
 typedef struct _zip_pkware_keys zip_pkware_keys_t;
 
-#define ZIP_CHECK_ADD_OVERFLOW(a, b) ((a) + (b) < (a))
-#define ZIP_CHECK_ADD_OVERFLOW_CAPPED(a, b, cap) ((a) > (cap) - (b))
+#define UNSIGNED_ADD_FITS(a, b) ((a) + (b) >= (a))
+#define UNSIGNED_ADD_THREE_FITS(a, b, c) (UNSIGNED_ADD_FITS((a), (b)) && UNSIGNED_ADD_FITS((a) + (b), (c)))
+#define UNSIGNED_ADD_FITS_CAPPED(a, b, cap) ((b) <= (cap) && (a) <= (cap) - (b))
+#define UNSIGNED_SUBTRACT_FITS(a, b) ((a) >= (b))
+#define UNSIGNED_MULTIPLY_FITS_CAPPED(a, b, cap) ((b) == 0 || (cap) / (b) >= (a))
+
+#define UNSIGNED_PLUS_SIGNED_FITS(a, b) ((b) >= 0 ? UNSIGNED_ADD_FITS((a), (b)) : (a) + (b) <= (a))
+#define UNSIGNED_PLUS_SIGNED_FITS_CAPPED(a, b, cap) ((b) >= 0 ? UNSIGNED_ADD_FITS_CAPPED((a), (b), (cap)) : (a) + (b) <= (a))
+
+#define ASSIGN_UNSIGNED_ADD_FITS(r, a, b) (UNSIGNED_ADD_FITS((a), (b)) ? (r) = (a) + (b), 1 : 0)
+#define ASSIGN_UNSIGNED_ADD_THREE_FITS(r, a, b, c) (UNSIGNED_ADD_THREE_FITS((a), (b), (c)) ? (r) = (a) + (b) + (c), 1 : 0)
+#define ASSIGN_UNSIGNED_ADD_FITS_CAPPED(r, a, b, cap) (UNSIGNED_ADD_FITS_CAPPED((a), (b), (cap)) ? (r) = (a) + (b), 1 : 0)
+#define ASSIGN_UNSIGNED_PLUS_SIGNED_FITS_CAPPED(r, a, b, cap) (UNSIGNED_PLUS_SIGNED_FITS_CAPPED((a), (b), (cap)) ? (r) = (a) + (b), 1 : 0)
 
 #define ZIP_MAX(a, b) ((a) > (b) ? (a) : (b))
 #define ZIP_MIN(a, b) ((a) < (b) ? (a) : (b))

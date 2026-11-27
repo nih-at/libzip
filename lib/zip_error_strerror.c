@@ -119,18 +119,17 @@ ZIP_EXTERN const char *zip_error_strerror(zip_error_t *err) {
         size_t length = strlen(system_error_string);
         if (zip_error_string) {
             size_t length_error = strlen(zip_error_string);
-            if (length + length_error + 2 < length) {
+            if (!ASSIGN_UNSIGNED_ADD_THREE_FITS(length, length, length_error, 2)) {
                 free(system_error_buffer);
                 return _zip_err_str[ZIP_ER_MEMORY].description;
             }
-            length += length_error + 2;
         }
-        if (length == SIZE_MAX || (s = (char *)malloc(length + 1)) == NULL) {
+        if (!ASSIGN_UNSIGNED_ADD_FITS(length, length, 1) || (s = (char *)malloc(length)) == NULL) {
             free(system_error_buffer);
             return _zip_err_str[ZIP_ER_MEMORY].description;
         }
 
-        snprintf_s(s, length + 1, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);
+        snprintf_s(s, length, "%s%s%s", (zip_error_string ? zip_error_string : ""), (zip_error_string ? ": " : ""), system_error_string);
         err->str = s;
 
         free(system_error_buffer);

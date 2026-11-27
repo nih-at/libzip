@@ -610,13 +610,12 @@ static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cd, zip_error_t *error)
             return -1;
         }
 
-        if (ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size, local_metadata_size) || ZIP_CHECK_ADD_OVERFLOW(cd->entry[i].orig->comp_size + local_metadata_size, cd->entry[i].orig->offset)) {
+        if (!ASSIGN_UNSIGNED_ADD_THREE_FITS(j, cd->entry[i].orig->comp_size, local_metadata_size, cd->entry[i].orig->offset)) {
             zip_error_set(error, ZIP_ER_NOZIP, 0);
             _zip_dirent_finalize(&temp);
             free(spans);
             return -1;
         }
-        j = cd->entry[i].orig->offset + cd->entry[i].orig->comp_size + local_metadata_size;
 
         if (j > max) {
             max = j;
@@ -880,7 +879,7 @@ static bool check_eocd(zip_cdir_t *cd, unsigned int flags, zip_error_t *error) {
         return false;
     }
 
-    if (cd->offset + cd->size < cd->offset) {
+    if (!UNSIGNED_ADD_FITS(cd->offset, cd->size)) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return false;
     }
@@ -960,7 +959,7 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
     size = _zip_buffer_get_64(buffer);
 
     /* Is there a hole between EOCD and EOCD locator, or do they overlap? Also check for overflow. */
-    if ((flags & ZIP_CHECKCONS) && (ZIP_CHECK_ADD_OVERFLOW(size, eocd_offset + 12) || size + eocd_offset + 12 != eocdloc_offset)) {
+    if ((flags & ZIP_CHECKCONS) && (!UNSIGNED_ADD_THREE_FITS(size, eocd_offset, 12) || size + eocd_offset + 12 != eocdloc_offset)) {
         zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_EOCD64_OVERLAPS_EOCD);
         if (free_buffer) {
             _zip_buffer_free(buffer);
@@ -1006,12 +1005,12 @@ cdir_status_t _zip_read_eocd64(zip_cdir_t *cdir, zip_source_t *src, zip_buffer_t
         _zip_buffer_free(buffer);
     }
 
-    if (offset > ZIP_INT64_MAX || offset + size < offset) {
+    if (offset > ZIP_INT64_MAX || !UNSIGNED_ADD_FITS(offset, size)) {
         zip_error_set(error, ZIP_ER_SEEK, EFBIG);
         return CDIR_INVALID;
     }
 
-    if (nentry > size / CDENTRYSIZE) {
+    if (!UNSIGNED_MULTIPLY_FITS_CAPPED(nentry, CDENTRYSIZE, size)) {
         zip_error_set(error, ZIP_ER_INCONS, ZIP_ER_DETAIL_CDIR_INVALID);
         return CDIR_INVALID;
     }

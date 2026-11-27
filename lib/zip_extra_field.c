@@ -349,7 +349,7 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
         return 0;
     }
 
-    if (e->orig->offset + 26 > ZIP_INT64_MAX) {
+    if (!UNSIGNED_ADD_FITS_CAPPED(e->orig->offset, 26, ZIP_INT64_MAX)) {
         zip_error_set(&za->error, ZIP_ER_SEEK, EFBIG);
         return -1;
     }

@@ -202,7 +202,7 @@ bool _zip_buffer_ok(zip_buffer_t *buffer) {
 zip_uint8_t *_zip_buffer_peek(zip_buffer_t *buffer, zip_uint64_t length) {
     zip_uint8_t *data;
 
-    if (!buffer->ok || buffer->offset + length < length || buffer->offset + length > buffer->size) {
+    if (!buffer->ok || !UNSIGNED_ADD_FITS_CAPPED(buffer->offset, length, buffer->size)) {
         buffer->ok = false;
         return NULL;
     }

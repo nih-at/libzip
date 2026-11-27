@@ -59,11 +59,12 @@ ZIP_EXTERN zip_int64_t zip_dir_add(zip_t *za, const char *name, zip_flags_t flag
     len = strlen(name);
 
     if (len == 0 || name[len - 1] != '/') {
-        if (len > SIZE_MAX - 2 || (s = (char *)malloc(len + 2)) == NULL) {
+        size_t alloc_len;
+        if (!ASSIGN_UNSIGNED_ADD_FITS(alloc_len, len, 2) || (s = (char *)malloc(alloc_len)) == NULL) {
             zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
             return -1;
         }
-        (void)strncpy_s(s, len + 2, name, len);
+        (void)strncpy_s(s, alloc_len, name, len);
         s[len] = '/';
         s[len + 1] = '\0';
     }
