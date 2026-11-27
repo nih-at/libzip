@@ -449,6 +449,79 @@ check_reopened_aes(const char *archive, zip_uint64_t index, const char *password
 }
 
 
+/* zip_close() reports integrity errors that its data source only detects on close. */
+static int
+check_copy_aes(const char *archive, zip_uint64_t index, const char *password, int expected_error) {
+    int close_error;
+    int err;
+    int fail;
+    zip_error_t error;
+    zip_source_t *destination_source;
+    zip_source_t *source;
+    zip_t *destination;
+    zip_t *za;
+
+    fail = 0;
+    err = 0;
+    za = zip_open(archive, 0, &err);
+    if (za == NULL) {
+        zip_error_t open_error;
+
+        zip_error_init_with_code(&open_error, err);
+        fprintf(stderr, "can't open '%s': %s\n", archive, zip_error_strerror(&open_error));
+        zip_error_fini(&open_error);
+        return 1;
+    }
+
+    zip_error_init(&error);
+    if ((destination_source = zip_source_buffer_create(NULL, 0, 0, &error)) == NULL) {
+        fprintf(stderr, "can't create buffer source: %s\n", zip_error_strerror(&error));
+        zip_error_fini(&error);
+        zip_discard(za);
+        return 1;
+    }
+    if ((destination = zip_open_from_source(destination_source, ZIP_TRUNCATE, &error)) == NULL) {
+        fprintf(stderr, "can't open archive in buffer source: %s\n", zip_error_strerror(&error));
+        zip_source_free(destination_source);
+        zip_error_fini(&error);
+        zip_discard(za);
+        return 1;
+    }
+
+    if ((source = zip_source_zip_file_create(za, index, 0, 0, -1, password, &error)) == NULL) {
+        fprintf(stderr, "can't create source for '%s': %s\n", archive, zip_error_strerror(&error));
+        zip_discard(destination);
+        zip_error_fini(&error);
+        zip_discard(za);
+        return 1;
+    }
+    if (zip_file_add(destination, "copy", source, 0) < 0) {
+        fprintf(stderr, "can't add copy of '%s': %s\n", archive, zip_strerror(destination));
+        zip_source_free(source);
+        zip_discard(destination);
+        zip_error_fini(&error);
+        zip_discard(za);
+        return 1;
+    }
+
+    if (zip_close(destination) < 0) {
+        close_error = zip_error_code_zip(zip_get_error(destination));
+        zip_discard(destination);
+    }
+    else {
+        close_error = ZIP_ER_OK;
+    }
+    if (close_error != expected_error) {
+        fprintf(stderr, "zip_close of copy returned error %d instead of %d for '%s'\n", close_error, expected_error, archive);
+        fail = 1;
+    }
+
+    zip_error_fini(&error);
+    zip_discard(za);
+    return fail;
+}
+
+
 int
 main(void) {
     int fail;
@@ -459,12 +532,18 @@ main(void) {
     fail += check_case("broken.zip", NULL, "storedcrcerror", ZIP_ER_CRC);
     fail += check_case("broken.zip", NULL, "deflatecrcerror", ZIP_ER_CRC);
     fail += check_case("hmac-error.zip", "1234", "test.txt", ZIP_ER_CRC);
+    fail += check_case("trailing-data-aes256.zip", "1234", "test.txt", 0);
+    fail += check_case("trailing-data-badmac-aes256.zip", "1234", "test.txt", ZIP_ER_CRC);
     fail += check_nonseekable_reopen();
     fail += check_reopened_source();
     fail += check_write_arguments();
     fail += check_reopened_aes("empty-badmac-aes256.zip", 0, "password", ZIP_ER_CRC, ZIP_ER_CRC);
     fail += check_reopened_aes("encrypt-aes256.zip", 1, "foofoofoo", ZIP_ER_OK, ZIP_ER_OK);
     fail += check_reopened_aes("hmac-error.zip", 0, "1234", ZIP_ER_CRC, ZIP_ER_CRC);
+    fail += check_reopened_aes("trailing-data-aes256.zip", 0, "1234", ZIP_ER_OK, ZIP_ER_OK);
+    fail += check_reopened_aes("trailing-data-badmac-aes256.zip", 0, "1234", ZIP_ER_CRC, ZIP_ER_CRC);
+    fail += check_copy_aes("trailing-data-aes256.zip", 0, "1234", ZIP_ER_OK);
+    fail += check_copy_aes("trailing-data-badmac-aes256.zip", 0, "1234", ZIP_ER_CRC);
 
     return fail ? 1 : 0;
 }
