@@ -274,8 +274,8 @@ static int zin_close(char *argv[]) {
         fprintf(stderr, "can't close source archive: %s\n", zip_strerror(z_in[idx]));
         return -1;
     }
-    z_in[idx] = z_in[z_in_count];
     z_in_count--;
+    z_in[idx] = z_in[z_in_count];
 
     return 0;
 }
