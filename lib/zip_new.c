@@ -68,6 +68,7 @@ zip_t *_zip_new(zip_error_t *error) {
     za->open_source = NULL;
     za->progress = NULL;
     za->torrent_mtime = 0;
+    za->prefix_length = 0;
 
     return za;
 }
