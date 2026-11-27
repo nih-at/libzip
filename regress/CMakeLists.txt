@@ -1,10 +1,19 @@
 
 include(GenerateCommandTable)
 
+set(path "$<TARGET_FILE_DIR:zip>;$ENV{PATH}")
+if (TARGET zlib)
+  set(path "$<TARGET_FILE_DIR:zlib>;${path}")
+endif()
+if (NOT IS_WINDOWS)
+  string(REPLACE ";" "\\;" path "${path}")
+endif()
+
 if (CMOCKA_FOUND)
   set(CMOCKA_TEST_PROGRAMS
     crypto_clear
     shell_completion
+    source_zip_partial
   )
 
   foreach(PROGRAM IN LISTS CMOCKA_TEST_PROGRAMS)
@@ -13,6 +22,7 @@ if (CMOCKA_FOUND)
     target_include_directories(${PROGRAM} PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR} ${CMOCKA_INCLUDE_DIRS}) 
 
     add_test(NAME ${PROGRAM} COMMAND ${PROGRAM})
+    set_tests_properties(${PROGRAM} PROPERTIES ENVIRONMENT "PATH=${path}")
   endforeach()
 
   # The internal symbol is hidden when zip is a shared library, so link against the file directly.
@@ -163,14 +173,6 @@ if (NIHTEST)
     manyfiles-zip64.zip
     manyfiles.zip
   )
-
-  set(path "$<TARGET_FILE_DIR:zip>;$ENV{PATH}")
-  if (TARGET zlib)
-    set(path "$<TARGET_FILE_DIR:zlib>;${path}")
-  endif()
-  if (NOT IS_WINDOWS)
-  string(REPLACE ";" "\\;" path "${path}")
-  endif()
 
   # set(ENV{srcdir} ${PROJECT_SOURCE_DIR}/regress)
 
