@@ -51,9 +51,11 @@ struct ctx {
 static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
     size_t bound;
 
+#if SIZE_MAX < ZIP_UINT64_MAX
     if (uncompressed_size > SIZE_MAX) {
         return ZIP_UINT64_MAX;
     }
+#endif
     bound = ZSTD_compressBound((size_t)uncompressed_size);
     if (bound == 0 || ZSTD_isError(bound) || bound < uncompressed_size) {
         return ZIP_UINT64_MAX;
