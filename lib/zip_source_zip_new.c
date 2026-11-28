@@ -167,7 +167,9 @@ ZIP_EXTERN zip_source_t *zip_source_zip_file_create(zip_t *srcza, zip_uint64_t s
         empty_data = (have_size && st.size == 0);
     }
     if (empty_data) {
-        src = zip_source_buffer_with_attributes_create(NULL, 0, 0, &attributes, error);
+        if ((src = zip_source_buffer_with_attributes_create(NULL, 0, 0, &attributes, error)) == NULL) {
+            return NULL;
+        }
         /* If we created source buffer above, we want the window source to take ownership of it. */
         take_ownership = true;
         /* if we created a buffer source above, then treat it as if

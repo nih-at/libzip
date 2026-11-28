@@ -216,6 +216,12 @@ bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index
     }
 
     if (entry == NULL) {
+        if (hash->nentries + 1 > hash->table_size * HASH_MAX_FILL && hash->table_size < HASH_MAX_SIZE) {
+            if (!hash_resize(hash, hash->table_size * 2, error)) {
+                return false;
+            }
+            table_index = hash_value % hash->table_size;
+        }
         if ((entry = (zip_hash_entry_t *)malloc(sizeof(zip_hash_entry_t))) == NULL) {
             zip_error_set(error, ZIP_ER_MEMORY, 0);
             return false;
@@ -225,12 +231,8 @@ bool _zip_hash_add(zip_hash_t *hash, const zip_uint8_t *name, zip_uint64_t index
         hash->table[table_index] = entry;
         entry->hash_value = hash_value;
         entry->orig_index = -1;
+        entry->current_index = -1;
         hash->nentries++;
-        if (hash->nentries > hash->table_size * HASH_MAX_FILL && hash->table_size < HASH_MAX_SIZE) {
-            if (!hash_resize(hash, hash->table_size * 2, error)) {
-                return false;
-            }
-        }
     }
 
     if (flags & ZIP_FL_UNCHANGED) {
@@ -270,9 +272,8 @@ bool _zip_hash_delete(zip_hash_t *hash, const zip_uint8_t *name, zip_error_t *er
                     free(entry);
                     hash->nentries--;
                     if (hash->nentries < hash->table_size * HASH_MIN_FILL && hash->table_size > HASH_MIN_SIZE) {
-                        if (!hash_resize(hash, hash->table_size / 2, error)) {
-                            return false;
-                        }
+                        /* Shrinking is an optimization; keep the existing table on OOM. */
+                        (void)hash_resize(hash, hash->table_size / 2, NULL);
                     }
                 }
                 else {
@@ -351,6 +352,8 @@ bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error) {
     zip_uint32_t i;
     zip_hash_entry_t *entry, *previous;
 
+    (void)error;
+
     for (i = 0; i < hash->table_size; i++) {
         previous = NULL;
         entry = hash->table[i];
@@ -382,9 +385,8 @@ bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error) {
         while (hash->nentries < new_size * HASH_MIN_FILL && new_size > HASH_MIN_SIZE) {
             new_size /= 2;
         }
-        if (!hash_resize(hash, new_size, error)) {
-            return false;
-        }
+        /* Shrinking is an optimization; keep the existing table on OOM. */
+        (void)hash_resize(hash, new_size, NULL);
     }
 
     return true;
