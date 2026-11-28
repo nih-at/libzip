@@ -48,17 +48,15 @@ struct ctx {
 
 
 static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
-    zip_uint64_t compressed_size;
-
-    if (uncompressed_size > ZIP_UINT64_MAX - 16383) {
-        return ZIP_UINT64_MAX;
-    }
+    zip_uint64_t overhead, compressed_size;
 
     /* max deflate size increase: size + ceil(size/16k)*5+6 */
 
-    compressed_size = uncompressed_size + (uncompressed_size + 16383) / 16384 * 5 + 6;
-
-    if (compressed_size < uncompressed_size) {
+    if (!UNSIGNED_ADD_FITS(uncompressed_size, 16383)) {
+        return ZIP_UINT64_MAX;
+    }
+    overhead = (uncompressed_size + 16383) / 16384 * 5 + 6;
+    if (!ASSIGN_UNSIGNED_ADD_FITS(compressed_size, uncompressed_size, overhead)) {
         return ZIP_UINT64_MAX;
     }
     return compressed_size;

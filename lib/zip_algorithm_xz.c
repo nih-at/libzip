@@ -99,11 +99,12 @@ static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
      */
     /* 13 bytes added for lzma alone header */
     zip_uint64_t overhead = uncompressed_size / 10 + 64 * 1024 + 13;
+    zip_uint64_t compressed_size;
 
-    if (uncompressed_size > ZIP_UINT64_MAX - overhead) {
+    if (!ASSIGN_UNSIGNED_ADD_FITS(compressed_size, uncompressed_size, overhead)) {
         return ZIP_UINT64_MAX;
     }
-    return uncompressed_size + overhead;
+    return compressed_size;
 }
 
 
