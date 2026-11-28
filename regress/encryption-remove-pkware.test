@@ -1,0 +1,10 @@
+features HAVE_CRYPTO
+description remove Traditional PKWARE encryption without stale data descriptor
+program zipsh_regress_nonrandom
+return 0
+arguments encrypt.zzip
+stdin
+set_default_password no-entropy
+file_encryption -i 1 none
+end-of-inline-data
+file encrypt.zzip encrypt-pkware-noentropy.zip encrypt-none.zip

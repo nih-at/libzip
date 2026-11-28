@@ -539,6 +539,9 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
     }
 
     /* as long as we don't support non-seekable output, clear data descriptor bit */
+    if (de->encryption_method != ZIP_EM_TRAD_PKWARE) {
+        de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
+    }
     if ((is_zip64 = _zip_dirent_write(za, de, flags)) < 0) {
         zip_source_free(src_final);
         return -1;
@@ -588,6 +591,10 @@ static int add_data(zip_t *za, zip_source_t *src, zip_dirent_t *de) {
 
     if (!ZIP_WANT_TORRENTZIP(za)) {
         dirent_changed |= _zip_dirent_apply_attributes(de, &attributes, (flags & ZIP_FL_FORCE_ZIP64) != 0);
+        if (de->encryption_method != ZIP_EM_TRAD_PKWARE && (de->bitflags & ZIP_GPBF_DATA_DESCRIPTOR) != 0) {
+            de->bitflags &= (zip_uint16_t)~ZIP_GPBF_DATA_DESCRIPTOR;
+            dirent_changed = true;
+        }
 
         if ((de->changed & ZIP_DIRENT_LAST_MOD) == 0 && !have_dos_time) {
             if (st.valid & ZIP_STAT_MTIME) {
@@ -773,7 +780,7 @@ static int write_data_descriptor(zip_t *za, const zip_dirent_t *de, int is_zip64
     }
 
     _zip_buffer_put(buffer, DATADES_MAGIC, 4);
-    _zip_buffer_put_32(buffer, de->crc);
+    _zip_buffer_put_32(buffer, _zip_dirent_winzip_aes_version(de) == 2 ? 0 : de->crc);
     if (is_zip64) {
         _zip_buffer_put_64(buffer, de->comp_size);
         _zip_buffer_put_64(buffer, de->uncomp_size);

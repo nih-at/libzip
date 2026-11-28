@@ -604,6 +604,7 @@ void _zip_dirent_set_version_needed(zip_dirent_t *de, bool force_zip64);
 void zip_dirent_torrentzip_normalize(zip_dirent_t *de);
 
 zip_int32_t _zip_dirent_size(zip_source_t *src, zip_uint16_t, zip_error_t *);
+zip_uint16_t _zip_dirent_winzip_aes_version(const zip_dirent_t *de);
 int _zip_dirent_write(zip_t *za, zip_dirent_t *dirent, zip_flags_t flags);
 
 zip_extra_field_t *_zip_ef_clone(const zip_extra_field_t *, zip_error_t *);

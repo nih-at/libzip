@@ -181,8 +181,21 @@ static zip_int64_t pkware_decrypt(zip_source_t *src, void *ud, void *data, zip_u
         return 0;
     }
 
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
+        zip_file_attributes_t *attributes = (zip_file_attributes_t *)data;
+        if (len < sizeof(*attributes)) {
+            zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+            return -1;
+        }
+        attributes->valid |= ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
+        attributes->general_purpose_bit_flags = 0;
+        attributes->general_purpose_bit_mask = ZIP_GPBF_DATA_DESCRIPTOR;
+
+        return 0;
+    }
+
     case ZIP_SOURCE_SUPPORTS:
-        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
+        return zip_source_make_command_bitmap(ZIP_SOURCE_AT_EOF, ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, ZIP_SOURCE_GET_FILE_ATTRIBUTES, ZIP_SOURCE_SUPPORTS_REOPEN, -1);
 
     case ZIP_SOURCE_ERROR:
         return zip_error_to_data(&ctx->error, data, len);
