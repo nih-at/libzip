@@ -24,6 +24,7 @@ endif()
 if (NIHTEST)
   set(TEST_PROGRAMS
     add_from_filep
+    algorithm_bounds
     can_clone_file
     exact_read_integrity
     filep_error
@@ -110,6 +111,9 @@ if (NIHTEST)
   foreach(PROGRAM IN LISTS ZIP_PROGRAMS)
     if (PROGRAM STREQUAL "ziptool_regress_nonrandom")
       add_executable(${PROGRAM} programs/ziptool_regress.c)
+      target_link_libraries(${PROGRAM} zip_regress)
+    elseif (PROGRAM STREQUAL "algorithm_bounds")
+      add_executable(${PROGRAM} programs/algorithm_bounds.c)
       target_link_libraries(${PROGRAM} zip_regress)
     else()
       add_executable(${PROGRAM} programs/${PROGRAM}.c)

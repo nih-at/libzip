@@ -49,7 +49,18 @@ struct ctx {
 };
 
 static zip_uint64_t maximum_compressed_size(zip_uint64_t uncompressed_size) {
-    return ZSTD_compressBound(uncompressed_size);
+    size_t bound;
+
+#if SIZE_MAX < ZIP_UINT64_MAX
+    if (uncompressed_size > SIZE_MAX) {
+        return ZIP_UINT64_MAX;
+    }
+#endif
+    bound = ZSTD_compressBound((size_t)uncompressed_size);
+    if (bound == 0 || ZSTD_isError(bound) || bound < uncompressed_size) {
+        return ZIP_UINT64_MAX;
+    }
+    return bound;
 }
 
 
@@ -57,6 +68,7 @@ static void *allocate(bool compress, zip_uint32_t compression_flags, zip_error_t
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
         return NULL;
     }
 

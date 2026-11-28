@@ -1,0 +1,4 @@
+# test compression algorithm maximum_compressed_size saturation and UB safety
+program algorithm_bounds
+arguments ignored
+return 0
