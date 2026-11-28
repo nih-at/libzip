@@ -1,0 +1,4 @@
+# test extra-field seek error propagation and atomic ZIP_EF_BOTH updates
+program extra_field_safety
+arguments ignored
+return 0

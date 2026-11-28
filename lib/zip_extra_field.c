@@ -379,7 +379,7 @@ int _zip_read_local_ef(zip_t *za, zip_uint64_t idx) {
         zip_uint8_t *ef_raw;
 
         if (zip_source_seek(za->src, fname_len, SEEK_CUR) < 0) {
-            zip_error_set(&za->error, ZIP_ER_SEEK, errno);
+            zip_error_set_from_source(&za->error, za->src);
             return -1;
         }
 
@@ -469,38 +469,46 @@ zip_int16_t _zip_extra_fields_count(const zip_extra_fields_t *extra_fields, zip_
 }
 
 
-zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error) {
-    zip_extra_field_t *ef_prev = NULL;
-    zip_extra_field_t *ef_new, *ef;
+struct ef_set_plan {
+    zip_extra_field_t *ef;
+    zip_extra_field_t *ef_prev;
+    zip_extra_field_t *ef_new;
+    zip_uint16_t len;
+};
+
+static bool _zip_ef_set_prepare(zip_extra_field_t *ef_head, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, struct ef_set_plan *plan, zip_error_t *error) {
     zip_int32_t new_len;
 
-    ef = _zip_ef_find(ef_head, ef_id, ef_idx, &ef_prev);
+    plan->ef_prev = NULL;
+    plan->ef_new = NULL;
+    plan->len = len;
+    plan->ef = _zip_ef_find(ef_head, ef_id, ef_idx, &plan->ef_prev);
 
-    if (ef == NULL && ef_idx != ZIP_EXTRA_FIELD_NEW) {
+    if (plan->ef == NULL && ef_idx != ZIP_EXTRA_FIELD_NEW) {
         zip_error_set(error, ZIP_ER_INVAL, 0);
-        return NULL;
+        return false;
     }
 
     new_len = _zip_ef_size(ef_head);
     /* This should not happen, but we want to assume lengths are >= 0 later. */
     if (new_len < 0) {
         zip_error_set(error, ZIP_ER_EF_TOO_LARGE, 0);
-        return NULL;
+        return false;
     }
 
-    if (ef != NULL) {
-        new_len -= ef->size + 4;
+    if (plan->ef != NULL) {
+        new_len -= plan->ef->size + 4;
     }
     new_len += len + 4;
 
     if (new_len > ZIP_UINT16_MAX) {
         zip_error_set(error, ZIP_ER_EF_TOO_LARGE, 0);
-        return NULL;
+        return false;
     }
 
     /* If we are updating an existing field with its current data pointer, just update the size.
        This also ensures that data remains valid, which is needed if we set both local and central extra fields. */
-    if (ef && ef->data == data) {
+    if (plan->ef && plan->ef->data == data) {
         /*
           We cannot return an error if len > ef->size. Consider this sequence:
 
@@ -515,69 +523,99 @@ zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, z
 
           Do *not* submit "fixes" for this!
         */
-        ef->size = len;
-        return ef_head;
+        return true;
     }
 
     /* Otherwise, create a new extra field. */
-    if ((ef_new = _zip_ef_new(ef_id, len, data)) == NULL) {
+    if ((plan->ef_new = _zip_ef_new(ef_id, len, data)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
-        return NULL;
+        return false;
     }
 
-    if (ef != NULL) {
-        ef_new->next = ef->next;
-        ef->next = NULL;
-        _zip_ef_free(ef);
-    }
-    else if (ef_prev) {
-        ef_new->next = ef_prev->next;
+    return true;
+}
+
+static zip_extra_field_t *_zip_ef_set_commit(zip_extra_field_t *ef_head, const struct ef_set_plan *plan) {
+    if (plan->ef_new == NULL) {
+        plan->ef->size = plan->len;
+        return ef_head;
     }
 
-    if (ef_prev) {
-        ef_prev->next = ef_new;
+    if (plan->ef != NULL) {
+        plan->ef_new->next = plan->ef->next;
+        plan->ef->next = NULL;
+        _zip_ef_free(plan->ef);
+    }
+    else if (plan->ef_prev) {
+        plan->ef_new->next = plan->ef_prev->next;
+    }
+
+    if (plan->ef_prev) {
+        plan->ef_prev->next = plan->ef_new;
     }
     else {
-        ef_head = ef_new;
+        ef_head = plan->ef_new;
     }
 
     return ef_head;
 }
 
+zip_extra_field_t *_zip_ef_set(zip_extra_field_t *ef_head, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error) {
+    struct ef_set_plan plan;
+
+    if (!_zip_ef_set_prepare(ef_head, ef_id, ef_idx, data, len, &plan, error)) {
+        return NULL;
+    }
+
+    return _zip_ef_set_commit(ef_head, &plan);
+}
+
 bool _zip_extra_fields_set(zip_extra_fields_t *extra_fields, zip_flags_t flags, zip_uint16_t ef_id, zip_uint16_t ef_idx, const zip_uint8_t *data, zip_uint16_t len, zip_error_t *error) {
-    zip_extra_field_t *ef;
+    struct ef_set_plan local_plan;
+    struct ef_set_plan central_plan;
 
     if (flags & ZIP_EF_LOCAL) {
-        ef = _zip_ef_set(extra_fields->local, ef_id, ef_idx, data, len, error);
-        if (ef == NULL) {
+        if (!_zip_ef_set_prepare(extra_fields->local, ef_id, ef_idx, data, len, &local_plan, error)) {
             return false;
         }
-        extra_fields->local = ef;
     }
     if (flags & ZIP_EF_CENTRAL) {
-        ef = _zip_ef_set(extra_fields->central, ef_id, ef_idx, data, len, error);
-        if (ef == NULL) {
+        if (!_zip_ef_set_prepare(extra_fields->central, ef_id, ef_idx, data, len, &central_plan, error)) {
+            if (flags & ZIP_EF_LOCAL) {
+                _zip_ef_free(local_plan.ef_new);
+            }
             return false;
         }
-        extra_fields->central = ef;
+    }
+
+    if (flags & ZIP_EF_LOCAL) {
+        extra_fields->local = _zip_ef_set_commit(extra_fields->local, &local_plan);
+    }
+    if (flags & ZIP_EF_CENTRAL) {
+        extra_fields->central = _zip_ef_set_commit(extra_fields->central, &central_plan);
     }
 
     return true;
 }
 
 bool _zip_extra_fields_clone(zip_extra_fields_t *extra_fields, zip_error_t *error) {
+    zip_extra_field_t *new_local = NULL;
+    zip_extra_field_t *new_central = NULL;
+
     if (extra_fields->local) {
-        if ((extra_fields->local = _zip_ef_clone(extra_fields->local, error)) == NULL) {
-            /* Clear central so we don't refer to the original. */
-            extra_fields->central = NULL;
+        if ((new_local = _zip_ef_clone(extra_fields->local, error)) == NULL) {
             return false;
         }
     }
     if (extra_fields->central) {
-        if ((extra_fields->central = _zip_ef_clone(extra_fields->central, error)) == NULL) {
+        if ((new_central = _zip_ef_clone(extra_fields->central, error)) == NULL) {
+            _zip_ef_free(new_local);
             return false;
         }
     }
+
+    extra_fields->local = new_local;
+    extra_fields->central = new_central;
 
     return true;
 }

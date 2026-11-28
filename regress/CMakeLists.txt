@@ -26,6 +26,7 @@ if (NIHTEST)
     add_from_filep
     can_clone_file
     exact_read_integrity
+    extra_field_safety
     filep_error
     fopen_unchanged
     fread
