@@ -1,0 +1,4 @@
+# test Zip64 data descriptor seek bounds when central_compressed_size > ZIP_INT64_MAX
+program dirent_dd_seek
+arguments ignored
+return 0

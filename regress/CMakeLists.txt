@@ -25,6 +25,7 @@ if (NIHTEST)
   set(TEST_PROGRAMS
     add_from_filep
     can_clone_file
+    dirent_dd_seek
     exact_read_integrity
     filep_error
     fopen_unchanged
